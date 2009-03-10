@@ -8,7 +8,7 @@ _*Crux*_ is a component framework created over [http://code.google.com/p/google-
 
 It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in portuguese).
 
-_*Crux*_ is now mantained by [http://www.sysmap.com.br _*Sysmap Solutions Software e Consultoria LTDA.*_] as an open source project.
+_*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions Software e Consultoria LTDA.] as an open source project.
 
 ==Example==
 
@@ -20,7 +20,7 @@ _*Crux*_ provides a declarative way for component creation. It uses _<span>_ tag
        <script language='javascript' src='br.com.sysmap.teste.CruxTeste.nocache.js'></script>
    </head>
    <body>
-       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld'>
+       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
    </body>
 </html>
 }}}
