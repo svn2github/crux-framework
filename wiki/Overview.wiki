@@ -31,9 +31,10 @@ This code is a GWT host page for a hipotetical example module called CruxTest.
 
 You can see that a _<span>_ tag is used to inform that a component of type 'button' must be rendered at the body of html page. That button contains a click event pointing to 'clientHandler.helloWorld'. It means that a method called 'helloWorld' from a class identified by the alias 'clientHandler' will be called to handle this event calls.
 
-You can see at the followin code block how we tell _*Crux*_ witch class must be associated with the alias 'clientHandler':
+You can see at the followin code block how we tell _*Crux*_ which  class must be associated with the alias 'clientHandler':
 
 {{{
+package br.com.sysmap.test.client;
 import com.google.gwt.user.client.Window;
 
 @ClientController("clientHandler")
