@@ -27,11 +27,11 @@ _*Crux*_ provides a declarative way for component creation. It uses _<span>_ tag
 </html>
 }}}
 
-This code is a GWT host page for a hipotetical example module called CruxTest.
+This code is a GWT host page for a hipotetical example module called _CruxTest_.
 
-You can see that a _<span>_ tag is used to inform that a component of type 'button' must be rendered at the body of html page. That button contains a click event pointing to 'clientHandler.helloWorld'. It means that a method called 'helloWorld' from a class identified by the alias 'clientHandler' will be called to handle this event calls.
+You can see that a _<span>_ tag is used to inform that a component of type _'button'_ must be rendered at the body of html page. That button contains a click event pointing to _'clientHandler.helloWorld'_. It means that a method called _'helloWorld'_ from a class identified by the alias _'clientHandler'_ will be called to handle this event calls.
 
-You can see at the followin code block how we tell _*Crux*_ which  class must be associated with the alias 'clientHandler':
+You can see at the following code block how we tell _*Crux*_ which  class must be associated with the alias _'clientHandler'_:
 
 {{{
 package br.com.sysmap.test.client;
@@ -45,4 +45,11 @@ public class Teste
       Window.alert("Hello World!!");
    }
 }
+}}}
+
+And now you can see the code for the _CruxTest_ module declaration:
+{{{
+<module>
+   <inherits name='br.com.sysmap.crux.core.Crux'/>
+</module>
 }}}
