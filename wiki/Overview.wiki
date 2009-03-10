@@ -15,7 +15,7 @@ _*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions] as an o
 
 The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
 
-_*Crux*_ provides a declarative way for component creation. It uses _<span>_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
+_*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
 
 {{{
 <html>
@@ -30,7 +30,7 @@ _*Crux*_ provides a declarative way for component creation. It uses _<span>_ tag
 
 This code is a GWT host page for a hypothetical example module called _CruxTest_ .
 
-You can see that a _<span>_ tag is used to inform that a component of type _'button'_ must be rendered at the body of html page. That button contains a click event pointing to _'clientHandler.helloWorld'_. It means that a method called _'helloWorld'_ from a class identified by the alias _'clientHandler'_ will be called to handle this event calls.
+You can see that a _`<span>`_ tag is used to inform that a component of type _'button'_ must be rendered at the body of html page. That button contains a click event pointing to _'clientHandler.helloWorld'_. It means that a method called _'helloWorld'_ from a class identified by the alias _'clientHandler'_ will be called to handle this event calls.
 
 You can see at the following code block how we tell _*Crux*_ which  class must be associated with the alias _'clientHandler'_:
 
