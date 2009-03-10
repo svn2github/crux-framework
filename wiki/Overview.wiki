@@ -8,19 +8,40 @@ _*Crux*_ is a component framework created over [http://code.google.com/p/google-
 
 It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in portuguese).
 
-_*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions Software e Consultoria LTDA.] as an open source project.
+_*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
 
 ==Example==
+
+The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
 
 _*Crux*_ provides a declarative way for component creation. It uses _<span>_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
 
 {{{
 <html>
    <head>
-       <script language='javascript' src='br.com.sysmap.teste.CruxTeste.nocache.js'></script>
+       <script language='javascript' src='br.com.sysmap.test.CruxTest.nocache.js'></script>
    </head>
    <body>
        <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
    </body>
 </html>
+}}}
+
+This code is a GWT host page for a hipotetical example module called CruxTest.
+
+You can see that a _<span>_ tag is used to inform that a component of type 'button' must be rendered at the body of html page. That button contains a click event pointing to 'clientHandler.helloWorld'. It means that a method called 'helloWorld' from a class identified by the alias 'clientHandler' will be called to handle this event calls.
+
+You can see at the followin code block how we tell _*Crux*_ witch class must be associated with the alias 'clientHandler':
+
+{{{
+import com.google.gwt.user.client.Window;
+
+@ClientController("clientHandler")
+public class Teste
+{
+   public void helloWorld()
+   {
+      Window.alert("Hello World!!");
+   }
+}
 }}}
