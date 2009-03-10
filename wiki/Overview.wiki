@@ -1,5 +1,26 @@
-#summary Framework overview.
+#summary Crux overview.
 
 = Introduction =
 
-This Framework is under construction and has no release yet.
+== History ==
+
+_*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications.
+
+It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in portuguese).
+
+_*Crux*_ is now mantained by [http://www.sysmap.com.br _*Sysmap Solutions Software e Consultoria LTDA.*_] as an open source project.
+
+==Example==
+
+_*Crux*_ provides a declarative way for component creation. It uses _<span>_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
+
+{{{
+<html>
+   <head>
+       <script language='javascript' src='br.com.sysmap.teste.CruxTeste.nocache.js'></script>
+   </head>
+   <body>
+       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld'>
+   </body>
+</html>
+}}}
