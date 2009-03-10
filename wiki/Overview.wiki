@@ -1,4 +1,5 @@
 #summary Crux overview.
+#labels Featured,Phase-Requirements
 
 = Introduction =
 
