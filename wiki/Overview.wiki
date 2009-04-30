@@ -20,7 +20,7 @@ _*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ t
 {{{
 <html>
    <head>
-       <script language='javascript' src='br.com.sysmap.test.CruxTest.nocache.js'></script>
+       <script language='javascript' src='cruxteste/cruxteste.nocache.js'></script>
    </head>
    <body>
        <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
@@ -51,8 +51,9 @@ public class Teste
 
 And now you can see the code for the _CruxTest_ module declaration:
 {{{
-<module>
+<module rename-to='cruxteste'>
    <inherits name='br.com.sysmap.crux.core.Crux'/>
+   <inherits name='br.com.sysmap.crux.ext.CruxBasicComponents'/>
 </module>
 }}}
 
