@@ -11,7 +11,7 @@ It is derived from a masters degree dissertation that was defended in 2008 at th
 
 _*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
 
-==Example==
+==Simple Example==
 
 The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
 
@@ -36,6 +36,7 @@ You can see at the following code block how we tell _*Crux*_ which  class must b
 
 {{{
 package br.com.sysmap.test.client;
+
 import com.google.gwt.user.client.Window;
 
 @ClientController("clientHandler")
@@ -54,3 +55,85 @@ And now you can see the code for the _CruxTest_ module declaration:
    <inherits name='br.com.sysmap.crux.core.Crux'/>
 </module>
 }}}
+
+
+==Example with server interaction==
+
+This example ilustrate how you can interact with server using _*Crux*_. Consider the same HTML page and module definition from the previous example and the following controller class:
+
+{{{
+package br.com.sysmap.test.client;
+
+import br.com.sysmap.teste.client.service.TesteServiceAsync;
+import br.com.sysmap.crux.core.client.controller.Create;
+import br.com.sysmap.crux.core.client.rpc.AsyncCallbackAdapter;
+
+import com.google.gwt.user.client.Window;
+
+@ClientController("clientHandler")
+public class Teste
+{
+   @Create
+   protected TesteServiceAsync service;
+
+   public void helloWorld()
+   {
+	service.hello(new AsyncCallbackAdapter<String>()
+	{
+		@Override
+		public void onSuccess(String s) 
+		{
+			Window.alert(s);
+		}
+		
+	});
+   }   
+}
+}}}
+
+The following block of code shows the server class called by above example:
+
+{{{
+package br.com.sysmap.teste.server.control;
+
+import br.com.sysmap.teste.client.service.TestService;
+
+public class TestController implements TesteService
+{
+   public String hello()
+   {
+        return "hello!";
+   }
+}
+}}}
+
+Where the interface TestService is defined as:
+{{{
+package br.com.sysmap.teste.client.service;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+
+public interface TesteService extends RemoteService 
+{
+    public String hello();
+}
+}}}
+
+And the async interface for the service is:
+
+{{{
+package br.com.sysmap.teste.client.service;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public interface TesteServiceAsync 
+{
+	void hello(AsyncCallback<String> callback);
+}
+}}}
+
+As you can observe, it is pretty similiar to pure GWT way to communicate. In fact you can also use that way if you want. The main differences in _*Crux's*_ approach is:
+  # You don't need to add a new servlet declaration on GWT module definition nether on web.xml for each new service declared.
+  # Your service implementation class does not need to extend the GWT RemoteServiceServlet. It just need to implements the service interface.
+  # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service. _*Crux*_ provides a FrontController.
+  # You can use the annotation _Create_ rather than _GWT.create_. it can be used not only for services, but for any field of the controller class.
