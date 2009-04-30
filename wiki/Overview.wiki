@@ -135,5 +135,5 @@ public interface TesteServiceAsync
 As you can observe, it is pretty similiar to pure GWT way to communicate. In fact you can also use that way if you want. The main differences in _*Crux's*_ approach is:
   # You don't need to add a new servlet declaration on GWT module definition nether on web.xml for each new service declared.
   # Your service implementation class does not need to extend the GWT RemoteServiceServlet. It just need to implements the service interface.
-  # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service. _*Crux*_ provides a FrontController.
+  # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service nether use the RemoteServiceRelativePath on your service interface. _*Crux*_ provides a FrontController. 
   # You can use the annotation _Create_ rather than _GWT.create_. it can be used not only for services, but for any field of the controller class.
