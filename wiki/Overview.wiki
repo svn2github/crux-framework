@@ -53,7 +53,7 @@ And now you can see the code for the _CruxTest_ module declaration:
 {{{
 <module rename-to='cruxteste'>
    <inherits name='br.com.sysmap.crux.core.Crux'/>
-   <inherits name='br.com.sysmap.crux.ext.CruxBasicComponents'/>
+   <inherits name='br.com.sysmap.crux.basic.CruxBasicComponents'/>
 </module>
 }}}
 
