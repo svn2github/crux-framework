@@ -8,6 +8,6 @@
       * [UserManual#Create_an_Application Create an Application]
     * [UserManual#Coding_client_side Coding client side]
       * [UserManual#Building_User_Interface Building User Interface]
-      * [UserManual#Managing Events Managing Events]
+      * [UserManual#Managing_Events Managing Events]
     * [UserManual#Client-Server_Communication Client-Server Communication]
   * [ComponentDeveloperManual Component Developer Manual]
