@@ -1,10 +1,8 @@
   * [Overview Overview]
-
-  * User Manual
+  * [UserManual User Manual]
     * [UserManual#Introduction Introduction]
-    * Quick Start
+    * [UserManual#Quick_Start Quick Start]
       * [UserManual#Install Install]
       * [UserManual#Sample_Application Sample Application]
       * [UserManual#Create_an_Application Create an Application]
-
   * [ComponentDeveloperManual Component Developer Manual]
