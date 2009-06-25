@@ -159,6 +159,6 @@ If XML support is enabled, the previous example can be written as following:
 </html>
 }}}
 
-The XML pages are used only for development porpouses. They are translated to HTML (using _`<span>`_ tags) and accessed as static resources in production environment. It can be done by an ant task (also included in default distribution). 
+The XML pages are used only for development porpouses. They are translated to HTML (with _`<span>`_ tags) and accessed as static resources in production environment. It can be done by an ant task (also included in default distribution). 
 
 During development, a filter intercept the requests to _*Crux*_ pages and process a transformation before writes the response. It ensures that the page recept by the browser is the same in production and in development scenarios. In a production scenario, the filter does nothing. 
