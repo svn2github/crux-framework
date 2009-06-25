@@ -2,7 +2,7 @@
 
   * User Manual
     * [UserManual#Introduction Introduction]
-    * Quick Start]
+    * Quick Start
       * [UserManual#Install Install]
       * [UserManual#Sample_Application Sample Application]
       * [UserManual#Create_an_Application Create an Application]
