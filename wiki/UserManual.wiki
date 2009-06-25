@@ -7,6 +7,14 @@
 
 == Install ==
 
-== Sample Application==
+== Sample Application ==
 
-== Create an Application==
+== Create an Application ==
+
+= Coding client side =
+
+== Building User Interface ==
+
+== Managing Events ==
+
+= Client-Server Communication =
