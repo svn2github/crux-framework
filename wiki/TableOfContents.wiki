@@ -11,3 +11,4 @@
       * [UserManual#Managing_Events Managing Events]
     * [UserManual#Client-Server_Communication Client-Server Communication]
   * [ComponentDeveloperManual Component Developer Manual]
+  * [Widgets Widgets]
