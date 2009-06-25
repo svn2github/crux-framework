@@ -2,7 +2,6 @@
 
 = Introduction =
 
-
 = Quick Start=
 
 == Install ==
@@ -11,10 +10,18 @@
 
 == Create an Application ==
 
-= Coding client side =
+= Coding Client Side =
 
 == Building User Interface ==
 
 == Managing Events ==
 
-= Client-Server Communication =
+== I18N ==
+
+== Client-Server Communication ==
+
+= Coding Server Side =
+
+== I18N ==
+
+= Extending and Customizing =
