@@ -20,7 +20,7 @@ _*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ t
 {{{
 <html>
    <head>
-       <script language='javascript' src='cruxteste/cruxteste.nocache.js'></script>
+       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
    </head>
    <body>
        <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
@@ -51,7 +51,7 @@ public class Teste
 
 And now you can see the code for the _CruxTest_ module declaration:
 {{{
-<module rename-to='cruxteste'>
+<module rename-to='cruxtest'>
    <inherits name='br.com.sysmap.crux.core.Crux'/>
    <inherits name='br.com.sysmap.crux.basic.CruxBasicComponents'/>
 </module>
@@ -138,3 +138,25 @@ As you can observe, it is pretty similiar to pure GWT way to communicate. In fac
   # Your service implementation class does not need to extend the GWT RemoteServiceServlet. It just need to implements the service interface.
   # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service nether use the RemoteServiceRelativePath annotation on your service interface. _*Crux*_ provides a FrontController. 
   # You can use the annotation _Create_ rather than _GWT.create_. it can be used not only for services, but for any field of the controller class.
+
+==_*Crux*_ Tools==
+
+Default _*Crux*_ distribution provides a set of tools to support the development. The most important one is an extension that allows pages to be created as XML files.
+
+Using crux XML files you can benefit from auto-completitions and XInclude support for breaking your pages in reuseable blocks.
+
+If XML support is enabled, the previous example can be written as following:
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:button value="Hello" onClick="clientHandler.helloWorld" />
+   </body>
+</html>
+}}}
+
+The XML pages are used only for development porpouses. They are translated to HTML and accessed as static resources in production environment.
