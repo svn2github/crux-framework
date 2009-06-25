@@ -1,5 +1,6 @@
 #summary Crux overview.
 #labels Featured,Phase-Requirements
+#sidebar TableOfContents
 
 = Introduction =
 
