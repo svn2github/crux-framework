@@ -1,14 +1,6 @@
 #summary User Manual
 #sidebar TableOfContents
 
-= Contents =
-  * [UserManual#Introduction Introduction]
-  * [UserManual#Quick_Start Quick Start]
-    * [UserManual#Install Install]
-    * [UserManual#Sample_Application Sample Application]
-    * [UserManual#Create_an_Application Create an Application]
-
-
 = Introduction =
 
 
