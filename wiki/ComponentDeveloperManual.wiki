@@ -1,5 +1,5 @@
 #summary Component Developer Manual.
-
+#sidebar TableOfContents
 = Introduction =
 
 Add your content here.
