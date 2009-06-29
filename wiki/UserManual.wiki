@@ -23,7 +23,7 @@ You can create widgets on your page using one of the tree methods:
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget in the same way you already do using GWT alone. 
 
-The foloowing code is an example of the first method:
+The following code is an example of the first method:
 {{{
 <html>
    <head>
