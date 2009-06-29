@@ -36,7 +36,67 @@ The foloowing code is an example of the first method:
 </html>
 }}} 
 
-If you choose to create widgets by _`<span>` tags, you can consult the following table to verify the type for all default registered widgets:
+If you choose to create widgets by _`<span>`_ tags, you can consult the following table to verify the type for all GWT widgets:
+
+||*Type*||*Widget*||
+||absolutePanel||com.google.gwt.user.client.ui.AbsolutePanel||
+||anchor||com.google.gwt.user.client.ui.Anchor||
+||button||com.google.gwt.user.client.ui.Button||
+||captionPanel||com.google.gwt.user.client.ui.CaptionPanel||
+||checkBox||com.google.gwt.user.client.ui.CheckBox||
+||dateBox||com.google.gwt.user.client.ui.DateBox||
+||datePicker||com.google.gwt.user.client.ui.DatePicker||
+||deckPanel||com.google.gwt.user.client.ui.DeckPanel||
+||decoratedPopupPanel||com.google.gwt.user.client.ui.DecoratedPopupPanel||
+||decoratedTabBar||com.google.gwt.user.client.ui.DecoratedTabBar||
+||decoratedTabPanel||com.google.gwt.user.client.ui.DecoratedTabPanel||
+||decoratorPanel||com.google.gwt.user.client.ui.DecoratorPanel||
+||decoratedStackPanel||com.google.gwt.user.client.ui.DecoratedStackPanel||
+||dialogBox||com.google.gwt.user.client.ui.DialogBox||
+||disclosurePanel||com.google.gwt.user.client.ui.DisclosurePanel||
+||dockPanel||com.google.gwt.user.client.ui.DockPanel||
+||fileUpload||com.google.gwt.user.client.ui.FileUpload||
+||flexTable||com.google.gwt.user.client.ui.FlexTable||
+||flowPanel||com.google.gwt.user.client.ui.FlowPanel||
+||focusPanel||com.google.gwt.user.client.ui.FocusPanel||
+||formPanel||com.google.gwt.user.client.ui.FormPanel||
+||frame||com.google.gwt.user.client.ui.Frame||
+||grid||com.google.gwt.user.client.ui.Grid||
+||hidden||com.google.gwt.user.client.ui.Hidden||
+||horizontalPanel||com.google.gwt.user.client.ui.HorizontalPanel||
+||horizontalSplitPanel||com.google.gwt.user.client.ui.HorizontalSplitPanel||
+||HTML||com.google.gwt.user.client.ui.HTML||
+||HTMLPanel||com.google.gwt.user.client.ui.HTMLPanel||
+||hyperlink||com.google.gwt.user.client.ui.Hyperlink||
+||image||com.google.gwt.user.client.ui.Image||
+||inlineHTML||com.google.gwt.user.client.ui.InlineHTML||
+||inlineHyperlink||com.google.gwt.user.client.ui.InlineHyperlink||
+||inlineLabel||com.google.gwt.user.client.ui.InlineLabel||
+||label||com.google.gwt.user.client.ui.Label||
+||listBox||com.google.gwt.user.client.ui.ListBox||
+||menuBar||com.google.gwt.user.client.ui.MenuBar||
+||namedFrame||com.google.gwt.user.client.ui.NamedFrame||
+||passwordTextBox||com.google.gwt.user.client.ui.PasswordTextBox||
+||popupPanel||com.google.gwt.user.client.ui.PopupPanel||
+||pushButton||com.google.gwt.user.client.ui.PushButton||
+||radioButton||com.google.gwt.user.client.ui.RadioButton||
+||richTextArea||com.google.gwt.user.client.ui.RichTextArea||
+||scrollPanel||com.google.gwt.user.client.ui.ScrollPanel||
+||simpleCheckBox||com.google.gwt.user.client.ui.SimpleCheckBox||
+||simpleLazyPanel||br.com.sysmap.crux.basic.client.SimpleLazyPanel||
+||simplePanel||com.google.gwt.user.client.ui.SimplePanel||
+||simpleRadioButton||com.google.gwt.user.client.ui.SimpleRadioButton||
+||stackPanel||com.google.gwt.user.client.ui.StackPanel||
+||suggestBox||com.google.gwt.user.client.ui.SuggestBox||
+||tabBar||com.google.gwt.user.client.ui.TabBar||
+||tabPanel||com.google.gwt.user.client.ui.TabPanel||
+||textBox||com.google.gwt.user.client.ui.TextBox||
+||textArea||com.google.gwt.user.client.ui.TextArea||
+||toggleButton||com.google.gwt.user.client.ui.ToggleButton||
+||tree||com.google.gwt.user.client.ui.Tree||
+||verticalSplitPanel||com.google.gwt.user.client.ui.VerticalSplitPanel||
+||verticalPanel||com.google.gwt.user.client.ui.VerticalPanel||
+
 
 
 == Managing Events ==
