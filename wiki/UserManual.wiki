@@ -54,7 +54,7 @@ Now, you can see an example of the second method:
 </html>
 }}} 
 
-If you decide to use this aproach, you must attempt to:
+If you decide to use this approach, you must attempt to:
   # Your files must have the extension *_.crux.xml_*.
   #
 == Managing Events ==
