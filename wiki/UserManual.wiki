@@ -18,10 +18,26 @@ Default _*Crux*_ distribution provides factories for all widgets delivered in GW
 
 To use a widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution], you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
 
-You can create widgets on your page using one of the tree ways:
-  # Declare a _`<span>`_ tag with an attribute `_`type to inform the widget you want to add to the page.
+You can create widgets on your page using one of the tree methods:
+  # Declare a _`<span>`_ tag with an attribute `_`type to inform the widget you want to add to the page (it must match the name used to register the widget under _*Crux*_).
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget in the same way you already do using GWT alone. 
+
+The foloowing code is an example of the first method:
+{{{
+<html>
+   <head>
+       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
+   </head>
+   <body>
+       <span id='myBox' _type='textBox' />
+       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
+   </body>
+</html>
+}}} 
+
+If you choose to create widgets by _`<span>` tags, you can consult the following table to verify the type for all default registered widgets:
+
 
 == Managing Events ==
 
