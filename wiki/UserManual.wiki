@@ -83,6 +83,20 @@ This filter will intercept the requests to transform your *_.crux.xml_* files in
 
 If the filter is used in a production scenario, it will just do nothing. 
 
+===Create Widgets Programatically===
+
+You can create widgets exactly as you create using GWT directly. The main difference is that you don't need to extend the EntryPoint interface to put your code.
+
+_*Crux*_ provides a default EntryPoint that will start the process of parsing the page to build the widgets.
+
+You can add an EventHandler to be called when the screen is loaded (see [UserManual#Managing_Events Managing Events] to more details about events). 
+
+Inside your EventHandler, you can build Widgets as in the following example:
+{{{
+
+}}}
+
+
 == Managing Events ==
 
 == I18N ==
