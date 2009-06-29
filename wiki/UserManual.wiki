@@ -23,6 +23,7 @@ You can create widgets on your page using one of the tree methods:
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget in the same way you already do using GWT alone. 
 
+===Writing HTML Pages===
 The following code is an example of the first method:
 {{{
 <html>
@@ -38,6 +39,7 @@ The following code is an example of the first method:
 
 If you choose to create widgets by _`<span>`_ tags, you can consult the following [Widgets#Basic_Widgets table] to verify the type for all GWT widgets.
 
+===Writing XML Pages===
 Now, you can see an example of the second method:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -52,6 +54,9 @@ Now, you can see an example of the second method:
 </html>
 }}} 
 
+If you decide to use this aproach, you must attempt to:
+  # Your files must have the extension *_.crux.xml_*.
+  #
 == Managing Events ==
 
 == I18N ==
