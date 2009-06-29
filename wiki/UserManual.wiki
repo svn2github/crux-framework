@@ -12,6 +12,14 @@
 
 == Building User Interface ==
 
+Any GWT widget can be used to build user interface. However, to be able to use a widget declaratively inside a HTML page, you need to have a _*Crux*_ _WidgetFactory_ registered for this widget. 
+
+Default _*Crux*_ distribution provides factories for all widgets delivered in GWT default distribution and for other advanced ones. To create and register factories for your own widgets, consult the [ComponentDeveloperManual Component Developer Manual].
+
+To use a widget included in the GWT default distribution, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
+
+
+
 == Managing Events ==
 
 == I18N ==
