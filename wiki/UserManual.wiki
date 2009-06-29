@@ -83,7 +83,7 @@ This filter will intercept the requests to transform your *_.crux.xml_* files in
 
 If the filter is used in a production scenario, it will just do nothing. 
 
-===Create Widgets Programatically===
+===Creating Widgets Programatically===
 
 You can create widgets exactly as you create using GWT directly. The main difference is that you don't need to extend the EntryPoint interface to put your code.
 
