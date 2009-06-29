@@ -12,3 +12,5 @@
     * [UserManual#Client-Server_Communication Client-Server Communication]
   * [ComponentDeveloperManual Component Developer Manual]
   * [Widgets Widgets]
+    * [Widgets#Basic_Widgets Basic]
+    * [Widgets#Advanced_Widgets Advanced]
