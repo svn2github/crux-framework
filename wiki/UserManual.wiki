@@ -36,8 +36,21 @@ The following code is an example of the first method:
 </html>
 }}} 
 
-If you choose to create widgets by _`<span>`_ tags, you can consult the following [Widgets#Basic_Widgets table] to verify the type for all GWT widgets:
+If you choose to create widgets by _`<span>`_ tags, you can consult the following [Widgets#Basic_Widgets table] to verify the type for all GWT widgets.
 
+Now, you can see an example of the second method:
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:textBox id="myBox" />
+       <crux:button id="myButton" value="Hello" onClick="clientHandler.helloWorld" />
+   </body>
+</html>
+}}} 
 
 == Managing Events ==
 
