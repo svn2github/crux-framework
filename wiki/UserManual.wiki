@@ -38,7 +38,7 @@ The following code is an example of the first method:
 
 If you choose to create widgets by _`<span>`_ tags, you can consult the following table to verify the type for all GWT widgets:
 
-||*Type*||*Widget*||
+|| *Type* || *Widget* ||
 ||absolutePanel||com.google.gwt.user.client.ui.AbsolutePanel||
 ||anchor||com.google.gwt.user.client.ui.Anchor||
 ||button||com.google.gwt.user.client.ui.Button||
