@@ -79,6 +79,10 @@ If you decide to use this approach, you must attempt to:
 
 Note that if you use the [UserManual#CruxProjectGenerator Crux Project Generator], it will already configure the filter for you.
 
+This filter will intercept the requests to transform your *_.crux.xml_* files in *_.html_* files that uses _`<span>`_ tags, exactly as the page showed in the first method. Itjust need to be done in a development scenario. Before you put your application in production, you compile your code (see [UserManual#Compilation compilation]) and the transformation is done only at this moment.
+
+If the filter is used in a production scenario, it will just do nothing. 
+
 == Managing Events ==
 
 == I18N ==
