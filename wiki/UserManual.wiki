@@ -76,6 +76,9 @@ If you decide to use this approach, you must attempt to:
    <url-pattern>*.html</url-pattern>
 </filter-mapping>
 }}}
+
+Note that if you use the [UserManual#CruxProjectGenerator Crux Project Generator], it will already configure the filter for you.
+
 == Managing Events ==
 
 == I18N ==
