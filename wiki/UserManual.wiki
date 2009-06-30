@@ -93,7 +93,15 @@ You can add an EventHandler to be called when the screen is loaded (see [UserMan
 
 Inside your EventHandler, you can build Widgets as in the following example:
 {{{
-
+   ...
+   Button myButton = new Button();
+   myButton.addClickHandler(new ClickHandler(){
+      public void onClick(ClickEvent event)
+      {
+          Window.alert("hello");
+      }
+   });
+   ...
 }}}
 
 
