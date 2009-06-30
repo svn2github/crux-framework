@@ -10,18 +10,35 @@
 
 = Coding Client Side =
 
+_*Crux*_ applications is basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
+
+If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
+
+Your modules must inherits _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
+
+If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint (br.com.sysmap.crux.core.client.JSEngine) and call super on your onModuleLoad() method.
+
+The following example creates a module that can use any widget provided by default distribution of Crux:
+{{{
+<module rename-to='singlemodule'>
+	<inherits name='br.com.sysmap.crux.core.Crux'/>
+	<inherits name='br.com.sysmap.crux.basic.CruxBasicWidgets'/>
+	<inherits name='br.com.sysmap.crux.advanced.CruxAdvancedWidgets'/>
+</module>
+}}}
+
+The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, Multi-Frame capable dialogs etc.
+
 == Building User Interface ==
 
-Any GWT widget can be used in user interface construction. However, to be able to use a widget declaratively inside an HTML page, you need to have a _*Crux*_ _WidgetFactory_ registered for this widget. 
+Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
 
-Default _*Crux*_ distribution provides factories for all widgets delivered in GWT default distribution and for other advanced ones. To create and register factories for your own widgets, consult the [ComponentDeveloperManual Component Developer Manual].
+Consult the [ComponentDeveloperManual Component Developer Manual] for informations about how to use custom widgets with _*Crux*_.
 
-To use a widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution], you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
-
-You can create widgets on your page using one of the three methods:
-  # Declare a _`<span>`_ tag with an attribute `_`type to inform the widget you want to add to the page (it must match the name used to register the widget under _*Crux*_).
+You can add widgets to your pages by one of the three methods:
+  # Declare a _`<span>`_ tag with an attribute `_`type to inform witch widget you want to add to the page.
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
-  # Create programatically a widget in the same way you already do using GWT alone. 
+  # Create programatically a widget exactly as you already do using GWT alone. 
 
 ===Writing HTML Pages===
 The following code is an example of the first method:
@@ -37,7 +54,9 @@ The following code is an example of the first method:
 </html>
 }}} 
 
-If you choose to create widgets by _`<span>`_ tags, you can consult the following [Widgets#Basic_Widgets table] to verify the type for all GWT widgets.
+You can consult the following [Widgets#Basic_Widgets table] to verify the type for default GWT widgets.
+
+
 
 ===Writing XML Pages===
 Now, you can see an example of the second method:
