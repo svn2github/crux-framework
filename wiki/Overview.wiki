@@ -1,7 +1,5 @@
 #labels Featured,Phase-Requirements
-= Introduction =
-
-== History ==
+= History =
 
 _*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications.
 
@@ -9,13 +7,13 @@ It is derived from a masters degree dissertation that was defended in 2008 at th
 
 _*Crux*_ is now maintained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
 
-== What can *_Crux_* do? ==
+= What can *_Crux_* do? =
 _*Crux*_ allows you to create web user interfaces in a declarative and modularized way, what drastically improves development speed and code maintainability. In other words, it brings you the best of both worlds: the comfort of creating pages with HTML and the elegance of controlling those pages using Java code.
 
 The entire set of widgets from GWT is available for using in _*Crux*_, and it is easy to create or even plug in an already existent set of widgets. See more about custom widgets at [CreatingCustomWidgets Creating Custom Widgets] section.
 
 
-==Simple Example==
+=Simple Example=
 
 The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
 
@@ -62,7 +60,7 @@ And now you can see the code for the _CruxTest_ module declaration:
 }}}
 
 
-==Example with server interaction==
+=Example with server interaction=
 
 This example ilustrate how you can interact with server using _*Crux*_. Consider the same HTML page and module definition from the previous example and the following controller class:
 
@@ -143,7 +141,7 @@ As you can observe, it is pretty similiar to pure GWT way to communicate. In fac
   # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service nether use the RemoteServiceRelativePath annotation on your service interface. _*Crux*_ provides a FrontController. 
   # You can use the annotation _Create_ rather than _GWT.create_. it can be used not only for services, but for any field of the controller class.
 
-==_*Crux*_ Tools==
+=_*Crux*_ Tools=
 
 Default _*Crux*_ distribution provides a set of tools to support the development. The most important one is an extension that allows pages to be created as XML files.
 
