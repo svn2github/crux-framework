@@ -35,7 +35,7 @@ Any GWT widget can be used in user interface construction. Default _*Crux*_ dist
 
 To add widgets to your pages, you can use one of these three methods:
   # Declare a _`<span>`_ tag with an attribute `_`type to inform which widget you want to add to the page.
-  # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
+  # Use _*HtmlTags*_ tool to build a page as a XML file and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget exactly as you already do using GWT alone. 
 
 ===Writing HTML Pages===
@@ -47,7 +47,7 @@ The following code is an example of the first method:
    </head>
    <body>
        <span id='myBox' _type='textBox' />
-       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
+       <span id='myButton' _type='button' _text='Hello' _onclick='clientHandler.helloWorld' />
    </body>
 </html>
 }}} 
@@ -66,7 +66,7 @@ Now, you can see an example of the second method:
    </head>
    <body>
        <crux:textBox id="myBox" />
-       <crux:button id="myButton" value="Hello" onClick="clientHandler.helloWorld" />
+       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
 </html>
 }}} 
@@ -96,15 +96,13 @@ If you decide to use this approach, you must attempt to:
 
 Note that if you use the [UserManual#CruxProjectGenerator Crux Project Generator], it will already configure the filter for you.
 
-This filter will intercept the requests to transform your *_.crux.xml_* files in *_.html_* files that uses _`<span>`_ tags, exactly as the page showed in the first method. Itjust need to be done in a development scenario. Before you put your application in production, you compile your code (see [UserManual#Compilation compilation]) and the transformation is done only at this moment.
+This filter will intercept the requests to transform your *_.crux.xml_* files in *_.html_* files that uses _`<span>`_ tags, exactly as the page showed in the first method. It just need to be done in a development scenario. Before you put your application in production, you compile your code (see [UserManual#Compilation compilation]) and the transformation is done only at this moment.
 
 If the filter is used in a production scenario, it will just do nothing. 
 
 ===Creating Widgets Programatically===
 
-You can create widgets exactly as you create using GWT directly. The main difference is that you don't need to extend the EntryPoint interface to put your code.
-
-_*Crux*_ provides a default EntryPoint that will start the process of parsing the page to build the widgets.
+You can create widgets exactly as you create using GWT directly. 
 
 You can add an EventHandler to be called when the screen is loaded (see [UserManual#Managing_Events Managing Events] to more details about events). 
 
@@ -121,8 +119,50 @@ Inside your EventHandler, you can build Widgets as in the following example:
    ...
 }}}
 
+== Screen ==
+
+_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<span>` with `_`type="screen":
+
+{{{
+<html>
+   <head>
+       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
+   </head>
+   <body>
+       <span _type='screen' _onclose='clientHandler.onClose'>
+	       <span id='myBox' _type='textBox' />
+	       <span id='myButton' _type='button' _text='Hello' _onclick='clientHandler.helloWorld' />
+       </span>
+   </body>
+</html>
+}}}
+
+If you are using XML files with HTMLTags plugin, you can write:
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' manageHistory="true"/>
+       <crux:textBox id="myBox" />
+       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+   </body>
+</html>
+}}}
+
+The screen can be retrieve programatically by a call to the static method {{{Screen.get()}}}.
+Through Screen, you can:
+  # Access any widget created decaratively on pages.
+  # Add handlers to Window events, like load, close or resize.
+  # 
 
 == Managing Events ==
+
+_*Crux*_ uses 
+
 
 == I18N ==
 
