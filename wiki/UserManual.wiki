@@ -12,13 +12,13 @@
 
 == Building User Interface ==
 
-Any GWT widget can be used to build user interface. However, to be able to use a widget declaratively inside a HTML page, you need to have a _*Crux*_ _WidgetFactory_ registered for this widget. 
+Any GWT widget can be used in user interface construction. However, to be able to use a widget declaratively inside a HTML page, you need to have a _*Crux*_ _WidgetFactory_ registered for this widget. 
 
 Default _*Crux*_ distribution provides factories for all widgets delivered in GWT default distribution and for other advanced ones. To create and register factories for your own widgets, consult the [ComponentDeveloperManual Component Developer Manual].
 
 To use a widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution], you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
 
-You can create widgets on your page using one of the tree methods:
+You can create widgets on your page using one of the three methods:
   # Declare a _`<span>`_ tag with an attribute `_`type to inform the widget you want to add to the page (it must match the name used to register the widget under _*Crux*_).
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget in the same way you already do using GWT alone. 
