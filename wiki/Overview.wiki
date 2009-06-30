@@ -66,6 +66,10 @@ public class MyController {
 }
 }}}
 
+*The result:*
+http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
+http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
+
 
 This code is a GWT host page for a hypothetical example module called _CruxTest_ .
 
