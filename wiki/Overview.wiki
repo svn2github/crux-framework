@@ -28,7 +28,11 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
     </head>
 
     <body>
+        
+        <script type="text/javascript" src="/modules/bin/cruxexample/cruxexample.nocache.js"></script>
+        
         <crux:screen useEventHandler="myController"/>
+        
         <table>
             <tr>
                 <td>
@@ -46,7 +50,7 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 
 *The controller:*
 {{{
-package crux.examples;
+package crux.examples.client;
 
 import com.google.gwt.user.client.ui.Label;
 
@@ -59,7 +63,7 @@ public class MyController {
     /**
      * When invoked by the page, says hello.  
      */
-    public void sayHello(){
+    public void sayHello() {
         Label label = Screen.get("greetingLabel", Label.class);
         label.setText("Hello, world!");
     }
