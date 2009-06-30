@@ -77,6 +77,8 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
+Using the annotation {{{@Controller}}}, the class MyController is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page.
+
 This code is a GWT host page for a hypothetical example module called _CruxTest_ .
 
 You can see that a _`<span>`_ tag is used to inform that a component of type _'button'_ must be rendered at the body of html page. That button contains a click event pointing to _'clientHandler.helloWorld'_. It means that a method called _'helloWorld'_ from a class identified by the alias _'clientHandler'_ will be called to handle this event calls.
@@ -98,6 +100,8 @@ public class Teste
 }
 }}}
 
+
+
 And now you can see the code for the _CruxTest_ module declaration:
 {{{
 <module rename-to='cruxtest'>
@@ -105,7 +109,6 @@ And now you can see the code for the _CruxTest_ module declaration:
    <inherits name='br.com.sysmap.crux.basic.CruxBasicComponents'/>
 </module>
 }}}
-
 
 =Example with server interaction=
 
