@@ -3,7 +3,7 @@
 
 == History ==
 
-_*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] and its main goal is allowing fast development and easier maintainability of web applications.
+_*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications.
 
 It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in portuguese).
 
