@@ -1,6 +1,6 @@
 = Basic Widgets =
 
-This is the list of widgets presents in crux-basicwidgets.jar. It contains all widgets present in default GWT distribution.
+This is the list of widgets present in crux-basicwidgets.jar. It contains all widgets present in default GWT distribution.
 
 || *Type* || *Widget* ||
 ||absolutePanel||com.google.gwt.user.client.ui.AbsolutePanel||
