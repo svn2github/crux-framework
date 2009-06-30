@@ -1,10 +1,12 @@
 #labels Featured,Phase-Requirements
 = History =
-_*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications.
+_*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications. 
 
 It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in portuguese).
 
 _*Crux*_ is now maintained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
+
+The following documentation assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first. 
 
 = What can *_Crux_* do? =
 _*Crux*_ allows you to create web user interfaces in a declarative and modularized way, what drastically improves development speed and code maintainability. In other words, it brings you the best of both worlds: the comfort of creating pages with HTML and the elegance of controlling those pages using Java code.
@@ -13,10 +15,9 @@ The entire set of widgets from GWT is available for using in _*Crux*_, and it is
 
 
 =Simple Example=
-The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example. 
+The following example illustrates how to create a simple HTML page with _*Crux*_ and how to interact with it using a Java controller.
 
-_*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
-
+*The page:*
 {{{
 <html 
 	xmlns="http://www.w3.org/1999/xhtml" 
@@ -27,11 +28,44 @@ _*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ t
 	</head>
 
 	<body>
-		<crux:button id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
+		<table>
+			<tr>
+				<td>
+					<crux:button id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
+				</td>
+				<td>
+					<crux:label id="greetingLabel"/>			
+				</td>				
+			</tr>
+		</table>		
 	</body>
 
 </html>
 }}}
+
+*The controller:*
+{{{
+package crux.examples;
+
+import com.google.gwt.user.client.ui.Label;
+
+import br.com.sysmap.crux.core.client.component.Screen;
+import br.com.sysmap.crux.core.client.controller.Controller;
+
+@Controller(value="myController")
+public class MyController
+{
+	/**
+	 * When invoked by the page, says hello.  
+	 */
+	public void sayHello()
+	{
+		Label label = Screen.get("greetingLabel", Label.class);
+		label.setText("Hello, world!");
+	}
+}
+}}}
+
 
 This code is a GWT host page for a hypothetical example module called _CruxTest_ .
 
