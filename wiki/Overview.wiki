@@ -67,7 +67,9 @@ public class MyController {
 }}}
 
 *The result:*
+
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
+
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
