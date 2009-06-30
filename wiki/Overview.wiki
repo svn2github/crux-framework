@@ -9,7 +9,7 @@ It is derived from a masters degree dissertation that was defended in 2008 at th
 
 _*Crux*_ is now maintained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
 
-== How can *_Crux_* help me? ==
+== What can *_Crux_* do? ==
 _*Crux*_ allows you to create web user interfaces in a declarative and modularized way, what drastically improves development speed and code maintainability. In other words, it brings you the best of both worlds: the comfort of creating pages with HTML and the elegance of controlling those pages using Java code.
 
 
