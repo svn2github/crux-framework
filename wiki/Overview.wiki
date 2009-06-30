@@ -77,7 +77,7 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
-Using the annotation {{{@Controller}}}, the class MyController is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page.
+Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page.
 
 This code is a GWT host page for a hypothetical example module called _CruxTest_ .
 
