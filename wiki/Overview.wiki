@@ -13,18 +13,23 @@ The entire set of widgets from GWT is available for using in _*Crux*_, and it is
 
 
 =Simple Example=
-The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
+The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example. 
 
 _*Crux*_ provides a declarative way for component creation. It uses _`<span>`_ tags to inform that a component must be created at the specific location on the page. Look at the following code:
 
 {{{
-<html>
-   <head>
-       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
-   </head>
-   <body>
-       <span id='myButton' _type='button' _value='Hello' _onclick='clientHandler.helloWorld' />
-   </body>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0">
+
+	<head>
+		<title>My Page</title>
+	</head>
+
+	<body>
+		<crux:button id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
+	</body>
+
 </html>
 }}}
 
