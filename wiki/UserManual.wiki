@@ -157,7 +157,9 @@ The screen can be retrieve programatically by a call to the static method {{{Scr
 Through Screen, you can:
   # Access any widget created decaratively on pages.
   # Add handlers to Window events, like load, close or resize.
-  # 
+  # Communicate with other screens to, for example, change data between _*Crux*_ pages in different frames or windows of the same application.
+  # Control the history without need to add a hidden frame directly on the page.
+  # Block and unblobck the user intercation with the page.
 
 == Managing Events ==
 
