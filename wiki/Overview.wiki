@@ -9,9 +9,6 @@ It is derived from a masters degree dissertation that was defended in 2008 at th
 
 _*Crux*_ is now mantained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
 
-== What does *_Crux_* do? ==
-To *_Crux_* main goal is to allow developer to create web based applications in a declarative way, 
-
 ==Simple Example==
 
 The following example assumes that you are familiar with [http://code.google.com/p/google-web-toolkit/ GWT]. If this is not the case, please consult its documentation first for better understand this example.
