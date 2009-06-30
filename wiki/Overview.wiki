@@ -48,7 +48,6 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 package crux.examples;
 
 import com.google.gwt.user.client.ui.Label;
-
 import br.com.sysmap.crux.core.client.component.Screen;
 import br.com.sysmap.crux.core.client.controller.Controller;
 
