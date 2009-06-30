@@ -77,42 +77,13 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
-Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page.
+Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page. That button contains a click event pointing to {{{myController.sayHello}}}, which means that a method called {{{sayHello}}} will be invoked on the controller {{{myController}}} in order to handle such event.
 
-This code is a GWT host page for a hypothetical example module called _CruxTest_ .
-
-You can see that a _`<span>`_ tag is used to inform that a component of type _'button'_ must be rendered at the body of html page. That button contains a click event pointing to _'clientHandler.helloWorld'_. It means that a method called _'helloWorld'_ from a class identified by the alias _'clientHandler'_ will be called to handle this event calls.
-
-You can see at the following code block how we tell _*Crux*_ which  class must be associated with the alias _'clientHandler'_:
-
-{{{
-package br.com.sysmap.test.client;
-
-import com.google.gwt.user.client.Window;
-
-@ClientController("clientHandler")
-public class Teste
-{
-   public void helloWorld()
-   {
-      Window.alert("Hello World!!");
-   }
-}
-}}}
-
-
-
-And now you can see the code for the _CruxTest_ module declaration:
-{{{
-<module rename-to='cruxtest'>
-   <inherits name='br.com.sysmap.crux.core.Crux'/>
-   <inherits name='br.com.sysmap.crux.basic.CruxBasicComponents'/>
-</module>
-}}}
+It's important to say that the tags {{{<crux:button/>}}} and {{{<crux:label/>}}} are not part of the *_Crux_* core. Actually, they are part of another project, called [*_CruxHtmlTags_* http://code.google.com/p/crux-framework-tools/], which is a plug-in for *_Crux_*. *_Crux_*, itself, only recognizes SPAN tags for marking up widgets. For more information about that, take a look at [CruxEngine]
 
 =Example with server interaction=
 
-This example ilustrate how you can interact with server using _*Crux*_. Consider the same HTML page and module definition from the previous example and the following controller class:
+This example ilustrates how you can interact with server using _*Crux*_. Consider the same HTML page and module definition from the previous example and the following controller class:
 
 {{{
 package br.com.sysmap.test.client;
