@@ -10,15 +10,15 @@
 
 = Coding Client Side =
 
-_*Crux*_ applications is basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
+_*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
 
 If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
 
 Your modules must inherits _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
 
-If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint (br.com.sysmap.crux.core.client.JSEngine) and call super on your onModuleLoad() method.
+If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint ({{{br.com.sysmap.crux.core.client.JSEngine}}}) and call super on your onModuleLoad() method.
 
-The following example creates a module that can use any widget provided by default distribution of Crux:
+The following example shows a module that can use any widget provided by default distribution of Crux:
 {{{
 <module rename-to='singlemodule'>
 	<inherits name='br.com.sysmap.crux.core.Crux'/>
@@ -27,15 +27,13 @@ The following example creates a module that can use any widget provided by defau
 </module>
 }}}
 
-The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, Multi-Frame capable dialogs etc.
+The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs etc.
 
 == Building User Interface ==
 
-Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. 
+Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also availabe through crux-advancedwidgets.jar. Consult the [ComponentDeveloperManual Component Developer Manual] for informations about how to use custom widgets with _*Crux*_.
 
-Consult the [ComponentDeveloperManual Component Developer Manual] for informations about how to use custom widgets with _*Crux*_.
-
-You can add widgets to your pages by one of the three methods:
+To add a widget to your pages, you can use one of these three methods:
   # Declare a _`<span>`_ tag with an attribute `_`type to inform witch widget you want to add to the page.
   # Use _*HtmlTags*_ tool to build a page as a XML page and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget exactly as you already do using GWT alone. 
