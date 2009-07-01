@@ -215,6 +215,16 @@ The following example shows how this can be done:
 
 That code will call the method "method" on controller identified by "topController" on the top page. Consult the section [UserManual#Managing_Events Managing Events] for more details about how this call is processed.
 
+The following table shows the methods that allows calls on others screens:
+
+|| *Method* || *Description* ||
+||invokeControllerOnParent||call a controller on parent page||
+||invokeControllerOnOpener||call a controller on opener page||
+||invokeControllerOnAbsoluteTop||call a controller on top of the first opener page||
+||invokeControllerOnTop||call a controller on top page||
+||invokeControllerOnSelf||call a controller on self||
+
+
 You can also share information between _*Crux*_ screens using a common context to read and write variables.
 
 The _*Crux*_ Context is a common area where you can put and read values associating them with a key.
