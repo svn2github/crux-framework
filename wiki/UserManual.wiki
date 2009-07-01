@@ -146,7 +146,7 @@ If you are using XML files with HTMLTags plugin, you can write:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' manageHistory="true"/>
+       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' />
        <crux:textBox id="myBox" />
        <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
@@ -201,6 +201,7 @@ _*Crux*_ Screen support the following events:
 ||Close||Called when page is colsed||
 ||Closing||Called before close the page||
 ||Resize||Called on page resize||
+||HistoryChanged||Called when back button is pressed||
 
 ===Communication between Screens===
 
@@ -243,13 +244,13 @@ public class MyClass
 }
 }}}
 
-If you pass null as argument for a settet method of a Context Wrapper object, it will remove that value from context. Example:
+If you pass null as argument for a setter method of a Context Wrapper object, it will remove that value from context. Example:
 
 {{{
 	context.setValueTwo(null);
 }}}
 
-Note that you can have more than one Context Wrapper. Different modules can use different wrappers if you want. However, that area where context information is written is unique.
+Note that you can have more than one Context Wrapper. Different modules can use different wrappers if you want. However, the area where context information is written is unique.
 
 Screen class has the following static methods to support Context management:
 
@@ -259,7 +260,7 @@ Screen class has the following static methods to support Context management:
 ||clearContext||remove all context entries||
 
 Behind the scenes, Context is managed by a ContextHandler Object. It is provided two implementations for this interface:
-||*Handler*||*Description*|| 
+|| *Handler* || *Description* || 
 ||CookieContextHandler||Use cookies to store values||
 ||TopContextHandler||Store values in a HashMap located on top of the first opener window||
 
@@ -276,6 +277,41 @@ If you desire, you can add the following lines to your module config file to cha
 	</replace-with>			
 }}}
 
+
+===Control History===
+
+Screen provides a simple mechanism to manage history. Using the static method {{{Screen.addToHistory(String token)}}} you can create a history token (exactly as [http://code.google.com/docreader/#p=google-web-toolkit-doc-1-5&s=google-web-toolkit-doc-1-5&t=DevGuideHistory GWT tokens]). To handle the changes on history, you can add a handler to HistoryChanged events, as you can see in the next example:
+
+{{{
+	// To put a token on history
+	Screen.addToHistory("link1Clicked");
+}}}
+
+{{{
+	// To add a HistoryChanged Handler
+	Screen.addHistoryChangedHandler(new addValueChangeHandler<String>(){
+		public void onValueChange(ValueChangeEvent<String> event)
+		{
+			Window.alert(event.getValue());
+		}
+	});
+}}}
+
+or Declaratively:
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' onHistoryChanged='clientHandler.onHistoryChanged' />
+   </body>
+</html>
+}}}
+
+Note that you don't need here to add any iFrame to your host page, as in pure GWT.
 
 == Managing Events ==
 
