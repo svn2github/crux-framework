@@ -163,7 +163,7 @@ Through Screen, you can:
 
 ===Access Screen Widgets===
 
-To access screen widgets, you can use the static method {{{Screen.get(screenId)}}}
+To access screen widgets, you can use the static method {{{Screen.get(screenId)}}}.
 
 {{{
 	Button myButton = (Button)Screen.get("myButton");
@@ -171,7 +171,7 @@ To access screen widgets, you can use the static method {{{Screen.get(screenId)}
 	Button myButton = Screen.get("myButton", Button.class);
 }}}
 
-You can also (and we recomend) create an interface to access your widgets on screen. Your interface must extends the interface ScreenWrapper and the methods must follow the pattern: {{{<widgetType> get<WidgetID>()}}}. See the example:
+You can also create an interface to access your widgets on screen. Your interface must extends the interface ScreenWrapper and the methods must follow the pattern: {{{<widgetType> get<WidgetID>()}}}. See the example:
 {{{
 @Controller("myController")
 public class MyClass
@@ -191,7 +191,29 @@ public class MyClass
 }
 }}}
 
+We recomend that you create wrappers for screens, that is most elegant and avoid mismatches on typing widgets ids as strings all over the code.
+
 ===Screen Events===
+
+_*Crux*_ Screen support the following events:
+  # Load: Called when page loads. It is fired after the screen's building process is completed.
+  # Close: Called when page is colsed.
+  # Closing: Called before close the page.
+  # Resize: Called on page resize.
+
+===Communication between Screens===
+
+Using some static methods on Screen class, it is possible to invoke operations on other _*Crux*_ screens running in different frames or windows.
+
+The following example shows how this can be done:
+
+{{{
+	Screen.invokeControllerOnTop("topController.method", new MyParameterClass());
+}}}
+
+That code will call the method "method" on controller identified by "topController" on the top page. Consult the section [UserManual#Managing_Events Managing Events] for more details about this call.
+
+
 
 == Managing Events ==
 
