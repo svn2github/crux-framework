@@ -203,7 +203,7 @@ _*Crux*_ Screen support the following events:
 ||Resize||Called on page resize||
 ||HistoryChanged||Called when back button is pressed||
 
-=== 3.2.3 Communication between Screen s===
+=== 3.2.3 Communication between Screens===
 
 Using some static methods on Screen class, it is possible to invoke operations on other _*Crux*_ screens running in different frames or windows.
 
