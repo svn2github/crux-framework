@@ -196,11 +196,11 @@ We recomend that you create wrappers for screens, that is most elegant and avoid
 ===Screen Events===
 
 _*Crux*_ Screen support the following events:
-  || *Event* || *Description* ||
-  || Load || Called when page loads. It is fired after the screen's building process is completed ||
-  || Close || Called when page is colsed ||
-  || Closing || Called before close the page ||
-  || Resize || Called on page resize ||
+|| *Event* || *Description* ||
+||Load||Called when page loads. It is fired after the screen's building process is completed||
+||Close||Called when page is colsed||
+||Closing||Called before close the page||
+||Resize||Called on page resize||
 
 ===Communication between Screens===
 
