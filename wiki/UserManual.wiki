@@ -161,6 +161,38 @@ Through Screen, you can:
   # Control the history without need to add a hidden frame directly on the page.
   # Block and unblobck the user intercation with the page.
 
+===Access Screen Widgets===
+
+To access screen widgets, you can use the static method {{{Screen.get(screenId)}}}
+
+{{{
+	Button myButton = (Button)Screen.get("myButton");
+	or
+	Button myButton = Screen.get("myButton", Button.class);
+}}}
+
+You can also (and we recomend) create an interface to access your widgets on screen. Your interface must extends the interface ScreenWrapper and the methods must follow the pattern: {{{<widgetType> get<WidgetID>()}}}. See the example:
+{{{
+@Controller("myController")
+public class MyClass
+{
+	public static interface MyScreen extends ScreenWrapper
+	{
+		Button getMyButton();
+		TextBox getMyBox();
+	}
+	
+	protected myScreen = GWT.create(MyScreen.class);
+
+	public void myMethod()
+	{
+		myScreen.getMyBox().setValue("Test");
+	}
+}
+}}}
+
+===Screen Events===
+
 == Managing Events ==
 
 _*Crux*_ uses 
