@@ -29,7 +29,7 @@ The following example shows a module that can use any widget provided by default
 
 The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs etc.
 
-== Building User Interface ==
+== 3.1 Building User Interface ==
 
 Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also availabe through crux-advancedwidgets.jar. Consult the [ComponentDeveloperManual Component Developer Manual] for informations about how to use custom widgets with _*Crux*_.
 
@@ -38,7 +38,7 @@ To add widgets to your pages, you can use one of these three methods:
   # Use _*HtmlTags*_ tool to build a page as a XML file and use some XSDs to enable auto completition on your favorite editor.
   # Create programatically a widget exactly as you already do using GWT alone. 
 
-===Writing HTML Pages===
+=== 3.1.1 Writing HTML Pages===
 The following code is an example of the first method:
 {{{
 <html>
@@ -56,7 +56,7 @@ You can consult the following [Widgets#Basic_Widgets table] to verify the type f
 
 
 
-===Writing XML Pages===
+=== 3.1.2 Writing XML Pages===
 Now, you can see an example of the second method:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -100,7 +100,7 @@ This filter will intercept the requests to transform your *_.crux.xml_* files in
 
 If the filter is used in a production scenario, it will just do nothing. 
 
-===Creating Widgets Programatically===
+=== 3.1.3 Creating Widgets Programatically===
 
 You can create widgets exactly as you create using GWT directly. 
 
@@ -119,7 +119,7 @@ Inside your EventHandler, you can build Widgets as in the following example:
    ...
 }}}
 
-== Screen ==
+== 3.2 Screen ==
 
 _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<span>` with `_`type="screen":
 
@@ -161,7 +161,7 @@ Through Screen, you can:
   # Control the history without need to add a hidden frame directly on the page.
   # Block and unblobck the user intercation with the page.
 
-===Access Screen Widgets===
+=== 3.2.1 Access Screen Widgets ===
 
 To access screen widgets, you can use the static method {{{Screen.get(screenId)}}}.
 
@@ -193,7 +193,7 @@ public class MyClass
 
 We recomend that you create wrappers for screens, that is most elegant and avoid mismatches on typing widgets ids as strings all over the code.
 
-===Screen Events===
+=== 3.2.2 Screen Events ===
 
 _*Crux*_ Screen support the following events:
 || *Event* || *Description* ||
@@ -203,7 +203,7 @@ _*Crux*_ Screen support the following events:
 ||Resize||Called on page resize||
 ||HistoryChanged||Called when back button is pressed||
 
-===Communication between Screens===
+=== 3.2.3 Communication between Screen s===
 
 Using some static methods on Screen class, it is possible to invoke operations on other _*Crux*_ screens running in different frames or windows.
 
@@ -278,7 +278,7 @@ If you desire, you can add the following lines to your module config file to cha
 }}}
 
 
-===Control History===
+=== 3.2.4 Control History ===
 
 Screen provides a simple mechanism to manage history. Using the static method {{{Screen.addToHistory(String token)}}} you can create a history token (exactly as [http://code.google.com/docreader/#p=google-web-toolkit-doc-1-5&s=google-web-toolkit-doc-1-5&t=DevGuideHistory GWT tokens]). To handle the changes on history, you can add a handler to HistoryChanged events, as you can see in the next example:
 
@@ -312,6 +312,34 @@ or Declaratively:
 }}}
 
 Note that you don't need here to add any iFrame to your host page, as in pure GWT.
+
+=== 3.2.5 Block and Unblock ===
+
+You can block and unblock the user interaction with the page using the static methods {{{Screen.blockToUser()}}} e {{{Screen.unblockToUser()}}}. See the following example:
+
+{{{
+  ...
+   protected TestServiceAsync service = (TestServiceAsync) GWT.create(TestService.class);
+
+   public void helloWorld()
+   {
+        Screen.blockToUser();
+        service.hello(new AsyncCallback<String>()
+        {
+                public void onSuccess(String s) 
+                {
+                        Screen.unblockToUser();
+                        Window.alert(s);
+                }
+                public void onFailure(Throwable e) 
+                {
+                        Screen.unblockToUser();
+                        Window.alert(e.getMessage());
+                }
+        });
+   }   
+   ...
+}}} 
 
 == Managing Events ==
 
