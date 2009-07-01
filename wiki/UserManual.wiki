@@ -157,7 +157,7 @@ The screen can be retrieve programatically by a call to the static method {{{Scr
 Through Screen, you can:
   # Access any widget created decaratively on pages.
   # Add handlers to Window events, like load, close or resize.
-  # Communicate with other screens to, for example, change data between _*Crux*_ pages in different frames or windows of the same application.
+  # Communicate with other screens to, for example, exchange data between _*Crux*_ pages in different frames or windows of the same application.
   # Control the history without need to add a hidden frame directly on the page.
   # Block and unblobck the user intercation with the page.
 
@@ -212,8 +212,69 @@ The following example shows how this can be done:
 	Screen.invokeControllerOnTop("topController.method", new MyParameterClass());
 }}}
 
-That code will call the method "method" on controller identified by "topController" on the top page. Consult the section [UserManual#Managing_Events Managing Events] for more details about this call.
+That code will call the method "method" on controller identified by "topController" on the top page. Consult the section [UserManual#Managing_Events Managing Events] for more details about how this call is processed.
 
+You can also share information between _*Crux*_ screens using a common context to read and write variables.
+
+The _*Crux*_ Context is a common area where you can put and read values associating them with a key.
+
+To turn easier the access to context information, you can define an interface that extends the interface {{{Context}}}. Its methods must follow the pattern: {{{<valueType> get<valueKey>()}}} or {{{void set<valueKey>(valueType)}}}. See the example:
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+	public static interface MyContextWrapper extends Context
+	{
+		Double getValueOne();
+		String[] getValueTwo();
+		void setValueTwo(String[] value);
+	}
+	
+	protected MyContextWrapper = GWT.create(MyContextWrapper.class);
+
+	public void myMethod()
+	{
+		Screen.createContext();
+		MyContextWrapper context = Screen.getContext(MyContextWrapper.class);
+		context.setValueTwo(new String[]{"Value One", "Value Two"});
+		Window.alert(context.getValueTwo()[0]);
+	}
+}
+}}}
+
+If you pass null as argument for a settet method of a Context Wrapper object, it will remove that value from context. Example:
+
+{{{
+	context.setValueTwo(null);
+}}}
+
+Note that you can have more than one Context Wrapper. Different modules can use different wrappers if you want. However, that area where context information is written is unique.
+
+Screen class has the following static methods to support Context management:
+
+|| *Method* || *Description* ||
+||createContext||Initialize the context. It just need to be called once in one of the modules that is sharing informations.||
+||getContext||creates a wrapper object to access the context||
+||clearContext||remove all context entries||
+
+Behind the scenes, Context is managed by a ContextHandler Object. It is provided two implementations for this interface:
+||*Handler*||*Description*|| 
+||CookieContextHandler||Use cookies to store values||
+||TopContextHandler||Store values in a HashMap located on top of the first opener window||
+
+The default implementation is CookieContextHandler. However, each one has pros and cons.
+
+*TopContextHandler* is faster and does not leave data after the application is closed. It is not possible to have dirty read, because the context area is created only when used for the first time. However, in a multi window application, the context data is lost if top window is closed.
+
+*CookieContextHandler* never loses data if a window is closed. However, you must ensure that you call the method {{{Screen.createContext()}}} in your application to avoid dirty reads (cookies can contains old values from a previous execution).
+
+If you desire, you can add the following lines to your module config file to change the default context behaviour:
+{{{
+	<replace-with class="br.com.sysmap.crux.core.client.context.TopContextHandler">
+		<when-type-assignable class="br.com.sysmap.crux.core.client.context.ContextHandler" />
+	</replace-with>			
+}}}
 
 
 == Managing Events ==
