@@ -20,7 +20,7 @@ If you need to create a new EntryPoint, your class must override the _*Crux*_ En
 
 The following example shows a module that can use any widget provided by default distribution of Crux:
 {{{
-<module rename-to='singlemodule'>
+<module rename-to='cruxtest'>
 	<inherits name='br.com.sysmap.crux.core.Crux'/>
 	<inherits name='br.com.sysmap.crux.basic.CruxBasicWidgets'/>
 	<inherits name='br.com.sysmap.crux.advanced.CruxAdvancedWidgets'/>
