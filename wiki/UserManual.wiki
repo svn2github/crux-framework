@@ -230,19 +230,21 @@ The _*Crux*_ Context is a common area where you can put and read values associat
 To turn easier the access to context information, you can define an interface that extends the interface {{{Context}}}. Its methods must follow the pattern: {{{<valueType> get<valueKey>()}}} or {{{void set<valueKey>(valueType)}}}. See the example:
 
 {{{
+public interface MyContextWrapper extends Context
+{
+	Double getValueOne();
+	String[] getValueTwo();
+	void setValueTwo(String[] value);
+}
+}}}
+
+
+{{{
 @Controller("myController")
 public class MyClass
-{
-	public static interface MyContextWrapper extends Context
-	{
-		Double getValueOne();
-		String[] getValueTwo();
-		void setValueTwo(String[] value);
-	}
-	
+{	
 	public void myMethod()
 	{
-		Screen.createContext();
 		MyContextWrapper context = Screen.getContext(MyContextWrapper.class);
 		context.setValueTwo(new String[]{"Value One", "Value Two"});
 		Window.alert(context.getValueTwo()[0]);
@@ -257,6 +259,11 @@ If you pass null as argument for a setter method of a Context Wrapper object, it
 }}}
 
 Note that you can have more than one Context Wrapper. Different modules can use different wrappers if you want. However, the area where context information is written is unique.
+It's important to advice that you must initialize the context once, at some point, before using it. This can be done this way:
+
+{{{
+Screen.createContext();
+}}}
 
 Screen class has the following static methods to support Context management:
 
