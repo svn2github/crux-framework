@@ -467,7 +467,7 @@ public class MyController
 
 The Controller annotation has the following properties:
 
-|| *Property* || *Required?* || *Default* || *Description* ||
+|| *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
 ||statefull||no||true||If true, one controller object is created an the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
 ||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound <br>to screen widgets before and after the event occurs||
@@ -506,6 +506,7 @@ public class MyClass
     @Create
     protected TestServiceAsync service;
 
+    @Expose
     public void myMethod()
     {
         myScreen.getMyBox().setValue("Test");
