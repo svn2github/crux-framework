@@ -490,12 +490,12 @@ public class MyClass
         TextBox getMyBox();
     }
         
-	public static interface MyContextWrapper extends Context
-	{
-		Double getValueOne();
-		String[] getValueTwo();
-		void setValueTwo(String[] value);
-	}
+    public static interface MyContextWrapper extends Context
+    {
+        Double getValueOne();
+        String[] getValueTwo();
+        void setValueTwo(String[] value);
+    }
 	
     @Create
     protected MyScreen myScreen;
@@ -509,7 +509,7 @@ public class MyClass
     public void myMethod()
     {
         myScreen.getMyBox().setValue("Test");
-		context.setValueTwo(new String[]{"Value One", "Value Two"});
+        context.setValueTwo(new String[]{"Value One", "Value Two"});
     }
 }
 }}}
