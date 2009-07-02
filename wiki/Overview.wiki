@@ -63,12 +63,14 @@ public class MyController {
     /**
      * When invoked by the page, says hello.  
      */
+    @Expose
     public void sayHello() {
         Label label = Screen.get("greetingLabel", Label.class);
         label.setText("Hello, world!");
     }
 }
 }}}
+
 
 *The result:*
 
@@ -77,7 +79,7 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
-Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}}, or for any other widget in that page. That button contains a click event pointing to {{{myController.sayHello}}}, which means that a method called {{{sayHello}}} will be invoked on the controller {{{myController}}} in order to handle such event.
+Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}} or for any other widget in that page. That button contains a click event pointing to {{{myController.sayHello}}}, which means that a method called {{{sayHello}}}, which was exposed by the annotation {{{@Expose}}}, will be invoked on the controller {{{myController}}} in order to handle such event.
 
 It's important to say that tags {{{<crux:button/>}}} and {{{<crux:label/>}}}, used on the HTML example above, are not part of the *_Crux_* core. Actually, they come from a *_Crux_* plug-in, called [http://code.google.com/p/crux-framework-tools/ CruxHtmlTags]. It means that *_Crux_* can be used with plain HTML pages, in absent of such library, although it's not the most comfortable way of using _*Crux*_. For more information about how to use plain HTML pages, take a look at *[CruxEngine]*
 
