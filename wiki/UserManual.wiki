@@ -259,11 +259,13 @@ If you pass null as argument for a setter method of a Context Wrapper object, it
 }}}
 
 Note that you can have more than one Context Wrapper. Different modules can use different wrappers if you want. However, the area where context information is written is unique.
-It's important to advice that you must initialize the context once, at some point, before using it. This can be done this way:
+It's important to advice that you must initialize the context before using it. This can be done this way:
 
 {{{
 Screen.createContext();
 }}}
+
+If you call {{{Screen.createContext()}}} more than once, you will erase the context and create a new one.
 
 Screen class has the following static methods to support Context management:
 
