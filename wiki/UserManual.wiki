@@ -72,12 +72,14 @@ Now, you can see an example of the second method:
 }}} 
 
 If you decide to use this approach, you must attempt to:
-  # Your files must have the extension *_.crux.xml_*.
-  # In order to enable auto completion, you need to configure your IDE to point to the following XSD files:
+  * Your files must have the extension *_.crux.xml_*.
+
+  * In order to enable auto completion, you need to configure your IDE to point to the following XSD files:
     * [xhtml.xsd xhtml.xsd]
     * [crux-basicwidgets.xsd crux-basicwidgets.xsd]
     * [crux-advancedwidgets.xsd crux-advancedwidgets.xsd]
-  # Configure the HtmlTagsFilter in your web.xml files as following:
+
+  * Configure the HtmlTagsFilter in your web.xml files as following:
 {{{
 <filter>
    <display-name>HtmlTagsFilter</display-name>
