@@ -477,7 +477,7 @@ The Controller annotation has the following properties:
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound from screen widgets before the event occurs and <br> bound back to screen widgets when the event handling terminates ||
+||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 
 ==== 3.3.3.3 The @Create Annotation====
 
