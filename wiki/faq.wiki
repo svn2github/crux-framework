@@ -1,13 +1,12 @@
-#summary One-sentence summary of this page.
-
-= Introduction =
-
-Add your content here.
+==_*Crux*_ Design==
+Why _*Crux*_ uses {{{<span>}}} and not other tags like {{{div}}} or even custom tags (like <grid> or something similar) in host pages to declare widgets? And why does it put an `_` before all attributes and events names?
 
 
-= Details =
+==Performance==
+How fast _*Crux*_ declarative approach can be compared with default GWT approach (programatic)?
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+How much can _*Crux*_ increase the final javascript size? And the host page size?
+
+Using _*Crux*_, usually I write strings that contains the name of my controller and the method name that I want to call (in pages). GWT does not support reflection for performance reasons. Does _*Crux*_ approach break this GWT design to emulate reflection? If not, how _*Crux*_ make these types of calls without use reflection?
+
+About server side code? _*Crux*_ add any overhead?

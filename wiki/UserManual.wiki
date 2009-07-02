@@ -351,10 +351,15 @@ You can block and unblock the user interaction with the page using the static me
    ...
 }}} 
 
-== Managing Events ==
+== 3.3 Managing Events ==
 
-_*Crux*_ uses 
+It's possible to add event handlers:
+  # Declaratively.
+  # Programaticaly.
 
+To add an event declaratively, you must create a [UserManual#Controller Controller] and give it a name.
+
+If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName>}}}  
 
 == I18N ==
 
