@@ -27,7 +27,7 @@ The following example shows a module that can use any widget provided by default
 </module>
 }}}
 
-The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs etc.
+The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc.
 
 == 3.1 Building User Interface ==
 
@@ -270,11 +270,11 @@ If you call {{{Screen.createContext()}}} more than once, you will erase the cont
 Screen class has the following static methods to support Context management:
 
 || *Method* || *Description* ||
-||createContext||Initialize the context. It just need to be called once in one of the modules that is sharing informations.||
+||createContext||Initialize the context. It just need to be called once in one of the modules that are sharing information.||
 ||getContext||creates a wrapper object to access the context||
 ||clearContext||remove all context entries||
 
-Behind the scenes, Context is managed by a ContextHandler Object. It is provided two implementations for this interface:
+Behind the scenes, Context is managed by a ContextHandler object. It is provided two implementations for this interface:
 || *Handler* || *Description* || 
 ||CookieContextHandler||Use cookies to store values||
 ||TopContextHandler||Store values in a HashMap located on top of the first opener window||
@@ -283,7 +283,7 @@ The default implementation is CookieContextHandler. However, each one has pros a
 
 *TopContextHandler* is faster and does not leave data after the application is closed. It is not possible to have dirty read, because the context area is created only when used for the first time. However, in a multi window application, the context data is lost if top window is closed.
 
-*CookieContextHandler* never loses data if a window is closed. However, you must ensure that you call the method {{{Screen.createContext()}}} in your application to avoid dirty reads (cookies can contains old values from a previous execution).
+*CookieContextHandler* never loses data if a window is closed. However, you must ensure that you call the method {{{Screen.createContext()}}} in your application to avoid dirty reads (cookies can contain old values from a previous execution).
 
 If you desire, you can add the following lines to your module config file to change the default context behaviour:
 {{{
@@ -419,9 +419,9 @@ You can still use the default GWT mechanism to add handlers for events programat
 The only point to observe here is that you need to put this code in some controller method that is called declaratively, unless you has overwriten the _*Crux*_ EntryPoint and call it directly from there.
 
 === 3.3.3 Controller===
-Controller Classes are called to handle events. 
+Controller classes are called to handle events. 
 
-To Create a Controller, you just create a simple java Class with the {{{@Controller}}} annotation. That annotation has a value property to inform the name of the controller. That is the name used on pages to point to the controller.
+To Create a Controller, you just create a simple java class with the {{{@Controller}}} annotation. That annotation has a value property to inform the name of the controller. That is the name used on pages to point to the controller.
 
 See the following example:
 
@@ -434,9 +434,9 @@ public class MyController
 }}}
 
 Your controller can have a lot of methods to handle events. These methods must follow the conditions:
-  # Have public visibility;
-  # Have zero or one argument. If an argument is present, it must be an GwtEvent an this method only will be able to handle this type of events.
-  # Have the annotation {{{@Expose}}}.
+  # It must have public visibility;
+  # It must have zero or one argument. If an argument is present, it must be an GwtEvent an this method only will be able to handle this type of events.
+  # It must be marked with the annotation {{{@Expose}}}.
 
 See the example:
 {{{
@@ -476,12 +476,12 @@ The Controller annotation has the following properties:
 
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
-||statefull||no||true||If true, one controller object is created an the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound <br>to screen widgets before and after the event occurs||
+||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
+||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound <br>from screen widgets before the event occurs and bound back to screen widgets <br> after the event terminates ||
 
 ==== 3.3.3.3 The @Create Annotation====
 
-This annotation can be used to simplify the code for Controllers. It only can be used inside a Controller class and it automatically creates an object (according with field type) and initialize the field with this value.
+This annotation can be used to simplify the code for Controllers. It only can be used inside a controller class and it automatically creates an object (according with field type) and initialize the field with this value.
 
 This creation is done by a call to GWT.create method, assuring that any generator eventually associated with the requested type will be called correctly.
 
@@ -495,13 +495,6 @@ public class MyClass
     {
         Button getMyButton();
         TextBox getMyBox();
-    }
-        
-    public static interface MyContextWrapper extends Context
-    {
-        Double getValueOne();
-        String[] getValueTwo();
-        void setValueTwo(String[] value);
     }
 	
     @Create
