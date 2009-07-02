@@ -360,7 +360,7 @@ It's possible to add event handlers:
 === 3.3.1 Add Event Declaratively===
 To add an event declaratively, you must create a [UserManual#Controller Controller] and give it a name.
 
-If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName>="<controllerName>.<methodName>"}}}.
+If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName> = "<controllerName>.<methodName>"}}}.
 
 {{{
 <html>
