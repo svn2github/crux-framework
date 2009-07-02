@@ -1,5 +1,5 @@
 ==_*Crux*_ Design==
-Why _*Crux*_ uses {{{<span>}}} and not other tags like {{{div}}} or even custom tags (like <grid> or something similar) in host pages to declare widgets? And why does it put an `_` before all attributes and events names?
+Why _*Crux*_ uses {{{<span>}}} and not other tags like {{{div}}} or even custom tags (like {{{<grid>}}} or something similar) in host pages to declare widgets? And why does it put an `_` before all attributes and events names?
 
 
 ==Performance==
