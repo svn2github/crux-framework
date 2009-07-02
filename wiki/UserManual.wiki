@@ -467,10 +467,10 @@ public class MyController
 
 The Controller annotation has the following properties:
 
-|| *Property* || *Required?* || *Default* ||Description ||
-||value||yes||||defines the name of the controller. Used inside pages to point to the controller||
-||statefull||no||true||If true, one controller object is created an the same instance is used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound to screen widgets before and after the event occurs||
+|| *Property* || *Required?* || *Default* || *Description* ||
+||value||yes|| ||defines the name of the controller. Used inside pages to point to the controller||
+||statefull||no||true||If true, one controller object is created an the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
+||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound <br>to screen widgets before and after the event occurs||
 
 ==== 3.3.3.3 The @Create Annotation====
 
