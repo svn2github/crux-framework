@@ -463,7 +463,20 @@ public class MyController
 }
 }}}
 
+====3.3.3.1 Value Binding====
 
+==== 3.3.3.2 The @Controller Annotation====
+
+The Controller annotation has the following properties:
+
+|| *Property* || *Required?* || *Default* ||Description ||
+||value||yes||||defines the name of the controller. Used inside pages to point to the controller||
+||statefull||no||true||If true, one controller object is created an the same instance is used to handle all events. If false, a new instance is used for each new event||
+||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound to screen widgets before and after the event occurs||
+
+==== 3.3.3.3 The @Create Annotation====
+
+==== 3.3.3.4 Comunication Between Controllers====
 
 == I18N ==
 
