@@ -414,6 +414,23 @@ You can still use the default GWT mechanism to add handlers for events programat
 The only point to observe here is that you need to put this code in some controller method that is called declaratively, unless you has overwriten the _*Crux*_ EntryPoint and call it directly from there.
 
 === 3.3.3 Controller===
+Controller Classes are called to handle events. 
+
+To Create a Controller, you just create a simple java Class with the {{{@Controller}}} annotation. That annotation has a value property to inform the name of the controller. That is the name used on pages to point to the controller.
+
+See the following example:
+
+{{{
+@Controller("clientHandler")
+public class MyController
+{
+   ... // event handlers here
+}}}
+
+Your controller can have a lot of methods to handle events. These methods must follow the conditions:
+  # Have public visibility;
+  # Have zero or one argument. If an argument is present, it must be an GwtEvent an this method only will be able to handle this type of events.
+  # Have the annotation {{{@Expose}}}.
 
 == I18N ==
 
