@@ -182,7 +182,7 @@ public class MyClass
 		TextBox getMyBox();
 	}
 	
-	protected myScreen = GWT.create(MyScreen.class);
+	protected MyScreen myScreen = GWT.create(MyScreen.class);
 
 	public void myMethod()
 	{
@@ -203,7 +203,7 @@ _*Crux*_ Screen support the following events:
 ||Resize||Called on page resize||
 ||HistoryChanged||Called when back button is pressed||
 
-=== 3.2.3 Communication between Screens===
+=== 3.2.3 Communication Between Screens===
 
 Using some static methods on Screen class, it is possible to invoke operations on other _*Crux*_ screens running in different frames or windows.
 
@@ -242,8 +242,6 @@ public class MyClass
 		void setValueTwo(String[] value);
 	}
 	
-	protected MyContextWrapper = GWT.create(MyContextWrapper.class);
-
 	public void myMethod()
 	{
 		Screen.createContext();
@@ -475,6 +473,47 @@ The Controller annotation has the following properties:
 ||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound to screen widgets before and after the event occurs||
 
 ==== 3.3.3.3 The @Create Annotation====
+
+This annotation can be used to simplify the code for Controllers. It only can be used inside a Controller class and it automatically creates an object (according with field type) and initialize the field with this value.
+
+This creation is done by a call to GWT.create method, assuring that any generator eventually associated with the requested type will be called correctly.
+
+The code showed in sections [UserManual#Access_Screen_Widgets Access Screen Widgets], [UserManual#Communication_Between_Screens Communication Between Screens] and [UserManual#Block_and_Unblock Block and Unblock] could be written as:
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    public static interface MyScreen extends ScreenWrapper
+    {
+        Button getMyButton();
+        TextBox getMyBox();
+    }
+        
+	public static interface MyContextWrapper extends Context
+	{
+		Double getValueOne();
+		String[] getValueTwo();
+		void setValueTwo(String[] value);
+	}
+	
+    @Create
+    protected MyScreen myScreen;
+
+    @Create
+    protected MyContextWrapper context;
+
+    @Create
+    protected TestServiceAsync service;
+
+    public void myMethod()
+    {
+        myScreen.getMyBox().setValue("Test");
+		context.setValueTwo(new String[]{"Value One", "Value Two"});
+    }
+}}}}
+
+Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
 ==== 3.3.3.4 Comunication Between Controllers====
 
