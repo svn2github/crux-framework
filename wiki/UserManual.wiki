@@ -411,7 +411,7 @@ You can still use the default GWT mechanism to add handlers for events programat
    ...
 }}}
 
-The only point the observer here is that you need to put this code in some controller method that is called declaratively, unless you has overwriten the _*Crux*_ EntryPoint and call it directly from there.
+The only point to observe here is that you need to put this code in some controller method that is called declaratively, unless you has overwriten the _*Crux*_ EntryPoint and call it directly from there.
 
 === 3.3.3 Controller===
 
