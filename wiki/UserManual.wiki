@@ -129,7 +129,7 @@ _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declara
        <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
    </head>
    <body>
-       <span _type='screen' _onclose='clientHandler.onClose'>
+       <span _type='screen' _onclose='clientHandler.onClose' _usecontroller="clientHandler">
 	       <span id='myBox' _type='textBox' />
 	       <span id='myButton' _type='button' _text='Hello' _onclick='clientHandler.helloWorld' />
        </span>
@@ -146,7 +146,7 @@ If you are using XML files with HTMLTags plugin, you can write:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' />
+       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' useController="clientHandler" />
        <crux:textBox id="myBox" />
        <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
@@ -316,7 +316,7 @@ or Declaratively:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' onHistoryChanged='clientHandler.onHistoryChanged' />
+       <crux:screen useController="clientHandler" onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' onHistoryChanged='clientHandler.onHistoryChanged' />
    </body>
 </html>
 }}}
@@ -355,11 +355,49 @@ You can block and unblock the user interaction with the page using the static me
 
 It's possible to add event handlers:
   # Declaratively.
-  # Programaticaly.
+  # Programatically.
 
+=== 3.3.1 Add Event Declaratively===
 To add an event declaratively, you must create a [UserManual#Controller Controller] and give it a name.
 
-If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName>}}}  
+If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName>="<controllerName>.<methodName>"}}}.
+
+{{{
+<html>
+   <head>
+       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
+   </head>
+   <body>
+       <span _type='screen' _onclose='clientHandler.onClose' _usecontroller='clientHandler'>
+	       <span id='myBox' _type='textBox' _onchange='clientHandler.helloWorld'/>
+	       <span id='myButton' _type='button' _onclick='clientHandler.helloWorld' />
+       </span>
+   </body>
+</html>
+}}}
+
+Note that you must also "import" your controller through the attribute {{{_usecontroller}}} of the screen's tag.
+
+If you decide to use the HtmlTags Plugin, you can write:
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen onClose='clientHandler.onClose' useController="clientHandler" >
+	       <crux:textBox id="myBox" />
+	       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+	   </crux:screen>
+   </body>
+</html>
+}}}
+
+=== 3.3.2 Add Event Programatically===
+
+=== 3.3.3 Controller===
 
 == I18N ==
 
