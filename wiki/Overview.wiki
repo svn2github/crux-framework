@@ -20,54 +20,54 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 *The page:*
 {{{
 <html 
-    xmlns="http://www.w3.org/1999/xhtml" 
-    xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0">
-
-    <head>
-        <title>My Page</title>
-    </head>
-
-    <body>
-        
-        <script type="text/javascript" src="/modules/bin/cruxexample/cruxexample.nocache.js"></script>
-        
-        <crux:screen useControllers="myController"/>
-        
-        <table>
-            <tr>
-                <td>
-                    <crux:button id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
-                </td>
-                <td>
-                    <crux:label id="greetingLabel"/>            
-                </td>                
-            </tr>
-        </table>        
-    </body>
-
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0">
+	<head>
+		<title>My Page</title>
+	</head>
+	<body>
+		<script type="text/javascript" src="/modules/bin/cruxexample/cruxexample.nocache.js"></script>
+		<crux:screen useEventHandler="myController"/>
+		<table border="1">
+			<tr>
+				<td>
+					<crux:textBox id="nameTextBox"/>
+				</td>
+				<td>
+					<crux:button id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<crux:label id="greetingLabel"/>			
+				</td>	
+			</tr>
+		</table>
+	</body>
 </html>
 }}}
 
 *The controller:*
 {{{
-package crux.examples.client;
-
-import com.google.gwt.user.client.ui.Label;
+package crux.examples.client.controller;
 
 import br.com.sysmap.crux.core.client.component.Screen;
 import br.com.sysmap.crux.core.client.controller.Controller;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 
 @Controller(value="myController")
 public class MyController {
-    
-    /**
-     * When invoked by the page, says hello.  
-     */
-    @Expose
-    public void sayHello() {
-        Label label = Screen.get("greetingLabel", Label.class);
-        label.setText("Hello, world!");
-    }
+
+	@Expose
+	public void sayHello() {
+
+		TextBox textBox = Screen.get("nameTextBox", TextBox.class);
+		String name = textBox.getValue();
+		
+		Label label = Screen.get("greetingLabel", Label.class);
+		label.setText("Hello, " + name + "!");
+	}	
 }
 }}}
 
@@ -79,111 +79,93 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
 http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 
-Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}} or for any other widget in that page. That button contains a click event pointing to {{{myController.sayHello}}}, which means that a method called {{{sayHello}}}, which was exposed by the annotation {{{@Expose}}}, will be invoked on the controller {{{myController}}} in order to handle such event.
+Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}} or for any other widget in the page. That button contains a click event pointing to {{{myController.sayHello}}}, which means that a method called {{{sayHello}}}, which was exposed by the annotation {{{@Expose}}}, will be invoked on the controller {{{myController}}} in order to handle such event.
 
 It's important to say that tags {{{<crux:button/>}}} and {{{<crux:label/>}}}, used on the HTML example above, are not part of the *_Crux_* core. Actually, they come from a *_Crux_* plug-in, called [http://code.google.com/p/crux-framework-tools/ CruxHtmlTags]. It means that *_Crux_* can be used with plain HTML pages, in absent of such library, although it's not the most comfortable way of using _*Crux*_. For more information about how to use plain HTML pages, take a look at *[CruxEngine]*
 
 =Example with server interaction=
 
-This example ilustrates how you can interact with server using _*Crux*_. Consider the same HTML page and module definition from the previous example and the following controller class:
-
+This example illustrates how you can interact with server using _*Crux*_. Consider the same HTML page from the previous example. The controller class was modified to access the remote server and now looks like this:
 {{{
-package br.com.sysmap.test.client;
+package crux.examples.client.controller;
 
-import br.com.sysmap.teste.client.service.TesteServiceAsync;
+import br.com.sysmap.crux.core.client.component.Screen;
+import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.Create;
 import br.com.sysmap.crux.core.client.rpc.AsyncCallbackAdapter;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+import crux.examples.client.remote.GreetingServiceAsync;
 
-import com.google.gwt.user.client.Window;
-
-@ClientController("clientHandler")
-public class Teste
-{
-   @Create
-   protected TesteServiceAsync service;
-
-   public void helloWorld()
-   {
-	service.hello(new AsyncCallbackAdapter<String>()
-	{
-		@Override
-		public void onSuccess(String s) 
-		{
-			Window.alert(s);
-		}
+@Controller(value="myController")
+public class MyController {
+	
+	@Create
+	protected GreetingServiceAsync service; 
+	
+	@Expose
+	public void sayHello() {
 		
-	});
-   }   
+		TextBox textBox = Screen.get("nameTextBox", TextBox.class);
+		final String name = textBox.getValue();
+		
+		service.getHelloMessage(name, new AsyncCallbackAdapter<String>(this){
+
+				@Override
+				public void onComplete(String result){
+					Label label = Screen.get("greetingLabel", Label.class);
+					label.setText(result);		
+				}
+			}
+		);
+	}
 }
 }}}
 
-The following block of code shows the server class called by above example:
+The {{{GreetingServiceAsync }}} interface, which resides on client side, is given below:
 
 {{{
-package br.com.sysmap.teste.server.control;
-
-import br.com.sysmap.teste.client.service.TestService;
-
-public class TestController implements TesteService
-{
-   public String hello()
-   {
-        return "hello!";
-   }
-}
-}}}
-
-Where the interface TestService is defined as:
-{{{
-package br.com.sysmap.teste.client.service;
-
-import com.google.gwt.user.client.rpc.RemoteService;
-
-public interface TesteService extends RemoteService 
-{
-    public String hello();
-}
-}}}
-
-And the async interface for the service is:
-
-{{{
-package br.com.sysmap.teste.client.service;
+package crux.examples.client.remote;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface TesteServiceAsync 
+public interface GreetingServiceAsync
 {
-	void hello(AsyncCallback<String> callback);
+	public void getHelloMessage(String name, AsyncCallback<String> callback);
 }
 }}}
 
-As you can observe, it is pretty similiar to pure GWT way to communicate. In fact you can also use that way if you want. The main differences in _*Crux's*_ approach is:
-  # You don't need to add a new servlet declaration on GWT module definition nether on web.xml for each new service declared.
-  # Your service implementation class does not need to extend the GWT RemoteServiceServlet. It just need to implements the service interface.
-  # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service nether use the RemoteServiceRelativePath annotation on your service interface. _*Crux*_ provides a FrontController. 
-  # You can use the annotation _Create_ rather than _GWT.create_. it can be used not only for services, but for any field of the controller class.
-
-=_*Crux*_ Tools=
-
-Default _*Crux*_ distribution provides a set of tools to support the development. The most important one is an extension that allows pages to be created as XML files.
-
-Using crux XML files you can benefit from auto-completitions and XInclude support for breaking your pages in reuseable blocks.
-
-If XML support is enabled, the previous example can be written as following:
+It has a sibling synchronous interface, shared by server and client sides:
 
 {{{
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
-   <head>
-       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
-   </head>
-   <body>
-       <crux:button value="Hello" onClick="clientHandler.helloWorld" />
-   </body>
-</html>
+package crux.examples.client.remote;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+
+public interface GreetingService extends RemoteService
+{
+	public String getHelloMessage(String name);
+}
 }}}
 
-The XML pages are used only for development porpouses. They are translated to HTML (with _`<span>`_ tags) and accessed as static resources in production environment. It can be done by an ant task (also included in default distribution). 
+And, finally, the server-side business class (implementing the last given interface):
 
-During development, a filter intercept the requests to _*Crux*_ pages and process a transformation before writes the response. It ensures that the page recept by the browser is the same in production and in development scenarios. In a production scenario, the filter does nothing. 
+{{{
+package crux.examples.server;
+
+import crux.examples.client.remote.GreetingService;
+
+public class GreetingServiceImpl implements GreetingService
+{
+	public String getHelloMessage(String name)
+	{
+		return "Server says: Hello, " + name + "!'";
+	}
+}
+}}}
+
+As you can observe, it is pretty similar to pure GWT way to communicate. In fact you can also use that way if you want. The main differences in _*Crux's*_ approach is:
+  # You don't need to add a new servlet declaration on GWT module definition nether on web.xml for each new service declared.
+  # Your service implementation class does not need to extend the GWT RemoteServiceServlet. It just need to implements the service interface.
+  # You don't need to inform through _ServiceDefTarget.setServiceEntryPoint_ the path for your service nether use the RemoteServiceRelativePath annotation on your service interface. _*Crux*_ provides a FrontController for handling that. 
+  # You can use the annotation _Create_ rather than _GWT.create_. It can be used not only for services, but for any field of the controller class.
