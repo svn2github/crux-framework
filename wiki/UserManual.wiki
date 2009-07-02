@@ -425,12 +425,45 @@ See the following example:
 public class MyController
 {
    ... // event handlers here
+}
 }}}
 
 Your controller can have a lot of methods to handle events. These methods must follow the conditions:
   # Have public visibility;
   # Have zero or one argument. If an argument is present, it must be an GwtEvent an this method only will be able to handle this type of events.
   # Have the annotation {{{@Expose}}}.
+
+See the example:
+{{{
+@Controller("clientHandler")
+public class MyController
+{
+   @Expose
+   public void onClose(CloseEvent<Window> event)
+   {
+       // code here   
+   }
+   
+   @Expose
+   public void helloWorld()
+   {
+       // code here   
+   }
+   
+   @Expose
+   public void onClick(ClickEvent event)
+   {
+       // code here   
+   }
+   
+   protected void myMethod(String string)
+   {
+       // code here   
+   }
+}
+}}}
+
+
 
 == I18N ==
 
