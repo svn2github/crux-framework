@@ -397,6 +397,22 @@ If you decide to use the HtmlTags Plugin, you can write:
 
 === 3.3.2 Add Event Programatically===
 
+You can still use the default GWT mechanism to add handlers for events programatically, like:
+
+{{{
+   ...
+   Button myButton = new Button();
+   myButton.addClickHandler(new ClickHandler(){
+      public void onClick(ClickEvent event)
+      {
+          Window.alert("hello");
+      }
+   });
+   ...
+}}}
+
+The only point the observer here is that you need to put this code in some controller method that is called declaratively, unless you has overwriten the _*Crux*_ EntryPoint and call it directly from there.
+
 === 3.3.3 Controller===
 
 == I18N ==
