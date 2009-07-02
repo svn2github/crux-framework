@@ -511,7 +511,8 @@ public class MyClass
         myScreen.getMyBox().setValue("Test");
 		context.setValueTwo(new String[]{"Value One", "Value Two"});
     }
-}}}}
+}
+}}}
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
