@@ -15,7 +15,7 @@ The entire set of widgets from GWT is available for using in _*Crux*_, and it is
 
 
 =Simple Example=
-The following example illustrates how to create a simple HTML page with _*Crux*_ and how to interact with it using a Java controller.
+The following example illustrates how to create a simple HTML page with _*Crux*_ and how to interact with it using a java controller.
 
 *The page:*
 {{{
@@ -26,8 +26,8 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 		<title>My Page</title>
 	</head>
 	<body>
-		<script type="text/javascript" src="/modules/bin/cruxexample/cruxexample.nocache.js"></script>
-		<crux:screen useEventHandler="myController"/>
+		<script type="text/javascript" src="cruxexample.nocache.js"></script>
+		<crux:screen useController="myController"/>
 		<table border="1">
 			<tr>
 				<td>
