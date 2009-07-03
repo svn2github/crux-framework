@@ -664,6 +664,62 @@ public class Person implements Serializable
 }
 }}}
 
+Any field in a value object can be bound to a widget if it:
+  * is a primitive type (or a primitive wrapper);
+  * is a CharSequence type (String, StringBuilder, StringBuffer, etc);
+  * is a Date type (java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
+  * is any type annotated with {{{@ValueObject}}} annotation.
+
+The following code shows more examples:
+
+{{{
+@ValueObject
+public class Person implements Serializable
+{
+	private static final long serialVersionUID = -783134338059796761L;
+
+	private String name;
+	private Date birth;
+	private Address address; 
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Date getBirth() {
+		return birth;
+	}
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+}
+}}}
+
+{{{
+@ValueObject
+public class Address implements Serializable
+{
+	private static final long serialVersionUID = -231134901059796145L;
+
+	private String street;
+	
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+}
+}}}
+
 ==== 3.3.3.4 Comunication Between Controllers====
 
 == I18N ==
