@@ -581,6 +581,88 @@ public class MyClass
 
 In the above example, the value of the "name" textBox on page will be bound to field "name" of the Person object created by controller (the same is true to "phone"). After the handler execution, the changes made in the value object will be reflected on page. 
 
+If want, you can use the {{{@ScreenBind}}} annotation on value object field to inform _*Crux*_ which widget will be bound to this field. The above example can be changed to:
+
+{{{
+@ValueObject
+public class Person implements Serializable
+{
+	private static final long serialVersionUID = -783134338059796761L;
+
+	@ScreenBind("person.name")
+	private String name;
+
+	@ScreenBind("person.phone")
+	private String phone;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+}
+}}}
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen useController="myController" >
+	       <crux:textBox id="person.name" />
+	       <crux:textBox id="person.phone" />
+	       <crux:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	   </crux:screen>
+   </body>
+</html>
+}}}
+
+You can also controll which fields of a value object must be bound to some widget screen. {{{@ValueObject}}} annotation has a boolean propertie called {{{bindWidgetByFieldName}}} (default to true). Setting this value to false make _*Crux*_ to does not bind all value object fields to widgets automatically. If you set this, you must specify for each field, the name of the widget that it will be bound (through {{{@ScreenBind}}} annotation).
+
+See the following example:
+{{{
+@ValueObject(bindWidgetByFieldName=false)
+public class Person implements Serializable
+{
+	private static final long serialVersionUID = -783134338059796761L;
+
+	@ScreenBind("person.name")
+	private String name;
+
+	@ScreenBind
+	private String phone; //will be bound to "phone" widget
+	
+	private String address; // will not be bound.
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+}
+}}}
 
 ==== 3.3.3.4 Comunication Between Controllers====
 
