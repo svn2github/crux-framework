@@ -222,6 +222,21 @@ The following table shows the methods that allows calls on others screens:
 ||invokeControllerOnTop||call a controller on top page||
 ||invokeControllerOnSelf||call a controller on self||
 
+You can create an interface to wrap the invocations to a specific controller. Your interface must extends the interface {{{Invoker}}} and the methods must follow the pattern: {{{<returnType> <methodName>On<position>(<paramType>);}}}. See the example:
+{{{
+public interface MyControllerInvoker extends Invoker
+{
+	void myMethodOnTop(String[] params); // is the same that Screen.invokeControllerOnTop("myController.myMethod", params);
+	String mySecondMethodOnSelf();
+	String mySecondMethodOnOpener();
+}
+}}}
+
+{{{
+   ...
+   MyControllerInvoker invoker = GWT.create(MyControllerInvoker.class);
+   ...
+}}}
 
 You can also share information between _*Crux*_ screens using a common context to read and write variables.
 
@@ -483,10 +498,10 @@ This annotation can be used to simplify the code for Controllers. It only can be
 
 This creation is done by a call to GWT.create method, assuring that any generator eventually associated with the requested type will be called correctly.
 
-The code showed in sections [UserManual#Access_Screen_Widgets Access Screen Widgets], [UserManual#Communication_Between_Screens Communication Between Screens] and [UserManual#Block_and_Unblock Block and Unblock] could be written as:
+The code showed in sections [UserManual#Access_Screen_Widgets Access Screen Widgets], [UserManual#Communication_Between_Screens Communication Between Screens], [UserManual#Communication_Between_Screens Communication Between Screens] and [UserManual#Block_and_Unblock Block and Unblock] could be written as:
 
 {{{
-@Controller("myController")
+@Controller("myNewController")
 public class MyClass
 {
     public static interface MyScreen extends ScreenWrapper
@@ -503,6 +518,9 @@ public class MyClass
 
     @Create
     protected TestServiceAsync service;
+
+    @Create
+    protected MyControllerInvoker invoker;
 
     @Expose
     public void myMethod()
@@ -808,7 +826,7 @@ The following types are allowed as arguments to a remote call to a controller me
   * Date types(java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
   * Enum types;
   * Any type that implements the interface {{{CruxSerializable}}}.
-  * Arrays of any those types above;
+  * Arrays of any of those types above;
   
 So, if you need to pass a custom object to another page, your object class must implements the interface CruxSerializable. This interface forces your type to implement a serialize and deserialize methods.
 
