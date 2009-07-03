@@ -271,7 +271,7 @@ public class MyClass
 {	
 	public void myMethod()
 	{
-		MyContextWrapper context = Screen.getContext(MyContextWrapper.class);
+		MyContextWrapper context = GWT.create(MyContextWrapper.class);
 		context.setValueTwo(new String[]{"Value One", "Value Two"});
 		Window.alert(context.getValueTwo()[0]);
 	}
@@ -297,7 +297,6 @@ Screen class has the following static methods to support Context management:
 
 || *Method* || *Description* ||
 ||createContext||Initialize the context. It just need to be called once in one of the modules that are sharing information.||
-||getContext||creates a wrapper object to access the context||
 ||clearContext||remove all context entries||
 
 Behind the scenes, Context is managed by a ContextHandler object. It is provided two implementations for this interface:
