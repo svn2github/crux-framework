@@ -515,7 +515,7 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
-You must note, however, that to a field can be created through {{{@Create}}} annotation, taht field must has public or protected visibility or has a public setter method.
+You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public setter method.
 
 ====3.3.3.3 Value Binding====
 
@@ -724,7 +724,7 @@ public class Address implements Serializable
 }
 }}}
 
-If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to false. You can, later, control the value object a screen updates throgh methods {{{Screen.updateScreen(controller)}}} and
+If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to false. You can, later, control the value object and screen updates through methods {{{Screen.updateScreen(controller)}}} and
 {{{Screen.updateController(controller)}}}. See the following example:
 
 {{{
