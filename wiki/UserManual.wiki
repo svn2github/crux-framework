@@ -747,6 +747,74 @@ public class MyClass
 
 ==== 3.3.3.4 Comunication Between Controllers====
 
+In section [UserManual#Access_Screen_Widgets Access Screen Widgets] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of thos controllers.
+
+The first point is that you must explicity inform _*Crux*_ that an event handler can be called from out of the current page (by another document). To do this, you must put an annotation {{{@ExposeOutOfModule}}} on the method you want to expose.
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    @ExposeOutOfModule
+    public void myMethod()
+    {
+       // code here
+    }
+}
+}}}
+
+Now, other pages can call this method through {{{Screen.invokeControllerOn<?>()}}} methods.
+
+For calls to {{{Screen.invokeControllerOnSelf()}}} the handler does not need to be exposed to out of module. You can call a handler exposed only with {{{@Expose}}} annotation.
+
+So we can talk about two kinds of controller methods invocation. One remote and one local. Remote calls are those made to another pages (top, parent, opener, etc) and local are made to the same page (self).
+
+An event handler for calls made through screen invoker methods, can receive an {{{InvokeControllerEvent}}} parameter. This class provides a method to access value passed as argument to invoke methods.
+
+See the example:
+
+{{{
+   ...
+   Window.alert(Screen.invokeControllerOnTop("myController.hello","Thiago"));
+   Window.alert(Screen.invokeControllerOnSelf("myController.helloLocal","Thiago"));
+   ...
+}}}
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    @ExposeOutOfModule
+    public String hello(InvokeControllerEvent event)
+    {
+       String param = (String)event.getData();
+       return "Hello "+param;
+    }
+
+    @Expose
+    public String helloLocal(InvokeControllerEvent event)
+    {
+       String param = (String)event.getData();
+       return "Hello "+param;
+    }
+}
+}}}
+
+===== 3.3.3.4.1 Parameter types=====
+
+The following types are allowed as arguments to a remote call to a controller method:
+  * Primitive types (or a primitive wrapper);
+  * CharSequence types (String, StringBuilder, StringBuffer, etc);
+  * Date types(java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
+  * Enum types;
+  * Any type that implements the interface {{{CruxSerializable}}}.
+  * Arrays of any those types above;
+  
+So, if you need to pass a custom object to another page, your object class must implements the interface CruxSerializable. This interface forces your type to implement a serialize and deserialize methods.
+
+For local calls, any type is allowed, once no serialization is needed.
+  
+
 == I18N ==
 
 == Client-Server Communication ==
