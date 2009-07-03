@@ -844,12 +844,12 @@ So, if you need to pass a custom object to another page, your object class must 
 For local calls, any type is allowed, once no serialization is needed.
   
 
-== I18N ==
+== 3.4 I18N ==
 
-== Client-Server Communication ==
+== 3.5 Client-Server Communication ==
 
-= Coding Server Side =
+= 4 Coding Server Side =
 
-== I18N ==
+== 4.1 I18N ==
 
-= Extending and Customizing =
+= 5 Extending and Customizing =
