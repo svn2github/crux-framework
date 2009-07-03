@@ -515,6 +515,8 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
+You must note, however, that to a field can be created through {{{@Create}}} annotation, taht field must has public or protected visibility or has a public setter method.
+
 ====3.3.3.3 Value Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between screen widgets and data objects.
@@ -668,7 +670,9 @@ Any field in a value object can be bound to a widget if it:
   * is a primitive type (or a primitive wrapper);
   * is a CharSequence type (String, StringBuilder, StringBuffer, etc);
   * is a Date type (java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
-  * is any type annotated with {{{@ValueObject}}} annotation.
+  * is an Enum type;
+  * is any type annotated with {{{@ValueObject}}} annotation;
+  * has public or protected visibility or has public getter and setter methods.
 
 The following code shows more examples:
 
@@ -717,6 +721,27 @@ public class Address implements Serializable
 	public void setStreet(String street) {
 		this.street = street;
 	}
+}
+}}}
+
+If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to false. You can, later, control the value object a screen updates throgh methods {{{Screen.updateScreen(controller)}}} and
+{{{Screen.updateController(controller)}}}. See the following example:
+
+{{{
+@Controller(value="myController", autoBind=false)
+public class MyClass
+{
+    @Create
+    protected Person person;
+
+    @Expose
+    public void myMethod()
+    {
+    	Screen.updateController(this);
+    	Window.alert(person.getName());
+    	person.setPhone("1234-5678");
+    	Screen.updateScreen(this);
+    }
 }
 }}}
 
