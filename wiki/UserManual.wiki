@@ -226,9 +226,9 @@ You can create an interface to wrap the invocations to a specific controller. Yo
 {{{
 public interface MyControllerInvoker extends Invoker
 {
-	void myMethodOnTop(String[] params); // is the same that Screen.invokeControllerOnTop("myController.myMethod", params);
-	String mySecondMethodOnSelf();
-	String mySecondMethodOnOpener();
+   void myMethodOnTop(String[] params); // is the same that Screen.invokeControllerOnTop("myController.myMethod", params);
+   String mySecondMethodOnSelf();
+   String mySecondMethodOnOpener();
 }
 }}}
 
@@ -238,7 +238,18 @@ public interface MyControllerInvoker extends Invoker
    ...
 }}}
 
-You can also share information between _*Crux*_ screens using a common context to read and write variables.
+To inform the name of the controller that will be bound to the invoker interface, you can use the annotation {{{@ControllerName}}}. If it is not present, _*Crux*_ will use the name of the invoker interface without the suffix 'Invoker'.
+
+The above interface could also be written as:
+{{{
+@ControllerName("controller")
+public interface MyControllerInvoker extends Invoker
+{
+   ...
+}
+}}}
+
+Another way of information sharing is availabe for _*Crux*_ screens. You can use a common context to read and write variables.
 
 The _*Crux*_ Context is a common area where you can put and read values associating them with a key.
 
