@@ -235,6 +235,7 @@ public interface MyControllerInvoker extends Invoker
 {{{
    ...
    MyControllerInvoker invoker = GWT.create(MyControllerInvoker.class);
+   invoker.myMethodOnTop(new String[]{"value1", "value2"});
    ...
 }}}
 
