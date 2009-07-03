@@ -468,9 +468,7 @@ public class MyController
 }
 }}}
 
-====3.3.3.1 Value Binding====
-
-==== 3.3.3.2 The @Controller Annotation====
+==== 3.3.3.1 The @Controller Annotation====
 
 The Controller annotation has the following properties:
 
@@ -479,7 +477,7 @@ The Controller annotation has the following properties:
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
 ||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 
-==== 3.3.3.3 The @Create Annotation====
+==== 3.3.3.2 The @Create Annotation====
 
 This annotation can be used to simplify the code for Controllers. It only can be used inside a controller class and it automatically creates an object (according with field type) and initialize the field with this value.
 
@@ -516,6 +514,73 @@ public class MyClass
 }}}
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
+
+====3.3.3.3 Value Binding====
+
+_*Crux*_ provides a mechanism to help you to automatically bind values between screen widgets and data objects.
+
+You can create an value object and annotate it with {{{@ValueObject}}} annotation. Doing it, you allows _*Crux*_ to populate an object of this type with values present on screen widgets before run the event handler methods. After method execution, the screen is also updated with any change in these objects.
+
+See the following example:
+
+{{{
+@ValueObject
+public class Person implements Serializable
+{
+	private static final long serialVersionUID = -783134338059796761L;
+
+	private String name;
+	private String phone;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+}
+}}}
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    @Create
+    protected Person person;
+
+    @Expose
+    public void myMethod()
+    {
+    	Window.alert(person.getName());
+    	person.setPhone("1234-5678");
+    }
+}
+}}}
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen useController="myController" >
+	       <crux:textBox id="name" />
+	       <crux:textBox id="phone" />
+	       <crux:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	   </crux:screen>
+   </body>
+</html>
+}}}
+
+In the above example, the value of the "name" textBox on page will be bound to field "name" of the Person object created by controller (the same is true to "phone"). After the handler execution, the changes made in the value object will be reflected on page. 
+
 
 ==== 3.3.3.4 Comunication Between Controllers====
 
