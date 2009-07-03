@@ -776,7 +776,7 @@ public class MyClass
 
 ==== 3.3.3.4 Comunication Between Controllers====
 
-In section [UserManual#Access_Screen_Widgets Access Screen Widgets] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of thos controllers.
+In section [UserManual#Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of thos controllers.
 
 The first point is that you must explicity inform _*Crux*_ that an event handler can be called from out of the current page (by another document). To do this, you must put an annotation {{{@ExposeOutOfModule}}} on the method you want to expose.
 
