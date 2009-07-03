@@ -1,9 +1,0 @@
-=What is keeping us busy=
-
-At this moment we are working on following features:
-
-  * This documentation :P
-  * A mechanism to allow plugging in custom layouts (skins) for widget sets. Such skins would be packaged as jar files, and placed in the WEB-INF/lib dir of the web application;
-  * New advanced widgets, like a sortable and 'pageable' data grid;
-  * A Crux project generator;
-  * Minor adjusts to finalize the first release.
