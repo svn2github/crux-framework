@@ -774,7 +774,40 @@ public class MyClass
 }
 }}}
 
-==== 3.3.3.4 Comunication Between Controllers====
+==== 3.3.3.$ Using Controllers on Screen====
+
+To inform that a controller will be used on a screen, you must explicity "import" it using the {{{_usecontroller}}} (or {{{{useController}}}, with HtmlTags Plugin).
+
+{{{
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen useController="myController, myOtherController" >
+	   </crux:screen>
+   </body>
+</html>
+}}}}}}
+
+It is necessary for performance reasons.
+
+However, if you want that a controller be imported in every screen you have, you can put an annotation {{{@Global}}} in the Controller class.
+
+{{{
+@Global
+@Controller("myController")
+public class MyClass
+{
+       // code here
+}
+}}}
+
+That will allow this controller methods to be called even if no {{{useController}}} declaration is present on your screen.
+
+==== 3.3.3.5 Comunication Between Controllers====
 
 In section [UserManual#Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of those controllers.
 
@@ -829,7 +862,7 @@ public class MyClass
 }
 }}}
 
-===== 3.3.3.4.1 Parameter types=====
+===== 3.3.3.5.1 Parameter types=====
 
 The following types are allowed as arguments to a remote call to a controller method:
   * Primitive types (or a primitive wrapper);
@@ -843,6 +876,36 @@ So, if you need to pass a custom object to another page, your object class must 
 
 For local calls, any type is allowed, once no serialization is needed.
   
+If you define a custom serializable type, you must inform _*Crux*_ explicity that you  want to use such type in your module. You can do it declaratively using {{{_useserializer}}} attibute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen useController="myController" useSerializable="mySerializableType">
+	   </crux:screen>
+   </body>
+</html>
+}}}
+
+{{{
+@SerializableName("mySerializableType")  
+public class MySerializableType implements CruxSerializable
+{
+   ...
+}
+}}}
+
+or 
+
+{{{
+   ModuleComunicationSerializer.registerCruxSerializable(MySerializableType.class.getName(), new MySerializableType());
+}}}
+
+The annotation {{{@SerializableName}}} could be used to simplify the name you write on screen tag.
 
 == 3.4 I18N ==
 
