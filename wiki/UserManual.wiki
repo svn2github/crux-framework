@@ -544,7 +544,7 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
-You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public setter method.
+You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter method.
 
 ====3.3.3.3 Value Binding====
 
