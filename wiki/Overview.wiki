@@ -13,8 +13,7 @@ The following documentation assumes that you are familiar with [http://code.goog
 = What can *_Crux_* do? =
 _*Crux*_ allows you to create web user interfaces in a declarative and modularized way, which drastically improves development speed and code maintainability. In other words, it brings you the best of both worlds: the comfort of creating pages with HTML and the elegance of controlling those pages using Java code.
 
-The entire set of widgets from GWT is available for using in _*Crux*_, and it is easy to create or even plug in an already existent set of widgets. See more about custom widgets at [CreatingCustomWidgets Creating Custom Widgets] section.
-
+All GWT widgets are available for using with _*Crux*_, and it is easy to create new widgets or even plug in an already existent set of them. Fore more information about custom widgets, take a look at [CreatingCustomWidgets Creating Custom Widgets].
 
 =Simple Example=
 The following example illustrates how to create a simple HTML page with _*Crux*_ and how to interact with it using a java controller.
