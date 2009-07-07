@@ -774,11 +774,10 @@ public class MyClass
 }
 }}}
 
-==== 3.3.3.$ Using Controllers on Screen====
+==== 3.3.3.4 Using Controllers on Screen====
 
 To inform that a controller will be used on a screen, you must explicity "import" it using the {{{_usecontroller}}} (or {{{{useController}}}, with HtmlTags Plugin).
 
-{{{
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
@@ -790,7 +789,7 @@ To inform that a controller will be used on a screen, you must explicity "import
 	   </crux:screen>
    </body>
 </html>
-}}}}}}
+}}}
 
 It is necessary for performance reasons.
 
