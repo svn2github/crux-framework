@@ -51,7 +51,7 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 {{{
 package crux.examples.client.controller;
 
-import br.com.sysmap.crux.core.client.component.Screen;
+import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.controller.Controller;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -89,7 +89,7 @@ This example illustrates how you can interact with server using _*Crux*_. Consid
 {{{
 package crux.examples.client.controller;
 
-import br.com.sysmap.crux.core.client.component.Screen;
+import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.Create;
 import br.com.sysmap.crux.core.client.rpc.AsyncCallbackAdapter;
