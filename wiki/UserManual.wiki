@@ -830,7 +830,7 @@ For calls to {{{Screen.invokeControllerOnSelf()}}} the handler does not need to 
 
 So we can talk about two kinds of controller methods invocation. One remote and one local. Remote calls are those made to another pages (top, parent, opener, etc) and local are made to the same page (self).
 
-An event handler for calls made through screen invoker methods, can receive an {{{InvokeControllerEvent}}} parameter. This class provides a method to access value passed as argument to invoke methods.
+An event handler for calls made through screen invoker methods, can receive an {{{InvokeControllerEvent}}} parameter. This class provides a method to access values passed as argument in method invocation.
 
 See the example:
 
@@ -838,6 +838,7 @@ See the example:
    ...
    Window.alert(Screen.invokeControllerOnTop("myController.hello","Thiago"));
    Window.alert(Screen.invokeControllerOnSelf("myController.helloLocal","Thiago"));
+   Window.alert(Screen.invokeControllerOnSelf("myController.parametersExample",new Object[]{new Integer(123), "Thiago", new Boolean(true)}));
    ...
 }}}
 
@@ -847,6 +848,7 @@ or
    ...
    Window.alert(myControllerInvoker.helloOnTop("Thiago"));
    Window.alert(myControllerInvoker.helloLocalOnSelf("Thiago"));
+   Window.alert(myControllerInvoker.parametersExample(1234, "Thiago", true));
    ...
 }}}
 
@@ -866,6 +868,19 @@ public class MyClass
     {
        String param = event.getParameter(String.class);
        return "Hello "+param;
+    }
+
+    @ExposeOutOfModule
+    public String parametersExample(InvokeControllerEvent event)
+    {
+       if (event.getParameterCount() == 3)
+       {
+          String param0 = event.getParameter(0, Integer.class);
+          String param1 = event.getParameter(1, String.class);
+          String param2 = event.getParameter(2, Boolean.class);
+          return "Hello "+param0;
+       }
+       return null;
     }
 }
 }}}
