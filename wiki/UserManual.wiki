@@ -875,9 +875,9 @@ public class MyClass
     {
        if (event.getParameterCount() == 3)
        {
-          String param0 = event.getParameter(0, Integer.class);
+          int param0 = event.getParameter(0, Integer.class);
           String param1 = event.getParameter(1, String.class);
-          String param2 = event.getParameter(2, Boolean.class);
+          boolean param2 = event.getParameter(2, Boolean.class);
           return "Hello "+param0;
        }
        return null;
