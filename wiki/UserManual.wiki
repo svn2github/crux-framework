@@ -228,7 +228,7 @@ public interface MyControllerInvoker extends Invoker
 {
    void myMethodOnTop(String[] params); // is the same that Screen.invokeControllerOnTop("myController.myMethod", params);
    String mySecondMethodOnSelf();
-   String mySecondMethodOnOpener();
+   String mySecondMethodOnOpener(Integer param0, String param1, String[] param2);
 }
 }}}
 
@@ -841,6 +841,15 @@ See the example:
    ...
 }}}
 
+or 
+
+{{{
+   ...
+   Window.alert(myControllerInvoker.helloOnTop("Thiago"));
+   Window.alert(myControllerInvoker.helloLocalOnSelf("Thiago"));
+   ...
+}}}
+
 {{{
 @Controller("myController")
 public class MyClass
@@ -848,14 +857,14 @@ public class MyClass
     @ExposeOutOfModule
     public String hello(InvokeControllerEvent event)
     {
-       String param = (String)event.getData();
+       String param = event.getParameter(String.class);
        return "Hello "+param;
     }
 
     @Expose
     public String helloLocal(InvokeControllerEvent event)
     {
-       String param = (String)event.getData();
+       String param = event.getParameter(String.class);
        return "Hello "+param;
     }
 }
