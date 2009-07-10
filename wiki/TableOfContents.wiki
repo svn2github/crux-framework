@@ -1,9 +1,9 @@
 ==Contents==
   * [Overview Overview]
   * [UserManual User Manual]
-    * [UserManual#1_Introduction Introduction]
-    * [UserManual#Quick_Start Quick Start]
-      * [UserManual#Install Install]
+    * [UserManual#1_Introduction 1 Introduction]
+    * [UserManual#Quick_Start 2 Quick Start]
+      * [UserManual#Install 2.1 Install]
       * [UserManual#Sample_Application Sample Application]
       * [UserManual#Create_an_Application Create an Application]
     * [UserManual#Coding_client_side Coding client side]
