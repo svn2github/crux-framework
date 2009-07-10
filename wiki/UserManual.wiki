@@ -954,6 +954,8 @@ public interface MyMessages extends Messages
 }
 }}} 
 
+And the crux page that use it:
+
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
