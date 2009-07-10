@@ -2,8 +2,6 @@
 = What is *_Crux_*? =
 _*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications. 
 
-It is derived from a masters degree dissertation that was defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil -  and can be read 
-
 It is derived from a masters degree dissertation defended in 2008 at the Federal University of Minas Gerais (UFMG) - Minas Gerais, Brazil - which can be read [http://www.dcc.ufmg.br/pos/cursos/defesas/980M.PDF here] (available only in Portuguese).
 
 _*Crux*_ is now maintained by [http://www.sysmap.com.br Sysmap Solutions] as an open source project.
