@@ -1,7 +1,8 @@
 = 1 Introduction =
 To follow this documentation you will need:
-  * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE installed in your computer;
-  * 
+  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.6 (recomended) or 1.5;
+  * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
+
 
 = 2 Quick Start=
 
