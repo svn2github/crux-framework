@@ -79,7 +79,7 @@ http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
 
 Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}} or for any other widget in the page. The {{{helloButton}}} contains a click event pointing to {{{myController.sayHello}}}. This means that a method called {{{sayHello}}}, exposed by the annotation {{{@Expose}}}, will be invoked on the controller {{{myController}}} to handle click events from {{{helloButton}}}.
 
-It's important to say that tags {{{<crux:button/>}}} and {{{<crux:label/>}}}, used on the HTML example above, are not part of the *_Crux_* core. Actually, they come from a *_Crux_* plug-in, called [http://code.google.com/p/crux-framework-tools/ CruxHtmlTags]. In other words, *_Crux_* can also be used with plain HTML pages. For more information about how to use plain HTML pages, take a look at *[UserManual#3.1 CruxEngine]*
+It's important to say that tags {{{<crux:button/>}}} and {{{<crux:label/>}}}, used on the HTML example above, are not part of the *_Crux_* core. Actually, they come from a *_Crux_* plug-in, called [http://code.google.com/p/crux-framework-tools/ CruxHtmlTags]. In other words, *_Crux_* can also be used with plain HTML pages. For more information about how to use plain HTML pages, take a look at *[UserManual#3.1_Building_User_Interface Building User Interface]*
 
 =Example with server interaction=
 
