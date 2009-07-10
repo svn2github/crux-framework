@@ -936,6 +936,54 @@ The annotation {{{@SerializableName}}} could be used to simplify the name you wr
 
 == 3.4 I18N ==
 
+_*Crux*_ supports i18n for widgets created declaratively. The native [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/i18n.html GWT mechanism] is still valid.
+
+You can use the following pattern to tell _*Crux*_ that you want to use a GWT message or a constant value in a widget tag declaration:
+
+{{{
+   "${<messageResource>.<messageEntry>}"	
+}}}
+
+For example. Supose the following messages interface:
+
+{{{
+public interface MyMessages extends Messages
+{
+	@DefaultMessage("my message")
+	String myMessage();
+}
+}}} 
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:label id="label" text="${myMessages.myMessage}" />
+   </body>
+</html>
+}}}
+
+In the above example, the message resource name is derived from interface name. If you want to change this value, you can use the annotation {{{@Name}}} in your messages interface.
+
+See the example:
+
+{{{
+@Name("msg")
+public interface MyConstants extends Constants
+{
+	@DefaultStringValue("my message")
+	String myMessage();
+}
+}}} 
+
+{{{
+   ...
+       <crux:label id="label" text="${msg.myMessage}" />
+   ...
+}}}
 == 3.5 Client-Server Communication ==
 
 = 4 Coding Server Side =
