@@ -1,5 +1,5 @@
 = 1 Introduction =
-To follow this documentation you will need:
+This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how do _*Crux*_ work internally. In order to easy follow this documentation you will need:
   * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend you to use the 1.6 one);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
