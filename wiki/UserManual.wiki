@@ -1,4 +1,7 @@
 = 1 Introduction =
+To follow this documentation you will need:
+  * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE installed in your computer;
+  * 
 
 = 2 Quick Start=
 
