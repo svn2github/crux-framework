@@ -1,6 +1,6 @@
 = 1 Introduction =
 To follow this documentation you will need:
-  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.6 (recomended) or 1.5;
+  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend you to use the 1.6 one);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
 
