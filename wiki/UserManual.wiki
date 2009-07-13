@@ -954,7 +954,7 @@ public interface MyMessages extends Messages
 }
 }}} 
 
-And the crux page that use it:
+And the crux page that uses it:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -986,8 +986,108 @@ public interface MyConstants extends Constants
        <crux:label id="label" text="${msg.myMessage}" />
    ...
 }}}
+
 == 3.5 Client-Server Communication ==
 
+ You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn it easier. 
+
+With_*Crux*_, you can use a Front Controller. The use of this Front Controller_ allows you to make just one mapping in your web.xml file.
+
+ In other words, you don't need to add a new servlet declaration on your  GWT module definition nether on web.xml for each new service declared.
+ 
+ Other improvement is the ues of the  [3.3.3.2_The_@Create_Annotation @Create annotation]. It will create the service object and set its  entry point name to point to the FrontController automatically. 
+ 
+ The following example shows all this features together:
+ 
+{{{
+package crux.examples.client.remote;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+
+public interface GreetingService extends RemoteService
+{
+        public String getHelloMessage(String name);
+}
+}}}
+
+{{{
+public class MyController {
+        @Create
+        protected GreetingServiceAsync service; 
+        
+        @Expose
+        public void sayHello() {
+                service.getHelloMessage("Thiago", new AsyncCallbackAdapter<String>(this){
+                                @Override
+                                public void onComplete(String result){
+                                   Window.alert(result);
+                                }
+                        }
+                );
+        }
+}
+}}}
+
+Note that the service interface does not use the annotation [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html RemoteServiceRelativePath]. It will assume the mapping to the Front Controller. If that annotation was present, _*Crux*_ would use it to set the entry point name.
+
+Another point to observe in the above example is the use of the abstract class {{{AsyncCallbackAdapter}}} in the place of GWT {{{AsyncCallback}}} interface.
+
+That class does the following:
+  # Implements a default error handler that alert the exception message and log it.
+  # If controller autoBind for [UserManual#3.3.3.3_Value_Binding ValueObjects] is enabled, it will automatically update screen with value object properties after process the {{{onComplete()}}} method.
+
+
+So, the two following approach is equivalents:
+
+{{{
+@Controller(value="myController", autoBind=true)
+public class MyController {
+        @Create
+        protected GreetingServiceAsync service; 
+        
+        @Create
+        protected Person aValueObject; 
+
+        @Expose
+        public void sayHello() {
+                service.getHelloMessage("Thiago", new AsyncCallbackAdapter<String>(this){
+                                @Override
+                                public void onComplete(String result){
+                                   aValueObject.setName("Thiago");
+                                }
+                        }
+                );
+        }
+}
+}}}
+
+{{{
+@Controller(value="myController", autoBind=false)
+public class MyController {
+        @Create
+        protected GreetingServiceAsync service; 
+        
+        @Create
+        protected Person aValueObject; 
+
+        @Expose
+        public void sayHello() {
+                Screen.updateController(this);
+                service.getHelloMessage("Thiago", new AsyncCallback<String>(this){
+                                public void onSuccess(String result){
+                                   aValueObject.setName("Thiago");
+                                   Screen.updateScreen(this);
+                                }
+                                public void onFailure(Throwable e){
+                                    GWT.log(e.getLocalizedMessage(), e);
+                                    Window.alert(e.getLocalizedMessage());
+                                    Screen.updateScreen(this);
+                                }
+                        }
+                );
+        }
+}
+}}}
 = 4 Coding Server Side =
 
 == 4.1 I18N ==
