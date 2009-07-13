@@ -989,7 +989,7 @@ public interface MyConstants extends Constants
 
 == 3.5 Client-Server Communication ==
 
- You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn it easier. 
+You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn it easier. 
 
 With_*Crux*_, you can use a Front Controller. The use of this Front Controller_ allows you to make just one mapping in your web.xml file.
 
