@@ -1,8 +1,11 @@
 = 1 Introduction =
+
+ _*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
+If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
+
 This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. In order to easy follow this documentation you will need:
   * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend you to use the 1.6);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
-
 
 = 2 Quick Start=
 
@@ -14,11 +17,8 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 
 = 3 Coding Client Side =
 
-_*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
 
-If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
-
-Your modules must inherits _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
+Your modules must inherit _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
 
 If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint ({{{br.com.sysmap.crux.core.client.JSEngine}}}) and call super on your onModuleLoad() method.
 
@@ -31,7 +31,7 @@ The following example shows a module that can use any widget provided by default
 </module>
 }}}
 
-The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that is distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc.
+The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. The BasicWidgets set contains all widgets that are distributed directly with GWT. The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc.
 
 == 3.1 Building User Interface ==
 
