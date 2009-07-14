@@ -170,4 +170,4 @@ As you can observe, it is pretty similar to pure GWT way to communicate. In fact
   
 
 
-Do you want learn more about _*Crux*_? take a look at the [UserManual User Manual].
+Do you want learn more about _*Crux*_? Take a look at the [UserManual User Manual].
