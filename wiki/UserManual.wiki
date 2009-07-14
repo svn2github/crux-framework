@@ -18,7 +18,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
   {{{
   	projectGenerator "path/to/eclipse/workspace"
   }}}
-  	This command will create a eclipse project, with the name you informed in the properties files
+  This command will create a eclipse project, with the name you informed in the properties files
   	  
 
 
