@@ -73,9 +73,9 @@ public class MyController {
 
 *The result:*
 
-http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.jpg
+http://crux-framework.googlecode.com/svn/wiki/images/say_hello_before.gif
 
-http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.jpg
+http://crux-framework.googlecode.com/svn/wiki/images/say_hello_after.gif
 
 Using the annotation {{{@Controller}}}, the class {{{MyController}}} is exposed to the page, under the alias {{{myController}}}. Then, it is ready to be used as an event handler for the button {{{helloButton}}} or for any other widget in the page. The {{{helloButton}}} contains a click event pointing to {{{myController.sayHello}}}. This means that a method called {{{sayHello}}}, exposed by the annotation {{{@Expose}}}, will be invoked on the controller {{{myController}}} to handle click events from {{{helloButton}}}.
 
