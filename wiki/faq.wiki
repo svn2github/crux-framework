@@ -7,6 +7,13 @@ Why it is called _*Crux*_?
 ==_*Crux*_ Design==
 Why _*Crux*_ uses {{{<span>}}} and not other tags like {{{div}}} or even custom tags (like {{{<grid>}}} or something similar) in host pages to declare widgets? And why does it put an `_` before all attributes and events names?
 
+*Q: How _Crux_ checks if the application is under a development environment?*
+
+R: To find out if your application is running under a development environment, _*Crux*_ cheks for this two conditions. If one of them is true, it assumes a development environment:
+  # Your application server was started by GWT HostedMode class.
+  # Your application server is running in debug mode.
+
+
 
 ==Performance==
 How fast _*Crux*_ declarative approach can be compared with default GWT approach (programatic)?
@@ -16,3 +23,11 @@ How much can _*Crux*_ increase the final javascript size? And the host page size
 Using _*Crux*_, usually I write strings that contains the name of my controller and the method name that I want to call (in pages). GWT does not support reflection for performance reasons. Does _*Crux*_ approach break this GWT design to emulate reflection? If not, how _*Crux*_ make these types of calls without use reflection?
 
 About server side code? _*Crux*_ add any overhead?
+
+
+
+
+
+The CruxFilter will be used to save the name of the page that is beeing requested. _*Crux*_ parses all pages to know the pages that use each module. That information is needed to help increase the performance and decrease the size of generated scritp. 
+
+
