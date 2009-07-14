@@ -168,5 +168,6 @@ As you can observe, it is pretty similar to pure GWT way to communicate. In fact
   # You don't need to inform through {{{ServiceDefTarget.setServiceEntryPoint}}} the path for your service neither use the {{{RemoteServiceRelativePath}}} annotation on your service interface. _*Crux*_ provides a _front controller_ for handling that. 
   # You can use the annotation {{{@Create}}} rather than {{{GWT.create}}} method. It can be used not only for services, but for any field in your controllers.
   
-  
-Interested in _*Crux*_? Learn more about it in the [UserManual User Manual].
+
+
+Do you want learn more about _*Crux*_? take a look at the [UserManual User Manual].
