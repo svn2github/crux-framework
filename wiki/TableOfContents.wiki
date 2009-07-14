@@ -10,7 +10,7 @@
       * [UserManual#Building_User_Interface Building User Interface]
       * [UserManual#Managing_Events Managing Events]
     * [UserManual#Client-Server_Communication Client-Server Communication]
-  * [ComponentDeveloperManual Component Developer Manual]
+  * [WidgetDeveloperManual Component Developer Manual]
   * [Widgets Widgets]
     * [Widgets#Basic_Widgets Basic]
     * [Widgets#Advanced_Widgets Advanced]

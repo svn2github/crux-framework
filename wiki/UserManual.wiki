@@ -36,7 +36,7 @@ The code above creates a module that inherits the _*Crux*_ core and the two sets
 
 == 3.1 Building User Interface ==
 
-Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also availabe through crux-advancedwidgets.jar. Consult the [ComponentDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
+Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also availabe through crux-advancedwidgets.jar. Consult the [WidgetDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
 
 To add widgets to your pages, you can use one of these three methods:
   # Declare a _`<span>`_ tag with an attribute `_`type to inform which widget you want to add to the page.
