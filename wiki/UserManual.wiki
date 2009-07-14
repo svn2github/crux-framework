@@ -1150,6 +1150,13 @@ This filter is used to transform your _.crux.xml_ files in pure _html_ files. Th
 
 The two above filters, that is used only for development, does nothing if used in a production environment, generating no overhead. They are removed by the ant task generated for deploy your project (if you are using the [_*Crux* Project Generator_]).
 
+You can add an optional listener called InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
+
+{{{
+   <listener>
+      <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
+   </listener>
+}}}
 === 4.1.2 Crux.properties ===
 
 _*Crux*_ tries to read a file called {{{Crux.property}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
@@ -1159,12 +1166,45 @@ The following properties can be set in this file:
 || *Property* || *Description* || *Default Value* ||
 ||wrapSiblingWidgets||If false, widgets created declarativelly under the same parent<br> has no guarantee of order||true||
 ||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
-||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||||
+||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||controllerFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
 
-
 === 4.1.2.1 wrapSiblingWidgets ===
+
+To enable _*Crux*_ to do very significant improvements in screen creation performance, _*Crux*_ will need that all of your widgets are orphan child of their parents.
+
+The property {{{wrapSiblingWidgets}}} will automatically create an empty {{{<span>}}} tag around each widget that does not follow this restriction. 
+
+See the following example:
+
+{{{
+   ...
+   <body>
+       <crux:textBox id="box1" />
+       <crux:textBox id="box2" />
+       <div>
+	       <crux:textBox id="box3" />
+       </div>
+   </body>
+   ...
+}}}
+
+That will be transformed to the following DOM elements:
+
+{{{
+   ...
+   <body>
+       <span><input type="text" id="box1" ... /></span>
+       <span><input type="text" id="box2" ... /></span>
+       <div>
+	       <input type="text" id="box3" ... />
+       </div>
+   </body>
+   ...
+}}}
+
+If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care to put your widgets in panels, or in other html tags alone, or else, _*Crux*_ will not guarantee the order of the sibling widgets.
 
 === 4.1.2.2 localeResolver ===
 
