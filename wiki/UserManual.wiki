@@ -1157,11 +1157,22 @@ _*Crux*_ tries to read a file called {{{Crux.property}}} that can be put (option
 The following properties can be set in this file:
 
 || *Property* || *Description* || *Default Value* ||
-||wrapSiblingWidgets|| ||true||
-||localeResolver|| ||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
-||screenResourceResolver|| ||||
-||classPathResolver|| ||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
-||controllerFactory|| ||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
+||wrapSiblingWidgets||If false, widgets created declarativelly under the same parent<br> has no guarantee of order||true||
+||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
+||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||||
+||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
+||controllerFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
+
+
+=== 4.1.2.1 wrapSiblingWidgets ===
+
+=== 4.1.2.2 localeResolver ===
+
+=== 4.1.2.3 screenResourceResolver ===
+
+=== 4.1.2.4 classPathResolver ===
+
+=== 4.1.2.5 controllerFactory ===
 
 == 4.2 Writing Server Services ==
 
