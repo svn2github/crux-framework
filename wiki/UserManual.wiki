@@ -18,15 +18,16 @@ This documentation will show you, in a detailed and gradual way, how to use the 
   {{{
   	projectGenerator "path/to/eclipse/workspace"
   }}}
-  This command will create an Eclipse project, with the name you informed in the properties file. It will pretty look like this:
+  This command will create an Eclipse project, with the name you informed in the properties file.
+  
+  * Import the generated project into your Eclipse IDE, and You will get something like this:
   
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project.gif
-  
-  * Import the generated project into your Eclipse IDE;
+   
   * Run the {{{<your project name>.launch}}} file, located at the project root folder;
   * If if everything worked, the GWT Hosted Mode console will appear, and you first application will look like this:
   
-  http://crux-framework.googlecode.com/svn/wiki/images/my_application.jpg  
+  http://crux-framework.googlecode.com/svn/wiki/images/generated-project-running.gif
   	  
 
 
