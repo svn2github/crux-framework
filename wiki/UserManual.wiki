@@ -1,6 +1,7 @@
 = 1 Introduction =
 
-_*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations an project structure directives.
+_*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations and project structure directives.
+
 If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
 
 This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. In order to easy follow this documentation you will need:
@@ -1095,7 +1096,7 @@ public class MyController {
 == 4.1 Setup ==
 
 === 4.1.1 Web.xml ===
-To setup the _*Crux* Front Contrller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
+To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
 
 {{{
 	<servlet>
@@ -1111,7 +1112,7 @@ To setup the _*Crux* Front Contrller_, showed in [3.5_Client-Server_Communicatio
 	</servlet-mapping>
 }}}
 
-There are some other configurations you will need to put to run your application correctly in development environment: 
+There are some other configurations you will need to do to run your application in [FAQ#_Crux_Design development environment]: 
 
 {{{
 	<filter>
@@ -1125,7 +1126,7 @@ There are some other configurations you will need to put to run your application
 	</filter-mapping>
 }}}
 
-The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is beeing compiled. This is used to better performance (see [FAQ#Performance this] for more information). Because that information is used only in compilation, it just need to be present in development environment.
+The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is beeing compiled. This is used for better performance (see [FAQ#Performance this] for more information). Because that information is used only for compilation, it just need to be present in development environment.
 
 If you plan to use the [HtmlTags] plugin, you need to add this lines too:
 
@@ -1147,8 +1148,20 @@ If you plan to use the [HtmlTags] plugin, you need to add this lines too:
 
 This filter is used to transform your _.crux.xml_ files in pure _html_ files. This process is only done in development. In a production environment, your application can access the generated version of the page directly. 
 
-The two above filters, that is used only for development, does nothing if it is used in a production environment, generating no overhead. It is also removed by default ant task generated for deploy your project (if you are using the [_*Crux* Project Generator_]).
+The two above filters, that is used only for development, does nothing if used in a production environment, generating no overhead. They are removed by the ant task generated for deploy your project (if you are using the [_*Crux* Project Generator_]).
 
+=== 4.1.2 Crux.properties ===
+
+_*Crux*_ tries to read a file called {{{Crux.property}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
+
+The following properties can be set in this file:
+
+|| *Property* || *Description* || *Default Value* ||
+||wrapSiblingWidgets|| ||true||
+||localeResolver|| ||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
+||screenResourceResolver|| ||||
+||classPathResolver|| ||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
+||controllerFactory|| ||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
 
 == 4.2 Writing Server Services ==
 
