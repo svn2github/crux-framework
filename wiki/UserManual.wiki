@@ -992,11 +992,11 @@ public interface MyConstants extends Constants
 
 You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn it easier. 
 
-With_*Crux*_, you can use a Front Controller. The use of this Front Controller_ allows you to make just one mapping in your web.xml file.
+With _*Crux*_, you can use a _Front Controller_. The use of this _Front Controller_ allows you to make just one mapping in your web.xml file.
 
-In other words, you don't need to add a new servlet declaration on your  GWT module definition nether on web.xml for each new service declared.
+In other words, you don't need to add a new servlet declaration on your GWT module definition nether on web.xml for each new service declared.
  
-Other improvement is the ues of the  [3.3.3.2_The_@Create_Annotation @Create annotation]. It will create the service object and set its  entry point name to point to the FrontController automatically. 
+Other improvement is the use of the  [3.3.3.2_The_@Create_Annotation @Create annotation]. It will create the service object and set its  entry point name to point to the _Front Controller_ automatically. 
  
 The following example shows all this features together:
  
@@ -1092,10 +1092,53 @@ public class MyController {
 
 = 4 Coding Server Side =
 
+== 4.1 Writing Server Services ==
 
-== 4.1 Setup ==
+As wed said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
 
-=== 4.1.1 Web.xml ===
+At server side, the main difference for GWT is that your service implementation class does not need to extend {{{RemoteServiceServlet}}}. It 
+just needs to implement the service interface.
+
+{{{
+public interface GreetingService extends RemoteService{
+	public String getHelloMessage(String name);
+}
+}}}
+
+{{{
+public class GreetingServiceImpl implements GreetingService{
+   public String getHelloMessage(String name){
+      return "Server says: Hello, " + name + "!'";
+   }
+}
+}}}
+
+To find out which implementation will be used for a given service interface, _*Crux*_ will search (using javassist) for classes that implements that interface and use the first one found.
+
+This behaviour can be changed, as showed in section [UserManual#4.3.2.5_controllerFactory controllerFactory].
+
+If your service class needs to access the request, response or session, it can implements the interfaces RequestAware, ResponseAware or SessionAware, as in the following example:
+
+{{{
+public class GreetingServiceImpl implements GreetingService, RequestAware, ResponseAware{
+   private HttpServletRequest request;
+   private HttpServletResponse response;
+   	
+   public void setRequest(HttpServletRequest request){
+      this.request = request;
+   }
+   public void setResponse(HttpServletResponse response){
+      this.response = response;
+   }
+   ...   
+}
+}}}
+== 4.2 I18N ==
+
+
+== 4.3 Setup ==
+
+=== 4.3.1 Web.xml ===
 To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
 
 {{{
@@ -1157,7 +1200,7 @@ You can add an optional listener called InitializerListener to initialize some _
       <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
    </listener>
 }}}
-=== 4.1.2 Crux.properties ===
+=== 4.3.2 Crux.properties ===
 
 _*Crux*_ tries to read a file called {{{Crux.properties}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
 
@@ -1170,7 +1213,7 @@ The following properties can be set in this file:
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||controllerFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
 
-=== 4.1.2.1 wrapSiblingWidgets ===
+==== 4.3.2.1 wrapSiblingWidgets ====
 
 To enable _*Crux*_ to do very significant improvements in screen creation performance, _*Crux*_ will need that all of your widgets are orphan child of their parents.
 
@@ -1206,7 +1249,7 @@ That will be transformed to the following DOM elements:
 
 If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care to put your widgets in panels, or in other html tags alone, or else, _*Crux*_ will not guarantee the order of the sibling widgets.
 
-Disabling this property the previous example can build the following sequence of elements into the DOM:
+If this this propertyis disabled, the previous example can build the following sequence of elements into the DOM:
 {{{
    ...
    <body>
@@ -1234,16 +1277,12 @@ In that case, the best would be refactory this to:
    ...
 }}}
 
-=== 4.1.2.2 localeResolver ===
+==== 4.3.2.2 localeResolver ====
 
-=== 4.1.2.3 screenResourceResolver ===
+==== 4.3.2.3 screenResourceResolver ====
 
-=== 4.1.2.4 classPathResolver ===
+==== 4.3.2.4 classPathResolver ====
 
-=== 4.1.2.5 controllerFactory ===
-
-== 4.2 Writing Server Services ==
-
-== 4.3 I18N ==
+==== 4.3.2.5 controllerFactory ====
 
 = 5 Extending and Customizing =
