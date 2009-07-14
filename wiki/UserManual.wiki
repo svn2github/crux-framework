@@ -1159,7 +1159,7 @@ You can add an optional listener called InitializerListener to initialize some _
 }}}
 === 4.1.2 Crux.properties ===
 
-_*Crux*_ tries to read a file called {{{Crux.property}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
+_*Crux*_ tries to read a file called {{{Crux.properties}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
 
 The following properties can be set in this file:
 
@@ -1205,6 +1205,34 @@ That will be transformed to the following DOM elements:
 }}}
 
 If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care to put your widgets in panels, or in other html tags alone, or else, _*Crux*_ will not guarantee the order of the sibling widgets.
+
+Disabling this property the previous example can build the following sequence of elements into the DOM:
+{{{
+   ...
+   <body>
+       <input type="text" id="box2" ... /></span>
+       <div>
+	       <input type="text" id="box3" ... />
+       </div>
+       <input type="text" id="box1" ... />
+   </body>
+   ...
+}}}
+
+In that case, the best would be refactory this to:
+{{{
+   ...
+   <body>
+       <crux:flowPanel id="panel1">   
+          <crux:textBox id="box1" />
+          <crux:textBox id="box2" />
+          <div>
+	         <crux:textBox id="box3" />
+          </div>
+       </crux:flowPanel>   
+   </body>
+   ...
+}}}
 
 === 4.1.2.2 localeResolver ===
 
