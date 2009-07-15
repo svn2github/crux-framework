@@ -1,73 +1,73 @@
 ==Contents==
 <table>
 <tr>
-<td>-[Overview Overview]</td>
+<td>[Overview Overview]</td>
 </tr>
 <tr>
-<td>-[UserManual User Manual]</td>
+<td>[UserManual User Manual]</td>
 </tr>
 <tr>
-<td>----[UserManual#1_Introduction 1 Introduction]</td>
+<td>....[UserManual#1_Introduction 1 Introduction]</td>
 </tr>
 <tr>
-<td>----[UserManual#2_Quick_Start 2 Quick Start]</td>
+<td>....[UserManual#2_Quick_Start 2 Quick Start]</td>
 </tr>
 <tr>
-<td>--------[UserManual#2.1_Install 2.1 Install]</td>
+<td>........[UserManual#2.1_Install 2.1 Install]</td>
 </tr>
 <tr>
-<td>--------[UserManual#2.2_Sample_Application 2.2 Sample Application]</td>
+<td>........[UserManual#2.2_Sample_Application 2.2 Sample Application]</td>
 </tr>
 <tr>
-<td>--------[UserManual#2.3_Create_an_Application 2.3 Create an Application]</td>
+<td>........[UserManual#2.3_Create_an_Application 2.3 Create an Application]</td>
 </tr>
 <tr>
-<td>----[UserManual#3_Coding_client_side 3 Coding Client Side]</td>
+<td>....[UserManual#3_Coding_client_side 3 Coding Client Side]</td>
 </tr>  
 <tr>
-<td>--------[UserManual#3.1_Building_User_Interface 3.1 Building User Interface]</td>
+<td>........[UserManual#3.1_Building_User_Interface 3.1 Building User Interface]</td>
 </tr>
 <tr>
-<td>--------[UserManual#3.2_Screen 3.2 Screen]</td>
+<td>........[UserManual#3.2_Screen 3.2 Screen]</td>
 </tr>
 <tr>
-<td>--------[UserManual#3.3_Managing Events 3.3 Managing Events]</td>
+<td>........[UserManual#3.3_Managing Events 3.3 Managing Events]</td>
 </tr>
 <tr>
-<td>--------[UserManual#3.4_I18N 3.4 I18N]</td>
+<td>........[UserManual#3.4_I18N 3.4 I18N]</td>
 </tr>
 <tr>
-<td>--------[UserManual#3.5_Client-Server_Communication 3.5 Client-Server Communication]</td>
+<td>........[UserManual#3.5_Client-Server_Communication 3.5 Client-Server Communication]</td>
 </tr>
 <tr>
-<td>----[UserManual#4_Coding_Server_Side 4 Coding Server Side]</td>
+<td>....[UserManual#4_Coding_Server_Side 4 Coding Server Side]</td>
 </tr>  
 <tr>
-<td>--------[UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services]</td>
+<td>........[UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services]</td>
 </tr>
 <tr>
-<td>--------[UserManual#4.2_I18N 4.2 I18N]</td>
+<td>........[UserManual#4.2_I18N 4.2 I18N]</td>
 </tr>
 <tr>
-<td>--------[UserManual#4.3_Setup 4.3 Setup]</td>
+<td>........[UserManual#4.3_Setup 4.3 Setup]</td>
 </tr>
 <tr>
-<td>-[WidgetDeveloperManual Component Developer Manual]</td>
+<td>[WidgetDeveloperManual Component Developer Manual]</td>
 </tr>
 <tr>
-<td>-[Widgets Widgets]</td>
+<td>[Widgets Widgets]</td>
 </tr>  
 <tr>
-<td>----[Widgets#Basic_Widgets Basic]</td>
+<td>....[Widgets#Basic_Widgets Basic]</td>
 </tr>  
 <tr>
-<td>----[Widgets#Advanced_Widgets Advanced]</td>
+<td>....[Widgets#Advanced_Widgets Advanced]</td>
 </tr>  
 <tr>
-<td>-[WhatIsKeepingUsBusy What is keeping us busy]</td>
+<td>[WhatIsKeepingUsBusy What is keeping us busy]</td>
 </tr>  
 <tr>
-<td>-[FAQ FAQ]</td>
+<td>[FAQ FAQ]</td>
 </tr>  
 </table>  
   
