@@ -1372,9 +1372,72 @@ In that case, the best would be refactory this to:
 
 ==== 4.3.2.2 localeResolver ====
 
+By default, _*Crux*_ will use the same mechanism used by [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideI18nAndA11y.html#DevGuideSpecifyingLocale GWT at client side] to resolve the user locale.
+
+It means that you can, for example, pass the locale through an url parameter, like:
+{{{
+http://www.example.org/myapp.html?locale=pt_BR
+}}}
+
+However, if you need to change this behaviour, you can specify your own LocaleResolver class. That implmentation, you can adopt a custom rule to identify the user locale.
 ==== 4.3.2.3 screenResourceResolver ====
 
+This property tells _*Crux*_ which class will be used to retrieve a stream to the application pages. It is usefull to plugins, like [HtmlTags], that need to do some processing with pages before they are consumed by the framework.
+
 ==== 4.3.2.4 classPathResolver ====
+
+_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The problem is that if we are running under some application servers - let's say directly: weblogic :) - the entire strategy to retrive the web root path, the WEB-INF/classes and WEB-INF/lib paths changes completely.
+
+Because of this, we created this configuration parameter. You can use it to change the resolver to make your application work in any weblogic.
+
+The following example shows how you could build a ClasspathResolver to work in weblogic (tested with weblogic 10.0):
+
+{{{
+public class WebLogicClassPathResolver extends ClassPathResolverImpl
+{
+	private static final String A_RESOUCE_FROM_CLASSPATH_ROOT = "/"+WebLogicClassPathResolver.class.getName().replaceAll("\\.", "/")+".class";
+	
+	@Override
+	public URL findWebBaseDir()
+	{
+		try
+		{
+			URL url = findWebInfClassesPath();
+			File webInfClassesFile = new File(url.toURI());
+			File webRoot = webInfClassesFile.getParentFile().getParentFile();
+			return webRoot.toURI().toURL();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public URL findWebInfClassesPath()
+	{
+		try
+		{
+			URL url = new ClassPathUtils().getClass().getResource(A_RESOUCE_FROM_CLASSPATH_ROOT);
+			String path = StringUtils.removeEnd(url.toString(), A_RESOUCE_FROM_CLASSPATH_ROOT);
+			
+			if(path.toUpperCase().startsWith("ZIP:"))
+			{
+				int firstSlash = path.indexOf("/");
+				path = path.substring(firstSlash + 1);
+				path = StringUtils.removeEnd(path, "!");
+				path = "file:///" + path;
+			}
+			
+			return new URL(path + "/");
+		}
+		catch (MalformedURLException e)
+		{
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+}
+}}}
 
 ==== 4.3.2.5 controllerFactory ====
 
