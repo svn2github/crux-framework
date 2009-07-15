@@ -58,7 +58,7 @@
 <td>....[Widgets#Basic_Widgets Basic]</td>
 </tr>  
 <tr>
-<td>....[Widgets#Advanced_Widgets Advanced]</td>
+<td>....[AdvancedWidgets Advanced]</td>
 </tr>  
 <tr>
 <td>*[WhatIsKeepingUsBusy What is keeping us busy]*</td>
