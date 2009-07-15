@@ -1219,15 +1219,11 @@ However, you you plan to access i18n messages in classes called by a filter (tha
 To use _*Crux*_ in your application, first of all you will need following files:
 
   * In produtcion time, inside the {{{WEB-INF/lib}}} folder:
-  
     * commons-logging.jar
     * crux-core.jar
     * gwt-servlet.jar
-  
   * In development time:
-
    	* addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
-
       * crux-advanced-widgets.jar
       * crux-basic-widgets.jar
       * crux-html-tags.jar
@@ -1240,9 +1236,7 @@ To use _*Crux*_ in your application, first of all you will need following files:
       * jaxb-api.jar (only if running over Java 1.5)
       * jaxb-impl.jar (only if running over Java 1.5)
       * jsr173_api.jar (only if running over Java 1.5)
-
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
-
       * crux-compile-task.jar
       * crux-html-tags-compile-task.jar
       * gwt-dev-windows.jar (platform dependent)
@@ -1250,7 +1244,6 @@ To use _*Crux*_ in your application, first of all you will need following files:
       * gwt-module.dtd
       * gwt-user.jar
       * swt-win32-3235.dll (platform dependent)
-
 
 === 4.3.1 Web.xml ===
 To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
