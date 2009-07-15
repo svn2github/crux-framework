@@ -35,8 +35,10 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 
 Here we will explore the application generated on the previous section, explaining each single part of it.
 
-  * The  {{{war}}} dir
-    * jkahsdfjhasdhf
+  * *The  {{{war}}} folder* is the root context of your application, containing: 
+    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files)
+    * a WEB-INF folder, compliant with JEE specifications, containing:
+      * the {{{web.xml}}} file:  
 
 == 2.3 Create an Application ==
 
