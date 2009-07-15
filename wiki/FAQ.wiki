@@ -30,7 +30,7 @@ A: To find out if your application is running under a development environment, _
 
 
 ==Performance==
-*Q: How fast _Cru*_ declarative approach can be compared with default GWT approach (programmatic)?*
+*Q: How fast _Crux_ declarative approach can be compared with default GWT approach (programmatic)?*
 
 *Q: How much can _Crux_ increase the final javascript size? And the host page size?*
 
