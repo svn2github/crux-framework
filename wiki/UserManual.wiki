@@ -1216,15 +1216,18 @@ However, you you plan to access i18n messages in classes called by a filter (tha
 
 == 4.3 Setup ==
 
-To use _*Crux*_ in your application, first of all you will need following jar files:
+To use _*Crux*_ in your application, first of all you will need following files:
 
   * In produtcion time, inside the {{{WEB-INF/lib}}} folder:
+  
     * commons-logging.jar
     * crux-core.jar
     * gwt-servlet.jar
   
   * In development time:
+  
    	* addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
+   	
       * crux-advanced-widgets.jar
       * crux-basic-widgets.jar
       * crux-html-tags.jar
@@ -1237,7 +1240,9 @@ To use _*Crux*_ in your application, first of all you will need following jar fi
       * jaxb-api.jar (only if running over Java 1.5)
       * jaxb-impl.jar (only if running over Java 1.5)
       * jsr173_api.jar (only if running over Java 1.5)
+      
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
+    
       * crux-compile-task.jar
       * crux-html-tags-compile-task.jar
       * gwt-dev-windows.jar (platform dependent)
