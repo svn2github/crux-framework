@@ -7,10 +7,10 @@
 <td>*[UserManual User Manual]*</td>
 </tr>
 <tr>
-<td>....[UserManual#1_Introduction *1* Introduction]</td>
+<td>....*1* [UserManual#1_Introduction Introduction]</td>
 </tr>
 <tr>
-<td>....[UserManual#2_Quick_Start 2 Quick Start]</td>
+<td>....*2* [UserManual#2_Quick_Start Quick Start]</td>
 </tr>
 <tr>
 <td>........[UserManual#2.1_Install 2.1 Install]</td>
