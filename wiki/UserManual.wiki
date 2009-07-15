@@ -103,7 +103,7 @@ You can consult the following [Widgets#Basic_Widgets table] to verify the type f
 Now, you can see an example of the second method:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -184,7 +184,7 @@ If you are using XML files with HTMLTags plugin, you can write:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -387,7 +387,7 @@ or Declaratively:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -458,7 +458,7 @@ If you decide to use the HtmlTags Plugin, you can write:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -641,7 +641,7 @@ public class MyClass
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -688,7 +688,7 @@ public class Person implements Serializable
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -825,7 +825,7 @@ To inform that a controller will be used on a screen, you must explicity "import
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -948,7 +948,7 @@ If you define a custom serializable type, you must inform _*Crux*_ explicity tha
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -999,7 +999,7 @@ And the crux page that uses it:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>

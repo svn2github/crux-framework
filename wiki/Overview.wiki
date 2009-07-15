@@ -20,7 +20,7 @@ The following example illustrates how to create a simple HTML page with _*Crux*_
 {{{
 <html 
 	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:crux="http://www.sysmap.com.br/crux/ui/1.0">
+	xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0">
 	<head>
 		<title>My Page</title>
 	</head>
