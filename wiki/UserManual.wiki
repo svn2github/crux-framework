@@ -38,7 +38,7 @@ Here we will explore the application generated in the previous section, explaini
   * The  {{{war}}} folder is the root context of your application and contains: 
     * a WEB-INF folder, compliant with JEE specifications, where you will find:
       * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
-      * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details about _*Crux*_ jars at [CruxLibs Crux Libs]);
+      * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details at section [UserManual#4.3_Setup Setup]);
       * a {{{classes}}} folder, which is the output for java compilation;
       * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
     * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
@@ -1244,6 +1244,8 @@ To use _*Crux*_ in your application, first of all you will need following files:
       * gwt-module.dtd
       * gwt-user.jar
       * swt-win32-3235.dll (platform dependent)
+
+Using the [UserManual#2.1_Install Project Generator] you will get a ready to use project structure. 
 
 === 4.3.1 Web.xml ===
 To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
