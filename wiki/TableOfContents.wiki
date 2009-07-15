@@ -31,7 +31,7 @@
 <td>........[UserManual#3.2_Screen 3.2 Screen]</td>
 </tr>
 <tr>
-<td>........[UserManual#3.3_Managing Events 3.3 Managing Events]</td>
+<td>........[UserManual#3.3_Managing_Events 3.3 Managing Events]</td>
 </tr>
 <tr>
 <td>........[UserManual#3.4_I18N 3.4 I18N]</td>
