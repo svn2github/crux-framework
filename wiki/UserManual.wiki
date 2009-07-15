@@ -43,12 +43,12 @@ Here we will explore the application generated in the previous section, explaini
       * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
     * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
   * the {{{src}}} folder, containing the source files:
-    * {{{<the name you gave the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules (like shown at [UserManual#3_Coding_Client_Side Coding Client Side]);
-    * {{{<the same module package>.client.controller.MyController.java}}} - a client-side controller for the welcome page;
+    * {{{<the name you gave the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules (like shown at [UserManual#3_Coding_Client_Side Coding 3 Client Side]);
+    * {{{<the same module package>.client.controller.MyController.java}}} - a client-side controller for the welcome page (see [UserManual#3.3.3_Controller 3.3.3 Controller);
     * {{{<the same module package>.client.remote.GreetingService.java}}} -  a client-side business interface;
     * {{{<the same module package>.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
     * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
-      
+  for more about last three items, see [UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services].     
       
       
 
