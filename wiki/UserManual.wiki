@@ -36,18 +36,18 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 Here we will explore the application generated in the previous section, explaining each single part of it.
 
   * *The  {{{war}}} folder* is the root context of your application, containing: 
-    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
     * a WEB-INF folder, compliant with JEE specifications, containing:
       * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
       * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details about _*Crux*_ jars at [CruxLibs Crux Libs]);
       * a {{{classes}}} folder, which is the output for java compilation;
       * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application;
-    * the {{{src}}} folder, containing the source files:
-      * {{{<the name you gave to the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules;
-      * {{{<the same module package>.client.controller.MyController.java}}} - a client-side controller for the welcome page;
-      * {{{<the same module package>.client.remote.GreetingService.java}}} -  a client-side business interface;
-      * {{{<the same module package>.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
-      * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
+    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
+  * the {{{src}}} folder, containing the source files:
+    * {{{<the name you gave to the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules;
+    * {{{<the same module package>.client.controller.MyController.java}}} - a client-side controller for the welcome page;
+    * {{{<the same module package>.client.remote.GreetingService.java}}} -  a client-side business interface;
+    * {{{<the same module package>.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
+    * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
       
       
       
