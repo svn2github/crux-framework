@@ -1,10 +1,10 @@
 ==Contents==
 <table>
 <tr>
-<td>[Overview Overview]</td>
+<td>*[Overview Overview]*</td>
 </tr>
 <tr>
-<td>[UserManual User Manual]</td>
+<td>*[UserManual User Manual]*</td>
 </tr>
 <tr>
 <td>....[UserManual#1_Introduction 1 Introduction]</td>
@@ -49,10 +49,10 @@
 <td>........[UserManual#4.3_Setup 4.3 Setup]</td>
 </tr>
 <tr>
-<td>[WidgetDeveloperManual Component Developer Manual]</td>
+<td>*[WidgetDeveloperManual Component Developer Manual]*</td>
 </tr>
 <tr>
-<td>[Widgets Widgets]</td>
+<td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
 <td>....[Widgets#Basic_Widgets Basic]</td>
@@ -61,10 +61,10 @@
 <td>....[Widgets#Advanced_Widgets Advanced]</td>
 </tr>  
 <tr>
-<td>[WhatIsKeepingUsBusy What is keeping us busy]</td>
+<td>*[WhatIsKeepingUsBusy What is keeping us busy]*</td>
 </tr>  
 <tr>
-<td>[FAQ FAQ]</td>
+<td>*[FAQ FAQ]*</td>
 </tr>  
 </table>  
   
