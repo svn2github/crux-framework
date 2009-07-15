@@ -1,0 +1,16 @@
+= Advanced Widgets =
+
+This is the list of widgets present in crux-basicwidgets.jar. It contains all widgets present in default GWT distribution.
+
+|| *Type* || *Widget* ||
+||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||
+||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||
+||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.Decoratedpanel||
+||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||
+||maskedInput||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedInput||
+||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||
+||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||
+||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||
+||timer||br.com.sysmap.crux.advanced.client.timer.Timer||
+||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||
+||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||
