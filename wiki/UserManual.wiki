@@ -1,6 +1,6 @@
 = 1 Introduction =
 
-_*Crux*_ applications are basically GWT applications. It means that you must attempt to all GWT restrictions in terms of source code limitations and project structure directives.
+_*Crux*_ applications are basically GWT applications. It means you must attempt to all GWT restrictions in terms of source code limitations and project structure directives.
 If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
 
 This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. In order to easy follow this documentation you will need:
@@ -32,6 +32,11 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 
 
 == 2.2 Sample Application ==
+
+Here we will explore the application generated on the previous section, explaining each single part of it.
+
+  * *The  {{{war}}} dir*
+  ** ajsghhdgah hags dha
 
 == 2.3 Create an Application ==
 
