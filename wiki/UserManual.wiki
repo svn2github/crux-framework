@@ -36,9 +36,21 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 Here we will explore the application generated on the previous section, explaining each single part of it.
 
   * *The  {{{war}}} folder* is the root context of your application, containing: 
-    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files)
+    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
     * a WEB-INF folder, compliant with JEE specifications, containing:
-      * the {{{web.xml}}} file:  
+      * the {{{web.xml}}} file (more details about it at [4.3.1_Web.xml 4.3.1 Web.xml]);
+      * the {{{lib}}}, which stores all _*Crux*_ jar files your need at development time (more details about _*Crux*_ jars at [CruxLibs Crux Libs]);
+      * a {{{classes}}} folder, which is the output for java compilation;
+      * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application;
+    * the {{{src}}} folder, containing the source files:
+      * {{{com.mycompany.MyModule.gwt.xml}}} - a GWT module which extends _*Crux*_ modules;
+      * {{{com.mycompany.client.controller.MyController.java}}} - a client-side controller for the welcome page;
+      * {{{com.mycompany.client.remote.GreetingService.java}}} -  a client-side business interface;
+      * {{{com.mycompany.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
+      * {{{com.mycompany.server.GreetingServiceImpl.java}}} -  the server-side business class;
+      
+      
+      
 
 == 2.3 Create an Application ==
 
