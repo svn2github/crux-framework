@@ -4,6 +4,7 @@
 
 A: _*Crux*_ is the hardest point in a climbing. I (Thiago) am a climber (at least I try :) )... _*Crux*_ is derived from my master degree dissertation and during my studies, I could not avoid to thing: "Wow...now I am in the Crux"... Comparing the whole course with a big climbing and the amount of work that I had in the end to write this dissertation, have a son (near the defence date) and work at Sysmap Solutions...  
 
+After that, the framework changes a lot, and have a new development team that aproved the name too.
 
 ==_*Crux*_ Design==
 *Q: Why create widgets declaratively inside the HTML page?*
