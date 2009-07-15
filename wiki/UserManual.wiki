@@ -1173,8 +1173,46 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
    ...   
 }
 }}}
+
 == 4.2 I18N ==
 
+_*Crux*_ provides to server classes a support very similar to the GWT I18N support.
+
+You can create interfaces and uses the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultMessage}}} exactly as you do at client side.
+
+The main difference is that your interface does not need to extend any other interface and you use the factory method {{{MessagesFactory.getMessages(<interfaceClass>)}}} in the place of {{{GWT.create()}}}.
+
+See the following example:
+{{{
+public interface ServerMessages 
+{
+	@DefaultMessage("My server message: {0}.")
+	String myServerMessage(String message);
+}
+}}} 
+
+{{{
+public MyServerClass
+{
+   private static ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
+   
+   public void method()
+   {
+      System.out.println(messages.myServerMessage("test"));
+   }
+}
+}}}
+
+You can create a resource file called {{{ServerMessages}}} and put it under your application classpath to change messages for a specific locale. Example:
+
+{{{
+(file: ServerMessages_pt_BR.properties)
+myServerMessage=Minha mensagem no servidor: {0}.
+}}}
+
+That mechanism exposed will work properly for all your classes that are called by a service. _*Crux*_ will resolve locale problems in its [UserManual#3.5_Client-Server_Communication FrontController], before delegate the application control to your service implementation. 
+
+However, you you plan to access i18n messages in classes called by a filter (that executes before the _*Crux* FrontController_ Servlet), you need to configure a filter in your web.xml file. Read the section [UserManual#4.3.1_Web.xml Web.xml] to see how to do this.
 
 == 4.3 Setup ==
 
@@ -1240,6 +1278,21 @@ You can add an optional listener called InitializerListener to initialize some _
       <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
    </listener>
 }}}
+
+If you need I18N before the _*Crux* FrontController_ Servlet, you have to put this lines too:
+
+{{{
+	<filter>
+		<display-name>I18NFilter</display-name>
+		<filter-name>I18NFilter</filter-name>
+		<filter-class>br.com.sysmap.crux.core.i18n.I18NFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>I18NFilter</filter-name>
+		<url-pattern>*.rpc</url-pattern>
+	</filter-mapping>
+}}}
+
 === 4.3.2 Crux.properties ===
 
 _*Crux*_ tries to read a file called {{{Crux.properties}}} that can be put (optionaly) in any place under your classpath to change some default behavior of the framework.
