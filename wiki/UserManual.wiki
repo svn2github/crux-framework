@@ -25,7 +25,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project.gif
    
   * Run the {{{<your project name>.launch}}} file, located at the project root folder;
-  * If everything's gone ok, the GWT Hosted Mode console will appear, and you first application will look like this:
+  * If everything's gone ok, the GWT Hosted Mode console will appear, and your first application will look like this:
   
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project-running.gif
   	  
