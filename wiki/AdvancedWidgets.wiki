@@ -2,15 +2,14 @@
 
 This is the list of widgets present in crux-advanced-widgets.jar:
 
-|| *Type* || *Widget* ||
-||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||
-||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||
-||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.Decoratedpanel||
-||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||
-||maskedInput||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedInput||
-||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||
-||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||
-||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||
-||timer||br.com.sysmap.crux.advanced.client.timer.Timer||
-||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||
-||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||
+|| *Type* || *Widget* || Brief description ||
+||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||A TitlePanel capable of folding itself, hiding its contents||
+||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||A button based on a 3x1 table, useful for building rounded corners||
+||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
+||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||A tabbed set of pages, each of which can display html pages|| 
+||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
+||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel used to display sequential text messages, switching between them periodically||
+||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||A vertical accordion menu||
+||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fire events for scheduled times||
+||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
+||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
