@@ -1418,7 +1418,7 @@ public class WebLogicClassPathResolver extends ClassPathResolverImpl
 	{
 		try
 		{
-			URL url = new ClassPathUtils().getClass().getResource(A_RESOUCE_FROM_CLASSPATH_ROOT);
+			URL url = getClass().getResource(A_RESOUCE_FROM_CLASSPATH_ROOT);
 			String path = StringUtils.removeEnd(url.toString(), A_RESOUCE_FROM_CLASSPATH_ROOT);
 			
 			if(path.toUpperCase().startsWith("ZIP:"))
