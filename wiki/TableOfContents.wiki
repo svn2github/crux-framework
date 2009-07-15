@@ -13,40 +13,40 @@
 <td>....*2* [UserManual#2_Quick_Start Quick Start]</td>
 </tr>
 <tr>
-<td>........[UserManual#2.1_Install 2.1 Install]</td>
+<td>........*2.1* [UserManual#2.1_Install Install]</td>
 </tr>
 <tr>
-<td>........[UserManual#2.2_Sample_Application 2.2 Sample Application]</td>
+<td>........*2.2* [UserManual#2.2_Sample_Application Sample Application]</td>
 </tr>
 <tr>
-<td>....[UserManual#3_Coding_Client_Side 3 Coding Client Side]</td>
+<td>....*3* [UserManual#3_Coding_Client_Side Coding Client Side]</td>
 </tr>  
 <tr>
-<td>........[UserManual#3.1_Building_User_Interface 3.1 Building User Interface]</td>
+<td>........*3.1* [UserManual#3.1_Building_User_Interface Building User Interface]</td>
 </tr>
 <tr>
-<td>........[UserManual#3.2_Screen 3.2 Screen]</td>
+<td>........*3.2* [UserManual#3.2_Screen Screen]</td>
 </tr>
 <tr>
-<td>........[UserManual#3.3_Managing_Events 3.3 Managing Events]</td>
+<td>........*3.3* [UserManual#3.3_Managing_Events Managing Events]</td>
 </tr>
 <tr>
-<td>........[UserManual#3.4_I18N 3.4 I18N]</td>
+<td>........*3.4* [UserManual#3.4_I18N I18N]</td>
 </tr>
 <tr>
-<td>........[UserManual#3.5_Client-Server_Communication 3.5 Client-Server Communication]</td>
+<td>........*3.5* [UserManual#3.5_Client-Server_Communication Client-Server Communication]</td>
 </tr>
 <tr>
-<td>....[UserManual#4_Coding_Server_Side 4 Coding Server Side]</td>
+<td>....*4* [UserManual#4_Coding_Server_Side Coding Server Side]</td>
 </tr>  
 <tr>
-<td>........[UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services]</td>
+<td>........*4.1* [UserManual#4.1_Writing_Server_Services Writing Server Services]</td>
 </tr>
 <tr>
-<td>........[UserManual#4.2_I18N 4.2 I18N]</td>
+<td>........*4.2* [UserManual#4.2_I18N I18N]</td>
 </tr>
 <tr>
-<td>........[UserManual#4.3_Setup 4.3 Setup]</td>
+<td>........*4.3* [UserManual#4.3_Setup Setup]</td>
 </tr>
 <tr>
 <td>*[WidgetDeveloperManual Component Developer Manual]*</td>
