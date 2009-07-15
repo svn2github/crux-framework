@@ -50,12 +50,8 @@ Here we will explore the application generated in the previous section, explaini
     * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
   for more about last three items, see [UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services].     
       
-      
-
-== 2.3 Create an Application ==
 
 = 3 Coding Client Side =
-
 
 Your modules must inherit _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
 
@@ -74,7 +70,7 @@ The code above creates a module that inherits the _*Crux*_ core and the two sets
 
 == 3.1 Building User Interface ==
 
-Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basicwidgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also availabe through crux-advancedwidgets.jar. Consult the [WidgetDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
+Any GWT widget can be used in user interface construction. Default _*Crux*_ distribution supports the use of any widget included in the [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideUserInterface.html GWT default distribution]. To use any of those widgets, you must ensure that the file crux-basic-widgets.jar is present in the WEB-INF/lib folder of your application. Adavanced widgets are also available through crux-advanced-widgets.jar. Consult the [WidgetDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
 
 To add widgets to your pages, you can use one of these three methods:
   # Declare a _`<span>`_ tag with an attribute `_`type to inform which widget you want to add to the page.
