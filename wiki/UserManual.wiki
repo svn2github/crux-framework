@@ -40,7 +40,7 @@ Here we will explore the application generated in the previous section, explaini
       * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
       * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details about _*Crux*_ jars at [CruxLibs Crux Libs]);
       * a {{{classes}}} folder, which is the output for java compilation;
-      * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application;
+      * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
     * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
   * the {{{src}}} folder, containing the source files:
     * {{{<the name you gave the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules;
@@ -117,10 +117,12 @@ Now, you can see an example of the second method:
 If you decide to use this approach, you must attempt to:
   * Your files must have the extension *_.crux.xml_*.
 
-  * In order to enable auto completion, you need to configure your IDE to point to the following XSD files:
-    * [xhtml.xsd xhtml.xsd]
-    * [crux-basicwidgets.xsd crux-basicwidgets.xsd]
-    * [crux-advancedwidgets.xsd crux-advancedwidgets.xsd]
+  * In order to enable auto completion, you will need to configure your IDE to point to the following XSD files:
+    * [http://crux-framework-tools.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xhtml.xsd xhtml.xsd]
+    * [crux-basic-widgets.xsd crux-basicwidgets.xsd]
+    * [http://crux-framework.googlecode.com/svn/trunk/CruxAdvancedWidgets/src/xsd/crux-advanced-widgets.xsd crux-advanced-widgets.xsd]
+    * [http://crux-framework-tools.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xinclude.xsd xinclude.xsd]
+    If you are using an Eclipse based IDE, it can be done at the menu *Window -> Preferences -> XML -> XML Catalog* 
 
   * Configure the HtmlTagsFilter in your web.xml files as following:
 {{{
@@ -139,7 +141,7 @@ If you decide to use this approach, you must attempt to:
 </filter-mapping>
 }}}
 
-Note that if you use the [UserManual#CruxProjectGenerator Crux Project Generator], it will already configure the filter for you.
+Note that if you use the [UserManual#2.1_Install Crux Project Generator], it will already configure the filter for you.
 
 This filter will intercept the requests to transform your *_.crux.xml_* files in *_.html_* files that uses _`<span>`_ tags, exactly as the page showed in the first method. It just need to be done in a development scenario. Before you put your application in production, you compile your code (see [UserManual#Compilation compilation]) and the transformation is done only at this moment.
 
