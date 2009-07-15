@@ -1379,16 +1379,48 @@ It means that you can, for example, pass the locale through an url parameter, li
 http://www.example.org/myapp.html?locale=pt_BR
 }}}
 
-However, if you need to change this behaviour, you can specify your own LocaleResolver class. That implmentation, you can adopt a custom rule to identify the user locale.
+However, if you need to change this behaviour, you can specify your own LocaleResolver class through the property {{{localeResolver}}}. That implementation can adopt a custom rule to identify the user locale.
+
+Your class just need to implement the following interface:
+
+{{{
+public interface LocaleResolver 
+{
+	void initializeUserLocale(HttpServletRequest request);
+	Locale getUserLocale() throws LocaleResolverException;
+}
+}}}
+
 ==== 4.3.2.3 screenResourceResolver ====
 
-This property tells _*Crux*_ which class will be used to retrieve a stream to the application pages. It is usefull to plugins, like [HtmlTags], that need to do some processing with pages before they are consumed by the framework.
+The property {{{screenResourceResolver}}} tells _*Crux*_ which class will be used to retrieve a stream to the application pages. It is usefull to plugins, like [HtmlTags], that need to do some processing with pages before they are consumed by the framework.
 
+Your class just need to implement the following interface:
+
+{{{
+public interface ScreenResourceResolver
+{
+	InputStream getScreenResource(String screenId) throws InterfaceConfigException;
+	Set<String> getAllScreenIDs(String module) throws ScreenConfigException;
+}
+}}}
 ==== 4.3.2.4 classPathResolver ====
 
-_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The problem is that if we are running under some application servers - let's say directly: weblogic :) - the entire strategy to retrive the web root path, the WEB-INF/classes and WEB-INF/lib paths changes completely.
+_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The problem is that if we are running under some application servers - let's say directly: weblogic :) - the strategy to retrive the web root, the WEB-INF/classes and WEB-INF/lib paths changes completely.
 
-Because of this, we created this configuration parameter. You can use it to change the resolver to make your application work in any weblogic.
+Because of this, we created the {{{classPathResolver}}} configuration parameter. You can use it to change the resolver to make your application work in any weblogic. 
+
+Your class just need to implement the following interface:
+
+{{{
+public interface ClassPathResolver
+{
+	URL findWebInfClassesPath();
+	URL findWebInfLibPath();
+	URL[] findWebInfLibJars();
+	URL findWebBaseDir();
+}
+}}}
 
 The following example shows how you could build a ClasspathResolver to work in weblogic (tested with weblogic 10.0):
 
@@ -1440,5 +1472,19 @@ public class WebLogicClassPathResolver extends ClassPathResolverImpl
 }}}
 
 ==== 4.3.2.5 controllerFactory ====
+
+The section [UserManual#4.1_Writing_Server_Services Writing Server Services] shows the default mechanism used to discovery your service implementation classes.
+
+However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springframework.net/ spring] or to make your service classes EJBs.
+
+Using the property {{{controllerFactory}}} you can specify your own class, that just need to implement the following interface:
+
+{{{
+public interface ControllerFactory 
+{
+	Object getController(String controllerName);
+	void initialize(ServletContext context);
+}
+}}}
 
 = 5 Extending and Customizing =
