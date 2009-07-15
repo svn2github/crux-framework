@@ -8,7 +8,7 @@ This is the list of widgets present in crux-advanced-widgets.jar:
 ||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
 ||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||A tabbed set of pages, each of which can display html pages|| 
 ||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
-||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel used to display sequential text messages, switching between them periodically||
+||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
 ||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||A vertical accordion menu||
 ||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fire events for scheduled times||
 ||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
