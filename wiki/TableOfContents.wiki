@@ -19,9 +19,6 @@
 <td>........[UserManual#2.2_Sample_Application 2.2 Sample Application]</td>
 </tr>
 <tr>
-<td>........[UserManual#2.3_Create_an_Application 2.3 Create an Application]</td>
-</tr>
-<tr>
 <td>....[UserManual#3_Coding_Client_Side 3 Coding Client Side]</td>
 </tr>  
 <tr>
