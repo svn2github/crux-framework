@@ -1152,7 +1152,7 @@ public class GreetingServiceImpl implements GreetingService{
 
 To find out which implementation will be used for a given service interface, _*Crux*_ will search (using javassist) for classes that implements that interface and use the first one found.
 
-This behaviour can be changed, as showed in section [UserManual#4.3.2.5_controllerFactory controllerFactory].
+This behaviour can be changed, as showed in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
 
 If your service class needs to access the request, response or session, it can implements the interfaces RequestAware, ResponseAware or SessionAware, as in the following example:
 
@@ -1332,7 +1332,7 @@ The following properties can be set in this file:
 ||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
 ||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
-||controllerFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ControllerFactoryImpl||
+||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
 
@@ -1499,18 +1499,18 @@ public class WebLogicClassPathResolver extends ClassPathResolverImpl
 }
 }}}
 
-==== 4.3.2.5 controllerFactory ====
+==== 4.3.2.5 serviceFactory ====
 
 The section [UserManual#4.1_Writing_Server_Services Writing Server Services] shows the default mechanism used to discovery your service implementation classes.
 
 However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springframework.net/ spring] or to make your service classes EJBs.
 
-Using the property {{{controllerFactory}}} you can specify your own class, that just need to implement the following interface:
+Using the property {{{serviceFactory}}} you can specify your own class, that just need to implement the following interface:
 
 {{{
-public interface ControllerFactory 
+public interface ServiceFactory 
 {
-	Object getController(String controllerName);
+	Object getService(String serviceName);
 	void initialize(ServletContext context);
 }
 }}}
