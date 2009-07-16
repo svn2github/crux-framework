@@ -13,6 +13,8 @@ _*Crux*_ allows you to create web user interfaces in a declarative and modulariz
 
 All GWT widgets are available for using with _*Crux*_, and it is easy to create new widgets or even plug in an already existent set of them. Fore more information about custom widgets, take a look at [WidgetDeveloperManual Widget Developer Manual].
 
+http://crux-framework.googlecode.com/svn/wiki/images/controller-client-side.gif
+
 =Simple Example=
 The following example illustrates how to create a simple HTML page with _*Crux*_ and how to interact with it using a java controller.
 
