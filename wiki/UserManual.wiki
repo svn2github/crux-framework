@@ -12,7 +12,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 
 == 2.1 Install ==
 
-  * Download the lastest _*Crux*_ release [http://crux-framework.googlecode.com/files/crux-1.0.0-RC1.zip here];
+  * Download the lastest _*Crux*_ release [http://code.google.com/p/crux-framework/downloads/list here];
   * Unzip the archive into a folder you want;
   * Edit the file named {{{project.properties}}}, setting your project attributes;
   * Open a command line shell and run the script {{{projectGenerator}}}, as shown below:
