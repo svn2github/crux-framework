@@ -1,4 +1,4 @@
-#labels Featured,Phase-Requirements
+#labels Featured
 = What is *_Crux_*? =
 _*Crux*_ is a component framework created over [http://code.google.com/p/google-web-toolkit/ GWT] for fast development of web applications. 
 
