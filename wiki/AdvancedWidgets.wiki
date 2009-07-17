@@ -2,7 +2,7 @@
 
 This is the list of widgets present in crux-advanced-widgets.jar:
 
-|| *Type* || *Widget* || Brief description ||
+|| *Type* || *Widget* || *Brief description* ||
 ||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||A TitlePanel capable of folding itself, hiding its contents||
 ||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||A button based on a 3x1 table, useful for building rounded corners||
 ||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
