@@ -62,6 +62,8 @@ This is the list of widgets present in crux-basic-widgets.jar. It contains all w
 ||verticalPanel||com.google.gwt.user.client.ui.VerticalPanel||
 
 
+
+
 = 2 Advanced Widgets =
 
 This is the list of widgets present in crux-advanced-widgets.jar:
