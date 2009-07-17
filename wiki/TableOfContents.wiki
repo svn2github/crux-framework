@@ -52,7 +52,7 @@
 <td>*[WidgetDeveloperManual Component Developer Manual]*</td>
 </tr>
 <tr>
-<td>*[Widgets Widgets]*</td>
+<td>*Widgets*</td>
 </tr>  
 <tr>
 <td>....[Widgets#Basic_Widgets Basic]</td>
