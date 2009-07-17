@@ -61,7 +61,7 @@
 <td>*[WidgetDeveloperManual Widget Developer Manual]*</td>
 </tr>
 <tr>
-<td>*[WhatIsKeepingUsBusy What is keeping us busy]*</td>
+<td>*[WhatIsKeepingUsBusy What Is Keeping us Busy]*</td>
 </tr>  
 <tr>
 <td>*[FAQ FAQ]*</td>
