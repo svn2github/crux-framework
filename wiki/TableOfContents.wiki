@@ -52,13 +52,13 @@
 <td>*[WidgetDeveloperManual Component Developer Manual]*</td>
 </tr>
 <tr>
-<td>*Widgets*</td>
+<td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
-<td>....[Widgets#Basic_Widgets Basic]</td>
+<td>....[Widgets#1_Basic_Widgets Basic]</td>
 </tr>  
 <tr>
-<td>....[AdvancedWidgets Advanced]</td>
+<td>....[Widgets#2_Advanced_Widgets Basic]</td>
 </tr>  
 <tr>
 <td>*[WhatIsKeepingUsBusy What is keeping us busy]*</td>
