@@ -1,4 +1,4 @@
-= Basic Widgets =
+= 1 Basic Widgets =
 
 This is the list of widgets present in crux-basic-widgets.jar. It contains all widgets present in default GWT distribution.
 
@@ -60,3 +60,19 @@ This is the list of widgets present in crux-basic-widgets.jar. It contains all w
 ||tree||com.google.gwt.user.client.ui.Tree||
 ||verticalSplitPanel||com.google.gwt.user.client.ui.VerticalSplitPanel||
 ||verticalPanel||com.google.gwt.user.client.ui.VerticalPanel||
+
+= 2 Advanced Widgets =
+
+This is the list of widgets present in crux-advanced-widgets.jar:
+
+|| *Type* || *Widget* || *Brief description* ||
+||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||A TitlePanel capable of folding itself, hiding its contents||
+||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||A button based on a 3x1 table, useful for building rounded corners||
+||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
+||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||A tabbed set of pages, each of which can display html pages|| 
+||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
+||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
+||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||A vertical accordion menu||
+||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
+||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
+||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
