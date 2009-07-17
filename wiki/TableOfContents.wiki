@@ -55,10 +55,10 @@
 <td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
-<td>....[Widgets#1_Basic_Widgets Basic]</td>
+<td>....*1* [Widgets#1_Basic_Widgets Basic]</td>
 </tr>  
 <tr>
-<td>....[Widgets#2_Advanced_Widgets Advanced]</td>
+<td>....*2* [Widgets#2_Advanced_Widgets Advanced]</td>
 </tr>  
 <tr>
 <td>*[WhatIsKeepingUsBusy What is keeping us busy]*</td>
