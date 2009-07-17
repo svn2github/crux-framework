@@ -10,6 +10,6 @@ This is the list of widgets present in crux-advanced-widgets.jar:
 ||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
 ||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
 ||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||A vertical accordion menu||
-||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fire events for scheduled times||
+||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
 ||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
 ||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
