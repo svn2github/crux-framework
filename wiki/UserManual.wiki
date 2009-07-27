@@ -92,8 +92,9 @@ The following code is an example of the first method:
 </html>
 }}} 
 
-You can consult the following [Widgets#Basic_Widgets table] to verify the type for default GWT widgets.
+_*Crux*_ engine will parse your page document at the client side replacing the special {{{<span>}}} tags to the correct widgets.
 
+You can consult the following [Widgets#Basic_Widgets table] to verify the type for default GWT widgets.
 
 
 === 3.1.2 Writing XML Pages===
