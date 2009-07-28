@@ -1,9 +1,6 @@
 ==Contents==
 <table>
 <tr>
-<td>*[Overview Overview]*</td>
-</tr>
-<tr>
 <td>*[UserManual User Manual]*</td>
 </tr>
 <tr>
