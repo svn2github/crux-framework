@@ -975,8 +975,51 @@ or
 
 The annotation {{{@SerializableName}}} could be used to simplify the name you write on screen tag.
 
-===3.3.3.6 Validation===
+==== 3.3.3.6 Validation====
 
+_*Crux*_ supports declaration of validators for a controller handler method. A Validator method is called before the handler method itself. If it runs without problem, the handler is called. If it throws any exception, the handler execution is aborted and a message is reported to the user.
+
+To declare a validator method to a given handler method, you just need to use the {{{@Validate}}} annotation :
+
+{{{
+@Controller("clientHandler")
+public class MyController
+{
+   
+   @Validate("myValidationMethod")
+   @Expose
+   public void onClose(CloseEvent<Window> event)
+   {
+       // code here   
+   }
+      
+   protected void myValidationMethod() throws ValidateException
+   {
+       // code here   
+   }
+}
+}}}
+
+If no value is passed to the {{{@Validate}}} annotation, _*Crux*_ tries to find a method called {{{validate<methodName>}}}. 
+
+{{{
+@Controller("clientHandler")
+public class MyController
+{
+   
+   @Validate
+   @Expose
+   public void onClose(CloseEvent<Window> event)
+   {
+       // code here   
+   }
+      
+   protected void validateOnClose() throws ValidateException
+   {
+       // code here   
+   }
+}
+}}}
 
 == 3.4 I18N ==
 
@@ -1132,6 +1175,8 @@ public class MyController {
         }
 }
 }}}
+
+== 3.6 Handling Errors==
 
 = 4 Coding Server Side =
 
