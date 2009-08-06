@@ -883,7 +883,7 @@ See the example:
    ...
    Window.alert(Screen.invokeControllerOnTop("myController.hello","Thiago"));
    Window.alert(Screen.invokeControllerOnSelf("myController.helloLocal","Thiago"));
-   Window.alert(Screen.invokeControllerOnSelf("myController.parametersExample",new Object[]{new Integer(123), "Thiago", new Boolean(true)}));
+   Window.alert(Screen.invokeControllerOnParent("myController.parametersExample",new Object[]{new Integer(123), "Thiago", new Boolean(true)}));
    ...
 }}}
 
@@ -893,7 +893,7 @@ or
    ...
    Window.alert(myControllerInvoker.helloOnTop("Thiago"));
    Window.alert(myControllerInvoker.helloLocalOnSelf("Thiago"));
-   Window.alert(myControllerInvoker.parametersExample(1234, "Thiago", true));
+   Window.alert(myControllerInvoker.parametersExampleOnParent(1234, "Thiago", true));
    ...
 }}}
 
@@ -974,6 +974,9 @@ or
 }}}
 
 The annotation {{{@SerializableName}}} could be used to simplify the name you write on screen tag.
+
+===3.3.3.6 Validation===
+
 
 == 3.4 I18N ==
 
