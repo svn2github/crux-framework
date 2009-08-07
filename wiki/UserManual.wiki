@@ -1224,6 +1224,7 @@ Here you can see how a formatter could be used:
    </head>
    <body>
       <a:maskedTextBox id="maskedTextBox" formatter="phone" width="90"/>   
+      <a:maskedTextBox id="dateMaskedTextBox" formatter="date" width="90"/>   
    </body>
 </html>
 }}}
@@ -1298,7 +1299,7 @@ Another example:
 
 {{{
 @FormatterName("date")
-public static class DateFormatter extends MaskedTextBoxBaseFormatter implements Formatter {
+public static class DateFormatter extends MaskedTextBoxBaseFormatter {
 
     DateTimeFormat format = DateTimeFormat.getFormat("MM/dd/yyyy");
 
