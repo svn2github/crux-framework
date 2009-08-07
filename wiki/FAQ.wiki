@@ -26,18 +26,3 @@ We can not use custom tags like {{{grid}}} at client side because HTML has a clo
 A: To find out if your application is running under a development environment, _*Crux*_ checks for this two conditions. If one of them is true, it assumes a development environment:
   # Your application server was started by GWT HostedMode class.
   # Your application server is running in debug mode.
-
-
-
-==Performance==
-*Q: How fast _Crux_ declarative approach can be compared with default GWT approach (programmatic)?*
-
-*Q: How much can _Crux_ increase the final javascript size? And the host page size?*
-
-*Q: Using _Crux_, usually I write strings that contains the name of my controller and the method name that I want to call (in pages). GWT does not support reflection for performance reasons. Does _Crux_ approach break this GWT design to emulate reflection? If not, how _Crux_ make these types of calls without use reflection?*
-
-*Q: About server side code? _Crux_ add any overhead?*
-
-
-
-
