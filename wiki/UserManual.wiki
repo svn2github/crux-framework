@@ -1182,24 +1182,24 @@ _*Crux*_ provides two basic interfaces for client errors reporting.
   * {{{ErrorHandler}}}
   * {{{ValidationErrorHandler}}}
 
-Those interfaces are used always an error occurs that needs to be reported to user (or to developer). 
+Those interfaces are used always occurs an error that needs to be reported to user (or to developer). 
 The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by client miss using the application (validations on the screen before perform an action).
 
-_*Crux*_ provides a default {{{Errorhandler}}}  that implements the two interfaces and, for the both types of errors:
+_*Crux*_ provides a default {{{Errorhandler}}}  that implements both interfaces and, for the both types of errors:
   * Logs in GWT console all exceptions received.
   * Shows the messages using the {{{Window.alert()}}} method.
 
 If you want to change the default error handling class, you can specify in your module file:
 
 {{{
-	<!-- Specify the default implementation to ErrorHandler.-->
-	<replace-with class="br.com.sysmap.crux.core.client.errors.ErrorHandlerImpl">
-		<when-type-assignable class="YourErrorHandlerClass" />
+	<!-- Specify the implementation to ErrorHandler.-->
+	<replace-with class="YourErrorHandlerClass">
+		<when-type-assignable class="br.com.sysmap.crux.core.client.errors.ErrorHandler" />
 	</replace-with>
 
-	<!-- Specify the default implementation to ValidationErrorHandler.-->
-	<replace-with class="br.com.sysmap.crux.core.client.errors.ErrorHandlerImpl">
-		<when-type-assignable class="YourValidationErrorHandlerClass" />
+	<!-- Specify the implementation to ValidationErrorHandler.-->
+	<replace-with class="YourValidationErrorHandlerClass">
+		<when-type-assignable class="br.com.sysmap.crux.core.client.errors.ValidationErrorHandler" />
 	</replace-with>
 
 }}}
