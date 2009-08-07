@@ -56,7 +56,7 @@ Here we will explore the application generated in the previous section, explaini
 
 Your modules must inherit _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
 
-If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint ({{{br.com.sysmap.crux.core.client.JSEngine}}}) and call super on your onModuleLoad() method.
+If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint ({{{br.com.sysmap.crux.core.client.Crux}}}) and call super on your onModuleLoad() method.
 
 The following example shows a module that can use any widget provided by default distribution of Crux:
 {{{
@@ -546,7 +546,7 @@ The Controller annotation has the following properties:
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
+||autoBind||no||true||If true, [UserManual#3.3.3.3_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 
 ==== 3.3.3.2 The @Create Annotation====
 
@@ -591,7 +591,7 @@ Note that {{{@Create}}} can handle service creation too, despite the fact that t
 
 You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter methods.
 
-====3.3.3.3 Value Binding====
+==== 3.3.3.3 Value Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between screen widgets and data objects.
 
@@ -977,7 +977,7 @@ The annotation {{{@SerializableName}}} could be used to simplify the name you wr
 
 ==== 3.3.3.6 Validation====
 
-_*Crux*_ supports declaration of validators for a controller handler method. A Validator method is called before the handler method itself. If it runs without problem, the handler is called. If it throws any exception, the handler execution is aborted and a message is reported to the user.
+_*Crux*_ supports declaration of validators for a controller handler method. A Validator method is called before the handler method itself. If it runs without problem, the handler is called. If it throws any exception, the handler execution is aborted and a message is reported to the user through the _*Crux*_ [UserManual#3.6_Handling_Errors Error Handlers].
 
 To declare a validator method to a given handler method, you just need to use the {{{@Validate}}} annotation :
 
@@ -1177,6 +1177,16 @@ public class MyController {
 }}}
 
 == 3.6 Handling Errors==
+
+_*Crux*_ provides two basic interfaces for client errors reporting.
+  * {{{ErrorHandler}}}
+  * {{{ValidationErrorHandler}}}
+  
+Those interfaces are used always an error occurs that needs to be reported to user (or to developer). The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by client miss using the application (validations on the screen before perform an action).
+
+_*Crux*_ provides a default {{{Errorhandler}}}  that implements the two interfaces and, for the both types of errors:
+  * Logs in GWT console all exceptions received.
+  * Shows the messages using the {{{Window.alert()}}} method.
 
 = 4 Coding Server Side =
 
