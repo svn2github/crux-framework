@@ -1182,7 +1182,8 @@ _*Crux*_ provides two basic interfaces for client errors reporting.
   * {{{ErrorHandler}}}
   * {{{ValidationErrorHandler}}}
   
-Those interfaces are used always an error occurs that needs to be reported to user (or to developer). The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by client miss using the application (validations on the screen before perform an action).
+Those interfaces are used always an error occurs that needs to be reported to user (or to developer). The interface {{{ErrorHandler}}} is called to report errors in
+ application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by client miss using the application (validations on the screen before perform an action).
 
 _*Crux*_ provides a default {{{Errorhandler}}}  that implements the two interfaces and, for the both types of errors:
   * Logs in GWT console all exceptions received.
