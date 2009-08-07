@@ -1204,6 +1204,49 @@ If you want to change the default error handling class, you can specify in your 
 
 }}}
 
+== 3.7 Formatters==
+
+Formatters can be used to provides to widgets, the capabilities:
+  * Input/Output formating/unformatting;
+  * Input masking (masks can be defined with regular expressions);
+  * Data conversions to/from string.
+  
+A widget must implements the interface {{{HasFormatter}}} to be associated with a formatter and formatters can be defined implementing the interface {{{Formatter}}}.
+
+The following example shows how a custom formatter could be defined:
+
+{{{
+@FormatterName("phone")
+public class PhoneFormatter implements Formatter
+{
+	public String format(Object input)
+	{
+		if (input == null || !(input instanceof String) || ((String)input).length() != 10)
+		{
+			return "";
+		}
+		
+		String strInput = (String) input;
+		
+		return "("+strInput.substring(0,2)+")"+strInput.substring(2,6)+"-"+strInput.substring(6);
+	}
+
+	public Object unformat(String input) throws InvalidFormatException
+	{
+		if (input == null || !(input instanceof String) || ((String)input).length() != 13)
+		{
+			return "";
+		}
+		String inputStr = (String)input;
+		inputStr = inputStr.substring(1,3)+inputStr.substring(4,8)+inputStr.substring(9,13);
+		return inputStr;
+	}
+}
+}}} 
+
+The above code, specifies a formatter that will present its associated widget content (a phone number) in the format:{{{ (99)9999-9999}}}. That formatter does not provides input masking feature. To create a version of the formatter with this feature, you must implements the interface {{{MaskedFormatter}}}
+
+
 = 4 Coding Server Side =
 
 == 4.1 Writing Server Services ==
@@ -1410,6 +1453,7 @@ The following properties can be set in this file:
 ||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
+||allowAutoBindWithNonDeclarativeWidgets|Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||true||
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
 
@@ -1591,3 +1635,9 @@ public interface ServiceFactory
 	void initialize(ServletContext context);
 }
 }}}
+
+==== 4.3.2.6 allowAutoBindWithNonDeclarativeWidgets====
+
+This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmaticaly. To prevent undesireable bugs on applications, the default value to this is true. 
+
+However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to false, _*Crux*_ can transfer to a generator the responsability to handle the binding code, keeping the final code smaller and simpler.
