@@ -812,7 +812,7 @@ public class Address
 </html>
 }}}
 
-In the above example, the field {{{phone}}} will not be bound to any widget, once there is not an widget with id {{{phone}}}. Another important point is that each field only can be bound to widgets that are able to return values of the same type of the field. 
+In the above example, the field {{{phone}}} will not be bound to any widget, once there is not any widget with id {{{phone}}}. Another important point is that each field only can be bound to widgets that are able to return values of the same type of the field. 
 
 The field {{{birth}}} only can be bound to widgets that implements {{{HasValue<Date>}}} (like {{{DateBox}}}) or {{{HasFormatter}}} and is associated with a formatter that returns {{{Date}}} objects. See the [UserManual#3.7_Formatters Formatters] section to more info about formatters.
 
