@@ -37,6 +37,9 @@
 <td>........*3.6* [UserManual#3.6_Handling_Errors Handling Errors]</td>
 </tr>
 <tr>
+<td>........*3.7* [UserManual#3.7_Formatters Formatters]</td>
+</tr>
+<tr>
 <td>....*4* [UserManual#4_Coding_Server_Side Coding Server Side]</td>
 </tr>  
 <tr>
