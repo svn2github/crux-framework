@@ -1,3 +1,4 @@
+//TODO: Under Construction
 = 1 Core Errors=
 
 == 1.1 Client Errors==
@@ -9,7 +10,7 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[event 002]}}}*||Error running client method {{{<call>}}}.||During the invocation of {{{<call>}}}, an uncaught exception was throwed.<br/> Search GWT console for the complete stacktrace.|| 
 ||*{{{[event 003]}}}*||Invalid declaration for handler method {{{<call>}}}. <br/>Correct syntaxe is {{{<controller.method>}}}.||The {{{<call>}}} does not follow the _*Crux*_ syntax for event declarations: {{{<controller.method>}}}|| 
 ||*{{{[screenFactory 001]}}}*||Error Creating widget: {{{<errMsg>}}}. See Log for more detail.||This is a generic error, caused by any exception throwed during document parser.<br/> You must consult GWT console for the complete stacktrace.|| 
-||*{{{[screenFactory 002]}}}*||Can not found widgetFactory for type: {{{widgetType}}}.||1. The type of the widget declared on {{{<span> type}}} attribute does not have any <br/>correspondent registered on _*Crux*_ declarative engine.<br/>2. You are using GWT Hosted mode hot deploy and _*Crux*_ is set <br/>to optimize your code including on your script only the widget factories <br/>used on page. If you insert a new type of widget in your HTML<br/>, just restart the GWT console.|| 
+||*{{{[screenFactory 002]}}}*||Can not found widgetFactory for type: {{{widgetType}}}.||1. The type of the widget declared on {{{<span> type}}} attribute does not have any <br/>correspondent registered on _*Crux*_ declarative engine.<br/>2. You are using GWT Hosted mode hot deploy and _*Crux*_ is set <br/>to optimize your code including on your script only the widget factories <br/>used on page. If you insert a new type of widget in your HTML, <br/>just restart the GWT console.|| 
 
 == 1.2 Server Errors==
 
@@ -23,3 +24,7 @@ This section describes the errors that can occur during server processing.
 Crux contains a lot of Generators to perform all of its features. This section describes the errors that can occur during rebind process. 
 
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
+
+= 2 Basic Widgets Errors=
+
+= 3 Advanced Widgets Errors=
