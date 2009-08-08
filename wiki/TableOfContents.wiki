@@ -52,6 +52,9 @@
 <td>........*4.3* [UserManual#4.3_Setup Setup]</td>
 </tr>
 <tr>
+<td>*[CruxErrors Crux Errors Description]*</td>
+</tr>  
+<tr>
 <td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
