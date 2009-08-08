@@ -3,8 +3,8 @@
 == 1 Client Errors==
 
 || *Error Code* || *Error Message* || Can Be Caused By ||
-||{{{[event 001]}}}||Client Controller Named <controller> not found.||1. A controller refered by some widget or by some screen invoker operation <br/>is not declared in {{{useController}}} attribute of {{{<screen>}}} tag on page.|| 
-||{{{[event 002]}}}||Error running client method <call>.||During the invocation of <call>, an uncaught exception was throwed.<br/> Search GWT console for the complete stacktrace.|| 
-||{{{[event 003]}}}||Invalid declaration for handler method <call>. Correct syntaxe is <controller.method>.||The <call> does not follow the _*Crux*_ syntax for event declarations: <controller.method>|| 
+||{{{[event 001]}}}||Client Controller Named {{{<controller>}}} not found.||1. A controller refered by some widget or by some screen invoker operation <br/>is not declared in {{{useController}}} attribute of {{{<screen>}}} tag on page.|| 
+||{{{[event 002]}}}||Error running client method {{{<call>}}}.||During the invocation of {{{<call>}}}, an uncaught exception was throwed.<br/> Search GWT console for the complete stacktrace.|| 
+||{{{[event 003]}}}||Invalid declaration for handler method {{{<call>}}}. Correct syntaxe is {{{<controller.method>}}}.||The {{{<call>}}} does not follow the _*Crux*_ syntax for event declarations: {{{<controller.method>}}}|| 
 
 
