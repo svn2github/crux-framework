@@ -1,10 +1,24 @@
 = 1 Core Errors=
 
-== 1 Client Errors==
+== 1.1 Client Errors==
 
-|| *Error Code* || *Error Message* || Can Be Caused By ||
+This section describes the errors that can occur during client (browser) processing.
+
+|| *Error Code* || *Error Message* || *Can Be Caused By* ||
 ||{{{[event 001]}}}||Client Controller Named {{{<controller>}}} not found.||1. A controller refered by some widget or by some screen invoker operation <br/>is not declared in {{{useController}}} attribute of {{{<screen>}}} tag on page.|| 
 ||{{{[event 002]}}}||Error running client method {{{<call>}}}.||During the invocation of {{{<call>}}}, an uncaught exception was throwed.<br/> Search GWT console for the complete stacktrace.|| 
-||{{{[event 003]}}}||Invalid declaration for handler method {{{<call>}}}. Correct syntaxe is {{{<controller.method>}}}.||The {{{<call>}}} does not follow the _*Crux*_ syntax for event declarations: {{{<controller.method>}}}|| 
+||{{{[event 003]}}}||Invalid declaration for handler method {{{<call>}}}. <br/>Correct syntaxe is {{{<controller.method>}}}.||The {{{<call>}}} does not follow the _*Crux*_ syntax for event declarations: {{{<controller.method>}}}|| 
+||{{{[screenFactory 001]}}}||Error Creating widget: {{{<errMsg>}}}. See Log for more detail.||This is a generic error, caused by any exception throwed during document parser.<br/> You must consult GWT console for the complete stacktrace.|| 
+
+== 1.2 Server Errors==
+
+This section describes the errors that can occur during server processing.
+
+|| *Error Code* || *Error Message* || *Can Be Caused By* ||
 
 
+== 1.3 Rebind Errors==
+
+Crux contains a lot of Generators to perform all of its features. This section describes the errors that can occur during rebind process. 
+
+|| *Error Code* || *Error Message* || *Can Be Caused By* ||
