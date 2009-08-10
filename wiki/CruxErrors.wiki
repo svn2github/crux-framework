@@ -20,7 +20,7 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[widget 006]}}}*||The element is not a span.||The WidgetFactory that was trying to create the widget <br/>was expecting to find a {{{<span>}}} tag.|| 
 ||*{{{[callback 001]}}}*||An Invalid controller was passed to AsyncCallbackAdapter.||AsyncCallbackAdapter received an object as parameter in constructor<br/> that is not a valid controller object.||
 
-=== 1.1.2 Client Messages===
+=== 1.1.2 Client Warning Messages===
 
 This section describes the messages that can occur during client (browser) processing.
 
