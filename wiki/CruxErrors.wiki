@@ -22,7 +22,7 @@ This section describes the errors that can occur during client (browser) process
 
 === 1.1.2 Client Warning Messages===
 
-This section describes the messages that can occur during client (browser) processing.
+This section describes the warning messages that can occur during client (browser) processing.
 
 || *Message Code* || *Message* ||
 ||*{{{[widget 007]}}}*||The widget {{{<widgetId>}}} was added to a pure HTML node where <br/>already exists other children. In this case, crux can not ensure <br/>an order for this widget. To solve this, If you must use panels as widget<br/>parent or enable the wrapSiblingWidgets config property.||
