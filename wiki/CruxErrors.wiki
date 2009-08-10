@@ -15,12 +15,12 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[widget 002]}}}*||The widget {{{<widgetId>}}} does not implement HasWidgets and can <br/>not contains any other widget.||An widget was declared on page inside another widget that does not support inner widgets.||
 ||*{{{[widget 003]}}}*||Can not create widget {{{<widgetId>}}}. Verify the widget type.||An error occured while instanting the widget.<br/> The widgetFactory associated with this type just returned null.|| 
 ||*{{{[widget 004]}}}*||The span element must contains at least one child.||Some widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find elements inside the {{{<span>}}} tag it was analysing.|| 
-||*{{{[widget 005]}}}*||The span element does not represents a widget.||Some widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find a widget on the {{{<span>}}} tag it was analysing.|| 
+||*{{{[widget 005]}}}*||The span element does not represents a widget.||A widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find a widget on the {{{<span>}}} tag it was analysing.|| 
 ||*{{{[widget 006]}}}*||The element is not a span.||The WidgetFactory that was trying to create the widget <br/>was expecting to find a {{{<span>}}} tag.|| 
 
 
 === 1.1.1 Client Warning Messages===
-||*{{{[widget 007]}}}*||The widget {{{<widgetId>}}} was added to a pure HTML node where <br/>already exists other children. In this case, crux can not ensure <br/>an order for this widget. To solve this, If you must use panels as widget<br/>parent or enable the wrapSiblingWidgets config property.||||
+||*{{{[widget 007]}}}*||The widget {{{<widgetId>}}} was added to a pure HTML node where <br/>already exists other children. In this case, crux can not ensure <br/>an order for this widget. To solve this, If you must use panels as widget<br/>parent or enable the wrapSiblingWidgets config property.||
  
 
 == 1.2 Server Errors==
