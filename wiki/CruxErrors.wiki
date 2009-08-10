@@ -1,7 +1,8 @@
-//TODO: Under Construction
-= 1 Core Errors=
+= 1 Core Messages=
 
-== 1.1 Client Errors==
+== 1.1 Client Messages==
+
+=== 1.1.1 Client Errors===
 
 This section describes the errors that can occur during client (browser) processing.
 
@@ -17,18 +18,29 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[widget 004]}}}*||The span element must contains at least one child.||Some widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find elements inside the {{{<span>}}} tag it was analysing.|| 
 ||*{{{[widget 005]}}}*||The span element does not represents a widget.||A widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find a widget on the {{{<span>}}} tag it was analysing.|| 
 ||*{{{[widget 006]}}}*||The element is not a span.||The WidgetFactory that was trying to create the widget <br/>was expecting to find a {{{<span>}}} tag.|| 
+||*{{{[callback 001]}}}*||An Invalid controller was passed to AsyncCallbackAdapter.||AsyncCallbackAdapter received an object as parameter in constructor<br/> that is not a valid controller object.||
 
+=== 1.1.2 Client Messages===
 
-=== 1.1.1 Client Warning Messages===
+This section describes the messages that can occur during client (browser) processing.
+
+|| *Message Code* || *Message* ||
 ||*{{{[widget 007]}}}*||The widget {{{<widgetId>}}} was added to a pure HTML node where <br/>already exists other children. In this case, crux can not ensure <br/>an order for this widget. To solve this, If you must use panels as widget<br/>parent or enable the wrapSiblingWidgets config property.||
  
 
-== 1.2 Server Errors==
+== 1.2 Server Messages==
+
+=== 1.2.1 Server Errors===
 
 This section describes the errors that can occur during server processing.
 
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
 
+=== 1.2.2 Server Messages===
+
+This section describes the messages that can occur during server processing.
+
+|| *Message Code* || *Message* ||Occurs when||
 
 == 1.3 Rebind Errors==
 
