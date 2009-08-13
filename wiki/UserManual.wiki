@@ -8,6 +8,11 @@ This documentation will show you, in a detailed and gradual way, how to use the 
   * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend using 1.6);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
+== 1.1 _Crux_ and GWT==
+
+_*Crux*_ is built over GWT. It means that all GWT features work on _Crux_.
+Current _*Crux*_ version requires GWT 1.7 version to work.
+
 = 2 Quick Start=
 
 == 2.1 Install ==
