@@ -11,7 +11,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 == 1.1 _Crux_ and GWT==
 
 _*Crux*_ is built over GWT and support all of its features.
-Current _*Crux*_ version requires GWT 1.7 version to work.
+Current _*Crux*_ version uses GWT 1.7.
 
 = 2 Quick Start=
 
