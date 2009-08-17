@@ -39,12 +39,14 @@ This section describes the warning messages that can occur during client (browse
 This section describes the errors that can occur during server processing.
 
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
+||*{{{[annotationScanner 002]}}}*||Error creating index of annotations: {{{message}}}||An error stopped the _*Crux*_ resource scanner.||
 
 === 1.2.2 Server Messages===
 
 This section describes the messages that can occur during server processing.
 
-|| *Message Code* || *Message* ||Occurs when||
+|| *Message Code* || *Message* ||*Occurs when*||
+||*{{{[annotationScanner 001]}}}*||Building index of annotations for classes.||An informative message that is showed when _*Crux*_ build the<br/>internal index of classes that is used to scan resouces.||
 
 == 1.3 Rebind Errors==
 
