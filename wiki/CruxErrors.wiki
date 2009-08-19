@@ -46,10 +46,16 @@ This section describes the errors that can occur during server processing.
 ||*{{{[widgetConfigScanner 001]}}}*||Error initializing widgetConfigScanner: {{{ErrMessage}}}||Error while scanning classpath for widget library descriptor files.||
 ||*{{{[services 001]}}}*||Error initializing services: {{{ErrMessage}}}||Error while scanning classpath for a server service class.||
 ||*{{{[serviceFactoryInitializer 002]}}}*||Error initializing serviceFactory: {{{ErrMessage}}}||Error while creating the server services factory class.||
+||*{{{[scannerURLS 001]}}}*||Error searching /WEB-INF/classes dir: {{{ErrMessage}}}||Error while obtaining url for web-inf/classes directory.||
+||*{{{[scannerURLS 002]}}}*||Error searching /WEB-INF/lib dir: {{{ErrMessage}}}||Error while obtaining url for web-inf/lib directory.||
+||*{{{[formatters 001]}}}*|Error initializing formatters: {{{ErrMessage}}}||Error while scanning classpath for a formatter class.||
 
 
 
-=== 1.2.2 Server Messages===
+
+
+
+=== 1.2.2 Server Informative Messages===
 
 This section describes the messages that can occur during server processing.
 
@@ -63,6 +69,7 @@ This section describes the messages that can occur during server processing.
 Crux contains a lot of Generators to perform all of its features. This section describes the errors that can occur during rebind process. 
 
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
+||*{{{[screenFactory 001]}}}*||The id attribute is required for CRUX Widgets.||A widget was declared without id.||
 
 = 2 Basic Widgets Errors=
 
