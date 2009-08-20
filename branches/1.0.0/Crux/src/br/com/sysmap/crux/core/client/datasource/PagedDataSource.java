@@ -13,14 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.event;
+package br.com.sysmap.crux.core.client.datasource;
 
-import br.com.sysmap.crux.core.client.screen.ScreenBindableObject;
-
-import com.google.gwt.event.shared.GwtEvent;
-
-public interface EventClientHandlerInvoker extends ScreenBindableObject
+/**
+ * 
+ * @author Thiago da Rosa de Bustamante <code>tr_bustamante@yahoo.com.br</code>
+ *
+ */
+public interface PagedDataSource<T extends DataSourceRecord> extends ScrollableDataSource<T>
 {
-	void invoke(String metodo, GwtEvent<?> sourceEvent, EventProcessor eventProcessor) throws Exception;
-	void invoke(String method, CruxEvent<?> sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception;
+	boolean hasNextPage();
+	boolean nextPage();
+	
+	boolean hasPreviousPage();
+	boolean previousPage();
+	
+	int getPageCount();
+	
+	int getPageSize();
+	void setPageSize(int pageSize);
+	int getCurrentPageSize();
+	
+	boolean setCurrentPage(int pageNumber);
+	int getCurrentPage();
 }

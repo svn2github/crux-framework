@@ -13,14 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.event;
+package br.com.sysmap.crux.core.client.datasource;
 
-import br.com.sysmap.crux.core.client.screen.ScreenBindableObject;
 
-import com.google.gwt.event.shared.GwtEvent;
 
-public interface EventClientHandlerInvoker extends ScreenBindableObject
+/**
+ * @author Thiago da Rosa de Bustamante <code>tr_bustamante@yahoo.com.br</code>
+ *
+ */
+public interface RemoteDataSource<R extends DataSourceRecord, E>
 {
-	void invoke(String metodo, GwtEvent<?> sourceEvent, EventProcessor eventProcessor) throws Exception;
-	void invoke(String method, CruxEvent<?> sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception;
+	void load();
+	void setLoadData(RemoteDataSourceConfiguration config);
+	void fetch(int startRecord, int endRecord);
+	void update(R[] records);
+	void updateData(E[] data);
+	void setCallback(RemoteDataSourceCallback callback);
 }

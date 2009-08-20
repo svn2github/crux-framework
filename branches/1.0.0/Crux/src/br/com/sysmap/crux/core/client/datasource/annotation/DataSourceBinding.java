@@ -13,14 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.event;
+package br.com.sysmap.crux.core.client.datasource.annotation;
 
-import br.com.sysmap.crux.core.client.screen.ScreenBindableObject;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.google.gwt.event.shared.GwtEvent;
-
-public interface EventClientHandlerInvoker extends ScreenBindableObject
-{
-	void invoke(String metodo, GwtEvent<?> sourceEvent, EventProcessor eventProcessor) throws Exception;
-	void invoke(String method, CruxEvent<?> sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception;
+/**
+ * @author Thiago da Rosa de Bustamante <code>tr_bustamante@yahoo.com.br</code>
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface DataSourceBinding {
+	String identifier();
+	String[] includeFields() default {};
+	String[] excludeFields() default {};
 }

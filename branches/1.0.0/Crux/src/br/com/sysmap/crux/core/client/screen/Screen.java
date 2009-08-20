@@ -24,7 +24,6 @@ import java.util.Map;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.context.ContextManager;
 import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.EventClientHandlerInvoker;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 
@@ -376,34 +375,34 @@ public class Screen
 	
 	/**
 	 * Update widgets on screen that have the same id of fields mapped with ValueObject
-	 * @param eventHandler
+	 * @param caller
 	 */
 	protected void updateScreenWidgets(Object eventHandler)
 	{
 		if (eventHandler != null)
 		{
-			if (!(eventHandler instanceof EventClientHandlerInvoker))
+			if (!(eventHandler instanceof ScreenBindableObject))
 			{
-				throw new ClassCastException(Crux.getMessages().screenInvalidHandlerError());
+				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
 			}
 
-			((EventClientHandlerInvoker) eventHandler).updateScreenWidgets();
+			((ScreenBindableObject) eventHandler).updateScreenWidgets();
 		}
 	}
 	
 	/**
 	 * Update fields mapped with ValueObject from widgets that have similar names.
-	 * @param eventHandler
+	 * @param caller
 	 */
 	protected void updateControllerObjects(Object eventHandler)
 	{
 		if (eventHandler != null)
 		{
-			if (!(eventHandler instanceof EventClientHandlerInvoker))
+			if (!(eventHandler instanceof ScreenBindableObject))
 			{
-				throw new ClassCastException(Crux.getMessages().screenInvalidHandlerError());
+				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
 			}
-			((EventClientHandlerInvoker) eventHandler).updateControllerObjects();
+			((ScreenBindableObject) eventHandler).updateControllerObjects();
 
 		}
 	}
@@ -527,7 +526,7 @@ public class Screen
 	/**
 	 * Update widgets on screen that have the same id of fields mapped with ValueObject
 	 * 
-	 * @param eventHandler
+	 * @param caller
 	 */
 	public static void updateScreen(Object eventHandler)
 	{
@@ -537,7 +536,7 @@ public class Screen
 	/**
 	 * Update fields mapped with ValueObject from widgets that have similar names.
 	 * 
-	 * @param eventHandler
+	 * @param caller
 	 */
 	public void updateController(Object eventHandler)
 	{

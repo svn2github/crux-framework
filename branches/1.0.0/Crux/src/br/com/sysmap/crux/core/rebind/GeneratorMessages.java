@@ -40,7 +40,7 @@ public interface GeneratorMessages
 	String errorGeneratingRegisteredElementInvalidScreenID();
 
 	@DefaultMessage("[generator 006] - property {0} can could not be created. This is not visible neither has a getter/setter method.")
-	String registeredClientEventHandlerPropertyNotFound(String name);
+	String registeredClientObjectPropertyNotFound(String name);
 
 	@DefaultMessage("[generator 007] - Error generating class for declared message {0}.")
 	String errorGeneratingDeclaredMessagesClassNotFound(String string);
@@ -67,5 +67,44 @@ public interface GeneratorMessages
 	String errorInvokerWrapperSerializationError();
 
 	@DefaultMessage("[generator 014] - Widget {0} not found.")
-	String errorGeneratingRegisteredClientHandlerWidgetNotFound(String name);
+	String errorGeneratingRegisteredObjectWidgetNotFound(String name);
+
+	@DefaultMessage("[generator 015] - Error for register client datasource. DataSource: {0}. Error:{1}")
+	String errorGeneratingRegisteredDataSource(String dataSource, String message);
+
+	@DefaultMessage("[generator 016] - DataSource class {0} must use annotation DataSourceColumn or implements Bindable<T> interface and use annotation DataSourceBinding")
+	String errorGeneratingRegisteredDataSourceNoMetaInformation(String name);
+
+	@DefaultMessage("[generator 017] - DataSource class {0} can not use annotation DataSourceColumn if it implements Bindable<T> interface.")
+	String errorGeneratingRegisteredDataSourceConflictingMetaInformation(String name);
+
+	@DefaultMessage("[generator 018] - DataSource class {0} has invalid annotatted information.")
+	String errorGeneratingRegisteredDataSourceInvalidMetaInformation(String dataSourceClassName);
+
+	@DefaultMessage("[generator 019] - DataSource not found: ")
+	String errorGeneratingRegisteredDataSourceNotFound();
+	
+	@DefaultMessage("[screenFactory 001] - The id attribute is required for CRUX Widgets.")
+	String screenFactoryWidgetIdRequired();
+
+	@DefaultMessage("[screenFactory 002] - Can not create widget {0}. Verify the widget type.")
+	String screenFactoryErrorCreateWidget(String widgetId);
+
+	@DefaultMessage("[screenFactory 003] - Error creating widget. Duplicated identifier: {0}.")
+	String screenFactoryErrorDuplicatedWidget(String widgetId);
+
+	@DefaultMessage("[screenFactory 004] - Multiple modules in the same html page is not allowed in CRUX.")
+	String screenFactoryErrorMultipleModulesOnPage();
+	
+	@DefaultMessage("[screenFactory 005] - Error retrieving screen {0}. Error: {1}.")
+	String screenFactoryErrorRetrievingScreen(String screenId, String errMsg);
+
+	@DefaultMessage("[screenFactory 006] - Error Creating widget {0}. Error: {1}.")
+	String screenFactoryGenericErrorCreateWidget(String screenId, String errMsg);
+
+	@DefaultMessage("[screenFactory 007] - Screen {0} not found!")
+	String screenFactoryScreeResourceNotFound(String screenId);
+
+	@DefaultMessage("[Screen 001] - Error setting property {0} for widget {1}.")
+	String screenPropertyError(String property, String widgetId);
 }

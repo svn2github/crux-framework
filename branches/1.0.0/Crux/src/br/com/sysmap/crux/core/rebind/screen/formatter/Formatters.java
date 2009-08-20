@@ -89,7 +89,16 @@ public class Formatters
 					}
 					else
 					{
-						formatters.put(formatterClass.getSimpleName(), formatterClass);
+						String simpleName = formatterClass.getSimpleName();
+						if (simpleName.length() >1)
+						{
+							simpleName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+						}
+						else
+						{
+							simpleName = simpleName.toLowerCase();
+						}
+						formatters.put(simpleName, formatterClass);
 					}
 				} 
 				catch (Throwable e) 

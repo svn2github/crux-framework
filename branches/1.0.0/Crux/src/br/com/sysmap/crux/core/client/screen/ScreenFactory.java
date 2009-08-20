@@ -315,5 +315,4 @@ public class ScreenFactory {
 	{
 		return this.declaredI18NMessages.getMessage(key);
 	}
-	
 }
