@@ -23,6 +23,8 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[moduleComunication 001]}}}*||Type {{{<name>}}} can not be shared between modules. Only primitives <br/>(and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes<br/> implementing CruxSerializable can be used.||You did not register your custom serializers into screen with {{{useSerializable}}} attribute.||
 ||*{{{[datasource 001]}}}*||Error loading dataSource data: {{{<message>}}}||An uncaught exception occurred processing user {{{LocalDataSource.loadData}}} method.||
 ||*{{{[datasource 002]}}}*||Error loading dataSource remote data: {{{<message>}}}||An uncaught exception occurred processing user {{{RemoteDataSource.fetchData}}} method.||
+||*{{{[datasource 003]}}}*||Error processing requested operation. DataSource is not loaded yet.||Before perform operations ocer datasource (like change current record<br/> or page), you must call {{{DataSource.load}}} method.||
+||*{{{[datasource 004]}}}*||DataSource has changes on page. You must save or discard<br/> them before perform this operation.||{{{EditablePagedDataSources}}} can not be paged with dirty data.||
 
 === 1.1.2 Client Warning Messages===
 
