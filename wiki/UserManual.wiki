@@ -121,10 +121,10 @@ If you decide to use this approach, you must attempt to:
   * Your files must have the extension *_.crux.xml_*.
 
   * In order to enable auto completion, you will need to configure your IDE to point to the following XSD files:
-    * [http://crux-framework-tools.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xhtml.xsd xhtml.xsd]
+    * [http://crux-framework.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xhtml.xsd xhtml.xsd]
     * [http://crux-framework.googlecode.com/svn/trunk/CruxAdvancedWidgets/src/xsd/crux-basic-widgets.xsd crux-basic-widgets.xsd]
     * [http://crux-framework.googlecode.com/svn/trunk/CruxAdvancedWidgets/src/xsd/crux-advanced-widgets.xsd crux-advanced-widgets.xsd]
-    * [http://crux-framework-tools.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xinclude.xsd xinclude.xsd]
+    * [http://crux-framework.googlecode.com/svn/trunk/CruxHtmlTags/xsd/xinclude.xsd xinclude.xsd]
     If you are using an Eclipse based IDE, it can be done at the menu *Window -> Preferences -> XML -> XML Catalog* 
 
   * Configure the HtmlTagsFilter in your web.xml files as following:
