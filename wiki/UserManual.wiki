@@ -1562,7 +1562,7 @@ The following properties can be set in this file:
 ||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
-||allowAutoBindWithNonDeclarativeWidgets|Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||true||
+||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||true||
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
 
