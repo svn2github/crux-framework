@@ -5,7 +5,7 @@ _*Crux*_ applications are basically GWT applications. It means you must attempt 
 If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
 
 This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. In order to easy follow this documentation you will need:
-  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend using 1.6);
+  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend 1.6);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
 == 1.1 _Crux_ and GWT==
