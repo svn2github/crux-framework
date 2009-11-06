@@ -54,9 +54,7 @@ public class CruxToHtmlTransformer
 	// Makes it easier to read the output files
 	private static boolean forceIndent = false;
 	
-	// Makes it easier to read the output files
 	private static String outputCharset = "ISO-8859-1";
-
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	private static HTMLTagsMessages messages = (HTMLTagsMessages)MessagesFactory.getMessages(HTMLTagsMessages.class);
 	private static Transformer transformer = null;
@@ -120,7 +118,7 @@ public class CruxToHtmlTransformer
 			ByteArrayOutputStream buff = new ByteArrayOutputStream();
 			String source = resolveXInclude(filePath);
 			transformer.transform(new StreamSource(new ByteArrayInputStream(source.getBytes("UTF-8"))), new StreamResult(buff));
-			String result = new String(buff.toByteArray());
+			String result = new String(buff.toByteArray(), "UTF-8");
 			result = handleHtmlDocument(source, result);
 			StreamUtils.write(new ByteArrayInputStream(result.getBytes()), out, false);
 		}
