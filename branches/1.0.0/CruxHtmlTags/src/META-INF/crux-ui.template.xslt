@@ -8,7 +8,7 @@
 
 	${imports}
 
-	<xsl:output method="xml" encoding="${charset}" indent="${indent}" exclude-result-prefixes="#all" omit-xml-declaration="yes" />
+	<xsl:output method="html" encoding="ISO-8859-1" indent="${indent}" exclude-result-prefixes="#all" omit-xml-declaration="yes" />
 
 	<!-- 
 	=====================================================================
