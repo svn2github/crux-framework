@@ -140,23 +140,7 @@ You can instante widgets exactly as you do using pure GWT.
 
 == 3.2 Screen ==
 
-_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<span>` with `_`type="screen":
-
-{{{
-<html>
-   <head>
-       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
-   </head>
-   <body>
-       <span _type='screen' _onclose='clientHandler.onClose' _usecontroller="clientHandler">
-	       <span id='myBox' _type='textBox' />
-	       <span id='myButton' _type='button' _text='Hello' _onclick='clientHandler.helloWorld' />
-       </span>
-   </body>
-</html>
-}}}
-
-If you are using XML files with HTMLTags plugin, you can write:
+_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<screen>`:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
