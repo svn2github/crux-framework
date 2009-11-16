@@ -11,7 +11,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
 == 1.1 _Crux_ and GWT==
 
 _*Crux*_ is built over GWT and support all of its features.
-Current _*Crux*_ version uses GWT 1.7.
+Current _*Crux*_ version uses GWT 1.7.1.
 
 = 2 Quick Start=
 
@@ -47,7 +47,12 @@ Here we will explore the application generated in the previous section, explaini
       * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details at section [UserManual#4.3_Setup Setup]);
       * a {{{classes}}} folder, which is the output for java compilation;
       * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
-    * a folder called {{{style}}}, where reside the look-and-feel resources (images and CSS files);
+  * the {{{build}}} folder, containing:
+    * a {{{lib}}} folder, containing the files needed by _*Crux*_ compilation;
+    * a {{{build.xml}}} ant file, that define the following tasks:
+      * *dist*: generates the war file for deployment;
+      * *compile-scripts*: invokes the _*Crux*_ compilation, generating the static files that can be tested in browsers;
+      * *generate-schemas*: generates all XSD files you need to auto-complete your XML pages code.
   * the {{{src}}} folder, containing the source files:
     * {{{<the name you gave the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules (like shown at [UserManual#3_Coding_Client_Side Coding 3 Client Side]);
     * {{{<the same module package>.client.controller.MyController.java}}} - a client-side controller for the welcome page (see [UserManual#3.3.3_Controller 3.3.3 Controller]);
