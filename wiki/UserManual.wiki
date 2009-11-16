@@ -64,13 +64,11 @@ Here we will explore the application generated in the previous section, explaini
 
 = 3 Coding Client Side =
 
-Your modules must inherit _*br.com.sysmap.crux.core.Crux.gwt.xml*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that starts a parser on page document to replace the marker `<span>` tags to widgets. 
+Your modules must inherit _*br.com.sysmap.crux.core.Crux*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that loads its engine. 
 
-If you need to create a new EntryPoint, your class must override the _*Crux*_ EntryPoint ({{{br.com.sysmap.crux.core.client.Crux}}}) and call super on your onModuleLoad() method.
-
-The following example shows a module that can use any widget provided by default distribution of Crux:
+The following example shows a typical module which can use all _*Crux*_ features:
 {{{
-<module rename-to='cruxtest'>
+<module rename-to='mymodule'>
 	<inherits name='br.com.sysmap.crux.core.Crux'/>
 	<inherits name='br.com.sysmap.crux.basic.CruxBasicWidgets'/>
 	<inherits name='br.com.sysmap.crux.advanced.CruxAdvancedWidgets'/>
