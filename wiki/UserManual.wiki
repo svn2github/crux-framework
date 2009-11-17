@@ -1327,8 +1327,15 @@ To create a template, you must follow the schema in the namespace {{{http://www.
 
 With templates, you can:
   # Create simple components in a declarative way;
-  # Create smart fragments that can be used to compose a greater page.
+  # Create smart fragments that can be used to compose greater pages.
   # Define a reusable layout schema as you can do with Tiles;
+
+Section [UserManual#3.9.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
+[UserManual#3.9.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of those features.
+
+After create a template file, you must run the task generate-schemas on your project build file. It will generate XSD files for your templates, enabling auto-completion when using a template inside a page.
+
+A template can be defined to receive parameters and include sub-sections. See the following examples:  
 
 === 3.9.1 Creating a Simple Component===
 
@@ -1383,6 +1390,21 @@ On File {{{headerClient.template.xml}}}:
 </t:template>
 }}}
 
+Then, you can use on any crux page, like:
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+      <c:headerClient />
+      ...
+   </body>
+</html>
+}}}
+
 === 3.9.3 Defining a Reusable Layout===
 On file {{{pageLayout.template.xml}}}:
 {{{
@@ -1435,6 +1457,8 @@ Then, you can use on any crux page, like:
    </body>
 </html>
 }}}
+
+Note that the above template reuses another template (headerClient) defined in previous section. 
 
 = 4 Coding Server Side =
 
