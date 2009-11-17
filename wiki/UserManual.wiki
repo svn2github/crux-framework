@@ -228,6 +228,7 @@ The following table shows the methods that allows calls on others screens:
 ||invokeControllerOnTop||call a controller on top page||
 ||invokeControllerOnSelf||call a controller on self||
 ||invokeControllerOnFrame{{{<FrameName>}}}||call a controller on an inner frame named {{{<frameName>}}}||
+||invokeControllerOnSiblingFrame{{{<FrameName>}}}||call a controller on an sibling inner frame named {{{<frameName>}}}||
 
 You can create an interface to wrap the invocations to a specific controller. Your interface must extends the interface {{{Invoker}}} and the methods must follow the pattern: {{{<returnType> <methodName>On<position>(<paramType>);}}}. See the example:
 {{{
