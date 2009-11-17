@@ -43,6 +43,9 @@
 <td>........*3.8* [UserManual#3.8_DataSources DataSources]</td>
 </tr>
 <tr>
+<td>........*3.9* [UserManual#3.9_Templates Templates]</td>
+</tr>
+<tr>
 <td>....*4* [UserManual#4_Coding_Server_Side Coding Server Side]</td>
 </tr>  
 <tr>
