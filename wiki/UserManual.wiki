@@ -1365,9 +1365,9 @@ Then, you can use on any crux page, like:
 On File {{{headerClient.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:t="http://www.sysmap.com.br/templates" 
-	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
-	  library="custom" useController="clientController">
+      xmlns:t="http://www.sysmap.com.br/templates" 
+      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      library="custom" useController="clientController">
    <b:HTMLPanel id="clientPanel" onLoadWidget="clientController.loadClientInformation" >
       <table>
    	     <tr>
@@ -1387,10 +1387,10 @@ On File {{{headerClient.template.xml}}}:
 On file {{{pageLayout.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:t="http://www.sysmap.com.br/templates" 
+      xmlns:t="http://www.sysmap.com.br/templates" 
       xmlns:a="http://www.sysmap.com.br/crux/adv"
-	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
-	  xmlns:c="http://www.sysmap.com.br/templates/custom" 
+      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:c="http://www.sysmap.com.br/templates/custom" 
 	  library="custom">
 
    <b:dockPanel id="centeringPanel" width="100%" height="100%">
