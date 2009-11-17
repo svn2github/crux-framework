@@ -1309,7 +1309,7 @@ Note that the {{{MaskedFormatter}}} methods ({{{applyMask}}} and {{{removeMask}}
 
 TODO: _A basic set of common formatters is being created and will be available as crux-formatters.jar that will be included in the distribution soon_.
 
-== 3.8 DataSources ==
+== 3.8 DataSources==
 
 A DataSource can be used to provide to widgets a set of data.
 
@@ -1320,6 +1320,121 @@ DataSouces also supports features like pagination or data sorting.
 == 3.9 Templates ==
 
 _*Crux*_ allow you to create reusable templates. 
+
+A template must be defined in a file with the extension {{{.template.xml}}}. That file can be put in any place under your classpath, and can also be packaged inside a jar file.
+
+To create a template, you must follow the schema in the namespace {{{http://www.sysmap.com.br/templates}}}, that is defined on templates.xsd file. That namespace can be added to your Eclipse catalog as described in [UserManual#2.3_IDE_Environment Environment]. 
+
+With templates, you can:
+  # Create simple components in a declarative way;
+  # Create smart fragments that can be used to compose a greater page.
+  # Define a reusable layout schema as you can do with Tiles;
+
+=== 3.9.1 Creating a Simple Component===
+
+On file {{{labeledBox.template.xml}}}:
+{{{
+<t:template xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:t="http://www.sysmap.com.br/templates" 
+	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
+	  library="custom">
+   
+   <b:horizontalPanel id="#{id}.hPanel" >
+      <b:label id="#{id}.label" text="#{label}:" /> 
+      <b:textBox id="#{id}" value="#{value}" />	  
+   </b:horizontalPanel>	  
+</t:template>
+}}}
+
+Then, you can use on any crux page, like:
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+      <c:labeledBox id="myLabel" label="Label Test" value="Test" />
+      <c:labeledBox id="myLabel2" label="Label Test2" value="Test2" />
+   </body>
+</html>
+}}}
+
+=== 3.9.2 Creating a Smart Fragment===
+
+On File {{{headerClient.template.xml}}}:
+{{{
+<t:template xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:t="http://www.sysmap.com.br/templates" 
+	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
+	  library="custom" useController="clientController">
+   <b:HTMLPanel id="clientPanel" onLoadWidget="clientController.loadClientInformation" >
+      <table>
+   	     <tr>
+   	        <td>Login:</td>
+   	        <td><b:label id="login" /></td>
+   	     </tr>
+   	     <tr>
+   	        <td>Name:</td>
+   	        <td><b:label id="name" /></td>
+   	     </tr>
+      </table>
+   </b:HTMLPanel>
+</t:template>
+}}}
+
+=== 3.9.3 Defining a Reusable Layout===
+On file {{{pageLayout.template.xml}}}:
+{{{
+<t:template xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:t="http://www.sysmap.com.br/templates" 
+      xmlns:a="http://www.sysmap.com.br/crux/adv"
+	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
+	  xmlns:c="http://www.sysmap.com.br/templates/custom" 
+	  library="custom">
+
+   <b:dockPanel id="centeringPanel" width="100%" height="100%">
+      <b:cell direction="north" height="70" verticalAlignment="top">
+          <c:headerClient />
+      </b:cell>
+      <b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
+         <b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
+            <b:cell direction="west" width="160">
+               <a:stackMenu id="menu" height="400" onLoadWidget="#{onLoadMenu}" ></a:stackMenu>
+            </b:cell>
+            <b:cell direction="east">
+               <a:decoratedPanel id="basePanel" width="100%" height="100%">
+                  <a:widget>
+                     <t:section name="body" />
+                  </a:widget>
+               </a:decoratedPanel>
+            </b:cell>
+         </b:dockPanel>
+      </b:cell>
+   </b:dockPanel>
+</t:template>
+}}}
+
+Then, you can use on any crux page, like:
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.sysmap.com.br/crux" 
+      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+      <crux:screen useController="myController" />
+      <c:pageLayout onLoadMenu="myController.loadMenuItems">
+         <c:body>
+            <!-- Body comes here -->
+            <b:label id="test" text="Hello World!!" />
+         </c:body>
+      </c:pageLayout>
+   </body>
+</html>
+}}}
 
 = 4 Coding Server Side =
 
