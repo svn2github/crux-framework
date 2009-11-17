@@ -1475,8 +1475,8 @@ According with template.xsd file, the tag {{{<template>}}} declare the following
 ||useFormatter||Add formatters to screen controllers list||  
 ||useDataSource||Add datasources to screen controllers list||  
 
-You can define a template that receive attributes and children. 
-  * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}} wherever you want to apply the attribute value.
+As showed in the previous examples, you can create a template that receive attributes and children. 
+  * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}}} wherever you want to apply the attribute value.
   * To add a child to your template, use the tag {{{section}}} where you want to create a replacement point for your template. That tag will be replaced by the content of the child declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
 = 4 Coding Server Side =
