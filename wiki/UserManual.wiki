@@ -140,18 +140,19 @@ You can instante widgets exactly as you do using pure GWT.
 
 == 3.2 Screen ==
 
-_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<screen>`:
+_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<screen>` tag:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" 
+      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' useController="clientHandler" />
-       <crux:textBox id="myBox" />
-       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+       <bas:textBox id="myBox" />
+       <bas:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
 </html>
 }}}
@@ -159,7 +160,7 @@ _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declara
 The screen can be retrieve programatically by a call to the static method {{{Screen.get()}}}.
 Through Screen, you can:
   # Access any widget created decaratively on pages.
-  # Add handlers to Window events, like load, close or resize.
+  # Add handlers to Window events, like {{{load}}}, {{{close}}} or {{{resize}}}.
   # Communicate with other screens to, for example, exchange data between _*Crux*_ pages in different frames or windows of the same application.
   # Control the history without need to add a hidden frame directly on the page.
   # Block and unblobck the user intercation with the page.
@@ -349,7 +350,7 @@ or Declaratively:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -396,42 +397,28 @@ It's possible to add event handlers:
   # Programatically.
 
 === 3.3.1 Add Event Declaratively===
-To add an event declaratively, you must create a [UserManual#Controller Controller] and give it a name.
+To add an event declaratively, you must create a [UserManual#3.3.3_Controller Controller] and give it a name.
 
-If you are creating your pages without the [HtmlTags plugin] support, you can declare attributes in the {{{<span>}}} element that define the widget properties following the pattern {{{_on<eventName> = "<controllerName>.<methodName>"}}}.
-
-{{{
-<html>
-   <head>
-       <script language='javascript' src='cruxtest/cruxtest.nocache.js'></script>
-   </head>
-   <body>
-       <span _type='screen' _onclose='clientHandler.onClose' _usecontroller='clientHandler'>
-	       <span id='myBox' _type='textBox' _onchange='clientHandler.helloWorld'/>
-	       <span id='myButton' _type='button' _onclick='clientHandler.helloWorld' />
-       </span>
-   </body>
-</html>
-}}}
-
-Note that you must also "import" your controller through the attribute {{{_usecontroller}}} of the screen's tag.
-
-If you decide to use the HtmlTags Plugin, you can write:
+An event declaration must follow the pattern {{{on<eventName> = "<controllerName>.<methodName>"}}}.
+For example:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" 
+      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen onClose='clientHandler.onClose' useController="clientHandler" >
-	       <crux:textBox id="myBox" />
-	       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+	       <bas:textBox id="myBox" />
+	       <bas:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
 	   </crux:screen>
    </body>
 </html>
 }}}
+
+Note that you must also "import" your controller through the attribute {{{useController}}} of the screen's tag.
 
 === 3.3.2 Add Event Programatically===
 
@@ -501,6 +488,8 @@ public class MyController
 }
 }}}
 
+Note that the above controller contains a method that does not follow the conditions to be an event handler ({{{myMethod}}}). It can not be called declaratively.
+ 
 ==== 3.3.3.1 The @Controller Annotation====
 
 The Controller annotation has the following properties:
@@ -512,11 +501,11 @@ The Controller annotation has the following properties:
 
 ==== 3.3.3.2 The @Create Annotation====
 
-This annotation can be used to simplify the code for Controllers. It only can be used inside a controller class and it automatically creates an object (according with field type) and initialize the field with this value.
+This annotation can be used to simplify the code for Controllers. It automatically creates an object (according with field type) and initialize the field with this value.
 
 This creation is done by a call to GWT.create method, assuring that any generator eventually associated with the requested type will be called correctly.
 
-The code showed in sections [UserManual#Access_Screen_Widgets Access Screen Widgets], [UserManual#Communication_Between_Screens Communication Between Screens], [UserManual#Communication_Between_Screens Communication Between Screens] and [UserManual#Block_and_Unblock Block and Unblock] could be written as:
+The code showed in sections [UserManual#3.2.1_Access_Screen_Widgets Access Screen Widgets], [UserManual#3.2.3_Communication_Between_Screens Communication Between Screens] and [UserManual#3.2.5_Block_and_Unblock Block and Unblock] could be written as:
 
 {{{
 @Controller("myNewController")
@@ -601,15 +590,16 @@ public class MyClass
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" 
+      xmlns:bas="http://www.sysmap.com.br/crux/bas">
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <crux:textBox id="name" />
-	       <crux:textBox id="phone" />
-	       <crux:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <bas:textBox id="name" />
+	       <bas:textBox id="phone" />
+	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -646,15 +636,16 @@ public class Person
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" 
+      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <crux:textBox id="person.name" />
-	       <crux:textBox id="person.phone" />
-	       <crux:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <bas:textBox id="person.name" />
+	       <bas:textBox id="person.phone" />
+	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -759,16 +750,17 @@ public class Address
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux"
+      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <crux:textBox id="name" />
-	       <crux:dateBox id="birth" />
-	       <crux:textBox id="street" />
-	       <crux:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <bas:textBox id="name" />
+	       <bas:dateBox id="birth" />
+	       <bas:textBox id="street" />
+	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -776,7 +768,7 @@ public class Address
 
 In the above example, the field {{{phone}}} will not be bound to any widget, once there is not any widget with id {{{phone}}}. Another important point is that each field only can be bound to widgets that are able to return values of the same type of the field. 
 
-The field {{{birth}}} only can be bound to widgets that implements {{{HasValue<Date>}}} (like {{{DateBox}}}) or {{{HasFormatter}}} and is associated with a formatter that returns {{{Date}}} objects. See the [UserManual#3.7_Formatters Formatters] section to more info about formatters.
+The field {{{birth}}} only can be bound to widgets that implements {{{HasValue<Date>}}} (like {{{DateBox}}}) or {{{HasFormatter}}} and is associated with a formatter that returns {{{Date}}} objects. See the [UserManual#3.7_Formatters Formatters] section to more info about formatters).
 
 If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to false. You can, later, control the value object and screen updates through methods {{{Screen.updateScreen(controller)}}} and
 {{{Screen.updateController(controller)}}}. See the following example:
@@ -801,11 +793,11 @@ public class MyClass
 
 ==== 3.3.3.4 Using Controllers on Screen====
 
-To inform that a controller will be used on a screen, you must explicity "import" it using the {{{_usecontroller}}} (or {{{{useController}}}, with HtmlTags Plugin).
+To inform that a controller will be used on a screen, you must explicity "import" it using the {{{{useController}}} attribute.
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -833,7 +825,7 @@ That will allow this controller methods to be called even if no {{{useController
 
 ==== 3.3.3.5 Comunication Between Controllers====
 
-In section [UserManual#Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of those controllers.
+In section [UserManual#3.2.3_Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of those controllers.
 
 The first point is that you must explicity inform _*Crux*_ that an event handler can be called from out of the current page (by another document). To do this, you must put an annotation {{{@ExposeOutOfModule}}} on the method you want to expose.
 
@@ -924,11 +916,11 @@ So, if you need to pass a custom object to another page, your object class must 
 
 For local calls, any type is allowed, once no serialization is needed.
   
-If you define a custom serializable type, you must inform _*Crux*_ explicity that you  want to use such type in your module. You can do it declaratively using {{{_useserializer}}} attibute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
+If you define a custom serializable type, you must inform _*Crux*_ explicity that you  want to use such type in your module. You can do it declaratively using {{{useSerializer}}} attibute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:crux="http://www.sysmap.com.br/crux" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
