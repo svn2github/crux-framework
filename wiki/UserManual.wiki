@@ -1323,21 +1323,25 @@ _*Crux*_ allow you to create reusable templates.
 
 A template must be defined in a file with the extension {{{.template.xml}}}. That file can be put in any place under your classpath, and can also be packaged inside a jar file.
 
-To create a template, you must follow the schema in the namespace {{{http://www.sysmap.com.br/templates}}}, that is defined on templates.xsd file. That namespace can be added to your Eclipse catalog as described in [UserManual#2.3_IDE_Environment Environment]. 
+To create a template, you must follow the schema in the namespace {{{http://www.sysmap.com.br/templates}}}, that is defined on template.xsd file. That namespace can be added to your Eclipse catalog as described in [UserManual#2.3_IDE_Environment Environment]. 
 
 With templates, you can:
   # Create simple components in a declarative way;
   # Create smart fragments that can be used to compose greater pages.
   # Define a reusable layout schema as you can do with Tiles;
 
-Section [UserManual#3.9.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
-[UserManual#3.9.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of those features.
+Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
+[UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of those features.
 
 After create a template file, you must run the task generate-schemas on your project build file. It will generate XSD files for your templates, enabling auto-completion when using a template inside a page.
 
-A template can be defined to receive parameters and include sub-sections. See the following examples:  
+A template can be defined to receive parameters and include sub-sections, as showed in the following examples:  
 
-=== 3.9.1 Creating a Simple Component===
+=== 3.9.1 Examples===
+
+See some templates use examples.
+
+==== 3.9.1.1 Creating a Simple Component====
 
 On file {{{labeledBox.template.xml}}}:
 {{{
@@ -1367,7 +1371,7 @@ Then, you can use on any crux page, like:
 </html>
 }}}
 
-=== 3.9.2 Creating a Smart Fragment===
+==== 3.9.1.2 Creating a Smart Fragment====
 
 On File {{{headerClient.template.xml}}}:
 {{{
@@ -1405,7 +1409,7 @@ Then, you can use on any crux page, like:
 </html>
 }}}
 
-=== 3.9.3 Defining a Reusable Layout===
+==== 3.9.1.3 Defining a Reusable Layout====
 On file {{{pageLayout.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
@@ -1459,6 +1463,21 @@ Then, you can use on any crux page, like:
 }}}
 
 Note that the above template reuses another template (headerClient) defined in previous section. 
+
+=== 3.9.2 Templates attributes and children ===
+
+According with template.xsd file, the tag {{{<template>}}} declare the following attributes:
+
+||*Attribute*||*Descripton*||
+||library||Required atrribute that inform the a library into with this template will be included<br> This will define the name of the xsd file where the template<br> definition will be put and the name of the namespace to be associated with this file.||
+||useController||Add controllers to screen controllers list||  
+||useSerializable||Add serializables to screen controllers list||  
+||useFormatter||Add formatters to screen controllers list||  
+||useDataSource||Add datasources to screen controllers list||  
+
+You can define a template that receive attributes and children. 
+  * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}} wherever you want to apply the attribute value.
+  * To add a child to your template, use the tag {{{section}}} where you want to create a replacement point for your template. That tag will be replaced by the content of the child declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
 = 4 Coding Server Side =
 
