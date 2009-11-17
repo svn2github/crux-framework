@@ -1305,6 +1305,15 @@ Note that the {{{MaskedFormatter}}} methods ({{{applyMask}}} and {{{removeMask}}
 
 TODO: _A basic set of common formatters is being created and will be available as crux-formatters.jar that will be included in the distribution soon_.
 
+== 3.8 DataSources ==
+
+A DataSource can be used to provide to widgets a set of data.
+
+Some widgets that manipulate data (like _*Crux*_ advanced grid), can be associated to a dataSource and just render the informations provided by it. 
+
+DataSouces also supports features like pagination or data sorting.
+
+
 = 4 Coding Server Side =
 
 == 4.1 Writing Server Services ==
