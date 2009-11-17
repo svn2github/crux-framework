@@ -40,6 +40,9 @@
 <td>........*3.7* [UserManual#3.7_Formatters Formatters]</td>
 </tr>
 <tr>
+<td>........*3.8* [UserManual#3.7_DataSources DataSources]</td>
+</tr>
+<tr>
 <td>....*4* [UserManual#4_Coding_Server_Side Coding Server Side]</td>
 </tr>  
 <tr>
