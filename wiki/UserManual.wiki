@@ -1017,7 +1017,7 @@ And the crux page that uses it:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/basic-widgets/1.0" >
+      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1042,7 +1042,7 @@ public interface MyConstants extends Constants
 
 {{{
    ...
-       <crux:label id="label" text="${msg.myMessage}" />
+       <bas:label id="label" text="${msg.myMessage}" />
    ...
 }}}
 
@@ -1092,7 +1092,7 @@ Note that the service interface does not use the annotation [http://code.google.
 Another point to observe in the above example is the use of the abstract class {{{AsyncCallbackAdapter}}} in the place of GWT {{{AsyncCallback}}} interface.
 
 That class does the following:
-  # Implements a default error handler that alert the exception message and log it.
+  # Implements a default error handler that will delegate to [UserManual#3.6_Handling_Errors Crux Error Handler] any error received.
   # If controller autoBind for [UserManual#3.3.3.3_Value_Binding ValueObjects] is enabled, it will automatically update screen with value object properties after process the {{{onComplete()}}} method.
 
 
@@ -1138,8 +1138,7 @@ public class MyController {
                                    Screen.updateScreen(this);
                                 }
                                 public void onFailure(Throwable e){
-                                    GWT.log(e.getLocalizedMessage(), e);
-                                    Window.alert(e.getLocalizedMessage());
+                                    Crux.getErrorHandler().handleError(e.getLocalizedMessage(), e);
                                     Screen.updateScreen(this);
                                 }
                         }
@@ -1189,12 +1188,13 @@ Here you can see how a formatter could be used:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:c="http://www.sysmap.com.br/crux/basic-widgets/1.0"
-      xmlns:a="http://www.sysmap.com.br/crux/advanced-widgets/1.0" >
+      xmlns:c="http://www.sysmap.com.br/crux"
+      xmlns:a="http://www.sysmap.com.br/crux/adv" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
+      <c:screen useFormatter="phone, date" />
       <a:maskedTextBox id="maskedTextBox" formatter="phone" width="90"/>   
       <a:maskedTextBox id="dateMaskedTextBox" formatter="date" width="90"/>   
    </body>
@@ -1387,7 +1387,7 @@ myServerMessage=Minha mensagem no servidor: {0}.
 
 That mechanism exposed will work properly for all your classes that are called by a service. _*Crux*_ will resolve locale problems in its [UserManual#3.5_Client-Server_Communication FrontController], before delegate the application control to your service implementation. 
 
-However, you you plan to access i18n messages in classes called by a filter (that executes before the _*Crux* FrontController_ Servlet), you need to configure a filter in your web.xml file. Read the section [UserManual#4.3.1_Web.xml Web.xml] to see how to do this.
+However, if you plan to access i18n messages in classes called by a filter (that executes before the _*Crux* FrontController_ Servlet), you need to configure a filter in your web.xml file. Read the section [UserManual#4.3.1_Web.xml Web.xml] to see how to do this.
 
 == 4.3 Setup ==
 
@@ -1406,11 +1406,7 @@ To use _*Crux*_ in your application, first of all you will need following files:
       * javassist.jar
       * jericho-html-2.5.jar
       * saxon9.jar
-      * xom-1.2.1.jar
-      * activation.jar (only if running over Java 1.5)
-      * jaxb-api.jar (only if running over Java 1.5)
-      * jaxb-impl.jar (only if running over Java 1.5)
-      * jsr173_api.jar (only if running over Java 1.5)
+      * saxon9-dom.jar
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
       * crux-compile-task.jar
       * crux-html-tags-compile-task.jar
@@ -1455,8 +1451,7 @@ There are some other configurations you will need to do to run your application 
 
 The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is beeing compiled. This is used for better performance (see [FAQ#Performance this] for more information). Because that information is used only for compilation, it just need to be present in development environment.
 
-If you plan to use the [HtmlTags] plugin, you need to add this lines too:
-
+You will need too:
 {{{
 <filter>
 		<display-name>HtmlTagsFilter</display-name>
@@ -1549,7 +1544,7 @@ That will be transformed to the following DOM elements:
 
 If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care to put your widgets in panels, or in other html tags alone, or else, _*Crux*_ will not guarantee the order of the sibling widgets.
 
-If this this propertyis disabled, the previous example can build the following sequence of elements into the DOM:
+If this property is disabled, the previous example can build the following sequence of elements into the DOM:
 {{{
    ...
    <body>
@@ -1611,6 +1606,7 @@ public interface ScreenResourceResolver
 	Set<String> getAllScreenIDs(String module) throws ScreenConfigException;
 }
 }}}
+
 ==== 4.3.2.4 classPathResolver ====
 
 _*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The problem is that if we are running under some application servers - let's say directly: weblogic :) - the strategy to retrive the web root, the WEB-INF/classes and WEB-INF/lib paths changes completely.
