@@ -93,13 +93,13 @@ To add widgets to your pages, you can use one of these methods:
 === 3.1.1 Pages as XML Files===
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:textBox id="myBox" />
-       <crux:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+       <gwt:textBox id="myBox" />
+       <gwt:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
 </html>
 }}} 
@@ -148,14 +148,14 @@ _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declara
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' useController="clientHandler" />
-       <bas:textBox id="myBox" />
-       <bas:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+       <gwt:textBox id="myBox" />
+       <gwt:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
 </html>
 }}}
@@ -409,14 +409,14 @@ For example:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen onClose='clientHandler.onClose' useController="clientHandler" >
-	       <bas:textBox id="myBox" />
-	       <bas:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
+	       <gwt:textBox id="myBox" />
+	       <gwt:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
 	   </crux:screen>
    </body>
 </html>
@@ -595,15 +595,15 @@ public class MyClass
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:bas="http://www.sysmap.com.br/crux/bas">
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt">
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <bas:textBox id="name" />
-	       <bas:textBox id="phone" />
-	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <gwt:textBox id="name" />
+	       <gwt:textBox id="phone" />
+	       <gwt:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -641,15 +641,15 @@ public class Person
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <bas:textBox id="person.name" />
-	       <bas:textBox id="person.phone" />
-	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <gwt:textBox id="person.name" />
+	       <gwt:textBox id="person.phone" />
+	       <gwt:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -755,16 +755,16 @@ public class Address
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux"
-      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
        <crux:screen useController="myController" >
-	       <bas:textBox id="name" />
-	       <bas:dateBox id="birth" />
-	       <bas:textBox id="street" />
-	       <bas:button id="myButton" text="Hello" onClick="myController.myMethod" />
+	       <gwt:textBox id="name" />
+	       <gwt:dateBox id="birth" />
+	       <gwt:textBox id="street" />
+	       <gwt:button id="myButton" text="Hello" onClick="myController.myMethod" />
 	   </crux:screen>
    </body>
 </html>
@@ -1021,12 +1021,12 @@ And the crux page that uses it:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:bas="http://www.sysmap.com.br/crux/bas" >
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:label id="label" text="${myMessages.myMessage}" />
+       <gwt:label id="label" text="${myMessages.myMessage}" />
    </body>
 </html>
 }}}
@@ -1193,14 +1193,14 @@ Here you can see how a formatter could be used:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:c="http://www.sysmap.com.br/crux"
-      xmlns:a="http://www.sysmap.com.br/crux/adv" >
+      xmlns:crux="http://www.sysmap.com.br/crux/widgets" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
       <c:screen useFormatter="phone, date" />
-      <a:maskedTextBox id="maskedTextBox" formatter="phone" width="90"/>   
-      <a:maskedTextBox id="dateMaskedTextBox" formatter="date" width="90"/>   
+      <crux:maskedTextBox id="maskedTextBox" formatter="phone" width="90"/>   
+      <crux:maskedTextBox id="dateMaskedTextBox" formatter="date" width="90"/>   
    </body>
 </html>
 }}}
@@ -1347,13 +1347,13 @@ On file {{{labeledBox.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:t="http://www.sysmap.com.br/templates" 
-	  xmlns:b="http://www.sysmap.com.br/crux/bas" 
+	  xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
 	  library="custom">
    
-   <b:horizontalPanel id="#{id}.hPanel" >
-      <b:label id="#{id}.label" text="#{label}:" /> 
-      <b:textBox id="#{id}" value="#{value}" />	  
-   </b:horizontalPanel>	  
+   <gwt:horizontalPanel id="#{id}.hPanel" >
+      <gwt:label id="#{id}.label" text="#{label}:" /> 
+      <gwt:textBox id="#{id}" value="#{value}" />	  
+   </gwt:horizontalPanel>	  
 </t:template>
 }}}
 
@@ -1377,17 +1377,17 @@ On File {{{headerClient.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
-      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
       library="custom" useController="clientController">
    <b:HTMLPanel id="clientPanel" onLoadWidget="clientController.loadClientInformation" >
       <table>
    	     <tr>
    	        <td>Login:</td>
-   	        <td><b:label id="login" /></td>
+   	        <td><gwt:label id="login" /></td>
    	     </tr>
    	     <tr>
    	        <td>Name:</td>
-   	        <td><b:label id="name" /></td>
+   	        <td><gwt:label id="name" /></td>
    	     </tr>
       </table>
    </b:HTMLPanel>
@@ -1397,7 +1397,7 @@ On File {{{headerClient.template.xml}}}:
 Then, you can use on any crux page, like:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
       xmlns:c="http://www.sysmap.com.br/templates/custom" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
@@ -1414,30 +1414,32 @@ On file {{{pageLayout.template.xml}}}:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
-      xmlns:a="http://www.sysmap.com.br/crux/adv"
-      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:crux="http://www.sysmap.com.br/crux/widgets"
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
       xmlns:c="http://www.sysmap.com.br/templates/custom" 
 	  library="custom">
 
-   <b:dockPanel id="centeringPanel" width="100%" height="100%">
-      <b:cell direction="north" height="70" verticalAlignment="top">
+   <gwt:dockPanel id="centeringPanel" width="100%" height="100%">
+      <gwt:cell direction="north" height="70" verticalAlignment="top">
           <c:headerClient />
-      </b:cell>
-      <b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
-         <b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
-            <b:cell direction="west" width="160">
-               <a:stackMenu id="menu" height="400" onLoadWidget="#{onLoadMenu}" ></a:stackMenu>
-            </b:cell>
-            <b:cell direction="east">
-               <a:decoratedPanel id="basePanel" width="100%" height="100%">
-                  <a:widget>
-                     <t:section name="body" />
-                  </a:widget>
-               </a:decoratedPanel>
-            </b:cell>
-         </b:dockPanel>
-      </b:cell>
-   </b:dockPanel>
+      </gwt:cell>
+      <gwt:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
+         <gwt:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
+            <gwt:cell direction="west" width="160">
+               <crux:stackMenu id="menu" height="400" onLoadWidget="#{onLoadMenu}" ></crux:stackMenu>
+            </gwt:cell>
+            <gwt:cell direction="east">
+               <crux:decoratedPanel id="basePanel" width="100%" height="100%">
+                  <crux:widget>
+                     <gwt:HTMLPanel id="hPanel">
+                        <t:section name="body" />
+                     </gwt:HTMLPanel>   
+                  </crux:widget>
+               </crux:decoratedPanel>
+            </gwt:cell>
+         </gwt:dockPanel>
+      </gwt:cell>
+   </gwt:dockPanel>
 </t:template>
 }}}
 
@@ -1445,7 +1447,7 @@ Then, you can use on any crux page, like:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:b="http://www.sysmap.com.br/crux/bas" 
+      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
       xmlns:c="http://www.sysmap.com.br/templates/custom" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
@@ -1455,7 +1457,7 @@ Then, you can use on any crux page, like:
       <c:pageLayout onLoadMenu="myController.loadMenuItems">
          <c:body>
             <!-- Body comes here -->
-            <b:label id="test" text="Hello World!!" />
+            <gwt:label id="test" text="Hello World!!" />
          </c:body>
       </c:pageLayout>
    </body>
