@@ -73,14 +73,14 @@ The following example shows a typical module which can use all _*Crux*_ features
 {{{
 <module rename-to='mymodule'>
 	<inherits name='br.com.sysmap.crux.core.Crux'/>
-	<inherits name='br.com.sysmap.crux.basic.CruxBasicWidgets'/>
-	<inherits name='br.com.sysmap.crux.advanced.CruxAdvancedWidgets'/>
+	<inherits name='br.com.sysmap.crux.gwt.CruxGWTWidgets'/>
+	<inherits name='br.com.sysmap.crux.widgets.CruxWidgets'/>
 </module>
 }}}
 
 The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. 
-  * The BasicWidgets set contains all widgets that are distributed directly with GWT. It's packaged in the {{{crux-basic-widgets.jar}}} file. 
-  * The Advanced set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc. It's packaged in the {{{crux-advanved-widgets.jar}}} file.
+  * The CruxGWTWidgets set contains all widgets that are distributed directly with GWT. It's packaged in the {{{crux-gwt-widgets.jar}}} file. 
+  * The CruxWidgets set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc. It's packaged in the {{{crux-widgets.jar}}} file.
 
 == 3.1 Building User Interface ==
 
@@ -1575,8 +1575,8 @@ To use _*Crux*_ in your application, first of all you will need following files:
     * gwt-servlet.jar
   * In development time:
    	* addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
-      * crux-advanced-widgets.jar
-      * crux-basic-widgets.jar
+      * crux-widgets.jar
+      * crux-gwt-widgets.jar
       * crux-html-tags.jar
       * crux-scannotation.jar
       * javassist.jar
