@@ -1335,8 +1335,6 @@ A template can be defined to receive parameters and include sub-sections, as sho
 
 === 3.9.1 Examples===
 
-See some templates usage examples.
-
 ==== 3.9.1.1 Creating a Simple Component====
 
 The file {{{labeledBox.template.xml}}} defines a template for a simple labeled box component:
