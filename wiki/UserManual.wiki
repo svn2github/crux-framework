@@ -1453,7 +1453,7 @@ Then, you can use it on any crux page:
 </html>
 }}}
 
-Note that the above template reuses another template (headerClient) defined in previous section. 
+Note that the above template reuses another template (userInfo) defined in previous section. 
 
 === 3.9.2 Templates attributes and children ===
 
