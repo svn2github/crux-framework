@@ -1321,8 +1321,8 @@ DataSouces also supports features like pagination or data sorting.
 
 Templates in _*Crux*_ are parameterizable XML files that can be used for:
   # Create simple components in a declarative way;
-  # Create smart fragments that can be used to compose greater pages.
-  # Define a reusable layout schema as you can do with Tiles;
+  # Create smart fragments that can be used to compose greater pages;
+  # Define reusable layout pages.
 
 A template must be defined in a file with the extension {{{.template.xml}}} and  can be placed anywhere under your classpath (even inside a jar file).Template files must follow the schema {{{http://www.sysmap.com.br/templates}}}.
 
@@ -1339,7 +1339,7 @@ See some templates usage examples.
 
 ==== 3.9.1.1 Creating a Simple Component====
 
-On file {{{labeledBox.template.xml}}}:
+The file {{{labeledBox.template.xml}}} defines a template for a simple labeled box component:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:t="http://www.sysmap.com.br/templates" 
@@ -1353,7 +1353,7 @@ On file {{{labeledBox.template.xml}}}:
 </t:template>
 }}}
 
-Then, you can use on any crux page, like:
+Then, you can use on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:c="http://www.sysmap.com.br/templates/custom" >
@@ -1369,7 +1369,7 @@ Then, you can use on any crux page, like:
 
 ==== 3.9.1.2 Creating a Smart Fragment====
 
-On File {{{headerClient.template.xml}}}:
+The File {{{headerClient.template.xml}}} defines a simple header that can be used on different pages:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
@@ -1390,7 +1390,7 @@ On File {{{headerClient.template.xml}}}:
 </t:template>
 }}}
 
-Then, you can use on any crux page, like:
+Then, you can use on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
@@ -1406,7 +1406,7 @@ Then, you can use on any crux page, like:
 }}}
 
 ==== 3.9.1.3 Defining a Reusable Layout====
-On file {{{pageLayout.template.xml}}}:
+The file {{{pageLayout.template.xml}}} defines a common layout that has a menu located on the left and a place to insert the page body:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
@@ -1439,7 +1439,7 @@ On file {{{pageLayout.template.xml}}}:
 </t:template>
 }}}
 
-Then, you can use on any crux page, like:
+Then, you can use on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
