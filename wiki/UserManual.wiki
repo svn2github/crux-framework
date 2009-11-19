@@ -1319,27 +1319,23 @@ DataSouces also supports features like pagination or data sorting.
 
 == 3.9 Templates ==
 
-_*Crux*_ allow you to create reusable templates. 
-
-A template must be defined in a file with the extension {{{.template.xml}}}. That file can be put in any place under your classpath, and can also be packaged inside a jar file.
-
-To create a template, you must follow the schema in the namespace {{{http://www.sysmap.com.br/templates}}}, that is defined on template.xsd file. That namespace can be added to your Eclipse catalog as described in [UserManual#2.3_IDE_Environment Environment]. 
-
-With templates, you can:
+Templates in _*Crux*_ are parameterizable XML files that can be used for:
   # Create simple components in a declarative way;
   # Create smart fragments that can be used to compose greater pages.
   # Define a reusable layout schema as you can do with Tiles;
 
-Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
-[UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of those features.
+A template must be defined in a file with the extension {{{.template.xml}}} and  can be placed anywhere under your classpath (even inside a jar file).Template files must follow the schema {{{http://www.sysmap.com.br/templates}}}.
 
-After create a template file, you must run the task generate-schemas on your project build file. It will generate XSD files for your templates, enabling auto-completion when using a template inside a page.
+Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
+[UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of templates usage.
+
+After creating a template file, you must run the task {{{generate-schemas}}} on your project build file. It will generate a XSD file for your template, enabling auto-completion when using it in a page.
 
 A template can be defined to receive parameters and include sub-sections, as showed in the following examples:  
 
 === 3.9.1 Examples===
 
-See some templates use examples.
+See some templates usage examples.
 
 ==== 3.9.1.1 Creating a Simple Component====
 
