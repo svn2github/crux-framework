@@ -1351,7 +1351,7 @@ The file {{{labeledBox.template.xml}}} defines a template for a simple labeled b
 </t:template>
 }}}
 
-Then, you can use on any crux page:
+Then, you can use it on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:c="http://www.sysmap.com.br/templates/custom" >
@@ -1359,21 +1359,20 @@ Then, you can use on any crux page:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-      <c:labeledBox id="myLabel" label="Label Test" value="Test" />
-      <c:labeledBox id="myLabel2" label="Label Test2" value="Test2" />
+      <c:labeledBox id="personName" label="Name" value="Type your name here..." />
    </body>
 </html>
 }}}
 
 ==== 3.9.1.2 Creating a Smart Fragment====
 
-The File {{{headerClient.template.xml}}} defines a simple header that can be used on different pages:
+The File {{{userInfo.template.xml}}} defines a simple header that can be used on different pages:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
       xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
-      library="custom" useController="clientController">
-   <b:HTMLPanel id="clientPanel" onLoadWidget="clientController.loadClientInformation" >
+      library="custom" useController="userController">
+   <b:HTMLPanel id="userPanel" onLoadWidget="userController.loadUserInfo" >
       <table>
    	     <tr>
    	        <td>Login:</td>
@@ -1388,7 +1387,7 @@ The File {{{headerClient.template.xml}}} defines a simple header that can be use
 </t:template>
 }}}
 
-Then, you can use on any crux page:
+Then, you can use it on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
@@ -1397,7 +1396,7 @@ Then, you can use on any crux page:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-      <c:headerClient />
+      <c:userInfo />
       ...
    </body>
 </html>
@@ -1415,21 +1414,17 @@ The file {{{pageLayout.template.xml}}} defines a common layout that has a menu l
 
    <gwt:dockPanel id="centeringPanel" width="100%" height="100%">
       <gwt:cell direction="north" height="70" verticalAlignment="top">
-          <c:headerClient />
+          <c:userInfo />
       </gwt:cell>
-      <gwt:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
-         <gwt:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
-            <gwt:cell direction="west" width="160">
-               <crux:stackMenu id="menu" height="400" onLoadWidget="#{onLoadMenu}" ></crux:stackMenu>
+      <gwt:cell direction="south">
+         <gwt:dockPanel id="menuTabsDividerPannel">
+            <gwt:cell direction="west">
+               <crux:stackMenu id="menu" onLoadWidget="#{onLoadMenu}" ></crux:stackMenu>
             </gwt:cell>
             <gwt:cell direction="east">
-               <crux:decoratedPanel id="basePanel" width="100%" height="100%">
-                  <crux:widget>
-                     <gwt:HTMLPanel id="hPanel">
-                        <t:section name="body" />
-                     </gwt:HTMLPanel>   
-                  </crux:widget>
-               </crux:decoratedPanel>
+               <gwt:HTMLPanel id="hPanel">
+                  <t:section name="body" />
+               </gwt:HTMLPanel>   
             </gwt:cell>
          </gwt:dockPanel>
       </gwt:cell>
@@ -1437,7 +1432,7 @@ The file {{{pageLayout.template.xml}}} defines a common layout that has a menu l
 </t:template>
 }}}
 
-Then, you can use on any crux page:
+Then, you can use it on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:crux="http://www.sysmap.com.br/crux" 
