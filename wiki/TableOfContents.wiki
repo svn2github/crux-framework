@@ -13,7 +13,10 @@
 <td>........*2.1* [UserManual#2.1_Install Install]</td>
 </tr>
 <tr>
-<td>........*2.2* [UserManual#2.2_Sample_Application Sample Application]</td>
+<td>........*2.2* [UserManual#2.2_Environment_Configuration Environment Configuration]</td>
+</tr>
+<tr>
+<td>........*2.3* [UserManual#2.3_Sample_Application Sample Application]</td>
 </tr>
 <tr>
 <td>....*3* [UserManual#3_Coding_Client_Side Coding Client Side]</td>

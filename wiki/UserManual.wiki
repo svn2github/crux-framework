@@ -35,9 +35,12 @@ Current _*Crux*_ version uses GWT 1.7.1.
   
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project-running.gif
   	  
+== 2.2 Environment Configuration ==
+
+To enable auto-completion on your _*Crux*_ pages
 
 
-== 2.2 Sample Application ==
+== 2.3 Sample Application ==
 
 Here we will explore the application generated in the previous section, explaining each single part of it.
 
@@ -61,10 +64,6 @@ Here we will explore the application generated in the previous section, explaini
     * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
   for more about last three items, see [UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services].     
       
-== 2.3 IDE Environment ==
-
-
-
 = 3 Coding Client Side =
 
 Your modules must inherit _*br.com.sysmap.crux.core.Crux*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that loads its engine. 
