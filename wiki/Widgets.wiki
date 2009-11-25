@@ -1,4 +1,4 @@
-= 1 Basic Widgets =
+= 1 GWT Widgets =
 
 The {{{crux-gwt-widgets.jar}}} files includes support for all native GWT widgets to _*Crux*_ declarative engine. To use any of those widgets inside a page, you must refer to the namespace {{{http://www.sysmap.com.br/crux/gwt}}}.
 
