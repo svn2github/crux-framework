@@ -67,10 +67,10 @@
 <td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
-<td>....*1* [Widgets#1_Basic_Widgets Basic]</td>
+<td>....*1* [Widgets#1_GWT_Widgets GWT]</td>
 </tr>  
 <tr>
-<td>....*2* [Widgets#2_Advanced_Widgets Advanced]</td>
+<td>....*2* [Widgets#2_Crux_Widgets Crux]</td>
 </tr>  
 <tr>
 <td>*[WidgetDeveloperManual Widget Developer Manual]*</td>
