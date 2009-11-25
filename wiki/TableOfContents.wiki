@@ -61,6 +61,18 @@
 <td>........*4.3* [UserManual#4.3_Setup Setup]</td>
 </tr>
 <tr>
+<td>....*5* [UserManual#5_Crux_Tools Crux Tools]</td>
+</tr>  
+<tr>
+<td>........*5.1* [UserManual#5.1_SchemaGenerator SchemaGenerator]</td>
+</tr>
+<tr>
+<td>........*5.2* [UserManual#5.2_ProjectGenerator ProjectGenerator]</td>
+</tr>
+<tr>
+<td>........*5.3* [UserManual#5.3_CruxCompiler Crux Compiler]</td>
+</tr>
+<tr>
 <td>*[CruxErrors Crux Errors Description]*</td>
 </tr>  
 <tr>
