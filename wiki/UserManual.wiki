@@ -1321,7 +1321,7 @@ A DataSource can be used to provide to widgets a set of data.
 
 Some widgets that manipulate data (like _*Crux*_  grid), can be associated to a dataSource and just render the information provided by it. 
 
-DataSouces also supports features like pagination, data sorting and editing.
+DataSources also supports features like pagination, data sorting and editing.
 
 _*Crux*_ provides a wide range of different DataSources that can be classified by the following criterias:
 
@@ -1338,7 +1338,11 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
     # *Row data* - Data organized into columns of records 
     # *Value Objects* - Data organized as a list of objects (Value Objects)
 
-For a complete guide about DataSources, consult the following [DataSources tutorial].
+To create a DataSource, you must inherit one of the abstract DataSource classes provided by _*Crux*_. The basic class that must be extended, depends on which category (between the categories exposed above) your DataSource will belong.
+
+For a complete guide about DataSources (including the complete list of basic DataSource classes), consult the following [DataSources tutorial].
+
+
 
 == 3.9 Templates ==
 
