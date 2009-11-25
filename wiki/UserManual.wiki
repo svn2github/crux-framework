@@ -37,7 +37,7 @@ Current _*Crux*_ version uses GWT 1.7.1.
   	  
 == 2.2 Environment Configuration ==
 
-To enable auto-completion on your _*Crux*_ pages you must add the project catalog to your Eclipse. This project catalog is located under the folder {{{xsd}}} ({{{crux-catalog.xml}}}) and includes information about all the _*Crux*_ widget libraries that is present in your project classpath.
+To enable auto-completion on your _*Crux*_ pages you must add the project catalog to your Eclipse. This project catalog is located under the folder {{{xsd}}} ({{{crux-catalog.xml}}}) and includes information about all the _*Crux*_ widget libraries that are present in your project classpath.
 
 To add the catalog file to your Eclipse catalogs list, just go to
 
