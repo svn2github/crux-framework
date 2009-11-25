@@ -1335,7 +1335,7 @@ A template must be defined in a file with the extension {{{.template.xml}}} and 
 Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
 [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of templates usage.
 
-After creating a template file, you must run the task {{{generate-schemas}}} on your project build file. It will generate a XSD file for your template, enabling auto-completion when using it in a page.
+After creating a template file, you must run the [UserManual#5.1_Schema_Generator Schema Generator]  again.  It will generate a XSD file for your template, enabling auto-completion when using it in a page.
 
 A template can be defined to receive parameters and include sub-sections, as showed in the following examples:  
 
