@@ -37,8 +37,15 @@ Current _*Crux*_ version uses GWT 1.7.1.
   	  
 == 2.2 Environment Configuration ==
 
-To enable auto-completion on your _*Crux*_ pages
+To enable auto-completion on your _*Crux*_ pages you must add the project catalog to your Eclipse. This project catalog is located under the folder {{{xsd}}} ({{{crux-catalog.xml}}}) and includes information about all the _*Crux*_ widget libraries that is present in your project classpath.
 
+To add the catalog file to your Eclipse catalogs list, just go to
+
+{{{
+   Window->Preferences...->XML Catalog
+}}}
+
+Then, select {{{User Specified Entries}}} and choose {{{Add...}}}. Choose {{{Next Catalog}}} and inform the path to the {{{crux-catalog.xml}}} file.
 
 == 2.3 Sample Application ==
 
@@ -1859,3 +1866,9 @@ public interface ServiceFactory
 This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is true. 
 
 However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to false, _*Crux*_ can transfer to a generator the responsability to handle the binding code, keeping the final code smaller and simpler.
+
+= 5 Crux Tools =
+
+== 5.1 SchemaGenerator==
+== 5.2 ProjectGenerator==
+== 5.3 CruxCompiler==
