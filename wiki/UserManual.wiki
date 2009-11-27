@@ -1340,7 +1340,7 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
 
 To create a DataSource, you must inherit one of the abstract DataSource classes provided by _*Crux*_. The basic class that must be extended, depends on which category (between the categories exposed above) your DataSource will belong.
 
-For a complete guide about DataSources (including the complete list of basic DataSource classes), consult the following [DataSources tutorial].
+For a complete guide about DataSources (including the complete list of basic DataSource classes), consult the following [UsingDataSources tutorial].
 
 
 
