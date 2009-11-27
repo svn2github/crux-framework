@@ -188,6 +188,16 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
 }
 }}}
 
+{{{
+public class Contact implements Serializable {
+	
+	private String name;
+	private String phone;
+	private Date birthday;
+    
+    // Getter and Setters ....	
+}
+}}}
 The annotation {{{@DataSourceBinding}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
 
 That annotation can also be used to restrict which fields will be used to store column values inside the DataSource. It has two fields with this porpouse:
@@ -197,7 +207,7 @@ That annotation can also be used to restrict which fields will be used to store 
 Example:
 {{{
 @DataSource("simpleGridDataSource")
-@DataSourceBinding(identifier="name", excludeFields={"dateOfBirth"})
+@DataSourceBinding(identifier="name", excludeFields={"birthday"})
 public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
 		
    @Create
@@ -212,6 +222,12 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
 }}}
 
 =4 Handling Service Responses=
+
+As exposed in the previous sections, once you retrieve the data in the DataSource loader methods, you must call the {{{updateData}}} method of the DataSource. 
+
+To turn easier the task of load data inside the DataSource, _*Crux*_ provides a special {{{AsyncCallback}}} implementation (DataSourceAsyncCallbackAdapter) that automatically takes the result of a service call and passes it to the {{{updateData}}} method. 
+
+See the following examples:
 
 {{{
 @DataSource("simpleDataSource")
@@ -230,6 +246,8 @@ public static class SimpleDataSource extends LocalEditablePagedDataSource {
    }		
 }
 }}}
+
+and 
 
 {{{
 @DataSource("simpleGridDataSource")
