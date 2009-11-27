@@ -1,8 +1,8 @@
-=1 DataSources Hierarchy =
+=1 Data-Sources Hierarchy =
 
-[http://crux-showcase.appspot.com/ http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
 
 _*Crux*_ provides a set of abstract classes that you can use to create a DataSource
 
-[http://crux-showcase.appspot.com/ http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
-[http://crux-showcase.appspot.com/ http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.jpg]
