@@ -56,16 +56,20 @@ Your DataSource class can implement more of those interfaces. The following figu
 || PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}} <br>that is called by the associated widget when it needs the information contained in a page.|| 
 || RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
 || MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> Contains the method {{{getRecordCount()}}} || 
+|| MeasurableRemoteDataSource || A Measurable and Remote Datasource. Contains the methods {{{load}}} and {{{setLoadData}}},<br> used to load DataSource configuration, that includes the size of the DataSource||
 || StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
 || EditableDataSource || DataSources that allows records selection or edition. Contains the methods to retrieve the modified records|| 
 || BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.|| 
-
 ==2.1 Data-Source Abstract classes ==
 
 _*Crux*_ also provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
   * For local DataSources: void load();
   * For remote DataSources: void fetch(int start, int end);
 
+Inside this loader methods ({{{load}}} or {{{fetch}}})you must call {{{updateData}}} method after the data is retrieved. 
+ 
+If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implements a {{{load}}} method too, in adition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
+ 
 The following figures shows some of those classes:
 
 [http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
@@ -85,13 +89,13 @@ The complete list of basic abstract DataSources classes provided by _*Crux*_:
 || LocalBindablePagedDataSource{{{<T>}}} || LocalDataSource, PagedDataSource, BindableDataSource{{{<T>}}} ||
 || LocalBindableEditableScrollableDataSource{{{<T>}}} || LocalDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
 || LocalBindableEditablePagedDataSource{{{<T>}}} || LocalDataSource, EditableDataSource, PagedDataSource, BindableDataSource{{{<T>}}} ||
-|| RemotePagedDataSource || RemoteDataSource ||
+|| RemotePagedDataSource || MeasurableRemoteDataSource ||
 || RemoteStreamingDataSource || StreamingDataSource ||
-|| RemoteEditablePagedDataSource || RemoteDataSource, EditableDataSource ||
+|| RemoteEditablePagedDataSource || MeasurableRemoteDataSource, EditableDataSource ||
 || RemoteEditableStreamingDataSource || StreamingDataSource, EditableDataSource,  ||
-|| RemoteBindablePagedDataSource{{{<T>}}} || RemoteDataSource, BindableDataSource{{{<T>}}} ||
+|| RemoteBindablePagedDataSource{{{<T>}}} || MeasurableRemoteDataSource, BindableDataSource{{{<T>}}} ||
 || RemoteBindableStreamingDataSource{{{<T>}}} || StreamingDataSource, BindableDataSource{{{<T>}}} ||
-|| RemoteBindableEditablePagedDataSource{{{<T>}}} || RemoteDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
+|| RemoteBindableEditablePagedDataSource{{{<T>}}} || MeasurableRemoteDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
 || RemoteBindableEditableStreamingDataSource{{{<T>}}} || StreamingDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
 
 See the following examples:
@@ -105,11 +109,13 @@ public static class RemoteDS extends RemoteBindableEditablePagedDataSource<Conta
    protected SimpleGridServiceAsync service;
 
    public void load(){
-      service.getContactCount(new RemoteDataSourceLoadAsyncCallbackAdapter(this));
+      RemoteDataSourceConfiguration config = getConfig();
+      setLoadData(config);
    }
 
    public void fetch(int startRecord, int endRecord){
-      service.getContactPage(startRecord, endRecord, new DataSourceAsyncCallbackAdapter<Contact>(this));
+      Contact[] data = getData();
+      updateData(data);
    }
 }
 }}}
@@ -135,9 +141,7 @@ It is possible to inform to _*Crux*_ the structure of a DataSource in two differ
   # Using the annotation {{{@DataSourceColumns}}}
   # Implementing the interface {{{BindableDataSource<T>}}}, where T is some class that will contains the data of a row in DataSource.
 
-Every row on a DataSource class must follow the rules:
-  # Define one identifier field. It is needed to identify a row even if all the set of data were reordered.
-  # Implement a data loader method ({{{load}}} or {{{fetch}}}) and call {{{updateData}}} method after the data is retrieved. 
+Every row on a DataSource class must define one identifier field. It is needed to identify a row even if all the set of data were reordered.
 
 See the examples in next two sections.
 
@@ -261,5 +265,25 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
    {
       service.getContactList(new DataSourceAsyncCallbackAdapter<Contact>(this));
    }		
+}
+}}}
+
+Another {{{AsyncCallback}}} implementation is provided to do the same job to the {{{RemoteDataSourceConfiguration}}}, that is called {{{RemoteDataSourceLoadAsyncCallbackAdapter}}}. See the following example.
+
+{{{
+@DataSource("contactDataSource")
+@DataSourceBinding(identifier="name")
+public static class RemoteDS extends RemoteBindableEditablePagedDataSource<Contact> {
+
+   @Create
+   protected SimpleGridServiceAsync service;
+
+   public void load(){
+      service.getContactCount(new RemoteDataSourceLoadAsyncCallbackAdapter(this));
+   }
+
+   public void fetch(int startRecord, int endRecord){
+      service.getContactPage(startRecord, endRecord, new DataSourceAsyncCallbackAdapter<Contact>(this));
+   }
 }
 }}}
