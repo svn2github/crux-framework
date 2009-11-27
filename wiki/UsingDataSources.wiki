@@ -66,10 +66,10 @@ _*Crux*_ also provides a set of abstract classes that you can use to create a Da
   * For local DataSources: void load();
   * For remote DataSources: void fetch(int start, int end);
 
-Inside this loader methods ({{{load}}} or {{{fetch}}})you must call {{{updateData}}} method after the data is retrieved. 
- 
+Inside this loader methods ({{{load}}} or {{{fetch}}}), you must call {{{updateData}}} method after the data is retrieved.
+
 If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implements a {{{load}}} method too, in adition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
- 
+
 The following figures shows some of those classes:
 
 [http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
