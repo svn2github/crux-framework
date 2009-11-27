@@ -1,6 +1,6 @@
 =1 Data-Sources =
 
-A _*Crux*_ DataSource is a class used to provide a set of data to widgets. Some widgets delivered in{{{crux-widgets.jar}}} supports the use of a DataSource.
+A _*Crux*_ DataSource is a class used to provide a set of data to widgets. Some widgets delivered in {{{crux-widgets.jar}}} supports the use of a DataSource.
 
 The following example shows a grid widget associated with a dataSource:
 
@@ -38,22 +38,39 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
 
 Note that you must declare a DataSource with the annotation {{{@DataSource}}} and then import it into your page using the screen attribute {{{useDataSource}}}.  We can compare it with the Annotation {{{@Controller}}} and the {{{useController}}} screen attribute.
 
-The main difference between DataSources and Controlleris is the final porpouse of these two classes. Controllers are used to handle widget events and Data-Sources are used to load a set of data to serve a widget.
+The main difference between DataSources and Controllers is the final porpouse of these two classes. Controllers are used to handle widget events and Data-Sources are used to load a set of data to serve a widget.
 
-Any DataSource must implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} and {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
+Any DataSource must implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} or {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
 
 =2 Data-Sources Hierarchy =
 
+Any DataSource must implements the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}}. However, a lot of other DataSource interfaces are provided by _*Crux*_, to support some other features like pagination or editing.
+
+Your DataSource class can implement more of those interfaces. The following figure shows the complete list of interfaces available:
+
 [http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
 
-_*Crux*_ provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself.
+|| *Interface* || *Description* ||
+|| DataSource || The basic interface for any DataSource. Contains the basic methods to navigating in records and sorting.|| 
+|| LocalDataSource || Local DataSources loads the data in just one setp and keep it in a local buffer. Contains the method {{{load()}}}|| 
+|| PagedDataSource || A DataSource that can divide data in blocks called _page_. Contains the method {{{fetch(int start, int end)}}} <br>that is called by the associated widget when it needs the information contained in a page.|| 
+|| RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server. <br>When a page is needed, the DataSource requests it to server. It also keep a buffer of the <br>already loaded pages. || 
 
+_*Crux*_ provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
+  * For local DataSources: void load();
+  * For remote DataSources: void fetch(int start, int end);
 
+The following figures shows some of those classes:
 
-The following figures show some of those classes:
-
-==2.1 Local Data-Source Example ==
 [http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
 
-==2.2 Remote Data-Source Example ==
+and
+
 [http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.jpg]
+
+==2.1 Data-Source Abstract classes ==
+
+The complete list of basic abstract DataSources classes provided by _*Crux*_:
+
+|| *Class* || *Implemented Datasource Interfaces* || *Description* ||
+|| || || ||
