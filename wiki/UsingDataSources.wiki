@@ -171,6 +171,7 @@ The class {{{DataSourceRecord}}} is used to represent a record in the DataSource
 
 == 3.2 Using a Class ==
 
+You can define the DataSource structure informing a class. _*Crux*_ will define columns following the names of the fields of the informed class. The type of each column will be the same type of the respective field. See the following example: 
 {{{
 @DataSource("simpleGridDataSource")
 @DataSourceBinding(identifier="name")
@@ -181,7 +182,30 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
 
    public void load()
    {
-      EditableDataSourceRecord[] data = getData();
+      Contact[] data = getData();
+      updateData(data);
+   }		
+}
+}}}
+
+The annotation {{{@DataSourceBinding}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
+
+That annotation can also be used to restrict which fields will be used to store column values inside the DataSource. It has two fields with this porpouse:
+  # includeFields - an array that inform the names of the fields of the binding class that will be used by the DataSource.
+  # excludeFields - an array that inform the names of the fields of the binding class that will not be used by the DataSource. 
+
+Example:
+{{{
+@DataSource("simpleGridDataSource")
+@DataSourceBinding(identifier="name", excludeFields={"dateOfBirth"})
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
+		
+   @Create
+   protected SimpleGridServiceAsync service;
+
+   public void load()
+   {
+      Contact[] data = getData();
       updateData(data);
    }		
 }
@@ -208,16 +232,16 @@ public static class SimpleDataSource extends LocalEditablePagedDataSource {
 }}}
 
 {{{
-	@DataSource("simpleGridDataSource")
-	@DataSourceBinding(identifier="name")
-	public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
+@DataSource("simpleGridDataSource")
+@DataSourceBinding(identifier="name")
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
 		
-		@Create
-		protected SimpleGridServiceAsync service;
+   @Create
+   protected SimpleGridServiceAsync service;
 		
-		public void load()
-		{
-			service.getContactList(new DataSourceAsyncCallbackAdapter<Contact>(this));
-		}		
-	}
+   public void load()
+   {
+      service.getContactList(new DataSourceAsyncCallbackAdapter<Contact>(this));
+   }		
+}
 }}}
