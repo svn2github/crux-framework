@@ -76,5 +76,20 @@ and
 
 The complete list of basic abstract DataSources classes provided by _*Crux*_:
 
-|| *Class* || *Implemented Datasource Interfaces* || *Description* ||
-|| || || ||
+|| *Class* || *Implemented Datasource Interfaces* ||
+|| LocaScrollableDataSource || LocalDataSource ||
+|| LocaPagedDataSource || LocalDataSource, PagedDataSource ||
+|| LocalEditableScrollableDataSource || LocalDataSource, EditableDataSource ||
+|| LocalEditablePagedDataSource || LocalDataSource, EditableDataSource, PagedDataSource ||
+|| LocalBindableScrollableDataSource<T> || LocalDataSource, BindableDataSource<T> ||
+|| LocalBindablePagedDataSource<T> || LocalDataSource, PagedDataSource, BindableDataSource<T> ||
+|| LocalBindableEditableScrollableDataSource<T> || LocalDataSource, EditableDataSource, BindableDataSource<T> ||
+|| LocalBindableEditablePagedDataSource<T> || LocalDataSource, EditableDataSource, PagedDataSource, BindableDataSource<T> ||
+|| RemotePagedDataSource<T> || RemoteDataSource ||
+|| RemoteStreamingDataSource<T> || StreamingDataSource ||
+|| RemoteEditablePagedDataSource<T> || RemoteDataSource, EditableDataSource ||
+|| RemoteEditableStreamingDataSource || StreamingDataSource, EditableDataSource,  ||
+|| RemoteBindablePagedDataSource<T> || RemoteDataSource, BindableDataSource<T> ||
+|| RemoteBindableStreamingDataSource<T> || StreamingDataSource, BindableDataSource<T> ||
+|| RemoteBindableEditablePagedDataSource<T> || RemoteDataSource, EditableDataSource, BindableDataSource<T> ||
+|| RemoteBindableEditableStreamingDataSource<T> || StreamingDataSource, EditableDataSource, BindableDataSource<T> ||
