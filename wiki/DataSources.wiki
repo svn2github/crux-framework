@@ -1,8 +1,20 @@
-=1 Data-Sources Hierarchy =
+=1 Data-Sources =
+
+  
+
+
+=2 Data-Sources Hierarchy =
 
 [http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
 
-_*Crux*_ provides a set of abstract classes that you can use to create a DataSource
+_*Crux*_ provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself.
 
+
+
+The following figures show some of those classes:
+
+==2.1 Local Data-Source Example ==
 [http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
+
+==2.2 Remote Data-Source Example ==
 [http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.jpg]
