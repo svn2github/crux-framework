@@ -55,8 +55,10 @@ Your DataSource class can implement more of those interfaces. The following figu
 || LocalDataSource || Local DataSources loads the data in just one step and keeps it in a local buffer. Contains the method {{{load()}}}|| 
 || PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}} <br>that is called by the associated widget when it needs the information contained in a page.|| 
 || RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
-|| MeasurableDataSource || A DataSource that can be measured. In other words, when I can determine the number of records of the DataSource.<br> Contains the method {{{getRecordCount()}}} || 
-|| StreamingDataSource || A DataSource that retrieve its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
+|| MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> Contains the method {{{getRecordCount()}}} || 
+|| StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
+|| EditableDataSource || DataSources that allows records selection or edition. Contains the methods to retrieve the modified records|| 
+|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.|| 
 
 ==2.1 Data-Source Abstract classes ==
 
