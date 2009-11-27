@@ -1,7 +1,46 @@
 =1 Data-Sources =
 
-  
+A _*Crux*_ DataSource is a class used to provide a set of data to widgets. Some widgets delivered in{{{crux-widgets.jar}}} supports the use of a DataSource.
 
+The following example shows a grid widget associated with a dataSource:
+
+{{{
+<html 
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:c="http://www.sysmap.com.br/crux" 
+   xmlns:a="http://www.sysmap.com.br/crux/widgets">
+      
+      <c:screen useDataSource="simpleGridDataSource" useFormatter="birthday"/>
+      
+      <a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" 
+                   stretchColumns="true" pageSize="7" highlightRowOnMouseOver="true">
+         <a:dataColumn key="name" label="Name"/>
+         <a:dataColumn key="phone" label="Phone"/>
+         <a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
+      </a:grid>
+</html>
+}}}
+
+The DataSource class:
+{{{
+@DataSource("simpleGridDataSource")
+@DataSourceBinding(identifier="name")
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
+   @Create
+   protected SimpleGridServiceAsync service;
+
+   public void load()
+   {
+      service.getContactList(new DataSourceAsyncCallbackAdapter<Contact>(this));
+   }		
+}
+}}}
+
+Note that you must declare a DataSource with the annotation {{{@DataSource}}} and then import it into your page using the screen attribute {{{useDataSource}}}.  We can compare it with the Annotation {{{@Controller}}} and the {{{useController}}} screen attribute.
+
+The main difference between DataSources and Controlleris is the final porpouse of these two classes. Controllers are used to handle widget events and Data-Sources are used to load a set of data to serve a widget.
+
+Any DataSource must implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} and {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
 
 =2 Data-Sources Hierarchy =
 
