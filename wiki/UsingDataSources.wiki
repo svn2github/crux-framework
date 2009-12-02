@@ -59,7 +59,8 @@ Your DataSource class can implement more of those interfaces. The following figu
 || MeasurableRemoteDataSource || A Measurable and Remote Datasource. Contains the methods {{{load}}} and {{{setLoadData}}},<br> used to load DataSource configuration, that includes the size of the DataSource||
 || StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
 || EditableDataSource || DataSources that allows records selection or edition. Contains the methods to retrieve the modified records|| 
-|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.|| 
+|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.||
+ 
 ==2.1 Data-Source Abstract classes ==
 
 _*Crux*_ also provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
