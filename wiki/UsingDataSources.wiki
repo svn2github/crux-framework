@@ -61,6 +61,7 @@ Your DataSource class can implement more of those interfaces. The following figu
 || EditableDataSource || DataSources that allows records selection or edition. Contains the methods to retrieve the modified records|| 
 || BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.||
  
+ <br>
 ==2.1 Data-Source Abstract classes ==
 
 _*Crux*_ also provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
