@@ -1,6 +1,6 @@
 =1 Data-Sources =
 
-A _*Crux*_ DataSource is a class used to provide a set of data to widgets. Some widgets delivered in {{{crux-widgets.jar}}} supports the use of a DataSource.
+_*Crux*_ DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
 
 The following example shows a grid widget associated with a dataSource:
 
@@ -12,8 +12,7 @@ The following example shows a grid widget associated with a dataSource:
       
       <c:screen useDataSource="simpleGridDataSource" useFormatter="birthday"/>
       
-      <a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" 
-                   stretchColumns="true" pageSize="7" highlightRowOnMouseOver="true">
+      <a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" pageSize="7">
          <a:dataColumn key="name" label="Name"/>
          <a:dataColumn key="phone" label="Phone"/>
          <a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
@@ -38,23 +37,21 @@ public static class SimpleGridDataSource extends LocalBindableEditablePagedDataS
 
 Note that you must declare a DataSource with the annotation {{{@DataSource}}} and then import it into your page using the screen attribute {{{useDataSource}}}.  We can compare it with the Annotation {{{@Controller}}} and the {{{useController}}} screen attribute.
 
-The main difference between DataSources and Controllers is the final porpouse of these two classes. Controllers are used to handle widget events and Data-Sources are used to load a set of data to serve a widget.
+The main difference between DataSources and Controllers is the final purpose of these two classes. Controllers are used to handle widget events and data sources are used to load a set of data to serve a widget.
 
-Any DataSource must implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} or {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
+All basic DataSources implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} or {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
 
 =2 Data-Sources Hierarchy =
 
-Any DataSource must implements the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}}. However, a lot of other DataSource interfaces are provided by _*Crux*_, to support some other features like pagination or editing.
-
-Your DataSource class can implement more of those interfaces. The following figure shows the complete list of interfaces available:
+There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra features, like pagination and data editing. Your DataSource class can implement many of those interfaces. The following figure shows the complete list of available interfaces:
 
 [http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
 
 || *Interface* || *Description* ||
-|| DataSource || The basic interface for any DataSource. Contains the basic methods to navigating in records and sorting.|| 
+|| DataSource || The basic interface for any DataSource. Contains the basic methods to navigating through records and sorting data.|| 
 || LocalDataSource || Local DataSources loads the data in just one step and keeps it in a local buffer. Contains the method {{{load()}}}|| 
-|| PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}} <br>that is called by the associated widget when it needs the information contained in a page.|| 
-|| RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
+|| PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}},<br>which is called by the associated widget when it needs the information contained in a page.|| 
+|| RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server and must be fetched on demand. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
 || MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> Contains the method {{{getRecordCount()}}} || 
 || MeasurableRemoteDataSource || A Measurable and Remote Datasource. Contains the methods {{{load}}} and {{{setLoadData}}},<br> used to load DataSource configuration, that includes the size of the DataSource||
 || StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
