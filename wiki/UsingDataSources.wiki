@@ -52,14 +52,14 @@ There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra
 || LocalDataSource || Local DataSources loads the data in just one step and keeps it in a local buffer. Contains the method {{{load()}}}|| 
 || PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}},<br>which is called by the associated widget when it needs the information contained in a page.|| 
 || RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server and must be fetched on demand. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
-|| MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> Contains the method {{{getRecordCount()}}} || 
+|| MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> It contains the method {{{getRecordCount()}}} || 
 || MeasurableRemoteDataSource || A Measurable and Remote Datasource. Contains the methods {{{load}}} and {{{setLoadData}}},<br> used to load DataSource configuration, that includes the size of the DataSource||
 || StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
-|| EditableDataSource || DataSources that allows records selection or edition. Contains the methods to retrieve the modified records|| 
-|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allows you to use a Value Object to store the information.||
+|| EditableDataSource || DataSources that allow records selection or edition. It contains methods to retrieve the modified records|| 
+|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allow you to use an arbitrary Value Object to store the information.||
  
  <br>
-==2.1 Data-Source Abstract classes ==
+==2.1 DataSource Abstract classes ==
 
 _*Crux*_ also provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
   * For local DataSources: void load();
