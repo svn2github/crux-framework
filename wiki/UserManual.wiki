@@ -1318,31 +1318,26 @@ TODO: _A basic set of common formatters is being created and will be available a
 
 == 3.8 Data-Sources==
 
-A DataSource can be used to provide to widgets a set of data.
-
-Some widgets that manipulate data (like _*Crux*_  grid), can be associated to a dataSource and just render the information provided by it. 
-
-DataSources also supports features like pagination, data sorting and editing.
+DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
 
 _*Crux*_ provides a wide range of different DataSources that can be classified by the following criterias:
 
-  # The *Location* of the data
-    # *Local* - DataSources can load the data once and keep it locally on user's brownser. That data can be paged, sorted or edited locally.
-    # *Remote* - The data resides on server, and DataSources fetch them when needed (by widgets request).
-  # How it *present* the data
-    # *Paged* - Data can be divided in pages
-    # *Scrollable* - Data contained in a single page
-  # How it restrict the *access* to data
-    # *Read only* - Data can not be modified or selected
+  # How them *present the data*
+    # *Paged* - PagedDataSources can divide the data into pages
+    # *Scrollable* - This kind od DataSource handler all data in a single page
+  # How they *fetch the data* 
+    # *Local* - This kind of DataSource can load data once and keep it locally on user's brownser, so it can be paged, sorted or edited locally.
+    # *Remote* - RemoteDatasources load data on demand, as widgets request for them. 
+  # How them *restrict access* to data
+    # *Read Only* - Data can not be modified or selected
     # *Editable* - Data can be modified and selected
   # How data is *structured* inside the DataSource
-    # *Row data* - Data organized into columns of records 
-    # *Value Objects* - Data organized as a list of objects (Value Objects)
+    # *Records* - Data is organized as columns of records 
+    # *Value Objects* - Data is organized as a list of objects (Value Objects) (see [UsingDataSources#3.2_Using_a_Class BindableDataSource])
 
 To create a DataSource, you must inherit one of the abstract DataSource classes provided by _*Crux*_. The basic class that must be extended, depends on which category (between the categories exposed above) your DataSource will belong.
 
 For a complete guide about DataSources (including the complete list of basic DataSource classes), consult the following [UsingDataSources tutorial].
-
 
 
 == 3.9 Templates ==
