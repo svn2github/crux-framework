@@ -61,13 +61,13 @@ There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra
  <br>
 ==2.1 DataSource Abstract classes ==
 
-_*Crux*_ also provides a set of abstract classes that you can use to create a DataSource. Those classes implements different combination of the above interfaces to simplify your implementation. Using one of those classes, you just must implement the method to retrieve the data itself:
+The easiest way of creating a DataSource is extending one of the _*Crux*_ provided abstract classes.  Those classes implement different combination of the above interfaces to simplify your implementation. Using one of those classes, you only need to implement one method to retrieve the data itself:
   * For local DataSources: void load();
   * For remote DataSources: void fetch(int start, int end);
 
 Inside this loader methods ({{{load}}} or {{{fetch}}}), you must call {{{updateData}}} method after the data is retrieved.
 
-If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implements a {{{load}}} method too, in adition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
+If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implement a {{{load}}} method too, in adition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
 
 The following figures shows some of those classes:
 
