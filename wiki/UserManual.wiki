@@ -1324,7 +1324,7 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
 
   # How them *present the data*
     # *Paged* - PagedDataSources can divide the data into pages
-    # *Scrollable* - This kind od DataSource handler all data in a single page
+    # *Scrollable* - This kind od DataSource handles all data in a single page
   # How they *fetch the data* 
     # *Local* - This kind of DataSource can load data once and keep it locally on user's brownser, so it can be paged, sorted or edited locally.
     # *Remote* - RemoteDatasources load data on demand, as widgets request for them. 
@@ -1335,7 +1335,7 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
     # *Records* - Data is organized as columns of records 
     # *Value Objects* - Data is organized as a list of objects (Value Objects) (see [UsingDataSources#3.2_Using_a_Class BindableDataSource])
 
-To create a DataSource, you must inherit one of the abstract DataSource classes provided by _*Crux*_. The basic class that must be extended, depends on which category (between the categories exposed above) your DataSource will belong.
+To create a DataSource, you can extend one of the abstract DataSource classes provided by _*Crux*_. The class you should choose depends on which categories (between the exposed above) your DataSource will belong.
 
 For a complete guide about DataSources (including the complete list of basic DataSource classes), consult the following [UsingDataSources tutorial].
 
