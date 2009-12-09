@@ -45,7 +45,7 @@ All basic DataSources implement the interface {{{br.com.sysmap.crux.core.client.
 
 There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra features, like pagination and data editing. Your DataSource class can implement many of those interfaces. The following figure shows the complete list of available interfaces:
 
-[http://crux-framework.googlecode.com/svn/wiki/images/dataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/dataSources.gif]
 
 || *Interface* || *Description* ||
 || DataSource || The basic interface for any DataSource. Contains the basic methods to navigating through records and sorting data.|| 
@@ -71,11 +71,11 @@ If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, yo
 
 The following figures show some of those classes:
 
-[http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.gif]
 
 and
 
-[http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.jpg]
+[http://crux-framework.googlecode.com/svn/wiki/images/remoteDataSources.gif]
 
 The complete list of basic abstract DataSources classes provided by _*Crux*_:
 
