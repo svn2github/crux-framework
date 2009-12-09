@@ -62,14 +62,14 @@ There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra
 ==2.1 DataSource Abstract classes ==
 
 The easiest way of creating a DataSource is extending one of the _*Crux*_ provided abstract classes.  Those classes implement different combination of the above interfaces to simplify your implementation. Using one of those classes, you only need to implement one method to retrieve the data itself:
-  * For local DataSources: void load();
-  * For remote DataSources: void fetch(int start, int end);
+  * {{{void load();}}} - for local DataSources 
+  * {{{void fetch(int start, int end);}}} - for remote DataSources
 
-Inside this loader methods ({{{load}}} or {{{fetch}}}), you must call {{{updateData}}} method after the data is retrieved.
+Inside this loader methods ({{{load}}} or {{{fetch}}}), you must call the {{{updateData}}} method after the data is retrieved.
 
-If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implement a {{{load}}} method too, in adition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
+If your DataSource implements the interface {{{MeasurableRemoteDataSource}}}, you must implement a {{{load}}} method too, in addition of the {{{fetch}}} method. The load method is used to load DataSource configuration, including the size of the remote DataSource. Inside this method you must call {{{setLoadData}}} once you have loaded the configuration data.
 
-The following figures shows some of those classes:
+The following figures show some of those classes:
 
 [http://crux-framework.googlecode.com/svn/wiki/images/localDataSources.jpg]
 
@@ -79,7 +79,7 @@ and
 
 The complete list of basic abstract DataSources classes provided by _*Crux*_:
 
-|| *Class* || *Implemented Datasource Interfaces* ||
+|| *Class* || *Implemented DataSource Interfaces* ||
 || LocaScrollableDataSource || LocalDataSource ||
 || LocaPagedDataSource || LocalDataSource, PagedDataSource ||
 || LocalEditableScrollableDataSource || LocalDataSource, EditableDataSource ||
@@ -170,7 +170,7 @@ The annotation {{{@DataSourceColumns}}} contains the fields:
   * identifier - Tell _*Crux*_ which field is the row identifier.
   * columns - An array of {{{@DataSourceColumn}}}. Each of them defines a column on the DataSource.
   
-The class {{{DataSourceRecord}}} is used to represent a record in the DataSource. This class defines a field {{{identifier}}} and a list of objects, that contains the values of the columns (following the order in which the columns were declared). {{{EditableDataSourceRecord}}} is used when the DataSource supports editing.
+The class {{{DataSourceRecord}}} is used to represent a record in the DataSource. This class defines a field {{{identifier}}} and a list of objects that contain the values of the columns (following the order in which the columns were declared). {{{EditableDataSourceRecord}}} is used when the DataSource supports editing.
 
 == 3.2 Using a Class ==
 
@@ -203,7 +203,7 @@ public class Contact implements Serializable {
 }}}
 The annotation {{{@DataSourceBinding}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
 
-That annotation can also be used to restrict which fields will be used to store column values inside the DataSource. It has two fields with this porpouse:
+That annotation can also be used to restrict which fields will be used to store column values inside the DataSource. It has two fields with this purpose:
   # includeFields - an array that inform the names of the fields of the binding class that will be used by the DataSource.
   # excludeFields - an array that inform the names of the fields of the binding class that will not be used by the DataSource. 
 
