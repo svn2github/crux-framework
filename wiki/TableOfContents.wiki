@@ -43,7 +43,7 @@
 <td>........*3.7* [UserManual#3.7_Formatters Formatters]</td>
 </tr>
 <tr>
-<td>........*3.8* [UserManual#3.8_Data_Sources Data Sources](overview)</td>
+<td>........*3.8* [UserManual#3.8_Data_Sources Data Sources (overview)]</td>
 </tr>
 <tr>
 <td>............*3.8.1* [UsingDataSources  Data Sources Tutorial]</td>
