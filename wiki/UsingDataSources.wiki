@@ -1,4 +1,4 @@
-=1 Data-Sources =
+=1 DataSources =
 
 _*Crux*_ DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
 
@@ -41,7 +41,7 @@ The main difference between DataSources and Controllers is the final purpose of 
 
 All basic DataSources implement the interface {{{br.com.sysmap.crux.core.client.datasource.DataSource}}} and one of the two interfaces: {{{br.com.sysmap.crux.core.client.datasource.LocalDataSource}}} or {{{br.com.sysmap.crux.core.client.datasource.RemoteDataSource}}} .  
 
-=2 Data-Sources Hierarchy =
+=2 DataSources Hierarchy =
 
 There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra features, like pagination and data editing. Your DataSource class can implement many of those interfaces. The following figure shows the complete list of available interfaces:
 
