@@ -1316,7 +1316,7 @@ Note that the {{{MaskedFormatter}}} methods ({{{applyMask}}} and {{{removeMask}}
 
 TODO: _A basic set of common formatters is being created and will be available as crux-formatters.jar that will be included in the distribution soon_.
 
-== 3.8 DataSources==
+== 3.8 Data Sources==
 
 DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
 
