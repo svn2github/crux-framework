@@ -1327,7 +1327,7 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
     # *Scrollable* - This kind od DataSource handles all data in a single page
   # How they *fetch the data* 
     # *Local* - This kind of DataSource can load data once and keep it locally on user's brownser, so it can be paged, sorted or edited locally.
-    # *Remote* - RemoteDatasources load data on demand, as widgets request for them. 
+    # *Remote* - RemoteDatasources load data on demand, as widgets request them. 
   # How them *restrict access* to data
     # *Read Only* - Data can not be modified or selected
     # *Editable* - Data can be modified and selected
