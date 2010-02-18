@@ -1891,6 +1891,8 @@ The following properties can be set in this file:
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
 ||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||true||
+||enableChildrenWindowsDebug||If true, propagates the GWT debug parameters to <br>other windows opened while application runs under the DevMode||true||
+||enableWebRootScannerCache||If true, uses a cache for the resources scanner||true||
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
 
@@ -2079,6 +2081,14 @@ public interface ServiceFactory
 This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is true. 
 
 However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to false, _*Crux*_ can transfer to a generator the responsability to handle the binding code, keeping the final code smaller and simpler.
+
+==== 4.3.2.7 enableChildrenWindowsDebug====
+
+GWT 2.0 uses a parameter to inform its browser debug plugin that it must enable the debug. If  enableChildrenWindowsDebug parameter is set to true, _*Crux*_ will propagate the GWT debug parameter to other windows when, for example, a Popup is opened.
+
+==== 4.3.2.8 enableWebRootScannerCache====
+
+_*Crux*_ uses a resource scanner to find the application pages, templates and other things. Some _*Crux*_ plugins requires to disable this scanner. 
 
 = 5 Crux Tools =
 
