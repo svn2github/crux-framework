@@ -199,7 +199,8 @@ public class MyClass
 		TextBox getMyBox();
 	}
 	
-	protected MyScreen myScreen = GWT.create(MyScreen.class);
+	@Create
+	protected MyScreen myScreen;
 
 	public void myMethod()
 	{
@@ -384,7 +385,8 @@ You can block and unblock the user interaction with the page using the static me
 
 {{{
   ...
-   protected TestServiceAsync service = (TestServiceAsync) GWT.create(TestService.class);
+  @Create
+   protected TestServiceAsync service;
 
    public void helloWorld()
    {
@@ -515,7 +517,7 @@ The Controller annotation has the following properties:
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
 ||autoBind||no||true||If true, [UserManual#3.3.3.3_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 ||lazy||no|| true ||If true, the controller object is built only when first called.||
-||fragment||no|| <empty> ||You can inform a fragment identifier. The compiler will split your code grouping controllers by these identifiers.||
+||fragment||no|| {{{<empty>}}} ||You can inform a fragment identifier. The compiler will split your code grouping controllers<br> by these identifiers.||
 
 ==== 3.3.3.2 The @Create Annotation====
 
@@ -523,7 +525,7 @@ This annotation can be used to simplify the code for Controllers. It automatical
 
 This creation is done by a call to GWT.create method, assuring that any generator eventually associated with the requested type will be called correctly.
 
-The code showed in sections [UserManual#3.2.1_Access_Screen_Widgets Access Screen Widgets], [UserManual#3.2.3_Communication_Between_Screens Communication Between Screens] and [UserManual#3.2.5_Block_and_Unblock Block and Unblock] could be written as:
+See the following example:
 
 {{{
 @Controller("myNewController")
@@ -557,6 +559,8 @@ public class MyClass
 }}}
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
+
+The {{{@Create}}} annotation does more than simply creates an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.7_Parameters parameter fields] are loaded, etc.)
 
 You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter methods.
 
