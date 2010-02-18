@@ -1013,7 +1013,7 @@ public class MyController
        // code here   
    }
       
-   protected void myValidationMethod() throws ValidateException
+   protected void myValidationMethod(CloseEvent<Window> event) throws ValidateException
    {
        // code here   
    }
@@ -1040,6 +1040,150 @@ public class MyController
    }
 }
 }}}
+
+Note that the validate method can receive a parameter of the same type as the main method parameter type (as in the first example) or no parameter (as in the second example).
+
+
+==== 3.3.3.7 Parameters====
+
+_*Crux*_ provides a mechanism to help you to automatically bind values between window parameters and data objects. This can be done using the annotations {{{@Parameter}}} and {{{@ParameterObject}}} on controller fields and DTO classes.
+
+You can annotate a controller field with the annotation {{{@Parameter}}} as in the following example:
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    @Parameter
+    protected String person;
+
+    @Parameter(value="parameterName", required=true)
+    protected int field;
+
+    @Expose
+    public void myMethod()
+    {
+    	Window.alert(person);
+    	Window.alert(Integer.toString(field));
+    }
+}
+}}}
+
+In the above example, the value of the "person" parameter on window URL will be bound to field "person" of the controller (the same is true to "field"). 
+
+Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.3_Value_Binding Value Objects]. Doing it, you allows _*Crux*_ to populate an object of this type with values present on window url parameters. 
+
+See the following example:
+
+{{{
+@ParameterObject
+public class Parameters
+{
+	private String person;
+	private int field;
+	
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
+	}
+	public int getField() {
+		return field;
+	}
+	public void setField(int field) {
+		this.field = field;
+	}
+}
+}}}
+
+{{{
+@Controller("myController")
+public class MyClass
+{
+    @Create
+    protected Parameters parameters;
+
+    @Expose
+    public void myMethod()
+    {
+    	Window.alert(parameters.getPerson());
+    	Window.alert(Integer.toString(parameters.getField()));
+    }
+}
+}}}
+
+
+If want, you can use the {{{@Parameter}}} annotation on parameter object field to inform _*Crux*_ which parameter will be bound to this field. The above example can be changed to:
+
+{{{
+@ParameterObject
+public class Parameters
+{
+	@Parameter("personName")
+	private String person;
+	
+	@Parameter("fieldParameter", required=true)
+	private int field;
+	
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
+	}
+	public int getField() {
+		return field;
+	}
+	public void setField(int field) {
+		this.field = field;
+	}
+}
+}}}
+
+You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to true). Setting this value to false make _*Crux*_ to does not bind all parameter object fields to window parameter automatically. If you set this, you must specify for each field, the name of the parameter that it will be bound (through {{{@Parameter}}} annotation).
+
+See the following example:
+{{{
+@ParameterObject(bindParameterByFieldName=false)
+public class Parameters
+{
+	@Parameter("personName")
+	private String person;
+	
+	@Parameter("fieldParameter", required=true)
+	private int field;
+	
+	private int field2; // not bound
+	
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
+	}
+	public int getField() {
+		return field;
+	}
+	public void setField(int field) {
+		this.field = field;
+	}
+	public int getField2() {
+		return field2;
+	}
+	public void setField2(int field2) {
+		this.field2 = field2;
+	}
+}
+}}}
+
+Any field in a parameter object can be bound if it:
+  * is a primitive type (or a primitive wrapper);
+  * is a CharSequence type (String, StringBuilder, StringBuffer, etc);
+  * is a Date type (java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
+  * is an Enum type;
+  * is any type annotated with {{{@ParameterObject}}} annotation;
+  * has public or protected visibility or has public getter and setter methods.
 
 == 3.4 I18N ==
 
