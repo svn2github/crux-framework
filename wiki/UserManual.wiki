@@ -1053,7 +1053,7 @@ You can annotate a controller field with the annotation {{{@Parameter}}} as in t
 For the following URL
 
 {{{
-	http://myhost.com/myapp/mymodule/mypage.html?person=Thiago&field=123
+	http://myhost.com/myapp/mymodule/mypage.html?person=Thiago&parameterName=123
 }}}
 
 And Controller
