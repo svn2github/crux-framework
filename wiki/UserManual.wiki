@@ -12,7 +12,7 @@ To see an example application using _*Crux*_, take a look at the our [http://cru
 == 1.1 _Crux_ and GWT==
 
 _*Crux*_ is built over GWT and support all of its features.
-Current _*Crux*_ version uses GWT 1.7.1.
+Current _*Crux*_ version uses GWT 2.0.
 
 = 2 Quick Start=
 
@@ -93,7 +93,7 @@ The code above creates a module that inherits the _*Crux*_ core and the two sets
 
 Any GWT widget can be used in user interface construction. Consult the [WidgetDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
 
-To add widgets to your pages, you can use one of these methods:
+To add widgets to your pages, you can use these methods:
   # Create a page as a XML file and use some XSDs to enable auto completion on your favorite editor.
   # Programmatically instantiate widgets, exactly as you already do using with pure GWT. 
 
@@ -133,6 +133,8 @@ You must attempt to:
 </filter-mapping>
 }}}
 
+The *.crux.xml* files is used to turn deveolpment easier. When you generate the final application distribution file, the _*Crux*_ compiler translate that page into a *.html* page. See [UserManual#5.3_Crux_Compiler Crux Compiler] for more information.
+
 === 3.1.2 Instantiating Widgets Programmatically===
 
 You can instantiate widgets exactly as you do using pure GWT. 
@@ -160,20 +162,21 @@ _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declara
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:screen onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' useController="clientHandler" />
+       <crux:screen onClose="clientHandler.onClose" onLoad="clientHandler.onLoad" useController="clientHandler" />
        <gwt:textBox id="myBox" />
        <gwt:button id="myButton" text="Hello" onClick="clientHandler.helloWorld" />
    </body>
 </html>
 }}}
 
-The screen can be retrieve programmatically by a call to the static method {{{Screen.get()}}}.
+The screen can be retrieved programmatically by a call to the static method {{{Screen.get()}}}.
 Through Screen, you can:
   # Access any widget created declaratively on pages.
   # Add handlers to Window events, like {{{load}}}, {{{close}}} or {{{resize}}}.
   # Communicate with other screens to, for example, exchange data between _*Crux*_ pages in different frames or windows of the same application.
   # Control the history without need to add a hidden frame directly on the page.
   # Block and unblock the user interaction with the page.
+  # Access a lot of other informations, like client locale.
 
 === 3.2.1 Access Screen Widgets ===
 
@@ -289,9 +292,11 @@ public interface MyContextWrapper extends Context
 @Controller("myController")
 public class MyClass
 {	
+    @Create
+    protected MyContextWrapper context;
+
 	public void myMethod()
 	{
-		MyContextWrapper context = GWT.create(MyContextWrapper.class);
 		context.setValueTwo(new String[]{"Value One", "Value Two"});
 		Window.alert(context.getValueTwo()[0]);
 	}
@@ -366,7 +371,7 @@ or Declaratively:
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
    <body>
-       <crux:screen useController="clientHandler" onClose='clientHandler.onClose' onLoad='clientHandler.onLoad' onHistoryChanged='clientHandler.onHistoryChanged' />
+       <crux:screen useController="clientHandler" onHistoryChanged='clientHandler.onHistoryChanged' />
    </body>
 </html>
 }}}
@@ -509,6 +514,8 @@ The Controller annotation has the following properties:
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
 ||autoBind||no||true||If true, [UserManual#3.3.3.3_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
+||lazy||no|| true ||If true, the controller object is built only when first called.||
+||fragment||no|| <empty> ||You can inform a fragment identifier. The compiler will split your code grouping controllers by these identifiers.||
 
 ==== 3.3.3.2 The @Create Annotation====
 
@@ -1736,7 +1743,7 @@ If this property is disabled, the previous example can build the following seque
 {{{
    ...
    <body>
-       <input type="text" id="box2" ... /></span>
+       <input type="text" id="box2" ... />
        <div>
 	       <input type="text" id="box3" ... />
        </div>
