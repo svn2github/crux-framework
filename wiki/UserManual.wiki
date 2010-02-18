@@ -815,7 +815,7 @@ public class MyClass
 
 ==== 3.3.3.4 Using Controllers on Screen====
 
-To inform that a controller will be used on a screen, you must explicitly "import" it using the {{{{useController}}} attribute.
+To inform that a controller will be used on a screen, you must explicitly "import" it using the {{{useController}}} attribute.
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -938,7 +938,7 @@ So, if you need to pass a custom object to another page, your object class must 
 
 For local calls, any type is allowed, once no serialization is needed.
   
-If you define a custom serializable type, you must inform _*Crux*_ explicitly that you  want to use such type in your module. You can do it declaratively using {{{useSerializer}}} attribute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
+If you define a custom serializable type, you must inform _*Crux*_ explicitly that you  want to use such type in your module. You can do it declaratively using {{{useSerializable}}} attribute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -957,7 +957,33 @@ If you define a custom serializable type, you must inform _*Crux*_ explicitly th
 @SerializableName("mySerializableType")  
 public class MySerializableType implements CruxSerializable
 {
-   ...
+  private String field1;
+  private Integer field2;
+  
+  ... // getter and setters
+  
+   public String serialize() {
+      try  {
+         Object[] values =  new Object[]{field1, field2};
+         return Screen.getCruxSerializer().serialize(values);
+      } catch (ModuleComunicationException e) {
+        ...
+      }
+      return null;
+  }
+  
+  public Object deserialize(String serializedData) {
+    try {
+       Object[] des = (Object[]) Screen.getCruxSerializer().deserialize(serializedData);
+       MySerializableType dto =  new MySerializableType();
+       dto.setField1((String) des[0]);		
+       dto.setField2((Integer) des[1]);
+        return dto;
+    }catch (ModuleComunicationException e) {
+			e.printStackTrace();
+    }
+    return null;
+  }
 }
 }}}
 
