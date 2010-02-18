@@ -1050,6 +1050,14 @@ _*Crux*_ provides a mechanism to help you to automatically bind values between w
 
 You can annotate a controller field with the annotation {{{@Parameter}}} as in the following example:
 
+For the following URL
+
+{{{
+	http://myhost.com/myapp/mymodule/mypage.html?person=Thiago&field=123
+}}}
+
+And Controller
+
 {{{
 @Controller("myController")
 public class MyClass
