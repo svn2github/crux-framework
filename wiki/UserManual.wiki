@@ -1079,6 +1079,13 @@ public class MyClass
 
 In the above example, the value of the "person" parameter on window URL will be bound to field "person" of the controller (the same is true to "field"). 
 
+The {{{@Parameter}}} annotation has two fields:
+|| *Property* || *Default Value* || *Description* ||
+||value|| {{{empty}}} ||defines the name of the parameter. If not present, the field name is used||
+||required|| false ||If true, a validation is done to ensure that the parameter is present in the URL.||
+
+If a validation error occur while binding the parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur caused by a type conversion error or by a missing required parameter.
+
 Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.3_Value_Binding Value Objects]. Doing it, you allows _*Crux*_ to populate an object of this type with values present on window url parameters. 
 
 See the following example:
