@@ -1,6 +1,6 @@
 = 1 Introduction =
 
-If you are not familiar with *_Crux_* framework using, please consult the [UserManual User Manual] first.
+If you are not familiar with _*Crux*_ framework using, please consult the [UserManual User Manual] first.
 
 This documentation will show you how to work with custom widgets inside _*Crux*_. 
 
@@ -12,5 +12,36 @@ So, you can plug any custom widgets in _*Crux*_ Declarative Engine. If you are n
 
 = 2 _Crux_ Declarative Engine = 
 
+_*Crux*_ declarative engine uses factories to create the widgets based on informations contained inside the html pages. For a deeper explanation abou how this declarative engine works, consult the following  [DeclarativeEngine tutorial].
 
+To register a custom widget in _*Crux*_ declarative engine, you just have to create a factory class for it.
 
+See the following example:
+
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget>
+{
+   @Override
+   public MyWidget instantiateWidget(Element element, String widgetId) 
+   {
+      return new MyWidget();
+   }
+	
+   @Override
+   @TagAttributes({
+      @TagAttribute("myWidgetAttribute"),
+   })
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException {}
+}
+}}}
+
+Note that the above class uses the annotation {{{@DeclarativeFactory}}} and extends the abstract class {{{WidgetFactory}}}. These two conditions are necessary for any _*Crux*_ widget factory.
+
+Through the {{{@DeclarativeFactory}}} annotation, you can specify the name of the library where your widget will be registered and the name that will be associated with your widget itself. 
+
+Before we go deeper inside the code showed and see more examples, let's see how you could use the widget registered with _*Crux*_ declarative engine:
+
+{{{
+
+}}} 
