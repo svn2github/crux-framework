@@ -1,5 +1,0 @@
-=What is keeping us busy=
-
-At this moment we are working on following features:
-
-  * New advanced widgets, like a sortable and 'pageable' data grid;
