@@ -1044,7 +1044,7 @@ public class MyController
 Note that the validate method can receive a parameter of the same type as the main method parameter type (as in the first example) or no parameter (as in the second example).
 
 
-==== 3.3.3.7 Parameters====
+==== 3.3.3.7 Parameters Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between window parameters and data objects. This can be done using the annotations {{{@Parameter}}} and {{{@ParameterObject}}} on controller fields and DTO classes.
 
