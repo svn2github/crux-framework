@@ -73,6 +73,6 @@ Crux contains a lot of Generators to perform all of its features. This section d
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
 ||*{{{[screenFactory 001]}}}*||The id attribute is required for CRUX Widgets.||A widget was declared without id.||
 
-= 2 Basic Widgets Errors=
+= 2 GWT Widgets Library Errors=
 
-= 3 Advanced Widgets Errors=
+= 3 Crux Widgets Library Errors=
