@@ -1,1 +1,16 @@
-Sorry... This is still under construction.
+= 1 Introduction =
+
+If you are not familiar with *_Crux_* framework using, please consult the [UserManual User Manual] first.
+
+This documentation will show you how to work with custom widgets inside _*Crux*_. 
+
+== 1.1 GWT widgets ==
+
+_*Crux*_ widgets are  [http://code.google.com/intl/pt-BR/webtoolkit/doc/latest/DevGuideUiWidgets.html GWT widgets]. _*Crux*_ just offer an aditional engine where those widgets can be plugged.
+
+So, you can plug any custom widgets in _*Crux*_ Declarative Engine. If you are not familiar with GWT widgets development, please consult its documentation  [http://code.google.com/intl/pt-BR/webtoolkit/doc/latest/DevGuideUiWidgets.html first].
+
+= 2 _Crux_ Declarative Engine = 
+
+
+
