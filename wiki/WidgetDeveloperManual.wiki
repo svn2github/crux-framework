@@ -12,6 +12,8 @@ So, you can plug any custom widgets in _*Crux*_ Declarative Engine. If you are n
 
 = 2 _Crux_ Declarative Engine = 
 
+== 2.1 Overview == 
+
 _*Crux*_ declarative engine uses factories to create the widgets based on informations contained inside the html pages. For a deeper explanation about how this declarative engine works, consult the following  [DeclarativeEngine tutorial].
 
 To register a custom widget in _*Crux*_ declarative engine, you just have to create a factory class for it.
@@ -56,3 +58,8 @@ Before we go deeper inside the code showed and see more examples, let's see how 
 
 
 Note that a namespace called {{{http://www.sysmap.com.br/crux/myLibrary}}} is used on the above page. A {{{XSD}}} file defining this namespace is created by the [UserManual#5.1_Schema_Generator SchemaGenerator].
+
+The example showed assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}}.
+
+
+== 2.2 WidgetFactory ==
