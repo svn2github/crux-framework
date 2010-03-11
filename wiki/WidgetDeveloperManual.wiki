@@ -59,7 +59,7 @@ Before we go deeper inside the code showed and see more examples, let's see how 
 
 Note that a namespace called {{{http://www.sysmap.com.br/crux/myLibrary}}} is used on the above page. A {{{XSD}}} file defining this namespace is created by the [UserManual#5.1_Schema_Generator SchemaGenerator].
 
-The example showed assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}}.
+The example showed assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}} on {{{crux.xml}}} file.
 
 
 == 2.2 WidgetFactory ==
