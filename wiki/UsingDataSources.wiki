@@ -127,9 +127,12 @@ public static class RemoteDS extends RemoteBindableEditableStreamingDataSource<C
    @Create
    protected SimpleGridServiceAsync service;
 
+   @Parameter(required=true)
+   protected String contact;
+
    public void fetch(int startRecord, int endRecord)
    {
-      service.getContactPage(startRecord, endRecord, new DataSourceAsyncCallbackAdapter<Contact>(this));
+      service.getContactPage(contact, startRecord, endRecord, new DataSourceAsyncCallbackAdapter<Contact>(this));
    }
 }
 }}}
