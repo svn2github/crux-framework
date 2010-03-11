@@ -135,6 +135,8 @@ You must attempt to:
 
 The *.crux.xml* files is used to turn deveolpment easier. When you generate the final application distribution file, the _*Crux*_ compiler translate that page into a *.html* page. See [UserManual#5.3_Crux_Compiler Crux Compiler] for more information.
 
+It means that you can, for example, create a page called {{{index.crux.xml}}}, but the url you must pass to the browser will refer to {{{index.html}}}. 
+
 === 3.1.2 Instantiating Widgets Programmatically===
 
 You can instantiate widgets exactly as you do using pure GWT. 
