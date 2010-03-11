@@ -31,7 +31,7 @@
 <td>........*3.3* [UserManual#3.3_Managing_Events Managing Events]</td>
 </tr>
 <tr>
-<td>............*3.3.1* [UserManual#3.3.1_Add_Even_Declaratively Add Event Declaratively]</td>
+<td>............*3.3.1* [UserManual#3.3.1_Add_Event_Declaratively Add Event Declaratively]</td>
 </tr>
 <tr>
 <td>............*3.3.2* [UserManual#3.3.2_Add_Event_Programmatically Add Event Programmatically]</td>
