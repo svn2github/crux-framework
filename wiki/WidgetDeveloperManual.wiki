@@ -249,7 +249,7 @@ This method does almost the same as processAttributes, however, it handle widget
 
 Two annotations can be used on {{{processEvents}}} method: {{{@TagEvents}}} and {{{@TagEventsDeclaration}}}.
 
- We can compare these annotations with {{{@TagAttributes}}} and  {{{@TagAttributesDeclaration}}} .
+We can compare these annotations with {{{@TagAttributes}}} and  {{{@TagAttributesDeclaration}}} .
 
 See the following example:
 
@@ -288,11 +288,20 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
 
 The {{{@TagEvents}}} has one attribute (value) of type array of {{{@TagEvent}}}. Each {{{@TagEvent}}} is used to inform one event of the widget.
 
-{{{@TagEvent}}} accepts one attribute of type {{{EvtBinder}}}. {{{EvtBinders}}} are classes that can 
+{{{@TagEvent}}} accepts one attribute of type {{{EvtBinder}}}. {{{EvtBinders}}} are classes that can bind event declarations to widgets automatically.
 
+_*Crux*_ offers EvtBinders for all GWT events and for some custom _*Crux*_ widgets events:
 
+|| *Event type* || *Class* || *Widget type* ||
+|| onBeforeSelection || BeforeSelectionEvtBind || HasBeforeSelectionHandlers<?> ||
+|| onBlur || BlurEvtBind || HasBlurHandlers ||
+|| onChange || ChangeEvtBind || HasChangeHandlers ||
+|| onClick || ClickEvtBind || HasClickHandlers ||
+|| onFocus || FocusEvtBind || HasFocusHandlers ||
+|| onHighlight || HighlightEvtBind || HasHighlightHandlers<?> ||
+|| onKeyDown || KeyDownEvtBind || HasKeyDownHandlers ||
+|| onKeyPress || KeyPressEvtBind || HasKeyPressHandlers ||
 
-The annotation {{{@TagEventsDeclaration}}} has one 
 
 === 2.3.4 The processChildren  method===
 
