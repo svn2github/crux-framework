@@ -90,7 +90,7 @@ For aditional information about this declarative approach, consult the _*Crux*_ 
 
 {{{WidgetFactory.createWidget()}}} method is called for this creation. It executes the following steps:
 
-  # Calls the method {{{T instantiateWidget(element, widgetId);}}}
+  # Calls the method {{{T instantiateWidget(element, widgetId)}}}
   # Calls the method {{{void processAttributes(WidgetFactoryContext<T> context)}}}
   # Calls the method {{{void processEvents(WidgetFactoryContext<T> context)}}}
   # Calls the method {{{void processChildren(WidgetFactoryContext<T> context)}}}

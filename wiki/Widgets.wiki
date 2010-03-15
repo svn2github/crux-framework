@@ -36,14 +36,18 @@ Example
 This is the list of widgets included into this library:
 
 || *Type* || *Widget* || *Brief description* ||
-||collapsePanel||br.com.sysmap.crux.advanced.client.collapsepanel.CollapsePanel||A TitlePanel capable of folding itself, hiding its contents||
-||decoratedButton||br.com.sysmap.crux.advanced.client.decoratedbutton.DecoratedButton||A button based on a 3x1 table, useful for building rounded corners||
-||decoratedPanel||br.com.sysmap.crux.advanced.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
-||dynaTabs||br.com.sysmap.crux.advanced.client.dynatabs.DynaTabs||A tabbed set of pages, each of which can display html pages|| 
-||grid||br.com.sysmap.crux.advanced.client.grid.impl.Grid||A powerfull grid with dataSources||
-||maskedTextBox||br.com.sysmap.crux.advanced.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
-||scrollBanner||br.com.sysmap.crux.advanced.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
-||stackMenu||br.com.sysmap.crux.advanced.client.stackmenu.StackMenu||A vertical accordion menu||
-||timer||br.com.sysmap.crux.advanced.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
-||titlePanel||br.com.sysmap.crux.advanced.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
-||transferList||br.com.sysmap.crux.advanced.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
+||collapsePanel||br.com.sysmap.crux.widgets.client.collapsepanel.CollapsePanel||A TitlePanel capable of folding itself, hiding its contents||
+||decoratedButton||br.com.sysmap.crux.widgets.client.decoratedbutton.DecoratedButton||A button based on a 3x1 table, useful for building rounded corners||
+||decoratedPanel||br.com.sysmap.crux.widgets.client.decoratedpanel.DecoratedPanel||Much like GWT's DecoratorPanel||
+||dynaTabs||br.com.sysmap.crux.widgets.client.dynatabs.DynaTabs||A tabbed set of pages, each of which can display html pages|| 
+||grid||br.com.sysmap.crux.widgets.client.grid.Grid||A powerfull grid with dataSources||
+||maskedTextBox||br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
+||maskedLabel||br.com.sysmap.crux.widgets.client.maskedlabel.MaskedLabel||A label capable of formatting user data||
+||scrollBanner||br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
+||stackMenu||br.com.sysmap.crux.widgets.client.stackmenu.StackMenu||A vertical accordion menu||
+||timer||br.com.sysmap.crux.widgets.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
+||titlePanel||br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
+||transferList||br.com.sysmap.crux.widgets.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
+
+
+You can see all _*Crux*_ Widgets working on [http://crux-showcase.appspot.com/ Crux Showcase].
