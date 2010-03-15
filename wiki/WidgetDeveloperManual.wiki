@@ -103,7 +103,30 @@ The  {{{instantiateWidget}}} method is abstract and must be implemented by any F
 === 2.3.1 The instantiateWidget method===
 
 
+The {{{instantiateWidget}}} method is called to the widget object instantiation. The {{{<span>}}} element is passed as parameter and can be used if the widget to be created needs some attribute in its constructor.If the widget showed on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute, we could write something like:
+
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget>
+{
+   @Override
+   public MyWidget instantiateWidget(Element element, String widgetId) 
+   {
+      return new MyWidget(element.getAttribute("_theRequiredAttribute"));
+   }
+  ...
+}
+}}}
+
+The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods showed bellow.
+
 === 2.3.2 The processAttributes method===
+
+This method has to goals:
+  # Turn easier the binding beetwen the widget metadata element (the {{{<span>}}} tag) and the widget itself.
+  # Inform to _*Crux*_ engine whiche attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]). 
+
+
 
 
 === 2.3.3 The processEvents  method===
