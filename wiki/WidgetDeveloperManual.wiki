@@ -32,7 +32,7 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
 	
    @Override
    @TagAttributes({
-      @TagAttribute("myWidgetAttribute"),
+      @TagAttribute("myWidgetAttribute")
    })
    public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
    {
@@ -134,14 +134,88 @@ The purpose of this method is just instantiate the widget. The best place to han
 
 === 2.3.2 The processAttributes method===
 
-This method has to goals:
+This method has two goals:
   # Turn easier the binding beetwen the widget metadata element (the {{{<span>}}} tag) and the widget itself.
   # Inform to _*Crux*_ engine which attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]).
   
+
+See the following code:
    
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget>
+{
+
+   @Override
+   @TagAttributesDeclaration({
+      @TagAttributeDeclaration("myWidgetAttribute")
+   })
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
+   {
+      super.processAttributes(context);
+      
+      MyWidget widget = context.getWidget();
+      String attr = element.getAttribute("_myWidgetAttribute");
+      if (StringUtils.isNotEmpty(attr))
+      {
+         widget.setMyWidgetAttribute(attr);
+      }
+   }
+}
+}}}
+
+The first thing done by the above processAttributes method is call {{{super.processAttributes}}}. It is important, once all attributes common to all GWT widgets (like {{{visible, width, height}}} and others) are handled by {{{WidgetFactory.processAttributes}}}. 
+
+Other important point to observe is the annotation {{{@TagAttributesDeclaration}}} on method. It is used to inform all attributes supported by this widget. This information is used by  [UserManual#5.1_Schema_Generator SchemaGenerator]. Note that {{{WidgetFactory.processAttributes}}} has this same annotation including more attributes.   [UserManual#5.1_Schema_Generator SchemaGenerator] will consider attributes declared on super classes to generate the XSD files.
 
 
+If you observe the code showed on section [WidgetDeveloperManual#2.1_Overview 2.1], you will note that the annotation {{{@TagAttributes}}} is used in the place of {{{@TagAttributesDeclaration}}}. The two annotations are very similar and support the same attributes. However, when you use the {{{@TagAttributes}}}, _*Crux*_ will generate the code for the binding of those attributes. The code on section 2.1 just declare the attribute {{{myWidgetAttribute}}} on the method annotation and does not need to implement all the code showed in this section.
 
+In other words, the above code can bre written as:
+
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget>
+{
+   @Override
+   @TagAttributes({
+      @TagAttribute("myWidgetAttribute")
+   })
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
+   {
+      super.processAttributes(context);
+   }
+}
+}}}
+
+The annotation {{{@TagAttributesDeclaration}}} must be used when you want to inform _*Crux*_ that the attributes exist (because the [UserManual#5.1_Schema_Generator SchemaGenerator]), but wants to handle the parser programmatically, making some special validations, for example.
+
+
+You can use both annotations on a processAttributes method. 
+
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget>
+{
+   @Override
+   public MyWidget instantiateWidget(Element element, String widgetId) 
+   {
+      return new MyWidget(element.getAttribute("_theRequiredAttribute"));
+   }
+   
+   @Override
+   @TagAttributes({
+      @TagAttribute("myWidgetAttribute")
+   })
+   @TagAttributesDeclaration({
+      @TagAttributeDeclaration(value="theRequiredAttribute", required=true)
+   })
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
+   {
+      super.processAttributes(context);
+   }
+}
+}}}
 
 === 2.3.3 The processEvents  method===
 
