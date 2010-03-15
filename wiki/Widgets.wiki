@@ -43,7 +43,9 @@ This is the list of widgets included into this library:
 ||grid||br.com.sysmap.crux.widgets.client.grid.Grid||A powerfull grid with dataSources||
 ||maskedTextBox||br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
 ||maskedLabel||br.com.sysmap.crux.widgets.client.maskedlabel.MaskedLabel||A label capable of formatting user data||
+||randomPager||br.com.sysmap.crux.widgets.client.paging.RandomPager||A pager that support direct access to any pageable widget page.||
 ||scrollBanner||br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
+||sequentialPager||br.com.sysmap.crux.widgets.client.paging.SequentialPager||A pager that support paging on any pageable widget in a sequential order.||
 ||stackMenu||br.com.sysmap.crux.widgets.client.stackmenu.StackMenu||A vertical accordion menu||
 ||timer||br.com.sysmap.crux.widgets.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
 ||titlePanel||br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
