@@ -34,7 +34,10 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
    @TagAttributes({
       @TagAttribute("myWidgetAttribute"),
    })
-   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException {}
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
+   {
+      super.processAttributes(context);
+   }
 }
 }}}
 
@@ -97,7 +100,16 @@ For aditional information about this declarative approach, consult the _*Crux*_ 
   # Calls the method {{{void postProcess(WidgetFactoryContext<T> context)}}}
   # Return the created widget to {{{ScreenFactory}}}, that will properly attach it on screen and replaces its {{{<span>}}} metadata tag.
   
-The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used to factory to specify and to process the informations about widget attributes, events and children. The next sections describe how  to properly overwrite each of those methods to serve your widget needs.
+The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used to factory to specify and to process the informations about widget attributes, events and children.  All of those other methods receive  a parameter of type {{{WidgetFactoryContext}}}. This class has the following public methods:
+
+|| *Method* || *Description* ||
+|| getWidget || Returns the widget previously instantiated be the method {{{instantiateWidget}}} ||
+|| getElement || Returns the widget metadata element (the {{{<span>}}} tag) ||
+|| getWidgetId || Returns the widget identifier ||
+|| setAttribute(String key, Object value) || Allows the factory to set some information to use in some other step of the parser, (like during the children processing) ||
+|| getAttribute(String key) || Returns some attribute previously set by method setAttribute||
+
+The next sections describe how  to properly overwrite each of those methods to serve your widget needs.
 
 
 === 2.3.1 The instantiateWidget method===
@@ -124,7 +136,9 @@ The purpose of this method is just instantiate the widget. The best place to han
 
 This method has to goals:
   # Turn easier the binding beetwen the widget metadata element (the {{{<span>}}} tag) and the widget itself.
-  # Inform to _*Crux*_ engine whiche attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]). 
+  # Inform to _*Crux*_ engine which attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]).
+  
+   
 
 
 
