@@ -86,4 +86,32 @@ For aditional information about this declarative approach, consult the _*Crux*_ 
 
 == 2.3 WidgetFactory ==
 
-{{{WidgetFactory}}} is the basic class for any _*Crux*_ widget factory. ...
+{{{WidgetFactory}}} is the basic class for any _*Crux*_ widget factory. {{{ScreenFactory}}} delegates to those factories the creation of the requested widget, based ont the {{{<span>}}} element on the DOM.
+
+{{{WidgetFactory.createWidget()}}} method is called for this creation. It executes the following steps:
+
+  # Calls the method {{{T instantiateWidget(element, widgetId);}}}
+  # Calls the method {{{void processAttributes(WidgetFactoryContext<T> context)}}}
+  # Calls the method {{{void processEvents(WidgetFactoryContext<T> context)}}}
+  # Calls the method {{{void processChildren(WidgetFactoryContext<T> context)}}}
+  # Calls the method {{{void postProcess(WidgetFactoryContext<T> context)}}}
+  # Return the created widget to {{{ScreenFactory}}}, that will properly attach it on screen and replaces its {{{<span>}}} metadata tag.
+  
+The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used to factory to specify and to process the informations about widget attributes, events and children. The next sections describe how  to properly overwrite each of those methods to serve your widget needs.
+
+
+=== 2.3.1 The instantiateWidget method===
+
+
+=== 2.3.2 The processAttributes method===
+
+
+=== 2.3.3 The processEvents  method===
+
+
+=== 2.3.4 The processChildren  method===
+
+
+=== 2.3.5 The postProcess  method===
+
+
