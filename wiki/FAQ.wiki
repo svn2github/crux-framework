@@ -21,8 +21,3 @@ The {{{<span>}}} tags does not affect the page render as much as {{{<div>}}} doe
 
 We can not use custom tags like {{{grid}}} at client side because HTML has a closed set of tags and any other tag is ignored in DOM. To solve this issue, we create a plugin (HtmlTags) that allows programmers to write XML with custom tags that are translated to HTML tags.
 
-*Q: How _Crux_ checks if the application is under a development environment?*
-
-A: To find out if your application is running under a development environment, _*Crux*_ checks for this two conditions. If one of them is true, it assumes a development environment:
-  # Your application server was started by GWT HostedMode class.
-  # Your application server is running in debug mode.
