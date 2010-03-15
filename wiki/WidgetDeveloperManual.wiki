@@ -217,6 +217,20 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
 }
 }}}
 
+==== 2.3.2.1 @TagAttributes Annotation====
+
+The {{{@TagAttributes}}} has one attribute (value) of type array of {{{@TagAttribute}}}. Each {{{@TagAttribute}}} is used to inform one attribute of the widget.
+
+{{{@TagAttribute}}} accepts the following attributes:
+
+|| *Name* || *Type* || *Required* || *Default* || *Description* ||
+|| value || String || yes || - || The name of the attribute. ||
+|| defaultValue || String || no || "" || The default value to be used on XSD. ||
+|| type || Class<?> || no || String || The type of the attribute. ||
+|| required || boolean || no || false || Inform if the attribut is required. ||
+|| supportsI18N || boolean || no || false || Inform if the attribut support _*Crux*_ declarative i18n. ||
+
+ 
 === 2.3.3 The processEvents  method===
 
 
