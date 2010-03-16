@@ -290,7 +290,7 @@ The {{{@TagEvents}}} has one attribute (value) of type array of {{{@TagEvent}}}.
 
 {{{@TagEvent}}} accepts one attribute of type {{{EvtBinder}}}. {{{EvtBinders}}} are classes that can bind event declarations to widgets automatically.
 
-_*Crux*_ offers EvtBinders for all GWT events and for some custom _*Crux*_ widgets events:
+_*Crux*_ offers {{{EvtBinders}}} for all GWT events and for  custom _*Crux*_ widgets events. The following table shows the GWT {{{EvtBinders}}}:
 
 || *Event type* || *Class* || *Widget type* ||
 || onBeforeSelection || BeforeSelectionEvtBind || HasBeforeSelectionHandlers<?> ||
@@ -301,7 +301,23 @@ _*Crux*_ offers EvtBinders for all GWT events and for some custom _*Crux*_ widge
 || onHighlight || HighlightEvtBind || HasHighlightHandlers<?> ||
 || onKeyDown || KeyDownEvtBind || HasKeyDownHandlers ||
 || onKeyPress || KeyPressEvtBind || HasKeyPressHandlers ||
+|| onKeyUp|| KeyUpEvtBind || HasKeyUpHandlers ||
+|| onError || LoadErrorEvtBind || HasErrorHandlers ||
+|| onLoad || LoadEvtBind || HasLoadHandlers ||
+|| onMouseDown || MouseDownEvtBind || HasMouseDownHandlers ||
+|| onMouseMove || MouseMoveEvtBind || HasMouseMoveHandlers ||
+|| onMouseOut || MouseOutEvtBind || HasMouseOutHandlers ||
+|| onMouseOver || MouseOverEvtBind || HasMouseOverHandlers ||
+|| onMouseUp || MouseUpEvtBind || HasMouseUpHandlers ||
+|| onMouseWheel || MouseWheelEvtBind || HasMouseWheelHandlers ||
+|| onOpen || OpenEvtBind || HasOpenHandlers<?> ||
+|| onScroll || ScrollEvtBind || HasScrollHandlers ||
+|| onSelection || SelectionEvtBind || HasSelectionHandlers<?> ||
+|| onShowRange || ShowRangeEvtBind || HasShowRangeHandlers<?> ||
+|| onChange || ValueChangeEvtBind || HasValueChangeHandlers<?> ||
 
+
+The annotation {{{@TagEventsDeclaration}}} has one attribute of type {{{String}}}. This attribute only inform to _*Crux*_ the name of the event. The parser of the {{{<span>}}} element and the binding with the widget must be done programmatically, as showed on the previous example.
 
 === 2.3.4 The processChildren  method===
 
