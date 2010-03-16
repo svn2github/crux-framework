@@ -134,7 +134,7 @@ The purpose of this method is just instantiate the widget. The best place to han
 
 === 2.3.2 Attributes and Events Processing===
 
-The {{{processAttributes}}} and {{{processEvents}}} are used to the binding of the {{{<span>}}} elements and the widgets created. 
+The {{{processAttributes}}} and {{{processEvents}}} methods are used to the binding of the {{{<span>}}} elements and the widgets created. 
 
 
 ==== 2.3.2.1 The processAttributes method====
@@ -326,7 +326,59 @@ The annotation {{{@TagEventsDeclaration}}} has one attribute of type {{{String}}
 
 ==== 2.3.2.3 Factories Inheritance====
 
+The annotations present on {{{processAttributes}}} and {{{processEvents}}} methods of Widget factories super classes and implemented  interfaces are also considered by _*Crux*_ engine. 
 
+Let's take a look at the following example. 
+
+{{{
+public interface HasNameFactory<T extends HasName>
+{
+   @TagAttributes({
+      @TagAttribute("name")
+   })	
+   void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+}
+}}}  
+
+{{{
+@DeclarativeFactory(id="myWidget", library="myLibrary")
+public class MyWidgetFactory extends WidgetFactory<MyWidget> implements HasNameFactory<MyWidget>
+{
+	...
+   @Override
+   @TagAttributes({
+      @TagAttribute("myWidgetAttribute")
+   })
+   public void processAttributes(WidgetFactoryContext<MyWidget> context) throws InterfaceConfigException 
+   {
+      super.processAttributes(context);
+   }
+}
+}}}
+
+That factory showed above will accepts and automatically bind the attributes {{{myWidgetAttribute}}} and {{{name}}} to {{{MyWidget}}}.
+
+_*Crux*_ libraries use the inheritance support to turn easy the development of its factories. GWTWidgets library has interfaces that binds attributes and events for most of GWT basic interfaces for widgets:
+
+|| *Interface* || *Attributes* || *Events* || 
+|| HasAllFocusHandlersFactory || - || onFocus, onBlur ||
+|| HasAllKeyHandlersFactory || - || onKeyUp, onKeyPress, onKeyDown ||
+|| HasAllMouseHandlersFactory || - || omMouseUp, onMouseDown, onMouseOver, onMouseOut, onMouseMove, onMouseWheel ||
+|| HasAnimationFactory || animationEnabled || - ||
+|| HasBeforeSelectionHandlersFactory || - || onBeforeSelection ||
+|| HasChangeHandlersFactory || - || onChange ||
+|| HasClickHandlersFactory || - || onClick ||
+|| HasCloseHandlersFactory || - || onClose ||
+|| HasDirectionFactory || direction || - ||
+|| HasHighlightHandlersFactory || - || onHighlight ||
+|| HasNameFactory || name || - ||
+|| HasOpenHandlersFactory || - || onOpen ||
+|| HasScrollHandlersFactory || - || onScroll ||
+|| HasSelectionHandlersFactory || - || onSelection ||
+|| HasShowRangeHandlersFactory || - || onShowRange ||
+|| HasTextFactory || text || - ||
+|| HasValueChangeHandlersFactory || - || onChange ||
+|| HasWordWrapFactory || wordWrap || - ||
 
 === 2.3.3 Children Processing===
 
