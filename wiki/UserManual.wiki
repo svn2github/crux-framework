@@ -1691,7 +1691,7 @@ As showed in the previous examples, you can create a template that receive attri
   * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}}} wherever you want to apply the attribute value.
   * To add a child to your template, use the tag {{{section}}} where you want to create a placeholder in your template. That tag will be replaced by the content of the child declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
-== 3.10 Running with a diferent server ==
+== 3.10 Running With a Diferent Server ==
 
 To run your _*Crux*_ application under DevMode with a different server, you must follow all the steps described at the GWT [http://code.google.com/intl/pt-BR/webtoolkit/doc/latest/FAQ_DebuggingAndCompiling.html documentation]. 
 
