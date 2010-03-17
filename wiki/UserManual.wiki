@@ -2116,7 +2116,7 @@ SchemaGenerator also produces an eclipse catalog file containing all generated X
 
 == 5.2 Project Generator==
 
-ProjectGenerator is a tool used to created new _*Crux*_ projects according with our default project layout. 
+ProjectGenerator is a tool used to create new _*Crux*_ projects according with our default project layout. 
 
 After download the _*Crux*_ distribution [http://code.google.com/p/crux-framework/downloads/list file], unzip its content on an empty folder and you will found a shell command file named {{{projectGenerator}}}.
 
