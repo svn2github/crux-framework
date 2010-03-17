@@ -2116,6 +2116,24 @@ SchemaGenerator also produces an eclipse catalog file containing all generated X
 
 == 5.2 Project Generator==
 
+ProjectGenerator is a tool used to created new _*Crux*_ projects according with our default project layout. 
+
+After download the _*Crux*_ distribution [http://code.google.com/p/crux-framework/downloads/list file], unzip its content on an empty folder and you will found a shell command file named {{{projectGenerator}}}.
+
+Call that file, passing no parameter, or passing {{{-help}}} for display the usage screen.
+
+All configurations about the project generation is done through a file called {{{project.properties}}} (that is located on the same folder that projectGenerator command).
+
+The following table shows all the properties contained on that file:
+
+|| *Property* || *Default Value* || *Description* ||
+|| projectName || MyApplication || The name of the project that will be created ||
+|| hostedModeStartupURL || index.html || The name of the initial page of your project.<br> The Debug lanch file will point to this and a page <br> with that name willl be created to server as example. ||
+|| hostedModeStartupModule || com.mycompany.MyModule || The name of the GWT module created to your application ||
+|| hostedModeVMArgs || -Xss32768k -Xms64M -Xmx256M -DCrux.dev=true || The startup parameters passed to DevMode JVM ||
+|| useCruxModuleExtension || false || If true, creates a project following the _*Crux*_ [UserManual#Modules Module] Layout ||
+|| cruxModuleDescription || My Module Description || The description of your module. Only used if {{{useCruxModuleExtension}}} is true ||
+
 == 5.3 Crux Compiler==
 
 
