@@ -61,7 +61,7 @@ This section describes the errors that can occur during server processing.
 ||*{{{[localeResolver 001]}}}*||Error initializing LocaleResolver: {{{errMsg}}}.||Error while initializing application LocaleResolver.||
 ||*{{{[localeResolver 002]}}}*||User LocaleResolver not initialized.||The userLocaleResolver was not initialize and a server message was requested.||
 ||*{{{[screenResolver 001]}}}*||Error initializing ScreenResolver: {{{errMsg}}}.||Error while creating the screenResolver object.||
-||*{{{[screenResolver 002]}}}*||Error obtaining screen resource. Screen id: {{{screnId}}}. Message: {{{errMsg}}}||Error obtained the screen. The screenID can be wrong or the classpath does not include <br>the folder where this page is.||
+||*{{{[screenResolver 002]}}}*||Error obtaining screen resource. Screen id: {{{screnId}}}. Message: {{{errMsg}}}||Error obtained the screen. The screenID can be wrong or the classpath<br> does not include the folder where this page is.||
 ||*{{{[screenBridge 001]}}}*||Error registering screen: {0}.||Screen Bridge is used to pass the information about the page beeing compiled.<br> This information is passed beteewn the application server and the GWT generators. <br> Bridge needs access to filesystem and write on machine user temp dir.||
 ||*{{{[screenBridge 002]}}}*||Error reading screen id: {0}.||Screen Bridge is used to pass the information about the page beeing compiled.<br> This information is passed beteewn the application server and the GWT generators. <br> Bridge needs access to filesystem and write on machine user temp dir.||
 
