@@ -87,6 +87,10 @@ This section describes the messages that can occur during server processing.
 Crux contains a lot of Generators to perform all of its features. This section describes the errors that can occur during rebind process. 
 
 || *Error Code* || *Error Message* || *Can Be Caused By* ||
+||*{{{[generator 001]}}}*||DeclarativeFactory not registered: {{{factoryID}}}.||No factory found on classpath with the factoryID provided.||
+||*{{{[generator 002]}}}*||Error for register client event handler. Controller: {{{controller}}}. Error:{{{errMsg}}}.||An unexpected error occur when creating the controller.||
+||*{{{[generator 003]}}}*||Error for register client formatter. Formatter: {{{formatter}}}. Error:{{{errMsg}}}.||An unexpected error occur when creating the formatter.||
+||*{{{[generator 004]}}}*||Error for generate client class {{{errMsg}}}.||Unexpected error during a _*Crux*_ Generator.||
 ||*{{{[screenFactory 001]}}}*||The id attribute is required for CRUX Widgets.||A widget was declared without id.||
 
 = 2 GWT Widgets Library Errors=
