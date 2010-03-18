@@ -10,14 +10,18 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[event 001]}}}*||Client Controller Named {{{<controller>}}} not found.||1. A controller refered by some widget or by some screen invoker operation <br/>is not declared in {{{useController}}} attribute of {{{<screen>}}} tag on page.<br/>2. You are using GWT Hosted mode hot deploy and _*Crux*_ is set <br/>to optimize your code including on your script only the controllers <br/>declared on page. If you insert a new controller, just restart the GWT console.|| 
 ||*{{{[event 002]}}}*||Error running client method {{{<call>}}}.||During the invocation of {{{<call>}}}, an uncaught exception was throwed.<br/> Search GWT console for the complete stacktrace.|| 
 ||*{{{[event 003]}}}*||Invalid declaration for handler method {{{<call>}}}. <br/>Correct syntaxe is {{{<controller.method>}}}.||The {{{<call>}}} does not follow the _*Crux*_ syntax for event declarations: {{{<controller.method>}}}|| 
+||*{{{[event 004]}}}*||Error loading lazy controller {{{controllerName}}}.||Occurs when GWT spliting code is being used (through<br> controller {{{fragment}}} property) and an error occurs when downloading the javascript.|| 
 ||*{{{[screenFactory 001]}}}*||Error Creating widget: {{{<errMsg>}}}. See Log for more detail.||This is a generic error, caused by any exception throwed during document parser.<br/> You must consult GWT console for the complete stacktrace.|| 
-||*{{{[screenFactory 002]}}}*||Can not found widgetFactory for type: {{{widgetType}}}.||1. The type of the widget declared on {{{<span> type}}} attribute does not have any <br/>correspondent registered on _*Crux*_ declarative engine.<br/>2. You are using GWT Hosted mode hot deploy and _*Crux*_ is set <br/>to optimize your code including on your script only the widget factories <br/>used on page. If you insert a new type of widget in your HTML, <br/>just restart the GWT console.|| 
+||*{{{[screenFactory 002]}}}*||Can not found widgetFactory for type: {{{widgetType}}}.||1. The type of the widget declared on {{{<span> type}}} attribute does not have any <br/>correspondent registered on _*Crux*_ declarative engine.<br/>2. You are using GWT DevMode hot deploy and _*Crux*_ <br>{{{enableHotDeploymentForWidgetFactories}}} property is set to false. If you insert a new type of widget in your HTML, <br/>just restart the GWT console.|| 
+||*{{{[screenFactory 003]}}}*||The widget {{{widgetId}}} is a layout panel that does not have its dimensions defined. Explicity define it, or append it directly on body element.|| LayoutPanel must defines its dimensions or be appended on body element.|| 
 ||*{{{[widget 001]}}}*||The id attribute is required for CRUX widgets.||A widget was inserted on page without ID.|| 
 ||*{{{[widget 002]}}}*||The widget {{{<widgetId>}}} does not implement HasWidgets and can <br/>not contains any other widget.||An widget was declared on page inside another widget that does not support inner widgets.||
 ||*{{{[widget 003]}}}*||Can not create widget {{{<widgetId>}}}. Verify the widget type.||An error occured while instanting the widget.<br/> The widgetFactory associated with this type just returned null.|| 
 ||*{{{[widget 004]}}}*||The span element must contains at least one child.||Some widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find elements inside the {{{<span>}}} tag it was analysing.|| 
 ||*{{{[widget 005]}}}*||The span element does not represents a widget.||A widget declaration is invalid on page. <br/> The WidgetFactory that was trying to create the widget <br/>was expecting to find a widget on the {{{<span>}}} tag it was analysing.|| 
 ||*{{{[widget 006]}}}*||The element is not a span.||The WidgetFactory that was trying to create the widget <br/>was expecting to find a {{{<span>}}} tag.|| 
+
+||*{{{[widget 008]}}}*||The span element must contain a text node child.||This error is throwed when a tag with text is expected on HTML<br>, but some other thing was found.|| 
 ||*{{{[callback 001]}}}*||An Invalid controller was passed to AsyncCallbackAdapter.||AsyncCallbackAdapter received an object as parameter in constructor<br/> that is not a valid controller object.||
 ||*{{{[screen 001]}}}*||An Invalid object was passed to update screen or DTOs.||An invalid argument was passed to {{{Screen.updateScreen}}} or {{{Screen.updateController}}} <br/> methods. Only controllers and datasources can be passed.||
 ||*{{{[moduleComunication 001]}}}*||Type {{{<name>}}} can not be shared between modules. Only primitives <br/>(and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes<br/> implementing CruxSerializable can be used.||You did not register your custom serializers into screen with {{{useSerializable}}} attribute.||
@@ -25,6 +29,7 @@ This section describes the errors that can occur during client (browser) process
 ||*{{{[datasource 002]}}}*||Error loading dataSource remote data: {{{<message>}}}||An uncaught exception occurred processing user {{{RemoteDataSource.fetchData}}} method.||
 ||*{{{[datasource 003]}}}*||Error processing requested operation. DataSource is not loaded yet.||Before perform operations ocer datasource (like change current record<br/> or page), you must call {{{DataSource.load}}} method.||
 ||*{{{[datasource 004]}}}*||DataSource has changes on page. You must save or discard<br/> them before perform this operation.||{{{EditablePagedDataSources}}} can not be paged with dirty data.||
+||*{{{[datasource 005]}}}*||The column {{{columnName}}} can not be sorted.||DataSource sort method was called on a column that does not support sorting.||
 
 === 1.1.2 Client Warning Messages===
 
@@ -44,13 +49,21 @@ This section describes the errors that can occur during server processing.
 ||*{{{[annotationScanner 002]}}}*||Error creating index of annotations: {{{message}}}||An error stopped the _*Crux*_ resource scanner.||
 ||*{{{[annotationScanner 003]}}}*||The class {{{classname}}} is not an interface.||An invalid argument was passed to {{{ClassScanner.searchClassesByInterface}}} method.||
 ||*{{{[clientHandlers 001]}}}*||Error initializing clientHandler: {{{ErrMessage}}}.||Error while scanning classpath for client controller classes.||
+||*{{{[clientHandlers 002]}}}*||Duplicated Client Controller: {{{controllerName}}}.||Two different classes was registered as controllers with the same name.||
 ||*{{{[widgetConfig 001]}}}*||Error parsing crux configuration file: {{{ErrMessage}}}.||Some widget library contains an invalid descriptor file.||
-||*{{{[widgetConfigScanner 001]}}}*||Error initializing widgetConfigScanner: {{{ErrMessage}}}||Error while scanning classpath for widget library descriptor files.||
+||*{{{[widgetConfigScanner 001]}}}*||Error initializing widgetConfigScanner: {{{ErrMessage}}}||Error while scanning classpath for widget libraries.||
 ||*{{{[services 001]}}}*||Error initializing services: {{{ErrMessage}}}||Error while scanning classpath for a server service class.||
 ||*{{{[serviceFactoryInitializer 002]}}}*||Error initializing serviceFactory: {{{ErrMessage}}}||Error while creating the server services factory class.||
 ||*{{{[scannerURLS 001]}}}*||Error searching /WEB-INF/classes dir: {{{ErrMessage}}}||Error while obtaining url for web-inf/classes directory.||
 ||*{{{[scannerURLS 002]}}}*||Error searching /WEB-INF/lib dir: {{{ErrMessage}}}||Error while obtaining url for web-inf/lib directory.||
 ||*{{{[formatters 001]}}}*||Error initializing formatters: {{{ErrMessage}}}||Error while scanning classpath for a formatter class.||
+||*{{{[formatters 002]}}}*||Duplicated formatter: {{{formatterName}}}.||Two different classes was registered as formatters with the same name.||
+||*{{{[localeResolver 001]}}}*||Error initializing LocaleResolver: {{{errMsg}}}.||Error while initializing application LocaleResolver.||
+||*{{{[localeResolver 002]}}}*||User LocaleResolver not initialized.||The userLocaleResolver was not initialize and a server message was requested.||
+||*{{{[screenResolver 001]}}}*||Error initializing ScreenResolver: {{{errMsg}}}.||Error while creating the screenResolver object.||
+||*{{{[screenResolver 002]}}}*||Error obtaining screen resource. Screen id: {{{screnId}}}. Message: {{{errMsg}}}||Error obtained the screen. The screenID can be wrong or the classpath does not include <br>the folder where this page is.||
+||*{{{[screenBridge 001]}}}*||Error registering screen: {0}.||Screen Bridge is used to pass the information about the page beeing compiled.<br> This information is passed beteewn the application server and the GWT generators. <br> Bridge needs access to filesystem and write on machine user temp dir.||
+||*{{{[screenBridge 002]}}}*||Error reading screen id: {0}.||Screen Bridge is used to pass the information about the page beeing compiled.<br> This information is passed beteewn the application server and the GWT generators. <br> Bridge needs access to filesystem and write on machine user temp dir.||
 
 
 
