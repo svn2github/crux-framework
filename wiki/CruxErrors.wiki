@@ -70,6 +70,7 @@ This section describes the errors that can occur during server processing.
 ||*{{{[screenResourceScanner 001]}}}*||Error initializing screenResourceScanner: {{{errMsg}}}.||Error while creating the screenResourceScanner object.||
 ||*{{{[datasources 001]}}}*||Error initializing datasource: {{{errMsg}}}.||Error while creating a datasource object.||
 ||*{{{[datasources 002]}}}*||Duplicated datasource: {{{datasource}}}.||Two datasources are annotated with the same key.||
+||*{{{[synchronizerToken 001]}}}*||Invalid Synchronizer Token for method {methodFullName}. Possible CSRF attack..||A method annotated wiht {{{@UseSynchronizerToken}}} was invoked with <br>an invalid token. It is a possible CSRF attack.||
 
 
 === 1.2.2 Server Informative Messages===
