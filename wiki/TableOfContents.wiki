@@ -58,7 +58,7 @@
 <td>........*3.5* [UserManual#3.5_Client-Server_Communication Client-Server Communication]</td>
 </tr>
 <tr>
-<td>............*3.3.1* [UserManual#3.5.1_Server_Sensitive_Methods Server Sensitive Methods]</td>
+<td>............*3.5.1* [UserManual#3.5.1_Server_Sensitive_Methods Server Sensitive Methods]</td>
 </tr>
 <tr>
 <td>........*3.6* [UserManual#3.6_Handling_Errors Handling Errors]</td>
