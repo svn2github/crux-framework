@@ -1358,7 +1358,7 @@ public class MyController {
 
 === 3.5.1 Server Sensitive Methods===
 
-_*Crux*_ supports the pattern [http://www.corej2eepatterns.com/Design/PresoDesign.htm Synchronizer Token] for sensitive methods protection.
+_*Crux*_ supports the [http://www.corej2eepatterns.com/Design/PresoDesign.htm Synchronizer Token] pattern for sensitive methods protection.
 This pattern helps to avoid the duplicated request problem and [http://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet CSRF] 
 attacks.
 
