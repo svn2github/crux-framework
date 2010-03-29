@@ -1356,6 +1356,34 @@ public class MyController {
 }
 }}}
 
+=== 3.5.1 Server Sensitive Methods===
+
+_*Crux*_ supports the pattern [http://www.corej2eepatterns.com/Design/PresoDesign.htm Synchronizer Token] for sensitive methods protection.
+This pattern helps to avoid the duplicated request problem and [http://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet CSRF] 
+attacks.
+
+To inform _*Crux*_ that a server method is sensitive, you just need to put the annotation {{{@UseSynchronizerToken}}} on the service interface method.
+
+See the following example:
+
+{{{
+package crux.examples.client.remote;
+
+public interface GreetingService extends RemoteService
+{
+   @UseSynchronizerToken
+   public String getHelloMessage(String name);
+}
+}}}   
+
+This annotation accepts the following attributes:
+
+|| *Attribute* || *Type* || *Default* || *Description* ||  
+||notifyCallsWhenProcessing||boolean||true|| If this property is true, when the user tries to send a duplicated request,<br> an informative message is showed. 
+To change the message, use the property {{{methodIsAlreadyBeingProcessed}}}<br> on ClientMessages.properties file.||
+||blocksUserInteraction||boolean||true|| If this property is true, when a request to a sensitive method is fired,<br> the screen became blocked to user.||
+
+
 == 3.6 Handling Errors==
 
 _*Crux*_ provides two basic interfaces for client errors reporting.
