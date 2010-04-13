@@ -1915,9 +1915,15 @@ If you need I18N before the _*Crux* FrontController_ Servlet, you have to put th
 
 === 4.3.2 Crux.properties ===
 
-_*Crux*_ tries to read a file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath to change some default behavior of the framework.
+_*Crux*_ provides some configuration options that can modify some framework behavior.
 
-The following properties can be set in this file:
+Those options can be informed through:
+  # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{Eg: -DCrux.wrapSiblingWidgets=false}}}.
+  # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath to change some default behavior of the framework.
+
+If you use both ways showed, the command line has preference. 
+
+The following properties can be set:
 
 || *Property* || *Description* || *Default Value* ||
 ||wrapSiblingWidgets||If false, widgets created declaratively under the same parent<br> has no guarantee of order||true||
@@ -2102,7 +2108,7 @@ public class WebLogicClassPathResolver extends ClassPathResolverImpl
 
 The section [UserManual#4.1_Writing_Server_Services Writing Server Services] shows the default mechanism used to discovery your service implementation classes.
 
-However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springframework.net/ spring], [http://code.google.com/p/google-guice/ guice] or to make your service classes EJBs.
+However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springsource.org spring], [http://code.google.com/p/google-guice/ guice] or to make your service classes EJBs.
 
 Using the property {{{serviceFactory}}} you can specify your own class, that just needs to implement the following interface:
 
@@ -2136,7 +2142,7 @@ Enabling this options cost a little bit more in performance terms, but can turn 
 
 _*Crux*_ only register on its client engine the factories that are alrealdy used to parse your page(s). If you set this option to true, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
 
-This behaviour will be adopted only if you are under development mode (-DCrux.dev=true). During the distribution compilation, you must run in production mode, what will make _*Crux*_ ignore this option and optimize to use only what is referenced on page. 
+This behavior will be adopted only if you are under development mode (-DCrux.dev=true). During the distribution compilation, you must run in production mode, what will make _*Crux*_ ignore this option and optimize to use only what is referenced on page. 
 
 
 = 5 Crux Tools =
