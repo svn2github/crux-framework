@@ -1915,11 +1915,11 @@ If you need I18N before the _*Crux* FrontController_ Servlet, you have to put th
 
 === 4.3.2 Crux.properties ===
 
-_*Crux*_ provides some configuration options that can modify some framework behavior.
+_*Crux*_ provides some configuration options that can modify behaviors on the framework.
 
 Those options can be informed through:
   # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{Eg: -DCrux.wrapSiblingWidgets=false}}}.
-  # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath to change some default behavior of the framework.
+  # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
 
 If you use both ways showed, the command line has preference. 
 
