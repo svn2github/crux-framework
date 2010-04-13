@@ -2130,7 +2130,7 @@ _*Crux*_ uses a resource scanner to find the application pages, templates and ot
 
 ==== 4.3.2.9 enableHotDeploymentForWebDirs====
 
-Enabling this options cost a little bit more in performance terms, but can turn easier the developement, once you will not need to restart server to see changes on templates.
+Enabling this options cost a little bit more in performance terms, but can turn easier the developement, once you will not need to restart your server to see changes on templates.
 
 ==== 4.3.2.10 enableHotDeploymentForWidgetFactories====
 
