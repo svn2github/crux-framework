@@ -41,7 +41,8 @@ After meet the previous requirements, you must:
   # Checkout the projects from _*Crux*_ [http://code.google.com/p/crux-framework/source/checkout repository];
   # Run the ant build file /CruxLibs/build/build.xml, calling the taks {{{<download-dependencies>}}};
   # Run the ant build file /CruxLibs/build/build.xml, calling the taks {{{<distribute>}}};
-  # Refresh all other _*Crux*_ projects and call the ant build file /{{{<CRUX_PROJECT>}}}/build/build.xml, calling the task {{{<export>}}};
+  # Refresh all other _*Crux*_ projects and call the ant build file /{{{<CRUX_PROJECT>}}}/build/build.xml, calling the task {{{<export>}}} on each _*Crux*_ project;
+  # Run the ant build file /CruxLibs/build/build.xml, calling the taks {{{<distribute>}}} again, to update the /CruxRelease with all crux*.jar, generated in previous step ;
 
 The {{{<export>}}} ant task, compiles the project, generate a jar file and export this jar to /CruxLibs project, to be used by /CruxRelease, when generate the final distribution file.
 
