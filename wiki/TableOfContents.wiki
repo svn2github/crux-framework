@@ -118,6 +118,9 @@
 <td>*[WidgetDeveloperManual Widget Developer Manual]*</td>
 </tr>
 <tr>
+<td>*[DeveloperManual Building Crux]*</td>
+</tr>
+<tr>
 <td>*[FAQ FAQ]*</td>
 </tr>  
 </table>  
