@@ -26,7 +26,7 @@ Each of those files has its own eclipse project and is located on Crux [http://c
   # /CruxThemes
   # /CruxWidgets
   
-In addition of those projects, We have two projects that you need to download to build the _*Crux*_ distribution:
+In addition of those projects, we have two projects that you need to download to build the _*Crux*_ distribution:
   # /CruxRelease - This project contains the ProjectGenerator and the ant build file needed to create the distribution file.
   # /CruxLibs - This project is a kind of jar repository. It contains the ant file used to download the dependencies required by all other projects and to distribute those files between the projects.
  
