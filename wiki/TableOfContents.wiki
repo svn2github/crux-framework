@@ -40,16 +40,16 @@
 <td>............*3.3.3* [UserManual#3.3.3_Controller Controller]</td>
 </tr>
 <tr>
-<td>...................  [UserManual#3.3.3.5_Comunication_Between_Controllers Controllers Communication]</td>
+<td>...................  [UserManual#3.3.3.6_Comunication_Between_Controllers Controllers Communication]</td>
 </tr>
 <tr>
-<td>...................  [UserManual#3.3.3.3_Value_Binding Value Binding]</td>
+<td>...................  [UserManual#3.3.3.4_Value_Binding Value Binding]</td>
 </tr>
 <tr>
-<td>...................  [UserManual#3.3.3.6_Validation Validation]</td>
+<td>...................  [UserManual#3.3.3.7_Validation Validation]</td>
 </tr>
 <tr>
-<td>...................  [UserManual#3.3.3.7_Parameters_Binding Parameters Binding]</td>
+<td>...................  [UserManual#3.3.3.8_Parameters_Binding Parameters Binding]</td>
 </tr>
 <tr>
 <td>........*3.4* [UserManual#3.4_I18N I18N]</td>

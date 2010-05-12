@@ -517,7 +517,7 @@ The Controller annotation has the following properties:
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
 ||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#3.3.3.3_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
+||autoBind||no||true||If true, [UserManual#3.3.3.4_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 ||lazy||no|| true ||If true, the controller object is built only when first called.||
 ||fragment||no|| {{{<empty>}}} ||You can inform a fragment identifier. The compiler will split your code grouping controllers<br> by these identifiers.||
 
@@ -562,11 +562,19 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
-The {{{@Create}}} annotation does more than simply creates an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.7_Parameters parameter fields] are loaded, etc.)
+The {{{@Create}}} annotation does more than simply creates an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
 
 You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter methods.
 
-==== 3.3.3.3 Value Binding====
+==== 3.3.3.3 The @Expose Annotation====
+
+The Expose annotation has the following properties:
+
+|| *Property* || *Required* || *Default Value* || *Description* ||
+||allowMultipleCalls||no|| false ||If true, allow user to dispatch more than one event at time.<br/> If false, when an event handler is called, the screen is blocked <br/>until the method finish.||
+
+
+==== 3.3.3.4 Value Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between screen widgets and data objects.
 
@@ -815,7 +823,7 @@ public class MyClass
 }
 }}}
 
-==== 3.3.3.4 Using Controllers on Screen====
+==== 3.3.3.5 Using Controllers on Screen====
 
 To inform that a controller will be used on a screen, you must explicitly "import" it using the {{{useController}}} attribute.
 
@@ -847,7 +855,7 @@ public class MyClass
 
 That will allow these controller methods to be called even if no {{{useController}}} declaration is present on your screen.
 
-==== 3.3.3.5 Comunication Between Controllers====
+==== 3.3.3.6 Comunication Between Controllers====
 
 In section [UserManual#3.2.3_Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of those controllers.
 
@@ -926,7 +934,7 @@ public class MyClass
 }
 }}}
 
-===== 3.3.3.5.1 Parameter types=====
+===== 3.3.3.6.1 Parameter types=====
 
 The following types are allowed as arguments to a remote call to a controller method:
   * Primitive types (or a primitive wrapper);
@@ -997,7 +1005,7 @@ or
 
 The annotation {{{@SerializableName}}} could be used to simplify the name you write on screen tag.
 
-==== 3.3.3.6 Validation====
+==== 3.3.3.7 Validation====
 
 _*Crux*_ supports declaration of validators for a controller handler method. A Validator method is called before the handler method itself. If it runs without problem, the handler is called. If it throws any exception, the handler execution is aborted and a message is reported to the user through the _*Crux*_ [UserManual#3.6_Handling_Errors Error Handlers].
 
@@ -1046,7 +1054,7 @@ public class MyController
 Note that the validate method can receive a parameter of the same type as the main method parameter type (as in the first example) or no parameter (as in the second example).
 
 
-==== 3.3.3.7 Parameters Binding====
+==== 3.3.3.8 Parameters Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between window parameters and data objects. This can be done using the annotations {{{@Parameter}}} and {{{@ParameterObject}}} on controller fields and DTO classes.
 
@@ -1088,7 +1096,7 @@ The {{{@Parameter}}} annotation has two fields:
 
 If a validation error occur while binding the parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur caused by a type conversion error or by a missing required parameter.
 
-Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.3_Value_Binding Value Objects]. Doing it, you allows _*Crux*_ to populate an object of this type with values present on window url parameters. 
+Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.4_Value_Binding Value Objects]. Doing it, you allows _*Crux*_ to populate an object of this type with values present on window url parameters. 
 
 See the following example:
 
@@ -1302,7 +1310,7 @@ Another point to observe in the above example is the use of the abstract class {
 
 That class does the following:
   # Implements a default error handler that will delegate to [UserManual#3.6_Handling_Errors Crux Error Handler] any error received.
-  # If controller autoBind for [UserManual#3.3.3.3_Value_Binding ValueObjects] is enabled, it will automatically update screen with value object properties after process the {{{onComplete()}}} method.
+  # If controller autoBind for [UserManual#3.3.3.4_Value_Binding ValueObjects] is enabled, it will automatically update screen with value object properties after process the {{{onComplete()}}} method.
 
 
 So, the two following approach is equivalents:
