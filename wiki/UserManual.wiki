@@ -91,7 +91,7 @@ The code above creates a module that inherits the _*Crux*_ core and the two sets
 
 == 3.1 Building User Interface ==
 
-Any GWT widget can be used in user interface construction. Consult the [WidgetDeveloperManual Component Developer Manual] for information about how to use custom widgets with _*Crux*_.
+Any GWT widget can be used in user interface construction. Consult the [WidgetDeveloperManual Widget Developer Manual] for information about how to use custom widgets with _*Crux*_.
 
 To add widgets to your pages, you can use these methods:
   # Create a page as a XML file and use some XSDs to enable auto completion on your favorite editor.
@@ -1783,7 +1783,7 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
 
 _*Crux*_ provides to server classes a support very similar to the GWT I18N support.
 
-You can create interfaces and uses the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultMessage}}} exactly as you do at client side.
+You can create interfaces and uses the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client side.
 
 The main difference is that your interface does not need to extend any other interface and you use the factory method {{{MessagesFactory.getMessages(<interfaceClass>)}}} in the place of {{{GWT.create()}}}.
 
@@ -1791,7 +1791,7 @@ See the following example:
 {{{
 public interface ServerMessages 
 {
-	@DefaultMessage("My server message: {0}.")
+	@DefaultServerMessage("My server message: {0}.")
 	String myServerMessage(String message);
 }
 }}} 
