@@ -45,7 +45,7 @@ Note that the above class uses the annotation {{{@DeclarativeFactory}}} and exte
 
 Through the {{{@DeclarativeFactory}}} annotation, you can specify the name of the library where your widget will be registered and the name that will be associated with your widget itself. 
 
-Before we go deeper inside the code showed and see more examples, let's see how you could use the widget registered with _*Crux*_ declarative engine:
+Before we go deeper inside the code shown and see more examples, let's see how you could use the widget registered with _*Crux*_ declarative engine:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -62,7 +62,7 @@ Before we go deeper inside the code showed and see more examples, let's see how 
 
 Note that a namespace called {{{http://www.sysmap.com.br/crux/myLibrary}}} is used on the above page. A {{{XSD}}} file defining this namespace is created by the [UserManual#5.1_Schema_Generator SchemaGenerator].
 
-The example showed assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}} on {{{crux.xml}}} file.
+The example shown assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}} on {{{crux.xml}}} file.
 
 
 == 2.2 How Engine Works ==
@@ -100,7 +100,7 @@ For aditional information about this declarative approach, consult the _*Crux*_ 
   # Calls the method {{{void postProcess(WidgetFactoryContext<T> context)}}}
   # Return the created widget to {{{ScreenFactory}}}, that will properly attach it on screen and replaces its {{{<span>}}} metadata tag.
   
-The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used to factory to specify and to process the informations about widget attributes, events and children.  All of those other methods receive  a parameter of type {{{WidgetFactoryContext}}}. This class has the following public methods:
+The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used by the factory to specify and process the information about widget's attributes, events and children.  All of those other methods receive  a parameter of type {{{WidgetFactoryContext}}}. This class has the following public methods:
 
 || *Method* || *Description* ||
 || getWidget || Returns the widget previously instantiated be the method {{{instantiateWidget}}} ||
@@ -115,7 +115,7 @@ The next sections describe how  to properly overwrite each of those methods to s
 === 2.3.1 The instantiateWidget method===
 
 
-The {{{instantiateWidget}}} method is called to the widget object instantiation. The {{{<span>}}} element is passed as parameter and can be used if the widget to be created needs some attribute in its constructor.If the widget showed on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute, we could write something like:
+The {{{instantiateWidget}}} method is called to instantiate a new widget object . The {{{<span>}}} element is passed as parameter and can be used if the widget to be created needs some attribute in its constructor.If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute, we could write something like:
 
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary")
@@ -130,7 +130,7 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
 }
 }}}
 
-The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods showed bellow.
+The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods, shown bellow, in order to take advantage of all benefits this engine offers you.
 
 === 2.3.2 Attributes and Events Processing===
 
@@ -174,7 +174,7 @@ The first thing done by the above processAttributes method is call {{{super.proc
 Other important point to observe is the annotation {{{@TagAttributesDeclaration}}} on method. It is used to inform all attributes supported by this widget. This information is used by  [UserManual#5.1_Schema_Generator SchemaGenerator]. Note that {{{WidgetFactory.processAttributes}}} has this same annotation including more attributes.   [UserManual#5.1_Schema_Generator SchemaGenerator] will consider attributes declared on super classes to generate the XSD files.
 
 
-If you observe the code showed on section [WidgetDeveloperManual#2.1_Overview 2.1], you will note that the annotation {{{@TagAttributes}}} is used in the place of {{{@TagAttributesDeclaration}}}. The two annotations are very similar and support the same attributes. However, when you use the {{{@TagAttributes}}}, _*Crux*_ will generate the code for the binding of those attributes. The code on section 2.1 just declare the attribute {{{myWidgetAttribute}}} on the method annotation and does not need to implement all the code showed in this section.
+If you observe the code shown on section [WidgetDeveloperManual#2.1_Overview 2.1], you will note that the annotation {{{@TagAttributes}}} is used in the place of {{{@TagAttributesDeclaration}}}. The two annotations are very similar and support the same attributes. However, when you use the {{{@TagAttributes}}}, _*Crux*_ will generate the code for the binding of those attributes. The code on section 2.1 just declare the attribute {{{myWidgetAttribute}}} on the method annotation and does not need to implement all the code shown in this section.
 
 In other words, the above code can bre written as:
 
@@ -322,7 +322,7 @@ _*Crux*_ offers {{{EvtBinders}}} for all GWT events and for  custom _*Crux*_ wid
 || onChange || ValueChangeEvtBind || HasValueChangeHandlers<?> ||
 
 
-The annotation {{{@TagEventsDeclaration}}} has one attribute of type {{{String}}}. This attribute only inform to _*Crux*_ the name of the event. The parser of the {{{<span>}}} element and the binding with the widget must be done programmatically, as showed on the previous example.
+The annotation {{{@TagEventsDeclaration}}} has one attribute of type {{{String}}}. This attribute only inform to _*Crux*_ the name of the event. The parser of the {{{<span>}}} element and the binding with the widget must be done programmatically, as shown on the previous example.
 
 ==== 2.3.2.3 Factories Inheritance====
 
@@ -356,7 +356,7 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget> implements HasNameF
 }
 }}}
 
-That factory showed above will accepts and automatically bind the attributes {{{myWidgetAttribute}}} and {{{name}}} to {{{MyWidget}}}.
+That factory shown above will accepts and automatically bind the attributes {{{myWidgetAttribute}}} and {{{name}}} to {{{MyWidget}}}.
 
 _*Crux*_ libraries use the inheritance support to turn easy the development of its factories. GWTWidgets library has interfaces that binds attributes and events for most of GWT basic interfaces for widgets:
 
