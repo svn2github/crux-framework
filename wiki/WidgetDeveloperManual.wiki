@@ -81,7 +81,7 @@ The _*Crux*_ EntryPoint will start a factory class called {{{ScreenFactory}}}, t
 
 {{{ScreenFactory}}} uses the attribute {{{_type}}} to decide which factory class it wil call to create the desired widget, for each of those {{{<span>}}} tags found. Then, {{{ScreenFactory}}} replaces the {{{<span >}}} tag by the widget created. 
 
-Of course, we could use another kind of metadata structure on HTML pages, like javascript arrays, or some kind of strings (like XML) on a javascript block to serve as insume to the _*Crux*_ {{{ScreenFactory}}}. However, some widgets on a page contains other HTML blocks as children. Sometimes, those HTML blocks contains other child widgets... So, the most natural way to handle this is to use the own HTML DOM as the source of the metadata. It turn the implementation very easy and the page load much faster.
+Of course, we could use another kind of metadata structure on HTML pages, like javascript arrays, or some kind of strings (like XML) on a javascript block to serve as input for _*Crux*_ {{{ScreenFactory}}}. However, some widgets on a page contains other HTML blocks as children. Sometimes, those HTML blocks contains other child widgets... So, the most natural way to handle this is to use the own HTML DOM as the source of the metadata. It turn the implementation very easy and the page load much faster.
 
 
 For aditional information about this declarative approach, consult the _*Crux*_ [FAQ FAQ].
@@ -387,5 +387,3 @@ _*Crux*_ libraries use the inheritance support to turn easy the development of i
 ==== 2.3.3.2 WidgetChildProcessor====
 
 === 2.3.4 The postProcess  method===
-
-
