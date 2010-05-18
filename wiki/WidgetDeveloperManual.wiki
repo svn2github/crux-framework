@@ -62,10 +62,10 @@ Before we go deeper inside the code shown and see more examples, let's see how y
 
 Note that a namespace called {{{http://www.sysmap.com.br/crux/myLibrary}}} is used on the above page. A {{{XSD}}} file defining this namespace is created by the [UserManual#5.1_Schema_Generator SchemaGenerator].
 
-The example shown assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bounded to the tag attribute {{{myWidgetAttribute}}} on {{{crux.xml}}} file.
+The example shown assumes that the widget {{{MyWidget}}} contains a public String property called {{{myWidgetAttribute}}} that will be bound to the tag's attribute {{{myWidgetAttribute}}} on {{{crux.xml}}} file.
 
 
-== 2.2 How Engine Works ==
+== 2.2 How The Engine Works ==
 
 If you look to the source code of any _*Crux*_ page on your browser, you will find a lot of {{{<span>}}} tags similar to the following one:
 
@@ -193,10 +193,7 @@ public class MyWidgetFactory extends WidgetFactory<MyWidget>
 }
 }}}
 
-The annotation {{{@TagAttributesDeclaration}}} must be used when you want to inform _*Crux*_ that the attributes exist (because the [UserManual#5.1_Schema_Generator SchemaGenerator]), but wants to handle the parser programmatically, making some special validations, for example.
-
-
-You can use both annotations on a processAttributes method. 
+The annotation {{{@TagAttributesDeclaration}}} must be used when you want to inform _*Crux*_ that the attributes exist (because the [UserManual#5.1_Schema_Generator SchemaGenerator]), but you want or need to parse it programmatically. The code below shows a situation where you can face this need: the widget has an attribute that is required by its constructor. Note that you can use both annotations on a {{{processAttributes}}} method. 
 
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary")
