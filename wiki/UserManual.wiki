@@ -20,6 +20,7 @@ Current _*Crux*_ version uses GWT 2.0.
 
   * Download the latest _*Crux*_ release [http://code.google.com/p/crux-framework/downloads/list here];
   * Unzip the archive into a folder you want;
+  * Be sure your default JVM is the version 1.6 or higher. It is necessary to execute the _*Crux*_ installer (in runtime, Crux projects run fine with Java 1.5);
   * Execute the {{{start.cmd}}} or {{{start.sh}}} file, according to your operating system;
   * The _*Crux QuickStart*_ tool will start, opened in your default web browser:
   
