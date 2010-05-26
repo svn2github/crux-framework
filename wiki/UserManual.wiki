@@ -20,19 +20,18 @@ Current _*Crux*_ version uses GWT 2.0.
 
   * Download the latest _*Crux*_ release [http://code.google.com/p/crux-framework/downloads/list here];
   * Unzip the archive into a folder you want;
-  * Edit the file named {{{project.properties}}}, setting your project attributes;
-  * Open a command line shell and run the script {{{projectGenerator}}}, as shown below:
-  {{{
-  	projectGenerator "path/to/eclipse/workspace"
-  }}}
-  This command will create an Eclipse project, with the name you informed in the properties file.
+  * Execute the {{{start.cmd}}} or {{{start.sh}}} file, according to your operating system;
+  * The _*Crux QuickStart*_ tool will start, opened in your default web browser:
   
-  * Import the generated project into your Eclipse IDE, and you will get something like this:
+  http://crux-framework.googlecode.com/svn/wiki/images/quickstart-begin.gif
+  
+  * Click the {{{Generate New Crux Application}}} button and follow the instructions. At the end of the wizard, an Eclipse project will be generated for you.
+  * Import the freshly generated project into your Eclipse IDE, and you will get something like this:
   
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project.gif
    
   * Run the {{{<your project name>.launch}}} file, located at the project root folder;
-  * If everything's gone ok, the GWT Hosted Mode console will appear, and your first application will look like this:
+  * If everything's gone OK, the GWT DevMode console will appear, and your first application will look like this:
   
   http://crux-framework.googlecode.com/svn/wiki/images/generated-project-running.gif
   	  
