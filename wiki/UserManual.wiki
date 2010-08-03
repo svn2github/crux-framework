@@ -1833,7 +1833,6 @@ To use _*Crux*_ in your application, first of all you will need following files:
       * crux-gwt-widgets.jar
       * crux-scannotation.jar
       * javassist.jar
-      * jericho-html-2.5.jar
       * saxon9.jar
       * saxon9-dom.jar
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
