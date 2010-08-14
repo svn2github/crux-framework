@@ -125,9 +125,10 @@ public static class RemoteDS extends RemoteStreamingDataSource<Contact> {
 
 =3 DataSources Structure=
 
-When you define a DataSource, you informe a class. _*Crux*_ will define columns following the names of the fields of the informed class. The type of each column will be the same type of the respective field. See the following example: 
+When you define a DataSource, you inform a class. _*Crux*_ will define columns following the names of the fields of the informed class. The type of each column will be the same type of the respective field. See the following example: 
 
 Every row on a DataSource class must define one identifier field. It is needed to identify a row even if all the set of data were reordered.
+The annotation {{{@DataSourceRecordIdentifier}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
 
 {{{
 @DataSource("simpleGridDataSource")
@@ -151,11 +152,42 @@ public class Contact implements Serializable {
 	private String name;
 	private String phone;
 	private Date birthday;
+	private Address address;
     
     // Getter and Setters ....	
 }
 }}}
-The annotation {{{@DataSourceRecordIdentifier}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
+
+{{{
+public class Address implements Serializable {
+	
+	private String street;
+    
+    // Getter and Setters ....	
+}
+}}}
+
+Note that the Contact class has a property of type Address. A widget can refer to a inner property using "dots", like {{{address.street}}} when reading from a DataSource.
+
+The dataSource declared above could be used on a widget like:
+
+{{{
+<html 
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:c="http://www.sysmap.com.br/crux" 
+   xmlns:a="http://www.sysmap.com.br/crux/widgets">
+      
+      <c:screen useDataSource="simpleGridDataSource" useFormatter="birthday"/>
+      
+      <a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" pageSize="7">
+         <a:dataColumn key="name" label="Name"/>
+         <a:dataColumn key="phone" label="Phone"/>
+         <a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
+         <a:dataColumn key="address.street" label="Street" />
+      </a:grid>
+</html>
+}}}
+
 
 =4 Handling Service Responses=
 
