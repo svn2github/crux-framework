@@ -223,59 +223,9 @@ _*Crux*_ Screen support the following events:
 ||Resize||Called on page resize||
 ||HistoryChanged||Called when back button is pressed||
 
-=== 3.2.3 Communication Between Screens===
+=== 3.2.3 Shared Context===
 
-Using some static methods on Screen class, it is possible to invoke operations on other _*Crux*_ screens running in different frames or windows.
-
-The following example shows how this can be done:
-
-{{{
-	Screen.invokeControllerOnTop("topController.method", new MyParameterClass());
-}}}
-
-That code will call the method "method" on controller identified by "topController" on the top page. Consult the section [UserManual#Managing_Events Managing Events] for more details about how this call is processed.
-
-The following table shows the methods that allow calls on others screens:
-
-|| *Method* || *Description* ||
-||invokeControllerOnParent||call a controller on parent page||
-||invokeControllerOnOpener||call a controller on opener page||
-||invokeControllerOnAbsoluteTop||call a controller on top of the first opener page||
-||invokeControllerOnTop||call a controller on top page||
-||invokeControllerOnSelf||call a controller on self||
-||invokeControllerOnFrame{{{<FrameName>}}}||call a controller on an inner frame named {{{<frameName>}}}||
-||invokeControllerOnSiblingFrame{{{<FrameName>}}}||call a controller on a sibling inner frame named {{{<frameName>}}}||
-
-You can create an interface to wrap the invocations to a specific controller. Your interface must extends the interface {{{Invoker}}} and the methods must follow the pattern: {{{<returnType> <methodName>On<position>(<paramType>);}}}. See the example:
-{{{
-public interface MyControllerInvoker extends Invoker
-{
-   void myMethodOnTop(String[] params); // is the same that Screen.invokeControllerOnTop("myController.myMethod", params);
-   String mySecondMethodOnSelf();
-   String mySecondMethodOnOpener(Integer param0, String param1, String[] param2);
-   String mySecondMethodOnFrameTest(Integer param0, String param1, String[] param2);
-}
-}}}
-
-{{{
-   ...
-   MyControllerInvoker invoker = GWT.create(MyControllerInvoker.class);
-   invoker.myMethodOnTop(new String[]{"value1", "value2"});
-   ...
-}}}
-
-To inform the name of the controller that will be bound to the invoker interface, you can use the annotation {{{@ControllerName}}}. If it is not present, _*Crux*_ will use the name of the invoker interface without the suffix 'Invoker'.
-
-The above interface could also be written as:
-{{{
-@ControllerName("controller")
-public interface MyControllerInvoker extends Invoker
-{
-   ...
-}
-}}}
-
-Another way of information sharing is available for _*Crux*_ screens. You can use a common context to read and write variables.
+It is possible to share information between _*Crux*_ screens. You can use a common context to read and write variables.
 
 The _*Crux*_ Context is a common area where you can put and read values associating them with a key.
 
@@ -326,24 +276,6 @@ Screen class has the following static methods to support Context management:
 || *Method* || *Description* ||
 ||createContext||Initialize the context. It just needs to be called once in one of the modules that are sharing information.||
 ||clearContext||remove all context entries||
-
-Behind the scenes, Context is managed by a ContextHandler object. It is provided two implementations for this interface:
-|| *Handler* || *Description* || 
-||CookieContextHandler||Use cookies to store values||
-||TopContextHandler||Store values in a HashMap located on top of the first opener window||
-
-The default implementation is CookieContextHandler. However, each one has pros and cons.
-
-*TopContextHandler* is faster and does not leave data after the application is closed. It is not possible to have dirty read, because the context area is created only when used for the first time. However, in a multi window application, the context data is lost if top window is closed.
-
-*CookieContextHandler* never loses data if a window is closed. However, you must ensure that you call the method {{{Screen.createContext()}}} in your application to avoid dirty reads (cookies can contain old values from a previous execution).
-
-If you desire, you can add the following lines to your module config file to change the default context behavior:
-{{{
-	<replace-with class="br.com.sysmap.crux.core.client.context.TopContextHandler">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.context.ContextHandler" />
-	</replace-with>			
-}}}
 
 
 === 3.2.4 Control History ===
@@ -847,163 +779,123 @@ However, if you want that a controller be imported in every screen you have, you
 {{{
 @Global
 @Controller("myController")
-public class MyClass
-{
+public class MyClass {
        // code here
 }
 }}}
 
 That will allow these controller methods to be called even if no {{{useController}}} declaration is present on your screen.
 
-==== 3.3.3.6 Comunication Between Controllers====
+==== 3.3.3.6 Communication Between Controllers====
 
-In section [UserManual#3.2.3_Communication_Between_Screens Communication Between Screens] we show how you can, from a controller, to invoke methods on another controller. Now we will see the details associated with the methods of those controllers.
+Crux supports communication between different controllers, even if located on different screens (documents).
 
-The first point is that you must explicitly inform _*Crux*_ that an event handler can be called from out of the current page (by another document). To do this, you must put an annotation {{{@ExposeOutOfModule}}} on the method you want to expose.
+The first step to implement a cross document communication is create an interface extending the {{{CrossDocument}}} interface.
+
+{{{
+public interface MyControllerCrossDoc extends CrossDocument {
+    void myMethod(String str, boolean b, MySerializableDTO dto);
+    List<String> myOtherMethod() throws MyCustomException;
+}
+}}}
+
+The methods declared on this interface is those which you want to make available for calls from other controllers. All method parameters and return types
+must be a primitive type (or a primitive wrapper), an Enum or implement {{{java.io.Serializable}}} or {{{com.google.gwt.user.client.rpc.IsSerializable}}}.  
+
+The second step is make your controller class implements the new interface.
 
 {{{
 @Controller("myController")
-public class MyClass
-{
-    @ExposeOutOfModule
-    public void myMethod()
-    {
+public class MyController implements MyControllerCrossDoc {
+    public void myMethod(String str, boolean b, MySerializableDTO dto){
+       // code here
+    }
+    
+    public List<String> myOtherMethod() throws MyCustomException{
+       // code here
+    }
+    
+    // You can add your other event handler methods too.
+    @Expose
+    public void myEventHandlerMethod(ClickEvent event){
        // code here
     }
 }
 }}}
 
-Now, other pages can call this method through {{{Screen.invokeControllerOn<?>()}}} methods.
+It is important to observe the names of the interface and the controller class. Both must be implemented on the same package and the CrossDocument interface must
+have the same name of the class, followed by the suffix {{{CrossDoc}}} as showed on the previous example. 
 
-For calls to {{{Screen.invokeControllerOnSelf()}}} the handler does not need to be exposed to out of module. You can call a handler exposed only with {{{@Expose}}} annotation.
-
-So we can talk about two kinds of controller methods invocation. One remote and one local. Remote calls are those made to another pages (top, parent, opener, etc) and local are made to the same page (self).
-
-An event handler for calls made through screen invoker methods, can receive an {{{InvokeControllerEvent}}} parameter. This class provides a method to access values passed as argument in method invocation.
-
-See the example:
+Now we can show how to make the call from a second controller.
 
 {{{
-   ...
-   Window.alert(Screen.invokeControllerOnTop("myController.hello","Thiago"));
-   Window.alert(Screen.invokeControllerOnSelf("myController.helloLocal","Thiago"));
-   Window.alert(Screen.invokeControllerOnParent("myController.parametersExample",new Object[]{new Integer(123), "Thiago", new Boolean(true)}));
-   ...
-}}}
-
-or 
-
-{{{
-   ...
-   Window.alert(myControllerInvoker.helloOnTop("Thiago"));
-   Window.alert(myControllerInvoker.helloLocalOnSelf("Thiago"));
-   Window.alert(myControllerInvoker.parametersExampleOnParent(1234, "Thiago", true));
-   ...
-}}}
-
-{{{
-@Controller("myController")
-public class MyClass
-{
-    @ExposeOutOfModule
-    public String hello(InvokeControllerEvent event)
-    {
-       String param = event.getParameter(String.class);
-       return "Hello "+param;
-    }
+@Controller("mySecondController")
+public class MySecondController {
+	@Create
+	protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
 
     @Expose
-    public String helloLocal(InvokeControllerEvent event)
-    {
-       String param = event.getParameter(String.class);
-       return "Hello "+param;
-    }
-
-    @ExposeOutOfModule
-    public String parametersExample(InvokeControllerEvent event)
-    {
-       if (event.getParameterCount() == 3)
-       {
-          int param0 = event.getParameter(0, Integer.class);
-          String param1 = event.getParameter(1, String.class);
-          boolean param2 = event.getParameter(2, Boolean.class);
-          return "Hello "+param0;
+    public void myMethod(ClickEvent event){
+       
+       crossDoc.myMethod("thiago", true, new MySerializableDTO());
+       
+       try{
+       	  List<String> result = crossDoc.myOtherMethod();
+       	  //do something with result...
+       }catch(MyCustomException e){
+          // handle error
        }
-       return null;
     }
 }
 }}}
 
-===== 3.3.3.6.1 Parameter types=====
+On the previous example, the crossDoc object will call the methods on a controller located on the same screen of the caller object.
 
-The following types are allowed as arguments to a remote call to a controller method:
-  * Primitive types (or a primitive wrapper);
-  * CharSequence types (String, StringBuilder, StringBuffer, etc);
-  * Date types(java.util.Date, java.sql.Date, java.sql.Timestamp, etc);
-  * Enum types;
-  * Any type that implements the interface {{{CruxSerializable}}}.
-  * Arrays of any of those types above;
-  
-So, if you need to pass a custom object to another page, your object class must implements the interface CruxSerializable. This interface forces your type to implement a serialize and deserialize methods.
-
-For local calls, any type is allowed, once no serialization is needed.
-  
-If you define a custom serializable type, you must inform _*Crux*_ explicitly that you  want to use such type in your module. You can do it declaratively using {{{useSerializable}}} attribute on screen tag, or through the method {{{ModuleComunicationSerializer.registerCruxSerializable}}}.
+If you want to inform a new target for the call, you must cast the crossDoc object to {{{TargetDocument}}} interface and set the target of the call.
 
 {{{
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" >
-   <head>
-       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
-   </head>
-   <body>
-       <crux:screen useController="myController" useSerializable="mySerializableType">
-	   </crux:screen>
-   </body>
-</html>
-}}}
+@Controller("mySecondController")
+public class MySecondController {
+	@Create
+	protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
 
-{{{
-@SerializableName("mySerializableType")  
-public class MySerializableType implements CruxSerializable
-{
-  private String field1;
-  private Integer field2;
-  
-  ... // getter and setters
-  
-   public String serialize() {
-      try  {
-         Object[] values =  new Object[]{field1, field2};
-         return Screen.getCruxSerializer().serialize(values);
-      } catch (ModuleComunicationException e) {
-        ...
-      }
-      return null;
-  }
-  
-  public Object deserialize(String serializedData) {
-    try {
-       Object[] des = (Object[]) Screen.getCruxSerializer().deserialize(serializedData);
-       MySerializableType dto =  new MySerializableType();
-       dto.setField1((String) des[0]);		
-       dto.setField2((Integer) des[1]);
-        return dto;
-    }catch (ModuleComunicationException e) {
-			e.printStackTrace();
+    @Expose
+    public void myMethod(ClickEvent event){
+       ((TargetDocument)).setTarget(Target.TOP);       
+       crossDoc.myMethod("thiago", true, new MySerializableDTO());
     }
-    return null;
-  }
 }
 }}}
+ 
+The previous example calls the method on the "myController" controller located on the top window of the current screen.
 
-or 
+The following table shows all methods present on {{{TargetDocument}}} interface, that can be used to inform the target for the calls.
+
+|| *Method* || *Description* ||
+||void setTarget(Target target)||Sets the target for the cross document call. <br/>{{{Target}}} is an Enum described on following list.||
+||void setTargetFrame(String frame);||Sets a target frame for the cross document call.||
+||void setTargetSiblingFrame(String frame);||Sets a target sibling frame for the cross document call.||
+||void setTargetWindow(JSWindow jsWindow);||Sets the target window for the cross document call.<br/>{{{JSWindow}}} is just a {{{JavaScriptObject}}} to wrap the native window object||
+
+The {{{Target}}} Enum supports the following values:
+  # TOP
+  # PARENT
+  # ABSOLUTE_TOP
+  # SELF
+  # OPENER
+
+ABSOLUTE_TOP refers to the window top located on the first opener window.
+
+Here are some examples:
 
 {{{
-   ModuleComunicationSerializer.registerCruxSerializable(MySerializableType.class.getName(), new MySerializableType());
+  ((TargetDocument)).setTargetWindow(Popup.getOpener());       
+  ((TargetDocument)).setTargetWindow(DynaTabs.getTabWindow("secondTab"));
+  ((TargetDocument)).setTargetWindow(DynaTabs.getSiblingTabWindow("secondTab"));
+  ((TargetDocument)).setTargetFrame("myInternalNamedFrame");
+  ((TargetDocument)).setTarget(Target.OPENER);          
 }}}
 
-The annotation {{{@SerializableName}}} could be used to simplify the name you write on screen tag.
 
 ==== 3.3.3.7 Validation====
 

@@ -17,8 +17,6 @@ Each of those files has its own eclipse project and is located on Crux [http://c
   # /Crux
   # /CruxCompiler
   # /CruxGWTWidgets
-  # /CruxHtmlTags
-  # /CruxHtmlTagsCompileTasks
   # /CruxModules
   # /CruxModulesAdmin
   # /CruxModulesCompiler
