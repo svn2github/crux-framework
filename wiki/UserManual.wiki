@@ -884,7 +884,7 @@ The {{{Target}}} Enum supports the following values:
   # SELF
   # OPENER
 
-ABSOLUTE_TOP refers to the window top located on the first opener window.
+ABSOLUTE_TOP refers to the top window of the first opener window.
 
 Here are some examples:
 
