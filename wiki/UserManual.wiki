@@ -823,7 +823,7 @@ public class MyController implements MyControllerCrossDoc {
 }
 }}}
 
-It is important to observe the names of the interface and the controller class. Both must be implemented on the same package and the CrossDocument interface must
+It is important to observe the names of the interface and of the controller class. Both must be implemented on the same package and the CrossDocument interface must
 have the same name of the class, followed by the suffix {{{CrossDoc}}} as showed on the previous example. 
 
 Now we can show how to make the call from a second controller.
