@@ -1453,12 +1453,6 @@ _*Crux*_ provides a wide range of different DataSources that can be classified b
   # How they *fetch the data* 
     # *Local* - This kind of DataSource can load data once and keep it locally on user's brownser, so it can be paged, sorted or edited locally.
     # *Remote* - RemoteDatasources load data on demand, as widgets request them. 
-  # How them *restrict access* to data
-    # *Read Only* - Data can not be modified or selected
-    # *Editable* - Data can be modified and selected
-  # How data is *structured* inside the DataSource
-    # *Records* - Data is organized as columns of records 
-    # *Value Objects* - Data is organized as a list of objects (Value Objects) (see [UsingDataSources#3.2_Using_a_Class BindableDataSource])
 
 To create a DataSource, you can extend one of the abstract DataSource classes provided by _*Crux*_. The class you should choose depends on which categories (between the exposed above) your DataSource will belong.
 
