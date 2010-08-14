@@ -167,7 +167,7 @@ public class Address implements Serializable {
 }
 }}}
 
-Note that the Contact class has a property of type Address. A widget can refer to a inner property using "dots", like {{{address.street}}} when reading from a DataSource.
+Note that the Contact class has a property of type Address. A widget can refer to a inner property using "dots", like {{{"address.street"}}} when reading from a DataSource.
 
 The dataSource declared above could be used on a widget like:
 
