@@ -799,7 +799,7 @@ public interface MyControllerCrossDoc extends CrossDocument {
 }
 }}}
 
-The methods declared on this interface is those which you want to make available for calls from other controllers. All method parameters and return types
+The methods declared on this interface are those which you want to make available for calls from other controllers. All method parameters and return types
 must be a primitive type (or a primitive wrapper), an Enum or implement {{{java.io.Serializable}}} or {{{com.google.gwt.user.client.rpc.IsSerializable}}}.  
 
 The second step is make your controller class implements the new interface.
