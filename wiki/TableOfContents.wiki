@@ -40,7 +40,7 @@
 <td>............*3.3.3* [UserManual#3.3.3_Controller Controller]</td>
 </tr>
 <tr>
-<td>...................  [UserManual#3.3.3.6_Comunication_Between_Controllers Controllers Communication]</td>
+<td>...................  [UserManual#3.3.3.6_Communication_Between_Controllers Controllers Communication]</td>
 </tr>
 <tr>
 <td>...................  [UserManual#3.3.3.4_Value_Binding Value Binding]</td>
