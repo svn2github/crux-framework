@@ -802,7 +802,7 @@ public interface MyControllerCrossDoc extends CrossDocument {
 The methods declared on this interface are those which you want to make available for calls from other controllers. All method parameters and return types
 must be a primitive type (or a primitive wrapper), an Enum or implement {{{java.io.Serializable}}} or {{{com.google.gwt.user.client.rpc.IsSerializable}}}.  
 
-The second step is make your controller class implements the new interface.
+The second step is to make your controller class implement the new interface.
 
 {{{
 @Controller("myController")
@@ -815,7 +815,7 @@ public class MyController implements MyControllerCrossDoc {
        // code here
     }
     
-    // You can add your other event handler methods too.
+    // You can have any other methods here.
     @Expose
     public void myEventHandlerMethod(ClickEvent event){
        // code here
@@ -823,21 +823,24 @@ public class MyController implements MyControllerCrossDoc {
 }
 }}}
 
-It is important to observe the names of the interface and of the controller class. Both must be implemented on the same package and the CrossDocument interface must
-have the same name of the class, followed by the suffix {{{CrossDoc}}} as showed on the previous example. 
+To ensure that everything will run fine, you must obey the following rules:
+  # Both controller class and CrossDocument interface must be coded on the same package;
+  # The name of the CrossDocument interface must have the form: {{{"<Controller Name>CrossDoc"}}}.
+
+See the previous code for an example. 
 
 Now we can show how to make the call from a second controller.
 
 {{{
 @Controller("mySecondController")
 public class MySecondController {
-	@Create
-	protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
+    @Create
+    protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
 
     @Expose
-    public void myMethod(ClickEvent event){
+    public void onClick(ClickEvent event){
        
-       crossDoc.myMethod("thiago", true, new MySerializableDTO());
+       crossDoc.myMethod("test", true, new MySerializableDTO());
        
        try{
        	  List<String> result = crossDoc.myOtherMethod();
@@ -856,13 +859,13 @@ If you want to inform a new target for the call, you must cast the crossDoc obje
 {{{
 @Controller("mySecondController")
 public class MySecondController {
-	@Create
-	protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
+    @Create
+    protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
 
     @Expose
-    public void myMethod(ClickEvent event){
-       ((TargetDocument)).setTarget(Target.TOP);       
-       crossDoc.myMethod("thiago", true, new MySerializableDTO());
+    public void onClick(ClickEvent event){
+       ((TargetDocument)crossDoc).setTarget(Target.TOP);       
+       crossDoc.myMethod("test", true, new MySerializableDTO());
     }
 }
 }}}
@@ -889,11 +892,11 @@ ABSOLUTE_TOP refers to the top window of the first opener window.
 Here are some examples:
 
 {{{
-  ((TargetDocument)).setTargetWindow(Popup.getOpener());       
-  ((TargetDocument)).setTargetWindow(DynaTabs.getTabWindow("secondTab"));
-  ((TargetDocument)).setTargetWindow(DynaTabs.getSiblingTabWindow("secondTab"));
-  ((TargetDocument)).setTargetFrame("myInternalNamedFrame");
-  ((TargetDocument)).setTarget(Target.OPENER);          
+  ((TargetDocument)crossDoc).setTargetWindow(Popup.getOpener());       
+  ((TargetDocument)crossDoc).setTargetWindow(DynaTabs.getTabWindow("secondTab"));
+  ((TargetDocument)crossDoc).setTargetWindow(DynaTabs.getSiblingTabWindow("secondTab"));
+  ((TargetDocument)crossDoc).setTargetFrame("myInternalNamedFrame");
+  ((TargetDocument)crossDoc).setTarget(Target.OPENER);          
 }}}
 
 
@@ -1932,70 +1935,11 @@ public interface ScreenResourceResolver
 
 ==== 4.3.2.4 classPathResolver ====
 
-_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The problem is that if we are running under some application servers - let's say directly: weblogic :) - the strategy to retrieve the web root, the WEB-INF/classes and WEB-INF/lib paths changes completely.
+_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The interface
+{{{ClassPathResolver}}} is used for this purpose. 
 
-Because of this, we created the {{{classPathResolver}}} configuration parameter. You can use it to change the resolver to make your application work in any weblogic. 
-
-Your class just need to implement the following interface:
-
-{{{
-public interface ClassPathResolver
-{
-	URL findWebInfClassesPath();
-	URL findWebInfLibPath();
-	URL[] findWebInfLibJars();
-	URL findWebBaseDir();
-}
-}}}
-
-The following example shows how you could build a ClasspathResolver to work in weblogic (tested with weblogic 10.0):
-
-{{{
-public class WebLogicClassPathResolver extends ClassPathResolverImpl
-{
-	private static final String A_RESOUCE_FROM_CLASSPATH_ROOT = "/"+WebLogicClassPathResolver.class.getName().replaceAll("\\.", "/")+".class";
-	
-	@Override
-	public URL findWebBaseDir()
-	{
-		try
-		{
-			URL url = findWebInfClassesPath();
-			File webInfClassesFile = new File(url.toURI());
-			File webRoot = webInfClassesFile.getParentFile().getParentFile();
-			return webRoot.toURI().toURL();
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public URL findWebInfClassesPath()
-	{
-		try
-		{
-			URL url = getClass().getResource(A_RESOUCE_FROM_CLASSPATH_ROOT);
-			String path = StringUtils.removeEnd(url.toString(), A_RESOUCE_FROM_CLASSPATH_ROOT);
-			
-			if(path.toUpperCase().startsWith("ZIP:"))
-			{
-				int firstSlash = path.indexOf("/");
-				path = path.substring(firstSlash + 1);
-				path = StringUtils.removeEnd(path, "!");
-				path = "file:///" + path;
-			}
-			
-			return new URL(path + "/");
-		}
-		catch (MalformedURLException e)
-		{
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
-}
-}}}
+When the module layout for projects is used, you must change classPathResolver property to use ModuleClassPathResolver. This class 
+can find all resources even if they are packaged on different jar files.  
 
 ==== 4.3.2.5 serviceFactory ====
 
@@ -2003,7 +1947,7 @@ The section [UserManual#4.1_Writing_Server_Services Writing Server Services] sho
 
 However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springsource.org spring], [http://code.google.com/p/google-guice/ guice] or to make your service classes EJBs.
 
-Using the property {{{serviceFactory}}} you can specify your own class, that just needs to implement the following interface:
+Using the property {{{serviceFactory}}} you can specify your own factory class, that just needs to implement the following interface:
 
 {{{
 public interface ServiceFactory 
