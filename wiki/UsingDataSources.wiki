@@ -23,8 +23,8 @@ The following example shows a grid widget associated with a dataSource:
 The DataSource class:
 {{{
 @DataSource("simpleGridDataSource")
-@DataSourceRecordIdentifier("name")
-public static class SimpleGridDataSource extends LocalPagedDataSource<Contact> {
+@DataSourceBinding(identifier="name")
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
    @Create
    protected SimpleGridServiceAsync service;
 
@@ -48,13 +48,15 @@ There are a lot of DataSource interfaces, provided by _*Crux*_, to support extra
 [http://crux-framework.googlecode.com/svn/wiki/images/dataSources.gif]
 
 || *Interface* || *Description* ||
-|| DataSource || The basic interface for any DataSource. Contains the basic methods to navigating through records, sorting and editing data.|| 
+|| DataSource || The basic interface for any DataSource. Contains the basic methods to navigating through records and sorting data.|| 
 || LocalDataSource || Local DataSources loads the data in just one step and keeps it in a local buffer. Contains the method {{{load()}}}|| 
 || PagedDataSource || A DataSource that can divide data in blocks called _pages_. Contains the method {{{fetch(int start, int end)}}},<br>which is called by the associated widget when it needs the information contained in a page.|| 
 || RemoteDataSource || Remote DataSources are also paged. This interface supports the cases when the data resides on the server and must be fetched on demand. <br>When a page is needed, the DataSource requests it to server. It also keeps a buffer of the <br>already loaded pages. || 
 || MeasurableDataSource || A DataSource that can be measured. In other words, when the number of records of the DataSource can be determined.<br> It contains the method {{{getRecordCount()}}} || 
 || MeasurableRemoteDataSource || A Measurable and Remote Datasource. Contains the methods {{{load}}} and {{{setLoadData}}},<br> used to load DataSource configuration, that includes the size of the DataSource||
 || StreamingDataSource || A DataSource that retrieves its data from a stream. The size of this stream is unknow.<br> Streaming DataSources are also paged, but is not possible to know the number of pages before request the last one. <br> All the pages must be requested in order.|| 
+|| EditableDataSource || DataSources that allow records selection or edition. It contains methods to retrieve the modified records|| 
+|| BindableDataSource || The data inside a DataSource can be structured as an array of records or as an array of Objects. <br> BindableDataSources allow you to use an arbitrary Value Object to store the information.||
  
  <br>
 ==2.1 DataSource Abstract classes ==
@@ -80,15 +82,27 @@ The complete list of basic abstract DataSources classes provided by _*Crux*_:
 || *Class* || *Implemented DataSource Interfaces* ||
 || LocaScrollableDataSource || LocalDataSource ||
 || LocaPagedDataSource || LocalDataSource, PagedDataSource ||
+|| LocalEditableScrollableDataSource || LocalDataSource, EditableDataSource ||
+|| LocalEditablePagedDataSource || LocalDataSource, EditableDataSource, PagedDataSource ||
+|| LocalBindableScrollableDataSource{{{<T>}}} || LocalDataSource, BindableDataSource{{{<T>}}} ||
+|| LocalBindablePagedDataSource{{{<T>}}} || LocalDataSource, PagedDataSource, BindableDataSource{{{<T>}}} ||
+|| LocalBindableEditableScrollableDataSource{{{<T>}}} || LocalDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
+|| LocalBindableEditablePagedDataSource{{{<T>}}} || LocalDataSource, EditableDataSource, PagedDataSource, BindableDataSource{{{<T>}}} ||
 || RemotePagedDataSource || MeasurableRemoteDataSource ||
 || RemoteStreamingDataSource || StreamingDataSource ||
+|| RemoteEditablePagedDataSource || MeasurableRemoteDataSource, EditableDataSource ||
+|| RemoteEditableStreamingDataSource || StreamingDataSource, EditableDataSource,  ||
+|| RemoteBindablePagedDataSource{{{<T>}}} || MeasurableRemoteDataSource, BindableDataSource{{{<T>}}} ||
+|| RemoteBindableStreamingDataSource{{{<T>}}} || StreamingDataSource, BindableDataSource{{{<T>}}} ||
+|| RemoteBindableEditablePagedDataSource{{{<T>}}} || MeasurableRemoteDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
+|| RemoteBindableEditableStreamingDataSource{{{<T>}}} || StreamingDataSource, EditableDataSource, BindableDataSource{{{<T>}}} ||
 
 See the following examples:
 
 {{{
 @DataSource("contactDataSource")
-@DataSourceRecordIdentifier("name")
-public static class RemoteDS extends RemotePagedDataSource<Contact> {
+@DataSourceBinding(identifier="name")
+public static class RemoteDS extends RemoteBindableEditablePagedDataSource<Contact> {
 
    @Create
    protected SimpleGridServiceAsync service;
@@ -107,8 +121,8 @@ public static class RemoteDS extends RemotePagedDataSource<Contact> {
 
 {{{
 @DataSource("contactDataSource")
-@DataSourceRecordIdentifier("name")
-public static class RemoteDS extends RemoteStreamingDataSource<Contact> {
+@DataSourceBinding(identifier="name")
+public static class RemoteDS extends RemoteBindableEditableStreamingDataSource<Contact> {
 
    @Create
    protected SimpleGridServiceAsync service;
@@ -125,14 +139,48 @@ public static class RemoteDS extends RemoteStreamingDataSource<Contact> {
 
 =3 DataSources Structure=
 
-When you define a DataSource, you inform a class. _*Crux*_ will define columns following the names of the fields of the informed class. The type of each column will be the same type of the respective field. See the following example: 
+It is possible to inform to _*Crux*_ the structure of a DataSource in two different ways:
+  # Using the annotation {{{@DataSourceColumns}}}
+  # Implementing the interface {{{BindableDataSource<T>}}}, where T is some class that will contains the data of a row in DataSource.
 
 Every row on a DataSource class must define one identifier field. It is needed to identify a row even if all the set of data were reordered.
-The annotation {{{@DataSourceRecordIdentifier}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
 
+See the examples in next two sections.
+
+== 3.1 Defining Columns ==
+
+You can define the DataSource structure informing directly all columns that compose the DataSource, as you can see in the following example:
+{{{
+@DataSource("simpleDataSource")
+@DataSourceColumns(identifier="name", columns={
+   @DataSourceColumn("address"),
+   @DataSourceColumn(value="dateOfBirth", type=Date.class)
+})
+public static class SimpleDataSource extends LocalEditablePagedDataSource {
+		
+   @Create
+   protected SimpleGridServiceAsync service;
+		
+   public void load()
+   {
+      EditableDataSourceRecord[] data = getData();
+      updateData(data);
+   }		
+}
+}}}
+
+The annotation {{{@DataSourceColumns}}} contains the fields:
+  * identifier - Tell _*Crux*_ which field is the row identifier.
+  * columns - An array of {{{@DataSourceColumn}}}. Each of them defines a column on the DataSource.
+  
+The class {{{DataSourceRecord}}} is used to represent a record in the DataSource. This class defines a field {{{identifier}}} and a list of objects that contain the values of the columns (following the order in which the columns were declared). {{{EditableDataSourceRecord}}} is used when the DataSource supports editing.
+
+== 3.2 Using a Class ==
+
+You can define the DataSource structure informing a class. _*Crux*_ will define columns following the names of the fields of the informed class. The type of each column will be the same type of the respective field. See the following example: 
 {{{
 @DataSource("simpleGridDataSource")
-@DataSourceRecordIdentifier("name")
+@DataSourceBinding(identifier="name")
 public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
 		
    @Create
@@ -152,42 +200,32 @@ public class Contact implements Serializable {
 	private String name;
 	private String phone;
 	private Date birthday;
-	private Address address;
     
     // Getter and Setters ....	
 }
 }}}
+The annotation {{{@DataSourceBinding}}} must be used to inform which field in the Value Object will be used as row identifier ("name" in the above example).
 
+That annotation can also be used to restrict which fields will be used to store column values inside the DataSource. It has two fields with this purpose:
+  # includeFields - an array that inform the names of the fields of the binding class that will be used by the DataSource.
+  # excludeFields - an array that inform the names of the fields of the binding class that will not be used by the DataSource. 
+
+Example:
 {{{
-public class Address implements Serializable {
-	
-	private String street;
-    
-    // Getter and Setters ....	
+@DataSource("simpleGridDataSource")
+@DataSourceBinding(identifier="name", excludeFields={"birthday"})
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
+		
+   @Create
+   protected SimpleGridServiceAsync service;
+
+   public void load()
+   {
+      Contact[] data = getData();
+      updateData(data);
+   }		
 }
 }}}
-
-Note that the Contact class has a property of type Address. A widget can refer to a inner property using "dots", like {{{"address.street"}}} when reading from a DataSource.
-
-The dataSource declared above could be used on a widget like:
-
-{{{
-<html 
-   xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:c="http://www.sysmap.com.br/crux" 
-   xmlns:a="http://www.sysmap.com.br/crux/widgets">
-      
-      <c:screen useDataSource="simpleGridDataSource" useFormatter="birthday"/>
-      
-      <a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" pageSize="7">
-         <a:dataColumn key="name" label="Name"/>
-         <a:dataColumn key="phone" label="Phone"/>
-         <a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
-         <a:dataColumn key="address.street" label="Street" />
-      </a:grid>
-</html>
-}}}
-
 
 =4 Handling Service Responses=
 
@@ -198,9 +236,29 @@ To turn easier the task of load data inside the DataSource, _*Crux*_ provides a 
 See the following examples:
 
 {{{
+@DataSource("simpleDataSource")
+@DataSourceColumns(identifier="name", columns={
+   @DataSourceColumn("address"),
+   @DataSourceColumn(value="dateOfBirth", type=Date.class)
+})
+public static class SimpleDataSource extends LocalEditablePagedDataSource {
+		
+   @Create
+   protected SimpleGridServiceAsync service;
+		
+   public void load()
+   {
+      service.getContactList(new DataSourceAsyncCallbackAdapter<EditableDataSourceRecord>(this));
+   }		
+}
+}}}
+
+and 
+
+{{{
 @DataSource("simpleGridDataSource")
-@DataSourceRecordIdentifier("name")
-public static class SimpleGridDataSource extends LocalPagedDataSource<Contact> {
+@DataSourceBinding(identifier="name")
+public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
 		
    @Create
    protected SimpleGridServiceAsync service;
@@ -216,8 +274,8 @@ Another {{{AsyncCallback}}} implementation is provided to do the same job to the
 
 {{{
 @DataSource("contactDataSource")
-@DataSourceRecordIdentifier("name")
-public static class RemoteDS extends RemotePagedDataSource<Contact> {
+@DataSourceBinding(identifier="name")
+public static class RemoteDS extends RemoteBindableEditablePagedDataSource<Contact> {
 
    @Create
    protected SimpleGridServiceAsync service;
