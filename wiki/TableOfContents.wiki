@@ -122,6 +122,12 @@
 </tr>
 <tr>
 <td>*[FAQ FAQ]*</td>
+</tr>
+<tr>
+<td>*[Previous Releases Documentation]*</td>
+</tr>
+<tr>
+<td>....*2.2.1* [http://crux-framework.googlecode.com/svn/wiki/older/crux-wiki-2x.zip 2.2.1]</td>
 </tr>  
 </table>  
   
