@@ -54,7 +54,7 @@ Here we will explore the application generated in the previous section, explaini
 
   * The  {{{war}}} folder is the root context of your application and contains: 
     * a WEB-INF folder, compliant with JEE specifications, where you will find:
-      * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
+      * the {{{web.xml}}} file (more details at [/tags/crux-2.x/UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
       * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details at section [UserManual#4.3_Setup Setup]);
       * a {{{classes}}} folder, which is the output for java compilation;
       * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
