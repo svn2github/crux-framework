@@ -4,8 +4,6 @@ _*Crux*_ distribution includes a set of jar files:
   # crux-core.jar - The core of _*Crux*_ framework.
   # crux-compiler.jar - The _*Crux*_ compiler tool and some ant tasks to call the compiler.
   # crux-gwt-widgets.jar - A set of factories to integrate all GWT widgets with _*Crux*_.
-  # crux-html-tags.jar - A legacy file to keep compatibility with _*Crux*_ 2.1.0 version.
-  # crux-html-tags-compile-task.jar - A legacy file to keep compatibility with _*Crux*_ 2.1.0 version.
   # crux-modules.jar - A _*Crux*_ extension to support the module layout for projects.
   # cruxModulesAdmin.module.jar - A _*Crux*_ module that provides administration functions on applications modules.
   # crux-module-compiler.jar - A _*Crux*_ compiler extension to support projects with module layout.
