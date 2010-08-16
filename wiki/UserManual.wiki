@@ -1625,7 +1625,7 @@ Note that this parameter just need to be inserted when runnig the server with de
 
 == 4.1 Writing Server Services ==
 
-As wed said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
+As we said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
 
 At server side, the main difference for GWT is that your service implementation class does not need to extend {{{RemoteServiceServlet}}}. It 
 just needs to implement the service interface.
@@ -1644,7 +1644,7 @@ public class GreetingServiceImpl implements GreetingService{
 }
 }}}
 
-To find out which implementation will be used for a given service interface, _*Crux*_ will search (using javassist) for classes that implements that interface and use the first one found.
+To find out which implementation will be used for a given service interface, _*Crux*_ will search for classes that implements that interface and use the first one found.
 
 This behavior  can be changed, as showed in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
 
@@ -1707,23 +1707,23 @@ However, if you plan to access i18n messages in classes called by a filter (that
 
 == 4.3 Setup ==
 
-To use _*Crux*_ in your application, first of all you will need following files:
+To use _*Crux*_ in your application, you will need the following files:
 
   * In production time, inside the {{{WEB-INF/lib}}} folder:
     * commons-logging.jar
     * crux-core.jar
     * gwt-servlet.jar
+    * crux-scannotation.jar
+    * javassist.jar
   * In development time:
    	* addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
       * crux-widgets.jar
       * crux-gwt-widgets.jar
-      * crux-scannotation.jar
-      * javassist.jar
       * saxon9.jar
       * saxon9-dom.jar
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
       * crux-compiler.jar
-      * gwt-dev.jar (platform dependent)
+      * gwt-dev.jar 
       * gwt-ll.dll (platform dependent)
       * gwt-module.dtd
       * gwt-user.jar
@@ -1747,7 +1747,7 @@ To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communicati
 	</servlet-mapping>
 }}}
 
-There are some other configurations you will need to do to run your application in [FAQ#_Crux_Design development environment]: 
+There are some other configurations you will need to do to run your application in development environment: 
 
 {{{
 	<filter>
