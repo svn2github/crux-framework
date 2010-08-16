@@ -198,29 +198,9 @@ To turn easier the task of load data inside the DataSource, _*Crux*_ provides a 
 See the following examples:
 
 {{{
-@DataSource("simpleDataSource")
-@DataSourceColumns(identifier="name", columns={
-   @DataSourceColumn("address"),
-   @DataSourceColumn(value="dateOfBirth", type=Date.class)
-})
-public static class SimpleDataSource extends LocalEditablePagedDataSource {
-		
-   @Create
-   protected SimpleGridServiceAsync service;
-		
-   public void load()
-   {
-      service.getContactList(new DataSourceAsyncCallbackAdapter<EditableDataSourceRecord>(this));
-   }		
-}
-}}}
-
-and 
-
-{{{
 @DataSource("simpleGridDataSource")
-@DataSourceBinding(identifier="name")
-public static class SimpleGridDataSource extends LocalBindableEditablePagedDataSource<Contact> {
+@DataSourceRecordIdentifier("name")
+public static class SimpleGridDataSource extends LocalPagedDataSource<Contact> {
 		
    @Create
    protected SimpleGridServiceAsync service;
@@ -236,8 +216,8 @@ Another {{{AsyncCallback}}} implementation is provided to do the same job to the
 
 {{{
 @DataSource("contactDataSource")
-@DataSourceBinding(identifier="name")
-public static class RemoteDS extends RemoteBindableEditablePagedDataSource<Contact> {
+@DataSourceRecordIdentifier("name")
+public static class RemoteDS extends RemotePagedDataSource<Contact> {
 
    @Create
    protected SimpleGridServiceAsync service;
