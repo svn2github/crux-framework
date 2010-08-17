@@ -1,4 +1,6 @@
 #labels Featured,Phase-Implementation
+= Crux 3.0.0 =
+
 = 1 Introduction =
 
 _*Crux*_ applications are basically GWT applications. It means you must attempt to all GWT restrictions in terms of source code limitations and project structure directives.
@@ -2028,6 +2030,4 @@ You can invoke CruxCompiler in two different ways:
 = 6 Crux Modules =
 
 GWT supports modularization, allowing you to divide applications and package its parts separately. _*Crux*_ extends the GWT concept of module, adding support to management tasks.  
-
-
 
