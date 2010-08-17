@@ -73,7 +73,7 @@ Here we will explore the application generated in the previous section, explaini
     * {{{<the same module package>.client.remote.GreetingService.java}}} -  a client-side business interface;
     * {{{<the same module package>.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
     * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
-  for more about last three items, see the [UserManual#4.1_Writing_Server_Services 4.1 Writing Server-Side Code] section.     
+  for more about last three items, see the [UserManual#4.1_Writing_Server-Side_Code 4.1 Writing Server-Side Code] section.     
       
 = 3 Coding Client Side =
 
@@ -1946,7 +1946,7 @@ can find all resources even if they are packaged on different jar files.
 
 ==== 4.3.2.5 serviceFactory ====
 
-The section [UserManual#4.1_Writing_Server_Services Writing Server Services] shows the default mechanism used to discovery your service implementation classes.
+The section [UserManual#4.1_Writing_Server-Side_Code Writing Server-Side Code] shows the default mechanism used to discovery your service implementation classes.
 
 However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springsource.org spring], [http://code.google.com/p/google-guice/ guice] or to make your service classes EJBs.
 
