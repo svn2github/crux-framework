@@ -229,9 +229,11 @@ _*Crux*_ Screen support the following events:
 
 === 3.2.3 Shared Context===
 
-It is possible to share information between _*Crux*_ screens. You can use a common context to read and write variables.
+The _*Crux*_ Context is a common area where you can put and read values associating them with a key (like a {{{Map}}} structure). You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
 
-The _*Crux*_ Context is a common area where you can put and read values associating them with a key.
+Behind the scenes, Crux contexts are nothing but cookies. It means you should not trust in it's contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
+
+=== 3.2.3.1 Using Contexts===
 
 To turn easier the access to context information, you can define an interface that extends the interface {{{Context}}}. Its methods must follow the pattern: {{{<valueType> get<valueKey>()}}} or {{{void set<valueKey>(valueType)}}}. See the example:
 
