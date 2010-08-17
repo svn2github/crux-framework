@@ -227,6 +227,7 @@ _*Crux*_ Screen support the following events:
 ||Resize||Called on page resize||
 ||HistoryChanged||Called when back button is pressed||
 
+
 === 3.2.3 Shared Context===
 
 The _*Crux*_ Context is a common area where you can put and read values associating them with a key (like a {{{Map}}} structure). You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
