@@ -1629,7 +1629,7 @@ Note that this parameter just need to be inserted when runnig the server with de
 
 = 4 Coding Server Side =
 
-== 4.1 Writing Server Services ==
+== 4.1 Writing Server-Side Code ==
 
 As we said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
 
