@@ -65,6 +65,7 @@ Here we will explore the application generated in the previous section, explaini
     * a {{{build.xml}}} ant file, which defines the following tasks:
       * *dist*: generates the war file for deployment;
       * *compile-scripts*: invokes the _*Crux*_ compilation, generating the static files that can be tested in browsers;
+      * *fast-compile-scripts*: almost equals to the previous, but faster, because generates non-optimal compiled files, by calling GWT compiler with the {{{-draftCompile}}} parameter;
       * *generate-schemas*: generates all XSD files you need to auto-complete your XML pages code.
   * the {{{src}}} folder, containing the source files:
     * {{{<the name you gave the module>.gwt.xml}}} - a GWT module which extends _*Crux*_ modules (like shown at [UserManual#3_Coding_Client_Side Coding Client Side]);
