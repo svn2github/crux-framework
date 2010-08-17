@@ -73,7 +73,7 @@ Here we will explore the application generated in the previous section, explaini
     * {{{<the same module package>.client.remote.GreetingService.java}}} -  a client-side business interface;
     * {{{<the same module package>.client.remote.GreetingServiceAsync.java}}} -  a client-side asynchronous interface for accessing the server;
     * {{{<the same module package>.server.GreetingServiceImpl.java}}} -  the server-side business class;
-  for more about last three items, see [UserManual#4.1_Writing_Server_Services 4.1 Writing Server Services].     
+  for more about last three items, see the [UserManual#4.1_Writing_Server_Services 4.1 Writing Server-Side Code] section.     
       
 = 3 Coding Client Side =
 
