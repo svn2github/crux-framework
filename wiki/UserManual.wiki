@@ -896,18 +896,19 @@ The {{{Target}}} Enum supports the following values:
 ||  PARENT  ||  Points the CrossDocument object to the [http://www.w3.org/TR/html4/types.html#type-frame-target _parent] window  ||
 ||  SELF  ||  Points the CrossDocument object to the [http://www.w3.org/TR/html4/types.html#type-frame-target _self] (current) window  ||
 ||  OPENER  ||  Points the CrossDocument object to the window.opener (useful when working with window.open mechanism)  ||
-||  ABSOLUTE_TOP  || Points the CrossDocument object to the outermost window of your application, no matter<br/>you are running from inside a frame or a child window (blank, popup, etc) ||
+||  ABSOLUTE_TOP  || Points the CrossDocument object to the outermost window of your application, no matter<br/>if executed from inside a frame or other window (e.g. _blank, popup, etc.) ||
 
-ABSOLUTE_TOP refers to the top window of the first opener window.
+
 
 Here are some examples:
 
 {{{
+  ((TargetDocument)crossDoc).setTarget(Target.OPENER);
+  ((TargetDocument)crossDoc).setTarget(Target.TOP);
+  ((TargetDocument)crossDoc).setTargetFrame("myInternalNamedFrame");
   ((TargetDocument)crossDoc).setTargetWindow(Popup.getOpener());       
   ((TargetDocument)crossDoc).setTargetWindow(DynaTabs.getTabWindow("secondTab"));
   ((TargetDocument)crossDoc).setTargetWindow(DynaTabs.getSiblingTabWindow("secondTab"));
-  ((TargetDocument)crossDoc).setTargetFrame("myInternalNamedFrame");
-  ((TargetDocument)crossDoc).setTarget(Target.OPENER);          
 }}}
 
 
