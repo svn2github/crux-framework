@@ -490,7 +490,7 @@ public class MyClass
     protected TestServiceAsync service;
 
     @Create
-    protected MyControllerInvoker invoker;
+    protected MyControllerCrossDoc crossDoc;
 
     @Expose
     public void myMethod()
@@ -503,7 +503,7 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
-The {{{@Create}}} annotation does more than simply creates an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
+The {{{@Create}}} annotation does more than simply creating an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
 
 You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter methods.
 
