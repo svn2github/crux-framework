@@ -505,21 +505,21 @@ Note that {{{@Create}}} can handle service creation too, despite the fact that t
 
 The {{{@Create}}} annotation does more than simply creating an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
 
-You must note, however, that to a field can be created through {{{@Create}}} annotation, that field must has public or protected visibility or has a public getter and setter methods.
+You must note, however, that to use {{{@Create}}} on a field, that field must have public or protected visibility or have a public getter and setter methods.
 
 ==== 3.3.3.3 The @Expose Annotation====
 
 The Expose annotation has the following properties:
 
 || *Property* || *Required* || *Default Value* || *Description* ||
-||allowMultipleCalls||no|| false ||If true, allow user to dispatch more than one event at time.<br/> If false, when an event handler is called, the screen is blocked <br/>until the method finish.||
+||allowMultipleCalls||no|| false ||If true, allow user to dispatch more than one event at time.<br/> If false, when an event handler is called, the screen is blocked <br/>until the method finishes.||
 
 
 ==== 3.3.3.4 Value Binding====
 
 _*Crux*_ provides a mechanism to help you to automatically bind values between screen widgets and data objects.
 
-You can create a value object and annotate it with {{{@ValueObject}}} annotation. Doing it, you allows _*Crux*_ to populate an object of this type with values present on screen widgets before run the event handler methods. After method execution, the screen is also updated with any change in these objects.
+You can create a value object and annotate it with {{{@ValueObject}}} annotation. Doing it, you allow _*Crux*_ to populate an object of this type with values present on screen widgets before running the event handler methods. After method execution, the screen is also updated with any change in these objects.
 
 See the following example:
 
@@ -783,7 +783,7 @@ To inform that a controller will be used on a screen, you must explicitly "impor
 
 It is necessary for performance reasons.
 
-However, if you want that a controller be imported in every screen you have, you can put an annotation {{{@Global}}} in the Controller class.
+However, if you want that a controller be imported in every screen in your application, you can put an annotation {{{@Global}}} in the Controller class.
 
 {{{
 @Global
@@ -793,7 +793,7 @@ public class MyClass {
 }
 }}}
 
-That will allow these controller methods to be called even if no {{{useController}}} declaration is present on your screen.
+That will make those controllers be available even if no {{{useController}}} declaration is present on your screen.
 
 ==== 3.3.3.6 Communication Between Controllers====
 
