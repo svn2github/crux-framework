@@ -958,22 +958,22 @@ public class MyController
 }
 }}}
 
-Note that the validate method can receive a parameter of the same type as the main method parameter type (as in the first example) or no parameter (as in the second example).
+Note that the validate method can receive a parameter of the same type of the main method parameter type (as in the first example) or no parameter (as in the second example).
 
 
 ==== 3.3.3.8 Parameters Binding====
 
-_*Crux*_ provides a mechanism to help you to automatically bind values between window parameters and data objects. This can be done using the annotations {{{@Parameter}}} and {{{@ParameterObject}}} on controller fields and DTO classes.
+_*Crux*_ provides you a mechanism to automatically bind values received from the window's URL into data objects. This can be done using the annotations {{{@Parameter}}} and {{{@ParameterObject}}} on controller fields and DTO classes.
 
 You can annotate a controller field with the annotation {{{@Parameter}}} as in the following example:
 
-For the following URL
+For the following URL...
 
 {{{
 	http://myhost.com/myapp/mymodule/mypage.html?person=Thiago&parameterName=123
 }}}
 
-And Controller
+...you may have a Controller like this:
 
 {{{
 @Controller("myController")
@@ -1001,9 +1001,9 @@ The {{{@Parameter}}} annotation has two fields:
 ||value|| {{{empty}}} ||defines the name of the parameter. If not present, the field name is used||
 ||required|| false ||If true, a validation is done to ensure that the parameter is present in the URL.||
 
-If a validation error occur while binding the parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur caused by a type conversion error or by a missing required parameter.
+If a validation error occurs while binding a parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur due to type conversion error or by the lack of a required parameter.
 
-Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.4_Value_Binding Value Objects]. Doing it, you allows _*Crux*_ to populate an object of this type with values present on window url parameters. 
+Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.4_Value_Binding Value Objects]. Doing it, you allow _*Crux*_ to populate an object of this type with values present on window url parameters. 
 
 See the following example:
 
@@ -1073,7 +1073,7 @@ public class Parameters
 }
 }}}
 
-You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to true). Setting this value to false make _*Crux*_ to does not bind all parameter object fields to window parameter automatically. If you set this, you must specify for each field, the name of the parameter that it will be bound (through {{{@Parameter}}} annotation).
+You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to true). Setting this value to false makes _*Crux*_ do not bind all parameters automatically. If you set this, you must specify, for each field, the name of the parameter that will be bound to it (through {{{@Parameter}}} annotation).
 
 See the following example:
 {{{
@@ -1151,7 +1151,7 @@ And the crux page that uses it:
 </html>
 }}}
 
-In the above example, the message resource name is derived from interface name. If you want to change this value, you can use the annotation {{{@Name}}} in your messages interface.
+In the above example, the message resource name is derived from interface name. If you want to change this value, you can use the annotation {{{@MessageName}}} in your messages interface.
 
 See the example:
 
@@ -1305,7 +1305,7 @@ _*Crux*_ provides two basic interfaces for client errors reporting.
   * {{{ValidationErrorHandler}}}
 
 Those interfaces are used always occurs an error that needs to be reported to user (or to developer). 
-The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by client miss using the application (validations on the screen before perform an action).
+The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by a bad use of the application (typically validations over the screen state, based in business rules, before performing an action).
 
 _*Crux*_ provides a default {{{Errorhandler}}}  that implements both interfaces and, for the both types of errors:
   * Logs in GWT console all exceptions received.
