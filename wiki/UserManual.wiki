@@ -184,7 +184,7 @@ Through Screen, you can:
   # Access some other information, like the user's locale.
 
 
-=== 3.2.1 Access Screen Widgets ===
+=== 3.2.1 Accessing Screen Widgets ===
 
 To access screen widgets, you can use the static method {{{Screen.get(screenId)}}}.
 
@@ -230,9 +230,11 @@ _*Crux*_ Screen support the following events:
 
 === 3.2.3 Shared Context===
 
-The _*Crux*_ Context is a common area where you can put and read values associating them with a key (like a {{{Map}}} structure). You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
+The _*Crux*_ Context is a common area where you can store and retrieve data. Each data entry is associated with a key. You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
 
 Behind the scenes, Crux contexts are nothing but cookies. It means you should not trust in it's contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
+
+The data you store in a Context are visible to any Window on your application, no matter if it is a Popup, a Tab Page, or an IFrame. So, it is a very useful mechanism to share data between different HTML documents.
 
 === 3.2.3.1 Using Contexts===
 
@@ -276,7 +278,7 @@ It's important to advice that you must initialize the context before using it. T
 Screen.createContext();
 }}}
 
-If you call {{{Screen.createContext()}}} more than once, you will erase the context and create a new one.
+If you call {{{Screen.createContext()}}} more than once, you will erase the context and create a new one. When we talk about calling it only once, we mean once per user session. For example, you may call it only the user logs in your application successfully.
 
 Screen class has the following static methods to support Context management:
 
