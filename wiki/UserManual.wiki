@@ -890,11 +890,13 @@ The following table shows all methods present on {{{TargetDocument}}} interface,
 ||void setTargetWindow(JSWindow jsWindow);||Sets the target window for the cross document call.<br/>{{{JSWindow}}} is just a {{{JavaScriptObject}}} to wrap the native window object||
 
 The {{{Target}}} Enum supports the following values:
-  # TOP
-  # PARENT
-  # ABSOLUTE_TOP
-  # SELF
-  # OPENER
+
+|| *Method* || *Description* ||
+||  TOP  ||  Points the CrossDocument object to the [http://www.w3.org/TR/html4/types.html#type-frame-target _top] window  ||
+||  PARENT  ||  Points the CrossDocument object to the [http://www.w3.org/TR/html4/types.html#type-frame-target _parent] window  ||
+||  SELF  ||  [http://www.w3.org/TR/html4/types.html#type-frame-target SELF] Points the CrossDocument object to the current window  ||
+||  OPENER  ||  Points the CrossDocument object to the window.opener (useful when working with window.open mechanism  ||
+||  ABSOLUTE_TOP  || Points the CrossDocument object to the outermost window of your application, no matter you are running from inside a frame or a child window (blank, popup, etc) ||
 
 ABSOLUTE_TOP refers to the top window of the first opener window.
 
