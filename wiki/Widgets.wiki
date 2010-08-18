@@ -44,12 +44,15 @@ This is the list of widgets included into this library:
 ||maskedTextBox||br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedTextBox||A text box capable of validating and masking user input||
 ||maskedLabel||br.com.sysmap.crux.widgets.client.maskedlabel.MaskedLabel||A label capable of formatting user data||
 ||randomPager||br.com.sysmap.crux.widgets.client.paging.RandomPager||A pager that support direct access to any pageable widget page.||
+||rollingPanel||br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel||A panel that supports a scroll area with custom scroll buttons and no scroll bars.||
+||rollingTabPanel||br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabPanel||A Tab Panel that supports rolling tabs, if its width is not enough to display<br/> all open tabs||
 ||scrollBanner||br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner||A panel which displays sequential text messages, switching between them periodically||
 ||sequentialPager||br.com.sysmap.crux.widgets.client.paging.SequentialPager||A pager that support paging on any pageable widget in a sequential order.||
 ||stackMenu||br.com.sysmap.crux.widgets.client.stackmenu.StackMenu||A vertical accordion menu||
 ||timer||br.com.sysmap.crux.widgets.client.timer.Timer||A label that shows the elapsed time and fires scheduled events||
 ||titlePanel||br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel||A DecoratedPanel which has a title label|| 
 ||transferList||br.com.sysmap.crux.widgets.client.transferlist.TransferList||Two side-by-side list boxes which can exchange their items||
+||wizard||br.com.sysmap.crux.widgets.client.wizard.Wizard||A wizard that allow pages as inner widgets or separeted pages||
 
 
 You can see all _*Crux*_ Widgets working on [http://crux-showcase.appspot.com/ Crux Showcase].
