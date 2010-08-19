@@ -2034,9 +2034,9 @@ GWT supports modularization, allowing you to divide your application and package
 For this reason, _*Crux*_ projects can come in three diferent flavors:
 
 || *Application Layout* || *Overview* ||
-|| Standalone Application || This is the simplest of project layout, ideal for small projects, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not hard to administer.  ||
-|| Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
-|| Application With Modules || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
+|| Standalone Application || This is the simplest layout of project, ideal for small applications, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not so hard to administer.  ||
+|| Module Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to be reused between multiple functionalities. ||
+|| Application With Modules || This layout is the one intented do be used to build a fragment, reusable or not, of a large application.<br>A project with this layout can be coded, tested, versioned and even delivered totally separated of the rest of the application.<br>This can provide a drastic improvement in the development speed, in the cost of maintenance and, we hope, in the quality of the final product. ||
 
 
   
