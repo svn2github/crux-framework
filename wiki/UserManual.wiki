@@ -1661,10 +1661,10 @@ To find out which implementation will be used for a given service interface, _*C
 
 This behavior  can be changed, as showed in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
 
-If your service class needs to access the HttpRequest, HttpResponse or HttpSession objects, it can implement one or more of the following interfaces:
-  * {{{RequestAware}}}: makes your Service able to access the HttpRequest object;
-  * {{{ResponseAware}}}: makes your Service able to access the HttpResponse object;
-  * {{{SessionAware}}}: makes your Service able to access the HttpSession object.
+If your service class needs to access the HttpServletRequest, HttpServletResponse or HttpSession objects, it can implement one or more of the following interfaces:
+  * {{{RequestAware}}}  - makes your Service able to access the [http://download.oracle.com/javaee/5/api/javax/servlet/http/HttpServletRequest.html HttpServletRequest] object;
+  * {{{ResponseAware}}} - makes your Service able to access the [http://download.oracle.com/javaee/5/api/javax/servlet/http/HttpServletResponse.html HttpServletResponse] object;
+  * {{{SessionAware}}}  - makes your Service able to access the [http://download.oracle.com/javaee/5/api/javax/servlet/http/HttpSession.html HttpSession] object.
 
 {{{
 public class GreetingServiceImpl implements GreetingService, RequestAware, ResponseAware{
