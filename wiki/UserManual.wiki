@@ -457,9 +457,9 @@ The Controller annotation has the following properties:
 
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
-||statefull||no||true||If true, one controller object is created and the same instance is <br>used to handle all events. If false, a new instance is used for each new event||
-||autoBind||no||true||If true, [UserManual#3.3.3.4_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
-||lazy||no|| true ||If true, the controller object is built only when first called.||
+||statefull||no||{{{true}}}||If {{{true}}}, one controller object is created and the same instance is <br>used to handle all events. If {{{false}}}, a new instance is used for each new event||
+||autoBind||no||{{{true}}}||If {{{true}}}, [UserManual#3.3.3.4_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
+||lazy||no|| {{{true}}} ||If {{{true}}}, the controller object is built only when first called.||
 ||fragment||no|| {{{<empty>}}} ||You can inform a fragment identifier. The compiler will split your code grouping controllers<br> by these identifiers.||
 
 ==== 3.3.3.2 The @Create Annotation====
@@ -512,7 +512,7 @@ You must note, however, that to use {{{@Create}}} on a field, that field must ha
 The Expose annotation has the following properties:
 
 || *Property* || *Required* || *Default Value* || *Description* ||
-||allowMultipleCalls||no|| false ||If true, allow user to dispatch more than one event at time.<br/> If false, when an event handler is called, the screen is blocked <br/>until the method finishes.||
+||allowMultipleCalls||no|| {{{false}}} ||If {{{true}}}, allow user to dispatch more than one event at time.<br/> If {{{false}}}, when an event handler is called, the screen is blocked <br/>until the method finishes.||
 
 
 ==== 3.3.3.4 Value Binding====
@@ -578,7 +578,7 @@ public class MyClass
 </html>
 }}}
 
-In the above example, the value of the "name" textBox on page will be bound to field "name" of the Person object created by controller (the same is true to "phone"). After the handler execution, the changes made in the value object will be reflected on page. 
+In the above example, the value of the "name" textBox on page will be bound to field "name" of the Person object created by controller (the same is {{{true}}} to "phone"). After the handler execution, the changes made in the value object will be reflected on page. 
 
 If want, you can use the {{{@ScreenBind}}} annotation on value object field to inform _*Crux*_ which widget will be bound to this field. The above example can be changed to:
 
@@ -624,7 +624,7 @@ public class Person
 </html>
 }}}
 
-You can also control which fields of a value object must be bound to some widget screen. {{{@ValueObject}}} annotation has a boolean property called {{{bindWidgetByFieldName}}} (default to true). Setting this value to false make _*Crux*_ to does not bind all value object fields to widgets automatically. If you set this, you must specify for each field, the name of the widget that it will be bound (through {{{@ScreenBind}}} annotation).
+You can also control which fields of a value object must be bound to some widget screen. {{{@ValueObject}}} annotation has a boolean property called {{{bindWidgetByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} make _*Crux*_ to does not bind all value object fields to widgets automatically. If you set this, you must specify for each field, the name of the widget that it will be bound (through {{{@ScreenBind}}} annotation).
 
 See the following example:
 {{{
@@ -743,7 +743,7 @@ In the above example, the field {{{phone}}} will not be bound to any widget, onc
 
 The field {{{birth}}} only can be bound to widgets that implements {{{HasValue<Date>}}} (like {{{DateBox}}}) or {{{HasFormatter}}} and is associated with a formatter that returns {{{Date}}} objects. See the [UserManual#3.7_Formatters Formatters] section to more info about formatters).
 
-If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to false. You can, later, control the value object and screen updates through methods {{{Screen.updateScreen(controller)}}} and
+If you want to disable the automatic value binding mechanism to a specific controller, you can set the {{{@Controller}}} property {{{autoBind}}} to {{{false}}}. You can, later, control the value object and screen updates through methods {{{Screen.updateScreen(controller)}}} and
 {{{Screen.updateController(controller)}}}. See the following example:
 
 {{{
@@ -994,12 +994,12 @@ public class MyClass
 }
 }}}
 
-In the above example, the value of the "person" parameter on window URL will be bound to field "person" of the controller (the same is true to "field"). 
+In the above example, the value of the "person" parameter on window URL will be bound to field "person" of the controller (the same is {{{true}}} to "field"). 
 
 The {{{@Parameter}}} annotation has two fields:
 || *Property* || *Default Value* || *Description* ||
 ||value|| {{{empty}}} ||defines the name of the parameter. If not present, the field name is used||
-||required|| false ||If true, a validation is done to ensure that the parameter is present in the URL.||
+||required|| {{{false}}} ||If {{{true}}}, a validation is done to ensure that the parameter is present in the URL.||
 
 If a validation error occurs while binding a parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur due to type conversion error or by the lack of a required parameter.
 
@@ -1073,7 +1073,7 @@ public class Parameters
 }
 }}}
 
-You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to true). Setting this value to false makes _*Crux*_ do not bind all parameters automatically. If you set this, you must specify, for each field, the name of the parameter that will be bound to it (through {{{@Parameter}}} annotation).
+You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} makes _*Crux*_ do not bind all parameters automatically. If you set this, you must specify, for each field, the name of the parameter that will be bound to it (through {{{@Parameter}}} annotation).
 
 See the following example:
 {{{
@@ -1294,8 +1294,8 @@ public interface GreetingService extends RemoteService
 This annotation accepts the following attributes:
 
 || *Attribute* || *Type* || *Default* || *Description* ||  
-||notifyCallsWhenProcessing||boolean||true||If this property is true, when the user tries to send a duplicated request,<br> an informative message is shown. To change the message, use the property {{{methodIsAlreadyBeingProcessed}}}<br> on ClientMessages.properties file.||
-||blocksUserInteraction||boolean||true|| If this property is true, when a request to a sensitive method is fired,<br> the screen became blocked to user, until the method finishes.  ||
+||notifyCallsWhenProcessing||boolean||{{{true}}}||If this property is {{{true}}}, when the user tries to send a duplicated request,<br> an informative message is shown. To change the message, use the property {{{methodIsAlreadyBeingProcessed}}}<br> on ClientMessages.properties file.||
+||blocksUserInteraction||boolean||{{{true}}}|| If this property is {{{true}}}, when a request to a sensitive method is fired,<br> the screen became blocked to user, until the method finishes.  ||
 
 
 == 3.6 Handling Errors==
@@ -1837,16 +1837,16 @@ If you use both ways shown, the command line has precedence.
 The following properties can be set:
 
 || *Property* || *Description* || *Default Value* ||
-||wrapSiblingWidgets||If false, widgets created declaratively under the same parent<br> has no guarantee of order||true||
+||wrapSiblingWidgets||If {{{false}}}, widgets created declaratively under the same parent<br> has no guarantee of order||{{{true}}}||
 ||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
 ||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
 ||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
-||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||true||
-||enableChildrenWindowsDebug||If true, propagates the GWT debug parameters to <br>other windows opened while application runs under the DevMode||true||
-||enableWebRootScannerCache||If true, uses a cache for the resources scanner||true||
-||enableHotDeploymentForWebDirs||If true, _*Crux*_ enables hot deployment for all resources on web dir, including templates||true||
-||enableHotDeploymentForWidgetFactories||If true, *Crux*_ supports hot deployment when new widgets types are used on screens.||true||
+||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||{{{true}}}||
+||enableChildrenWindowsDebug||If {{{true}}}, propagates the GWT debug parameters to <br>other windows opened while application runs under the DevMode||{{{true}}}||
+||enableWebRootScannerCache||If {{{true}}}, uses a cache for the resources scanner||{{{true}}}||
+||enableHotDeploymentForWebDirs||If {{{true}}}, _*Crux*_ enables hot deployment for all resources on web dir, including templates||{{{true}}}||
+||enableHotDeploymentForWidgetFactories||If {{{true}}}, *Crux*_ supports hot deployment when new widgets types are used on screens.||{{{true}}}||
 
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
@@ -1883,7 +1883,7 @@ That will be transformed into the following DOM elements:
    ...
 }}}
 
-If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care about placing each widget inside a panel, or inside its own html tag. Otherwise, _*Crux*_ will not guarantee the order of the sibling widgets.
+If you want, you can disable this mechanism setting this property to {{{false}}}. In such a case, you will need to care about placing each widget inside a panel, or inside its own html tag. Otherwise, _*Crux*_ will not guarantee the order of the sibling widgets.
 
 If this property is disabled, the previous example can result in the following sequence of elements into the DOM:
 {{{
@@ -1980,27 +1980,29 @@ public interface ServiceFactory
 
 ==== 4.3.2.6 allowAutoBindWithNonDeclarativeWidgets====
 
-This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is true. 
+This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is {{{true}}}. 
 
-However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to false, _*Crux*_ can transfer to a generator the responsability to handle the binding code, keeping the final code smaller and simpler.
+However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to {{{false}}}, _*Crux*_ can transfer to a generator the responsability of handling the binding code, keeping the final code smaller and simpler.
 
 ==== 4.3.2.7 enableChildrenWindowsDebug====
 
-GWT 2.0 uses a parameter to inform its browser debug plugin that it must enable the debug. If  enableChildrenWindowsDebug parameter is set to true, _*Crux*_ will propagate the GWT debug parameter to other windows when, for example, a Popup is opened.
+GWT 2.0 uses a parameter on the browser URL to inform the GWT Plugin that it must enable the debugger. If  {{{enableChildrenWindowsDebug}}} parameter is set to {{{true}}}, _*Crux*_ will propagate the GWT debug parameter to other windows, for example, when you invoke {{{Popup.open}}}.
 
 ==== 4.3.2.8 enableWebRootScannerCache====
 
-_*Crux*_ uses a resource scanner to find the application pages, templates and other things. Some _*Crux*_ plugins requires to disable this scanner. 
+_*Crux*_ uses a resource scanner to find the application pages, templates and other things. The process of scanning the entire application is not a fast task. 
+For this reason, _*Crux*_ uses an internal cache to avoid the duplicated processing of some resources, enhancing the performance of the scanner. By the way, 
+if need, you can disable that cache, setting {{{enableWebRootScannerCache}}} to {{{false}}}. 
 
 ==== 4.3.2.9 enableHotDeploymentForWebDirs====
 
-Enabling this options cost a little bit more in performance terms, but can turn easier the developement, once you will not need to restart your server to see changes on templates.
+Enabling this options costs a little bit more in performance terms, but can turn easier the developement, once you will not need to restart your server to see changes on templates.
 
 ==== 4.3.2.10 enableHotDeploymentForWidgetFactories====
 
-_*Crux*_ only register on its client engine the factories that are alrealdy used to parse your page(s). If you set this option to true, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
+_*Crux*_ only register on its client engine the WidgetFactories that are alrealdy used to parse your page(s). If you set this option to {{{true}}}, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
 
-This behavior will be adopted only if you are under development mode (-DCrux.dev=true). During the distribution compilation, you must run in production mode, what will make _*Crux*_ ignore this option and optimize to use only what is referenced on page. 
+This behavior will be adopted only if you are under development mode ({{{-DCrux.dev=true}}}). When you compile your source for distribution (to deploy in production environment), you must run the compiler in production mode (({{{-DCrux.dev=false}}} or absent). This will make _*Crux*_ ignore the {{{enableHotDeploymentForWidgetFactories}}} option and optimize the generated code. 
 
 
 = 5 Crux Tools =
@@ -2032,9 +2034,9 @@ The following table shows all the properties contained on that file:
 || projectName || MyApplication || The name of the project that will be created ||
 || hostedModeStartupURL || index.html || The name of the initial page of your project.<br> The Debug lanch file will point to this and a page <br> with that name willl be created to server as example. ||
 || hostedModeStartupModule || com.mycompany.MyModule || The name of the GWT module created to your application ||
-|| hostedModeVMArgs || -Xss32768k -Xms64M -Xmx256M -DCrux.dev=true || The startup parameters passed to DevMode JVM ||
-|| useCruxModuleExtension || false || If true, creates a project following the _*Crux*_ [UserManual#Modules Module] Layout ||
-|| cruxModuleDescription || My Module Description || The description of your module. Only used if {{{useCruxModuleExtension}}} is true ||
+|| hostedModeVMArgs || {{{-Xss32768k -Xms64M -Xmx256M -DCrux.dev=true}}} || The startup parameters passed to DevMode JVM ||
+|| useCruxModuleExtension || {{{false}}} || If {{{true}}}, creates a project following the _*Crux*_ [UserManual#Modules Module] Layout ||
+|| cruxModuleDescription || My Module Description || The description of your module. Only used if {{{useCruxModuleExtension}}} is {{{true}}} ||
 
 == 5.3 Crux Compiler==
 
