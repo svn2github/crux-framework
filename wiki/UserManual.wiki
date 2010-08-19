@@ -1954,11 +1954,11 @@ public interface ScreenResourceResolver
 _*Crux*_ depends on knowing some paths in your application in order to retrieve the HTML pages, scan for Controllers and other operations. The interface
 {{{ClassPathResolver}}} is used for this purpose. 
 
-There are two default ClassPathResolvers delivered with _*Crux*_. The one you need depends on what [Layouts#?? module layout] your project uses.
-|| *Application Layout* || *ClassPathResolver* || *Why?* ||
-|| [Layouts#?? Stand Alone Application] || ClassPathResolverImpl || It's the simplest and the fastest one. ||
-|| [Layouts#?? Module Application] || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
-|| [Layouts#?? Application With Modules] || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
+There are two default ClassPathResolvers delivered with _*Crux*_. The one you need depends on what [UserManual#6_Project_Layouts project layout] your application uses.
+|| *Project Layout* || *ClassPathResolver* || *Why?* ||
+|| Standalone Application || ClassPathResolverImpl || It's the simplest and the fastest one. ||
+|| Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
+|| Application With Modules || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
 
  
 
@@ -2002,7 +2002,7 @@ Enabling this options costs a little bit more in performance terms, but can turn
 
 _*Crux*_ only register on its client engine the WidgetFactories that are alrealdy used to parse your page(s). If you set this option to {{{true}}}, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
 
-This behavior will be adopted only if you are under development mode ({{{-DCrux.dev=true}}}). When you compile your source for distribution (to deploy in production environment), you must run the compiler in production mode (({{{-DCrux.dev=false}}} or absent). This will make _*Crux*_ ignore the {{{enableHotDeploymentForWidgetFactories}}} option and optimize the generated code. 
+This behavior will be adopted only if you are under development mode ({{{-DCrux.dev=true}}}). When you compile your source for distribution (to deploy in production environment), you must run the compiler in production mode ({{{-DCrux.dev=false}}} or absent). This will make _*Crux*_ ignore the {{{enableHotDeploymentForWidgetFactories}}} option and optimize the generated code. 
 
 
 = 5 Crux Tools =
@@ -2018,36 +2018,25 @@ You can invoke SchemaGenerator in two different ways:
 
 SchemaGenerator also produces an eclipse catalog file containing all generated XSD files.
 
-== 5.2 Project Generator==
+== 5.2 Crux Compiler==
 
-ProjectGenerator is a tool used to create new _*Crux*_ projects according with our default project layout. 
-
-After download the _*Crux*_ distribution [http://code.google.com/p/crux-framework/downloads/list file], unzip its content on an empty folder and you will found a shell command file named {{{projectGenerator}}}.
-
-Call that file, passing no parameter, or passing {{{-help}}} for display the usage screen.
-
-All configurations about the project generation is done through a file called {{{project.properties}}} (that is located on the same folder that projectGenerator command).
-
-The following table shows all the properties contained on that file:
-
-|| *Property* || *Default Value* || *Description* ||
-|| projectName || MyApplication || The name of the project that will be created ||
-|| hostedModeStartupURL || index.html || The name of the initial page of your project.<br> The Debug lanch file will point to this and a page <br> with that name willl be created to server as example. ||
-|| hostedModeStartupModule || com.mycompany.MyModule || The name of the GWT module created to your application ||
-|| hostedModeVMArgs || {{{-Xss32768k -Xms64M -Xmx256M -DCrux.dev=true}}} || The startup parameters passed to DevMode JVM ||
-|| useCruxModuleExtension || {{{false}}} || If {{{true}}}, creates a project following the _*Crux*_ [UserManual#Modules Module] Layout ||
-|| cruxModuleDescription || My Module Description || The description of your module. Only used if {{{useCruxModuleExtension}}} is {{{true}}} ||
-
-== 5.3 Crux Compiler==
-
-The {{{CruxCompiler}}} Tool compiles a crux project. It converts all {{{.crux.xml}}} files to simple {{{.html}}} files and then call the GWT compiler to produce the javascript for all your application modules.
+The {{{CruxCompiler}}} tool compiles a crux project. It converts all {{{.crux.xml}}} files to simple {{{.html}}} files and then call the GWT compiler to produce the javascript for all your application modules.
 
 You can invoke CruxCompiler in two different ways:
   # calling it with the command line:
       {{{java br.com.sysmap.crux.tools.compile.CruxCompiler <outputDir>}}}
-  # calling the ant task {{{<cruxcompiler>}}}, that is already defined on the project {{{build.xml}}} file, generated by the [UserManual#5.2_Project_Generator Project Generator]
+  # calling the ant task {{{<compile-scripts>}}}, that is already defined on the project {{{build.xml}}} file, generated by the [UserManual#5.2_Project_Generator Project Generator]
 
 
-= 6 Crux Modules =
+= 6 Project Layouts =
 
-GWT supports modularization, allowing you to divide applications and package its parts separately. _*Crux*_ extends the GWT concept of module, adding support to management tasks.  
+GWT supports modularization, allowing you to divide your application and package its parts separately. This is specially usefull for building large applications.
+For this reason, _*Crux*_ projects can come in three diferent flavors:
+
+|| *Application Layout* || *Overview* ||
+|| Standalone Application || This is the simplest of project layout, ideal for small projects, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not hard to administer.  ||
+|| Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
+|| Application With Modules || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
+
+
+  
