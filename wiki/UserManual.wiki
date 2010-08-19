@@ -1172,11 +1172,11 @@ public interface MyConstants extends Constants
 
 == 3.5 Client-Server Communication ==
 
-You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn it easier. 
+You can use [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] and [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/JSON.html JSON] support to communicate with server. _*Crux*_, however, adds some few features to pure GWT RPC mechanisms to turn this process easier. 
 
-With _*Crux*_, you can use a _Front Controller_. The use of this _Front Controller_ allows you to make just one mapping in your web.xml file.
+With _*Crux*_, you can use a _Front Controller_ on the server-side. The use of this _Front Controller_ allows you to make just one mapping in your web.xml file.
 
-In other words, you don't need to add a new servlet declaration on your GWT module definition nether on web.xml for each new service declared.
+In other words, you don't need to add a new servlet declaration on your GWT module neither on your web.xml for each new service declared.
  
 Other improvement is the use of the  [3.3.3.2_The_@Create_Annotation @Create annotation]. It will create the service object and set its  entry point name to point to the _Front Controller_ automatically. 
  
@@ -1220,7 +1220,7 @@ That class does the following:
   # If controller autoBind for [UserManual#3.3.3.4_Value_Binding ValueObjects] is enabled, it will automatically update screen with value object properties after process the {{{onComplete()}}} method.
 
 
-So, the two following approach is equivalents:
+So, the two following approach are equivalent:
 
 {{{
 @Controller(value="myController", autoBind=true)
@@ -1294,8 +1294,8 @@ public interface GreetingService extends RemoteService
 This annotation accepts the following attributes:
 
 || *Attribute* || *Type* || *Default* || *Description* ||  
-||notifyCallsWhenProcessing||boolean||true||If this property is true, when the user tries to send a duplicated request,<br> an informative message is showed. To change the message, use the property {{{methodIsAlreadyBeingProcessed}}}<br> on ClientMessages.properties file.||
-||blocksUserInteraction||boolean||true|| If this property is true, when a request to a sensitive method is fired,<br> the screen became blocked to user.||
+||notifyCallsWhenProcessing||boolean||true||If this property is true, when the user tries to send a duplicated request,<br> an informative message is shown. To change the message, use the property {{{methodIsAlreadyBeingProcessed}}}<br> on ClientMessages.properties file.||
+||blocksUserInteraction||boolean||true|| If this property is true, when a request to a sensitive method is fired,<br> the screen became blocked to user, until the method finishes.  ||
 
 
 == 3.6 Handling Errors==
@@ -1328,12 +1328,12 @@ If you want to change the default error handling class, you can specify in your 
 
 == 3.7 Formatters==
 
-Formatters can be used to provide widgets, the capabilities:
+Formatters can be used to provide widgets the following capabilities:
   * Input/Output formatting/unformatting;
   * Input masking (masks can be defined with regular expressions);
   * Data conversions to/from string.
   
-A widget must implements the interface {{{HasFormatter}}} to be associated with a formatter and formatters can be defined implementing the interface {{{Formatter}}}.
+A widget must implement the interface {{{HasFormatter}}} to be associated with a formatter. Formatters, in turn, can be defined by implementing the interface {{{Formatter}}}.
 
 Here you can see how a formatter could be used:
 
@@ -1385,9 +1385,9 @@ public class PhoneFormatter implements Formatter
 }
 }}} 
 
-The above code, specifies a formatter that will present its associated widget content (a phone number) in the format:{{{ (99)9999-9999}}}. That formatter does not provide input masking feature. To create a version of the formatter with this feature, you must implements the interface {{{MaskedFormatter}}}
+The above code, specifies a formatter that will present its associated widget content (a phone number) in the format:{{{ (99)9999-9999}}}. 
 
-To create masked formatters for {{{MaskedTextBox}}} widgets, an abstract class that already implements {{{MaskedFormatter}}} can be used. The previous formatter example could be re-written as:
+The given formatter does not provide input masking feature. To create a version of the formatter with such characteristic, you must implement the interface {{{MaskedFormatter}}}. To create masked formatters for {{{MaskedTextBox}}} widgets, an abstract class that already implements {{{MaskedFormatter}}} can be used. The previous formatter example could be re-written as:
 
 {{{
 @FormatterName("phone")
@@ -1454,7 +1454,6 @@ public static class DateFormatter extends MaskedTextBoxBaseFormatter {
 
 Note that the {{{MaskedFormatter}}} methods ({{{applyMask}}} and {{{removeMask}}}) are already implemented by the abstract class. Only the {{{getMask}}} method must be implemented to specify the pattern used to build the mask.
 
-TODO: _A basic set of common formatters is being created and will be available as crux-formatters.jar that will be included in the distribution soon_.
 
 == 3.8 Data Sources==
 
@@ -1476,7 +1475,7 @@ For a complete guide about DataSources (including the complete list of basic Dat
 
 == 3.9 Templates ==
 
-Templates in _*Crux*_ are parameterizable XML files that can be used for:
+Templates in _*Crux*_ are parameterizable XML files that can be used to:
   # Create simple components in a declarative way;
   # Create smart fragments that can be used to compose greater pages;
   # Define reusable layout pages.
@@ -1486,9 +1485,9 @@ A template must be defined in a file with the extension {{{.template.xml}}} and 
 Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
 [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of templates usage.
 
-After creating a template file, you must run the [UserManual#5.1_Schema_Generator Schema Generator]  again.  It will generate a XSD file for your template, enabling auto-completion when using it in a page.
+After creating a template file, you should run the [UserManual#5.1_Schema_Generator Schema Generator] and re-import the {{{crux-catalog.xml}}} file in your Eclipse IDE. This way you will be able to use your templates with the auto-completion feature.
 
-A template can be defined to receive parameters and include sub-sections, as showed in the following examples:  
+A template can be defined to receive parameters and include sub-sections, as shown in the following examples:  
 
 === 3.9.1 Examples===
 
@@ -1523,7 +1522,8 @@ Then, you can use it on any crux page:
 
 ==== 3.9.1.2 Creating a Smart Fragment====
 
-The File {{{userInfo.template.xml}}} defines a simple header that can be used on different pages:
+The File {{{userInfo.template.xml}}} defines a simple header, which can show the login and name of the current user. 
+It has its own Controller and its own business logic and can be used in different pages without any aditional configuration:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
