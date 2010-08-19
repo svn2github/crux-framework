@@ -1623,7 +1623,7 @@ According with template.xsd file, the tag {{{<template>}}} declare the following
 
 As shown in the previous examples, you can create a template that receive attributes and children. 
   * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}}} wherever you want to apply the attribute value.
-  * To define a child tag for your template, use the tag {{{section}}}. It will create a placeholder in your template, which will be replaced by the content of the child tag declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
+  * To define a child tag for your template, use the tag {{{section}}}. It will create a placeholder in your template, which will be replaced by the content of the child tag declared on the page that uses the template. (See the example shown on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
 == 3.10 Running With a Diferent Server ==
 
@@ -1659,7 +1659,7 @@ public class GreetingServiceImpl implements GreetingService{
 
 To find out which implementation will be used for a given service interface, _*Crux*_ will search for classes that implements that interface and use the first one found.
 
-This behavior  can be changed, as showed in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
+This behavior  can be changed, as shown in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
 
 If your service class needs to access the HttpServletRequest, HttpServletResponse or HttpSession objects, it can implement one or more of the following interfaces:
   * {{{RequestAware}}}  - makes your Service able to access the [http://download.oracle.com/javaee/5/api/javax/servlet/http/HttpServletRequest.html HttpServletRequest] object;
@@ -1685,7 +1685,7 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
 
 _*Crux*_ provides a mechanism to use i18n in your server-side classes. It's very similar to the GWT i18n for client-side.
 
-You can create interfaces and use the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client side.
+You can create interfaces and use the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client-side.
 
 The main differences are:
   * Your interfaces don't need to extend any other interface;
@@ -1719,7 +1719,7 @@ You can create a resource file called {{{ServerMessages}}} and put it under your
 myServerMessage=Minha mensagem no servidor: {0}.
 }}}
 
-That mechanism exposed will work properly for all your classes that are called by a service. _*Crux*_ will resolve locale problems in its [UserManual#3.5_Client-Server_Communication FrontController], before delegate the application control to your service implementation. 
+The mechanism exposed above will work properly for all your classes that are called by a service. _*Crux*_ will resolve locale problems in its [UserManual#3.5_Client-Server_Communication FrontController], before delegating the application control to your service implementation. 
 
 However, if you plan to access i18n messages in classes called by a filter (that executes before the _*Crux* FrontController_ Servlet), you need to configure a filter in your web.xml file. Read the section [UserManual#4.3.1_Web.xml Web.xml] to see how to do this.
 
@@ -1734,7 +1734,7 @@ To use _*Crux*_ in your application, you will need the following files:
     * crux-scannotation.jar
     * javassist.jar
   * In development time:
-   	* addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
+   	* in addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
       * crux-widgets.jar
       * crux-gwt-widgets.jar
       * saxon9.jar
@@ -1749,7 +1749,7 @@ To use _*Crux*_ in your application, you will need the following files:
 Using the [UserManual#2.1_Install Project Generator] you will get a ready to use project structure. 
 
 === 4.3.1 Web.xml ===
-To setup the _*Crux* Front Controller_, showed in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
+To setup the _*Crux* Front Controller_, shown in [3.5_Client-Server_Communication previous section], you must add the following lines to your web.xml file:
 
 {{{
 	<servlet>
@@ -1779,11 +1779,11 @@ There are some other configurations you will need to do to run your application 
 	</filter-mapping>
 }}}
 
-The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is being compiled. This is used for better performance (see [FAQ#Performance this] for more information). Because that information is used only for compilation, it just need to be present in development environment.
+The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is being compiled. This is used for better performance (see [FAQ#Performance this] for more information). Because that information is used only for compilation, it just needs to be present in development environment.
 
-You will need too:
+In development time, you will need to have this too:
 {{{
-<filter>
+	<filter>
 		<display-name>DeclarativeUIFilter</display-name>
 		<filter-name>DeclarativeUIFilter</filter-name>
 		<filter-class>br.com.sysmap.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
@@ -1800,7 +1800,7 @@ You will need too:
 
 This filter is used to transform your _.crux.xml_ files in pure _html_ files. This process is only done in development. In a production environment, your application can access the generated version of the page directly. 
 
-The two above filters, which is used only for development, does nothing if used in a production environment, generating no overhead. They are removed by the ant task generated for deploy your project (if you are using the [_*Crux* Project Generator_]).
+The two above filters, does nothing (its right... nothing!) if used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [_*Crux* Project Generator_]).
 
 You can add an optional listener called InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
 
@@ -1810,7 +1810,7 @@ You can add an optional listener called InitializerListener to initialize some _
    </listener>
 }}}
 
-If you need I18N before the _*Crux* FrontController_ Servlet, you have to put these lines too:
+If you need i18n before the _*Crux* FrontController_ Servlet, you have to put these lines too:
 
 {{{
 	<filter>
@@ -1832,7 +1832,7 @@ Those options can be informed through:
   # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{Eg: -DCrux.wrapSiblingWidgets=false}}}.
   # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
 
-If you use both ways showed, the command line has preference. 
+If you use both ways shown, the command line has precedence. 
 
 The following properties can be set:
 
@@ -1851,7 +1851,7 @@ The following properties can be set:
 
 ==== 4.3.2.1 wrapSiblingWidgets ====
 
-To enable _*Crux*_ to do very significant improvements in screen creation performance, _*Crux*_ will need that all of your widgets are orphan child of their parents.
+To achieve very significant improvements on screen creation performance, _*Crux*_ needs that each widget in your page is the unique child of its parent HTML element.
 
 The property {{{wrapSiblingWidgets}}} will automatically create an empty {{{<span>}}} tag around each widget that does not follow this restriction. 
 
@@ -1869,7 +1869,7 @@ See the following example:
    ...
 }}}
 
-That will be transformed to the following DOM elements:
+That will be transformed into the following DOM elements:
 
 {{{
    ...
@@ -1883,9 +1883,9 @@ That will be transformed to the following DOM elements:
    ...
 }}}
 
-If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care to put your widgets in panels, or in other html tags alone, or else, _*Crux*_ will not guarantee the order of the sibling widgets.
+If you want, you can disable this mechanism setting this property to false. In such a case, you will need to care about placing each widget inside a panel, or inside its own html tag. Otherwise, _*Crux*_ will not guarantee the order of the sibling widgets.
 
-If this property is disabled, the previous example can build the following sequence of elements into the DOM:
+If this property is disabled, the previous example can result in the following sequence of elements into the DOM:
 {{{
    ...
    <body>
@@ -1898,7 +1898,7 @@ If this property is disabled, the previous example can build the following seque
    ...
 }}}
 
-In that case, the best would be refactory this to:
+In that case, the best would be refactoring the code to:
 {{{
    ...
    <body>
@@ -1922,9 +1922,9 @@ It means that you can, for example, pass the locale through an url parameter, li
 http://www.example.org/myapp.html?locale=pt_BR
 }}}
 
-However, if you need to change this behavior , you can specify your own LocaleResolver class through the property {{{localeResolver}}}. That implementation can adopt a custom rule to identify the user locale.
+However, if you need to change this behavior , you can specify your own LocaleResolver class through the property {{{localeResolver}}}. That implementation can adopt a custom rule to identify the user's locale.
 
-Your class just need to implement the following interface:
+Your class just needs to implement the following interface:
 
 {{{
 public interface LocaleResolver 
@@ -1936,9 +1936,10 @@ public interface LocaleResolver
 
 ==== 4.3.2.3 screenResourceResolver ====
 
-The property {{{screenResourceResolver}}} tells _*Crux*_ which class will be used to retrieve a stream to the application pages. It is useful to plugins, that need to do some processing with pages before they are consumed by the framework.
+The property {{{screenResourceResolver}}} tells _*Crux*_ which class will be used to retrieve an InputStream related to a given a page of your application. 
+It can be useful to create new plugins which may need to do some processing on pages before they are consumed by the framework.
 
-Your class just need to implement the following interface:
+Your class just needs to implement the following interface:
 
 {{{
 public interface ScreenResourceResolver
@@ -1950,11 +1951,16 @@ public interface ScreenResourceResolver
 
 ==== 4.3.2.4 classPathResolver ====
 
-_*Crux*_ needs to know some paths to can retrieve the HTML pages, scan for controllers and other operations. The interface
+_*Crux*_ depends on knowing some paths in your application in order to retrieve the HTML pages, scan for Controllers and other operations. The interface
 {{{ClassPathResolver}}} is used for this purpose. 
 
-When the module layout for projects is used, you must change classPathResolver property to use ModuleClassPathResolver. This class 
-can find all resources even if they are packaged on different jar files.  
+There are two default ClassPathResolvers delivered with _*Crux*_. The one you need depends on what [Layouts#?? module layout] your project uses.
+  ||  Application Layout  ||  ClassPathResolver  ||  Why?  ||
+  ||  Stand Alone Application  || ClassPathResolverImpl  ||  It's the simplest and the fastest one  ||
+  ||  Module Application  || ModuleClassPathResolver ||  It can find any Crux resource (like pages, templates, etc.) even if they are packaged in a jar file.  ||
+  ||  Application With Modules  || ModuleClassPathResolver ||  It can find any Crux resource (like pages, templates, etc.) even if they are packaged in a jar file.  ||
+
+ 
 
 ==== 4.3.2.5 serviceFactory ====
 
