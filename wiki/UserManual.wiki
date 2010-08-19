@@ -1956,9 +1956,9 @@ _*Crux*_ depends on knowing some paths in your application in order to retrieve 
 
 There are two default ClassPathResolvers delivered with _*Crux*_. The one you need depends on what [Layouts#?? module layout] your project uses.
 || *Application Layout* || *ClassPathResolver* || *Why?* ||
-|| Stand Alone Application || ClassPathResolverImpl || It's the simplest and the fastest one. ||
-|| Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in a jar file.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} dir. ||
-|| Application With Modules || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in a jar file. ||
+|| [Layouts#?? Stand Alone Application] || ClassPathResolverImpl || It's the simplest and the fastest one. ||
+|| [Layouts#?? Module Application] || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
+|| [Layouts#?? Application With Modules] || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
 
  
 
