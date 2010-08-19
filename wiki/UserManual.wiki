@@ -1523,7 +1523,7 @@ Then, you can use it on any crux page:
 ==== 3.9.1.2 Creating a Smart Fragment====
 
 The File {{{userInfo.template.xml}}} defines a simple header, which can show the login and name of the current user. 
-It has its own Controller and its own business logic and can be used in different pages without any aditional configuration:
+It has its own Controller and its own business logic:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
       xmlns:t="http://www.sysmap.com.br/templates" 
@@ -1544,7 +1544,7 @@ It has its own Controller and its own business logic and can be used in differen
 </t:template>
 }}}
 
-Then, you can use it on any crux page:
+You can use it on any page you want, without any additional configuration:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
@@ -1579,9 +1579,7 @@ The file {{{pageLayout.template.xml}}} defines a common layout that has a menu l
                <crux:stackMenu id="menu" onLoadWidget="#{onLoadMenu}" ></crux:stackMenu>
             </gwt:cell>
             <gwt:cell direction="east">
-               <gwt:HTMLPanel id="hPanel">
-                  <t:section name="body" />
-               </gwt:HTMLPanel>   
+               <t:section name="body" />
             </gwt:cell>
          </gwt:dockPanel>
       </gwt:cell>
@@ -1623,17 +1621,17 @@ According with template.xsd file, the tag {{{<template>}}} declare the following
 ||useFormatter||Adds formatters to screen formatter list||  
 ||useDataSource||Adds datasources to screen datasource list||  
 
-As showed in the previous examples, you can create a template that receive attributes and children. 
+As shown in the previous examples, you can create a template that receive attributes and children. 
   * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}}} wherever you want to apply the attribute value.
-  * To add a child to your template, use the tag {{{section}}} where you want to create a placeholder in your template. That tag will be replaced by the content of the child declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
+  * To define a child tag for your template, use the tag {{{section}}}. It will create a placeholder in your template, which will be replaced by the content of the child tag declared on the page that uses the template. (See the example showed on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
 == 3.10 Running With a Diferent Server ==
 
 To run your _*Crux*_ application under DevMode with a different server, you must follow all the steps described at the GWT [http://code.google.com/intl/pt-BR/webtoolkit/doc/latest/FAQ_DebuggingAndCompiling.html documentation]. 
 
-In adition to these steps, you must add the follow JVM argument to your application server: {{{-DCrux.dev=true}}}.
+In adition to these steps, you must add the following JVM argument to your application server: {{{-DCrux.dev=true}}}.
 
-Note that this parameter just need to be inserted when runnig the server with development purposes. In production, you don't need any aditional configuration. 
+Note that this parameter just needs to be inserted when runnig the server with development purposes. In production, you don't need any aditional configuration. 
 
 
 = 4 Coding Server Side =
@@ -1642,8 +1640,8 @@ Note that this parameter just need to be inserted when runnig the server with de
 
 As we said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
 
-At server side, the main difference for GWT is that your service implementation class does not need to extend {{{RemoteServiceServlet}}}. It 
-just needs to implement the service interface.
+At server-side, the main difference between GWT and _*Crux*_ is that your service implementation class does not need to extend {{{RemoteServiceServlet}}}. It is nothing more than a POJO and 
+just need to implement the business interface.
 
 {{{
 public interface GreetingService extends RemoteService{
