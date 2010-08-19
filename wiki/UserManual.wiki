@@ -2036,7 +2036,7 @@ For this reason, _*Crux*_ projects can come in three diferent flavors:
 || *Application Layout* || *Overview* ||
 || Standalone Application || This is the simplest layout of project, ideal for small applications, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not so hard to administer.  ||
 || Module Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to<br>be reused between multiple functionalities. ||
-|| Application With Modules || This layout is the one intented do be used to build a fragment, reusable or not, of a large application.<br>A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and,<br>we believe, in the quality of the final product. ||
+|| Application With Modules || This layout is the one intented do be used to build a fragment, reusable or not, of a large application.<br>A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product. ||
 
 
   
