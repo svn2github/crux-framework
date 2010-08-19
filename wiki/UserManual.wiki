@@ -1681,13 +1681,15 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
 }
 }}}
 
-== 4.2 I18N ==
+== 4.2 I18n ==
 
-_*Crux*_ provides to server classes a support very similar to the GWT I18N support.
+_*Crux*_ provides a mechanism to use i18n in your server-side classes. It's very similar to the GWT i18n for client-side.
 
-You can create interfaces and uses the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client side.
+You can create interfaces and use the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client side.
 
-The main difference is that your interface does not need to extend any other interface and you use the factory method {{{MessagesFactory.getMessages(<interfaceClass>)}}} in the place of {{{GWT.create()}}}.
+The main differences are:
+  * Your interfaces don't need to extend any other interface;
+  * You must use the factory method {{{MessagesFactory.getMessages(<interfaceClass>)}}} instead of {{{GWT.create()}}} to create an instance of your interface.
 
 See the following example:
 {{{
