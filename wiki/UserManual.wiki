@@ -1641,7 +1641,7 @@ Note that this parameter just needs to be inserted when runnig the server with d
 As we said in section [UserManual#3.5_Client-Server_Communication Client-Server Communication], _*Crux*_ supports the [http://code.google.com/intl/pt-BR/webtoolkit/tutorials/1.6/RPC.html GWT RPC] mechanism with some few features to turn it easier.
 
 At server-side, the main difference between GWT and _*Crux*_ is that your service implementation class does not need to extend {{{RemoteServiceServlet}}}. It is nothing more than a POJO and 
-just need to implement the business interface.
+just needs to implement the business interface.
 
 {{{
 public interface GreetingService extends RemoteService{
@@ -1661,7 +1661,10 @@ To find out which implementation will be used for a given service interface, _*C
 
 This behavior  can be changed, as showed in section [UserManual#4.3.2.5_serviceFactory serviceFactory].
 
-If your service class needs to access the request, response or session, it can implements the interfaces RequestAware, ResponseAware or SessionAware, as in the following example:
+If your service class needs to access the HttpRequest, HttpResponse or HttpSession objects, it can implement one or more of the following interfaces:
+  * {{{RequestAware}}}: makes your Service able to access the HttpRequest object;
+  * {{{ResponseAware}}}: makes your Service able to access the HttpResponse object;
+  * {{{SessionAware}}}: makes your Service able to access the HttpSession object.
 
 {{{
 public class GreetingServiceImpl implements GreetingService, RequestAware, ResponseAware{
