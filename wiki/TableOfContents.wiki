@@ -97,10 +97,7 @@
 <td>........*5.1* [UserManual#5.1_Schema_Generator Schema Generator]</td>
 </tr>
 <tr>
-<td>........*5.2* [UserManual#5.2_Project_Generator Project Generator]</td>
-</tr>
-<tr>
-<td>........*5.3* [UserManual#5.3_Crux_Compiler Crux Compiler]</td>
+<td>........*5.2* [UserManual#5.2_Crux_Compiler Crux Compiler]</td>
 </tr>
 <tr>
 <td>*[Widgets Widgets]*</td>
