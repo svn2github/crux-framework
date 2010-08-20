@@ -2033,13 +2033,11 @@ You can invoke CruxCompiler in two different ways:
 A _*Crux*_ application can be built for different purposes. There are some distinct layouts of projects provided by Crux that you can use for achieve these purposes. 
 Which layout you should choose for your application depends on its characteristics. The currently supported layouts are: 
 
-|| *Project Layout* || *Overview* ||
-|| Standalone Application ||   ||
-|| Module Application ||  ||
-|| Module Container Application || 
- 
+  * Standalone Application
+  * Module Application
+  * Module Container Application 
 
-Each project layout has its particularities. Here we will discuss about them:
+Below, we talk about each one:
 
 == 6.1 Standalone Application ==
 
