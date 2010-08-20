@@ -2039,13 +2039,15 @@ Which layout you should choose for your application depends on its characteristi
 
 Below, we talk about each one:
 
+
 == 6.1 Standalone Application ==
 
 This layout is a template for an ordinary Java web project. It has facilities for help you with tasks of 
 building and deploying the final application. It is the default and simplest layout of project, ideal for 
 small web applications, coded by small teams, for which the volume of source-code and the parallelization 
 of coding tasks are not so hard to administer. 
-  
+
+
 == 6.2 Module Application ==
 
 GWT supports modularization, allowing you to divide your application and package its parts separately. This 
@@ -2064,4 +2066,10 @@ pre-compiled resources for improving the compiling speed of the dependent applic
 
 == 6.3 Module Container Application ==
 
-This can be considered the ideal layout for corporative applications, which are typically built by a larger number of developers and consist of many dozens of use cases, some of which tend to be reused between multiple functionalities.
+This can be considered the ideal layout for corporative applications, which are typically built by a larger 
+number of developers and consist of many dozens of use cases, some of which tend to be reused by multiple 
+functionalities. 
+
+This kind of application can contain multiple Module Applications that just need to be available in its classpath,
+it is, must be placed inside the {{{WEB-INF/lib}}} folder. 
+
