@@ -130,6 +130,9 @@
 <td>*[FAQ FAQ]*</td>
 </tr>
 <tr>
+<td><br><br></td>
+</tr>
+<tr>
 <td>*Previous Releases Documentation*</td>
 </tr>
 <tr>
