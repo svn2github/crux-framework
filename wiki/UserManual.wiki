@@ -457,7 +457,7 @@ The Controller annotation has the following properties:
 
 || *Property* || *Required* || *Default Value* || *Description* ||
 ||value||yes|| none ||defines the name of the controller. Used inside pages to point to the controller||
-||statefull||no||{{{true}}}||If {{{true}}}, one controller object is created and the same instance is <br>used to handle all events. If {{{false}}}, a new instance is used for each new event||
+||stateful||no||{{{true}}}||If {{{true}}}, one controller object is created and the same instance is <br>used to handle all events. If {{{false}}}, a new instance is used for each new event||
 ||autoBind||no||{{{true}}}||If {{{true}}}, [UserManual#3.3.3.4_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 ||lazy||no|| {{{true}}} ||If {{{true}}}, the controller object is built only when first called.||
 ||fragment||no|| {{{<empty>}}} ||You can inform a fragment identifier. The compiler will split your code grouping controllers<br> by these identifiers.||
@@ -503,7 +503,7 @@ public class MyClass
 
 Note that {{{@Create}}} can handle service creation too, despite the fact that the variable type is not the same passed to {{{GWT.create}}} (in above example would be {{{TestService}}}).
 
-The {{{@Create}}} annotation does more than simply creating an object. It also makes some initializations for the created object, depending on the field type (eg. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
+The {{{@Create}}} annotation does more than simply creating an object. It also makes some initializations for the created object, depending on the field type (e.g. [UserManual#3.3.3.8_Parameters parameter fields] are loaded, etc.)
 
 You must note, however, that to use {{{@Create}}} on a field, that field must have public or protected visibility or have a public getter and setter methods.
 
@@ -1003,7 +1003,7 @@ The {{{@Parameter}}} annotation has two fields:
 
 If a validation error occurs while binding a parameter, a message is reported to the user through the Crux [UserManual#3.6_Handling_Errors Error Handlers]. A validation error can occur due to type conversion error or by the lack of a required parameter.
 
-Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.4_Value_Binding Value Objects]. Doing it, you allow _*Crux*_ to populate an object of this type with values present on window url parameters. 
+Another way to bind parameters is to create an object and annotate it with {{{@ParameterObject}}} annotation, exactly as you do with [UserManual#3.3.3.4_Value_Binding Value Objects]. Doing it, you allow _*Crux*_ to populate an object of this type with values present on window URL parameters. 
 
 See the following example:
 
@@ -1307,7 +1307,7 @@ _*Crux*_ provides two basic interfaces for client errors reporting.
 Those interfaces are used always occurs an error that needs to be reported to user (or to developer). 
 The interface {{{ErrorHandler}}} is called to report errors in application code (bad use of the framework, or an uncaught exception) and {{{ValidationErrorHandler}}} is called to report errors caused by a bad use of the application (typically validations over the screen state, based in business rules, before performing an action).
 
-_*Crux*_ provides a default {{{Errorhandler}}}  that implements both interfaces and, for the both types of errors:
+_*Crux*_ provides a default {{{ErrorHandler}}}  that implements both interfaces and, for the both types of errors:
   * Logs in GWT console all exceptions received.
   * Shows the messages using the {{{Window.alert()}}} method.
 
@@ -1459,13 +1459,13 @@ Note that the {{{MaskedFormatter}}} methods ({{{applyMask}}} and {{{removeMask}}
 
 DataSources are objects capable of providing a set of data to widgets that implement {{{HasDataSource}}} interface. DataSources support features like pagination, data sorting and editing.
 
-_*Crux*_ provides a wide range of different DataSources that can be classified by the following criterias:
+_*Crux*_ provides a wide range of different DataSources that can be classified by the following criteria:
 
   # How them *present the data*
     # *Paged* - PagedDataSources can divide the data into pages
-    # *Scrollable* - This kind od DataSource handles all data in a single page
+    # *Scrollable* - This kind of DataSource handles all data in a single page
   # How they *fetch the data* 
-    # *Local* - This kind of DataSource can load data once and keep it locally on user's brownser, so it can be paged, sorted or edited locally.
+    # *Local* - This kind of DataSource can load data once and keep it locally on user's browser, so it can be paged, sorted or edited locally.
     # *Remote* - RemoteDatasources load data on demand, as widgets request them. 
 
 To create a DataSource, you can extend one of the abstract DataSource classes provided by _*Crux*_. The class you should choose depends on which categories (between the exposed above) your DataSource will belong.
@@ -1619,19 +1619,19 @@ According with template.xsd file, the tag {{{<template>}}} declare the following
 ||useController||Adds controllers to screen controller list||  
 ||useSerializable||Adds serializables to screen serializable list||  
 ||useFormatter||Adds formatters to screen formatter list||  
-||useDataSource||Adds datasources to screen datasource list||  
+||useDataSource||Adds DataSources to screen data sources list||  
 
 As shown in the previous examples, you can create a template that receive attributes and children. 
   * To define an attribute for your template, just write the attribute in the form {{{#{attributeName}}}} wherever you want to apply the attribute value.
   * To define a child tag for your template, use the tag {{{section}}}. It will create a placeholder in your template, which will be replaced by the content of the child tag declared on the page that uses the template. (See the example shown on section [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout]).
 
-== 3.10 Running With a Diferent Server ==
+== 3.10 Running With a Different Server ==
 
 To run your _*Crux*_ application under DevMode with a different server, you must follow all the steps described at the GWT [http://code.google.com/intl/pt-BR/webtoolkit/doc/latest/FAQ_DebuggingAndCompiling.html documentation]. 
 
-In adition to these steps, you must add the following JVM argument to your application server: {{{-DCrux.dev=true}}}.
+In addition to these steps, you must add the following JVM argument to your application server: {{{-DCrux.dev=true}}}.
 
-Note that this parameter just needs to be inserted when runnig the server with development purposes. In production, you don't need any aditional configuration. 
+Note that this parameter just needs to be inserted when running the server with development purposes. In production, you don't need any additional configuration. 
 
 
 = 4 Coding Server Side =
@@ -1917,7 +1917,7 @@ In that case, the best would be refactoring the code to:
 
 By default, _*Crux*_ will use the same mechanism used by [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideI18nAndA11y.html#DevGuideSpecifyingLocale GWT at client side] to resolve the user locale.
 
-It means that you can, for example, pass the locale through an url parameter, like:
+It means that you can, for example, pass the locale through an URL parameter, like:
 {{{
 http://www.example.org/myapp.html?locale=pt_BR
 }}}
@@ -1982,7 +1982,7 @@ public interface ServiceFactory
 
 This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is {{{true}}}. 
 
-However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to {{{false}}}, _*Crux*_ can transfer to a generator the responsability of handling the binding code, keeping the final code smaller and simpler.
+However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to {{{false}}}, _*Crux*_ can transfer to a generator the responsibility of handling the binding code, keeping the final code smaller and simpler.
 
 ==== 4.3.2.7 enableChildrenWindowsDebug====
 
@@ -1996,11 +1996,11 @@ if need, you can disable that cache, setting {{{enableWebRootScannerCache}}} to 
 
 ==== 4.3.2.9 enableHotDeploymentForWebDirs====
 
-Enabling this options costs a little bit more in performance terms, but can turn easier the developement, once you will not need to restart your server to see changes on templates.
+Enabling this options costs a little bit more in performance terms, but can turn easier the development, once you will not need to restart your server to see changes on templates.
 
 ==== 4.3.2.10 enableHotDeploymentForWidgetFactories====
 
-_*Crux*_ only register on its client engine the WidgetFactories that are alrealdy used to parse your page(s). If you set this option to {{{true}}}, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
+_*Crux*_ only register on its client engine the WidgetFactories that are already used to parse your page(s). If you set this option to {{{true}}}, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
 
 This behavior will be adopted only if you are under development mode ({{{-DCrux.dev=true}}}). When you compile your source for distribution (to deploy in production environment), you must run the compiler in production mode ({{{-DCrux.dev=false}}} or absent). This will make _*Crux*_ ignore the {{{enableHotDeploymentForWidgetFactories}}} option and optimize the generated code. 
 
@@ -2030,13 +2030,13 @@ You can invoke CruxCompiler in two different ways:
 
 = 6 Project Layouts =
 
-GWT supports modularization, allowing you to divide your application and package its parts separately. This is specially usefull for building large applications.
-For this reason, _*Crux*_ projects can come in three diferent flavors:
+GWT supports modularization, allowing you to divide your application and package its parts separately. This is specially useful for building large applications.
+For this reason, _*Crux*_ projects can come in three different flavors:
 
 || *Application Layout* || *Overview* ||
-|| Standalone Application || This is the simplest layout of project, ideal for small applications, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not so hard to administer.  ||
+|| Standalone Application || This is the simplest layout of project, ideal for small web applications, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not so hard to administer.  ||
 || Module Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to<br>be reused between multiple functionalities. ||
-|| Application With Modules || This layout is the one intented do be used to build a fragment, reusable or not, of a large application.<br>A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product. ||
+|| Application With Modules || This layout is the one designed to be used as fragment, reusable or not, of a large application.<br>A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product. ||
 
 Each project layout has its particularities. Here we will discuss about them: 
   
