@@ -130,7 +130,7 @@
 <td>*[FAQ FAQ]*</td>
 </tr>
 <tr>
-<td><br><br></td>
+<td><br/></td>
 </tr>
 <tr>
 <td>*Previous Releases Documentation*</td>
