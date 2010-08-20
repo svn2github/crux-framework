@@ -1958,7 +1958,7 @@ There are two default ClassPathResolvers delivered with _*Crux*_. The one you ne
 || *Project Layout* || *ClassPathResolver* || *Why?* ||
 || Standalone Application || ClassPathResolverImpl || It's the simplest and the fastest one. ||
 || Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
-|| Application With Modules || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
+|| Module Container Application || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
 
  
 
@@ -2030,13 +2030,33 @@ You can invoke CruxCompiler in two different ways:
 
 = 6 Project Layouts =
 
-GWT supports modularization, allowing you to divide your application and package its parts separately. This is especially useful for building large applications.
-For this reason, _*Crux*_ projects can come in three different flavors:
+A _*Crux*_ application can be built for different purposes. There are some distinct layouts of projects provided by Crux that you can use for achieve these purposes. 
+Which layout you should choose for your application depends on its characteristics. The currently supported layouts are: 
 
-|| *Application Layout* || *Overview* ||
-|| Standalone Application || This is the simplest layout of project, ideal for small web applications, coded by small teams, for which <br>the volume of source-code and the parallelization of coding tasks are not so hard to administer.  ||
-|| Module Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to<br>be reused between multiple functionalities. ||
-|| Application With Modules || This layout is the one designed to be used as fragment, reusable or not, of a large application.<br>A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product. ||
+|| *Project Layout* || *Overview* ||
+|| Standalone Application ||   ||
+|| Module Application ||  ||
+|| Module Container Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to<br>be reused between multiple functionalities. ||
+ 
 
-Each project layout has its particularities. Here we will discuss about them: 
+Each project layout has its particularities. Here we will discuss about them:
+
+== 6.1 Standalone Application ==
+
+This layout is a template for an ordinary Java web project. It has facilities for help you with tasks of building and deploying the final application.         
+It is the default and simplest layout of project, ideal for small web applications, coded by small teams, for which the volume of source-code and the parallelization of coding tasks are not so hard to administer. 
   
+== 6.2 Module Application ==
+
+GWT supports modularization, allowing you to divide your application and package its parts separately. This is especially useful for building large applications.
+_*Crux*_ extends such mechanism adding some other features to turn the modular development easier. 
+The Module Application layout is designed to model fragments, reusable or not, of a large application. A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product.
+A Module Application must be packaged as a jar file, named with the following parameter {{{<module name>.module.jar}}}. This way, it is ready to be used by another module or by a Module Container Application.
+
+
+
+
+
+
+
+== 6.3 Module Container Application ==
