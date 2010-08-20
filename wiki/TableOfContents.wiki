@@ -132,11 +132,11 @@
 <tr>
 <td><br/><br/><br/></td>
 </tr>
-<tr>
-<td>== Previous Releases Documentation ==</td>
-</tr>
+</table>
+== Previous Releases Documentation ==
+<table> 
 <tr>
 <td>....[http://crux-framework.googlecode.com/svn/wiki/older/crux-wiki-2x.zip Release 2.x]</td>
 </tr>  
-</table>  
+</table>
   
