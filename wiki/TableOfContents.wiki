@@ -100,6 +100,18 @@
 <td>........*5.2* [UserManual#5.2_Crux_Compiler Crux Compiler]</td>
 </tr>
 <tr>
+<td>....*6* [UserManual#6_Project_Layouts Project Layouts]</td>
+</tr>  
+<tr>
+<td>........*6.1* [UserManual#6.1_Standalone_Application Standalone Application]</td>
+</tr>
+<tr>
+<td>........*6.2* [UserManual#6.2_Module_Application Module Application]</td>
+</tr>
+<tr>
+<td>........*6.3* [UserManual#6.3_Module_Container_Application Module Container Application]</td>
+</tr>
+<tr>
 <td>*[Widgets Widgets]*</td>
 </tr>  
 <tr>
