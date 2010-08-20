@@ -2036,28 +2036,34 @@ Which layout you should choose for your application depends on its characteristi
 || *Project Layout* || *Overview* ||
 || Standalone Application ||   ||
 || Module Application ||  ||
-|| Module Container Application || This can be considered the ideal layout for corporative applications, which are typically built by <br>a larger number of developers and consist of many dozens of use cases, some of which tend to<br>be reused between multiple functionalities. ||
+|| Module Container Application || 
  
 
 Each project layout has its particularities. Here we will discuss about them:
 
 == 6.1 Standalone Application ==
 
-This layout is a template for an ordinary Java web project. It has facilities for help you with tasks of building and deploying the final application.         
-It is the default and simplest layout of project, ideal for small web applications, coded by small teams, for which the volume of source-code and the parallelization of coding tasks are not so hard to administer. 
+This layout is a template for an ordinary Java web project. It has facilities for help you with tasks of 
+building and deploying the final application. It is the default and simplest layout of project, ideal for 
+small web applications, coded by small teams, for which the volume of source-code and the parallelization 
+of coding tasks are not so hard to administer. 
   
 == 6.2 Module Application ==
 
-GWT supports modularization, allowing you to divide your application and package its parts separately. This is especially useful for building large applications.
-_*Crux*_ extends such mechanism adding some other features to turn the modular development easier. 
-The Module Application layout is designed to model fragments, reusable or not, of a large application. 
-A module project can be coded, tested, versioned and even delivered totally separated of the rest of the application. This can provide a drastic improvement in the development speed, in the cost of maintenance and, we believe, in the quality of the final product.
-Applications of this flavor must be packaged as jars files, named with the following pattern {{{<module name>.module.jar}}}. This way, it is ready to be used by another module or by a Module Container Application.
+GWT supports modularization, allowing you to divide your application and package its parts separately. This 
+is especially useful for building large applications. _*Crux*_ extends such mechanism adding some other features 
+to turn the modular development easier. 
 
+The Module Application layout is designed to model fragments, reusable or not, of a large application. A module 
+project can be coded, tested, versioned and even delivered totally separated of the rest of the application. This 
+can provide a drastic improvement in the development speed, in the cost of maintenance and, we believe, in the 
+quality of the final product. 
 
-
-
-
+Every application of this flavor must be packaged a jar file, named with the following pattern {{{<moduleName>.module.jar}}}. 
+This way, it will be ready to be used by another module or by a Module Container Application. A packaged module can contain
+pre-compiled resources for improving the compiling speed of the dependent applications. 
 
 
 == 6.3 Module Container Application ==
+
+This can be considered the ideal layout for corporative applications, which are typically built by a larger number of developers and consist of many dozens of use cases, some of which tend to be reused between multiple functionalities.
