@@ -2030,8 +2030,9 @@ You can invoke CruxCompiler in two different ways:
 
 = 6 Project Layouts =
 
-A _*Crux*_ application can be built for different purposes. There are some distinct layouts of projects provided by Crux that you can use for achieve these purposes. 
-Which layout you should choose for your application depends on its characteristics. The currently supported layouts are: 
+A _*Crux*_ application can be built for different purposes. There are some distinct layouts of projects provided by Crux 
+that you can use for achieve these purposes. Which layout you should choose for your application depends on its characteristics. 
+The currently supported layouts are: 
 
   * Standalone Application
   * Module Application
@@ -2060,8 +2061,8 @@ can provide a drastic improvement in the development speed, in the cost of maint
 quality of the final product. 
 
 Every application of this flavor must be packaged a jar file, named with the following pattern {{{<moduleName>.module.jar}}}. 
-This way, it will be ready to be used by another module or by a Module Container Application. A packaged module can contain
-pre-compiled resources for improving the compiling speed of the dependent applications. 
+This way, it will be ready to be used by another module or by a [UserManual#6.3_Module_Container_Application Module Container Application]. 
+A packaged module can contain pre-compiled resources for improving the compiling speed of the dependent applications. 
 
 
 == 6.3 Module Container Application ==
@@ -2070,6 +2071,7 @@ This can be considered the ideal layout for corporative applications, which are 
 number of developers and consist of many dozens of use cases, some of which tend to be reused by multiple 
 functionalities. 
 
-This kind of application can contain multiple Module Applications that just need to be available in its classpath,
-it is, must be placed inside the {{{WEB-INF/lib}}} folder. 
+This kind of application can contain multiple [UserManual#6.2_Module_Application Module Applications] that 
+just need to be available in its classpath. More specifically, modules must be placed inside the {{{WEB-INF/lib}}} 
+folder. 
 
