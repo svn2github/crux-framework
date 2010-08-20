@@ -10,7 +10,7 @@ This documentation will show you, in a detailed and gradual way, how to use the 
   * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend 1.6);
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
-To see an example application using _*Crux*_, take a look at the our [http://crux-showcase.appspot.com/ Showcase].
+To see an example application using _*Crux*_, take a look at the [http://crux-showcase.appspot.com/ Showcase].
 == 1.1 _Crux_ and GWT==
 
 _*Crux*_ is built over GWT and support all of its features.
@@ -54,7 +54,7 @@ Then, select {{{User Specified Entries}}} and choose {{{Add...}}}. Choose {{{Nex
 
 Here we will explore the application generated in the previous section, explaining each single part of it.
 
-  * The  {{{war}}} folder is the root context of your application and contains: 
+  * The {{{war}}} folder is the root context of your application and contains: 
     * a WEB-INF folder, compliant with JEE specifications, where you will find:
       * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
       * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details at section [UserManual#4.3_Setup Setup]);
@@ -232,7 +232,7 @@ _*Crux*_ Screen support the following events:
 
 The _*Crux*_ Context is a common area where you can store and retrieve data. Each data entry is associated with a key. You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
 
-Behind the scenes, Crux contexts are nothing but cookies. It means you should not trust in it's contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
+Behind the scenes, Crux contexts are nothing but cookies. It means you should not trust in its contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
 
 The data you store in a Context are visible to any Window on your application, no matter if it is a Popup, a Tab Page, or an IFrame. So, it is a very useful mechanism to share data between different HTML documents.
 
@@ -283,8 +283,8 @@ If you call {{{Screen.createContext()}}} more than once, you will erase the cont
 Screen class has the following static methods to support Context management:
 
 || *Method* || *Description* ||
-||createContext||Initialize the context. It just needs to be called once in one of the modules that are sharing information.||
-||clearContext||remove all context entries||
+||createContext||Initializes the context. It just needs to be called once in one of the modules that are sharing information.||
+||clearContext||Removes all context entries||
 
 
 === 3.2.4 Control History ===
@@ -320,7 +320,7 @@ or Declaratively:
 </html>
 }}}
 
-Note that you don't need here to add any iFrame to your host page, as in pure GWT.
+Note that you don't need here to add any IFrame to your host page, as in pure GWT.
 
 === 3.2.5 Block and Unblock ===
 
@@ -449,7 +449,7 @@ public class MyController
 }
 }}}
 
-Note that the above controller contains a method that does not follow the conditions to be an event handler ({{{myMethod}}}). It can not be called declaratively.
+Note that the above controller contains a method that does not follow the conditions to be an event handler ({{{myMethod}}}). It cannot be called declaratively.
  
 ==== 3.3.3.1 The @Controller Annotation====
 
@@ -799,7 +799,7 @@ That will make those controllers be available even if no {{{useController}}} dec
 
 Crux supports communication between different controllers, even if located on different screens (documents).
 
-The first step to implement a cross document communication is create an interface extending the {{{CrossDocument}}} interface.
+The first step to implement a cross document communication is creating an interface extending the {{{CrossDocument}}} interface.
 
 {{{
 public interface MyControllerCrossDoc extends CrossDocument {
@@ -881,7 +881,7 @@ public class MySecondController {
  
 The previous example calls the method on the "myController" controller located on the top window of the current screen.
 
-The following table shows all methods present on {{{TargetDocument}}} interface, that can be used to inform the target for the calls.
+The following table shows all methods present on {{{TargetDocument}}} interface that can be used to inform the target for the calls.
 
 || *Method* || *Description* ||
 ||void setTarget(Target target)||Sets the target for the cross document call. <br/>{{{Target}}} is an Enum described on following list.||
@@ -1829,7 +1829,7 @@ If you need i18n before the _*Crux* FrontController_ Servlet, you have to put th
 _*Crux*_ provides some configuration options that can modify behaviors on the framework.
 
 Those options can be informed through:
-  # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{Eg: -DCrux.wrapSiblingWidgets=false}}}.
+  # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{e.g.: -DCrux.wrapSiblingWidgets=false}}}.
   # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
 
 If you use both ways shown, the command line has precedence. 
@@ -1968,7 +1968,7 @@ The section [UserManual#4.1_Writing_Server-Side_Code Writing Server-Side Code] s
 
 However, you can need to change this to, for example, integrate _*Crux*_ with some other server framework like [http://www.springsource.org spring], [http://code.google.com/p/google-guice/ guice] or to make your service classes EJBs.
 
-Using the property {{{serviceFactory}}} you can specify your own factory class, that just needs to implement the following interface:
+Using the property {{{serviceFactory}}} you can specify your own factory class, which just needs to implement the following interface:
 
 {{{
 public interface ServiceFactory 
@@ -2030,7 +2030,7 @@ You can invoke CruxCompiler in two different ways:
 
 = 6 Project Layouts =
 
-GWT supports modularization, allowing you to divide your application and package its parts separately. This is specially useful for building large applications.
+GWT supports modularization, allowing you to divide your application and package its parts separately. This is especially useful for building large applications.
 For this reason, _*Crux*_ projects can come in three different flavors:
 
 || *Application Layout* || *Overview* ||
