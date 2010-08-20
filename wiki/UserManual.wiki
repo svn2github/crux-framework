@@ -1681,7 +1681,7 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
 }
 }}}
 
-== 4.2 I18n ==
+== 4.2 I18N ==
 
 _*Crux*_ provides a mechanism to use i18n in your server-side classes. It's very similar to the GWT i18n for client-side.
 
