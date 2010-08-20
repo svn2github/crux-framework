@@ -133,7 +133,7 @@
 <td><br/><br/><br/></td>
 </tr>
 <tr>
-<td>*Previous Releases Documentation*</td>
+<td>== Previous Releases Documentation ==</td>
 </tr>
 <tr>
 <td>....[http://crux-framework.googlecode.com/svn/wiki/older/crux-wiki-2x.zip Release 2.x]</td>
