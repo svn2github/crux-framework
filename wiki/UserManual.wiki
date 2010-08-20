@@ -2050,8 +2050,9 @@ It is the default and simplest layout of project, ideal for small web applicatio
 
 GWT supports modularization, allowing you to divide your application and package its parts separately. This is especially useful for building large applications.
 _*Crux*_ extends such mechanism adding some other features to turn the modular development easier. 
-The Module Application layout is designed to model fragments, reusable or not, of a large application. A module project can be coded, tested, versioned and even delivered totally separated of<br> the rest of the application. This can provide a drastic improvement in the development speed, in<br>the cost of maintenance and, we believe, in the quality of the final product.
-A Module Application must be packaged as a jar file, named with the following parameter {{{<module name>.module.jar}}}. This way, it is ready to be used by another module or by a Module Container Application.
+The Module Application layout is designed to model fragments, reusable or not, of a large application. 
+A module project can be coded, tested, versioned and even delivered totally separated of the rest of the application. This can provide a drastic improvement in the development speed, in the cost of maintenance and, we believe, in the quality of the final product.
+Applications of this flavor must be packaged as jars files, named with the following pattern {{{<module name>.module.jar}}}. This way, it is ready to be used by another module or by a Module Container Application.
 
 
 
