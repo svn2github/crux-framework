@@ -1956,7 +1956,7 @@ _*Crux*_ depends on knowing some paths in your application in order to retrieve 
 
 There are two default ClassPathResolvers delivered with _*Crux*_. The one you need depends on what [UserManual#6_Project_Layouts project layout] your application uses.
 || *Project Layout* || *ClassPathResolver* || *Why?* ||
-|| Standalone Application || ClassPathResolverImpl || It's the simplest and the fastest one. ||
+|| Monolithic Application || ClassPathResolverImpl || It's the simplest and the fastest one. ||
 || Module Application || ModuleClassPathResolver || It can find any Crux resource (like pages, templates, etc.) even if they are packaged in jar files.<br>Its necessary because a module can inherit on other modules and those dependencies must be packaged as jar files and placed under the {{{WEB-INF/lib}}} folder. ||
 || Module Container Application || ModuleClassPathResolver || Exactly the same reason of the previous layout. ||
 
@@ -2034,14 +2034,14 @@ A _*Crux*_ application can be built for different purposes. There are some disti
 that you can use for achieve these purposes. Which layout you should choose for your application depends on its characteristics. 
 The currently supported layouts are: 
 
-  * Standalone Application
+  * Monolithic Application
   * Module Application
   * Module Container Application 
 
 Below, we talk about each one:
 
 
-== 6.1 Standalone Application ==
+== 6.1 Monolithic Application ==
 
 This layout is a template for an ordinary Java web project. It has facilities for help you with tasks of 
 building and deploying the final application. It is the default and simplest layout of project, ideal for 
