@@ -171,7 +171,7 @@ public class Templates
 		String library = templateElement.getAttribute("library");
 		if (templates.containsKey(library+"_"+templateId))
 		{
-			throw new TemplateException(messages.templateDuplicatedTemplate(library, templateId));
+			//throw new TemplateException(messages.templateDuplicatedTemplate(library, templateId));
 		}
 		
 		if (!registeredLibraries.containsKey(library))
