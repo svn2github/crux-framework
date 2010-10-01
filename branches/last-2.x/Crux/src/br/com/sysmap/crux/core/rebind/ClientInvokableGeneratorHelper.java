@@ -31,6 +31,7 @@ import br.com.sysmap.crux.core.client.controller.ValueObject;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.ValidateException;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
@@ -487,14 +488,14 @@ public abstract class ClientInvokableGeneratorHelper extends AbstractRegisteredE
 			if (required)
 			{
 				
-				sourceWriter.println("if (" +Window.class.getName()+".Location.getParameter(\""+name+"\")==null){");
+				sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".isEmpty("+Window.class.getCanonicalName()+".Location.getParameter(\""+name+"\"))){");
 				sourceWriter.indent();
 				sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote(coreMessages.requiredParameterMissing(name))+");");
 				sourceWriter.outdent();
 				sourceWriter.println("}");
 				
 			}
-			sourceWriter.println("if (" +Window.class.getName()+".Location.getParameter(\""+name+"\")!=null){");
+			sourceWriter.println("if (!"+StringUtils.class.getCanonicalName()+".isEmpty("+Window.class.getCanonicalName()+".Location.getParameter(\""+name+"\"))){");
 			sourceWriter.indent();
 			sourceWriter.println("try{");
 			sourceWriter.indent();
