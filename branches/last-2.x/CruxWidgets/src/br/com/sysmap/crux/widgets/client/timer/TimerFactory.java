@@ -16,7 +16,9 @@
 package br.com.sysmap.crux.widgets.client.timer;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -63,7 +65,7 @@ public class TimerFactory extends WidgetFactory<Timer>
 			start = Boolean.parseBoolean(strStart);
 		}
 		
-		return new Timer(initial, regressive, start);
+		return new Timer(initial, regressive, start, element.getAttribute("_pattern"));
 	}
 	
 	@Override
@@ -71,6 +73,9 @@ public class TimerFactory extends WidgetFactory<Timer>
 		@TagAttributeDeclaration(value="start", type=Boolean.class, defaultValue="false"),
 		@TagAttributeDeclaration(value="initial", type=Integer.class, defaultValue="0"),
 		@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false")
+	})
+	@TagAttributes({
+		@TagAttribute(value="pattern")
 	})
 	public void processAttributes(WidgetFactoryContext<Timer> context) throws InterfaceConfigException
 	{
