@@ -23,6 +23,9 @@ import br.com.sysmap.crux.core.client.screen.ModuleComunicationException;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseHandler;
 import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
+import br.com.sysmap.crux.widgets.client.event.openclose.HasOpenHandlers;
+import br.com.sysmap.crux.widgets.client.event.openclose.OpenEvent;
+import br.com.sysmap.crux.widgets.client.event.openclose.OpenHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
@@ -34,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimation
+public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimation, HasOpenHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-Popup" ;
 	protected static List<Popup> popups = new ArrayList<Popup>();
@@ -160,6 +163,46 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 		
 		popup.show();
 	}
+	
+	/**
+	 * 
+	 * @param title
+	 * @param url
+	 * @param beforeCloseHandler
+	 * @param styleName
+	 * @param animationEnabled
+	 */
+	public static void show(String title, String url, String width, String height, BeforeCloseHandler beforeCloseHandler, OpenHandler openHandler, String styleName, boolean animationEnabled, boolean closeable)
+	{
+		Popup popup = new Popup(); 
+		popup.setTitle(title);
+		popup.setUrl(url);
+		popup.setStyleName(styleName);
+		popup.setCloseable(closeable);
+		
+		if(width != null)
+		{
+			popup.setWidth(width);
+		}
+		if(height != null)
+		{
+			popup.setHeight(height);
+		}			
+		
+		popup.setAnimationEnabled(animationEnabled);
+		
+		if (beforeCloseHandler != null)
+		{
+			popup.addBeforeCloseHandler(beforeCloseHandler);
+		}
+		
+		if (openHandler != null)
+		{
+			popup.addOpenHandler(openHandler);
+		}		
+		
+		popup.show();
+	}
 
 	public static void unregisterLastShownPopup()
 	{
@@ -257,6 +300,11 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	public void setWidth(String width)
 	{
 		this.width = width;
+	}
+
+	public HandlerRegistration addOpenHandler(OpenHandler handler)
+	{
+		return addHandler(handler, OpenEvent.getType());
 	}
 
 	/**
