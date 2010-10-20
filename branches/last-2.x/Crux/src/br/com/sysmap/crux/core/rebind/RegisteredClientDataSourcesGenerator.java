@@ -174,7 +174,9 @@ public class RegisteredClientDataSourcesGenerator extends AbstractRegisteredElem
 	private String generateDataSourceClass(TreeLogger logger, Screen screen, SourceWriter sourceWriter, 
 						Class<? extends DataSource<?>> dataSourceClass)
 	{
-		String className = dataSourceClass.getSimpleName()+"Wrapper";
+		String originalName = dataSourceClass.getName();
+		originalName = originalName.replaceAll("\\.", "_");
+		String className = originalName+"Wrapper";
 		sourceWriter.println("public class "+className+" extends " + getClassSourceName(dataSourceClass)
 				         + " implements "+ScreenBindableObject.class.getName()+"{");
 				
