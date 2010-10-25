@@ -36,6 +36,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
@@ -58,15 +59,24 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 */
 	public CruxInternalPopupController()
 	{
-		JSWindow opener = Popup.getOpener();
-		if(opener != null)
+		Timer timer = new Timer()
 		{
-			((TargetDocument) crossDoc).setTargetWindow(opener);
-			if(crossDoc.isWaitingForOpenEvent())
+			@Override
+			public void run()
 			{
-				crossDoc.onOpen();				
+				JSWindow opener = Popup.getOpener();
+				if(opener != null)
+				{
+					((TargetDocument) crossDoc).setTargetWindow(opener);
+					if(crossDoc.isWaitingForOpenEvent())
+					{
+						crossDoc.onOpen();				
+					}
+				}				
 			}
-		}
+		};
+		
+		timer.schedule(10);
 	}
 	
 	/**
