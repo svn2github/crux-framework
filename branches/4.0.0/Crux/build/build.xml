@@ -51,9 +51,9 @@
 			</classpath>
 		</javac>
 
-		<svn failonerror="false" javahl="false" svnkit="true">
+		<!--svn failonerror="false" javahl="false" svnkit="true">
 			<info target="${basedir}" verbose="true"/>
-		</svn>
+		</svn-->
 		
 		<jar jarfile="${distdir}/${final.name}.jar">
 			<fileset dir="${classesdir}" excludes="**/public/*" />

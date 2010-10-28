@@ -16,7 +16,6 @@
 package br.com.sysmap.crux.core.client.screen;
 
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -25,24 +24,18 @@ import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Text;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Factory for gwt widgets. It creates widgets based on a span tag contained
+ * Factory for gwt widgets. It creates widgets based on a meta data array contained
  * in the host HTML page. It provides a declarative way to create widgets.
  * 
- * The following example shows how to create a widget in a declarative way:
- * 
- *  &lt;span id="myWidgetId" _type="textBox" 
- *                           _onclick="myControlClass.myethod" &gt; 
- *  &lt;/span&gt;
  * @author Thiago da Rosa de Bustamante
  */
 public abstract class WidgetFactory <T extends Widget>
@@ -59,14 +52,14 @@ public abstract class WidgetFactory <T extends Widget>
 	public static class WidgetFactoryContext<W>
 	{
 		private W widget;
-		private Element element;
+		private JSONObject element;
 		private String widgetId;
 		private FastMap<Object> attributes;
 		
-		WidgetFactoryContext(W widget, Element element, String widgetId)
+		WidgetFactoryContext(W widget, JSONObject metaElem, String widgetId)
 		{
 			this.widget = widget;
-			this.element = element;
+			this.element = metaElem;
 			this.widgetId = widgetId;
 			this.attributes = new FastMap<Object>();
 		}
@@ -75,7 +68,7 @@ public abstract class WidgetFactory <T extends Widget>
 		{
 			return widget;
 		}
-		public Element getElement()
+		public JSONObject getElement()
 		{
 			return element;
 		}
@@ -117,9 +110,9 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public final T createWidget(Element element, String widgetId) throws InterfaceConfigException
+	public final T createWidget(JSONObject metaElem, String widgetId) throws InterfaceConfigException
 	{
-		return createWidget(element, widgetId, true);
+		return createWidget(metaElem, widgetId, true);
 	}
 	
 	/**
@@ -130,9 +123,9 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public T createWidget(Element element, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	public T createWidget(JSONObject metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
-		WidgetFactoryContext<T> context = createContext(element, widgetId, addToScreen);
+		WidgetFactoryContext<T> context = createContext(metaElem, widgetId, addToScreen);
 		if (context != null)
 		{
 			processAttributes(context);
@@ -151,9 +144,9 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected WidgetFactoryContext<T> createContext(Element element, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	protected WidgetFactoryContext<T> createContext(JSONObject metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
-		T widget = instantiateWidget(element, widgetId);
+		T widget = instantiateWidget(metaElem, widgetId);
 		if (widget != null)
 		{
 			if(addToScreen)
@@ -161,7 +154,7 @@ public abstract class WidgetFactory <T extends Widget>
 				Screen.add(widgetId, widget);
 			}			
 
-			return new WidgetFactoryContext<T>(widget, element, widgetId);
+			return new WidgetFactoryContext<T>(widget, metaElem, widgetId);
 		}
 		return null;
 	}
@@ -265,37 +258,23 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	/**
-	 * Retrieve a Crux widget attribute from its declaring span element
-	 * @param element the widget span metadata element
+	 * Retrieve a Crux widget attribute from its declaring meta element
+	 * @param element the widget metadata element
 	 * @param propertyName the name of the attribute
 	 * @return attribute value
 	 */
-	public static String getProperty(Element element, String propertyName)
+	public static String getProperty(JSONObject metaElem, String propertyName)
 	{
-		if (element != null)
-		{
-			return element.getAttribute("_"+propertyName);
-		}
-		else
-		{
-			return null;
-		}
+		return JSONUtils.getStringProperty(metaElem, propertyName);
 	}
 	
 	/**Retrieve the widget child element name
 	 * @param childElement the span element representing the child
 	 * @return child name
 	 */
-	public static String getChildName(Element childElement)
+	public static String getChildName(JSONObject childElement)
 	{
-		if (childElement != null)
-		{
-			return childElement.getAttribute("__tag");
-		}
-		else
-		{
-			return null;
-		}
+		return JSONUtils.getStringProperty(childElement, "childTag");
 	}
 	
 	/**
@@ -315,10 +294,12 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected static Widget createChildWidget(Element element, String widgetId) throws InterfaceConfigException
+	protected static Widget createChildWidget(JSONObject metaElem) throws InterfaceConfigException
 	{
 		ScreenFactory factory = ScreenFactory.getInstance();
-		return factory.newWidget(element, widgetId, factory.getMetaElementType(element));
+		assert(metaElem.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+		String widgetId = JSONUtils.getUnsafeStringProperty(metaElem,"id");
+		return factory.newWidget(metaElem, widgetId, factory.getMetaElementType(metaElem));
 	}
 
 	/**
@@ -330,9 +311,9 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected static Widget createChildWidget(Element element, String widgetId, String widgetType) throws InterfaceConfigException
+	protected static Widget createChildWidget(JSONObject metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
-		return ScreenFactory.getInstance().newWidget(element, widgetId, widgetType);
+		return ScreenFactory.getInstance().newWidget(metaElem, widgetId, widgetType);
 	}
 	
 	/**
@@ -348,7 +329,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * Returns the element which is the father of the given one. If it does not have an id, creates a random for it
 	 * @param child
 	 * @return
-	 */
+	 *
 	protected Element getParentElement(Element child)
 	{
 		Element parent = child.getParentElement();
@@ -363,37 +344,22 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	/**
-	 * @param element
+	 * @param widgetId
 	 * @return
 	 */
-	protected Element getEnclosingPanelElement(Element element)
+	protected Element getEnclosingPanelElement(String widgetId)
 	{
-		Element panelElement = ScreenFactory.getInstance().getEnclosingPanelElement(element, element.getId());
-		if (StringUtils.isEmpty(panelElement.getId()))
-		{
-			panelElement.setId(generateNewId());
-		}
-		return panelElement;
+		return ScreenFactory.getInstance().getEnclosingPanelElement(widgetId);
 	}
 	
 	/**
 	 * 
-	 * @param element
+	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean isWidget(Element element)
+	protected static boolean isWidget(JSONObject metaElem)
 	{
-		return ScreenFactory.getInstance().isValidWidget(element);
-	}
-	
-	/**
-	 * 
-	 * @param element
-	 * @return
-	 */
-	protected static boolean isValidCruxWidgetMetaTag(Element element)
-	{
-		return ScreenFactory.getInstance().isValidCruxWidgetMetaTag(element);
+		return ScreenFactory.getInstance().isValidWidget(metaElem);
 	}
 	
 	/**
@@ -406,203 +372,87 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	/**
-	 * @param lazy
-	 */
-	protected static void cleanLazyDependentWidgets(String lazy)
-	{
-		ScreenFactory.getInstance().getScreen().cleanLazyDependentWidgets(lazy);
-	}
-	
-	/**
-	 * Returns true if an element is a span
-	 * @param element
-	 * @param acceptsNull
-	 * @return
-	 */
-	private static boolean isSpan(Element element) 
-	{
-		if (element != null)
-		{
-			String tagName = element.getTagName();
-			if (tagName != null)
-			{
-				return StringUtils.unsafeEquals(tagName,"SPAN");
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Returns the element if it is a span. Raises error otherwise.
-	 * @param element
-	 * @param acceptsNull
-	 * @return
-	 * @throws InterfaceConfigException
-	 */
-	private static Element ensureSpan(Element element) throws InterfaceConfigException
-	{
-		if(isSpan(element))
-		{
-			return element;
-		}
-		else
-		{
-			throw new InterfaceConfigException(Crux.getMessages().widgetFactoryEnsureSpanFail());
-		}
-	}
-	
-	/**
-	 * If the next child element is a span, returns it. Otherwise, raises error.
-	 * If there is no child element and <code>acceptsNull</code> is false, raises error.
-	 * @param element
-	 * @param acceptsNull
-	 * @return
-	 * @throws InterfaceConfigException
-	 */
-	protected static Element ensureFirstChildSpan(Element element, boolean acceptsNoChild) throws InterfaceConfigException
-	{
-		Element firstChild = element.getFirstChildElement();
-		
-		while (firstChild!= null && firstChild.getNodeType() != Node.ELEMENT_NODE)
-		{
-			firstChild = firstChild.getNextSiblingElement();
-		}
-		
-		if((!acceptsNoChild && firstChild == null) || (firstChild != null && !isSpan(element)))
-		{
-			throw new InterfaceConfigException(Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty());			
-		}
-		else
-		{
-			return firstChild;
-		}	
-	}
-	
-	/**
-	 * 
-	 * @param element
+	 * @param metaElem
 	 * @param acceptsNoChild
 	 * @return
-	 * @throws InterfaceConfigException
 	 */
-	protected static String ensureTextChild(Element element, boolean acceptsNoChild) throws InterfaceConfigException
+	protected static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws InterfaceConfigException
 	{
-		NodeList<Node> childNodes = element.getChildNodes();
-		String result = null;
-		
-		if(childNodes != null)
+		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		if (acceptsNoChild && !metaElem.containsKey("children"))
 		{
-			int length = childNodes.getLength();
-			for (int i = 0; i < length; i++)
-			{
-				Node node = childNodes.getItem(i);
-				
-				if(node instanceof Text)
-				{
-					Text text =  (Text) node;
-					result = (result == null?text.getNodeValue():result+text.getNodeValue());
-				}
-			}
+			return null;
 		}
-		
-		if((result == null || result.length() == 0) && !acceptsNoChild)
-		{
-			throw new InterfaceConfigException(Crux.getMessages().widgetFactoryEnsureTextChildEmpty());
-		}
-
+		JSONArray children = metaElem.get("children").isArray();
+		assert(acceptsNoChild || (children != null && children.size()>0)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		JSONObject firstChild = children.get(0).isObject();
+		assert(acceptsNoChild || firstChild != null):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		return firstChild;
+	}
+	
+	/**
+	 * 
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 */
+	protected static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild)
+	{
+		String result = JSONUtils.getStringProperty(metaElem, "_text");
+		assert(acceptsNoChild || (result != null && result.length() > 0)):Crux.getMessages().widgetFactoryEnsureTextChildEmpty();
 		return result;
 	}
+	
 	/**
-	 * If there are any span elements among the child nodes of the given one, returns those spans.
-	 * If there are no child spans and <code>acceptsNoChild</code> is false, raises error.
-	 * @param element
-	 * @param acceptsNull
+	 * @param metaElem
+	 * @param acceptsNoChild
 	 * @return
-	 * @throws InterfaceConfigException
 	 */
-	protected static FastList<Element> ensureChildrenSpans(Element element, boolean acceptsNoChild) throws InterfaceConfigException
+	protected static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) 
 	{
-		FastList<Element> childSpans = new FastList<Element>();
+		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		
-		NodeList<Node> childNodes = element.getChildNodes();
-		
-		if(childNodes != null)
+		if (acceptsNoChild && !metaElem.containsKey("children"))
 		{
-			int length = childNodes.getLength();
-			for (int i = 0; i < length; i++)
-			{
-				Node node = childNodes.getItem(i);
-				if(node.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element elem =  ensureSpan((Element) node);
-					childSpans.add(elem);
-				}
-			}
+			return null;
 		}
-		
-		if(childSpans.size() == 0 && !acceptsNoChild)
-		{
-			throw new InterfaceConfigException(Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty());
-		}
-		
-		return childSpans;	
+		JSONArray children = metaElem.get("children").isArray();
+		assert(acceptsNoChild || (children != null && children.size()>0 && children.get(0).isObject()!=null)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		return children;
 	}
 	
 	/**
 	 * 
 	 * @param element
 	 * @return
-	 * @throws InterfaceConfigException 
 	 */
-	protected Element ensureWidget(Element element) throws InterfaceConfigException
+	protected JSONObject ensureWidget(JSONObject metaElem) 
 	{
-		if(isWidget(element))
-		{
-			return element;
-		}
-		
-		throw new InterfaceConfigException(Crux.getMessages().widgetFactoryEnsureWidgetFail());
-	}
-	
-	/**
-	 * 
-	 */
-	protected static void parseDocument(Element rootElement)
-	{
-		ScreenFactory.getInstance().parseDocument(rootElement);
-	}
-
-	/**
-	 * @return
-	 */
-	protected static boolean isScreenParsing()
-	{
-		return ScreenFactory.getInstance().isParsing();
+		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
+		return metaElem;
 	}
 
 	/**
 	 * 
-	 * @param element
+	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasWidth(Element element)
+	protected static boolean hasWidth(JSONObject metaElem)
 	{
-		String width = element.getAttribute("_width");
-		
+		String width = JSONUtils.getStringProperty(metaElem, "width");
 		return width != null && (width.length() > 0);
 	}
 	
 	/**
 	 * 
-	 * @param element
+	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasHeight(Element element)
+	protected static boolean hasHeight(JSONObject metaElem)
 	{
-		String height = element.getAttribute("_height");
-		
-		return height != null && (height.length() > 0);
+		String width = JSONUtils.getStringProperty(metaElem, "height");
+		return width != null && (width.length() > 0);
 	}
 	
-	public abstract T instantiateWidget(Element element, String widgetId) throws InterfaceConfigException;
+	public abstract T instantiateWidget(JSONObject metaElem, String widgetId) throws InterfaceConfigException;
 }

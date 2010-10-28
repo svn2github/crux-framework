@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
-import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.json.client.JSONObject;
 
 
 /**
@@ -36,7 +36,7 @@ public class ScrollEvtBind implements EvtBinder<HasScrollHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(Element element, HasScrollHandlers widget)
+	public void bindEvent(JSONObject element, HasScrollHandlers widget)
 	{
 		final Event eventScroll = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventScroll != null)

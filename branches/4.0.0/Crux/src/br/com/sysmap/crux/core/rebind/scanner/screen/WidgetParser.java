@@ -15,9 +15,10 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.screen;
 
-import org.w3c.dom.Element;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public interface WidgetParser 
 {
-	void parse(Widget widget, Element element);
+	void parse(Widget widget, JSONObject elem) throws JSONException;
 }

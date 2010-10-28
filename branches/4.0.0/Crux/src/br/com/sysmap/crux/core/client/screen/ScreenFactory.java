@@ -18,19 +18,21 @@ package br.com.sysmap.crux.core.client.screen;
 import java.util.Date;
 
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
 import br.com.sysmap.crux.core.client.utils.DOMUtils;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -160,25 +162,25 @@ public class ScreenFactory {
 	
 	/**
 	 * Creates a new widget based on a HTML SPAN tag and attaches it on the Screen object.
-	 * @param element
+	 * @param metaElem
 	 * @param widgetId
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(Element element, String widgetId, String widgetType) throws InterfaceConfigException
+	public Widget newWidget(JSONObject metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
-		return newWidget(element, widgetId, widgetType, true);
+		return newWidget(metaElem, widgetId, widgetType, true);
 	}
 
 	/**
 	 * Creates a new widget based on a HTML SPAN tag 
-	 * @param element
+	 * @param metaElem
 	 * @param widgetId
 	 * @param addToScreen
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(Element element, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
+	public Widget newWidget(JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
 	{
 		Date start = null;
 		if (Crux.getConfig().enableClientFactoryTracing())
@@ -194,7 +196,7 @@ public class ScreenFactory {
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetFactoryNotFound(widgetType));
 		}
 		
-		Widget widget = widgetFactory.createWidget(element, widgetId, addToScreen); 
+		Widget widget = widgetFactory.createWidget(metaElem, widgetId, addToScreen); 
 		if (widget == null)
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryErrorCreateWidget(widgetId));
@@ -212,30 +214,13 @@ public class ScreenFactory {
 	}
 	
 	/**
-	 * Returns the parent element, or a wrapper span element, contained on parent on the same position
-	 * that the widget meta tag was declared
-	 * @param element
+	 * Returns the parent element (a wrapper span element) 
 	 * @param widgetId
 	 * @return
 	 */
-	protected Element getEnclosingPanelElement(Element element, String widgetId)
+	protected Element getEnclosingPanelElement(String widgetId)
 	{
-		Element panelElement;
-		boolean parentHasMoreThanOneChild = (element.getNextSiblingElement() != null || DOMUtils.getPreviousSiblingElement(element) != null);
-		if (Crux.getConfig().wrapSiblingWidgets() && parentHasMoreThanOneChild)
-		{
-			panelElement = DOM.createSpan();
-			element.getParentElement().insertBefore(panelElement, element);
-		}
-		else
-		{
-			if (parentHasMoreThanOneChild)
-			{
-				GWT.log(Crux.getMessages().screenFactoryNonDeterministicWidgetPositionInParent(widgetId), null);
-			}
-			panelElement = element.getParentElement();
-		}
-		return panelElement;
+		return DOM.getElementById("_crux_"+widgetId);
 	}
 	
 	/**
@@ -251,45 +236,26 @@ public class ScreenFactory {
 	 * @param element
 	 * @return
 	 */
-	boolean isValidWidget(Element element)
+	boolean isValidWidget(JSONObject element)
 	{
-		String tagName = element.getTagName();
-		if (StringUtils.unsafeEquals("SPAN",tagName))
-		{
-			String type = getMetaElementType(element);
-			if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @param element
-	 * @return
-	 */
-	boolean isValidCruxWidgetMetaTag(Element spanElement)
-	{
-		String type = getMetaElementType(spanElement);
+		String type =  JSONUtils.getStringProperty(element, "type");
 		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
 		{
 			return true;
 		}
 		return false;
 	}
-
+	
 	/**
-	 * This method search the element's children for crux meta tags. Those meta tags contains the information
+	 * This method receives an array of crux meta elements. Those meta elements contains the information
 	 * needed to render widgets and informations about the page itself (represented by a {@code Screen} object).
 	 * 
-	 * <p>For each widget meta tag found, this factory choose a {@code WidgetFactory} that will parse the 
-	 * meta tag and build the widget. To find out which {@code WidgetFactory} call, the attribute {@code _type}
-	 * from the meta tag element is checked.
-	 * @param rootElement
+	 * <p>For each widget meta element found, this factory choose a {@code WidgetFactory} that will parse the 
+	 * meta element and build the widget. To find out which {@code WidgetFactory} call, the attribute {@code type}
+	 * from the meta element is checked.
+	 * @param cruxMetaElements the array of elements
 	 */
-	void parseDocument(Element rootElement)
+	void parseDocument(JSONArray cruxMetaElements)
 	{
 		this.parsing = true;
 		try
@@ -300,59 +266,30 @@ public class ScreenFactory {
 				traceOutput = new StringBuilder();;
 				start = new Date();
 			}
-			NodeList<Element> spanElements = rootElement.getElementsByTagName("SPAN");
-			FastList<String> widgetIds = new FastList<String>();
-			Element screenElement = null;
-
-			int spansLength = spanElements.getLength();
-			for (int i=0; i<spansLength; i++)
+			
+			int elementsLength = cruxMetaElements.size();
+			for (int i=0; i<elementsLength; i++)
 			{
-				Element element = spanElements.getItem(i);
-				String type = isCruxMetaElement(element);
-				if (type != null)
+				JSONObject metaElement = cruxMetaElements.get(i).isObject();
+				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
+				String type = getMetaElementType(metaElement);
+				if (StringUtils.unsafeEquals("screen",type))
 				{
-					if (StringUtils.unsafeEquals("screen",type))
+					screen.parse(metaElement);
+				}
+				else
+				{
+					try 
 					{
-						screenElement = element;
-						screen.parse(screenElement);
+						createWidget(metaElement, type, screen);
 					}
-					else
+					catch (Throwable e) 
 					{
-						widgetIds.add(element.getId());
+						Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
 					}
 				}
 			}
 
-			FastList<Element> widgets = new FastList<Element>();
-			for (int i=0; i<widgetIds.size(); i++)
-			{
-				String elementId = widgetIds.get(i);
-				if (!screen.containsWidget(elementId))
-				{
-					Element element = DOM.getElementById(elementId);
-					if (element != null) // Some elements can be handled by its parent's factory
-					{
-						try 
-						{
-							createWidget(element, getMetaElementType(element), screen, widgets);
-						}
-						catch (Throwable e) 
-						{
-							Crux.getErrorHandler().handleError(e);
-							element.setInnerText(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()));
-						}
-					}
-				}
-			}
-			if (screenElement != null)
-			{
-				clearScreenMetaTag(screenElement);
-			}
-			clearWidgetsMetaTags(widgets);
-			if (Crux.getConfig().renderWidgetsWithIDs())
-			{
-				screen.updateWidgetsIds();
-			}
 			if (Crux.getConfig().enableClientFactoryTracing())
 			{
 				Date end = new Date();
@@ -374,50 +311,9 @@ public class ScreenFactory {
 	 * @param cruxMetaElement
 	 * @return
 	 */
-	public String getMetaElementType(Element cruxMetaElement)
+	public String getMetaElementType(JSONObject cruxMetaElement)
 	{
-		return cruxMetaElement.getAttribute("_type");
-	}
-
-	/**
-	 * 
-	 * @param screenElement
-	 */
-	private void clearScreenMetaTag(Element screenElement)
-	{
-		while (screenElement.hasChildNodes())
-		{
-			Node child = screenElement.getFirstChild();
-			screenElement.removeChild(child);
-			screenElement.getParentNode().insertBefore(child, screenElement);
-		}
-		Node parent = screenElement.getParentNode();
-		if (parent != null)
-		{
-			parent.removeChild(screenElement);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param widgets
-	 */
-	private void clearWidgetsMetaTags(FastList<Element> widgets)
-	{
-		for (int i=0; i<widgets.size(); i++) 
-		{
-			Element element = widgets.get(i);
-			String widgetId = element.getId();
-			if (widgetId != null && widgetId.length() >= 0)
-			{
-				element = DOM.getElementById(widgetId); // Evita que elementos reanexados ao DOM sejam esquecidos
-				Element parent;
-				if (element != null && (parent = element.getParentElement())!= null)
-				{
-					parent.removeChild(element);
-				}
-			}
-		}
+		return JSONUtils.getUnsafeStringProperty(cruxMetaElement, "type");
 	}
 
 	/**
@@ -426,8 +322,9 @@ public class ScreenFactory {
 	private void create()
 	{
 		screen = new Screen(getScreenId());
-		Element body = RootPanel.getBodyElement();
-		parseDocument(body);
+		Element metaDataDiv = DOM.getElementById("__CruxMetaData_");
+		JSONValue metaData = JSONParser.parse(metaDataDiv.getInnerHTML());
+		parseDocument(metaData.isArray());
 	}
 	
 	/**
@@ -449,9 +346,10 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidget(Element element, String widgetType, Screen screen, FastList<Element> widgetsElementsAdded) throws InterfaceConfigException
+	private Widget createWidget(JSONObject metaElem, String widgetType, Screen screen) throws InterfaceConfigException
 	{
-		String widgetId = element.getId();
+		assert(metaElem.containsKey("id") && metaElem.get("id").isString() != null) :Crux.getMessages().screenFactoryWidgetIdRequired();
+		String widgetId = JSONUtils.getUnsafeStringProperty(metaElem,"id");
 		if (widgetId == null || widgetId.length() == 0)
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetIdRequired());
@@ -464,69 +362,11 @@ public class ScreenFactory {
 		DeclarativeWidgetFactory widgetFactory = (DeclarativeWidgetFactory) registeredWidgetFactories.getWidgetFactory(widgetType);
 		if (!widgetFactory.isAttachToDOM())
 		{
-			widget = newWidget(element, widgetType, widgetId);
+			widget = newWidget(metaElem, widgetType, widgetId);
 		}
 		else
 		{
-			Element parentElement = getParentElement(element);
-			if (parentElement != null)
-			{
-				widget = createWidgetWithExplicitParent(element, parentElement, screen, widgetsElementsAdded, widgetId, widgetType);
-			}
-			else
-			{
-				widget = createWidgetWithoutExplicitParent(element, parentElement, widgetId, widgetType);
-			}
-		}
-		if (widget != null)
-		{
-			widgetsElementsAdded.add(element);
-		}
-		return widget;
-	}
-	
-	/**
-	 * 
-	 * @param element
-	 * @param screen
-	 * @param widgetsElementsAdded
-	 * @param widgetId
-	 * @param parentElement
-	 * @return
-	 * @throws InterfaceConfigException
-	 */
-	@SuppressWarnings("unchecked")
-	private Widget createWidgetWithExplicitParent(Element element, Element parentElement, Screen screen, FastList<Element> widgetsElementsAdded, String widgetId, String widgetType) throws InterfaceConfigException
-	{
-		Widget widget;
-		Widget parent = screen.getWidget(parentElement.getId());
-		String parentWidgetType = getMetaElementType(parentElement);
-		if (parent == null)
-		{
-			String hasWidgetParentId = HasWidgetsHandler.getHasWidgetsId(parentElement);
-			if (hasWidgetParentId != null && hasWidgetParentId.length() > 0)
-			{
-				parent = screen.getWidget(hasWidgetParentId);
-			}
-			if (parent == null)
-			{
-				parent = createWidget(parentElement, parentWidgetType, screen, widgetsElementsAdded);
-			}
-		}
-		
-		WidgetFactory<?> parentWidgetFactory = registeredWidgetFactories.getWidgetFactory(parentWidgetType);
-		if (parentWidgetFactory instanceof HasWidgetsFactory)
-		{
-			widget = newWidget(element, widgetId, widgetType);
-			((HasWidgetsFactory<Widget>)parentWidgetFactory).add(parent, widget, parentElement, element);
-		}
-		else if (parentWidgetFactory instanceof LazyFactory)
-		{
-			widget = null;
-		}
-		else
-		{
-			widget = screen.getWidget(widgetId);
+			widget = createWidgetAndAttach(metaElem, widgetId, widgetType);
 		}
 		return widget;
 	}
@@ -538,23 +378,21 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidgetWithoutExplicitParent(Element element, Element parentElement, String widgetId, String widgetType) throws InterfaceConfigException
+	private Widget createWidgetAndAttach(JSONObject metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
-		Element panelElement;
-		panelElement = getEnclosingPanelElement(element, widgetId);
-		Widget widget = newWidget(element, widgetId, widgetType);
+		Element panelElement = getEnclosingPanelElement(widgetId);
+		Widget widget = newWidget(metaElem, widgetId, widgetType);
 
 		Panel panel;
 		if (widget instanceof RequiresResize)
 		{
-			boolean hasSize = (WidgetFactory.hasWidth(element) && WidgetFactory.hasHeight(element));
-			if (RootPanel.getBodyElement().equals(element.getParentElement()) && !hasSize)
+			boolean hasSize = (WidgetFactory.hasWidth(metaElem) && WidgetFactory.hasHeight(metaElem));
+			if (RootPanel.getBodyElement().equals(panelElement.getParentElement()) && !hasSize)
 			{
 				panel = RootLayoutPanel.get();
 			}
 			else
 			{
-				ensureElementIdExists(panelElement);
 				panel = RootPanel.get(panelElement.getId());
 				if (!hasSize)
 				{
@@ -564,64 +402,9 @@ public class ScreenFactory {
 		}
 		else
 		{
-			if (!StringUtils.isEmpty(panelElement.getId()) && Screen.get(panelElement.getId()) != null)
-			{
-				panel = (Panel) Screen.get(panelElement.getId());
-			}
-			else
-			{
-				ensureElementIdExists(panelElement);
-				panel = RootPanel.get(panelElement.getId());
-			}
+			panel = RootPanel.get(panelElement.getId());
 		}
 		panel.add(widget);
 		return widget;
-	}
-
-	/**
-	 * @param panelElement
-	 */
-	private void ensureElementIdExists(Element panelElement)
-	{
-		if (StringUtils.isEmpty(panelElement.getId()))
-		{
-			panelElement.setId(WidgetFactory.generateNewId());
-		}
-	}
-
-	/**
-	 * 
-	 * @param element
-	 * @return
-	 */
-	private Element getParentElement(Element element) 
-	{
-		Element elementParent = element.getParentElement();
-		while (elementParent != null && !StringUtils.unsafeEquals("BODY",elementParent.getTagName()))
-		{
-			if (isValidCruxWidgetMetaTag(elementParent))// || HasWidgetsHandler.isValidHasWidgetsPanel(elementParent))TODO check this
-			{
-				return elementParent;
-			}
-			elementParent = elementParent.getParentElement();
-		}
-			
-		return null;	
-	}
-
-	/**
-	 * Check if the span element provided represents a crux meta tag element. If so, return
-	 * the crux meta tag type
-	 * @param element a span element
-	 * @return
-	 */
-	private String isCruxMetaElement(Element spanElement)
-	{
-		String type = getMetaElementType(spanElement);
-		if (type != null && type.length() > 0)
-		{
-			return type;
-		}
-		return null;
 	}
 }

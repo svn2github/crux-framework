@@ -56,7 +56,8 @@ import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -118,11 +119,11 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
 
-		JClassType elementType = factoryClass.getOracle().findType(Element.class.getCanonicalName());
+		JClassType jsonObjectType = factoryClass.getOracle().findType(JSONObject.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
 		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
-				new JType[]{elementType, stringType, JPrimitiveType.BOOLEAN});
+				new JType[]{jsonObjectType, stringType, JPrimitiveType.BOOLEAN});
 
 		JGenericType type = (JGenericType) factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
 		this.widgetChildProcessorContextType = factoryClass.getOracle().getParameterizedType(type, new JClassType[]{widgetType});
@@ -160,7 +161,8 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
     		ScreenFactory.class.getCanonicalName(),
-    		Element.class.getCanonicalName(),
+    		JSONObject.class.getCanonicalName(),
+    		JSONArray.class.getCanonicalName(),
     		FastList.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
     		InterfaceConfigException.class.getCanonicalName(),
@@ -247,7 +249,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		StringBuilder source = new StringBuilder();
 		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
 		
-		source.append(Widget.class.getName()+" _w = createChildWidget(c.getChildElement(), c.getChildElement().getId());\n");						
+		source.append(Widget.class.getName()+" _w = createChildWidget(c.getChildElement());\n");						
 		if (processorAttributes != null && processorAttributes.widgetProperty().length() > 0)
 		{
 			source.append("c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(_w);\n");						
@@ -441,7 +443,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        					}
 	        					else
 	        					{
-	        						result.append("String "+attrName+" = element.getAttribute(\"_"+attrName+"\");\n");
+	        						result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
 	        						if (attr.defaultValue().length() > 0)
 	        						{
 	        							result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
@@ -506,7 +508,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String attributesBlock = generateProcessAttributesBlock(factoryClass);
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
-			sourceWriter.println("Element element = context.getElement();");
+			sourceWriter.println("JSONObject element = context.getElement();");
 			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(attributesBlock);
@@ -550,16 +552,17 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 						}
 						else
 						{
-							source.append("Element child = ensureFirstChildSpan(c.getChildElement(), "+acceptNoChildren+");\n");
+							source.append("JSONObject child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
 						}
 						source.append("if (child != null){\n");
 					}
 					else
 					{
-						source.append("FastList<Element> children = ensureChildrenSpans(c.getChildElement(), "+acceptNoChildren+");\n");
+						source.append("JSONArray children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
 						source.append("if (children != null){\n");
 						source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
-						source.append("Element child = children.get(_i_);\n");
+						source.append("JSONObject child = children.get(_i_).isObject();\n");
+						source.append("if (child != null){\n");
 					}
 					if (hasChildElement)
 					{
@@ -569,9 +572,10 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 					source.append(generateChildrenBlockFromAnnotation(methodsForInnerProcessing, children, 
 							                                                                       processorVariables, true));
 
-					// TODO - Thiago - tratar valida��o de filhos obrigatorios .... espeficamente qdo parent for um agregador....
+					// TODO - Thiago - tratar validação de filhos obrigatorios .... espeficamente qdo parent for um agregador....
 					if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs > 1)
 					{
+						source.append("}\n");
 						source.append("}\n");
 					}
 					source.append("}\n");
@@ -597,7 +601,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        JMethod method = ClassUtils.getMethod(factoryClass, "processChildren", new JType[]{widgetFactoryContextType});
 	        if (mustGenerateChildrenProcessMethod(method))
 	        {
-	        	// TODO - Thiago -  tratar instanciamento qdo for inner classe n�o estatica.
+	        	// TODO - Thiago -  tratar instanciamento qdo for inner classe não estatica.
 	        	Map<String, String> methodsForInnerProcessing = new HashMap<String, String>();
 	        	Map<String, String> processorVariables = new HashMap<String, String>();
 
@@ -690,7 +694,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String eventsBlock = generateProcessEventsBlock(factoryClass, evtBinderVariables);
 		if (!StringUtils.isEmpty(eventsBlock))
 		{
-			sourceWriter.println("Element element = context.getElement();");
+			sourceWriter.println("JSONObject element = context.getElement();");
 			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(eventsBlock);
@@ -740,7 +744,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
 		if (first)
 		{
-			source.append("String  __tag = child.getAttribute(\"__tag\");\n");
+			source.append("String  __tag = getChildName(child);\n");
 		}
 		else
 		{
@@ -777,11 +781,11 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        
 	        if (processorAttributes.widgetProperty().length() > 0)
 	        {
-	        	return "if (child.trim().length() > 0) c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(child);";
+	        	return "if (child.length() > 0) c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(child);";
 	        }
 	        else if (hasTextType.isAssignableFrom(widgetType))
 	        {
-	        	return "if (child.trim().length() > 0) c.getRootWidget().setText(child);";
+	        	return "if (child.length() > 0) c.getRootWidget().setText(child);";
 	        	
 	        }
 	        return "";
@@ -977,10 +981,10 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	private JClassType getWidgetTypeFromClass()
 	{
-		JClassType elementType = factoryClass.getOracle().findType(Element.class.getCanonicalName());
+		JClassType jsonObjectType = factoryClass.getOracle().findType(JSONObject.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{elementType, stringType});
+		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{jsonObjectType, stringType});
 		if (returnType == null)
 		{
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));

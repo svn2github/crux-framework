@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.HasErrorHandlers;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for load events binding
@@ -34,7 +34,7 @@ public class LoadErrorEvtBind implements EvtBinder<HasErrorHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(Element element, HasErrorHandlers widget)
+	public void bindEvent(JSONObject element, HasErrorHandlers widget)
 	{
 		final Event eventError = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventError != null)

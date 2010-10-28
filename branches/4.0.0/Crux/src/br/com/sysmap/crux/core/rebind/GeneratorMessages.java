@@ -184,6 +184,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[screenFactory 008] - Error parsing screen {0}. Details: {1}.")
 	String screenFactoryErrorParsingScreen(String screenId, String errMsg);
 
+	@DefaultServerMessage("[screenFactory 009] - Error parsing screen metaData. Screen {0}. ")
+	String screenFactoryErrorParsingScreenMetaData(String screenId);
+
 	@DefaultServerMessage("[Screen 001] - Error setting property {0} for screen {1}.")
 	String screenPropertyError(String property, String screenId);
 	

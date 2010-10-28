@@ -56,7 +56,9 @@ public interface ClientMessages extends Messages
 	String screenFactoryWidgetFactoryNotFound(String type);
 	@DefaultMessage("[screenFactory 003] - The widget ''{0}'' is a layout panel that does not have its dimensions defined. Explicity define it, or append it directly on body element.")
 	String screenFactoryLayoutPanelWithoutSize(String widgetId);
-	
+	@DefaultMessage("[screenFactory 004] - Crux Meta Data contains an invalid meta element (without type attribute).")
+	String screenFactoryMetaElementDoesNotContainsType();
+
 	//  widget
 	@DefaultMessage("[widget 001] - The id attribute is required for CRUX widgets.")
 	String screenFactoryWidgetIdRequired();
@@ -70,8 +72,6 @@ public interface ClientMessages extends Messages
 	String widgetFactoryEnsureWidgetFail();
 	@DefaultMessage("[widget 006] - The element is not a span.")
 	String widgetFactoryEnsureSpanFail();
-	@DefaultMessage("[widget 007] - The widget ''{0}'' was added to a pure HTML node where already exists other children. In this case, crux can not ensure an order for this widget. To solve this, If you must use panels as widget parent or enable the wrapSiblingWidgets config property.")
-	String screenFactoryNonDeterministicWidgetPositionInParent(String widgetId);
 	@DefaultMessage("[widget 008] - The span element must contain a text node child.")
 	String widgetFactoryEnsureTextChildEmpty();
 	

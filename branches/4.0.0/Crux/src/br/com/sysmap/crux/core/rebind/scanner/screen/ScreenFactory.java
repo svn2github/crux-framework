@@ -24,11 +24,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Attr;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -124,34 +124,84 @@ public class ScreenFactory
 	/**
 	 * Creates a widget based in its &lt;span&gt; tag definition.
 	 * 
-	 * @param source
 	 * @param element
 	 * @param screen
 	 * @return
 	 * @throws ScreenConfigException
 	 */
-	private Widget createWidget(Document source, Element element, Screen screen) throws ScreenConfigException
+	private Widget createWidget(JSONObject elem, Screen screen) throws ScreenConfigException
 	{
-		String widgetId = element.getAttribute("id");
-		if (widgetId == null || widgetId.trim().length() == 0)
+		if (!elem.has("id"))
 		{
 			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired());
 		}
+		String widgetId;
+        try
+        {
+	        widgetId = elem.getString("id");
+        }
+        catch (JSONException e)
+        {
+			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired());
+        }
 		Widget widget = screen.getWidget(widgetId);
 		if (widget != null)
 		{
 			throw new ScreenConfigException(messages.screenFactoryErrorDuplicatedWidget(widgetId));
 		}
 		
-		widget = newWidget(element, widgetId);
+		widget = newWidget(elem, widgetId);
 		if (widget == null)
 		{
 			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId));
 		}
 		
 		screen.addWidget(widget);
+		
+		createWidgetChildren(elem, screen, widgetId, widget);
+		
 		return widget;
 	}
+
+	/**
+	 * @param elem
+	 * @param screen
+	 * @param widgetId
+	 * @param widget
+	 * @throws ScreenConfigException
+	 */
+	private void createWidgetChildren(JSONObject elem, Screen screen, String widgetId, Widget widget) throws ScreenConfigException
+    {
+	    if (elem.has("children"))
+		{
+			try
+            {
+	            JSONArray children = elem.getJSONArray("children");
+	            if (children != null)
+	            {
+	            	for (int i=0; i< children.length(); i++)
+	            	{
+	            		JSONObject childElem = children.getJSONObject(i);
+	            		if (isValidWidget(childElem))
+	            		{
+	            			Widget child = createWidget(childElem, screen);
+	            			child.setParent(widget);
+	            		}
+	            		else
+	            		{
+	            			createWidgetChildren(childElem, screen, widgetId, widget);
+	            		}
+	            	}
+	            }
+            }//TODO tratar o HTMLPanel no xslt.
+			//TODO tratar text dentro de tags com namespace crux (filhos de widgets)...colocar como uma propriedade chamada "_text" no elemento JSON da tag
+			//TODO fazer trim no texto interno dos spans no xslt. Fazer scape de " ao montar o array json
+            catch (JSONException e)
+            {
+    			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId), e);
+            }
+		}
+    }
 
 	/**
 	 * @param nodeList
@@ -194,40 +244,37 @@ public class ScreenFactory
 	}
 	
 	/**
-	 * Test if a target HTML element represents a Screen definition for Crux.
-	 * @param element
+	 * Test if a target json object represents a Screen definition for Crux.
+	 * @param cruxObject
 	 * @return
+	 * @throws JSONException 
 	 */
-	private boolean isScreenDefinitions(Element element)
+	private boolean isScreenDefinition(JSONObject cruxObject) throws JSONException
 	{
-		if ("span".equalsIgnoreCase(element.getLocalName()))
+		if (cruxObject.has("type"))
 		{
-			String type = element.getAttribute("_type");
-			if (type != null && "screen".equals(type))
-			{
-				return true;
-			}
+			String type = cruxObject.getString("type");
+			return (type != null && "screen".equals(type));
 		}
 		return false;
 	}
 	
 	/**
-	 * Test if a target HTML element represents a widget definition for Crux.
-	 * @param element
+	 * Test if a target json object represents a widget definition for Crux.
+	 * @param cruxObject
 	 * @return
+	 * @throws JSONException
 	 */
-	private boolean isValidWidget(Element element)
+	private boolean isValidWidget(JSONObject cruxObject) throws JSONException
 	{
-		if ("span".equalsIgnoreCase(element.getLocalName()))
+		if (cruxObject.has("type"))
 		{
-			String type = element.getAttribute("_type");
-			if (type != null && type.trim().length() > 0 && !"screen".equals(type))
-			{
-				return true;
-			}
+			String type = cruxObject.getString("type");
+			return (type != null && !"screen".equals(type));
 		}
 		return false;
 	}
+	
 	
 	/**
 	 * Builds a new widget, based on its &lt;span&gt; tag definition.
@@ -236,16 +283,16 @@ public class ScreenFactory
 	 * @return
 	 * @throws ScreenConfigException
 	 */
-	private Widget newWidget(Element element, String widgetId) throws ScreenConfigException
+	private Widget newWidget(JSONObject elem, String widgetId) throws ScreenConfigException
 	{
 		try 
 		{
-			String type = element.getAttribute("_type");
+			String type = elem.getString("type");
 			WidgetParser parser = new WidgetParserImpl();
 			Widget widget = new Widget();
 			widget.setId(widgetId);
 			widget.setType(type);
-			parser.parse(widget, element);
+			parser.parse(widget, elem);
 			return widget;
 		} 
 		catch (Throwable e) 
@@ -279,81 +326,95 @@ public class ScreenFactory
 
 		String screenModule = getScreenModule(source.getElementsByTagName("script"));
 		
-		if(screenModule != null)
-		{
-			screen = new Screen(id, screenModule);
-			
-			NodeList elementList = source.getElementsByTagName("span");
-			
-			int length = elementList.getLength();
-			for (int i = 0; i < length; i++) 
-			{
-				Element compCandidate = (Element) elementList.item(i);
-				if (isValidWidget(compCandidate))
-				{
-					try 
-					{
-						createWidget(source, compCandidate, screen);
-					} 
-					catch (ScreenConfigException e) 
-					{
-						logger.error(messages.screenFactoryGenericErrorCreateWidget(id, e.getLocalizedMessage()));
-					}
-				}
-				else if (isScreenDefinitions(compCandidate))
-				{
-					parseScreenElement(screen,compCandidate);
-				}
-			}
-			
-			checkWidgetsRelationship(screen, elementList);
-		}
+		try
+        {
+	        if(screenModule != null)
+	        {
+	        	screen = new Screen(id, screenModule);
+	        	
+	        	JSONArray metaData = getMetaData(source, id);
+	        	
+	        	int length = metaData.length();
+	        	for (int i = 0; i < length; i++) 
+	        	{
+	        		JSONObject compCandidate = metaData.getJSONObject(i);
+	        		
+	        		if (isScreenDefinition(compCandidate))
+	        		{
+	        			parseScreenElement(screen,compCandidate);
+	        		}
+	        		else if (isValidWidget(compCandidate))
+	        		{
+	        			try 
+	        			{
+	        				createWidget(compCandidate, screen);
+	        			} 
+	        			catch (ScreenConfigException e) 
+	        			{
+	        				logger.error(messages.screenFactoryGenericErrorCreateWidget(id, e.getLocalizedMessage()));
+	        			}
+	        		}
+	        	}
+	        }
+        }
+        catch (JSONException e)
+        {
+        	throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()));
+        }
 		
 		return screen;
 	}
 
 	/**
-	 * @param screen
-	 * @param elementList
+	 * @param source
+	 * @return
+	 * @throws JSONException
+	 * @throws ScreenConfigException 
 	 */
-	private void checkWidgetsRelationship(Screen screen, NodeList elementList)
-	{
-		int length = elementList.getLength();
-		for (int i = 0; i < length; i++) 
-		{
-			Element compCandidate = (Element) elementList.item(i);
-			Widget widget = screen.getWidget(compCandidate.getAttribute("id"));
-			if (widget != null)
-			{
-				Widget parent = getParentWidget(screen, compCandidate);
-				if (parent != null)
-				{
-					widget.setParent(parent);
-				}
-			}
-		}
-	}
+	private JSONArray getMetaData(Document source, String id) throws JSONException, ScreenConfigException
+    {
+		
+		Element cruxMetaData = getCruxMetaDataElement(source);
+		
+	    String metaData = cruxMetaData.getTextContent();
+
+	    if (metaData != null)
+	    {
+	    	metaData = metaData.trim();
+	    	if (metaData.startsWith("<!--"))
+	    	{
+	    		metaData = metaData.substring(4).trim();
+	    		if (metaData.endsWith("-->"))
+	    		{
+	    			metaData = metaData.substring(0, metaData.length()-3);
+	    		}
+	    	}
+	    	
+	    	JSONArray meta = new JSONArray(metaData);
+	    	return meta;
+	    }
+	    
+	    throw new ScreenConfigException(messages.screenFactoryErrorParsingScreenMetaData(id));
+    }
 
 	/**
-	 * @param screen
-	 * @param compCandidate
+	 * @param source
 	 * @return
 	 */
-	private Widget getParentWidget(Screen screen,Element compCandidate)
-	{
-		Node parentNode = compCandidate.getParentNode();
-		Widget parent = null;
-		while (parentNode != null && !parentNode.getNodeName().equalsIgnoreCase("body"))
+	private Element getCruxMetaDataElement(Document source)
+    {
+		NodeList nodeList = source.getElementsByTagName("div");
+		for (int i=0; i< nodeList.getLength(); i++)
 		{
-			if ((parentNode instanceof Element) && isValidWidget((Element) parentNode))
+			Element item = (Element) nodeList.item(i);
+			String metaDataId = item.getAttribute("id");
+			if (metaDataId != null && metaDataId.equals("__CruxMetaData_"))
 			{
-				parent = screen.getWidget(((Element)parentNode).getAttribute("id"));
-				break;
+				return item;
 			}
-			parentNode = parentNode.getParentNode();
 		}
-		return parent;
-	}
+	    return null;
+    }
 
 	/**
 	 * Parse screen element
@@ -361,56 +422,59 @@ public class ScreenFactory
 	 * @param compCandidate
 	 * @throws ScreenConfigException 
 	 */
-	private void parseScreenElement(Screen screen, Element compCandidate) throws ScreenConfigException 
+	private void parseScreenElement(Screen screen, JSONObject elem) throws ScreenConfigException 
 	{
-		Element elem = (Element) compCandidate;
-		
-		NamedNodeMap attributes = elem.getAttributes();
-		
-		int length = attributes.getLength();
-		
-		for (int i = 0; i < length; i++) 
-		{
-			Attr attr = (Attr) attributes.item(i);
-			String attrName = attr.getName();
-			
-			if(attrName.equals("_useController"))
-			{
-				parseScreenUseControllerAttribute(screen, attr);
-			}
-			else if(attrName.equals("_useSerializable"))
-			{
-				parseScreenUseSerializableAttribute(screen, attr);
-			}
-			else if(attrName.equals("_useFormatter"))
-			{
-				parseScreenUseFormatterAttribute(screen, attr);
-			}
-			else if(attrName.equals("_useDataSource"))
-			{
-				parseScreenUseDatasourceAttribute(screen, attr);
-			}
-			else if (attrName.startsWith("_on"))
-			{
-				Event event = EventFactory.getEvent(attrName, attr.getValue());
-				if (event != null)
-				{
-					screen.addEvent(event);
-				}
-			}
-			else if (attrName.equals("_title"))
-			{
-				String title = attr.getValue();
-				if (title != null && title.length() > 0)
-				{
-					screen.setTitle(title);
-				}
-			}
-			else if (!attrName.equals("id") && !attrName.equals("_type"))
-			{
-				if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));
-			}
-		}
+		try
+        {
+	        String[] attributes = JSONObject.getNames(elem);
+	        int length = attributes.length;
+	        
+	        for (int i = 0; i < length; i++) 
+	        {
+	        	String attrName = attributes[i];
+	        	
+	        	if(attrName.equals("useController"))
+	        	{
+	        		parseScreenUseControllerAttribute(screen, elem);
+	        	}
+	        	else if(attrName.equals("useSerializable"))
+	        	{
+	        		parseScreenUseSerializableAttribute(screen, elem);
+	        	}
+	        	else if(attrName.equals("useFormatter"))
+	        	{
+	        		parseScreenUseFormatterAttribute(screen, elem);
+	        	}
+	        	else if(attrName.equals("useDataSource"))
+	        	{
+	        		parseScreenUseDatasourceAttribute(screen, elem);
+	        	}
+	        	else if (attrName.startsWith("on"))
+	        	{
+	        		Event event = EventFactory.getEvent(attrName, elem.getString(attrName));
+	        		if (event != null)
+	        		{
+	        			screen.addEvent(event);
+	        		}
+	        	}
+	        	else if (attrName.equals("title"))
+	        	{
+	        		String title = elem.getString(attrName);
+	        		if (title != null && title.length() > 0)
+	        		{
+	        			screen.setTitle(title);
+	        		}
+	        	}
+	        	else if (!attrName.equals("id") && !attrName.equals("type"))
+	        	{
+	        		if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));
+	        	}
+	        }
+        }
+        catch (JSONException e)
+        {
+	        throw new ScreenConfigException(messages.screenFactoryErrorParsingScreenMetaData(screen.getId()));
+        }
 	}
 
 	/**
@@ -418,9 +482,17 @@ public class ScreenFactory
 	 * @param attr
 	 * @throws ScreenConfigException 
 	 */
-	private void parseScreenUseDatasourceAttribute(Screen screen, Attr attr) throws ScreenConfigException
+	private void parseScreenUseDatasourceAttribute(Screen screen, JSONObject elem) throws ScreenConfigException
     {
-	    String datasourceStr =  attr.getValue();
+	    String datasourceStr;
+        try
+        {
+        	datasourceStr = elem.getString("useDataSource");
+        }
+        catch (JSONException e)
+        {
+			throw new ScreenConfigException(e);
+        }
 	    if (datasourceStr != null)
 	    {
 	    	String[] datasources = RegexpPatterns.REGEXP_COMMA.split(datasourceStr);
@@ -444,9 +516,17 @@ public class ScreenFactory
 	 * @param attr
 	 * @throws ScreenConfigException 
 	 */
-	private void parseScreenUseFormatterAttribute(Screen screen, Attr attr) throws ScreenConfigException
+	private void parseScreenUseFormatterAttribute(Screen screen, JSONObject elem) throws ScreenConfigException
     {
-	    String formatterStr =  attr.getValue();
+	    String formatterStr;
+        try
+        {
+        	formatterStr = elem.getString("useFormatter");
+        }
+        catch (JSONException e)
+        {
+			throw new ScreenConfigException(e);
+        }
 	    if (formatterStr != null)
 	    {
 	    	String[] formatters = RegexpPatterns.REGEXP_COMMA.split(formatterStr);
@@ -471,9 +551,17 @@ public class ScreenFactory
 	 * @throws ScreenConfigException 
 	 */
 	@SuppressWarnings("deprecation")
-    private void parseScreenUseSerializableAttribute(Screen screen, Attr attr) throws ScreenConfigException
+    private void parseScreenUseSerializableAttribute(Screen screen, JSONObject elem) throws ScreenConfigException
     {
-	    String serializerStr =  attr.getValue();
+	    String serializerStr;
+        try
+        {
+	        serializerStr = elem.getString("useSerializable");
+        }
+        catch (JSONException e)
+        {
+			throw new ScreenConfigException(e);
+        }
 	    if (serializerStr != null)
 	    {
 	    	String[] serializers = RegexpPatterns.REGEXP_COMMA.split(serializerStr);
@@ -497,9 +585,17 @@ public class ScreenFactory
 	 * @param attr
 	 * @throws ScreenConfigException 
 	 */
-	private void parseScreenUseControllerAttribute(Screen screen, Attr attr) throws ScreenConfigException
+	private void parseScreenUseControllerAttribute(Screen screen, JSONObject elem) throws ScreenConfigException
     {
-	    String handlerStr =  attr.getValue();
+	    String handlerStr;
+        try
+        {
+	        handlerStr = elem.getString("useController");
+        }
+        catch (JSONException e)
+        {
+        	throw new ScreenConfigException(e);
+        }
 	    if (handlerStr != null)
 	    {
 	    	String[] handlers = RegexpPatterns.REGEXP_COMMA.split(handlerStr);

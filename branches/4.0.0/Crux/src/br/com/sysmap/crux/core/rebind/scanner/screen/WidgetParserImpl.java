@@ -15,11 +15,9 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.screen;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -29,11 +27,11 @@ import org.w3c.dom.NodeList;
 public class WidgetParserImpl implements WidgetParser
 {
 	/**
+	 * @throws JSONException 
 	 * 
 	 */
-	public void parse(Widget widget, Element element) 
+	public void parse(Widget widget, JSONObject elem) throws JSONException 
 	{
-		Element elem = (Element) element;
 		parse(elem, widget, true);
 	}
 
@@ -42,105 +40,100 @@ public class WidgetParserImpl implements WidgetParser
 	 * @param elem
 	 * @param widget
 	 * @param parseIfWidget
+	 * @throws JSONException 
 	 */
-	private void parse(Element elem, Widget widget, boolean parseIfWidget)
+	private void parse(JSONObject elem, Widget widget, boolean parseIfWidget) throws JSONException
 	{
-		if(elem != null && elem.getLocalName().equalsIgnoreCase("SPAN"))
-		{
 			if(!isWidget(elem) || parseIfWidget)
 			{
 				extractProperties(elem, widget);
 				
-				NodeList childElements = elem.getChildNodes();
-				
-				int length = childElements.getLength();
-				if(childElements != null && length > 0)
+				if (elem.has("children"))
 				{
-					for (int i = 0; i < length; i++)
+					JSONArray children = elem.getJSONArray("children");
+
+					int length = children.length();
+					if(length > 0)
 					{
-						Node childNode = childElements.item(i);
-						
-						if(Node.TEXT_NODE == childNode.getNodeType())
+						for (int i = 0; i < length; i++)
 						{
-							extractInnerText(childNode, widget);
-						}
-						else if(Node.ELEMENT_NODE == childNode.getNodeType())
-						{
-							Element child = (Element) childElements.item(i);
-							Element childElem = (Element) child;
-							parse(childElem, widget, false);
+							JSONObject child = children.getJSONObject(i);
+
+							extractInnerText(child, widget);
+							parse(child, widget, false);
 						}
 					}
-				}
-				else
-				{
-					extractInnerText(elem, widget);
+					else
+					{
+						extractInnerText(elem, widget);
+					}
 				}
 			}
-		}
+	}
+	
+	/**
+	 * @param elem
+	 * @return
+	 */
+	private boolean isWidget(JSONObject elem)
+	{
+		return elem.has("type");
 	}
 	
 	/**
 	 * 
 	 * @param elem
 	 * @param widget
+	 * @throws JSONException 
 	 */
-	private void extractInnerText(Node elem, Widget widget)
+	private void extractInnerText(JSONObject elem, Widget widget) throws JSONException
 	{
-		String text = elem.getTextContent();
-		
-		if(text != null && text.trim().length() > 0)
+		if (elem.has("_text"))
 		{
-			widget.addPropertyValue(text);
+			String text = elem.getString("_text");
+
+			if(text != null && text.trim().length() > 0)
+			{
+				widget.addPropertyValue(text);
+			}
 		}
 	}
 
 	/**
 	 * 
 	 * @param elem
-	 * @return
-	 */
-	private boolean isWidget(Element elem)
-	{
-		String att = elem.getAttribute("_type");
-		return att != null && att.trim().length() > 0;
-	}
-
-	/**
-	 * 
-	 * @param elem
 	 * @param widget
+	 * @throws JSONException 
 	 */
-	private void extractProperties(Element elem, Widget widget)
+	private void extractProperties(JSONObject elem, Widget widget) throws JSONException
 	{
-		NamedNodeMap attributes = elem.getAttributes();
+		String[] attributes = JSONObject.getNames(elem);
 		
-		int length = attributes.getLength();
+		int length = attributes.length;
 		for (int i = 0; i < length; i++) 
 		{
-			Attr attr = (Attr)attributes.item(i);
-			String attrName = attr.getName();
+			String attrName = attributes[i];
 			
-			if (attrName.equals("id") || attrName.equals("_type"))
+			if (attrName.equals("id") || attrName.equals("type"))
 			{
 				continue;
 			}
 			
-			if (attrName.startsWith("_on"))
+			if (attrName.startsWith("on"))
 			{
-				setEvent(widget, attrName, attr.getValue());
+				setEvent(widget, attrName, elem.getString(attrName));
 			}
-			else if (attrName.equals("_formatter"))
+			else if (attrName.equalsIgnoreCase("formatter"))
 			{
-				widget.setFormatter(attr.getValue());
+				widget.setFormatter(elem.getString(attrName));
 			}
-			else if (attrName.equals("_datasource"))
+			else if (attrName.equalsIgnoreCase("datasource"))
 			{
-				widget.setDataSource(attr.getValue());
+				widget.setDataSource(elem.getString(attrName));
 			}
 			else
 			{
-				widget.addPropertyValue(attr.getValue());
+				widget.addPropertyValue(elem.getString(attrName));
 			}
 		}
 	}

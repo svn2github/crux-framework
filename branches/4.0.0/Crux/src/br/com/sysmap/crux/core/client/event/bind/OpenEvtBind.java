@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for open events binding
@@ -36,7 +36,7 @@ public class OpenEvtBind implements EvtBinder<HasOpenHandlers<?>>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	@SuppressWarnings("unchecked")
-	public void bindEvent(Element element, HasOpenHandlers<?> widget)
+	public void bindEvent(JSONObject element, HasOpenHandlers<?> widget)
 	{
 		final Event eventChange = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventChange != null)

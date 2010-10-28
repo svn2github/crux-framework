@@ -17,8 +17,9 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for events binding
@@ -33,9 +34,13 @@ public class EvtBind
 	 * @param evtId
 	 * @return
 	 */
-	public static Event getWidgetEvent(Element element, String evtId)
+	public static Event getWidgetEvent(JSONObject metaElem, String evtId)
 	{
-		String evt = element.getAttribute("_"+evtId);
-		return Events.getEvent(evtId, evt);
+		String evt = JSONUtils.getStringProperty(metaElem, evtId);
+		if (evt != null)
+		{
+			return Events.getEvent(evtId, evt);
+		}
+		return null;
 	}
 }

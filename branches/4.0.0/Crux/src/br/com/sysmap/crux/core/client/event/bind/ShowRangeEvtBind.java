@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.HasShowRangeHandlers;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for showRange events binding
@@ -36,7 +36,7 @@ public class ShowRangeEvtBind implements EvtBinder<HasShowRangeHandlers<?>>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public void bindEvent(Element element, HasShowRangeHandlers<?> widget)
+	public void bindEvent(JSONObject element, HasShowRangeHandlers<?> widget)
 	{
 		final Event eventShowRange = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventShowRange != null)

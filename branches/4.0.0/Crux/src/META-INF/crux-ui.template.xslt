@@ -13,8 +13,6 @@
 	<xsl:param name="xhtmlNS" select="'http://www.w3.org/1999/xhtml'"></xsl:param>
 	<xsl:param name="allWidgets" select="'${allWidgets}'"></xsl:param>
 	<xsl:param name="referencedWidgets" select="'${referencedWidgets}'"></xsl:param>
-	<xsl:param name="lazyContainers" select="'${lazyContainers}'"></xsl:param>
-	<xsl:param name="lazyContainer" select="'${lazyContainer}'"></xsl:param>
 
 	<!-- 
 	=====================================================================
@@ -99,6 +97,18 @@
 	  </xsl:choose>
 	</xsl:function>
 
+	<!-- escapeString -->
+	<xsl:function name="f:escapeString" as="xs:string?">
+	  <xsl:param name="aString" as="xs:string?"/> 
+	  <xsl:variable name="backslash" select="replace($aString, '&#92;&#92;', '&#92;&#92;&#92;&#92;')" />
+	  <xsl:variable name="quote" select="replace($backslash, '&quot;', '&#92;&#92;&quot;')" />
+	  <xsl:variable name="lineFeed" select="replace($quote, '&#10;', '&#92;&#92;n')" />
+	  <xsl:variable name="carriageReturn" select="replace($lineFeed, '&#13;', '&#92;&#92;r')" />
+	  <xsl:variable name="tab" select="replace($carriageReturn, '&#09;', '&#92;&#92;t')" />
+	  <xsl:sequence select="$tab"/>
+	</xsl:function>
+
+
 	<!-- isWidget -->
 	<xsl:function name="f:isWidget" as="xs:boolean?">
 	  <xsl:param name="libraryName" as="xs:string?"/> 
@@ -112,10 +122,10 @@
   	  <xsl:sequence select="contains($referencedWidgets, concat(',', $tagName, ','))"/>
 	</xsl:function>
 
-	<!-- isLazyContainer -->
-	<xsl:function name="f:isLazyContainer" as="xs:boolean?">
-	  <xsl:param name="tagName" as="xs:string?"/> 
-  	  <xsl:sequence select="contains($lazyContainers, concat(',', $tagName, ','))"/>
+	<!-- isHTMLChild -->
+	<xsl:function name="f:isHTMLChild" as="xs:boolean?">
+	  <xsl:param name="elem" as="node()*"/> 
+  	  <xsl:sequence select="namespace-uri($elem/..) = $xhtmlNS"/>
 	</xsl:function>
 
 	<!-- getLibraryName -->
@@ -131,7 +141,7 @@
 	  	  </xsl:otherwise>
 	  </xsl:choose>
 	</xsl:function>
-
+		
 	<!-- 
 	=====================================================================
 	  Starts the transformation over the root element (HTML)
@@ -146,7 +156,7 @@
 	  Process Crux widgets core tags
 	=====================================================================
 	-->
-	<xsl:template name="splashScreen" match="crux:splashScreen">
+	<xsl:template name="cruxSplashScreen">
 		<xsl:element name="div" namespace="{$xhtmlNS}">
 			<xsl:attribute name="id" select="'cruxSplashScreen'"/>			
 			<xsl:if test="string-length(@style) > 0">
@@ -156,31 +166,17 @@
 				<xsl:attribute name="_transactionDelay" select="@transactionDelay"/>			
 			</xsl:if>
 			<xsl:copy-of select="child::*" copy-namespaces="no"/>
-			<xsl:value-of select="' '"/>
 		</xsl:element> 
 	</xsl:template>
 
-	<xsl:template name="screen" match="crux:screen">
-		<xsl:element name="span" namespace="{$xhtmlNS}">
-			<xsl:attribute name="_type" select="'screen'" />	
+	<xsl:template name="cruxScreenMetaTag" >
+		<xsl:value-of select="'{'"></xsl:value-of>
+			<xsl:value-of select="'&quot;type&quot;:&quot;screen&quot;'"></xsl:value-of>
 			<xsl:for-each select="current()/@*">
-				<xsl:if test="name() != 'id'">	
-					<xsl:call-template name="writeAttribute"/>
-				</xsl:if>
+				<xsl:value-of select="','"></xsl:value-of>
+				<xsl:call-template name="writeMetaAttribute"/>
 			</xsl:for-each>
-			<xsl:call-template name="handleInnerHtml"/>
-			<xsl:value-of select="' '"/>
-		</xsl:element> 
-	</xsl:template>
-	
-	<!-- 
-	=====================================================================
-	  Write tag attribute
-	=====================================================================
-	-->
-	<xsl:template name="writeAttribute">
-		<xsl:param name="attrName" select="concat('_', name())"></xsl:param>
-		<xsl:attribute name="{$attrName}" select="."/>
+		<xsl:value-of select="'}'"></xsl:value-of>
 	</xsl:template>
 
 	<!-- 
@@ -189,57 +185,115 @@
 	=====================================================================
 	-->
 	<xsl:template name="cruxInnerTags">
-		<xsl:param name="libraryName" select="f:getLibraryName(current())"></xsl:param>
-		<xsl:element name="span" namespace="{$xhtmlNS}">
-			<xsl:if test="string-length(@id) > 0">
-				<xsl:attribute name="id" select="@id" />
-			</xsl:if>
-			<xsl:variable name="tagName" select="f:getTagName(current(), local-name())" />
-			<xsl:choose>
-				<xsl:when test="f:isReferencedWidget($tagName)">
-					<xsl:attribute name="_type" select="f:getTagType($tagName)" />	
-				</xsl:when>
-				<xsl:when test="f:isWidget($libraryName, local-name())">
-					<xsl:attribute name="_type" select="concat($libraryName, '_', local-name())" />	
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="__tag" select="local-name()" />	
-				</xsl:otherwise>
-			</xsl:choose>			
-			<xsl:for-each select="current()/@*">
-				<xsl:if test="name() != 'id'">	
-					<xsl:call-template name="writeAttribute"/>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:value-of select="text()"></xsl:value-of>
-					<xsl:choose>
-						<xsl:when test="f:isLazyContainer($tagName)">
-							<xsl:element name="span" namespace="{$xhtmlNS}">
-								<xsl:variable name="rnd" select="math:random()" xmlns:math="java:java.lang.Math"/>
-								<xsl:attribute name="id" select="concat('lazy_', $rnd)" />
-								<xsl:attribute name="_type" select="$lazyContainer" />
-								<xsl:call-template name="handleInnerHtml" />
-							</xsl:element> 
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="handleInnerHtml" />
-						</xsl:otherwise>
-					</xsl:choose>
-		</xsl:element> 
+		<xsl:variable name="libraryName" select="f:getLibraryName(current())" />
+		<xsl:variable name="tagName" select="f:getTagName(current(), local-name())" />
+		<xsl:choose>
+			<xsl:when test="(f:isReferencedWidget($tagName) or f:isWidget($libraryName, local-name())) and f:isHTMLChild(current())">
+				<xsl:element name="span" namespace="{$xhtmlNS}">
+					<xsl:if test="string-length(@id) > 0">
+						<xsl:attribute name="id" select="concat('_crux_', @id)" />
+					</xsl:if>
+					<xsl:call-template name="handleInnerHtml" />
+				</xsl:element> 
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="handleInnerHtml" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
-
 
 	<!-- 
 	=====================================================================
+	  Write tag attribute
+	=====================================================================
+	-->
+	<xsl:template name="writeMetaAttribute">
+		<xsl:value-of select="concat('&quot;', name(), '&quot;:&quot;', ., '&quot;')"></xsl:value-of>
+	</xsl:template>	
+	<!-- 
+	=====================================================================
+	  Process Crux widgets libraries
+	=====================================================================
+	-->
+	
+	<xsl:template name="cruxInnerMetaTags">
+		<xsl:param name="libraryName" select="f:getLibraryName(current())"></xsl:param>
+		<xsl:param name="innerText" select="string-join(text(), '')"></xsl:param>
+		<xsl:value-of select="'{'"></xsl:value-of>
+			<xsl:variable name="tagName" select="f:getTagName(current(), local-name())" />
+			<xsl:choose>
+				<xsl:when test="f:isReferencedWidget($tagName)">
+					<xsl:value-of select="concat('&quot;type&quot;:&quot;', f:getTagType($tagName), '&quot;')"></xsl:value-of>
+				</xsl:when>
+				<xsl:when test="f:isWidget($libraryName, local-name())">
+					<xsl:value-of select="concat('&quot;type&quot;:&quot;', $libraryName, '_', local-name(), '&quot;')"></xsl:value-of>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat('&quot;childTag&quot;:&quot;', local-name(), '&quot;')"></xsl:value-of>
+				</xsl:otherwise>
+			</xsl:choose>			
+			
+			<xsl:if test="string-length(normalize-space($innerText)) > 0">
+				<xsl:value-of select="concat(',&quot;_text&quot;:&quot;', f:escapeString($innerText), '&quot;')"></xsl:value-of>
+			</xsl:if>			
+			<xsl:for-each select="current()/@*">
+				<xsl:value-of select="','"></xsl:value-of>
+				<xsl:call-template name="writeMetaAttribute"/>
+			</xsl:for-each>
+			
+			<xsl:if test="count(child::*) > 0 ">
+				<xsl:value-of select="',&quot;children&quot;:['"></xsl:value-of>
+				<xsl:call-template name="createWidgetsMetaData" />
+				<xsl:value-of select="']'"></xsl:value-of>
+			</xsl:if>
+			<xsl:value-of select="'}'"></xsl:value-of>
+	</xsl:template>
+
+	<!-- 
+	=====================================================================
+	  Recursively navigates through the document nodes, extracting crux
+	  meta tags and building a json array to represent that meta data
+	=====================================================================
+	-->
+	<xsl:template name="createWidgetsMetaData">
+		<xsl:for-each select="child::*">
+			<xsl:choose>
+				<xsl:when test="namespace-uri() = 'http://www.sysmap.com.br/crux' and local-name() = 'screen'">
+					<xsl:call-template name="cruxScreenMetaTag" />
+					<xsl:if test="position() != last() or f:isHTMLChild(current())">
+						<xsl:value-of select="','"></xsl:value-of>
+					</xsl:if>
+				</xsl:when>
+				<xsl:when test="string-length(namespace-uri()) > 30 and (contains(namespace-uri(), 'http://www.sysmap.com.br/crux/'))">
+					<xsl:call-template name="cruxInnerMetaTags" />
+					<xsl:if test="position() != last() or f:isHTMLChild(current())">
+						<xsl:value-of select="','"></xsl:value-of>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="createWidgetsMetaData" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	<!-- 
+	=====================================================================
 	  Recursively navigates through the document nodes, copying the 
-	  HTML nodes and delegating crux nodes to it handler
+	  HTML nodes and delegating crux nodes to its handler
 	=====================================================================
 	-->
 	<xsl:template name="handleInnerHtml">
 		<xsl:for-each select="child::*">
 			<xsl:choose>
 				<xsl:when test="namespace-uri() = 'http://www.sysmap.com.br/crux'">
-					<xsl:apply-templates select="current()" />
+					<xsl:choose>
+						<xsl:when test="local-name() = 'splashScreen'">
+							<xsl:call-template name="cruxSplashScreen" />
+						</xsl:when>
+						<xsl:when test="local-name() = 'screen'">
+							<xsl:call-template name="handleInnerHtml" />
+						</xsl:when>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="string-length(namespace-uri()) > 30 and (contains(namespace-uri(), 'http://www.sysmap.com.br/crux/'))">
 					<xsl:call-template name="cruxInnerTags" />
@@ -261,6 +315,17 @@
 							<xsl:copy copy-namespaces="no">
 								<xsl:copy-of select="@*"/>
 								<xsl:call-template name="handleInnerHtml" />
+								<xsl:if test="namespace-uri() = $xhtmlNS and local-name() = 'body'">
+									<xsl:element name="div" namespace="{$xhtmlNS}">
+										<xsl:attribute name="id" select="'__CruxMetaData_'" />
+										<xsl:attribute name="style" select="'display: none;'" />
+										<!-- xsl:comment-->	
+											<xsl:value-of select="'['"></xsl:value-of>
+											<xsl:call-template name="createWidgetsMetaData" />
+											<xsl:value-of select="']'"></xsl:value-of>
+										<!-- /xsl:comment-->
+									</xsl:element>
+								</xsl:if>
 							</xsl:copy>
 						</xsl:otherwise>
 					</xsl:choose>

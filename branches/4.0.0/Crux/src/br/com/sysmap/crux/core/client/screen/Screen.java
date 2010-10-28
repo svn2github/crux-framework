@@ -27,6 +27,7 @@ import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -46,6 +47,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -1187,71 +1189,86 @@ public class Screen
 	 * 
 	 * @param element
 	 */
-	protected void parse(Element element) 
+	protected void parse(JSONObject metaElem) 
 	{
-		String title = element.getAttribute("_title");
-		if (title != null && title.length() >0)
+		if (metaElem.containsKey("title"))
 		{
-			Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
+			String title = JSONUtils.getStringProperty(metaElem,"title");
+			if (title != null && title.length() >0)
+			{
+				Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
+			}
 		}
 
-		this.declaredControllers = extractReferencedResourceList(element, "_useController");
-		this.declaredDataSources = extractReferencedResourceList(element, "_useDataSource");
-		this.declaredSerializables = extractReferencedResourceList(element, "_useSerializable");
-		this.declaredFormatters = extractReferencedResourceList(element, "_useFormatter");
+		this.declaredControllers = extractReferencedResourceList(metaElem, "useController");
+		this.declaredDataSources = extractReferencedResourceList(metaElem, "useDataSource");
+		this.declaredSerializables = extractReferencedResourceList(metaElem, "useSerializable");
+		this.declaredFormatters = extractReferencedResourceList(metaElem, "useFormatter");
 		
-		final Event eventHistory = Events.getEvent("onHistoryChanged", element.getAttribute("_onHistoryChanged"));
-		if (eventHistory != null)
+		if (metaElem.containsKey("onHistoryChanged"))
 		{
-			addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){
-				public void onValueChange(ValueChangeEvent<String> historyEvent)
-				{
-					Events.callEvent(eventHistory, historyEvent);
-				}
-			});
+			final Event eventHistory = Events.getEvent("onHistoryChanged", JSONUtils.getStringProperty(metaElem,"onHistoryChanged"));
+			if (eventHistory != null)
+			{
+				addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){
+					public void onValueChange(ValueChangeEvent<String> historyEvent)
+					{
+						Events.callEvent(eventHistory, historyEvent);
+					}
+				});
+			}
 		}
-
-		final Event eventClosing = Events.getEvent("onClosing", element.getAttribute("_onClosing"));
-		if (eventClosing != null)
+		if (metaElem.containsKey("onClosing"))
 		{
-			addWindowClosingHandler(new Window.ClosingHandler(){
-				public void onWindowClosing(ClosingEvent closingEvent) 
-				{
-					Events.callEvent(eventClosing, closingEvent);
-				}
-			});
+			final Event eventClosing = Events.getEvent("onClosing", JSONUtils.getStringProperty(metaElem,"onClosing"));
+			if (eventClosing != null)
+			{
+				addWindowClosingHandler(new Window.ClosingHandler(){
+					public void onWindowClosing(ClosingEvent closingEvent) 
+					{
+						Events.callEvent(eventClosing, closingEvent);
+					}
+				});
+			}
 		}
-
-		final Event eventClose = Events.getEvent("onClose", element.getAttribute("_onClose"));
-		if (eventClose != null)
+		if (metaElem.containsKey("onClose"))
 		{
-			addWindowCloseHandler(new CloseHandler<Window>(){
-				public void onClose(CloseEvent<Window> event) 
-				{
-					Events.callEvent(eventClose, event);				
-				}
-			});
+			final Event eventClose = Events.getEvent("onClose", JSONUtils.getStringProperty(metaElem,"onClose"));
+			if (eventClose != null)
+			{
+				addWindowCloseHandler(new CloseHandler<Window>(){
+					public void onClose(CloseEvent<Window> event) 
+					{
+						Events.callEvent(eventClose, event);				
+					}
+				});
+			}
 		}
-
-		final Event eventResized = Events.getEvent("onResized", element.getAttribute("_onResized"));
-		if (eventResized != null)
+		if (metaElem.containsKey("onResized"))
 		{
-			addWindowResizeHandler(new ResizeHandler(){
-				public void onResize(ResizeEvent event) 
-				{
-					Events.callEvent(eventResized, event);
-				}
-			});
+			final Event eventResized = Events.getEvent("onResized",JSONUtils.getStringProperty(metaElem,"onResized"));
+			if (eventResized != null)
+			{
+				addWindowResizeHandler(new ResizeHandler(){
+					public void onResize(ResizeEvent event) 
+					{
+						Events.callEvent(eventResized, event);
+					}
+				});
+			}
 		}
-		final Event eventLoad = Events.getEvent("onLoad", element.getAttribute("_onLoad"));
-		if (eventLoad != null)
+		if (metaElem.containsKey("onLoad"))
 		{
-			addLoadHandler(new ScreenLoadHandler(){
-				public void onLoad(ScreenLoadEvent screenLoadEvent) 
-				{
-					Events.callEvent(eventLoad, screenLoadEvent);
-				}
-			});
+			final Event eventLoad = Events.getEvent("onLoad", JSONUtils.getStringProperty(metaElem,"onLoad"));
+			if (eventLoad != null)
+			{
+				addLoadHandler(new ScreenLoadHandler(){
+					public void onLoad(ScreenLoadEvent screenLoadEvent) 
+					{
+						Events.callEvent(eventLoad, screenLoadEvent);
+					}
+				});
+			}
 		}
 	}
 
@@ -1402,9 +1419,9 @@ public class Screen
 	 * @param attributeName
 	 * @return
 	 */
-	private String[] extractReferencedResourceList(Element element, String attributeName)
+	private String[] extractReferencedResourceList(JSONObject metaElem, String attributeName)
 	{
-		String attr = element.getAttribute(attributeName);
+		String attr = JSONUtils.getStringProperty(metaElem, attributeName);
 		if (!StringUtils.isEmpty(attr))
 		{
 			String[] result = attr.split(",");

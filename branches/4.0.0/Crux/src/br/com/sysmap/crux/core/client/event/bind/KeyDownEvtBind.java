@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for key events binding
@@ -35,7 +35,7 @@ public class KeyDownEvtBind implements EvtBinder<HasKeyDownHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(Element element, HasKeyDownHandlers widget)
+	public void bindEvent(JSONObject element, HasKeyDownHandlers widget)
 	{
 		final Event eventKeyDown = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventKeyDown != null)

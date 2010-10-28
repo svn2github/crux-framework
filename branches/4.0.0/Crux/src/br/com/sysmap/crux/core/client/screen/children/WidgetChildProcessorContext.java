@@ -18,7 +18,7 @@ package br.com.sysmap.crux.core.client.screen.children;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,7 +26,7 @@ import com.google.gwt.dom.client.Element;
  */
 public class WidgetChildProcessorContext<W>
 {
-	private Element childElement;
+	private JSONObject childElement;
 	
 	private WidgetFactoryContext<W> context;
 	
@@ -40,7 +40,7 @@ public class WidgetChildProcessorContext<W>
 		return context.getWidget();
 	}
 
-	public Element getRootElement()
+	public JSONObject getRootElement()
 	{
 		return context.getElement();
 	}
@@ -60,7 +60,7 @@ public class WidgetChildProcessorContext<W>
 		return WidgetFactory.getProperty(getChildElement(), propertyName);
 	}
 	
-	public Element getChildElement()
+	public JSONObject getChildElement()
 	{
 		return childElement;
 	}
@@ -75,7 +75,7 @@ public class WidgetChildProcessorContext<W>
 		return context.containsAttribute(key);
 	}
 	
-	public void setChildElement(Element childElement)
+	public void setChildElement(JSONObject childElement)
 	{
 		this.childElement = childElement;
 	}

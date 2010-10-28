@@ -21,7 +21,6 @@ package br.com.sysmap.crux.core.client.config;
  */
 public interface CruxClientConfig
 {
-	boolean wrapSiblingWidgets();
 	boolean enableDebugForURL(String url);
 	boolean renderWidgetsWithIDs();
 	boolean enableClientFactoryTracing();

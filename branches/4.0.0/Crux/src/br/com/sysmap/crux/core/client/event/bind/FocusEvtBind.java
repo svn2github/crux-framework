@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for focus events binding
@@ -35,7 +35,7 @@ public class FocusEvtBind implements EvtBinder<HasFocusHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(Element element, HasFocusHandlers widget)
+	public void bindEvent(JSONObject element, HasFocusHandlers widget)
 	{
 		final Event eventFocus = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventFocus != null)

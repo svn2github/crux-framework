@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasLoadHandlers;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for load events binding
@@ -34,7 +34,7 @@ public class LoadEvtBind implements EvtBinder<HasLoadHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(Element element, HasLoadHandlers widget)
+	public void bindEvent(JSONObject element, HasLoadHandlers widget)
 	{
 		final Event eventLoad = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventLoad != null)
