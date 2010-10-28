@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
@@ -52,7 +52,7 @@ public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
 	}
 
 	@Override
-	public ListBox instantiateWidget(Element element, String widgetId) 
+	public ListBox instantiateWidget(JSONObject element, String widgetId) 
 	{
 		String multiple = getProperty(element,"multiple");
 		if (multiple != null && multiple.trim().length() > 0)

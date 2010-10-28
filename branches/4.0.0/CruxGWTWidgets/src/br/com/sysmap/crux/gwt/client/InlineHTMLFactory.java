@@ -18,7 +18,7 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 {
 	@Override
-	public InlineHTML instantiateWidget(Element element, String widgetId) 
+	public InlineHTML instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new InlineHTML();
 	}
@@ -42,14 +42,19 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 	{
 		super.processAttributes(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		InlineHTML widget = context.getWidget();
 
-		String innerHtml = element.getInnerHTML();//TODO rever esta factory. Deveria ser similar ao HTMLFactory
 		String text = context.readWidgetProperty("text");
-		if ((text == null || text.length() ==0) && innerHtml != null && innerHtml.length() > 0)
+		if ((text == null || text.length() ==0))
 		{
-			((HasHTML)widget).setHTML(innerHtml);
+			String innerHtml = "";//element.getInnerHTML();//TODO rever esta factory. Deveria ser similar ao HTMLFactory
+			
+			//TODO tratar o innerHTML
+			if (innerHtml != null && innerHtml.length() > 0)
+			{
+				((HasHTML)widget).setHTML(innerHtml);
+			}
 		}
 	}
 }//TODO as factories HasHTML nao estao suportando i18n declarativo.

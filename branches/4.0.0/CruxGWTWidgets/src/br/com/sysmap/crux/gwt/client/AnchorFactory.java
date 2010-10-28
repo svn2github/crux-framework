@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -54,7 +54,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 	{
 		super.processAttributes(context);
 
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		Anchor widget = context.getWidget();
 		
 		String horizontalAlignment = context.readWidgetProperty("horizontalAlignment");
@@ -65,7 +65,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = element.getInnerHTML();
+			String innerHtml = "";//Tratar o innerHTML element.getInnerHTML();
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);
@@ -75,7 +75,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 	}
 
 	@Override
-	public Anchor instantiateWidget(Element element, String widgetId) 
+	public Anchor instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new Anchor();
 	}	

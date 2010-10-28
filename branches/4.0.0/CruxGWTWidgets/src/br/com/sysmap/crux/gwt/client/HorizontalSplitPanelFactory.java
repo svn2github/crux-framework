@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 
 /**
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPanel>
 {
 	@Override
-	public HorizontalSplitPanel instantiateWidget(Element element, String widgetId) {
+	public HorizontalSplitPanel instantiateWidget(JSONObject element, String widgetId) {
 		return new HorizontalSplitPanel();
 	}
 

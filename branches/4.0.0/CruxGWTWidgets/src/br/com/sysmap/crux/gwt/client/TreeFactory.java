@@ -46,7 +46,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -66,7 +66,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public Tree instantiateWidget(Element element, String widgetId) 
+	public Tree instantiateWidget(JSONObject element, String widgetId) 
 	{
 		Event eventLoadImage = EvtBind.getWidgetEvent(element, "onLoadImage");
 		
@@ -172,7 +172,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
 		{
-			String textCaption = context.getChildElement().getInnerHTML();
+			String textCaption = ensureTextChild(context.getChildElement(), true);
 			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 			
 			TreeItem parent = itemStack.peek();
@@ -207,8 +207,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
 		{
-			Element childElement = context.getChildElement();
-			Widget child = createChildWidget(childElement, childElement.getId());
+			Widget child = createChildWidget(context.getChildElement());
 			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 
 			TreeItem parent = itemStack.peek();

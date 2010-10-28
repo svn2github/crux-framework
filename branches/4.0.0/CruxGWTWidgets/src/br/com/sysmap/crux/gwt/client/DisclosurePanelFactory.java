@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 
 /**
@@ -48,7 +48,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 	
 	
 	@Override
-	public DisclosurePanel instantiateWidget(Element element, String widgetId) 
+	public DisclosurePanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		String headerText = getProperty(element,"headerText");
 		return new DisclosurePanel(headerText);

@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasShowRangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
@@ -60,7 +60,7 @@ public class DatePickerFactory extends CompositeFactory<DatePicker>
 	}
 	
 	@Override
-	public DatePicker instantiateWidget(Element element, String widgetId) throws InterfaceConfigException 
+	public DatePicker instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
 		return new DatePicker();
 	}

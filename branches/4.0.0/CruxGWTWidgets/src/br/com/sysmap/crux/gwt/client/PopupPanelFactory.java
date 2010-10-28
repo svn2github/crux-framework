@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.PopupPanel;
 
 
@@ -39,7 +39,7 @@ public class PopupPanelFactory extends PanelFactory<PopupPanel>
 {
 
 	@Override
-	public PopupPanel instantiateWidget(Element element, String widgetId) 
+	public PopupPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		String autoHideStr = getProperty(element,"autoHide");
 		boolean autoHide = false;

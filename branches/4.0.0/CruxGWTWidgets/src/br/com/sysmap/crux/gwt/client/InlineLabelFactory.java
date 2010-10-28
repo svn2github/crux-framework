@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 public class InlineLabelFactory extends AbstractLabelFactory<InlineLabel>
 {
 	@Override
-	public InlineLabel instantiateWidget(Element element, String widgetId) 
+	public InlineLabel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new InlineLabel();
 	}

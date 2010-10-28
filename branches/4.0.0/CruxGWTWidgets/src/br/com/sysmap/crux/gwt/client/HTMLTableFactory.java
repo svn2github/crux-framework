@@ -32,7 +32,6 @@ import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
@@ -192,7 +191,8 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setText(indexRow.intValue(), indexCol.intValue(), ScreenFactory.getInstance().getDeclaredMessage(context.getChildElement().getInnerHTML()));
+			context.getRootWidget().setText(indexRow.intValue(), indexCol.intValue(), 
+					ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true)));
 		}
 	}
 	
@@ -204,7 +204,8 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setHTML(indexRow.intValue(), indexCol.intValue(), context.getChildElement().getInnerHTML());
+			context.getRootWidget().setHTML(indexRow.intValue(), indexCol.intValue(), ensureTextChild(context.getChildElement(), true));
+			//TODO tratar o innerHTML
 		}
 	}
 	
@@ -219,8 +220,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			Element childElement = context.getChildElement();
-			context.getRootWidget().setWidget(indexRow.intValue(), indexCol.intValue(), createChildWidget(childElement, childElement.getId()));
+			context.getRootWidget().setWidget(indexRow.intValue(), indexCol.intValue(), createChildWidget(context.getChildElement()));
 		}
 	}
 }

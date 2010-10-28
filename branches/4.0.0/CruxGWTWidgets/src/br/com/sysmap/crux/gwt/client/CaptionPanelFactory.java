@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.CaptionPanel;
 
 /**
@@ -55,7 +55,7 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel>
 	public void processChildren(WidgetFactoryContext<CaptionPanel> context) throws InterfaceConfigException {}
 	
 	@Override
-	public CaptionPanel instantiateWidget(Element element, String widgetId) 
+	public CaptionPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new CaptionPanel();
 	}
@@ -90,7 +90,7 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<CaptionPanel> context) throws InterfaceConfigException 
 		{
-			context.getRootWidget().setCaptionText(context.getChildElement().getInnerHTML());
+			context.getRootWidget().setCaptionText(ensureTextChild(context.getChildElement(), true));
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<CaptionPanel> context) throws InterfaceConfigException 
 		{
-			context.getRootWidget().setCaptionHTML(context.getChildElement().getInnerHTML());
+			context.getRootWidget().setCaptionHTML(ensureTextChild(context.getChildElement(), true));//TODO tratar o innerHTML
 		}
 	}
 }

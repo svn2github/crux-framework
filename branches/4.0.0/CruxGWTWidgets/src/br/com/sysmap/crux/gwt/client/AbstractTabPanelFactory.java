@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TabBar.Tab;
@@ -98,7 +98,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = ScreenFactory.getInstance().getDeclaredMessage(context.getChildElement().getInnerHTML());
+			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.setAttribute("titleText", title);
 		}
 	}
@@ -109,7 +109,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = context.getChildElement().getInnerHTML();
+			String title = ensureTextChild(context.getChildElement(), true);//TODO tratar o innerHTML
 			context.setAttribute("titleHtml", title);
 		}
 	}
@@ -120,8 +120,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget titleWidget = createChildWidget(childElement, childElement.getId());
+			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("titleWidget", titleWidget);
 		}
 	}
@@ -132,8 +131,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget widget = createChildWidget(childElement, childElement.getId());
+			Widget widget = createChildWidget(context.getChildElement());
 			
 			String titleText = (String) context.getAttribute("titleText");
 			if (titleText != null)
@@ -158,7 +156,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		
 		private void updateTabState(WidgetChildProcessorContext<T> context)
 		{
-			Element tabElement = (Element) context.getAttribute("tabElement");
+			JSONObject tabElement = (JSONObject) context.getAttribute("tabElement");
 			String enabled = getProperty(tabElement,"enabled");
 			int tabCount = context.getRootWidget().getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)

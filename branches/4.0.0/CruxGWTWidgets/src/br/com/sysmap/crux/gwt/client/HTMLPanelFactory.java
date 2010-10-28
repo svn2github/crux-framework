@@ -15,18 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.HasWidgetsHandler;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 
@@ -39,17 +36,17 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 {
 	@Override
-	public HTMLPanel instantiateWidget(Element element, String widgetId) 
+	public HTMLPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		HTMLPanel ret = new HTMLPanel("");
-		FastList<Node> children = extractChildren(element);
+/*		FastList<Node> children = extractChildren(element);
 		for (int i=0; i<children.size(); i++)
 		{
 			Node node = children.get(i);
 			ret.getElement().appendChild(node);
 		}
 		HasWidgetsHandler.handleWidgetElement(ret, widgetId, "gwt_HTMLPanel");
-
+*/
 		return ret;
 	}
 

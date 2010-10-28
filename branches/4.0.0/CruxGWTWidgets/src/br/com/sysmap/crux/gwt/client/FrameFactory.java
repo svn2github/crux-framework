@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Frame;
 
 /**
@@ -48,7 +48,7 @@ public class FrameFactory extends WidgetFactory<Frame>
 	}
 
 	@Override
-	public Frame instantiateWidget(Element element, String widgetId) 
+	public Frame instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new Frame();
 	}	

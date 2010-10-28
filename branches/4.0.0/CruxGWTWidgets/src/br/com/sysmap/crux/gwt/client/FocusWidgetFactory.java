@@ -34,7 +34,7 @@ import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.FocusWidget;
 
 /**
@@ -95,7 +95,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		T widget = context.getWidget();
 		new ClickEvtBind().bindEvent(element, widget);
 		new FocusEvtBind().bindEvent(element, widget);

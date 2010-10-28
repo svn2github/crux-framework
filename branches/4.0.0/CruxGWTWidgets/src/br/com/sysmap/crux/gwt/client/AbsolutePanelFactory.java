@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -39,7 +39,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 {
 
 	@Override
-	public AbsolutePanel instantiateWidget(Element element, String widgetId)
+	public AbsolutePanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new AbsolutePanel();
 	}
@@ -81,8 +81,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 			String left = (String) context.getAttribute("left");
 			String top = (String) context.getAttribute("top");
 
-			Element childElement = context.getChildElement();
-			Widget child = createChildWidget(childElement, childElement.getId());
+			Widget child = createChildWidget(context.getChildElement());
 			AbsolutePanel absolutePanel = context.getRootWidget();
 			if (left != null && left.length() > 0 && top != null && top.length() > 0)
 			{

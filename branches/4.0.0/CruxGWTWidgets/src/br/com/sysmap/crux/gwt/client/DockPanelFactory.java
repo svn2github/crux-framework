@@ -24,13 +24,14 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,7 +46,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
 	
 	@Override
-	public DockPanel instantiateWidget(Element element, String widgetId)
+	public DockPanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new DockPanel();
 	}
@@ -125,8 +126,8 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException
 		{
-			String childId = context.getChildElement().getId();
-			Widget child = createChildWidget(context.getChildElement(), childId);
+			JSONObject childElement = context.getChildElement();
+			Widget child = createChildWidget(childElement);
 			DockPanel parent = context.getRootWidget();
 			
 			String direction = (String) context.getAttribute("direction");
@@ -160,6 +161,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 			}
 			else
 			{
+				String childId = JSONUtils.getStringProperty(childElement, "id");
 				throw new InterfaceConfigException(messages.dockPanelInvalidDirection(childId, context.getRootWidgetId()));
 			}
 			

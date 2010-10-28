@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 
 /**
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.DecoratedTabPanel;
 public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedTabPanel>
 {
 	@Override
-	public DecoratedTabPanel instantiateWidget(Element element, String widgetId) 
+	public DecoratedTabPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new DecoratedTabPanel();
 	}

@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
@@ -37,7 +37,7 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
        implements HasTextFactory<InlineHyperlink>, HasClickHandlersFactory<InlineHyperlink>
 {
 	@Override
-	public InlineHyperlink instantiateWidget(Element element, String widgetId) 
+	public InlineHyperlink instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new InlineHyperlink();
 	}
@@ -50,13 +50,13 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
 	{
 		super.processAttributes(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		InlineHyperlink widget = context.getWidget();
 		
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = element.getInnerHTML();
+			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);

@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DeckPanel;
 
 /**
@@ -33,7 +33,7 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel>
 					implements HasAnimationFactory<DeckPanel>
 {
 	@Override
-	public DeckPanel instantiateWidget(Element element, String widgetId) 
+	public DeckPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new DeckPanel();
 	}

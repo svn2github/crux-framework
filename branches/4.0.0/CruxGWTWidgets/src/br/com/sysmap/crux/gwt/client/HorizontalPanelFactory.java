@@ -27,7 +27,7 @@ import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,7 +41,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 {
 
 	@Override
-	public HorizontalPanel instantiateWidget(Element element, String widgetId)
+	public HorizontalPanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new HorizontalPanel();
 	}
@@ -111,7 +111,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<HorizontalPanel> context) throws InterfaceConfigException
 		{
-			Widget child = createChildWidget(context.getChildElement(), context.getChildElement().getId());
+			Widget child = createChildWidget(context.getChildElement());
 			context.getRootWidget().add(child);
 			context.setAttribute("child", child);
 			super.processChildren(context);

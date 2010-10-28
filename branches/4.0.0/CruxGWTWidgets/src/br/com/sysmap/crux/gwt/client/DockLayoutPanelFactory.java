@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 /**
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanel>
 {
 	@Override
-	public DockLayoutPanel instantiateWidget(Element element, String widgetId)
+	public DockLayoutPanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		Unit unit = getUnit(getProperty(element,"unit"));
 		return new DockLayoutPanel(unit);

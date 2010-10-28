@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanel>
 {
 	@Override
-	public SplitLayoutPanel instantiateWidget(Element element, String widgetId)
+	public SplitLayoutPanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new SplitLayoutPanel();
 	}

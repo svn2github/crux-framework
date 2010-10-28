@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
@@ -47,7 +47,7 @@ public class TextBoxFactory extends TextBoxBaseFactory<TextBox>
 	}
 
 	@Override
-	public TextBox instantiateWidget(Element element, String widgetId) throws InterfaceConfigException 
+	public TextBox instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
 		return new TextBox();
 	}

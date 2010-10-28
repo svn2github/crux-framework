@@ -17,16 +17,14 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.screen.CruxLazyPanel;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsHandler;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyFactory;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -38,78 +36,6 @@ import com.google.gwt.user.client.ui.Widget;
 @DeclarativeFactory(id="lazyPanel", library="gwt", lazy=true)
 public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFactory<LazyPanel>, HasWidgetsFactory<LazyPanel>
 {
-	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	static class LazyPanelImpl extends LazyPanel implements br.com.sysmap.crux.core.client.screen.LazyPanel{
-		private boolean initialized = false;
-		private String innerHTML;
-		private final String wizardId;
-		
-		public LazyPanelImpl(String innerHTML, String wizardId)
-		{
-			this.innerHTML = innerHTML;
-			this.wizardId = wizardId;
-		}
-		
-		/**
-		 * @see com.google.gwt.user.client.ui.LazyPanel#ensureWidget()
-		 */
-		@Override
-		public void ensureWidget()
-		{
-			if (!initialized)
-			{
-				cleanLazyDependentWidgets(wizardId);
-				initialized = true;
-			}
-			super.ensureWidget();
-		}
-
-		/**
-		 * @see com.google.gwt.user.client.ui.LazyPanel#createWidget()
-		 */
-		@Override
-		protected Widget createWidget() 
-		{
-			if (isScreenParsing())
-			{
-				createWidgetAsync();
-				return null;
-			}
-			else
-			{
-				doCreateWidget();
-				return getWidget();
-			}
-		}			
-
-		/**
-		 * 
-		 */
-		private void createWidgetAsync()
-		{
-			Scheduler.get().scheduleDeferred(new ScheduledCommand()
-			{
-				public void execute()
-				{
-					doCreateWidget();
-				}
-			});
-		}
-				
-		/**
-		 * 
-		 */
-		private void doCreateWidget()
-		{
-			Element lazyPanelElement = getElement();
-			lazyPanelElement.setInnerHTML(innerHTML);
-			innerHTML = null;
-			parseDocument(lazyPanelElement);
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.client.screen.HasWidgetsFactory#add(com.google.gwt.user.client.ui.Widget, com.google.gwt.user.client.ui.Widget, com.google.gwt.dom.client.Element, com.google.gwt.dom.client.Element)
@@ -123,15 +49,16 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	@Override
-	public LazyPanel instantiateWidget(final Element element, String widgetId) 
+	public LazyPanel instantiateWidget(final JSONObject element, String widgetId) 
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
-			maybeBuildLazyDependencyList(element, widgetId);
+			//maybeBuildLazyDependencyList(element, widgetId);
 		}		
 		
-		LazyPanel result =  new LazyPanelImpl(element.getInnerHTML(), widgetId);
-		element.setInnerHTML("");
+//		LazyPanel result =  new CruxLazyPanel(element.getInnerHTML(), widgetId);
+		LazyPanel result =  new CruxLazyPanel("", widgetId);
+		//element.setInnerHTML("");
 		HasWidgetsHandler.handleWidgetElement(result, widgetId, "gwt_lazyPanel");
 		return result;
 	}
@@ -140,7 +67,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 	 * @param element
 	 * @param externalId
 	 * @return
-	 */
+	 *
 	private Element getParentLazyPanelElement(Element element, String externalId) 
 	{
 		Element elementParent = element.getParentElement();
@@ -164,7 +91,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 	/**
 	 * @param element
 	 * @param widgetId
-	 */
+	 *
 	private void maybeBuildLazyDependencyList(final Element element, String widgetId)
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
@@ -173,7 +100,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 			{
 				// Only the most external lazy panels must be initialized, once they also
 				// initialize their internal lazy children.
-				NodeList<Element> spanElements = element.getElementsByTagName("span");
+				NodeList<Element> spanElements = element.getElementsByTagName("SPAN");
 
 				int spansLength = spanElements.getLength();
 				for (int i=0; i<spansLength; i++)
@@ -187,5 +114,5 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 				}
 			}
 		}
-	}	
+	}*/	
 }

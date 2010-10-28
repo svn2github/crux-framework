@@ -36,10 +36,9 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -57,7 +56,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public MenuBar instantiateWidget(Element element, String widgetId) 
+	public MenuBar instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new MenuBar(isMenuVertical(element));
 	}
@@ -89,7 +88,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	})
 	public void processChildren(WidgetFactoryContext<MenuBar> context) throws InterfaceConfigException {}
 
-	private boolean isMenuVertical(Element element)
+	private boolean isMenuVertical(JSONObject element)
 	{
 		String verticalStr = getProperty(element,"vertical");
 		boolean vertical = false;
@@ -163,7 +162,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 		@Override
 		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
 		{
-			String captionHtml = context.getChildElement().getInnerHTML();
+			String captionHtml = "";//TODO traatar o innerHTML context.getChildElement().getInnerHTML();
 			context.setAttribute(CURRENT_MENU_ITEM_CAPTION, captionHtml);
 			context.setAttribute(CURRENT_MENU_ITEM_IS_HTML, true);
 		}
@@ -226,15 +225,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	protected static MenuBar getSubMenu(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
 	{
 		MenuBar widget = context.getRootWidget();
-		Element element = context.getChildElement();
-			
-		String subMenuId = element.getId();
-		if (StringUtils.isEmpty(subMenuId))
-		{
-			subMenuId = generateNewId();
-		}
-		
-		MenuBar subMenu = (MenuBar) createChildWidget(element, subMenuId);	
+		MenuBar subMenu = (MenuBar) createChildWidget(context.getChildElement());	
 		subMenu.setAutoOpen(widget.getAutoOpen());
 		subMenu.setAnimationEnabled(widget.isAnimationEnabled());
 		return subMenu;

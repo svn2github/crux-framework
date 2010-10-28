@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.RichTextArea.FontSize;
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.RichTextArea.Justification;
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implements HasTextFactory<RichTextArea>
 {
 	@Override
-	public RichTextArea instantiateWidget(Element element, String widgetId) 
+	public RichTextArea instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new RichTextArea();
 	}
@@ -63,7 +63,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 	{
 		super.processAttributes(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		final RichTextArea widget = context.getWidget();
 		
 		final FastMap<String> declaredProperties = readDeclaredProperties(context);
@@ -81,7 +81,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = element.getInnerHTML();
+			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);

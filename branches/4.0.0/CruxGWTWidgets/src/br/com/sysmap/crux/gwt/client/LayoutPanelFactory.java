@@ -29,8 +29,8 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContex
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.layout.client.Layout.Alignment;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 {
 	@Override
-	public LayoutPanel instantiateWidget(Element element, String widgetId)
+	public LayoutPanel instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new LayoutPanel();
 	}
@@ -115,7 +115,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<LayoutPanel> context) throws InterfaceConfigException 
 		{
-			Widget childWidget = createChildWidget(context.getChildElement(), context.getChildElement().getId());
+			Widget childWidget = createChildWidget(context.getChildElement());
 			context.getRootWidget().add(childWidget);
 			
 			String left = (String) context.getAttribute("left");

@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -44,7 +44,7 @@ public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
 	{
 		super.processAttributes(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		CheckBox widget = context.getWidget();
 
 		String checked = context.readWidgetProperty("checked");
@@ -56,7 +56,7 @@ public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = element.getInnerHTML();
+			String innerHtml = "";//TODO tratar innerHTML element.getInnerHTML();
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);
@@ -65,7 +65,7 @@ public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
 	}
 	
 	@Override
-	public CheckBox instantiateWidget(Element element, String widgetId) 
+	public CheckBox instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new CheckBox();
 	}

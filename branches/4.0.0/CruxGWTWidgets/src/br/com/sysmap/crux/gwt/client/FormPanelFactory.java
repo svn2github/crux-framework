@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -65,7 +65,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	{
 		super.processEvents(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		FormPanel widget = context.getWidget();
 		
 		final Event eventSubmitComplete = EvtBind.getWidgetEvent(element, "onSubmitComplete");
@@ -94,7 +94,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	}
 	
 	@Override
-	public FormPanel instantiateWidget(Element element, String widgetId) 
+	public FormPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		String target = getProperty(element,"target");
 		if (target != null && target.length() >0)

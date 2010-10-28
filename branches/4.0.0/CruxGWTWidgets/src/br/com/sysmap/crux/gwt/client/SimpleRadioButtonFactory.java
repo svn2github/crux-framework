@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.SimpleRadioButton;
 
 /**
@@ -42,7 +42,7 @@ public class SimpleRadioButtonFactory extends FocusWidgetFactory<SimpleRadioButt
 	}
 	
 	@Override
-	public SimpleRadioButton instantiateWidget(Element element, String widgetId) 
+	public SimpleRadioButton instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new SimpleRadioButton(getProperty(element,"name"));
 	}

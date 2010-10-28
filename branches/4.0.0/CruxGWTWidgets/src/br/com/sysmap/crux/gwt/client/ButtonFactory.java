@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -28,7 +28,7 @@ public class ButtonFactory extends ButtonBaseFactory<Button>
 {
 
 	@Override
-	public Button instantiateWidget(Element element, String widgetId) 
+	public Button instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new Button();
 	}

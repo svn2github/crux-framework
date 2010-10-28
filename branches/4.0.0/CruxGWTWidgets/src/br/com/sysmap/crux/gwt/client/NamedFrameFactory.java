@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.NamedFrame;
 
 
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.NamedFrame;
 public class NamedFrameFactory extends WidgetFactory<NamedFrame>
 {
 	@Override
-	public NamedFrame instantiateWidget(Element element, String widgetId) 
+	public NamedFrame instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new NamedFrame(getProperty(element,"name"));
 	}

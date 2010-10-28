@@ -34,7 +34,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWi
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TabBar.Tab;
@@ -95,7 +95,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = context.getChildElement().getInnerHTML();
+			String title = ensureTextChild(context.getChildElement(), true);
 			context.getRootWidget().addTab(title);
 			updateTabState(context);
 		}
@@ -107,7 +107,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = context.getChildElement().getInnerHTML();
+			String title = ensureTextChild(context.getChildElement(), true);//TODO tratar o innerHTML
 			context.getRootWidget().addTab(title, true);
 			updateTabState(context);
 		}
@@ -119,8 +119,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget titleWidget = createChildWidget(childElement, childElement.getId());
+			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.getRootWidget().addTab(titleWidget);
 			updateTabState(context);
 		}
@@ -128,7 +127,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	
 	private static <T extends TabBar> void updateTabState(WidgetChildProcessorContext<T> context)
 	{
-		Element tabElement = (Element) context.getAttribute("tabElement");
+		JSONObject tabElement = (JSONObject) context.getAttribute("tabElement");
 		String enabled = getProperty(tabElement, "enabled");
 		int tabCount = context.getRootWidget().getTabCount();
 		if (enabled != null && enabled.length() >0)

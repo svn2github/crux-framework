@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 public class HTMLFactory extends AbstractLabelFactory<HTML>
 {
 	@Override
-	public HTML instantiateWidget(Element element, String widgetId) 
+	public HTML instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new HTML();
 	}
@@ -47,14 +47,17 @@ public class HTMLFactory extends AbstractLabelFactory<HTML>
 	{
 		super.processAttributes(context);
 		
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		HTML widget = context.getWidget();
 
-		String innerHtml = element.getInnerHTML();
 		String text = context.readWidgetProperty("text");
-		if ((text == null || text.length() ==0) && innerHtml != null && innerHtml.length() > 0)
+		if ((text == null || text.length() ==0))
 		{
-			((HasHTML)widget).setHTML(innerHtml);
+			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
+			if (innerHtml != null && innerHtml.length() > 0)
+			{
+				((HasHTML)widget).setHTML(innerHtml);
+			}
 		}
 	}
 

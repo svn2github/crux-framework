@@ -51,7 +51,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = context.getElement().getInnerHTML();
+			String innerHtml = "";// TODO tratar o innerHTML context.getElement().getInnerHTML();
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(ScreenFactory.getInstance().getDeclaredMessage(innerHtml));
@@ -140,7 +140,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
 		{
 			Face face = (Face)context.getAttribute("face");
-			face.setText(context.getChildElement().getInnerHTML());
+			face.setText(ensureTextChild(context.getChildElement(), true));
 		}
 	}
 	

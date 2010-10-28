@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public class FlowPanelFactory extends ComplexPanelFactory<FlowPanel>
 {
 	@Override
-	public FlowPanel instantiateWidget(Element element, String widgetId) 
+	public FlowPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new FlowPanel();
 	}

@@ -38,7 +38,7 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	 */
 	public void add(T parent, Widget child, Element parentElement, Element childElement) 
 	{
-		parent.add(child, getEnclosingPanelElement(childElement).getId());
+		//parent.add(child, getEnclosingPanelElement(childElement).getId());
 	}
 	
 	/**

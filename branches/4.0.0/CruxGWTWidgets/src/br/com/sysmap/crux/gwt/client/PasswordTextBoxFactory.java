@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 
 /**
@@ -44,7 +44,7 @@ public class PasswordTextBoxFactory extends TextBoxBaseFactory<PasswordTextBox>
 	}
 	
 	@Override
-	public PasswordTextBox instantiateWidget(Element element, String widgetId) 
+	public PasswordTextBox instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new PasswordTextBox();
 	}

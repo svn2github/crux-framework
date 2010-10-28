@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.FlexTable;
 
 /**
@@ -38,7 +38,7 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 {
 
 	@Override
-	public FlexTable instantiateWidget(Element element, String widgetId)
+	public FlexTable instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new FlexTable();
 	}

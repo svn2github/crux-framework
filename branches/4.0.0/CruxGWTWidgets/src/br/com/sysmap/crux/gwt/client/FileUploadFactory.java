@@ -15,11 +15,11 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.FileUpload;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.ui.FileUpload;
 
 /**
  * Represents a FileUploadFactory component.
@@ -30,7 +30,7 @@ public class FileUploadFactory extends WidgetFactory<FileUpload>
 {
 
 	@Override
-	public FileUpload instantiateWidget(Element element, String widgetId) 
+	public FileUpload instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new FileUpload();
 	}

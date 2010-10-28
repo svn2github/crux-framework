@@ -107,7 +107,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 		@Override
 		public void processChildren(WidgetChildProcessorContext<CellPanel> context) throws InterfaceConfigException
 		{
-			Widget child = createChildWidget(context.getChildElement(), context.getChildElement().getId());
+			Widget child = createChildWidget(context.getChildElement());
 			context.setAttribute("child", child);
 			super.processChildren(context);
 			context.setAttribute("child", null);

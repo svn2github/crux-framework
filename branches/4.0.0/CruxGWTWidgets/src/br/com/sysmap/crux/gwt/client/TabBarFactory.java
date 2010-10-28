@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabBar;
 
 /**
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.TabBar;
 public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 {
 	@Override
-	public TabBar instantiateWidget(Element element, String widgetId) 
+	public TabBar instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new TabBar();
 	}

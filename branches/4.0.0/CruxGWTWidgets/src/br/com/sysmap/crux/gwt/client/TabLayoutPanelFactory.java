@@ -34,8 +34,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersF
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,7 +48,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanel>, HasSelectionHandlersFactory<TabLayoutPanel>
 {
 	@Override
-	public TabLayoutPanel instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public TabLayoutPanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		String height = getProperty(element,"barHeight");
 		if (StringUtils.isEmpty(height))
@@ -124,7 +124,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException 
 		{
-			String title = ScreenFactory.getInstance().getDeclaredMessage(context.getChildElement().getInnerHTML());
+			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.setAttribute("titleText", title);
 		}
 	}
@@ -135,7 +135,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException 
 		{
-			String title = context.getChildElement().getInnerHTML();
+			String title = "";//TODO tratar o innerHTML context.getChildElement().getInnerHTML();
 			context.setAttribute("titleHtml", title);
 		}
 	}
@@ -156,8 +156,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget titleWidget = createChildWidget(childElement, childElement.getId());
+			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("titleWidget", titleWidget);
 		}
 	}
@@ -178,8 +177,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget widget = createChildWidget(childElement, childElement.getId());
+			Widget widget = createChildWidget(context.getChildElement());
 			
 			String titleText = (String) context.getAttribute("titleText");
 			if (titleText != null)

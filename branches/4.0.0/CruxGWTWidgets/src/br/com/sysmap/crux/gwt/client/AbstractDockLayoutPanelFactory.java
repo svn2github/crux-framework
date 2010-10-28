@@ -77,7 +77,7 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 		@Override
 		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
 		{
-			Widget childWidget = createChildWidget(context.getChildElement(), context.getChildElement().getId());
+			Widget childWidget = createChildWidget(context.getChildElement());
 			
 			Direction direction = (Direction) context.getAttribute("direction");
 			String sizeStr = (String) context.getAttribute("size");

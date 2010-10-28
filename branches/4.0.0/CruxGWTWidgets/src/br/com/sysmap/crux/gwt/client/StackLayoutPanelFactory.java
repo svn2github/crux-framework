@@ -28,8 +28,8 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContex
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 {
 	@Override
-	public StackLayoutPanel instantiateWidget(Element element, String widgetId) 
+	public StackLayoutPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new StackLayoutPanel(AbstractLayoutPanelFactory.getUnit(getProperty(element,"unit")));
 	}
@@ -108,7 +108,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException
 		{
-			Widget childWidget = createChildWidget(context.getChildElement(), context.getRootElement().getId());
+			Widget childWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("header", childWidget);
 		}
 	}
@@ -129,7 +129,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException
 		{
-			Widget contentWidget = createChildWidget(context.getChildElement(), context.getRootElement().getId());
+			Widget contentWidget = createChildWidget(context.getChildElement());
 			Widget headerWidget = (Widget) context.getAttribute("header");
 			Double headerSize = (Double) context.getAttribute("headerSize");
 			context.getRootWidget().add(contentWidget, headerWidget, headerSize);

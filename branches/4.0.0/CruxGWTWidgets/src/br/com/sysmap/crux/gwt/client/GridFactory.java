@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -25,7 +24,8 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Grid;
 
 /**
@@ -37,7 +37,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 {
 
 	@Override
-	public Grid instantiateWidget(Element element, String widgetId)
+	public Grid instantiateWidget(JSONObject element, String widgetId)
 	{
 		return new Grid();
 	}
@@ -53,9 +53,30 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	})
 	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException	
 	{
-		FastList<Element> childrenSpans = ensureChildrenSpans(context.getElement(), true);
-		context.getWidget().resizeRows(childrenSpans.size());
+		JSONArray children = ensureChildren(context.getElement(), true);
+		
+		int count = getNonNullChildrenCount(children);
+		
+		context.getWidget().resizeRows(count);
 	}
+
+	/**
+	 * @param children
+	 * @return
+	 */
+	private static int getNonNullChildrenCount(JSONArray children)
+    {
+	    int count = 0;
+		int size = children.size();
+		for (int i=0; i<size; i++)
+		{
+			if (children.get(i).isObject() != null)
+			{
+				count++;
+			}
+		}
+	    return count;
+    }
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	public static class GridRowProcessor extends TableRowProcessor<Grid>
@@ -69,8 +90,8 @@ public class GridFactory extends HTMLTableFactory<Grid>
 			Boolean cellsInitialized = (Boolean) context.getAttribute("cellsInitialized");
 			if (cellsInitialized == null || !cellsInitialized)
 			{
-				FastList<Element> childrenSpans = ensureChildrenSpans(context.getChildElement(), true);
-				context.getRootWidget().resizeColumns(childrenSpans.size());
+				JSONArray children = ensureChildren(context.getChildElement(), true);
+				context.getRootWidget().resizeColumns(getNonNullChildrenCount(children));
 				context.setAttribute("cellsInitialized", new Boolean(true));
 			}
 			

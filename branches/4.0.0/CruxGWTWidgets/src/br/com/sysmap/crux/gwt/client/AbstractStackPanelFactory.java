@@ -27,7 +27,6 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTa
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -71,7 +70,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			context.setAttribute(KEY_TITLE, context.getChildElement().getInnerHTML());
+			context.setAttribute(KEY_TITLE, ensureTextChild(context.getChildElement(), true));
 			context.setAttribute(KEY_IS_HTML, false);
 		}
 	}
@@ -82,7 +81,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			context.setAttribute(KEY_TITLE, context.getChildElement().getInnerHTML());
+			context.setAttribute(KEY_TITLE, ensureTextChild(context.getChildElement(), true));//TODO tratar o innerHTML
 			context.setAttribute(KEY_IS_HTML, true);
 		}
 	}
@@ -93,8 +92,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			Element childElement = context.getChildElement();
-			Widget child = createChildWidget(childElement, childElement.getId());
+			Widget child = createChildWidget(context.getChildElement());
 			
 			String title = (String)context.getAttribute(KEY_TITLE);
 			if (title == null)

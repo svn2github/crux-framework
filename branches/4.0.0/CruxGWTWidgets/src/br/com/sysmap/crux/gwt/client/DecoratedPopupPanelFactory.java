@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 
 /**
@@ -36,7 +36,7 @@ public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel
              implements HasAnimationFactory<DecoratedPopupPanel>, HasCloseHandlersFactory<DecoratedPopupPanel>
 {
 	@Override
-	public DecoratedPopupPanel instantiateWidget(Element element, String widgetId) 
+	public DecoratedPopupPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		String autoHideStr = getProperty(element,"autoHide");
 		boolean autoHide = false;

@@ -17,7 +17,6 @@ package br.com.sysmap.crux.gwt.client;
 
 import java.util.Date;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -36,7 +35,9 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
@@ -93,19 +94,24 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	}
 	
 	@Override
-	public DateBox instantiateWidget(Element element, String widgetId) throws InterfaceConfigException 
+	public DateBox instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
-		FastList<Element> children = ensureChildrenSpans(element, true);
-		if (children.size() > 0)
+		JSONArray children = ensureChildren(element, true);
+		int length = children.size();
+		if (length > 0)
 		{
 			DatePicker picker = null;
 			
-			for (int i=0; i<children.size(); i++)
+			for (int i=0; i<length; i++)
 			{
-				Element childElement = children.get(i);
-				if (isValidCruxWidgetMetaTag(childElement))
+				JSONValue jsonValue = children.get(i);
+				if (jsonValue != null)
 				{
-					picker = (DatePicker) createChildWidget(childElement, childElement.getId());
+					JSONObject childElement = jsonValue.isObject();
+					if (isWidget(childElement))
+					{
+						picker = (DatePicker) createChildWidget(childElement);
+					}
 				}
 			}			
 			
@@ -133,7 +139,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	 * @param widgetId 
 	 * @return
 	 */
-	public Format getFormat(Element element, String widgetId)
+	public Format getFormat(JSONObject element, String widgetId)
 	{
 		Format format = null;
 		String pattern = getProperty(element,"pattern");

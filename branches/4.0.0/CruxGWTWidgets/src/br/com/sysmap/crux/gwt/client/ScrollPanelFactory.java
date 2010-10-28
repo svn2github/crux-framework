@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.factory.HasScrollHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,7 +45,7 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel>
 	public static enum HorizontalScrollPosition{left,right};
 
 	@Override
-	public ScrollPanel instantiateWidget(Element element, String widgetId) 
+	public ScrollPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new ScrollPanel();
 	}
