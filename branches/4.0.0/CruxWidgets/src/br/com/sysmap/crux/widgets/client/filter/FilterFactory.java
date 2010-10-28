@@ -34,7 +34,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFacto
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -48,7 +48,7 @@ public class FilterFactory extends CompositeFactory<Filter>
 	              HasAllKeyHandlersFactory<Filter>
 {
 	@Override
-	public Filter instantiateWidget(final Element element, String widgetId) throws InterfaceConfigException
+	public Filter instantiateWidget(final JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new Filter();	
 	}

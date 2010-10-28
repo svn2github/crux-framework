@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.grid;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.PagedDataSource;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -33,6 +32,7 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
@@ -41,7 +41,8 @@ import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind;
 import br.com.sysmap.crux.widgets.client.grid.Grid.SortingType;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -56,7 +57,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param autoLoad 
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public Grid instantiateWidget(Element gridElem, String widgetId) throws InterfaceConfigException
+	public Grid instantiateWidget(JSONObject gridElem, String widgetId) throws InterfaceConfigException
 	{
 		Grid grid = new Grid(getColumnDefinitions(gridElem), getPageSize(gridElem), 
 				                               getRowSelectionModel(gridElem), getCellSpacing(gridElem), 
@@ -65,7 +66,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return grid;
 	}
 	
-	private SortingType getSortingType(Element gridElem)
+	private SortingType getSortingType(JSONObject gridElem)
 	{
 		String sortingType = getProperty(gridElem,"defaultSortingType");
 		if(!StringUtils.isEmpty(sortingType))
@@ -76,12 +77,12 @@ public class GridFactory extends WidgetFactory<Grid>
 		return null;
 	}
 
-	private String getSortingColumn(Element gridElem)
+	private String getSortingColumn(JSONObject gridElem)
 	{
 		return getProperty(gridElem,"defaultSortingColumn");
 	}
 
-	private boolean isFixedCellSize(Element gridElem)
+	private boolean isFixedCellSize(JSONObject gridElem)
 	{
 		String fixedCellSize = getProperty(gridElem,"fixedCellSize");
 		
@@ -93,7 +94,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 	
-	private String getEmptyDataFilling(Element gridElem)
+	private String getEmptyDataFilling(JSONObject gridElem)
 	{
 		String emptyDataFilling = getProperty(gridElem,"emptyDataFilling");
 		
@@ -105,7 +106,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return null;
 	}
 	
-	private boolean getHighlightRowOnMouseOver(Element gridElem)
+	private boolean getHighlightRowOnMouseOver(JSONObject gridElem)
 	{
 		String highlight = getProperty(gridElem,"highlightRowOnMouseOver");
 		
@@ -117,7 +118,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 
-	private boolean getAutoLoad(Element gridElem)
+	private boolean getAutoLoad(JSONObject gridElem)
 	{
 		String autoLoad = getProperty(gridElem,"autoLoadData");
 		
@@ -129,7 +130,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 	
-	private boolean getStretchColumns(Element gridElem)
+	private boolean getStretchColumns(JSONObject gridElem)
 	{
 		String stretchColumns = getProperty(gridElem,"stretchColumns");
 		
@@ -141,7 +142,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 
-	private int getCellSpacing(Element gridElem)
+	private int getCellSpacing(JSONObject gridElem)
 	{
 		String spacing = getProperty(gridElem,"cellSpacing");
 		
@@ -174,7 +175,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param gridElem
 	 * @return
 	 */
-	private RowSelectionModel getRowSelectionModel(Element gridElem)
+	private RowSelectionModel getRowSelectionModel(JSONObject gridElem)
 	{
 		String rowSelection = getProperty(gridElem,"rowSelection");
 		
@@ -213,7 +214,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param gridElem
 	 * @return
 	 */
-	private int getPageSize(Element gridElem)
+	private int getPageSize(JSONObject gridElem)
 	{
 		String pageSize = getProperty(gridElem,"pageSize");
 		
@@ -230,61 +231,65 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private ColumnDefinitions getColumnDefinitions(Element gridElem) throws InterfaceConfigException
+	private ColumnDefinitions getColumnDefinitions(JSONObject gridElem) throws InterfaceConfigException
 	{
 		ColumnDefinitions defs = new ColumnDefinitions();
 		
-		FastList<Element> colElems = ensureChildrenSpans(gridElem, false);
-		if(colElems != null && colElems.size() > 0)
+		JSONArray colElems = ensureChildren(gridElem, false);
+		int colsSize = colElems.size();
+		if(colElems != null && colsSize > 0)
 		{
-			for (int i=0; i<colElems.size(); i++)
+			for (int i=0; i<colsSize; i++)
 			{
-				Element colElem = colElems.get(i);
-				String width = getProperty(colElem,"width");
-				String strVisible = getProperty(colElem,"visible");
-				String strWrapLine = getProperty(colElem,"wrapLine");
-				String label = getProperty(colElem,"label");
-				String key = getProperty(colElem,"key");
-				String strFormatter = getProperty(colElem,"formatter");
-				String hAlign = getProperty(colElem,"horizontalAlignment");
-				String vAlign = getProperty(colElem,"verticalAlignment");
-				
-				boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
-				boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
-				String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
-				label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
-				
-				ColumnDefinition def = null;
-				
-				String columnType = getChildName(colElem);
-				if("dataColumn".equals(columnType))
+				JSONObject colElem = colElems.get(i).isObject();
+				if (colElem != null)
 				{
-					def = new DataColumnDefinition(
-							label, 
-							width, 
-							formatter, 
-							visible,
-							wrapLine,
-							AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-							AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+					String width = getProperty(colElem,"width");
+					String strVisible = getProperty(colElem,"visible");
+					String strWrapLine = getProperty(colElem,"wrapLine");
+					String label = getProperty(colElem,"label");
+					String key = getProperty(colElem,"key");
+					String strFormatter = getProperty(colElem,"formatter");
+					String hAlign = getProperty(colElem,"horizontalAlignment");
+					String vAlign = getProperty(colElem,"verticalAlignment");
+
+					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
+					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
+					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
+					label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
+
+					ColumnDefinition def = null;
+
+					String columnType = getChildName(colElem);
+					if("dataColumn".equals(columnType))
+					{
+						def = new DataColumnDefinition(
+								label, 
+								width, 
+								formatter, 
+								visible,
+								wrapLine,
+								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+					}
+					else if("widgetColumn".equals(columnType))
+					{
+						def = new WidgetColumnDefinition(
+								label, 
+								width, 
+								ensureFirstChild(colElem, false),
+								visible, 
+								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+					}
+
+					defs.add(key, def);
 				}
-				else if("widgetColumn".equals(columnType))
-				{
-					def = new WidgetColumnDefinition(
-							label, 
-							width, 
-							ensureFirstChildSpan(colElem, false),
-							visible, 
-							AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-							AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
-				}
-					
-				defs.add(key, def);
 			}
 		}
 		else
 		{
-			throw new InterfaceConfigException(WidgetMsgFactory.getMessages().gridDoesNotHaveColumns(gridElem.getId()));
+			throw new InterfaceConfigException(WidgetMsgFactory.getMessages().gridDoesNotHaveColumns(JSONUtils.getStringProperty(gridElem, "id")));
 		}
 				
 		return defs;
@@ -319,7 +324,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	})
 	public void processEvents(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
 	{
-		Element element = context.getElement();
+		JSONObject element = context.getElement();
 		Grid widget = context.getWidget();
 
 		RowEventsBind.bindClickRowEvent(element, widget);

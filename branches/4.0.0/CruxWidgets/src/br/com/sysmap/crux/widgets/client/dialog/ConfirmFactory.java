@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -38,7 +38,7 @@ public class ConfirmFactory extends WidgetFactory<Confirm>
 {
 
 	@Override
-	public Confirm instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public Confirm instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new Confirm();
 	}

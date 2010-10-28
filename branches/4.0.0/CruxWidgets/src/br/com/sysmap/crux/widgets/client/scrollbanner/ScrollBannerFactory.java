@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Scroll Banner widget
@@ -36,7 +36,7 @@ import com.google.gwt.dom.client.Element;
 public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 {
 	@Override
-	public ScrollBanner instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public ScrollBanner instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		String period = getProperty(element,"messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)
@@ -68,7 +68,7 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<ScrollBanner> context) throws InterfaceConfigException
 		{
-			String message = ScreenFactory.getInstance().getDeclaredMessage(context.getChildElement().getInnerHTML());
+			String message = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.getRootWidget().addMessage(message);
 		}
 	}

@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 public class CancelEvtBind implements EvtBinder<HasCancelHandlers>
 {
@@ -29,7 +29,7 @@ public class CancelEvtBind implements EvtBinder<HasCancelHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(Element element, HasCancelHandlers widget)
+	public void bindEvent(JSONObject element, HasCancelHandlers widget)
 	{
 		final Event cancelEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (cancelEvent != null)

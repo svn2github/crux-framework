@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Stack Menu
@@ -41,7 +41,7 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem>
        implements HasClickHandlersFactory<StackMenuItem>
 {
 	@Override
-	public StackMenuItem instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public StackMenuItem instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		String label = getProperty(element,"label"); 
 		StackMenuItem stackMenuItem = new StackMenuItem(ScreenFactory.getInstance().getDeclaredMessage(label));
@@ -73,8 +73,7 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<StackMenuItem> context) throws InterfaceConfigException 
 		{
-			Element childElement = context.getChildElement();
-			StackMenuItem childWidget = (StackMenuItem)createChildWidget(childElement, childElement.getId());
+			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
 			context.getRootWidget().add(childWidget);
 		}
 	}

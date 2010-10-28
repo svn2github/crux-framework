@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for before focus events binding
@@ -31,7 +31,7 @@ public class BeforeBlurEvtBind implements EvtBinder<HasBeforeBlurHandlers>
 {
 	private static final String EVENT_NAME = "onBeforeBlur";
 	
-	public void bindEvent(Element element, HasBeforeBlurHandlers widget)
+	public void bindEvent(JSONObject element, HasBeforeBlurHandlers widget)
 	{
 		final Event eventBeforeBlur = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventBeforeBlur != null)

@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.gwt.client.AbstractListBoxFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Represents a List Box component
@@ -37,7 +37,7 @@ public class SingleSelectFactory extends AbstractListBoxFactory<SingleSelect>
 	public void processChildren(WidgetFactoryContext<SingleSelect> context) throws InterfaceConfigException {}	
 	
 	@Override
-	public SingleSelect instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public SingleSelect instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new SingleSelect();
 	}

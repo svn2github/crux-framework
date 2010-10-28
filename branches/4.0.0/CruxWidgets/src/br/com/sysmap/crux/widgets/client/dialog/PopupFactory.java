@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlersFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -34,7 +34,7 @@ public class PopupFactory extends WidgetFactory<Popup>
        implements HasAnimationFactory<Popup>, HasBeforeCloseHandlersFactory<Popup>
 {
 	@Override
-	public Popup instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public Popup instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new Popup();
 	}

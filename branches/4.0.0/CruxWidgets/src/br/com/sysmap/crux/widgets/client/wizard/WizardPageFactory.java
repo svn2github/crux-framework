@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.client.wizard;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -30,10 +31,11 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -45,7 +47,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 
 	@Override
-    public WizardPage<?> instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+    public WizardPage<?> instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
     {
 	    String wizardContextObject = getProperty(element,"wizardContextObject");
 	    String wizardId = getProperty(element,"wizardId");
@@ -105,7 +107,8 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		})
 		public void processChildren(WidgetChildProcessorContext<WizardPage<?>> context) throws InterfaceConfigException 
 		{
-			String id = context.getChildElement().getId();
+			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id =JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			

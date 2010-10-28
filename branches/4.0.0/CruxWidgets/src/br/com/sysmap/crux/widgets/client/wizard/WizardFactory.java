@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.client.wizard;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -36,6 +37,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.FinishEvtBind;
@@ -44,7 +46,7 @@ import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -57,7 +59,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 	
 	@Override
-    public Wizard<?> instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+    public Wizard<?> instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
     {
 	    String wizardContextObject = getProperty(element,"wizardContextObject");
 		return instantiator.createWizard(widgetId, wizardContextObject);
@@ -226,7 +228,8 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		})
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
-			context.setAttribute("stepId", context.getChildElement().getId());
+			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			context.setAttribute("stepId", JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id"));
 			context.setAttribute("stepLabel", context.readChildProperty("label"));
 			context.setAttribute("stepOnEnter", context.readChildProperty("onEnter"));
 			context.setAttribute("stepOnLeave", context.readChildProperty("onLeave"));
@@ -259,7 +262,8 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		})
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
-			String id = context.getChildElement().getAttribute("id");
+			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			
@@ -292,7 +296,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException
 		{
-			Widget childWidget = createChildWidget(context.getChildElement(), context.getChildElement().getId());
+			Widget childWidget = createChildWidget(context.getChildElement());
 			
 			String id = (String)context.getAttribute("stepId");
 			String label = ScreenFactory.getInstance().getDeclaredMessage((String)context.getAttribute("stepLabel"));
@@ -332,7 +336,8 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		})
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException
 		{
-			String id = context.getChildElement().getAttribute("id");
+			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			String url = context.readChildProperty("url");
 			context.getRootWidget().addPageStep(id, label, url);
@@ -506,7 +511,8 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		})
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
-			String id = context.getChildElement().getAttribute("id");
+			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			

@@ -32,7 +32,7 @@ import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvtB
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvtBind;
 import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Collapse Panel widget
@@ -42,7 +42,7 @@ import com.google.gwt.dom.client.Element;
 public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePanel>
 {
 	@Override
-	public CollapsePanel instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public CollapsePanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		String height = getProperty(element,"height");
 		String width = getProperty(element,"width");

@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Transfer List widget
@@ -34,7 +34,7 @@ import com.google.gwt.dom.client.Element;
 public class TransferListFactory extends CompositeFactory<TransferList>
 {
 	@Override
-	public TransferList instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public TransferList instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new TransferList();
 	}

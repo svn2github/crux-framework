@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 public class BeforeOpenEvtBind implements EvtBinder<HasBeforeOpenHandlers>
 {
@@ -29,7 +29,7 @@ public class BeforeOpenEvtBind implements EvtBinder<HasBeforeOpenHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(Element element, HasBeforeOpenHandlers widget)
+	public void bindEvent(JSONObject element, HasBeforeOpenHandlers widget)
 	{
 		final Event beforeOpenEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (beforeOpenEvent != null)

@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
 {
@@ -29,7 +29,7 @@ public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(Element element, HasPasteHandlers widget)
+	public void bindEvent(JSONObject element, HasPasteHandlers widget)
 	{
 		final Event pasteEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		

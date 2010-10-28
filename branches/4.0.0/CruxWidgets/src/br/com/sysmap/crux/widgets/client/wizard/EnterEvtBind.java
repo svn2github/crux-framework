@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -33,7 +33,7 @@ public class EnterEvtBind implements EvtBinder<HasEnterHandlers<?>>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(Element element, HasEnterHandlers<?> widget)
+	public void bindEvent(JSONObject element, HasEnterHandlers<?> widget)
 	{
 		final Event enterEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (enterEvent != null)

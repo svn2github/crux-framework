@@ -41,7 +41,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersF
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -55,7 +55,7 @@ implements HasAnimationFactory<RollingTabPanel>,
 HasBeforeSelectionHandlersFactory<RollingTabPanel>
 {
 	@Override
-	public RollingTabPanel instantiateWidget(Element element, String widgetId) 
+	public RollingTabPanel instantiateWidget(JSONObject element, String widgetId) 
 	{
 		return new RollingTabPanel();
 	}
@@ -134,7 +134,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException 
 		{
-			String title = ScreenFactory.getInstance().getDeclaredMessage(context.getChildElement().getInnerHTML());
+			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.setAttribute("titleText", title);
 		}
 	}
@@ -145,7 +145,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException 
 		{
-			String title = context.getChildElement().getInnerHTML();
+			String title = "";//TODO tratar o innerHTML context.getChildElement().getInnerHTML();
 			context.setAttribute("titleHtml", title);
 		}
 	}
@@ -166,8 +166,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget titleWidget = createChildWidget(childElement, childElement.getId());
+			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("titleWidget", titleWidget);
 		}
 	}
@@ -188,8 +187,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			Widget widget = createChildWidget(childElement, childElement.getId());
+			Widget widget = createChildWidget(context.getChildElement());
 			
 			String titleText = (String) context.getAttribute("titleText");
 			if (titleText != null)
@@ -214,7 +212,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		
 		private void updateTabState(WidgetChildProcessorContext<RollingTabPanel> context)
 		{
-			Element tabElement = (Element) context.getAttribute("tabElement");
+			JSONObject tabElement = (JSONObject) context.getAttribute("tabElement");
 			String enabled = getProperty(tabElement,"enabled");
 			int tabCount = context.getRootWidget().getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)

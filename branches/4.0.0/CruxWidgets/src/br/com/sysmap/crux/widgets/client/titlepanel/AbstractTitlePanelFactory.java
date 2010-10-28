@@ -67,7 +67,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setTitleHtml(context.getChildElement().getInnerHTML());
+			context.getRootWidget().setTitleHtml("");//TODO tratar o innerHTML
 		}
 	}
 
@@ -77,7 +77,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			String innerText = context.getChildElement().getInnerText();
+			String innerText = ensureTextChild(context.getChildElement(),true);
 			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
 			context.getRootWidget().setTitleText(i18nText);
 		}
@@ -124,7 +124,8 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setContentHtml(context.getChildElement().getInnerHTML());
+			context.getRootWidget().setContentHtml("");
+			//TODO tratar o innerHTML
 		}
 	}
 
@@ -134,7 +135,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			String innerText = context.getChildElement().getInnerText();
+			String innerText = ensureTextChild(context.getChildElement(), true);
 			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
 			context.getRootWidget().setContentText(i18nText);
 		}

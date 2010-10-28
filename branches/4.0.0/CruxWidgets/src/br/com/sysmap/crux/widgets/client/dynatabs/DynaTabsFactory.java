@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.client.dynatabs;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -28,11 +29,12 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Decorated Button widget
@@ -42,7 +44,7 @@ import com.google.gwt.dom.client.Element;
 public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 {
 	@Override
-	public DynaTabs instantiateWidget(Element element, String widgetId) throws InterfaceConfigException
+	public DynaTabs instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
 	{
 		return new DynaTabs();
 	}
@@ -74,8 +76,9 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 		})
 		public void processChildren(WidgetChildProcessorContext<DynaTabs> context) throws InterfaceConfigException
 		{
-			Element childElement = context.getChildElement();
-			String id = childElement.getId();
+			JSONObject childElement = context.getChildElement();
+			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id = JSONUtils.getStringProperty(childElement, "id");
 			String label = context.readChildProperty("label");
 			label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
 			String url = context.readChildProperty("url");

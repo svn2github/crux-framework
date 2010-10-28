@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -33,7 +33,7 @@ public class WizardCommandEvtBind implements EvtBinder<HasWizardCommandHandlers<
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(Element element, HasWizardCommandHandlers<?> widget)
+	public void bindEvent(JSONObject element, HasWizardCommandHandlers<?> widget)
 	{
 		final Event commandEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (commandEvent != null)

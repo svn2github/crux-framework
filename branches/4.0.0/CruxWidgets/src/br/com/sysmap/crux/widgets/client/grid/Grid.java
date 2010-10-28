@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
 import br.com.sysmap.crux.core.client.datasource.HasDataSource;
@@ -48,11 +49,12 @@ import br.com.sysmap.crux.widgets.client.paging.Pager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -333,11 +335,14 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	{
 		try
 		{
-			Element template = column.getWidgetTemplate();
-			Element clone = (Element) template.cloneNode(true);
-			setRandomId(clone);
+			JSONObject template = column.getWidgetTemplate();
+			assert(template.containsKey("id")): Crux.getMessages().screenFactoryWidgetIdRequired();
+			String id = template.get("id").toString(); 
+			setRandomId(template);
 			ScreenFactory factory = ScreenFactory.getInstance();
-			return factory.newWidget(clone, clone.getId(), factory.getMetaElementType(clone), false);
+			Widget newWidget = factory.newWidget(template, template.get("id").toString(), factory.getMetaElementType(template), false);
+			template.put("id", new JSONString(id));
+			return newWidget;
 		}
 		catch (InterfaceConfigException e)
 		{
@@ -350,20 +355,33 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * Generates and sets a random ID on the given element and its children.
 	 * @param template
 	 */
-	private void setRandomId(Element template)
+	private void setRandomId(JSONObject template)
 	{
-		template.setId(template.getId() + "_" + generateWidgetIdSufix());
-		NodeList<Node> children = template.getChildNodes();
-		if(children != null)
+		String templateId;
+		if (template.containsKey("id"))
 		{
-			int length = children.getLength();
-			for(int i = 0; i < length; i++)
+			templateId = template.get("id").toString();
+		}
+		else
+		{
+			templateId = "";
+		}
+		
+		template.put("id", new JSONString(templateId + "_" + generateWidgetIdSufix()));
+		
+		if (template.containsKey("children"))
+		{
+			JSONArray children = template.get("children").isArray();
+			if(children != null)
 			{
-				Node childNode = children.getItem(i);
-				if(Element.is(childNode))
+				int length = children.size();
+				for(int i = 0; i < length; i++)
 				{
-					Element childElement = Element.as(childNode);
-					setRandomId(childElement);
+					JSONObject child = children.get(i).isObject();
+					if(child != null)
+					{
+						setRandomId(child);
+					}
 				}
 			}
 		}
