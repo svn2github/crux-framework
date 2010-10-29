@@ -363,7 +363,7 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagAttributeDeclaration(value="visible", type=Boolean.class),
 			@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
 			@TagAttributeDeclaration("label"),
-			@TagAttributeDeclaration("key"),
+			@TagAttributeDeclaration(value="key", required=true),
 			@TagAttributeDeclaration("formatter"),
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
@@ -379,7 +379,7 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagAttributeDeclaration("width"),
 			@TagAttributeDeclaration(value="visible", type=Boolean.class),
 			@TagAttributeDeclaration("label"),
-			@TagAttributeDeclaration("key"),
+			@TagAttributeDeclaration(value="key", required=true),
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
