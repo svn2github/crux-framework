@@ -34,12 +34,21 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 public class JCompiler
 {
 	private String classpath;
-	private JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+	private JavaCompiler compiler;
 	private String outputDirectory;
 	private String source;
 	private String sourcepath;
 	private String target;
 	private File tempFile;
+	
+	public JCompiler() throws CompilerException 
+	{
+		compiler = ToolProvider.getSystemJavaCompiler();
+		if (compiler == null)
+		{
+			throw new CompilerException("Can not retrieve the system java compiler. Ensure that you are running over a JDK (not a JRE) and your JDK version is 1.6 or greater!");
+		}
+	}
 	
 	/**
 	 * @param sourceDir
