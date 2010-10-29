@@ -435,9 +435,9 @@ public class ModuleExporter
 	 */
 	protected void initializeJavaCompiler() throws ModuleExporterException
     {
-	    compiler = new JCompiler();
 	    try
         {
+	    	compiler = new JCompiler();
 	        compiler.setOutputDirectory(exporterWorkDir);
 	        compiler.setSourcepath(sourceDir);
 	        if (!StringUtils.isEmpty(javaSource))
@@ -449,7 +449,7 @@ public class ModuleExporter
 	        	compiler.setTarget(javaTarget);
 	        }	        
         }
-        catch (IOException e)
+        catch (Exception e)
         {
 	        throw new ModuleExporterException("Error creating java compiler", e);
         }
