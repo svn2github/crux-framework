@@ -44,7 +44,7 @@ public class MainController {
 	private static final String WIDGET_GRID_TAB = "widgetGrid";
 	private static final String GRID_EVENTS_TAB = "gridEvents";
 	private static final String TEXT_AREA_TAB = "textArea";
-	private static final String HUGE_PAGE_TAB = "HugePage";
+	private static final String HUGE_PAGE_TAB = "hugePage";
 	
 	
 	@Create
