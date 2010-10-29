@@ -48,7 +48,7 @@
 									<a:dataColumn key="name" label="Name"/>
 									<a:dataColumn key="phone" label="Phone"/>
 									<a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
-									<a:widgetColumn>
+									<a:widgetColumn key="image">
 										<b:image 
 											id="call" url="../style/img/phone.gif"  
 											onClick="widgetGridController.onClickCall" 
