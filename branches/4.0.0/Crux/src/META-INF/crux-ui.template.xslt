@@ -13,6 +13,7 @@
 	<xsl:param name="xhtmlNS" select="'http://www.w3.org/1999/xhtml'"></xsl:param>
 	<xsl:param name="allWidgets" select="'${allWidgets}'"></xsl:param>
 	<xsl:param name="referencedWidgets" select="'${referencedWidgets}'"></xsl:param>
+	<xsl:param name="htmlPanelWidgets" select="'${htmlPanelWidgets}'"></xsl:param>
 
 	<!-- 
 	=====================================================================
@@ -116,6 +117,13 @@
   	  <xsl:sequence select="contains($allWidgets, concat(',', $libraryName, '_', $elemName, ','))"/>
 	</xsl:function>
 
+	<!-- isHtmlContainerWidget -->
+	<xsl:function name="f:isHtmlContainerWidget" as="xs:boolean?">
+	  <xsl:param name="libraryName" as="xs:string?"/> 
+	  <xsl:param name="elemName" as="xs:string?"/> 
+  	  <xsl:sequence select="contains($htmlPanelWidgets, concat(',', $libraryName, '_', $elemName, ','))"/>
+	</xsl:function>
+
 	<!-- isReferencedWidget -->
 	<xsl:function name="f:isReferencedWidget" as="xs:boolean?">
 	  <xsl:param name="tagName" as="xs:string?"/> 
@@ -125,7 +133,7 @@
 	<!-- isHTMLChild -->
 	<xsl:function name="f:isHTMLChild" as="xs:boolean?">
 	  <xsl:param name="elem" as="node()*"/> 
-  	  <xsl:sequence select="namespace-uri($elem/..) = $xhtmlNS"/>
+  	  <xsl:sequence select="(namespace-uri($elem/..) = $xhtmlNS) or f:isHtmlContainerWidget(f:getLibraryName($elem/..), $elem/../local-name())"/>
 	</xsl:function>
 
 	<!-- getLibraryName -->
@@ -188,7 +196,7 @@
 		<xsl:variable name="libraryName" select="f:getLibraryName(current())" />
 		<xsl:variable name="tagName" select="f:getTagName(current(), local-name())" />
 		<xsl:choose>
-			<xsl:when test="(f:isReferencedWidget($tagName) or f:isWidget($libraryName, local-name())) and f:isHTMLChild(current())">
+			<xsl:when test="(f:isHtmlContainerWidget($libraryName, local-name()) or (f:isReferencedWidget($tagName) or f:isWidget($libraryName, local-name())) and f:isHTMLChild(current()))">
 				<xsl:element name="span" namespace="{$xhtmlNS}">
 					<xsl:if test="string-length(@id) > 0">
 						<xsl:attribute name="id" select="concat('_crux_', @id)" />

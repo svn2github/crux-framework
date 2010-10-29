@@ -230,9 +230,11 @@ public class CruxToHtmlTransformer
 			String template = StreamUtils.readAsUTF8(templateIs);
 			String allWidgets = generateWidgetsList();
 			String referencedWidgets = generateReferenceWidgetsList();
+			String htmlPanelWidgets = generateHtmlPanelWidgetsList();
 			String lazyContainers = generateLazyContainersList();
 			template = template.replace("${allWidgets}", allWidgets);
 			template = template.replace("${referencedWidgets}", referencedWidgets);
+			template = template.replace("${htmlPanelWidgets}", htmlPanelWidgets);
 			template = template.replace("${lazyContainers}", lazyContainers);
 			template = template.replace("${lazyContainer}", WidgetConfig.getLazyContainerType());
 			template = template.replace("${indent}", mustIndent() ? "yes" : "no");
@@ -319,6 +321,39 @@ public class CruxToHtmlTransformer
 				}
 			}
 		}				
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private static String generateHtmlPanelWidgetsList()
+	{
+		StringBuilder widgetList = new StringBuilder(",");
+		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
+		for (String library : registeredLibraries)
+		{
+			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
+			for (String widget : factories)
+			{
+				try
+				{
+					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
+					DeclarativeFactory factory = clientClass.getAnnotation(DeclarativeFactory.class);
+					if (factory.htmlContainer())
+					{
+						widgetList.append(library+"_"+widget+",");				
+					}
+				}
+				catch (Exception e)
+				{
+					log.error(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
+				}
+			}
+		}
+		
+		return widgetList.toString();
 	}
 	
 	/**

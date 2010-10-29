@@ -64,6 +64,55 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Screen
 {
+	protected FastList<Element> blockingDivs = new FastList<Element>();
+	protected String[] declaredControllers;
+	protected String[] declaredDataSources;
+	protected String[] declaredFormatters;
+	@Deprecated
+	protected String[] declaredSerializables;
+	protected HandlerManager handlerManager;
+	protected IFrameElement historyFrame = null;
+	protected String id;
+	
+	protected FastMap<String> lazyWidgets = null;
+	
+	protected boolean loaded = false;
+	
+	protected FastList<ScreenLoadHandler>  loadHandlers = new FastList<ScreenLoadHandler>();
+	
+	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
+	
+	@Deprecated
+	protected ModuleComunicationSerializer serializer = null;
+	
+	protected FastMap<Widget> widgets = new FastMap<Widget>();
+
+	@SuppressWarnings("deprecation")
+    protected Screen(String id) 
+	{
+		this.id = id;
+		this.handlerManager = new HandlerManager(this);
+		initializeLazyWidgets(id);
+		this.serializer = new ModuleComunicationSerializer();
+		createControllerAccessor(this);
+		this.addWindowCloseHandler(new CloseHandler<Window>()
+		{
+			public void onClose(CloseEvent<Window> event)
+			{
+				removeControllerAccessor(Screen.this);
+			}
+		});
+
+		createCrossDocumentAccessor(this);
+		this.addWindowCloseHandler(new CloseHandler<Window>()
+		{
+			public void onClose(CloseEvent<Window> event)
+			{
+				removeCrossDocumentAccessor(Screen.this);
+			}
+		});
+	}
+	
 	/**
 	 * 
 	 * @param id
@@ -73,6 +122,7 @@ public class Screen
 	{
 		Screen.get().addWidget(id, widget);
 	}
+
 	/**
 	 * 
 	 * @param handler
@@ -82,6 +132,7 @@ public class Screen
 	{
 		return Screen.get().addWindowCloseHandler(handler);
 	}
+
 	/**
 	 * 
 	 * @param handler
@@ -91,6 +142,7 @@ public class Screen
 	{
 		return Screen.get().addWindowClosingHandler(handler);
 	}
+
 	/**
 	 * 
 	 * @param handler
@@ -100,6 +152,7 @@ public class Screen
 	{
 		return Screen.get().addWindowHistoryChangedHandler(handler);
 	}
+	
 	/**
 	 * 
 	 * @param handler
@@ -109,6 +162,7 @@ public class Screen
 	{
 		return Screen.get().addWindowResizeHandler(handler);
 	}
+
 	/**
 	 * 
 	 * @param token
@@ -117,6 +171,8 @@ public class Screen
 	{
 		Screen.get().addTokenToHistory(token);
 	}
+	
+	
 	/**
 	 * 
 	 * @param token
@@ -126,6 +182,7 @@ public class Screen
 	{
 		Screen.get().addTokenToHistory(token, issueEvent);
 	}
+	
 	/**
 	 * 
 	 * @param url
@@ -175,7 +232,7 @@ public class Screen
 	{
 		Screen.get().showBlockDiv(blockingDivStyleName);
 	}
-	
+
 	/**
      *
      */
@@ -200,7 +257,7 @@ public class Screen
 	{
 		ContextManager.createContext();
 	}
-	
+
 	/**
 	 * 
 	 * @param dataSource
@@ -210,7 +267,7 @@ public class Screen
 	{
 		return ScreenFactory.getInstance().createDataSource(dataSource);
 	}
-
+	
 	/**
 	 * If the given widget does not have a non-empty ID attribute, sets the given id into it. 
 	 * @param widget
@@ -238,7 +295,7 @@ public class Screen
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the current screen
 	 * @return
@@ -268,8 +325,8 @@ public class Screen
 	public static <T extends Widget> T get(String id, Class<T> clazz)
 	{
 		return Screen.get().getWidget(id, clazz);
-	}
-
+	}	
+	
 	/**
 	 * @return a list containing all widgets from the current screen 
 	 * @deprecated Use listWidgets() instead
@@ -285,7 +342,7 @@ public class Screen
 		}		
 		return values;
 	}
-	
+
 	/**
 	 * @return a list containing all widgets ids from the current screen 
 	 * @deprecated Use listWidgetIds() instead
@@ -300,17 +357,16 @@ public class Screen
 			ids.add(keys.get(i));
 		}		
 		return ids;
-	}
-
+	}	
+	
 	/**
 	 * @return
 	 */
 	public static String[] getControllers()
 	{
 		return Screen.get().getDeclaredControllers();
-	}
-	
-	
+	}	
+
 	/**
 	 * 
 	 * @return
@@ -320,7 +376,7 @@ public class Screen
 	{
 		return Screen.get().serializer;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -358,7 +414,7 @@ public class Screen
 	{
 		return ScreenFactory.getInstance().getClientFormatter(formatter);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -366,7 +422,7 @@ public class Screen
 	{
 		return Screen.get().getDeclaredFormatters();
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -375,7 +431,7 @@ public class Screen
 	{
 		return Screen.get().getIdentifier();
 	}
-
+	
 	/**
 	 * 
 	 * @return the locale specified or null
@@ -410,7 +466,7 @@ public class Screen
 		
 		return locale;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -430,7 +486,7 @@ public class Screen
 	{
 		invokeControllerOnAbsoluteTop(call, param, Object.class);
 	}
-
+	
 	/**
 	 * @param call
 	 * @param param
@@ -451,7 +507,7 @@ public class Screen
 	public static void invokeControllerOnFrame(String frame, String call, Object param) throws ModuleComunicationException
 	{
 		invokeControllerOnFrame(frame, call, param, Object.class);
-	}	
+	}
 	
 	/**
 	 * @param call
@@ -464,7 +520,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callFrameControllerAccessor(frame, call, Screen.get().serializer.serialize(param)));
 	}
-
+	
 	/**
 	 * 
 	 * @param call
@@ -474,8 +530,8 @@ public class Screen
 	public static void invokeControllerOnOpener(String call, Object param) throws ModuleComunicationException
 	{
 		invokeControllerOnOpener(call, param, Object.class);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param call
@@ -487,7 +543,7 @@ public class Screen
 	public static <T> T  invokeControllerOnOpener(String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
 		return (T) Screen.get().serializer.deserialize(callOpenerControllerAccessor(call, Screen.get().serializer.serialize(param)));
-	}	
+	}
 
 	/**
 	 * @param call
@@ -498,7 +554,7 @@ public class Screen
 	{
 		invokeControllerOnParent(call, param, Object.class);
 	}
-
+	
 	/**
 	 * @param call
 	 * @param param
@@ -544,7 +600,7 @@ public class Screen
 			return null;
 		}
 	}
-
+	
 	/**
 	 * @param call
 	 * @throws ModuleComunicationException
@@ -566,7 +622,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callSiblingFrameControllerAccessor(frame, call, Screen.get().serializer.serialize(param)));
 	}
-
+	
 	/**
 	 * @param call
 	 * @param param
@@ -589,7 +645,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callTopControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -597,7 +653,7 @@ public class Screen
 	{
 		return Screen.get().isScreenLoaded();
 	}
-
+	
 	/**
 	 * 
 	 * @return
@@ -607,23 +663,7 @@ public class Screen
 	{
 		return Screen.get().iteratorWidgets();
 	}
-	
-	/**
-	 * @return
-	 */
-	public static FastList<Widget> listWidgets()
-	{
-		return Screen.get().widgetsList();
-	}
 
-	/**
-	 * @return
-	 */
-	public static FastList<String> listWidgetIds()
-	{
-		return Screen.get().widgetsIdList();
-	}
-	
 	/**
 	 * 
 	 * @return
@@ -635,6 +675,22 @@ public class Screen
 	}
 	
 	/**
+	 * @return
+	 */
+	public static FastList<String> listWidgetIds()
+	{
+		return Screen.get().widgetsIdList();
+	}
+
+	/**
+	 * @return
+	 */
+	public static FastList<Widget> listWidgets()
+	{
+		return Screen.get().widgetsList();
+	}
+	
+	/**
 	 * Remove a widget on the current screen
 	 * @param id
 	 */
@@ -642,7 +698,7 @@ public class Screen
 	{
 		Screen.get().removeWidget(id);
 	}
-
+	
 	/**
 	 * Remove a widget on the current screen
 	 * @param id
@@ -652,7 +708,7 @@ public class Screen
 	{
 		Screen.get().removeWidget(id, removeFromDOM);
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -660,7 +716,7 @@ public class Screen
 	{
 		Screen.get().hideBlockDiv();
 	}
-	
+
 	/**
 	 * Update fields mapped with ValueObject from widgets that have similar names.
 	 * 
@@ -739,7 +795,7 @@ public class Screen
 	private static native String callParentControllerAccessor(String call, String serializedData)/*-{
 		return $wnd.parent._cruxScreenControllerAccessor(call, serializedData);
 	}-*/;
-	
+
 	/**
 	 * 
 	 * @param frame
@@ -780,62 +836,6 @@ public class Screen
 			id = id + "_" + i;
 		}
 		return id;
-	}
-	
-	protected FastList<Element> blockingDivs = new FastList<Element>();
-
-	protected String[] declaredControllers;
-	
-	protected String[] declaredDataSources;
-	
-	protected String[] declaredFormatters;
-	
-	@Deprecated
-	protected String[] declaredSerializables;
-
-	protected HandlerManager handlerManager;
-	
-	protected IFrameElement historyFrame = null;
-	
-	protected String id;
-	
-	protected FastMap<String> lazyWidgets = null;
-
-	protected boolean loaded = false;
-	
-	protected FastList<ScreenLoadHandler>  loadHandlers = new FastList<ScreenLoadHandler>();
-	
-	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
-
-	@Deprecated
-	protected ModuleComunicationSerializer serializer = null;
-	
-	protected FastMap<Widget> widgets = new FastMap<Widget>();
-
-	@SuppressWarnings("deprecation")
-    protected Screen(String id) 
-	{
-		this.id = id;
-		this.handlerManager = new HandlerManager(this);
-		initializeLazyWidgets(id);
-		this.serializer = new ModuleComunicationSerializer();
-		createControllerAccessor(this);
-		this.addWindowCloseHandler(new CloseHandler<Window>()
-		{
-			public void onClose(CloseEvent<Window> event)
-			{
-				removeControllerAccessor(Screen.this);
-			}
-		});
-
-		createCrossDocumentAccessor(this);
-		this.addWindowCloseHandler(new CloseHandler<Window>()
-		{
-			public void onClose(CloseEvent<Window> event)
-			{
-				removeCrossDocumentAccessor(Screen.this);
-			}
-		});
 	}
 	
 	/**
@@ -1139,29 +1139,6 @@ public class Screen
 	}
 	
 	/**
-	 * @return
-	 */
-	protected FastList<String> widgetsIdList()
-	{
-		return widgets.keys();
-	}
-
-	/**
-	 * @return
-	 */
-	protected FastList<Widget> widgetsList()
-	{
-		FastList<String> keys = widgets.keys();
-		FastList<Widget> values = new FastList<Widget>();
-		for (int i=0; i<keys.size(); i++)
-		{
-			values.add(widgets.get(keys.get(i)));
-		}
-		
-		return values;
-	}
-
-	/**
 	 * Fires the load event. This method has no effect when called more than one time.
 	 */
 	protected void load() 
@@ -1291,7 +1268,7 @@ public class Screen
 		    History.fireCurrentHistoryState();
 		}
 	}
-	
+
 	protected void removeWidget(String id)
 	{
 		removeWidget(id, true);
@@ -1305,7 +1282,7 @@ public class Screen
 			widget.removeFromParent();
 		}
 	}
-
+	
 	/**
 	 * Creates and shows a DIV over the screen contents
 	 * @param blockingDivStyleName
@@ -1340,7 +1317,7 @@ public class Screen
 
 		}
 	}
-	
+
 	/**
 	 * Update widgets on screen that have the same id of fields mapped with ValueObject
 	 * @param caller
@@ -1357,25 +1334,30 @@ public class Screen
 			((ScreenBindableObject) eventHandler).updateScreenWidgets();
 		}
 	}
-	
+
 	/**
-	 * Update each widget main element id with the value contained on Screen object
+	 * @return
 	 */
-	protected void updateWidgetsIds()
+	protected FastList<String> widgetsIdList()
 	{
-		FastList<String> widgetIds = this.widgets.keys();
-		for (int i=0; i<widgetIds.size(); i++)
-        {
-			String widgetId = widgetIds.get(i);
-	        Widget widget = Screen.get(widgetId);
-	        Element element = widget.getElement();
-			if (StringUtils.isEmpty(element.getId()))
-	        {
-	        	element.setId(widgetId);
-	        }
-        }
+		return widgets.keys();
 	}
 	
+	/**
+	 * @return
+	 */
+	protected FastList<Widget> widgetsList()
+	{
+		FastList<String> keys = widgets.keys();
+		FastList<Widget> values = new FastList<Widget>();
+		for (int i=0; i<keys.size(); i++)
+		{
+			values.add(widgets.get(keys.get(i)));
+		}
+		
+		return values;
+	}
+
 	/**
 	 * 
 	 */

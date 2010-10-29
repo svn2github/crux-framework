@@ -50,8 +50,26 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ScreenFactory {
 	
+	protected static final String ENCLOSING_PANEL_PREFIX = "_crux_";
 	private static ScreenFactory instance = null;
 	 
+	private DeclaredI18NMessages declaredI18NMessages = null;
+	private boolean parsing = false;
+	private RegisteredClientFormatters registeredClientFormatters = null;
+	private RegisteredDataSources registeredDataSources = null;
+	private RegisteredWidgetFactories registeredWidgetFactories = null;
+	private Screen screen = null;
+	private String screenId = null;
+	private StringBuilder traceOutput = null;
+	/**
+	 * Constructor
+	 */
+	private ScreenFactory()
+	{
+		this.declaredI18NMessages = GWT.create(DeclaredI18NMessages.class);
+		this.registeredDataSources = GWT.create(RegisteredDataSources.class);
+	}
+	
 	/**
 	 * Retrieve the ScreenFactory instance.
 	 * @return
@@ -63,23 +81,6 @@ public class ScreenFactory {
 			instance = new ScreenFactory();
 		}
 		return instance;
-	}
-	private DeclaredI18NMessages declaredI18NMessages = null;
-	private boolean parsing = false;
-	private RegisteredClientFormatters registeredClientFormatters = null;
-	private RegisteredDataSources registeredDataSources = null;
-	private RegisteredWidgetFactories registeredWidgetFactories = null;
-	private Screen screen = null;
-	private String screenId = null;
-	private StringBuilder traceOutput = null;
-	
-	/**
-	 * Constructor
-	 */
-	private ScreenFactory()
-	{
-		this.declaredI18NMessages = GWT.create(DeclaredI18NMessages.class);
-		this.registeredDataSources = GWT.create(RegisteredDataSources.class);
 	}
 	
 	/**
@@ -129,6 +130,17 @@ public class ScreenFactory {
 	}
 	
 	/**
+	 * Return the type of a given crux meta tag element. This type could be {@code "screen"} or 
+	 * another string referencing a registered {@code WidgetFactory}
+	 * @param cruxMetaElement
+	 * @return
+	 */
+	public String getMetaElementType(JSONObject cruxMetaElement)
+	{
+		return JSONUtils.getUnsafeStringProperty(cruxMetaElement, "type");
+	}
+	
+	/**
 	 * Get the screen associated with current page. If not created yet, create it.
 	 * @return
 	 */
@@ -159,7 +171,7 @@ public class ScreenFactory {
 		}
 		return screenId;
 	}
-	
+
 	/**
 	 * Creates a new widget based on a HTML SPAN tag and attaches it on the Screen object.
 	 * @param metaElem
@@ -171,7 +183,7 @@ public class ScreenFactory {
 	{
 		return newWidget(metaElem, widgetId, widgetType, true);
 	}
-
+	
 	/**
 	 * Creates a new widget based on a HTML SPAN tag 
 	 * @param metaElem
@@ -220,7 +232,7 @@ public class ScreenFactory {
 	 */
 	protected Element getEnclosingPanelElement(String widgetId)
 	{
-		return DOM.getElementById("_crux_"+widgetId);
+		return DOM.getElementById(ENCLOSING_PANEL_PREFIX+widgetId);
 	}
 	
 	/**
@@ -245,7 +257,7 @@ public class ScreenFactory {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method receives an array of crux meta elements. Those meta elements contains the information
 	 * needed to render widgets and informations about the page itself (represented by a {@code Screen} object).
@@ -303,17 +315,6 @@ public class ScreenFactory {
 			this.parsing = false;
 		}
 		screen.load();
-	}
-
-	/**
-	 * Return the type of a given crux meta tag element. This type could be {@code "screen"} or 
-	 * another string referencing a registered {@code WidgetFactory}
-	 * @param cruxMetaElement
-	 * @return
-	 */
-	public String getMetaElementType(JSONObject cruxMetaElement)
-	{
-		return JSONUtils.getUnsafeStringProperty(cruxMetaElement, "type");
 	}
 
 	/**
@@ -382,29 +383,31 @@ public class ScreenFactory {
 	{
 		Element panelElement = getEnclosingPanelElement(widgetId);
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
-
-		Panel panel;
-		if (widget instanceof RequiresResize)
+		if (!widget.isAttached())
 		{
-			boolean hasSize = (WidgetFactory.hasWidth(metaElem) && WidgetFactory.hasHeight(metaElem));
-			if (RootPanel.getBodyElement().equals(panelElement.getParentElement()) && !hasSize)
+			Panel panel;
+			if (widget instanceof RequiresResize)
 			{
-				panel = RootLayoutPanel.get();
+				boolean hasSize = (WidgetFactory.hasWidth(metaElem) && WidgetFactory.hasHeight(metaElem));
+				if (RootPanel.getBodyElement().equals(panelElement.getParentElement()) && !hasSize)
+				{
+					panel = RootLayoutPanel.get();
+				}
+				else
+				{
+					panel = RootPanel.get(panelElement.getId());
+					if (!hasSize)
+					{
+						GWT.log(Crux.getMessages().screenFactoryLayoutPanelWithoutSize(widgetId), null);
+					}
+				}
 			}
 			else
 			{
 				panel = RootPanel.get(panelElement.getId());
-				if (!hasSize)
-				{
-					GWT.log(Crux.getMessages().screenFactoryLayoutPanelWithoutSize(widgetId), null);
-				}
 			}
+			panel.add(widget);
 		}
-		else
-		{
-			panel = RootPanel.get(panelElement.getId());
-		}
-		panel.add(widget);
 		return widget;
 	}
 }
