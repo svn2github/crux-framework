@@ -22,33 +22,49 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
+import br.com.sysmap.crux.core.client.utils.JSONUtils;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
-
 
 /**
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="HTMLPanel", library="gwt")
+@DeclarativeFactory(id="HTMLPanel", library="gwt", htmlContainer=true)
 public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 {
 	@Override
-	public HTMLPanel instantiateWidget(JSONObject element, String widgetId) 
+	public HTMLPanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
-		HTMLPanel ret = new HTMLPanel("");
-/*		FastList<Node> children = extractChildren(element);
-		for (int i=0; i<children.size(); i++)
-		{
-			Node node = children.get(i);
-			ret.getElement().appendChild(node);
-		}
-		HasWidgetsHandler.handleWidgetElement(ret, widgetId, "gwt_HTMLPanel");
-*/
-		return ret;
+		CruxHTMLPanel cruxHTMLPanel = new CruxHTMLPanel(element);
+		createChildren(cruxHTMLPanel, element);
+		return cruxHTMLPanel;
 	}
+
+	private void createChildren(HTMLPanel cruxHTMLPanel, JSONObject element) throws InterfaceConfigException
+    {
+		if (element.containsKey("children"))
+		{
+			JSONArray children = element.get("children").isArray();
+			if (children != null)
+			{
+				int size = children.size();
+				for (int i=0; i<size; i++)
+				{
+					JSONObject child = children.get(i).isObject();
+					if (child != null)
+					{
+						String panelId = getEnclosingPanelPrefix()+JSONUtils.getUnsafeStringProperty(child, "id");
+						cruxHTMLPanel.add(createChildWidget(child), panelId);
+					}
+				}
+			}
+		}
+		
+    }
 
 	@Override
 	@TagChildren({

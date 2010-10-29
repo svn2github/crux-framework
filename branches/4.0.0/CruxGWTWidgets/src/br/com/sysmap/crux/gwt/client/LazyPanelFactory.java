@@ -18,7 +18,6 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.CruxLazyPanel;
-import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsHandler;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyFactory;
@@ -34,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="lazyPanel", library="gwt", lazy=true)
-public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFactory<LazyPanel>, HasWidgetsFactory<LazyPanel>
+public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFactory<LazyPanel>
 {
 
 	/**
