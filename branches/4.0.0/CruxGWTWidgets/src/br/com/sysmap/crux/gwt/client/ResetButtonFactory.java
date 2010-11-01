@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ResetButton;
 
 /**
@@ -28,7 +28,7 @@ public class ResetButtonFactory extends ButtonBaseFactory<ResetButton>
 {
 
 	@Override
-	public ResetButton instantiateWidget(JSONObject element, String widgetId) 
+	public ResetButton instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new ResetButton();
 	}

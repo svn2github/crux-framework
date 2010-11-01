@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DecoratedStackPanel;
 
 /**
@@ -36,7 +36,7 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 {
 
 	@Override
-	public DecoratedStackPanel instantiateWidget(JSONObject element, String widgetId) 
+	public DecoratedStackPanel instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new DecoratedStackPanel();
 	}

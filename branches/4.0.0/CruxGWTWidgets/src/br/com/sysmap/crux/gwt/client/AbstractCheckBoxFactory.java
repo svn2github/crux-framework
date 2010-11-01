@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -51,7 +51,7 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 	{
 		super.processAttributes(context);
 		
-		JSONObject element = context.getElement();
+		CruxMetaData element = context.getElement();
 		T widget = context.getWidget();
 
 		String checked = context.readWidgetProperty("checked");

@@ -23,6 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -40,7 +41,7 @@ import com.google.gwt.user.client.ui.RichTextArea.Justification;
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implements HasTextFactory<RichTextArea>
 {
 	@Override
-	public RichTextArea instantiateWidget(JSONObject element, String widgetId) 
+	public RichTextArea instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new RichTextArea();
 	}
@@ -63,7 +64,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 	{
 		super.processAttributes(context);
 		
-		JSONObject element = context.getElement();
+		CruxMetaData element = context.getElement();
 		final RichTextArea widget = context.getWidget();
 		
 		final FastMap<String> declaredProperties = readDeclaredProperties(context);

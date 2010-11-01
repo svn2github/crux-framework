@@ -32,10 +32,10 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTa
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,16 +48,16 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanel>, HasSelectionHandlersFactory<TabLayoutPanel>
 {
 	@Override
-	public TabLayoutPanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public TabLayoutPanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String height = getProperty(element,"barHeight");
+		String height = element.getProperty("barHeight");
 		if (StringUtils.isEmpty(height))
 		{
 			return new TabLayoutPanel(20, Unit.PX);
 		}
 		else
 		{
-			return new TabLayoutPanel(Double.parseDouble(height), AbstractLayoutPanelFactory.getUnit(getProperty(element,"unit")));
+			return new TabLayoutPanel(Double.parseDouble(height), AbstractLayoutPanelFactory.getUnit(element.getProperty("unit")));
 		}
 	}
 	

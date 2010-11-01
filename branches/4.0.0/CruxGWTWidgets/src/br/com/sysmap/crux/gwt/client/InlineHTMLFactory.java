@@ -17,8 +17,8 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 {
 	@Override
-	public InlineHTML instantiateWidget(JSONObject element, String widgetId) 
+	public InlineHTML instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new InlineHTML();
 	}
@@ -42,7 +42,7 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 	{
 		super.processAttributes(context);
 		
-		JSONObject element = context.getElement();
+		CruxMetaData element = context.getElement();
 		InlineHTML widget = context.getWidget();
 
 		String text = context.readWidgetProperty("text");

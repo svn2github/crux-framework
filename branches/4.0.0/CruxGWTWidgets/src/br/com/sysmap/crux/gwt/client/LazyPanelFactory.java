@@ -21,9 +21,9 @@ import br.com.sysmap.crux.core.client.screen.CruxLazyPanel;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsHandler;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,7 +48,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel> implements LazyFac
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	@Override
-	public LazyPanel instantiateWidget(final JSONObject element, String widgetId) 
+	public LazyPanel instantiateWidget(final CruxMetaData element, String widgetId) 
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{

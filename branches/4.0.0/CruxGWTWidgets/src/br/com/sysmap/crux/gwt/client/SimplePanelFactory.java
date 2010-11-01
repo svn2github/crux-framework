@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 public class SimplePanelFactory extends PanelFactory<SimplePanel>
 {
 	@Override
-	public SimplePanel instantiateWidget(JSONObject element, String widgetId) 
+	public SimplePanel instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new SimplePanel();
 	}

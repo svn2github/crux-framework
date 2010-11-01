@@ -20,8 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Hidden;
 
 /**
@@ -42,7 +42,7 @@ public class HiddenFactory extends WidgetFactory<Hidden>
 	}
 
 	@Override
-	public Hidden instantiateWidget(JSONObject element, String widgetId) 
+	public Hidden instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new Hidden();
 	}

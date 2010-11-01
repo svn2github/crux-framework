@@ -22,8 +22,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 {
 	@Override
-	public HTMLPanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
+	public HTMLPanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
 	{
 		CruxHTMLPanel cruxHTMLPanel = new CruxHTMLPanel(element);
 		createChildren(widgetId, element);

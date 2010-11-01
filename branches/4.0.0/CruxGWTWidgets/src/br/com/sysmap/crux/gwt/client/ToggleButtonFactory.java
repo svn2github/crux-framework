@@ -24,8 +24,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ToggleButton;
 
 /**
@@ -50,7 +50,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 	}
 
 	@Override
-	public ToggleButton instantiateWidget(JSONObject element, String widgetId) 
+	public ToggleButton instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new ToggleButton();
 	}

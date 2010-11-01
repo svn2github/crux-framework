@@ -17,6 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import java.util.Date;
 
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -33,11 +34,9 @@ import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
@@ -94,9 +93,9 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	}
 	
 	@Override
-	public DateBox instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
+	public DateBox instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
 	{
-		JSONArray children = ensureChildren(element, true);
+		Array<CruxMetaData> children = ensureChildren(element, true);
 		
 		if (children != null && children.size() > 0)
 		{
@@ -105,10 +104,9 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 			
 			for (int i=0; i<length; i++)
 			{
-				JSONValue jsonValue = children.get(i);
-				if (jsonValue != null)
+				CruxMetaData childElement = children.get(i);
+				if (childElement != null)
 				{
-					JSONObject childElement = jsonValue.isObject();
 					if (isWidget(childElement))
 					{
 						picker = (DatePicker) createChildWidget(childElement);
@@ -140,10 +138,10 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	 * @param widgetId 
 	 * @return
 	 */
-	public Format getFormat(JSONObject element, String widgetId)
+	public Format getFormat(CruxMetaData element, String widgetId)
 	{
 		Format format = null;
-		String pattern = getProperty(element,"pattern");
+		String pattern = element.getProperty("pattern");
 		
 		if (pattern != null && pattern.trim().length() > 0)
 		{

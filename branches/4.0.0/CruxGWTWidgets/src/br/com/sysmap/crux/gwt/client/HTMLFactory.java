@@ -22,8 +22,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 public class HTMLFactory extends AbstractLabelFactory<HTML>
 {
 	@Override
-	public HTML instantiateWidget(JSONObject element, String widgetId) 
+	public HTML instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new HTML();
 	}
@@ -47,7 +47,7 @@ public class HTMLFactory extends AbstractLabelFactory<HTML>
 	{
 		super.processAttributes(context);
 		
-		JSONObject element = context.getElement();
+		CruxMetaData element = context.getElement();
 		HTML widget = context.getWidget();
 
 		String text = context.readWidgetProperty("text");

@@ -33,8 +33,8 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTa
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TabBar.Tab;
@@ -127,8 +127,8 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	
 	private static <T extends TabBar> void updateTabState(WidgetChildProcessorContext<T> context)
 	{
-		JSONObject tabElement = (JSONObject) context.getAttribute("tabElement");
-		String enabled = getProperty(tabElement, "enabled");
+		CruxMetaData tabElement = (CruxMetaData) context.getAttribute("tabElement");
+		String enabled = tabElement.getProperty("enabled");
 		int tabCount = context.getRootWidget().getTabCount();
 		if (enabled != null && enabled.length() >0)
 		{
@@ -137,7 +137,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 
 		Tab currentTab = context.getRootWidget().getTab(tabCount-1);
 
-		String wordWrap = getProperty(tabElement,"wordWrap");
+		String wordWrap = tabElement.getProperty("wordWrap");
 		if (wordWrap != null && wordWrap.trim().length() > 0)
 		{
 			currentTab.setWordWrap(Boolean.parseBoolean(wordWrap));

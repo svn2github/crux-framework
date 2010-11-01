@@ -16,15 +16,14 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,11 +41,11 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 		 * Constructor
 		 * @param element
 		 */
-		public CruxHTMLPanel(JSONObject element)
+		public CruxHTMLPanel(CruxMetaData element)
         {
 	        super("");
 	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-	        Element panelElement = WidgetFactory.getEnclosingPanelElement(JSONUtils.getUnsafeStringProperty(element, "id"));
+	        Element panelElement = WidgetFactory.getEnclosingPanelElement(element.getProperty("id"));
 	        assert Document.get().getBody().isOrHasChild(panelElement);
 	        panelElement.removeFromParent();
 	        getElement().appendChild(panelElement);
@@ -67,15 +66,12 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	 * @param element
 	 * @throws InterfaceConfigException
 	 */
-	protected void createChildren(String parentId, JSONObject element) throws InterfaceConfigException
+	protected void createChildren(String parentId, CruxMetaData element) throws InterfaceConfigException
     {
-		if (element.containsKey("children"))
+		Array<CruxMetaData> children = element.getChildren();
+		if (children != null)
 		{
-			JSONArray children = element.get("children").isArray();
-			if (children != null)
-			{
-				addToParserStack(getFactoryType(), parentId, children);
-			}
+			addToParserStack(getFactoryType(), parentId, children);
 		}
     }
 	

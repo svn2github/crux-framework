@@ -24,14 +24,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,7 +45,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
 	
 	@Override
-	public DockPanel instantiateWidget(JSONObject element, String widgetId)
+	public DockPanel instantiateWidget(CruxMetaData element, String widgetId)
 	{
 		return new DockPanel();
 	}
@@ -126,7 +125,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException
 		{
-			JSONObject childElement = context.getChildElement();
+			CruxMetaData childElement = context.getChildElement();
 			Widget child = createChildWidget(childElement);
 			DockPanel parent = context.getRootWidget();
 			
@@ -161,7 +160,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 			}
 			else
 			{
-				String childId = JSONUtils.getStringProperty(childElement, "id");
+				String childId = childElement.getProperty("id");
 				throw new InterfaceConfigException(messages.dockPanelInvalidDirection(childId, context.getRootWidgetId()));
 			}
 			

@@ -21,8 +21,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
@@ -52,9 +52,9 @@ public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
 	}
 
 	@Override
-	public ListBox instantiateWidget(JSONObject element, String widgetId) 
+	public ListBox instantiateWidget(CruxMetaData element, String widgetId) 
 	{
-		String multiple = getProperty(element,"multiple");
+		String multiple = element.getProperty("multiple");
 		if (multiple != null && multiple.trim().length() > 0)
 		{
 			return new ListBox(Boolean.parseBoolean(multiple));

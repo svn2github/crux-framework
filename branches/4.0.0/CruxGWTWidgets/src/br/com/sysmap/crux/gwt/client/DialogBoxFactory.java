@@ -24,8 +24,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.DialogBox;
 
 /**
@@ -37,15 +37,15 @@ public class DialogBoxFactory extends PanelFactory<DialogBox>
        implements HasAnimationFactory<DialogBox>, HasCloseHandlersFactory<DialogBox>, HasTextFactory<DialogBox>
 {
 	@Override
-	public DialogBox instantiateWidget(JSONObject element, String widgetId) 
+	public DialogBox instantiateWidget(CruxMetaData element, String widgetId) 
 	{
-		String autoHideStr = getProperty(element,"autoHide");
+		String autoHideStr = element.getProperty("autoHide");
 		boolean autoHide = false;
 		if (autoHideStr != null && autoHideStr.length() >0)
 		{
 			autoHide = Boolean.parseBoolean(autoHideStr);
 		}
-		String modalStr = getProperty(element,"modal");
+		String modalStr = element.getProperty("modal");
 		boolean modal = false;
 		if (modalStr != null && modalStr.length() >0)
 		{

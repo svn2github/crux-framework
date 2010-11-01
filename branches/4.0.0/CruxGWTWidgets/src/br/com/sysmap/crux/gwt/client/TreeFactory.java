@@ -44,9 +44,9 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -66,7 +66,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public Tree instantiateWidget(JSONObject element, String widgetId) 
+	public Tree instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		Event eventLoadImage = EvtBind.getWidgetEvent(element, "onLoadImage");
 		
@@ -75,7 +75,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 			LoadImagesEvent<Tree> loadEvent = new LoadImagesEvent<Tree>(widgetId);
 			Resources treeImages = (Resources) Events.callEvent(eventLoadImage, loadEvent);
 
-			String useLeafImagesStr = getProperty(element,"useLeafImages");
+			String useLeafImagesStr = element.getProperty("useLeafImages");
 			boolean useLeafImages = true;
 			if (useLeafImagesStr != null && useLeafImagesStr.length() > 0)
 			{

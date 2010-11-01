@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -22,10 +23,9 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Grid;
 
 /**
@@ -37,7 +37,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 {
 
 	@Override
-	public Grid instantiateWidget(JSONObject element, String widgetId)
+	public Grid instantiateWidget(CruxMetaData element, String widgetId)
 	{
 		return new Grid();
 	}
@@ -53,7 +53,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	})
 	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException	
 	{
-		JSONArray children = ensureChildren(context.getElement(), true);
+		Array<CruxMetaData> children = ensureChildren(context.getElement(), true);
 		
 		int count = getNonNullChildrenCount(children);
 		
@@ -64,7 +64,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	 * @param children
 	 * @return
 	 */
-	private static int getNonNullChildrenCount(JSONArray children)
+	private static int getNonNullChildrenCount(Array<CruxMetaData> children)
     {
 	    int count = 0;
 		int size = children.size();
@@ -90,7 +90,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 			Boolean cellsInitialized = (Boolean) context.getAttribute("cellsInitialized");
 			if (cellsInitialized == null || !cellsInitialized)
 			{
-				JSONArray children = ensureChildren(context.getChildElement(), true);
+				Array<CruxMetaData> children = ensureChildren(context.getChildElement(), true);
 				context.getRootWidget().resizeColumns(getNonNullChildrenCount(children));
 				context.setAttribute("cellsInitialized", new Boolean(true));
 			}

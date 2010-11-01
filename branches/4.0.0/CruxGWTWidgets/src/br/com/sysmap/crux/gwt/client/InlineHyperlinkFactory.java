@@ -22,8 +22,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
@@ -37,7 +37,7 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
        implements HasTextFactory<InlineHyperlink>, HasClickHandlersFactory<InlineHyperlink>
 {
 	@Override
-	public InlineHyperlink instantiateWidget(JSONObject element, String widgetId) 
+	public InlineHyperlink instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new InlineHyperlink();
 	}
@@ -50,7 +50,7 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
 	{
 		super.processAttributes(context);
 		
-		JSONObject element = context.getElement();
+		CruxMetaData element = context.getElement();
 		InlineHyperlink widget = context.getWidget();
 		
 		String text = context.readWidgetProperty("text");
