@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
@@ -40,6 +41,7 @@ import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -56,9 +58,6 @@ import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -120,11 +119,11 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
 
-		JClassType jsonObjectType = factoryClass.getOracle().findType(JSONObject.class.getCanonicalName());
+		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
 		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
-				new JType[]{jsonObjectType, stringType, JPrimitiveType.BOOLEAN});
+				new JType[]{cruxMetaDataType, stringType, JPrimitiveType.BOOLEAN});
 
 		JGenericType type = (JGenericType) factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
 		this.widgetChildProcessorContextType = factoryClass.getOracle().getParameterizedType(type, new JClassType[]{widgetType});
@@ -162,9 +161,8 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
     		ScreenFactory.class.getCanonicalName(),
-    		JSONObject.class.getCanonicalName(),
-    		JSONValue.class.getCanonicalName(),
-    		JSONArray.class.getCanonicalName(),
+    		CruxMetaData.class.getCanonicalName(),
+    		Array.class.getCanonicalName(),
     		FastList.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
     		InterfaceConfigException.class.getCanonicalName(),
@@ -510,7 +508,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String attributesBlock = generateProcessAttributesBlock(factoryClass);
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
-			sourceWriter.println("JSONObject element = context.getElement();");
+			sourceWriter.println("CruxMetaData element = context.getElement();");
 			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(attributesBlock);
@@ -554,18 +552,16 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 						}
 						else
 						{
-							source.append("JSONObject child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
+							source.append("CruxMetaData child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
 						}
 						source.append("if (child != null){\n");
 					}
 					else
 					{
-						source.append("JSONArray children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
+						source.append("Array<CruxMetaData> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
 						source.append("if (children != null){\n");
 						source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
-						source.append("JSONValue childValue = children.get(_i_);\n");
-						source.append("if (childValue != null){\n");
-						source.append("JSONObject child = childValue.isObject();\n");
+						source.append("CruxMetaData child = children.get(_i_);\n");
 						source.append("if (child != null){\n");
 					}
 					if (hasChildElement)
@@ -579,7 +575,6 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 					// TODO - Thiago - tratar validação de filhos obrigatorios .... espeficamente qdo parent for um agregador....
 					if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs > 1)
 					{
-						source.append("}\n");
 						source.append("}\n");
 						source.append("}\n");
 					}
@@ -699,7 +694,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String eventsBlock = generateProcessEventsBlock(factoryClass, evtBinderVariables);
 		if (!StringUtils.isEmpty(eventsBlock))
 		{
-			sourceWriter.println("JSONObject element = context.getElement();");
+			sourceWriter.println("CruxMetaData element = context.getElement();");
 			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(eventsBlock);
@@ -986,10 +981,10 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	private JClassType getWidgetTypeFromClass()
 	{
-		JClassType jsonObjectType = factoryClass.getOracle().findType(JSONObject.class.getCanonicalName());
+		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{jsonObjectType, stringType});
+		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{cruxMetaDataType, stringType});
 		if (returnType == null)
 		{
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));

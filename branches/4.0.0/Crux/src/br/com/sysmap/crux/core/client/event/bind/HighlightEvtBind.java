@@ -17,11 +17,11 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.event.logical.shared.HasHighlightHandlers;
 import com.google.gwt.event.logical.shared.HighlightEvent;
 import com.google.gwt.event.logical.shared.HighlightHandler;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for highlight events binding
@@ -36,7 +36,7 @@ public class HighlightEvtBind implements EvtBinder<HasHighlightHandlers<?>>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	@SuppressWarnings("unchecked")
-	public void bindEvent(JSONObject element, HasHighlightHandlers<?> widget)
+	public void bindEvent(CruxMetaData element, HasHighlightHandlers<?> widget)
 	{
 		final Event eventHighlight = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventHighlight != null)

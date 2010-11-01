@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.event.bind;
 
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -23,6 +23,6 @@ import com.google.gwt.json.client.JSONObject;
  */
 public interface EvtBinder<T>
 {
-	void bindEvent(JSONObject element, T widget);
+	void bindEvent(CruxMetaData element, T widget);
 	String getEventName();
 }

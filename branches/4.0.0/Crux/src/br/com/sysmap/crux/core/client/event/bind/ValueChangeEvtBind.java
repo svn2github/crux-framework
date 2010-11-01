@@ -17,11 +17,11 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for change events binding
@@ -36,7 +36,7 @@ public class ValueChangeEvtBind implements EvtBinder<HasValueChangeHandlers<?>>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	@SuppressWarnings("unchecked")
-	public void bindEvent(JSONObject element, HasValueChangeHandlers<?> widget)
+	public void bindEvent(CruxMetaData element, HasValueChangeHandlers<?> widget)
 	{
 		final Event eventChange = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventChange != null)

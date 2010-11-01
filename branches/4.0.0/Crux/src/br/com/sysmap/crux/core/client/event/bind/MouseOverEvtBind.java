@@ -17,11 +17,11 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.event.dom.client.HasMouseOverHandlers;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for mouse events binding
@@ -35,7 +35,7 @@ public class MouseOverEvtBind implements EvtBinder<HasMouseOverHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(JSONObject element, HasMouseOverHandlers widget)
+	public void bindEvent(CruxMetaData element, HasMouseOverHandlers widget)
 	{
 		final Event eventMouseOver = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventMouseOver != null)

@@ -18,22 +18,19 @@ package br.com.sysmap.crux.core.client.screen;
 import java.util.Date;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.DOMUtils;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -139,9 +136,9 @@ public class ScreenFactory {
 	 * @param cruxMetaElement
 	 * @return
 	 */
-	public String getMetaElementType(JSONObject cruxMetaElement)
+	public String getMetaElementType(CruxMetaData cruxMetaElement)
 	{
-		return JSONUtils.getUnsafeStringProperty(cruxMetaElement, "type");
+		return cruxMetaElement.getProperty("type");
 	}
 	
 	/**
@@ -183,7 +180,7 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(JSONObject metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	public Widget newWidget(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		return newWidget(metaElem, widgetId, widgetType, true);
 	}
@@ -196,7 +193,7 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
+	public Widget newWidget(CruxMetaData metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
 	{
 		Date start = null;
 		if (Crux.getConfig().enableClientFactoryTracing())
@@ -252,9 +249,9 @@ public class ScreenFactory {
 	 * @param element
 	 * @return
 	 */
-	boolean isValidWidget(JSONObject element)
+	boolean isValidWidget(CruxMetaData metaElem)
 	{
-		String type =  JSONUtils.getStringProperty(element, "type");
+		String type =  metaElem.getProperty("type");
 		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
 		{
 			return true;
@@ -301,30 +298,26 @@ public class ScreenFactory {
 			traceOutput = new StringBuilder();;
 			start = new Date();
 		}
-		JSONArray cruxMetaElements = parserInfo.parserElements;
+		Array<CruxMetaData> cruxMetaElements = parserInfo.parserElements;
 		int elementsLength = cruxMetaElements.size();
 		for (int i=0; i<elementsLength; i++)
 		{
-			JSONValue jsonValue = cruxMetaElements.get(i);
-			if (jsonValue != null)
+			CruxMetaData metaElement = cruxMetaElements.get(i);
+			assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
+			String type = getMetaElementType(metaElement);
+			if (StringUtils.unsafeEquals("screen",type))
 			{
-				JSONObject metaElement = jsonValue.isObject();
-				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
-				String type = getMetaElementType(metaElement);
-				if (StringUtils.unsafeEquals("screen",type))
+				screen.parse(metaElement);
+			}
+			else
+			{
+				try 
 				{
-					screen.parse(metaElement);
+					createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
 				}
-				else
+				catch (Throwable e) 
 				{
-					try 
-					{
-						createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
-					}
-					catch (Throwable e) 
-					{
-						Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
-					}
+					Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
 				}
 			}
 		}
@@ -345,15 +338,16 @@ public class ScreenFactory {
 	{
 		screen = new Screen(getScreenId());
 		Element metaDataDiv = DOM.getElementById("__CruxMetaData_");
-		JSONValue metaData = JSONParser.parse(metaDataDiv.getInnerHTML());
-		addToParserStack(null, null, metaData.isArray());
+		
+		Array<CruxMetaData> metaData = CruxMetaData.parse(metaDataDiv.getInnerHTML());
+		addToParserStack(null, null, metaData);
 		parseDocument();
 	}
 	
 	/**
 	 * @param array
 	 */
-	protected void addToParserStack(String parentType, String parentId, JSONArray parserElements)
+	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaData> parserElements)
 	{
 		assert(parserElements != null);
 		parserStack.add(new ParserInfo(parentType, parentId, parserElements));
@@ -388,10 +382,10 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidget(JSONObject metaElem, String widgetType, Screen screen, String parentId, String parentType) throws InterfaceConfigException
+	private Widget createWidget(CruxMetaData metaElem, String widgetType, Screen screen, String parentId, String parentType) throws InterfaceConfigException
 	{
-		assert(metaElem.containsKey("id") && metaElem.get("id").isString() != null) :Crux.getMessages().screenFactoryWidgetIdRequired();
-		String widgetId = JSONUtils.getUnsafeStringProperty(metaElem,"id");
+		assert(metaElem.containsKey("id") && metaElem.getProperty("id") != null) :Crux.getMessages().screenFactoryWidgetIdRequired();
+		String widgetId = metaElem.getProperty("id");
 		if (widgetId == null || widgetId.length() == 0)
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetIdRequired());
@@ -428,7 +422,7 @@ public class ScreenFactory {
 	 * @throws InterfaceConfigException 
 	 */
 	@SuppressWarnings("unchecked")
-	private Widget createWidgetAndAttachToParent(JSONObject metaElem, String widgetId, String widgetType, String parentId, String parentType) throws InterfaceConfigException 
+	private Widget createWidgetAndAttachToParent(CruxMetaData metaElem, String widgetId, String widgetType, String parentId, String parentType) throws InterfaceConfigException 
 	{
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
 		Widget parent = screen.getWidget(parentId);
@@ -447,7 +441,7 @@ public class ScreenFactory {
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidgetAndAttach(JSONObject metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	private Widget createWidgetAndAttach(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		Element panelElement = getEnclosingPanelElement(widgetId);
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
@@ -476,9 +470,13 @@ public class ScreenFactory {
 		return widget;
 	}
 	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	private static class ParserInfo
 	{
-		private ParserInfo(String parentType, String parentId, JSONArray parserElements) 
+		private ParserInfo(String parentType, String parentId, Array<CruxMetaData> parserElements) 
 		{
 			this.parentType = parentType;
 			this.parentId = parentId;
@@ -487,6 +485,6 @@ public class ScreenFactory {
 		
 		String parentType;
 		String parentId;
-		JSONArray parserElements;
+		Array<CruxMetaData> parserElements;
 	}
 }

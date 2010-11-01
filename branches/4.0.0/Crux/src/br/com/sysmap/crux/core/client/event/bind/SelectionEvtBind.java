@@ -17,11 +17,11 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for selection events binding
@@ -36,7 +36,7 @@ public class SelectionEvtBind implements EvtBinder<HasSelectionHandlers<?>>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public void bindEvent(JSONObject element, HasSelectionHandlers<?> widget)
+	public void bindEvent(CruxMetaData element, HasSelectionHandlers<?> widget)
 	{
 		final Event eventChange = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventChange != null)

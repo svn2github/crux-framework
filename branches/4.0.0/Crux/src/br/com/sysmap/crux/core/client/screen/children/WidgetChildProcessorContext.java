@@ -15,10 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.screen.children;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,7 +24,7 @@ import com.google.gwt.json.client.JSONObject;
  */
 public class WidgetChildProcessorContext<W>
 {
-	private JSONObject childElement;
+	private CruxMetaData childElement;
 	
 	private WidgetFactoryContext<W> context;
 	
@@ -40,7 +38,7 @@ public class WidgetChildProcessorContext<W>
 		return context.getWidget();
 	}
 
-	public JSONObject getRootElement()
+	public CruxMetaData getRootElement()
 	{
 		return context.getElement();
 	}
@@ -52,15 +50,15 @@ public class WidgetChildProcessorContext<W>
 
 	public String readRootWidgetProperty(String propertyName)
 	{
-		return WidgetFactory.getProperty(getRootElement(), propertyName);
+		return context.getElement().getProperty(propertyName);
 	}
 	
 	public String readChildProperty(String propertyName)
 	{
-		return WidgetFactory.getProperty(getChildElement(), propertyName);
+		return childElement.getProperty(propertyName);
 	}
 	
-	public JSONObject getChildElement()
+	public CruxMetaData getChildElement()
 	{
 		return childElement;
 	}
@@ -75,7 +73,7 @@ public class WidgetChildProcessorContext<W>
 		return context.containsAttribute(key);
 	}
 	
-	public void setChildElement(JSONObject childElement)
+	public void setChildElement(CruxMetaData childElement)
 	{
 		this.childElement = childElement;
 	}

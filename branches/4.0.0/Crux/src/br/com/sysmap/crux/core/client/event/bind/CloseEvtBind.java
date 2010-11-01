@@ -17,11 +17,11 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Helper Class for close events binding
@@ -33,7 +33,7 @@ public class CloseEvtBind implements EvtBinder<HasCloseHandlers<?>>
 	private static final String EVENT_NAME = "onClick";
 	
 	@SuppressWarnings("unchecked")
-	public void bindEvent(JSONObject element, HasCloseHandlers<?> widget)
+	public void bindEvent(CruxMetaData element, HasCloseHandlers<?> widget)
 	{
 		final Event eventClose = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventClose != null)

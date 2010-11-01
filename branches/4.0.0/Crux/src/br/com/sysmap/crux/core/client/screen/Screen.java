@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -47,7 +47,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -1166,15 +1165,12 @@ public class Screen
 	 * 
 	 * @param element
 	 */
-	protected void parse(JSONObject metaElem) 
+	protected void parse(CruxMetaData metaElem) 
 	{
-		String title = JSONUtils.getStringProperty(metaElem,"title");
-		if (title != null)
+		String title = metaElem.getProperty("title");
+		if (title != null && title.length() >0)
 		{
-			if (title != null && title.length() >0)
-			{
-				Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
-			}
+			Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
 		}
 
 		this.declaredControllers = extractReferencedResourceList(metaElem, "useController");
@@ -1182,7 +1178,7 @@ public class Screen
 		this.declaredSerializables = extractReferencedResourceList(metaElem, "useSerializable");
 		this.declaredFormatters = extractReferencedResourceList(metaElem, "useFormatter");
 		
-		String historyProperty = JSONUtils.getStringProperty(metaElem,"onHistoryChanged");
+		String historyProperty = metaElem.getProperty("onHistoryChanged");
 		if (historyProperty != null)
 		{
 			final Event eventHistory = Events.getEvent("onHistoryChanged", historyProperty);
@@ -1196,7 +1192,7 @@ public class Screen
 				});
 			}
 		}
-		String closingProperty = JSONUtils.getStringProperty(metaElem,"onClosing");
+		String closingProperty = metaElem.getProperty("onClosing");
 		if (closingProperty != null)
 		{
 			final Event eventClosing = Events.getEvent("onClosing", closingProperty);
@@ -1210,7 +1206,7 @@ public class Screen
 				});
 			}
 		}
-		String closeProperty = JSONUtils.getStringProperty(metaElem,"onClose");
+		String closeProperty = metaElem.getProperty("onClose");
 		if (closeProperty != null)
 		{
 			final Event eventClose = Events.getEvent("onClose", closeProperty);
@@ -1224,7 +1220,7 @@ public class Screen
 				});
 			}
 		}
-		String resizedProperty = JSONUtils.getStringProperty(metaElem,"onResized");
+		String resizedProperty = metaElem.getProperty("onResized");
 		if (resizedProperty != null)
 		{
 			final Event eventResized = Events.getEvent("onResized",resizedProperty);
@@ -1238,7 +1234,7 @@ public class Screen
 				});
 			}
 		}
-		String loadProperty = JSONUtils.getStringProperty(metaElem,"onLoad");
+		String loadProperty = metaElem.getProperty("onLoad");
 		if (loadProperty != null)
 		{
 			final Event eventLoad = Events.getEvent("onLoad", loadProperty);
@@ -1406,9 +1402,9 @@ public class Screen
 	 * @param attributeName
 	 * @return
 	 */
-	private String[] extractReferencedResourceList(JSONObject metaElem, String attributeName)
+	private String[] extractReferencedResourceList(CruxMetaData metaElem, String attributeName)
 	{
-		String attr = JSONUtils.getStringProperty(metaElem, attributeName);
+		String attr = metaElem.getProperty(attributeName);
 		if (!StringUtils.isEmpty(attr))
 		{
 			String[] result = attr.split(",");
