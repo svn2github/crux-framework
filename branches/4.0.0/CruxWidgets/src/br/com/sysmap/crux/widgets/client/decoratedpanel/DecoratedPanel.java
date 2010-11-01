@@ -57,17 +57,25 @@ public class DecoratedPanel extends CellPanel
 	 */
 	public DecoratedPanel(String width, String height, String styleName)
 	{
-		getTable().setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
-		getTable().setPropertyString("width", width);
-		getTable().getStyle().setProperty("height", height);
+		Element table = getTable();
+		table.setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
+		table.setPropertyString("width", width);
+		table.getStyle().setProperty("height", height);
 //		getTable().getStyle().setProperty("tableLayout", "fixed");
 	 	
-		topLine = DOM.createTR();
-		topLeftCell = createTd("topLeftCell", true);
-		topCenterCell = createTd("topCenterCell", true);
-		topRightCell = createTd("topRightCell", true);
+		Element templateTR = DOM.createTR();
+		topLine = templateTR;
+		middleLine = templateTR.cloneNode(false).cast();
+		Element wrapperLine = templateTR.cloneNode(false).cast();
+		bottomLine = templateTR.cloneNode(false).cast();
 		
-		middleLine = DOM.createTR();
+		Element templateTd = createTemplateTd(true);
+		Element templateSpaceTd = createTemplateTd(false);
+
+		topLeftCell = templateTd;
+		topCenterCell = createTd(templateTd, "topCenterCell");
+		topRightCell = createTd(templateTd, "topRightCell");
+		
 		
 		Element wrapper = DOM.createTable().cast();
 		wrapper.setPropertyInt("cellSpacing", 0);
@@ -75,40 +83,41 @@ public class DecoratedPanel extends CellPanel
 		wrapper.setPropertyString("width", "100%");
 		wrapper.getStyle().setProperty("height", "100%");
 	    Element wrapperBody = DOM.createTBody();
-	    Element wrapperLine = DOM.createTR();
 	    
-	    Element middleLineTD = createTd("", false);
+	    Element middleLineTD = templateSpaceTd;
 	    middleLineTD.setPropertyInt("colSpan", 4);		
 	    middleLineTD.getStyle().setProperty("padding", "0px");
 	    middleLineTD.appendChild(wrapper);
 		
-		middleLeftCell = createTd("middleLeftCell", true);
-		middleCenterCell = createTd("middleCenterCell", false);
-		middleRightCell = createTd("middleRightCell", true);
+		middleLeftCell = createTd(templateTd, "middleLeftCell");
+		middleCenterCell = createTd(templateSpaceTd, "middleCenterCell");
+		middleRightCell = createTd(templateTd, "middleRightCell");
 		
-		bottomLine = DOM.createTR();
-		bottomLeftCell = createTd("bottomLeftCell", true);
-		bottomCenterCell = createTd("bottomCenterCell", true);
-		bottomRightCell = createTd("bottomRightCell", true);
+		bottomLeftCell = createTd(templateTd, "bottomLeftCell");
+		bottomCenterCell = createTd(templateTd, "bottomCenterCell");
+		bottomRightCell = createTd(templateTd, "bottomRightCell");
 		
-		DOM.appendChild(topLine, topLeftCell);
-		DOM.appendChild(topLine, topCenterCell);
-		DOM.appendChild(topLine, topRightCell);
-		DOM.appendChild(getBody(), topLine);
+		topLeftCell.setClassName("topLeftCell");
+
+		topLine.appendChild(topLeftCell);
+		topLine.appendChild(topCenterCell);
+		topLine.appendChild(topRightCell);
+		Element body = getBody();
+		body.appendChild(topLine);
 	   	    
-	    DOM.appendChild(wrapperLine, middleLeftCell);
-	    DOM.appendChild(wrapperLine, middleCenterCell);
-	    DOM.appendChild(wrapperLine, middleRightCell);
-	    DOM.appendChild(wrapperBody, wrapperLine);
-	    DOM.appendChild(wrapper, wrapperBody);
-	    DOM.appendChild(middleLineTD, wrapper);
-	    DOM.appendChild(middleLine, middleLineTD);
-	    DOM.appendChild(getBody(), middleLine);
+	    wrapperLine.appendChild(middleLeftCell);
+	    wrapperLine.appendChild(middleCenterCell);
+	    wrapperLine.appendChild(middleRightCell);
+	    wrapperBody.appendChild(wrapperLine);
+	    wrapper.appendChild(wrapperBody);
+	    middleLineTD.appendChild(wrapper);
+	    middleLine.appendChild(middleLineTD);
+	    body.appendChild(middleLine);
 	    	    
-	    DOM.appendChild(bottomLine, bottomLeftCell);
-	    DOM.appendChild(bottomLine, bottomCenterCell);
-	    DOM.appendChild(bottomLine, bottomRightCell);
-	    DOM.appendChild(getBody(), bottomLine);
+	    bottomLine.appendChild(bottomLeftCell);
+	    bottomLine.appendChild(bottomCenterCell);
+	    bottomLine.appendChild(bottomRightCell);
+	    body.appendChild(bottomLine);
 	    
 	    setSpacing(0);
 	}
@@ -184,10 +193,22 @@ public class DecoratedPanel extends CellPanel
 	 * @param fillWithBlank if true, inserts a blank space into the TD's inner text
 	 * @return a table cell (TD)
 	 */
-	private Element createTd(String styleName, boolean fillWithBlank)
+	private Element createTd(Element template, String styleName)
+	{
+		Element td = template.cloneNode(true).cast();
+		td.setClassName(styleName);
+		return td;
+	}
+
+	/**
+	 * Creates a TD with the given style name
+	 * @param styleName
+	 * @param fillWithBlank if true, inserts a blank space into the TD's inner text
+	 * @return a table cell (TD)
+	 */
+	private Element createTemplateTd(boolean fillWithBlank)
 	{
 		Element td = DOM.createTD();
-		td.setClassName(styleName);
 		if(fillWithBlank)
 		{
 			td.setInnerHTML("&nbsp;");
@@ -196,7 +217,7 @@ public class DecoratedPanel extends CellPanel
 		td.setPropertyString("valign", "middle");		
 		return td;
 	}
-
+	
 	/**
 	 * @return the top TR
 	 */

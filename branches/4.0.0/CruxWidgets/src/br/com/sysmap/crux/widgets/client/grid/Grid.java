@@ -55,6 +55,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -377,10 +378,14 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 				int length = children.size();
 				for(int i = 0; i < length; i++)
 				{
-					JSONObject child = children.get(i).isObject();
-					if(child != null)
+					JSONValue jsonValue = children.get(i);
+					if (jsonValue != null)
 					{
-						setRandomId(child);
+						JSONObject child = jsonValue.isObject();
+						if(child != null)
+						{
+							setRandomId(child);
+						}
 					}
 				}
 			}

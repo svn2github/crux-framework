@@ -43,6 +43,7 @@ import br.com.sysmap.crux.widgets.client.grid.Grid.SortingType;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -241,49 +242,53 @@ public class GridFactory extends WidgetFactory<Grid>
 		{
 			for (int i=0; i<colsSize; i++)
 			{
-				JSONObject colElem = colElems.get(i).isObject();
-				if (colElem != null)
+				JSONValue jsonValue = colElems.get(i);
+				if (jsonValue != null)
 				{
-					String width = getProperty(colElem,"width");
-					String strVisible = getProperty(colElem,"visible");
-					String strWrapLine = getProperty(colElem,"wrapLine");
-					String label = getProperty(colElem,"label");
-					String key = getProperty(colElem,"key");
-					String strFormatter = getProperty(colElem,"formatter");
-					String hAlign = getProperty(colElem,"horizontalAlignment");
-					String vAlign = getProperty(colElem,"verticalAlignment");
-
-					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
-					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
-					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
-					label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
-
-					ColumnDefinition def = null;
-
-					String columnType = getChildName(colElem);
-					if("dataColumn".equals(columnType))
+					JSONObject colElem = jsonValue.isObject();
+					if (colElem != null)
 					{
-						def = new DataColumnDefinition(
-								label, 
-								width, 
-								formatter, 
-								visible,
-								wrapLine,
-								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
-					}
-					else if("widgetColumn".equals(columnType))
-					{
-						def = new WidgetColumnDefinition(
-								label, 
-								width, 
-								ensureFirstChild(colElem, false),
-								visible, 
-								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
-					}
+						String width = getProperty(colElem,"width");
+						String strVisible = getProperty(colElem,"visible");
+						String strWrapLine = getProperty(colElem,"wrapLine");
+						String label = getProperty(colElem,"label");
+						String key = getProperty(colElem,"key");
+						String strFormatter = getProperty(colElem,"formatter");
+						String hAlign = getProperty(colElem,"horizontalAlignment");
+						String vAlign = getProperty(colElem,"verticalAlignment");
 
-					defs.add(key, def);
+						boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
+						boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
+						String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
+						label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
+
+						ColumnDefinition def = null;
+
+						String columnType = getChildName(colElem);
+						if("dataColumn".equals(columnType))
+						{
+							def = new DataColumnDefinition(
+									label, 
+									width, 
+									formatter, 
+									visible,
+									wrapLine,
+									AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+									AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+						}
+						else if("widgetColumn".equals(columnType))
+						{
+							def = new WidgetColumnDefinition(
+									label, 
+									width, 
+									ensureFirstChild(colElem, false),
+									visible, 
+									AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+									AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+						}
+
+						defs.add(key, def);
+					}
 				}
 			}
 		}

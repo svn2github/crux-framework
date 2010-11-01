@@ -78,7 +78,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 		{
 			JSONObject childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = JSONUtils.getStringProperty(childElement, "id");
+			String id = JSONUtils.getUnsafeStringProperty(childElement, "id");
 			String label = context.readChildProperty("label");
 			label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
 			String url = context.readChildProperty("url");

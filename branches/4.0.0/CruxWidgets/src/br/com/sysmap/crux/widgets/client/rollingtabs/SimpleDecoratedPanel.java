@@ -21,15 +21,19 @@ public class SimpleDecoratedPanel extends CellPanel
 		getTable().setClassName("");
 	
 		line = DOM.createTR();
-		leftCell = createTd("flapLeft", true);
-		centerCell = createTd("flapCenter", false);
-		centerCell.setPropertyInt("colSpan", 2);
-		rightCell = createTd("flapRight", false);
 		
-	    DOM.appendChild(line, leftCell);
-	    DOM.appendChild(line, centerCell);
-	    DOM.appendChild(line, rightCell);
-	    DOM.appendChild(getBody(), line);
+		Element templateTd = createTemplateTd();
+		centerCell = createTd(templateTd, "flapCenter");
+		rightCell = createTd(templateTd, "flapRight");
+		leftCell = templateTd;
+		leftCell.setClassName("flapLeft");
+		leftCell.setInnerHTML("&nbsp;");
+		centerCell.setPropertyInt("colSpan", 2);
+		
+	    line.appendChild(leftCell);
+	    line.appendChild(centerCell);
+	    line.appendChild(rightCell);
+	    getBody().appendChild(line);
 	    	    
 	    setSpacing(0);
 	}
@@ -62,16 +66,24 @@ public class SimpleDecoratedPanel extends CellPanel
 	 * @param styleName
 	 * @return
 	 */
-	private Element createTd(String styleName, boolean fillWithBlank)
+	private Element createTd(Element templateTD, String styleName)
 	{
-		Element td = DOM.createTD();
+		Element td = templateTD.cloneNode(false).cast();
 		td.setClassName(styleName);
 		
-		if(fillWithBlank)
-		{
-			td.setInnerHTML("&nbsp;");
-		}
-		
+		td.setPropertyString("align", "center");
+		td.setPropertyString("valign", "middle");		
+		return td;
+	}
+
+	/**
+	 * Creates a TD with the given style name 
+	 * @param styleName
+	 * @return
+	 */
+	private Element createTemplateTd()
+	{
+		Element td = DOM.createTD();
 		td.setPropertyString("align", "center");
 		td.setPropertyString("valign", "middle");		
 		return td;

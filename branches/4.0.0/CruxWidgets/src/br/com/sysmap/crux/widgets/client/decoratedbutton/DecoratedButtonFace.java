@@ -59,13 +59,16 @@ public class DecoratedButtonFace extends Widget
 		TableRowElement tr = DOM.createTR().cast();
 		tableBody.appendChild(tr);
 
-		TableCellElement tdLeft = DOM.createTD().cast();
+		TableCellElement templateTD = DOM.createTD().cast();
+		TableCellElement tdLeft = templateTD;
+		TableCellElement tdCenter = templateTD.cloneNode(false).cast();
+		TableCellElement tdRight = templateTD.cloneNode(false).cast();
+
 		tdLeft.setClassName("leftCell");
 		tdLeft.setInnerHTML("&nbsp;");
 		TextSelectionUtils.makeUnselectable(tdLeft);
 		tr.appendChild(tdLeft);
 
-		TableCellElement tdCenter = DOM.createTD().cast();
 		tdCenter.setClassName("centerCell");
 		tdCenter.setPropertyBoolean("noWrap", true);
 		tdCenter.setAlign("center");
@@ -74,7 +77,6 @@ public class DecoratedButtonFace extends Widget
 
 		this.faceText = tdCenter;
 
-		TableCellElement tdRight = DOM.createTD().cast();
 		tdRight.setClassName("rightCell");
 		tdRight.setInnerHTML("&nbsp;");
 		TextSelectionUtils.makeUnselectable(tdRight);
