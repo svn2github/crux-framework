@@ -1168,9 +1168,9 @@ public class Screen
 	 */
 	protected void parse(JSONObject metaElem) 
 	{
-		if (metaElem.containsKey("title"))
+		String title = JSONUtils.getStringProperty(metaElem,"title");
+		if (title != null)
 		{
-			String title = JSONUtils.getStringProperty(metaElem,"title");
 			if (title != null && title.length() >0)
 			{
 				Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
@@ -1182,9 +1182,10 @@ public class Screen
 		this.declaredSerializables = extractReferencedResourceList(metaElem, "useSerializable");
 		this.declaredFormatters = extractReferencedResourceList(metaElem, "useFormatter");
 		
-		if (metaElem.containsKey("onHistoryChanged"))
+		String historyProperty = JSONUtils.getStringProperty(metaElem,"onHistoryChanged");
+		if (historyProperty != null)
 		{
-			final Event eventHistory = Events.getEvent("onHistoryChanged", JSONUtils.getStringProperty(metaElem,"onHistoryChanged"));
+			final Event eventHistory = Events.getEvent("onHistoryChanged", historyProperty);
 			if (eventHistory != null)
 			{
 				addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){
@@ -1195,9 +1196,10 @@ public class Screen
 				});
 			}
 		}
-		if (metaElem.containsKey("onClosing"))
+		String closingProperty = JSONUtils.getStringProperty(metaElem,"onClosing");
+		if (closingProperty != null)
 		{
-			final Event eventClosing = Events.getEvent("onClosing", JSONUtils.getStringProperty(metaElem,"onClosing"));
+			final Event eventClosing = Events.getEvent("onClosing", closingProperty);
 			if (eventClosing != null)
 			{
 				addWindowClosingHandler(new Window.ClosingHandler(){
@@ -1208,9 +1210,10 @@ public class Screen
 				});
 			}
 		}
-		if (metaElem.containsKey("onClose"))
+		String closeProperty = JSONUtils.getStringProperty(metaElem,"onClose");
+		if (closeProperty != null)
 		{
-			final Event eventClose = Events.getEvent("onClose", JSONUtils.getStringProperty(metaElem,"onClose"));
+			final Event eventClose = Events.getEvent("onClose", closeProperty);
 			if (eventClose != null)
 			{
 				addWindowCloseHandler(new CloseHandler<Window>(){
@@ -1221,9 +1224,10 @@ public class Screen
 				});
 			}
 		}
-		if (metaElem.containsKey("onResized"))
+		String resizedProperty = JSONUtils.getStringProperty(metaElem,"onResized");
+		if (resizedProperty != null)
 		{
-			final Event eventResized = Events.getEvent("onResized",JSONUtils.getStringProperty(metaElem,"onResized"));
+			final Event eventResized = Events.getEvent("onResized",resizedProperty);
 			if (eventResized != null)
 			{
 				addWindowResizeHandler(new ResizeHandler(){
@@ -1234,9 +1238,10 @@ public class Screen
 				});
 			}
 		}
-		if (metaElem.containsKey("onLoad"))
+		String loadProperty = JSONUtils.getStringProperty(metaElem,"onLoad");
+		if (loadProperty != null)
 		{
-			final Event eventLoad = Events.getEvent("onLoad", JSONUtils.getStringProperty(metaElem,"onLoad"));
+			final Event eventLoad = Events.getEvent("onLoad", loadProperty);
 			if (eventLoad != null)
 			{
 				addLoadHandler(new ScreenLoadHandler(){

@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.screen;
 import java.util.Date;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
@@ -61,6 +62,9 @@ public class ScreenFactory {
 	private Screen screen = null;
 	private String screenId = null;
 	private StringBuilder traceOutput = null;
+	private FastList<ParserInfo> parserStack = new FastList<ParserInfo>();
+	
+	
 	/**
 	 * Constructor
 	 */
@@ -267,47 +271,16 @@ public class ScreenFactory {
 	 * from the meta element is checked.
 	 * @param cruxMetaElements the array of elements
 	 */
-	void parseDocument(JSONArray cruxMetaElements)
+	void parseDocument()
 	{
 		this.parsing = true;
 		try
 		{
-			Date start = null;
-			if (Crux.getConfig().enableClientFactoryTracing())
-			{// This statement is like this to generate a better code when compiling with GWT compiler. Do not extract the previous command.
-				traceOutput = new StringBuilder();;
-				start = new Date();
-			}
-			
-			int elementsLength = cruxMetaElements.size();
-			for (int i=0; i<elementsLength; i++)
+			ParserInfo cruxMetaElements = nextFromParserStack();
+			while (cruxMetaElements != null)
 			{
-				JSONObject metaElement = cruxMetaElements.get(i).isObject();
-				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
-				String type = getMetaElementType(metaElement);
-				if (StringUtils.unsafeEquals("screen",type))
-				{
-					screen.parse(metaElement);
-				}
-				else
-				{
-					try 
-					{
-						createWidget(metaElement, type, screen);
-					}
-					catch (Throwable e) 
-					{
-						Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
-					}
-				}
-			}
-
-			if (Crux.getConfig().enableClientFactoryTracing())
-			{
-				Date end = new Date();
-				traceOutput.append("parseDocument - ("+(end.getTime() - start.getTime())+" ms)<br/>");
-				createTraceOutput().setInnerHTML(traceOutput.toString());
-				traceOutput = null;
+				parseDocument(cruxMetaElements);
+				cruxMetaElements = nextFromParserStack();
 			}
 		}
 		finally
@@ -318,6 +291,54 @@ public class ScreenFactory {
 	}
 
 	/**
+	 * @param cruxMetaElements
+	 */
+	private void parseDocument(ParserInfo parserInfo) 
+	{
+		Date start = null;
+		if (Crux.getConfig().enableClientFactoryTracing())
+		{// This statement is like this to generate a better code when compiling with GWT compiler. Do not extract the previous command.
+			traceOutput = new StringBuilder();;
+			start = new Date();
+		}
+		JSONArray cruxMetaElements = parserInfo.parserElements;
+		int elementsLength = cruxMetaElements.size();
+		for (int i=0; i<elementsLength; i++)
+		{
+			JSONValue jsonValue = cruxMetaElements.get(i);
+			if (jsonValue != null)
+			{
+				JSONObject metaElement = jsonValue.isObject();
+				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
+				String type = getMetaElementType(metaElement);
+				if (StringUtils.unsafeEquals("screen",type))
+				{
+					screen.parse(metaElement);
+				}
+				else
+				{
+					try 
+					{
+						createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
+					}
+					catch (Throwable e) 
+					{
+						Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+					}
+				}
+			}
+		}
+
+		if (Crux.getConfig().enableClientFactoryTracing())
+		{
+			Date end = new Date();
+			traceOutput.append("parseDocument - ("+(end.getTime() - start.getTime())+" ms)<br/>");
+			createTraceOutput().setInnerHTML(traceOutput.toString());
+			traceOutput = null;
+		}
+	}
+
+	/**
 	 * 
 	 */
 	private void create()
@@ -325,7 +346,25 @@ public class ScreenFactory {
 		screen = new Screen(getScreenId());
 		Element metaDataDiv = DOM.getElementById("__CruxMetaData_");
 		JSONValue metaData = JSONParser.parse(metaDataDiv.getInnerHTML());
-		parseDocument(metaData.isArray());
+		addToParserStack(null, null, metaData.isArray());
+		parseDocument();
+	}
+	
+	/**
+	 * @param array
+	 */
+	protected void addToParserStack(String parentType, String parentId, JSONArray parserElements)
+	{
+		assert(parserElements != null);
+		parserStack.add(new ParserInfo(parentType, parentId, parserElements));
+	}
+	
+	/**
+	 * @return
+	 */
+	private ParserInfo nextFromParserStack()
+	{
+		return parserStack.extractFirst();
 	}
 	
 	/**
@@ -343,11 +382,13 @@ public class ScreenFactory {
 	 * 
 	 * @param element
 	 * @param screen
+	 * @param parentType 
+	 * @param parentId 
 	 * @param widgetsElementsAdded
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidget(JSONObject metaElem, String widgetType, Screen screen) throws InterfaceConfigException
+	private Widget createWidget(JSONObject metaElem, String widgetType, Screen screen, String parentId, String parentType) throws InterfaceConfigException
 	{
 		assert(metaElem.containsKey("id") && metaElem.get("id").isString() != null) :Crux.getMessages().screenFactoryWidgetIdRequired();
 		String widgetId = JSONUtils.getUnsafeStringProperty(metaElem,"id");
@@ -365,6 +406,11 @@ public class ScreenFactory {
 		{
 			widget = newWidget(metaElem, widgetType, widgetId);
 		}
+		else if (parentId != null)
+		{
+			assert(!StringUtils.isEmpty(parentId) && !StringUtils.isEmpty(parentType));
+			widget = createWidgetAndAttachToParent(metaElem, widgetId, widgetType, parentId, parentType);
+		}
 		else
 		{
 			widget = createWidgetAndAttach(metaElem, widgetId, widgetType);
@@ -372,6 +418,28 @@ public class ScreenFactory {
 		return widget;
 	}
 	
+	/**
+	 * @param metaElem
+	 * @param widgetId
+	 * @param widgetType
+	 * @param parentId
+	 * @param parentType
+	 * @return
+	 * @throws InterfaceConfigException 
+	 */
+	@SuppressWarnings("unchecked")
+	private Widget createWidgetAndAttachToParent(JSONObject metaElem, String widgetId, String widgetType, String parentId, String parentType) throws InterfaceConfigException 
+	{
+		Widget widget = newWidget(metaElem, widgetId, widgetType);
+		Widget parent = screen.getWidget(parentId);
+		assert (parent != null);
+		
+		WidgetFactory<?> parentWidgetFactory = registeredWidgetFactories.getWidgetFactory(parentType);
+		 assert (parentWidgetFactory instanceof HasWidgetsFactory);
+		 ((HasWidgetsFactory<Widget>)parentWidgetFactory).add(parent, parentId, widget, widgetId);
+		return widget;
+	}
+
 	/**
 	 * 
 	 * @param element
@@ -383,31 +451,42 @@ public class ScreenFactory {
 	{
 		Element panelElement = getEnclosingPanelElement(widgetId);
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
-		if (!widget.isAttached())
+		Panel panel;
+		if (widget instanceof RequiresResize)
 		{
-			Panel panel;
-			if (widget instanceof RequiresResize)
+			boolean hasSize = (WidgetFactory.hasWidth(metaElem) && WidgetFactory.hasHeight(metaElem));
+			if (RootPanel.getBodyElement().equals(panelElement.getParentElement()) && !hasSize)
 			{
-				boolean hasSize = (WidgetFactory.hasWidth(metaElem) && WidgetFactory.hasHeight(metaElem));
-				if (RootPanel.getBodyElement().equals(panelElement.getParentElement()) && !hasSize)
-				{
-					panel = RootLayoutPanel.get();
-				}
-				else
-				{
-					panel = RootPanel.get(panelElement.getId());
-					if (!hasSize)
-					{
-						GWT.log(Crux.getMessages().screenFactoryLayoutPanelWithoutSize(widgetId), null);
-					}
-				}
+				panel = RootLayoutPanel.get();
 			}
 			else
 			{
 				panel = RootPanel.get(panelElement.getId());
+				if (!hasSize)
+				{
+					GWT.log(Crux.getMessages().screenFactoryLayoutPanelWithoutSize(widgetId), null);
+				}
 			}
-			panel.add(widget);
 		}
+		else
+		{
+			panel = RootPanel.get(panelElement.getId());
+		}
+		panel.add(widget);
 		return widget;
+	}
+	
+	private static class ParserInfo
+	{
+		private ParserInfo(String parentType, String parentId, JSONArray parserElements) 
+		{
+			this.parentType = parentType;
+			this.parentId = parentId;
+			this.parserElements = parserElements;
+		}
+		
+		String parentType;
+		String parentId;
+		JSONArray parserElements;
 	}
 }

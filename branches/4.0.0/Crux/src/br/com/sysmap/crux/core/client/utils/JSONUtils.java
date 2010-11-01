@@ -15,6 +15,10 @@
  */
 package br.com.sysmap.crux.core.client.utils;
 
+import java.util.Collection;
+
+import br.com.sysmap.crux.core.client.collection.FastList;
+
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -52,5 +56,25 @@ public class JSONUtils
 		assert (object.containsKey(property)): "Invalid property";
 		return object.get(property).isString().stringValue();
 	}
+	
+	/**
+	 * @param object
+	 * @return
+	 */
+	public static FastList<String> getKeys(JSONObject object)
+	{
+		FastList<String> result = new FastList<String>();
+		addAllKeys(object, result);
+		return result;
+	}
+	
+	private static native void addAllKeys(JSONObject object, FastList<String> l) /*-{
+		var jsObject = object.@com.google.gwt.json.client.JSONObject::jsObject;
+		for (var key in jsObject) {
+			if (jsObject.hasOwnProperty(key)) {
+				l.@br.com.sysmap.crux.core.client.collection.FastList::add(Ljava/lang/Object;)(key);
+			}
+		}
+	}-*/;
 	
 }

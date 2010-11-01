@@ -61,6 +61,24 @@ public class FastList<V>
 		}
 	}
 
+	public final V extractFirst()
+	{
+		if (size() > 0)
+		{
+			if (GWT.isScript())
+			{
+				V ret = jsArray.get(0);
+				jsArray.remove(0);
+				return ret;
+			}
+			else
+			{
+				return javaArray.remove(0);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @param value
 	 */

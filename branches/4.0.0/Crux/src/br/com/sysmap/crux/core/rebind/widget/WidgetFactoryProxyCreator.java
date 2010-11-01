@@ -58,6 +58,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -162,6 +163,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
     		GWT.class.getCanonicalName(), 
     		ScreenFactory.class.getCanonicalName(),
     		JSONObject.class.getCanonicalName(),
+    		JSONValue.class.getCanonicalName(),
     		JSONArray.class.getCanonicalName(),
     		FastList.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
@@ -561,7 +563,9 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 						source.append("JSONArray children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
 						source.append("if (children != null){\n");
 						source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
-						source.append("JSONObject child = children.get(_i_).isObject();\n");
+						source.append("JSONValue childValue = children.get(_i_);\n");
+						source.append("if (childValue != null){\n");
+						source.append("JSONObject child = childValue.isObject();\n");
 						source.append("if (child != null){\n");
 					}
 					if (hasChildElement)
@@ -575,6 +579,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 					// TODO - Thiago - tratar validação de filhos obrigatorios .... espeficamente qdo parent for um agregador....
 					if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs > 1)
 					{
+						source.append("}\n");
 						source.append("}\n");
 						source.append("}\n");
 					}

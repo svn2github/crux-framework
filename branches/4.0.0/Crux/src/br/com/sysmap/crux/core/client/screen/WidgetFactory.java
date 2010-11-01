@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.client.screen;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -31,6 +32,7 @@ import br.com.sysmap.crux.core.client.utils.StyleUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -117,7 +119,7 @@ public abstract class WidgetFactory <T extends Widget>
 			return null;
 		}
 		JSONArray children = metaElem.get("children").isArray();
-		assert(acceptsNoChild || (children != null && children.size()>0 && children.get(0).isObject()!=null)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		assert(acceptsNoChild || (children != null && children.size()>0 && children.get(0)!=null)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		return children;
 	}
 
@@ -135,9 +137,9 @@ public abstract class WidgetFactory <T extends Widget>
 		}
 		JSONArray children = metaElem.get("children").isArray();
 		assert(acceptsNoChild || (children != null && children.size()>0)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
-		JSONObject firstChild = children.get(0).isObject();
+		JSONValue firstChild = children.get(0);
 		assert(acceptsNoChild || firstChild != null):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
-		return firstChild;
+		return firstChild.isObject();
 	}
 
 	/**
@@ -373,6 +375,16 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	/**
+	 * @param parentType
+	 * @param parentId
+	 * @param parserElements
+	 */
+	protected void addToParserStack(String parentType, String parentId, JSONArray parserElements)
+	{
+		ScreenFactory.getInstance().addToParserStack(parentType, parentId, parserElements);
+	}
+	
+	/**
 	 * @param element
 	 * @param widgetId
 	 * @param addToScreen
@@ -474,10 +486,10 @@ public abstract class WidgetFactory <T extends Widget>
 		{
 			this.attributes.remove(key);
 		}
-
 		public void setAttribute(String key, Object value)
 		{
 			this.attributes.put(key, value);
 		}
+		//TODO ler apenas o que foi passado. public FastList<String>
 	}
 }
