@@ -59,8 +59,8 @@ public class DecoratedPanel extends CellPanel
 	{
 		Element table = getTable();
 		table.setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
-		table.setPropertyString("width", width);
-		table.getStyle().setProperty("height", height);
+		table.setPropertyString("width", (width==null?"":width));
+		table.getStyle().setProperty("height", (height==null?"":height));
 //		getTable().getStyle().setProperty("tableLayout", "fixed");
 	 	
 		Element templateTR = DOM.createTR();
