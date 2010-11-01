@@ -303,21 +303,24 @@ public class ScreenFactory {
 		for (int i=0; i<elementsLength; i++)
 		{
 			CruxMetaData metaElement = cruxMetaElements.get(i);
-			assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
-			String type = getMetaElementType(metaElement);
-			if (StringUtils.unsafeEquals("screen",type))
+			if (metaElement != null)
 			{
-				screen.parse(metaElement);
-			}
-			else
-			{
-				try 
+				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
+				String type = getMetaElementType(metaElement);
+				if (StringUtils.unsafeEquals("screen",type))
 				{
-					createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
+					screen.parse(metaElement);
 				}
-				catch (Throwable e) 
+				else
 				{
-					Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+					try 
+					{
+						createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
+					}
+					catch (Throwable e) 
+					{
+						Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+					}
 				}
 			}
 		}
@@ -330,7 +333,7 @@ public class ScreenFactory {
 			traceOutput = null;
 		}
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -427,10 +430,10 @@ public class ScreenFactory {
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
 		Widget parent = screen.getWidget(parentId);
 		assert (parent != null);
-		
+
 		WidgetFactory<?> parentWidgetFactory = registeredWidgetFactories.getWidgetFactory(parentType);
-		 assert (parentWidgetFactory instanceof HasWidgetsFactory);
-		 ((HasWidgetsFactory<Widget>)parentWidgetFactory).add(parent, parentId, widget, widgetId);
+		assert (parentWidgetFactory instanceof HasWidgetsFactory);
+		((HasWidgetsFactory<Widget>)parentWidgetFactory).add(parent, parentId, widget, widgetId);
 		return widget;
 	}
 
