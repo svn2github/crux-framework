@@ -97,9 +97,10 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	public DateBox instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
 		JSONArray children = ensureChildren(element, true);
-		int length = children.size();
-		if (length > 0)
+		
+		if (children != null && children.size() > 0)
 		{
+			int length = children.size();
 			DatePicker picker = null;
 			
 			for (int i=0; i<length; i++)

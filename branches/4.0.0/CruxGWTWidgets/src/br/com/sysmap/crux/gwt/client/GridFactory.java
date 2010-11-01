@@ -70,7 +70,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 		int size = children.size();
 		for (int i=0; i<size; i++)
 		{
-			if (children.get(i).isObject() != null)
+			if (children.get(i) != null)
 			{
 				count++;
 			}

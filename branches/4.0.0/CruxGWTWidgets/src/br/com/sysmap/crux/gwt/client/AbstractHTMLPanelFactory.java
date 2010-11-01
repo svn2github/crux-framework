@@ -16,13 +16,17 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.utils.JSONUtils;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -30,7 +34,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T> 
+public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T> implements HasWidgetsFactory<T>
 {
 	protected static class CruxHTMLPanel extends HTMLPanel
 	{
@@ -48,4 +52,35 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	        getElement().appendChild(panelElement);
         }
 	}
+	
+	/**
+	 * @see br.com.sysmap.crux.core.client.screen.HasWidgetsFactory#add(com.google.gwt.user.client.ui.Widget, java.lang.String, com.google.gwt.user.client.ui.Widget, java.lang.String)
+	 */
+	public void add(T parent, String parentId, Widget widget, String widgetId) 
+	{
+		String panelId = getEnclosingPanelPrefix()+widgetId;
+		parent.add(widget, panelId);
+	}
+		
+	/**
+	 * @param cruxHTMLPanel
+	 * @param element
+	 * @throws InterfaceConfigException
+	 */
+	protected void createChildren(String parentId, JSONObject element) throws InterfaceConfigException
+    {
+		if (element.containsKey("children"))
+		{
+			JSONArray children = element.get("children").isArray();
+			if (children != null)
+			{
+				addToParserStack(getFactoryType(), parentId, children);
+			}
+		}
+    }
+	
+	/**
+	 * @return
+	 */
+	protected abstract String getFactoryType();
 }

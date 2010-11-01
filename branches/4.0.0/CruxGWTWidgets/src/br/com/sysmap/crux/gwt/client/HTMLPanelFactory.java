@@ -22,9 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
 
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -40,31 +38,9 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 	public HTMLPanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException 
 	{
 		CruxHTMLPanel cruxHTMLPanel = new CruxHTMLPanel(element);
-		createChildren(cruxHTMLPanel, element);
+		createChildren(widgetId, element);
 		return cruxHTMLPanel;
 	}
-
-	private void createChildren(HTMLPanel cruxHTMLPanel, JSONObject element) throws InterfaceConfigException
-    {
-		if (element.containsKey("children"))
-		{
-			JSONArray children = element.get("children").isArray();
-			if (children != null)
-			{
-				int size = children.size();
-				for (int i=0; i<size; i++)
-				{
-					JSONObject child = children.get(i).isObject();
-					if (child != null)
-					{
-						String panelId = getEnclosingPanelPrefix()+JSONUtils.getUnsafeStringProperty(child, "id");
-						cruxHTMLPanel.add(createChildWidget(child), panelId);
-					}
-				}
-			}
-		}
-		
-    }
 
 	@Override
 	@TagChildren({
@@ -76,4 +52,10 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<HTMLPanel> {}
+
+	@Override
+	protected String getFactoryType() 
+	{
+		return "gwt_HTMLPanel";
+	}
 }
