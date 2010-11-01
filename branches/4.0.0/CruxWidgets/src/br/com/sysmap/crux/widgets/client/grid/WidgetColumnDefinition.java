@@ -15,7 +15,8 @@
  */
 package br.com.sysmap.crux.widgets.client.grid;
 
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
@@ -25,15 +26,15 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
  */
 public class WidgetColumnDefinition extends ColumnDefinition
 {
-	JSONObject widgetTemplate;
+	CruxMetaData widgetTemplate;
 
-	public WidgetColumnDefinition(String label, String width, JSONObject widgetTemplate, boolean visible, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public WidgetColumnDefinition(String label, String width, CruxMetaData widgetTemplate, boolean visible, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		super(label, width, visible, horizontalAlign, verticalAlign);
 		this.widgetTemplate = widgetTemplate;
 	}
 
-	public JSONObject getWidgetTemplate()
+	public CruxMetaData getWidgetTemplate()
 	{
 		return widgetTemplate;
 	}

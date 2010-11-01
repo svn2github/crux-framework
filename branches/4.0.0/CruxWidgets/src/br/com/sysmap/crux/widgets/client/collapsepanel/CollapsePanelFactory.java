@@ -28,11 +28,10 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvtBind;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvtBind;
 import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Collapse Panel widget
@@ -42,20 +41,20 @@ import com.google.gwt.json.client.JSONObject;
 public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePanel>
 {
 	@Override
-	public CollapsePanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public CollapsePanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String height = getProperty(element,"height");
-		String width = getProperty(element,"width");
-		String styleName = getProperty(element,"styleName");
+		String height = element.getProperty("height");
+		String width = element.getProperty("width");
+		String styleName = element.getProperty("styleName");
 
-		String strCollapsible = getProperty(element,"collapsible");
+		String strCollapsible = element.getProperty("collapsible");
 		boolean collapsible = true;
 		if(strCollapsible != null && strCollapsible.length() > 0)
 		{
 			collapsible = Boolean.parseBoolean(strCollapsible);
 		}
 		
-		String strCollapsed = getProperty(element,"collapsed");
+		String strCollapsed = element.getProperty("collapsed");
 		boolean collapsed = false;
 		if(strCollapsed != null && strCollapsed.length() > 0)
 		{

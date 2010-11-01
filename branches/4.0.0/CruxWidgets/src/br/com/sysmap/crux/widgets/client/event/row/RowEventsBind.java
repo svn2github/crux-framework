@@ -17,9 +17,8 @@ package br.com.sysmap.crux.widgets.client.event.row;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.event.Events;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * TODO - Gesse - Comment this
@@ -30,7 +29,7 @@ public class RowEventsBind extends EvtBind
 	/**
 	 * @param widget
 	 */
-	public static void bindClickRowEvent(JSONObject element, HasRowClickHandlers widget)
+	public static void bindClickRowEvent(CruxMetaData element, HasRowClickHandlers widget)
 	{
 		final Event clickLineEvent = getWidgetEvent(element, Events.ROW_CLICK);
 		if (clickLineEvent != null)
@@ -45,7 +44,7 @@ public class RowEventsBind extends EvtBind
 		}
 	}
 	
-	public static void bindDoubleClickRowEvent(JSONObject element, HasRowDoubleClickHandlers widget)
+	public static void bindDoubleClickRowEvent(CruxMetaData element, HasRowDoubleClickHandlers widget)
 	{
 		final Event doubleClickLineEvent = getWidgetEvent(element, Events.ROW_DOUBLE_CLICK);
 		if (doubleClickLineEvent != null)
@@ -60,7 +59,7 @@ public class RowEventsBind extends EvtBind
 		}
 	}
 	
-	public static void bindRenderRowEvent(JSONObject element, HasRowRenderHandlers widget)
+	public static void bindRenderRowEvent(CruxMetaData element, HasRowRenderHandlers widget)
 	{
 		final Event renderEvent = getWidgetEvent(element, Events.ROW_RENDER);
 		if (renderEvent != null)
@@ -75,7 +74,7 @@ public class RowEventsBind extends EvtBind
 		}
 	}
 	
-	public static void bindBeforeSelectRowEvent(JSONObject element, HasBeforeRowSelectHandlers widget)
+	public static void bindBeforeSelectRowEvent(CruxMetaData element, HasBeforeRowSelectHandlers widget)
 	{
 		final Event evt = getWidgetEvent(element, Events.BEFORE_ROW_SELECT);
 		if (evt != null)

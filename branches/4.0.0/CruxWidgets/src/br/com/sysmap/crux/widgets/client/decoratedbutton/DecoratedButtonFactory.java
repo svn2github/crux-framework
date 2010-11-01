@@ -18,9 +18,8 @@ package br.com.sysmap.crux.widgets.client.decoratedbutton;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.gwt.client.FocusWidgetFactory;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Decorated Button widget
@@ -30,7 +29,7 @@ import com.google.gwt.json.client.JSONObject;
 public class DecoratedButtonFactory extends FocusWidgetFactory<DecoratedButton> implements HasTextFactory<DecoratedButton>
 {
 	@Override
-	public DecoratedButton instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public DecoratedButton instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
 		return new DecoratedButton();
 	}

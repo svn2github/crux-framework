@@ -17,8 +17,7 @@ package br.com.sysmap.crux.widgets.client.titlepanel;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * Factory for Title Panel widget
@@ -28,11 +27,11 @@ import com.google.gwt.json.client.JSONObject;
 public class TitlePanelFactory extends AbstractTitlePanelFactory<TitlePanel>
 {
 	@Override
-	public TitlePanel instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public TitlePanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String height = getProperty(element,"height");
-		String width = getProperty(element,"width");
-		String styleName = getProperty(element,"styleName");
+		String height = element.getProperty("height");
+		String width = element.getProperty("width");
+		String styleName = element.getProperty("styleName");
 		return new TitlePanel(width, height, styleName);
 	}	
 }

@@ -22,8 +22,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * Factory for Stack Menu
@@ -33,7 +32,7 @@ import com.google.gwt.json.client.JSONObject;
 public class StackMenuFactory extends WidgetFactory<StackMenu>
 {
 	@Override
-	public StackMenu instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public StackMenu instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
 		return new StackMenu();
 	}

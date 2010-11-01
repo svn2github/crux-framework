@@ -31,10 +31,10 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -48,7 +48,7 @@ public class FilterFactory extends CompositeFactory<Filter>
 	              HasAllKeyHandlersFactory<Filter>
 {
 	@Override
-	public Filter instantiateWidget(final JSONObject element, String widgetId) throws InterfaceConfigException
+	public Filter instantiateWidget(final CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
 		return new Filter();	
 	}

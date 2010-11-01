@@ -38,10 +38,10 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTa
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -55,7 +55,7 @@ implements HasAnimationFactory<RollingTabPanel>,
 HasBeforeSelectionHandlersFactory<RollingTabPanel>
 {
 	@Override
-	public RollingTabPanel instantiateWidget(JSONObject element, String widgetId) 
+	public RollingTabPanel instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new RollingTabPanel();
 	}
@@ -212,8 +212,8 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		
 		private void updateTabState(WidgetChildProcessorContext<RollingTabPanel> context)
 		{
-			JSONObject tabElement = (JSONObject) context.getAttribute("tabElement");
-			String enabled = getProperty(tabElement,"enabled");
+			CruxMetaData tabElement = (CruxMetaData) context.getAttribute("tabElement");
+			String enabled = tabElement.getProperty("enabled");
 			int tabCount = context.getRootWidget().getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)
 			{
@@ -222,7 +222,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 
 			Tab currentTab = context.getRootWidget().getTabBar().getTab(tabCount-1);
 			
-			String wordWrap = getProperty(tabElement,"wordWrap");
+			String wordWrap = tabElement.getProperty("wordWrap");
 			if (wordWrap != null && wordWrap.trim().length() > 0)
 			{
 				currentTab.setWordWrap(Boolean.parseBoolean(wordWrap));

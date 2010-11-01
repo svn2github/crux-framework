@@ -31,11 +31,10 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -47,10 +46,10 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 
 	@Override
-    public WizardPage<?> instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+    public WizardPage<?> instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
     {
-	    String wizardContextObject = getProperty(element,"wizardContextObject");
-	    String wizardId = getProperty(element,"wizardId");
+	    String wizardContextObject = element.getProperty("wizardContextObject");
+	    String wizardId = element.getProperty("wizardId");
 	    return instantiator.createWizardPage(wizardId, wizardContextObject);
     }
 
@@ -108,7 +107,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		public void processChildren(WidgetChildProcessorContext<WizardPage<?>> context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id =JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
+			String id =context.getChildElement().getProperty("id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			

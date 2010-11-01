@@ -29,8 +29,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * Factory for Stack Menu
@@ -41,9 +40,9 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem>
        implements HasClickHandlersFactory<StackMenuItem>
 {
 	@Override
-	public StackMenuItem instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public StackMenuItem instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String label = getProperty(element,"label"); 
+		String label = element.getProperty("label"); 
 		StackMenuItem stackMenuItem = new StackMenuItem(ScreenFactory.getInstance().getDeclaredMessage(label));
 		stackMenuItem.getElement().setId(widgetId);
 		return stackMenuItem;

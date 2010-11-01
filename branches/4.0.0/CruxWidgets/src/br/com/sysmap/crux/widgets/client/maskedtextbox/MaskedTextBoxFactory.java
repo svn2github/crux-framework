@@ -32,9 +32,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -48,9 +47,9 @@ public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox>
                   HasAllKeyHandlersFactory<MaskedTextBox>, HasAllMouseHandlersFactory<MaskedTextBox>
 {
 	@Override
-	public MaskedTextBox instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public MaskedTextBox instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String formatter = getProperty(element,"formatter");
+		String formatter = element.getProperty("formatter");
 		if (formatter != null && formatter.length() > 0)
 		{
 			Formatter fmt = Screen.getFormatter(formatter);

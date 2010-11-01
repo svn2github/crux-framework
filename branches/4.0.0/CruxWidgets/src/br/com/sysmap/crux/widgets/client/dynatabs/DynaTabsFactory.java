@@ -29,12 +29,10 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Decorated Button widget
@@ -44,7 +42,7 @@ import com.google.gwt.json.client.JSONObject;
 public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 {
 	@Override
-	public DynaTabs instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public DynaTabs instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
 		return new DynaTabs();
 	}
@@ -76,9 +74,9 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 		})
 		public void processChildren(WidgetChildProcessorContext<DynaTabs> context) throws InterfaceConfigException
 		{
-			JSONObject childElement = context.getChildElement();
+			CruxMetaData childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = JSONUtils.getUnsafeStringProperty(childElement, "id");
+			String id = childElement.getProperty("id");
 			String label = context.readChildProperty("label");
 			label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
 			String url = context.readChildProperty("url");

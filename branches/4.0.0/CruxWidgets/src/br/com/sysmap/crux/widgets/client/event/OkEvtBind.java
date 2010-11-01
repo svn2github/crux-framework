@@ -18,8 +18,7 @@ package br.com.sysmap.crux.widgets.client.event;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 public class OkEvtBind implements EvtBinder<HasOkHandlers>
 {
@@ -29,7 +28,7 @@ public class OkEvtBind implements EvtBinder<HasOkHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(JSONObject element, HasOkHandlers widget)
+	public void bindEvent(CruxMetaData element, HasOkHandlers widget)
 	{
 		final Event okEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (okEvent != null)

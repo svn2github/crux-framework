@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
 import br.com.sysmap.crux.core.client.datasource.HasDataSource;
@@ -36,6 +37,7 @@ import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
@@ -52,10 +54,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -336,13 +334,13 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	{
 		try
 		{
-			JSONObject template = column.getWidgetTemplate();
+			CruxMetaData template = column.getWidgetTemplate();
 			assert(template.containsKey("id")): Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = template.get("id").toString(); 
+			String id = template.getProperty("id"); 
 			setRandomId(template);
 			ScreenFactory factory = ScreenFactory.getInstance();
-			Widget newWidget = factory.newWidget(template, template.get("id").toString(), factory.getMetaElementType(template), false);
-			template.put("id", new JSONString(id));
+			Widget newWidget = factory.newWidget(template, template.getProperty("id"), factory.getMetaElementType(template), false);
+			template.setProperty("id", id);
 			return newWidget;
 		}
 		catch (InterfaceConfigException e)
@@ -356,37 +354,30 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * Generates and sets a random ID on the given element and its children.
 	 * @param template
 	 */
-	private void setRandomId(JSONObject template)
+	private void setRandomId(CruxMetaData template)
 	{
 		String templateId;
 		if (template.containsKey("id"))
 		{
-			templateId = template.get("id").toString();
+			templateId = template.getProperty("id");
 		}
 		else
 		{
 			templateId = "";
 		}
 		
-		template.put("id", new JSONString(templateId + "_" + generateWidgetIdSufix()));
+		template.setProperty("id", templateId + "_" + generateWidgetIdSufix());
 		
-		if (template.containsKey("children"))
+		Array<CruxMetaData> children = template.getChildren();
+		if(children != null)
 		{
-			JSONArray children = template.get("children").isArray();
-			if(children != null)
+			int length = children.size();
+			for(int i = 0; i < length; i++)
 			{
-				int length = children.size();
-				for(int i = 0; i < length; i++)
+				CruxMetaData child = children.get(i);
+				if(child != null)
 				{
-					JSONValue jsonValue = children.get(i);
-					if (jsonValue != null)
-					{
-						JSONObject child = jsonValue.isObject();
-						if(child != null)
-						{
-							setRandomId(child);
-						}
-					}
+					setRandomId(child);
 				}
 			}
 		}

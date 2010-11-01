@@ -19,8 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 public class BeforeCollapseEvtBind implements EvtBinder<HasBeforeCollapseHandlers>
 {
@@ -30,7 +29,7 @@ public class BeforeCollapseEvtBind implements EvtBinder<HasBeforeCollapseHandler
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(JSONObject element, HasBeforeCollapseHandlers widget)
+	public void bindEvent(CruxMetaData element, HasBeforeCollapseHandlers widget)
 	{
 		final Event beforeCollapseEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (beforeCollapseEvent != null)

@@ -27,9 +27,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvtBind;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * Factory for Timer widget
@@ -41,31 +40,31 @@ public class TimerFactory extends WidgetFactory<Timer>
 	/**
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public Timer instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public Timer instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
 		long initial = 0;
 		boolean regressive = false;
 		boolean start = false;
 		
-		String strInitial = getProperty(element,"initial");  
+		String strInitial = element.getProperty("initial");  
 		if(strInitial != null && strInitial.trim().length() > 0)
 		{
 			initial = Long.parseLong(strInitial);
 		}
 		
-		String strRegressive = getProperty(element,"regressive");  
+		String strRegressive = element.getProperty("regressive");  
 		if(strRegressive != null && strRegressive.trim().length() > 0)
 		{
 			regressive = Boolean.parseBoolean(strRegressive);
 		}
 		
-		String strStart = getProperty(element,"start");  
+		String strStart = element.getProperty("start");  
 		if(strStart != null && strStart.trim().length() > 0)
 		{
 			start = Boolean.parseBoolean(strStart);
 		}
 		
-		return new Timer(initial, regressive, getProperty(element,"pattern"), start);
+		return new Timer(initial, regressive, element.getProperty("pattern"), start);
 	}
 	
 	@Override

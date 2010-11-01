@@ -19,8 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * Binder for BeforeMoveItemsEvent handlers
@@ -33,7 +32,7 @@ public class BeforeMoveItemsEvtBind implements EvtBinder<HasBeforeMoveItemsHandl
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
 	 */
-	public void bindEvent(JSONObject element, HasBeforeMoveItemsHandlers widget)
+	public void bindEvent(CruxMetaData element, HasBeforeMoveItemsHandlers widget)
 	{
 		final Event beforeMoveItemsEvt = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		

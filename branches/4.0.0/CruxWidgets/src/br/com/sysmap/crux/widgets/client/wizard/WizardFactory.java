@@ -37,7 +37,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.utils.JSONUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.FinishEvtBind;
@@ -46,7 +46,6 @@ import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -59,9 +58,9 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 	
 	@Override
-    public Wizard<?> instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+    public Wizard<?> instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
     {
-	    String wizardContextObject = getProperty(element,"wizardContextObject");
+	    String wizardContextObject = element.getProperty("wizardContextObject");
 		return instantiator.createWizard(widgetId, wizardContextObject);
     }
 
@@ -229,7 +228,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			context.setAttribute("stepId", JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id"));
+			context.setAttribute("stepId", context.getChildElement().getProperty("id"));
 			context.setAttribute("stepLabel", context.readChildProperty("label"));
 			context.setAttribute("stepOnEnter", context.readChildProperty("onEnter"));
 			context.setAttribute("stepOnLeave", context.readChildProperty("onLeave"));
@@ -263,7 +262,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
+			String id = context.getChildElement().getProperty("id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			
@@ -337,7 +336,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
+			String id = context.getChildElement().getProperty("id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			String url = context.readChildProperty("url");
 			context.getRootWidget().addPageStep(id, label, url);
@@ -512,7 +511,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 		public void processChildren(WidgetChildProcessorContext<Wizard<?>> context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = JSONUtils.getUnsafeStringProperty(context.getChildElement(), "id");
+			String id = context.getChildElement().getProperty("id");
 			String label = ScreenFactory.getInstance().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			

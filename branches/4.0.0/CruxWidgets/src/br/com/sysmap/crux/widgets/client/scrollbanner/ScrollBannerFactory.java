@@ -25,8 +25,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-
-import com.google.gwt.json.client.JSONObject;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 /**
  * Factory for Scroll Banner widget
@@ -36,9 +35,9 @@ import com.google.gwt.json.client.JSONObject;
 public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 {
 	@Override
-	public ScrollBanner instantiateWidget(JSONObject element, String widgetId) throws InterfaceConfigException
+	public ScrollBanner instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
 	{
-		String period = getProperty(element,"messageScrollingPeriod");
+		String period = element.getProperty("messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)
 		{
 			return new ScrollBanner(Integer.parseInt(period));

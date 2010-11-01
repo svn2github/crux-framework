@@ -17,10 +17,8 @@ package br.com.sysmap.crux.widgets.client.event.timeout;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.widgets.client.event.Events;
-
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * TODO - Gesse - Comment this
@@ -32,10 +30,10 @@ public class TimeoutEvtBind extends EvtBind
 	 * @param childElement
 	 * @param widget
 	 */
-	public static void bindEventForChildTag(JSONObject childElement, HasTimeoutHandlers widget)
+	public static void bindEventForChildTag(CruxMetaData childElement, HasTimeoutHandlers widget)
 	{
-		final String time = WidgetFactory.getProperty(childElement,"time");
-		String execute = WidgetFactory.getProperty(childElement,"execute");
+		final String time = childElement.getProperty("time");
+		String execute = childElement.getProperty("execute");
 		
 		if(time != null && execute != null)
 		{
