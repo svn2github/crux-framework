@@ -120,6 +120,7 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 		srcWriter.println("public "+getProxySimpleName()+"(){ ");
 		
 		List<Screen> screens = getScreens();
+		
 		if (Environment.isProduction() || !Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableHotDeploymentForWidgetFactories()))
 		{
 			for (Screen screen : screens)

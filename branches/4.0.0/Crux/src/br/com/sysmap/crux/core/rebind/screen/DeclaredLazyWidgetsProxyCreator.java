@@ -27,7 +27,6 @@ import br.com.sysmap.crux.core.rebind.scanner.module.Module;
 import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
-import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -123,7 +122,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 			
 			while (parent != null)
 			{
-				if (WidgetConfig.isLazyType(parent.getType()))
+				if (!parent.isVisible())
 				{
 					srcWriter.println("result.put("+EscapeUtils.quote(widget.getId())+", "+EscapeUtils.quote(parent.getId())+");");
 					break;

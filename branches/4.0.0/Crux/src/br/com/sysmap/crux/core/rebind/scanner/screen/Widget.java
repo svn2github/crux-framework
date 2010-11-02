@@ -32,6 +32,7 @@ public class Widget
 	protected String formatter;
 	protected String id;
 	protected Widget parent = null;
+	protected boolean visible = true;
 
 	protected List<String> propertiesValues = new ArrayList<String>();
 	protected String type;
@@ -119,6 +120,11 @@ public class Widget
 		this.formatter = formatter;
 	}
 
+	public boolean isVisible() 
+	{
+		return visible;
+	}
+
 	protected void addEvent(Event event)
 	{
 		if (event != null)
@@ -146,4 +152,11 @@ public class Widget
 	{
 		this.type = type;
 	}
+
+	void setVisible(boolean visible) 
+	{
+		this.visible = visible;
+	}
+	
+	
 }

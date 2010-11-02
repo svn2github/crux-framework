@@ -31,6 +31,5 @@ public @interface DeclarativeFactory
 	String id();
 	String library();
 	boolean attachToDOM() default true;
-	boolean lazy() default false;
 	boolean htmlContainer() default false;
 }

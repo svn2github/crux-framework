@@ -32,6 +32,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -209,7 +210,17 @@ public class ScreenFactory {
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetFactoryNotFound(widgetType));
 		}
 		
-		Widget widget = widgetFactory.createWidget(metaElem, widgetId, addToScreen); 
+		Widget widget;
+		if (mustRenderLazily((DeclarativeWidgetFactory) widgetFactory, metaElem, widgetId))
+		{
+			String lazyId = LazyPanelFactory.LAZY_PANEL_PREFIX+widgetId;
+			widget = LazyPanelFactory.getLazyPanel(metaElem, lazyId);
+			Screen.add(lazyId, widget);
+		}
+		else
+		{
+			widget = widgetFactory.createWidget(metaElem, widgetId, addToScreen); 
+		}
 		if (widget == null)
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryErrorCreateWidget(widgetId));
@@ -286,6 +297,27 @@ public class ScreenFactory {
 		}
 		screen.load();
 	}
+	
+	/**
+	 * @param widgetFactory
+	 * @param metaElem
+	 * @param widgetId
+	 * @return
+	 * @throws InterfaceConfigException
+	 */
+	private boolean mustRenderLazily(DeclarativeWidgetFactory widgetFactory, CruxMetaData metaElem, String widgetId) throws InterfaceConfigException 
+	{
+		if (widgetFactory.isPanel())
+		{
+			String visible = metaElem.getProperty("visible");
+			if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
+			{
+				String lazyId = LazyPanelFactory.LAZY_PANEL_PREFIX+widgetId;
+				return !screen.containsWidget(lazyId);
+			}
+		}
+		return false;
+	} 
 
 	/**
 	 * @param cruxMetaElements
@@ -430,10 +462,18 @@ public class ScreenFactory {
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
 		Widget parent = screen.getWidget(parentId);
 		assert (parent != null);
-
-		WidgetFactory<?> parentWidgetFactory = registeredWidgetFactories.getWidgetFactory(parentType);
-		assert (parentWidgetFactory instanceof HasWidgetsFactory);
-		((HasWidgetsFactory<Widget>)parentWidgetFactory).add(parent, parentId, widget, widgetId);
+		
+		if (StringUtils.unsafeEquals(LazyPanelFactory.LAZY_PANEL_TYPE, parentType))
+		{
+			LazyPanelFactory.getInstance().add((LazyPanel) parent, parentId, widget, widgetId);
+		}
+		else
+		{
+			WidgetFactory<?> factory = registeredWidgetFactories.getWidgetFactory(parentType);
+			assert (factory instanceof HasWidgetsFactory);
+			HasWidgetsFactory<Widget> parentWidgetFactory = (HasWidgetsFactory<Widget>) factory;
+			parentWidgetFactory.add(parent, parentId, widget, widgetId);
+		}
 		return widget;
 	}
 

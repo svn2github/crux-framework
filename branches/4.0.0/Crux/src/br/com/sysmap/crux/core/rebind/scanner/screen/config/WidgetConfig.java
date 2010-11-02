@@ -19,7 +19,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -41,7 +40,6 @@ import br.com.sysmap.crux.core.server.scan.ClassScanner;
 public class WidgetConfig 
 {
 	private static Map<String, String> config = null;
-	private static Set<String> lazyWidgets = null;
 	private static Map<Type, String> widgets = null;
 	private static Map<String, Set<String>> registeredLibraries = null;
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
@@ -78,7 +76,6 @@ public class WidgetConfig
 	{
 		config = new HashMap<String, String>(100);
 		widgets = new HashMap<Type, String>();
-		lazyWidgets = new HashSet<String>();
 		registeredLibraries = new HashMap<String, Set<String>>();
 		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
 		if (factoriesNames != null)
@@ -98,10 +95,6 @@ public class WidgetConfig
 					String widgetType = annot.library() + "_" + annot.id();
 					
 					config.put(widgetType, factoryClass.getCanonicalName());
-					if (annot.lazy())
-					{
-						lazyWidgets.add(widgetType);
-					}
 					
 					Type type = ((ParameterizedType)factoryClass.getGenericSuperclass()).getActualTypeArguments()[0];
 					if (type instanceof ParameterizedType)
@@ -180,6 +173,10 @@ public class WidgetConfig
 		return registeredLibraries.get(library);
 	}
 
+	/**
+	 * @param widgetClass
+	 * @return
+	 */
 	public static String getWidgetType(Type widgetClass)
     {
 		if (widgets == null)
@@ -188,32 +185,4 @@ public class WidgetConfig
 		}
 		return widgets.get(widgetClass);
     }
-
-	public static boolean isLazyType(String type)
-	{
-		if (lazyWidgets == null)
-		{
-			initializeWidgetConfig();
-		}
-		return lazyWidgets.contains(type);
-	}
-
-	/**
-	 * @return
-	 */
-	public static String getLazyContainerType()
-	{
-		if (lazyWidgets == null)
-		{
-			initializeWidgetConfig();
-		}
-		
-		Iterator<String> lazies = lazyWidgets.iterator();
-		if (lazies.hasNext())
-		{
-			return lazies.next();
-		}
-		return null;
-	}
-
 }

@@ -131,6 +131,10 @@ public class WidgetParserImpl implements WidgetParser
 			{
 				widget.setDataSource(elem.getString(attrName));
 			}
+			else if (attrName.equalsIgnoreCase("visible"))
+			{
+				widget.setVisible(Boolean.parseBoolean(elem.getString(attrName)));
+			}
 			else
 			{
 				widget.addPropertyValue(elem.getString(attrName));

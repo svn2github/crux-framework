@@ -452,8 +452,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param controllerClass
 	 * @param method
 	 */
-	@SuppressWarnings("deprecation")
-    private void generateInvokeBlockForMethod(SourceWriter sourceWriter, JMethod method)
+    @SuppressWarnings("deprecation")
+	private void generateInvokeBlockForMethod(SourceWriter sourceWriter, JMethod method)
     {
 	    if (method.getAnnotation(br.com.sysmap.crux.core.client.controller.ExposeOutOfModule.class) != null)
 	    {

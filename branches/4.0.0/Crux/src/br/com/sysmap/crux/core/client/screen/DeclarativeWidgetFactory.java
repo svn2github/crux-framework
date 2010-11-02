@@ -22,4 +22,5 @@ package br.com.sysmap.crux.core.client.screen;
 public interface DeclarativeWidgetFactory
 {
 	boolean isAttachToDOM();
+	boolean isPanel();
 }

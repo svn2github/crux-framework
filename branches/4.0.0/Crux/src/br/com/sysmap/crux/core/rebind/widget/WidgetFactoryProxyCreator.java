@@ -59,6 +59,7 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -146,6 +147,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		generateProcessEventsMethod(srcWriter);
 		generateProcessChildrenMethod(srcWriter);
 		generateIsAttachMethod(srcWriter);
+		generateIsPanelMethod(srcWriter);
     }
 	
 	@Override
@@ -365,6 +367,9 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		}
 	}
 	
+	/**
+	 * @param sourceWriter
+	 */
 	private void generateIsAttachMethod(SourceWriter sourceWriter)
 	{
 		DeclarativeFactory declarativeFactory = factoryClass.getAnnotation(DeclarativeFactory.class);
@@ -376,6 +381,19 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		sourceWriter.println("}");
 	}
 
+	/**
+	 * @param sourceWriter
+	 */
+	private void generateIsPanelMethod(SourceWriter sourceWriter)
+	{
+		JClassType panelType = factoryClass.getOracle().findType(Panel.class.getCanonicalName());
+		
+		sourceWriter.println("public boolean isPanel(){"); 
+		sourceWriter.indent();
+		sourceWriter.println("return "+(widgetType.isAssignableTo(panelType))+";");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+	}
 	
 	/**
 	 * 
