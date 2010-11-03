@@ -16,7 +16,13 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.LazyPanel;
@@ -29,16 +35,24 @@ import com.google.gwt.user.client.ui.LazyPanel;
 @DeclarativeFactory(id="lazyPanel", library="gwt")
 public class LazyPanelFactory extends PanelFactory<LazyPanel> 
 {
-
-	@Override
-	public void processAttributes(WidgetFactoryContext<LazyPanel> context) throws InterfaceConfigException 
-	{
-		super.processAttributes(context);
-	}
-	
 	@Override
 	public LazyPanel instantiateWidget(CruxMetaData metaElem, String widgetId) throws InterfaceConfigException 
 	{
 		return br.com.sysmap.crux.core.client.screen.LazyPanelFactory.getLazyPanel(metaElem, widgetId);
 	}
+	
+	@Override
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})
+	public void processChildren(WidgetFactoryContext<LazyPanel> context) throws InterfaceConfigException 
+	{
+		super.processChildren(context);
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="1")
+	@TagChildLazyConditions(all={
+		@TagChildLazyCondition(property="visible", notEquals="true"),
+	})	
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<LazyPanel> {}	
 }
