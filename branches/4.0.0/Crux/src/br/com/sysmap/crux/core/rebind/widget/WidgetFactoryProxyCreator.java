@@ -104,9 +104,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	private final JClassType factoryClass;
 	private int variableNameSuffixCounter = 0;
 	private final JClassType widgetChildProcessorContextType;
-
 	private final JClassType widgetFactoryContextType;
-	
 	private final JClassType widgetType;
 
 	/**

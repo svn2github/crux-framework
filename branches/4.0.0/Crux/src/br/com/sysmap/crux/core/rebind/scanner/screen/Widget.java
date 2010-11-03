@@ -15,10 +15,8 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.screen;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,9 +30,8 @@ public class Widget
 	protected String formatter;
 	protected String id;
 	protected Widget parent = null;
-	protected boolean visible = true;
 
-	protected List<String> propertiesValues = new ArrayList<String>();
+	protected Map<String, String> properties = new HashMap<String, String>();
 	protected String type;
 	private int hashValue = 0;
 	
@@ -105,9 +102,9 @@ public class Widget
 		return events.values().iterator();
 	}
 
-	public Iterator<String> iterateProperties()
+	public Iterator<String> iteratePropertyValues()
 	{
-		return propertiesValues.iterator();
+		return properties.values().iterator();
 	}
 
 	public void setDataSource(String dataSource)
@@ -120,11 +117,6 @@ public class Widget
 		this.formatter = formatter;
 	}
 
-	public boolean isVisible() 
-	{
-		return visible;
-	}
-
 	protected void addEvent(Event event)
 	{
 		if (event != null)
@@ -133,11 +125,16 @@ public class Widget
 		}
 	}
 
-	protected void addPropertyValue(String value)
+	protected void addProperty(String name, String value)
 	{
-		propertiesValues.add(value);
+		properties.put(name, value);
 	}
 
+	public String getProperty(String name)
+	{
+		return properties.get(name);
+	}
+	
 	void setId(String id)
 	{
 		this.id = id;
@@ -153,10 +150,5 @@ public class Widget
 		this.type = type;
 	}
 
-	void setVisible(boolean visible) 
-	{
-		this.visible = visible;
-	}
-	
 	
 }

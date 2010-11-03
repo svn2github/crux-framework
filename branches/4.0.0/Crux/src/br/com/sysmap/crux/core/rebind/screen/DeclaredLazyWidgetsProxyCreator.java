@@ -15,8 +15,10 @@
  */
 package br.com.sysmap.crux.core.rebind.screen;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets;
@@ -27,6 +29,7 @@ import br.com.sysmap.crux.core.rebind.scanner.module.Module;
 import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
+import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -39,6 +42,16 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
+	private Map<String, WidgetLazyChecker> lazyWidgetCheckers = new HashMap<String, WidgetLazyChecker>();
+	private WidgetLazyChecker defaultLazyChecker = new WidgetLazyChecker() 
+	{
+		public boolean isLazy(Widget widget) 
+		{
+			String visible = widget.getProperty("visible");
+			return visible != null && !Boolean.parseBoolean(visible);
+		}
+	};
+	
 	/**
 	 * Constructor
 	 * @param logger
@@ -122,7 +135,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 			
 			while (parent != null)
 			{
-				if (!parent.isVisible())
+				if (checkLazy(parent))
 				{
 					srcWriter.println("result.put("+EscapeUtils.quote(widget.getId())+", "+EscapeUtils.quote(parent.getId())+");");
 					break;
@@ -135,6 +148,36 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 		}
 		srcWriter.outdent();
 		srcWriter.println("}");
+	}
+
+	/**
+	 * @param parent
+	 * @return
+	 */
+	private boolean checkLazy(Widget parent) 
+	{
+		if (defaultLazyChecker.isLazy(parent))
+		{
+			return true;
+		}
+		if (!lazyWidgetCheckers.containsKey(parent.getType()))
+		{
+			initializeLazyChecker(parent.getType());
+		}
+		WidgetLazyChecker checker = lazyWidgetCheckers.get(parent.getType());
+		return checker != null && checker.isLazy(parent);
+	}
+
+	/**
+	 * @param type
+	 */
+	private void initializeLazyChecker(String type) 
+	{
+		String widgetFactoryClass = WidgetConfig.getClientClass(type);
+		JClassType factoryType = context.getTypeOracle().findType(widgetFactoryClass);
+		
+		
+		
 	}
 
 	/**
@@ -154,4 +197,13 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
 	{
 	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	private static interface WidgetLazyChecker
+	{
+		boolean isLazy(Widget widget);
+	}	
 }

@@ -144,7 +144,7 @@ public class RegisteredI18NMessagesProxyCreator extends AbstractInterfaceWrapper
 	 */
 	protected void getMessageBlock(Widget widget)
 	{
-		Iterator<String> iterator = widget.iterateProperties();
+		Iterator<String> iterator = widget.iteratePropertyValues();
 		while (iterator.hasNext())
 		{
 			String property = (String) iterator.next();

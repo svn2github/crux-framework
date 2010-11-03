@@ -1016,9 +1016,10 @@ public class Screen
 		Widget widget = widgets.get(id);
 		if (widget == null)
 		{
-			if (lazyWidgets.containsKey(id))
+			String lazyPanelId = lazyWidgets.get(id);
+			if (lazyPanelId != null)
 			{
-				initializeLazyDependentWidget(lazyWidgets.get(id));
+				initializeLazyDependentWidget(lazyPanelId);
 				widget = widgets.get(id);
 			}
 		}

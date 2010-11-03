@@ -94,7 +94,7 @@ public class WidgetParserImpl implements WidgetParser
 
 			if(text != null && text.trim().length() > 0)
 			{
-				widget.addPropertyValue(text);
+				widget.addProperty("_text", text);
 			}
 		}
 	}
@@ -131,13 +131,9 @@ public class WidgetParserImpl implements WidgetParser
 			{
 				widget.setDataSource(elem.getString(attrName));
 			}
-			else if (attrName.equalsIgnoreCase("visible"))
-			{
-				widget.setVisible(Boolean.parseBoolean(elem.getString(attrName)));
-			}
 			else
 			{
-				widget.addPropertyValue(elem.getString(attrName));
+				widget.addProperty(attrName, elem.getString(attrName));
 			}
 		}
 	}
