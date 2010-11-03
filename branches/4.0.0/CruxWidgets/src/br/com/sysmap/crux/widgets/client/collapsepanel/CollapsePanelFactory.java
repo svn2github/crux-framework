@@ -20,6 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
@@ -157,6 +159,10 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 	}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")
+	@TagChildLazyConditions(all={
+		@TagChildLazyCondition(property="collapsible", notEquals="false"),
+		@TagChildLazyCondition(property="collapsed", equals="true")
+	})
 	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CollapsePanel> {}
 
 	public static class CollapsePanelHTMLChildProcessor extends HTMLChildProcessor<CollapsePanel>{}
