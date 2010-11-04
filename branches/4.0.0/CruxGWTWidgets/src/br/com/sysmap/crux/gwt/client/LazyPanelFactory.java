@@ -66,7 +66,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel>
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")
 	@TagChildLazyConditions(all={
-		@TagChildLazyCondition(property="visible", notEquals="true"),
+		@TagChildLazyCondition(property="visible", notEquals="true")
 	})	
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<LazyPanel> {}	
 }
