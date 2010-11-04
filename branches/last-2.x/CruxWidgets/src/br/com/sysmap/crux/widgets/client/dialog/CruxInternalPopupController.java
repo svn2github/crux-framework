@@ -294,6 +294,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 					{
 						if (canClose(frameElement))
 						{
+							((TargetDocument) crossDoc).setTargetWindow(getOpener());
 							crossDoc.onClose();
 						}
 					}

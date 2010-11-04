@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimation, HasOpenHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-Popup" ;
-	protected static List<Popup> popups = new ArrayList<Popup>();
+	protected static List<Popup> popups = null;
 	private static CruxInternalPopupController popupController = null;
 	private boolean animationEnabled;
 	private boolean closeable = true;
@@ -73,7 +73,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	
 	public static Popup getLastShownPopup()
 	{
-		if(popups.size() > 0)
+		if(popups != null && popups.size() > 0)
 		{
 			return popups.get(popups.size() - 1);
 		}
@@ -206,7 +206,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 
 	public static void unregisterLastShownPopup()
 	{
-		if(popups.size() > 0)
+		if(popups != null && popups.size() > 0)
 		{
 			popups.remove(popups.size() - 1);
 		}
@@ -316,6 +316,11 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 		{
 			popupController = new CruxInternalPopupController(); 
 		}
+		if (popups == null)
+		{
+			popups = new ArrayList<Popup>(); 
+		}
+		 
 		popups.add(this);
 		popupController.showPopup(new PopupData(title, url, width, height, styleName!=null ? styleName : DEFAULT_STYLE_NAME, animationEnabled, closeable));
 	}
