@@ -18,7 +18,11 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
@@ -54,4 +58,16 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel>
 			widget.showWidget(Integer.parseInt(visibleWidget));
 		}
 	}	
+	
+	@Override
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})
+	public void processChildren(WidgetFactoryContext<DeckPanel> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<DeckPanel> {}
+		
 }

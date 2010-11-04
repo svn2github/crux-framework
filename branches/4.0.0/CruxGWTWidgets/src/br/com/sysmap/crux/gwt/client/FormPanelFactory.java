@@ -20,12 +20,16 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.FormPanel;
@@ -106,4 +110,15 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 			return new FormPanel();
 		}
 	}
+	
+	@Override
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})
+	public void processChildren(WidgetFactoryContext<FormPanel> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="1")
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<FormPanel> {}	
 }

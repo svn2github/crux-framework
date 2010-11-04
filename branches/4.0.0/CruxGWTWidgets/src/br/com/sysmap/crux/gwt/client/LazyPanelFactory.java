@@ -26,6 +26,7 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.LazyPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A Panel which content is only rendered when it becomes visible for the first time.
@@ -38,7 +39,20 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel>
 	@Override
 	public LazyPanel instantiateWidget(CruxMetaData metaElem, String widgetId) throws InterfaceConfigException 
 	{
-		return br.com.sysmap.crux.core.client.screen.LazyPanelFactory.getLazyPanel(metaElem, widgetId);
+		return new LazyPanel()
+		{
+			@Override
+			protected Widget createWidget()
+			{
+				return null;
+			}
+			
+			@Override
+			public void setVisible(boolean visible)
+			{
+				 setVisible(getElement(), visible);
+			}
+		};
 	}
 	
 	@Override
