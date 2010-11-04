@@ -64,7 +64,6 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
-		generateWrapSiblingWidgetsMethod(sourceWriter);
 		generateEnableChildrenWindowsDebugMethod(sourceWriter);
 		generateRenderWidgetsWithIDsMethod(sourceWriter);
 		generateEnableClientFactoryTracing(sourceWriter);
@@ -88,18 +87,6 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 		sourceWriter.println("}");
 	}
 
-	/**
-	 * @param sourceWriter
-	 */
-	protected void generateWrapSiblingWidgetsMethod(SourceWriter sourceWriter)
-	{
-		sourceWriter.println("public boolean wrapSiblingWidgets(){");
-		sourceWriter.indent();
-		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().wrapSiblingWidgets() + ";");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-	}
-	
 	/**
 	 * @param sourceWriter
 	 */

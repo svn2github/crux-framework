@@ -18,9 +18,11 @@ package br.com.sysmap.crux.core.client.screen;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.CollectionFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetLazyRuntimeCheckers.WidgetLazyChecker;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,15 +34,20 @@ import com.google.gwt.user.client.ui.Widget;
 public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 {
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
-	static final String LAZY_PANEL_PREFIX = "_lazy_";
+	public static final String LAZY_PANEL_PREFIX = "_lazy_";
 	
 	private static LazyPanelFactory instance = null; 
 	
+	/**
+	 * 
+	 */
 	private LazyPanelFactory() 
 	{
-		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * @return
+	 */
 	public static LazyPanelFactory getInstance()
 	{
 		if (instance == null)
@@ -81,34 +88,63 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
-			Array<CruxMetaData> children = element.getChildren();
-			if (children != null)
-			{
-				ScreenFactory factory = ScreenFactory.getInstance();
+			WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
+			buildLazyDependencyList(element, widgetId, checkers);
+		}
+	}
+	/**
+	 * @param element
+	 * @param widgetId
+	 */
+	private static void buildLazyDependencyList(final CruxMetaData element, String widgetId, WidgetLazyRuntimeCheckers checkers)
+	{
+		Array<CruxMetaData> children = element.getChildren();
+		if (children != null)
+		{
+			ScreenFactory factory = ScreenFactory.getInstance();
 
-				int size = children.size();
-				String childId = widgetId;
-				for (int i=0; i<size; i++)
+			int size = children.size();
+			String childId = widgetId;
+			for (int i=0; i<size; i++)
+			{
+				CruxMetaData child = children.get(i);
+				if (child != null)
 				{
-					CruxMetaData child = children.get(i);
-					if (child != null)
+					String childWidgetId = widgetId;
+					boolean childIsLazyPanel = false;
+					if (factory.isValidWidget(child))
 					{
-						String childWidgetId = widgetId;
-						if (factory.isValidWidget(child))
+						childId = child.getProperty("id");
+						factory.getScreen().addLazyWidgetDependency(childId, widgetId);
+						if (mustRenderLazily(child, checkers))
 						{
-							childId = child.getProperty("id");
-							factory.getScreen().addLazyWidgetDependency(childId, widgetId);
-							String visible = child.getProperty("visible");
-							if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
-							{
-								childWidgetId = childId;
-							}
+							childIsLazyPanel = true;
+							childWidgetId = childId;
 						}
-						maybeBuildLazyDependencyList(child, childWidgetId);
+					}
+					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(childWidgetId))
+					{
+						buildLazyDependencyList(child, childWidgetId, checkers);
 					}
 				}
 			}
-		}//TODO tratar caso onde existem lazies dentro de lazies.... do jeito q esta ai, vai inicializar novamente...
+		}
+	}
+	
+	/**
+	 * @param child
+	 * @param checkers
+	 * @return
+	 */
+	private static boolean mustRenderLazily(CruxMetaData child, WidgetLazyRuntimeCheckers checkers)
+	{
+		String visible = child.getProperty("visible");
+		if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
+		{
+			return true;
+		}
+		WidgetLazyChecker checker = checkers.getWidgetLazyChecker(ScreenFactory.getInstance().getMetaElementType(child));
+		return checker != null && checker.isLazy(child);
 	}
 	
 	/**
@@ -168,5 +204,5 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 			}
 			return getWidget();			
 		}			
-	}	
+	}
 }

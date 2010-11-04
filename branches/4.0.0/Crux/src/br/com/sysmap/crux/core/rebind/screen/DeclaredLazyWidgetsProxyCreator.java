@@ -15,12 +15,17 @@
  */
 package br.com.sysmap.crux.core.rebind.screen;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import br.com.sysmap.crux.core.client.collection.FastMap;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
@@ -30,10 +35,13 @@ import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.widget.WidgetFactoryHelper;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -124,37 +132,45 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 */
 	private void generateGetLazyBlock(SourceWriter srcWriter, Screen screen)
 	{
-		srcWriter.println("if (screenId.endsWith("+EscapeUtils.quote(getScreenId(screen))+")){");
-		srcWriter.indent();
+		try
+        {
+	        srcWriter.println("if (screenId.endsWith("+EscapeUtils.quote(getScreenId(screen))+")){");
+	        srcWriter.indent();
 
-		Iterator<Widget> widgets = screen.iterateWidgets();
-		while (widgets.hasNext())
-		{
-			Widget widget = widgets.next();
-			Widget parent = widget.getParent();
-			
-			while (parent != null)
-			{
-				if (checkLazy(parent))
-				{
-					srcWriter.println("result.put("+EscapeUtils.quote(widget.getId())+", "+EscapeUtils.quote(parent.getId())+");");
-					break;
-				}
-				else
-				{
-					parent = parent.getParent();
-				}
-			}
-		}
-		srcWriter.outdent();
-		srcWriter.println("}");
+	        Iterator<Widget> widgets = screen.iterateWidgets();
+	        while (widgets.hasNext())
+	        {
+	        	Widget widget = widgets.next();
+	        	Widget parent = widget.getParent();
+	        	
+	        	while (parent != null)
+	        	{
+	        		if (checkLazy(parent))
+	        		{
+	        			srcWriter.println("result.put("+EscapeUtils.quote(widget.getId())+", "+EscapeUtils.quote(parent.getId())+");");
+	        			break;
+	        		}
+	        		else
+	        		{
+	        			parent = parent.getParent();
+	        		}
+	        	}
+	        }
+	        srcWriter.outdent();
+	        srcWriter.println("}");
+        }
+        catch (NotFoundException e)
+        {
+        	throw new CruxGeneratorException(e);//TODO message
+        }
 	}
 
 	/**
 	 * @param parent
 	 * @return
+	 * @throws NotFoundException 
 	 */
-	private boolean checkLazy(Widget parent) 
+	private boolean checkLazy(Widget parent) throws NotFoundException 
 	{
 		if (defaultLazyChecker.isLazy(parent))
 		{
@@ -170,15 +186,137 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 
 	/**
 	 * @param type
+	 * @throws NotFoundException 
 	 */
-	private void initializeLazyChecker(String type) 
+	private void initializeLazyChecker(String type) throws NotFoundException 
 	{
 		String widgetFactoryClass = WidgetConfig.getClientClass(type);
-		JClassType factoryType = context.getTypeOracle().findType(widgetFactoryClass);
+		JClassType factoryType = context.getTypeOracle().getType(widgetFactoryClass);
+		WidgetFactoryHelper factoryHelper = new WidgetFactoryHelper(factoryType);
 		
+		JMethod childrenMethod = factoryHelper.getProcessChildrenMethod();
 		
+		final List<WidgetLazyChecker> declaredCheckers = new ArrayList<WidgetLazyChecker>();
+		initializeLazyChecker(childrenMethod, factoryHelper, declaredCheckers);
+		if (declaredCheckers.size() == 0)
+		{
+			lazyWidgetCheckers.put(type, null);
+		}
+		else if (declaredCheckers.size() == 1)
+		{
+			lazyWidgetCheckers.put(type, declaredCheckers.get(0));
+		}
+		else
+		{
+			lazyWidgetCheckers.put(type, new WidgetLazyChecker()
+			{
+				public boolean isLazy(Widget widget)
+				{
+					boolean ret = false;
+					for (WidgetLazyChecker widgetLazyChecker : declaredCheckers)
+                    {
+	                    ret = ret || widgetLazyChecker.isLazy(widget);
+                    }
+					return ret;
+				}
+			});
+		}
 		
 	}
+
+	/**
+	 * @param childrenMethod
+	 * @param factoryHelper
+	 * @param declaredCheckers
+	 * @throws NotFoundException
+	 */
+	private void initializeLazyChecker(JMethod childrenMethod, WidgetFactoryHelper factoryHelper, List<WidgetLazyChecker> declaredCheckers) throws NotFoundException
+    {
+		TagChildren tagChildren = childrenMethod.getAnnotation(TagChildren.class);
+		if (tagChildren != null)
+		{
+			for (TagChild child : tagChildren.value())
+            {
+				JClassType childProcessor = context.getTypeOracle().getType(child.value().getCanonicalName());
+				TagChildLazyConditions lazyConditions = childProcessor.getAnnotation(TagChildLazyConditions.class);
+				if (lazyConditions != null)
+				{
+					WidgetLazyChecker lazyChecker = initializeLazyChecker(lazyConditions);
+					if (lazyChecker != null)
+					{
+						declaredCheckers.add(lazyChecker);
+					}
+				}
+				JMethod childProcessorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
+				initializeLazyChecker(childProcessorMethod, factoryHelper, declaredCheckers);
+            }
+		}
+    }
+
+	/**
+	 * @param lazyConditions
+	 * @return
+	 */
+	private WidgetLazyChecker initializeLazyChecker(final TagChildLazyConditions lazyConditions)
+    {
+	    if (lazyConditions.all().length > 0)
+	    {
+	    	return new WidgetLazyChecker()
+			{
+				public boolean isLazy(Widget widget)
+				{
+					boolean lazy = true;
+					for (TagChildLazyCondition lazyCondition : lazyConditions.all())
+                    {
+						String property = widget.getProperty(lazyCondition.property());
+						if (lazyCondition.equals().length() > 0)
+						{
+							lazy = lazy && (property != null && property.equals(lazyCondition.equals()));
+						}
+						else if (lazyCondition.notEquals().length() > 0)
+						{
+							lazy = lazy && (property == null || !property.equals(lazyCondition.notEquals()));
+						}
+						if (!lazy)
+						{
+							break;
+						}
+                    }
+					
+					return lazy;
+				}
+			}; 
+	    }
+	    else if (lazyConditions.any().length > 0)
+	    {
+	    	return new WidgetLazyChecker()
+			{
+				public boolean isLazy(Widget widget)
+				{
+					boolean lazy = false;
+					for (TagChildLazyCondition lazyCondition : lazyConditions.any())
+                    {
+						String property = widget.getProperty(lazyCondition.property());
+						if (lazyCondition.equals().length() > 0)
+						{
+							lazy = lazy || (property != null && property.equals(lazyCondition.equals()));
+						}
+						else if (lazyCondition.notEquals().length() > 0)
+						{
+							lazy = lazy || (property == null || !property.equals(lazyCondition.notEquals()));
+						}
+						if (lazy)
+						{
+							break;
+						}
+                    }
+					
+					return lazy;
+				}
+			}; 
+	    }
+	    return null;
+    }
 
 	/**
 	 * @param screen

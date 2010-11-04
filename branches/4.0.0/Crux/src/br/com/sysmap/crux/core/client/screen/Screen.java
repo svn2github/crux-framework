@@ -838,6 +838,24 @@ public class Screen
 	}
 	
 	/**
+	 * @param widgetId
+	 * @return
+	 */
+	public boolean containsLazyDependents(String widgetId)
+	{
+		FastList<String> keys = lazyWidgets.keys();
+		for (int i=0; i<keys.size(); i++)
+		{
+			String key = keys.get(i);
+			if (lazyWidgets.get(key).equals(widgetId))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * @param lazy
 	 * @param depedentId
 	 */
@@ -848,7 +866,7 @@ public class Screen
 			this.lazyWidgets.put(lazy, dependentId);
 		}
 	}
-
+	
 	/**
 	 * Adds an event handler that is called only once, when the screen is loaded
 	 * @param handler
@@ -857,7 +875,7 @@ public class Screen
 	{
 		handlerManager.addHandler(ScreenLoadEvent.TYPE, handler);
 		loadHandlers.add(handler);
-	}
+	}	
 	
 	/**
 	 * 
@@ -876,12 +894,12 @@ public class Screen
 	protected void addTokenToHistory(String token, boolean issueEvent)
 	{
 		History.newItem(token, issueEvent);
-	}	
+	}
 	
 	protected void addWidget(String id, Widget widget)
 	{
 		widgets.put(id, widget);
-	}
+	}	
 	
 	/**
 	 * 
@@ -891,8 +909,8 @@ public class Screen
 	protected HandlerRegistration addWindowCloseHandler(CloseHandler<Window> handler) 
 	{
 		return Window.addCloseHandler(handler);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param handler
@@ -901,8 +919,8 @@ public class Screen
 	protected HandlerRegistration addWindowClosingHandler(ClosingHandler handler) 
 	{
 		return Window.addWindowClosingHandler(handler);
-	}
-
+	}		
+	
 	/**
 	 * 
 	 * @param handler
@@ -925,8 +943,8 @@ public class Screen
 	protected HandlerRegistration addWindowResizeHandler(ResizeHandler handler) 
 	{
 		return Window.addResizeHandler(handler);
-	}		
-	
+	}
+
 	/**
 	 * @param widgetId
 	 */
@@ -938,7 +956,7 @@ public class Screen
 			lazyWidgets.remove(dependentWidgets.get(i));
 		}
 	}
-
+	
 	/**
 	 * @param id
 	 * @return
@@ -973,7 +991,7 @@ public class Screen
 	{
 		return declaredControllers;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -981,7 +999,7 @@ public class Screen
 	{
 		return declaredDataSources;
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -998,7 +1016,7 @@ public class Screen
 	{
 		return declaredSerializables;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -1006,7 +1024,7 @@ public class Screen
 	{
 		return id;
 	}
-
+	
 	/**
 	 * @param id
 	 * @return
@@ -1079,7 +1097,7 @@ public class Screen
 			cleanLazyDependentWidgets(widgetId);
 		}
 	}
-	
+
 	/**
 	 * @param id
 	 */
@@ -1120,7 +1138,7 @@ public class Screen
 		
 		return result.iterator();
 	}
-
+	
 	/**
 	 * @return
 	 * @deprecated Use widgetsIdList() instead
@@ -1137,7 +1155,7 @@ public class Screen
 		
 		return result.iterator();
 	}
-	
+
 	/**
 	 * Fires the load event. This method has no effect when called more than one time.
 	 */
@@ -1275,7 +1293,7 @@ public class Screen
 	{
 		removeWidget(id, true);
 	}
-
+	
 	protected void removeWidget(String id, boolean removeFromDOM)
 	{
 		Widget widget = widgets.remove(id);
@@ -1284,7 +1302,7 @@ public class Screen
 			widget.removeFromParent();
 		}
 	}
-	
+
 	/**
 	 * Creates and shows a DIV over the screen contents
 	 * @param blockingDivStyleName
@@ -1336,7 +1354,7 @@ public class Screen
 			((ScreenBindableObject) eventHandler).updateScreenWidgets();
 		}
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -1344,7 +1362,7 @@ public class Screen
 	{
 		return widgets.keys();
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -1359,7 +1377,7 @@ public class Screen
 		
 		return values;
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -1386,7 +1404,7 @@ public class Screen
 			return a?a:null;
 		};
 	}-*/;
-	
+
 	/**
 	 * Create a hook javascript function, called outside of module.
 	 * @param handler
@@ -1397,7 +1415,7 @@ public class Screen
 			return a?a:null;
 		};
 	}-*/;
-
+	
 	/**
 	 * @param element
 	 * @param attributeName
@@ -1436,6 +1454,8 @@ public class Screen
 		}
 		return dependentWidgets;
 	}
+	
+	
 	
 	@Deprecated
 	@SuppressWarnings("unused") // called by native code

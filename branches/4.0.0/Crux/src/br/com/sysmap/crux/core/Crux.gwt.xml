@@ -46,9 +46,13 @@
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ScreenWrapper" />
 	</generate-with>
 
-	<!-- Specify the generator for screen wrappers.     -->
+	<!-- Specify the generator for screen lazy widgets handling.     -->
 	<generate-with class="br.com.sysmap.crux.core.rebind.screen.DeclaredLazyWidgetsGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets" />
+	</generate-with>
+
+	<generate-with class="br.com.sysmap.crux.core.rebind.screen.WidgetLazyRuntimeCheckersGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.WidgetLazyRuntimeCheckers" />
 	</generate-with>
 
 	<!-- Specify the generator for resolve declared i18n messages .-->

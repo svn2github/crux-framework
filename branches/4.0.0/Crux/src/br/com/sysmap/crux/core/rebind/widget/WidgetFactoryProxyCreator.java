@@ -26,12 +26,16 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.DeclarativeWidgetFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
+import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
@@ -40,8 +44,8 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -52,12 +56,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -101,11 +104,8 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	private static final int UNBOUNDED = -1;
 	private Map<JClassType, String> attributesFromClass = new HashMap<JClassType, String>();
 	private Map<JClassType, EventBinderData> eventsFromClass = new HashMap<JClassType, EventBinderData>();
-	private final JClassType factoryClass;
 	private int variableNameSuffixCounter = 0;
-	private final JClassType widgetChildProcessorContextType;
-	private final JClassType widgetFactoryContextType;
-	private final JClassType widgetType;
+	private final WidgetFactoryHelper factoryHelper;
 
 	/**
 	 * @param logger
@@ -115,17 +115,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	public WidgetFactoryProxyCreator(TreeLogger logger, GeneratorContext context, JClassType factoryClass)
 	{
 		super(logger, context);
-		this.factoryClass = factoryClass;
-		this.widgetType = getWidgetTypeFromClass();
-
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
-		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-		
-		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
-				new JType[]{cruxMetaDataType, stringType, JPrimitiveType.BOOLEAN});
-
-		JGenericType type = (JGenericType) factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
-		this.widgetChildProcessorContextType = factoryClass.getOracle().getParameterizedType(type, new JClassType[]{widgetType});
+		this.factoryHelper = new WidgetFactoryHelper(factoryClass);
 	}
 
 	@Override
@@ -161,6 +151,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
     		ScreenFactory.class.getCanonicalName(),
+    		Screen.class.getCanonicalName(),
     		CruxMetaData.class.getCanonicalName(),
     		Array.class.getCanonicalName(),
     		FastList.class.getCanonicalName(),
@@ -176,7 +167,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	protected String getProxyQualifiedName()
 	{
-		return factoryClass.getPackage().getName() + "." + getProxySimpleName();
+		return factoryHelper.getFactoryClass().getPackage().getName() + "." + getProxySimpleName();
 	}	
 	
 	/**
@@ -184,13 +175,13 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(factoryClass) + FACTORY_PROXY_SUFFIX;
+		return ClassUtils.getSourceName(factoryHelper.getFactoryClass()) + FACTORY_PROXY_SUFFIX;
 	}
 
 	@Override
     protected SourceWriter getSourceWriter()
     {
-		JPackage crossDocIntfPkg = factoryClass.getPackage();
+		JPackage crossDocIntfPkg = factoryHelper.getFactoryClass().getPackage();
 		String packageName = crossDocIntfPkg == null ? "" : crossDocIntfPkg.getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, getProxySimpleName());
 
@@ -207,21 +198,18 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 			composerFactory.addImport(imp);
 		}
 
-		composerFactory.setSuperclass(factoryClass.getParameterizedQualifiedSourceName());
+		composerFactory.setSuperclass(factoryHelper.getFactoryClass().getParameterizedQualifiedSourceName());
 		composerFactory.addImplementedInterface(DeclarativeWidgetFactory.class.getCanonicalName());
 		return composerFactory.createSourceWriter(context, printWriter);
     }
 	
 	/**
-	 * 
-	 * @param logger
-	 * @param sourceWriter
-	 * @param widgetType
+	 * @param methodsForInnerProcessing
 	 * @param children
-	 * @param childrenSuffix
 	 * @param childProcessor
-	 * @throws NoSuchMethodException
-	 * @throws Exception
+	 * @param processorVariables
+	 * @param first
+	 * @return
 	 */
 	private String generateAgregatorTagProcessingBlock(Map<String, String> methodsForInnerProcessing, 
 													   TagChildren children,
@@ -230,10 +218,9 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	{
 		StringBuilder source = new StringBuilder();
 		
-		JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{widgetChildProcessorContextType});
-		TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 		if (children != null)
 		{
+			TagChildren tagChildren = factoryHelper.getChildrenAnnotationFromProcessor(childProcessor);
 			source.append(generateChildrenBlockFromAnnotation(methodsForInnerProcessing, tagChildren, processorVariables, first));
 		}
 		return source.toString();
@@ -249,7 +236,15 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		StringBuilder source = new StringBuilder();
 		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
 		
-		source.append(Widget.class.getName()+" _w = createChildWidget(c.getChildElement());\n");						
+		TagChildLazyConditions lazyConditions = childProcessor.getAnnotation(TagChildLazyConditions.class);
+		if (lazyConditions == null)
+		{
+			source.append(Widget.class.getName()+" _w = createChildWidget(c.getChildElement());\n");
+		}
+		else
+		{
+			source.append(generateChildCreationForLazyConditions(lazyConditions));
+		}
 		if (processorAttributes != null && processorAttributes.widgetProperty().length() > 0)
 		{
 			source.append("c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(_w);\n");						
@@ -261,6 +256,67 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		
 		return source.toString();
 	}
+
+	/**
+	 * @param lazyConditions
+	 * @return
+	 */
+	private String generateChildCreationForLazyConditions(TagChildLazyConditions lazyConditions)
+    {
+		StringBuilder source = new StringBuilder();
+		if (lazyConditions.all().length > 0)
+		{
+            source.append("boolean _lazy = true;\n");
+			for (TagChildLazyCondition lazyCondition : lazyConditions.all())
+            {
+				String varName = "prop_"+getVariableNameSuffixCounter();
+	            source.append("String "+varName+" = c.readRootWidgetProperty(\""+lazyCondition.property()+"\");\n");
+	            if (lazyCondition.equals().length() >0)
+	            {
+	            	 source.append("_lazy = _lazy && "+varName+"!=null && "+varName+".equals("+EscapeUtils.quote(lazyCondition.equals())+");\n"); 
+	            }
+	            else if (lazyCondition.notEquals().length() >0)
+	            {
+	            	 source.append("_lazy = _lazy && ("+varName+"==null || !"+varName+".equals("+EscapeUtils.quote(lazyCondition.notEquals())+"));\n"); 
+	            }
+            }
+		}
+		else if (lazyConditions.any().length > 0)
+		{
+            source.append("boolean _lazy = false;\n");
+			for (TagChildLazyCondition lazyCondition : lazyConditions.any())
+            {
+				String varName = "prop_"+getVariableNameSuffixCounter();
+	            source.append("String "+varName+" = c.readRootWidgetProperty(\""+lazyCondition.property()+"\")\n");
+	            if (lazyCondition.equals().length() >0)
+	            {
+	            	 source.append("_lazy = lazy || ("+varName+"!=null && "+varName+".equals("+EscapeUtils.quote(lazyCondition.equals())+"));\n"); 
+	            }
+	            else if (lazyCondition.notEquals().length() >0)
+	            {
+	            	 source.append("_lazy = lazy || ("+varName+"==null || !"+varName+".equals("+EscapeUtils.quote(lazyCondition.equals())+"));\n"); 
+	            }
+            }
+		}
+		else
+		{
+			throw new CruxGeneratorException();//TODO message
+		}
+		source.append(Widget.class.getName()+" _w;\n");
+		source.append("if (!_lazy){\n");
+		source.append("_w = createChildWidget(c.getChildElement());\n");
+		source.append("} else {\n");
+		source.append("CruxMetaData _elem = c.getChildElement();\n");
+		source.append("assert(_elem.getProperty(\"id\") != null);\n");
+		source.append("String _lazyPanelId = \""+LazyPanelFactory.LAZY_PANEL_PREFIX+"\"+_elem.getProperty(\"id\");\n");
+		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId);\n");
+		source.append("Screen.add(_lazyPanelId, _w);\n");
+		source.append("}\n");
+		 
+		
+		return source.toString();
+		//readRootWidgetProperty
+    }
 
 	/**
 	 * @param methodsForInnerProcessing
@@ -276,16 +332,17 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		try
         {
 	        StringBuilder source = new StringBuilder();
+	        TypeOracle oracle = factoryHelper.getFactoryClass().getOracle();
 	        for (TagChild child : children.value())
 	        {
 	        	if (child.autoProcess())
 	        	{
-	        		JClassType childProcessor = factoryClass.getOracle().getType(child.value().getCanonicalName());
-	        		JClassType textChildProcessorType = factoryClass.getOracle().getType(TextChildProcessor.class.getCanonicalName());
-	        		JClassType choiceChildProcessorType = factoryClass.getOracle().getType(ChoiceChildProcessor.class.getCanonicalName());
-	        		JClassType sequenceChildProcessorType = factoryClass.getOracle().getType(SequenceChildProcessor.class.getCanonicalName());
-	        		JClassType allChildProcessorType = factoryClass.getOracle().getType(AllChildProcessor.class.getCanonicalName());
-	        		JClassType anyWidgetChildProcessorType = factoryClass.getOracle().getType(AnyWidgetChildProcessor.class.getCanonicalName());
+					JClassType childProcessor = oracle.getType(child.value().getCanonicalName());
+	        		JClassType textChildProcessorType = oracle.getType(TextChildProcessor.class.getCanonicalName());
+	        		JClassType choiceChildProcessorType = oracle.getType(ChoiceChildProcessor.class.getCanonicalName());
+	        		JClassType sequenceChildProcessorType = oracle.getType(SequenceChildProcessor.class.getCanonicalName());
+	        		JClassType allChildProcessorType = oracle.getType(AllChildProcessor.class.getCanonicalName());
+	        		JClassType anyWidgetChildProcessorType = oracle.getType(AnyWidgetChildProcessor.class.getCanonicalName());
 	        		
 	        		if (textChildProcessorType.isAssignableFrom(childProcessor))
 	        		{
@@ -324,11 +381,10 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 	
 	/**
-	 * 
-	 * @param logger
-	 * @param sourceWriter
-	 * @param widgetType
+	 * @param methodsForInnerProcessing
 	 * @param childProcessor
+	 * @param processorVariables
+	 * @return
 	 */
 	private String generateGenericProcessingBlock(Map<String, String> methodsForInnerProcessing, 
 												  JClassType childProcessor, 
@@ -341,7 +397,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String evtBinderVar = getEvtBinderVariableName("p", processorVariables, processorName);
 		source.append(evtBinderVar+".processChildren(c);\n");
 		
-		JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{widgetChildProcessorContextType});
+		JMethod processorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
 		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, 
 				                                            processorMethod, processorVariables);
 		if (childrenProcessorMethodName != null)
@@ -370,7 +426,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	private void generateIsAttachMethod(SourceWriter sourceWriter)
 	{
-		DeclarativeFactory declarativeFactory = factoryClass.getAnnotation(DeclarativeFactory.class);
+		DeclarativeFactory declarativeFactory = factoryHelper.getFactoryClass().getAnnotation(DeclarativeFactory.class);
 		
 		sourceWriter.println("public boolean isAttachToDOM(){"); 
 		sourceWriter.indent();
@@ -384,11 +440,11 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	private void generateIsPanelMethod(SourceWriter sourceWriter)
 	{
-		JClassType panelType = factoryClass.getOracle().findType(Panel.class.getCanonicalName());
+		JClassType panelType = factoryHelper.getFactoryClass().getOracle().findType(Panel.class.getCanonicalName());
 		
 		sourceWriter.println("public boolean isPanel(){"); 
 		sourceWriter.indent();
-		sourceWriter.println("return "+(widgetType.isAssignableTo(panelType))+";");
+		sourceWriter.println("return "+(factoryHelper.getWidgetType().isAssignableTo(panelType))+";");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
@@ -401,7 +457,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	private void generateMethodsForInnerProcessingChildren(SourceWriter sourceWriter, Map<String, String> methodsForInnerProcessing)
 	{
-        String contextDeclaration = widgetChildProcessorContextType.getParameterizedQualifiedSourceName();
+        String contextDeclaration = factoryHelper.getWidgetChildProcessorContextType().getParameterizedQualifiedSourceName();
 		
 		for (String methodName : methodsForInnerProcessing.keySet())
 		{
@@ -428,7 +484,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        }
 	        StringBuilder result = new StringBuilder();
 	        
-	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{widgetFactoryContextType});
+	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{factoryHelper.getWidgetFactoryContextType()});
 	        if (method != null)
 	        {
 	        	TagAttributes attrs = method.getAnnotation(TagAttributes.class);
@@ -441,7 +497,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        			{
 	        				String setterMethod = ClassUtils.getSetterMethod(attrName);
 	        				JClassType type = factoryClass.getOracle().getType(attr.type().getCanonicalName());
-	        				if (ClassUtils.hasValidSetter(widgetType, setterMethod, type))
+	        				if (ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
 	        				{
 	        					String expression;
 	        					JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
@@ -509,23 +565,20 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 
 	/**
 	 * 
-	 * @param logger
 	 * @param sourceWriter
-	 * @param factoryClass
-	 * @param widgetType
 	 */
 	private void generateProcessAttributesMethod(SourceWriter sourceWriter)
 	{
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processAttributes("+widgetFactoryContextType.getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processAttributes("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
 		         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.indent();
 		sourceWriter.println("super.processAttributes(context);");
-		String attributesBlock = generateProcessAttributesBlock(factoryClass);
+		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass());
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
 			sourceWriter.println("CruxMetaData element = context.getElement();");
-			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
+			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(attributesBlock);
 		sourceWriter.outdent();
@@ -533,11 +586,10 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 	
 	/**
-	 * 
-	 * @param logger
-	 * @param sourceWriter
+	 * @param methodsForInnerProcessing
 	 * @param processChildrenMethod
-	 * @param widgetType
+	 * @param processorVariables
+	 * @return
 	 */
 	private String generateProcessChildrenBlockFromMethod(Map<String, String> methodsForInnerProcessing, 
 														   JMethod processChildrenMethod, Map<String, String> processorVariables)
@@ -603,18 +655,14 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 
 	/**
-	 * 
-	 * @param logger
 	 * @param sourceWriter
-	 * @param factoryClass
-	 * @param widgetType
-	 * @throws CruxGeneratorException 
+	 * @throws CruxGeneratorException
 	 */
 	private void generateProcessChildrenMethod(SourceWriter sourceWriter) throws CruxGeneratorException
 	{
 		try
         {
-	        JMethod method = ClassUtils.getMethod(factoryClass, "processChildren", new JType[]{widgetFactoryContextType});
+	        JMethod method = factoryHelper.getProcessChildrenMethod();
 	        if (mustGenerateChildrenProcessMethod(method))
 	        {
 	        	// TODO - Thiago -  tratar instanciamento qdo for inner classe não estatica.
@@ -648,7 +696,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		
 		StringBuilder result = new StringBuilder();
 		
-		JMethod method = factoryClass.findMethod("processEvents", new JType[]{widgetFactoryContextType});
+		JMethod method = factoryClass.findMethod("processEvents", new JType[]{factoryHelper.getWidgetFactoryContextType()});
 		if (method != null)
 		{
 			TagEvents evts = method.getAnnotation(TagEvents.class);
@@ -692,11 +740,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 
 	/**
-	 * 
-	 * @param logger
 	 * @param sourceWriter
-	 * @param factoryClass
-	 * @param widgetType
 	 * @throws CruxGeneratorException
 	 */
 	private void generateProcessEventsMethod(SourceWriter sourceWriter) throws CruxGeneratorException
@@ -704,14 +748,14 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		Map<String, String> evtBinderVariables = new HashMap<String, String>();
 		
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processEvents("+widgetFactoryContextType.getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processEvents("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
 				         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processEvents(context);");
-		String eventsBlock = generateProcessEventsBlock(factoryClass, evtBinderVariables);
+		String eventsBlock = generateProcessEventsBlock(factoryHelper.getFactoryClass(), evtBinderVariables);
 		if (!StringUtils.isEmpty(eventsBlock))
 		{
 			sourceWriter.println("CruxMetaData element = context.getElement();");
-			sourceWriter.println(widgetType.getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
+			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(eventsBlock);
 		sourceWriter.println("}");
@@ -781,11 +825,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 
 	/**
-	 * 
-	 * @param logger
-	 * @param widgetType
 	 * @param childProcessor
-	 * @param processorVariables
 	 * @return
 	 */
 	private String generateTextProcessingBlock(JClassType childProcessor)
@@ -799,7 +839,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        {
 	        	return "if (child.length() > 0) c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(child);";
 	        }
-	        else if (hasTextType.isAssignableFrom(widgetType))
+	        else if (hasTextType.isAssignableFrom(factoryHelper.getWidgetType()))
 	        {
 	        	return "if (child.length() > 0) c.getRootWidget().setText(child);";
 	        	
@@ -813,24 +853,19 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	}
 
 	/**
-	 * 
-	 * @param logger
 	 * @param sourceWriter
-	 * @param widgetType
 	 * @param method
-	 * @param contextDeclaration
 	 * @param methodsForInnerProcessing
 	 * @param processorVariables
-	 * @throws Exception
 	 */
 	private void generatingChildrenProcessingBlock(SourceWriter sourceWriter, JMethod method, 
 			Map<String, String> methodsForInnerProcessing, Map<String, String> processorVariables) 
 	{
 		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, method, processorVariables);
-        String contextDeclaration = widgetChildProcessorContextType.getParameterizedQualifiedSourceName();
+        String contextDeclaration = factoryHelper.getWidgetChildProcessorContextType().getParameterizedQualifiedSourceName();
 
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processChildren("+widgetFactoryContextType.getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processChildren("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
 				               +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processChildren(context);");
 		if (childrenProcessorMethodName != null)
@@ -874,7 +909,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		AllowedOccurences allowed = new AllowedOccurences();
 		try
 		{
-			JClassType childProcessorType = factoryClass.getOracle().getType(child.value().getCanonicalName());
+			JClassType childProcessorType = factoryHelper.getFactoryClass().getOracle().getType(child.value().getCanonicalName());
 			TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessorType);
 
 			if (processorAttributes != null)
@@ -902,7 +937,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
 
-				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{widgetChildProcessorContextType});
+				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{factoryHelper.getWidgetChildProcessorContextType()});
 				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{
@@ -989,25 +1024,6 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		return variableNameSuffixCounter++;
 	}
 	
-	/**
-	 * 
-	 * @param logger
-	 * @param factoryClass
-	 * @return
-	 */
-	private JClassType getWidgetTypeFromClass()
-	{
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
-		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-		
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{cruxMetaDataType, stringType});
-		if (returnType == null)
-		{
-			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
-		}
-		return (JClassType) returnType;
-	}
-
 	/**
 	 * 
 	 * @param name
