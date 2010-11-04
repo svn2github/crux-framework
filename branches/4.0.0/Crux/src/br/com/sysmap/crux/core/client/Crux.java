@@ -18,6 +18,9 @@
  */
 package br.com.sysmap.crux.core.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import br.com.sysmap.crux.core.client.config.CruxClientConfig;
 import br.com.sysmap.crux.core.client.errors.ErrorHandler;
 import br.com.sysmap.crux.core.client.errors.ValidationErrorHandler;
@@ -26,6 +29,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 
@@ -36,6 +40,7 @@ import com.google.gwt.user.client.Timer;
  */
 public class Crux implements EntryPoint 
 {
+	private static Logger logger = Logger.getLogger(Crux.class.getName());
 	private static CruxClientConfig config;
 	private static ErrorHandler errorHandler;
 	private static boolean initialized = false;
@@ -99,12 +104,20 @@ public class Crux implements EntryPoint
 			}
 			else
 			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, "Initializing Crux engine...");
+				}
 				messages = GWT.create(ClientMessages.class);
 				config = GWT.create(CruxClientConfig.class);
 				errorHandler = GWT.create(ErrorHandler.class);
 				validationErrorHandler = GWT.create(ValidationErrorHandler.class);
 				br.com.sysmap.crux.core.client.screen.ScreenFactory.getInstance().getScreen();
 				initialized = true;
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, "Crux engine initialized.");
+				}
 			}
 		} 
 		catch (Throwable e) 

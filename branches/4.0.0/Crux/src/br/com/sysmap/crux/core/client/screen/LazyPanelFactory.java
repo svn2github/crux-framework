@@ -15,6 +15,9 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.CollectionFactory;
@@ -23,6 +26,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,6 +37,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 {
+	private static Logger logger = Logger.getLogger(LazyPanelFactory.class.getName());
+	
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
 	public static final String LAZY_PANEL_PREFIX = "_lazy_";
 	
@@ -72,6 +78,10 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	 */
 	public static LazyPanel getLazyPanel(final CruxMetaData element, String widgetId) 
 	{
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Delaying the widget ["+element.getProperty("id")+"] creation. Intantiating a new lazyPanel ["+widgetId+"] to wrap this widget...");
+		}
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
 			maybeBuildLazyDependencyList(element, widgetId);
@@ -88,8 +98,20 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+widgetId+"]...");
+			}
 			WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
+
+			assert(element.containsKey("id"));
+			ScreenFactory.getInstance().getScreen().addLazyWidgetDependency(element.getProperty("id"), widgetId);
+			
 			buildLazyDependencyList(element, widgetId, checkers);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+widgetId+"] created.");
+			}
 		}
 	}
 	/**
@@ -192,6 +214,10 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 		@Override
 		protected Widget createWidget() 
 		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Creating ["+lazyId+"] wrapped widget...");
+			}
 			Array<CruxMetaData> children = CollectionFactory.createArray();
 			children.add(metaData);
 			metaData = null;
@@ -201,6 +227,10 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 			if (!factory.isParsing())
 			{
 				factory.parseDocument();
+			}
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "["+lazyId+"] wrapped widget created.");
 			}
 			return getWidget();			
 		}			

@@ -45,7 +45,7 @@ public class SerializationUtils {
   };
   static final String GENERATED_FIELD_SERIALIZER_SUFFIX = "_FieldSerializer";
   static final String TYPE_SERIALIZER_SUFFIX = "_TypeSerializer";
-  static final String TYPE_DESERIALIZER_SUFFIX = "_TypeDeserializer";
+  static final String TYPE_DESERIALIZER_SUFFIX = "_TypeDeserializer";  
   static final Set<String> TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES = new HashSet<String>();
 
   static {
@@ -61,14 +61,21 @@ public class SerializationUtils {
     TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES.add("java.lang.Short");
     TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES.add("java.lang.String");
     TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES.add("java.lang.Throwable");
+
+    /*
+     * Work around for incompatible type hierarchy (and therefore signature)
+     * between JUnit3 and JUnit4.
+     */
+    TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES.add("junit.framework.AssertionFailedError");
   }
 
   /**
    * Returns the set of fields that are serializable for a given class type.
    * This method does not consider any superclass fields.
    * 
+   * @param typeOracle the type oracle
    * @param classType the class for which we want serializable fields
-   * @return array of fields that meet the serialization criteria.
+   * @return array of fields that meet the serialization criteria
    */
   public static JField[] getSerializableFields(TypeOracle typeOracle,
       JClassType classType) {
@@ -94,7 +101,6 @@ public class SerializationUtils {
    * field serializer. If the type is not serializable then it can return null.
    * 
    * @param type the type that is going to be serialized
-   * 
    * @return the fully qualified name of the field serializer for the given type
    */
   static String getFieldSerializerName(TypeOracle typeOracle, JType type) {
@@ -106,11 +112,38 @@ public class SerializationUtils {
 
     assert (type.isClassOrInterface() != null || type.isArray() != null);
     JClassType classType = (JClassType) type;
+    return getStandardSerializerName(classType);
+  }
+
+  /**
+   * Returns the serialization signature for a type.
+   * 
+   * @param instanceType
+   * @return a string representing the serialization signature of a type
+   */
+  static String getSerializationSignature(TypeOracle typeOracle, JType type)
+      throws RuntimeException {
+    CRC32 crc = new CRC32();
+
+    try {
+      generateSerializationSignature(typeOracle, type, crc);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(
+          "Could not compute the serialization signature", e);
+    }
+
+    return Long.toString(crc.getValue());
+  }
+
+  /**
+   * Returns the name of the generated field serializer.
+   */
+  static String getStandardSerializerName(JClassType classType) {
     String[] name = Shared.synthesizeTopLevelClassName(classType,
         SerializationUtils.GENERATED_FIELD_SERIALIZER_SUFFIX);
     if (name[0].length() > 0) {
       String serializerName = name[0] + "." + name[1];
-      if (SerializableTypeOracleBuilder.isInStandardJavaPackage(type.getQualifiedSourceName())) {
+      if (SerializableTypeOracleBuilder.isInStandardJavaPackage(classType.getQualifiedSourceName())) {
         /*
          * Don't generate code into java packages. If you do hosted mode
          * CompilingClassLoader will fail to resolve references to the generated
@@ -124,26 +157,6 @@ public class SerializationUtils {
     } else {
       return name[1];
     }
-  }
-
-  /**
-   * Returns the serialization signature for a type.
-   * 
-   * @param instanceType
-   * @return a string representing the serialization signature of a type
-   */
-  public static String getSerializationSignature(TypeOracle typeOracle, JType type)
-      throws RuntimeException {
-    CRC32 crc = new CRC32();
-
-    try {
-      generateSerializationSignature(typeOracle, type, crc);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(
-          "Could not compute the serialization signature", e);
-    }
-
-    return Long.toString(crc.getValue());
   }
 
   /**
@@ -169,10 +182,9 @@ public class SerializationUtils {
     }
   }
 
-
   /**
-   * Returns the qualified name of the type deserializer class for the given
-   * interface.
+   * Returns the qualified name of the type serializer class for the given
+   * service interface.
    * 
    * @param serviceIntf service interface
    * @return name of the type serializer that handles the service interface
@@ -185,14 +197,14 @@ public class SerializationUtils {
     }
 
     String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
-    		TYPE_DESERIALIZER_SUFFIX);
+        TYPE_DESERIALIZER_SUFFIX);
     if (name[0].length() > 0) {
       return name[0] + "." + name[1];
     } else {
       return name[1];
     }
   }
-  
+
   /**
    * Returns the simple name of the type serializer class for the given service
    * interface.
@@ -200,8 +212,7 @@ public class SerializationUtils {
    * @param serviceIntf service interface
    * @return the simple name of the type serializer class
    */
-  static String getTypeSerializerSimpleName(TypeOracle typeOracle,
-      JClassType serviceIntf) throws IllegalArgumentException {
+  public static String getTypeSerializerSimpleName(JClassType serviceIntf) throws IllegalArgumentException {
     if (serviceIntf.isInterface() == null) {
       throw new IllegalArgumentException(serviceIntf.getQualifiedSourceName()
           + " is not a service interface");
@@ -209,6 +220,24 @@ public class SerializationUtils {
 
     String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
         TYPE_SERIALIZER_SUFFIX);
+    return name[1];
+  }
+
+  /**
+   * Returns the simple name of the type serializer class for the given service
+   * interface.
+   * 
+   * @param serviceIntf service interface
+   * @return the simple name of the type serializer class
+   */
+  public static String getTypeDeserializerSimpleName(JClassType serviceIntf) throws IllegalArgumentException {
+    if (serviceIntf.isInterface() == null) {
+      throw new IllegalArgumentException(serviceIntf.getQualifiedSourceName()
+          + " is not a service interface");
+    }
+
+    String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
+        TYPE_DESERIALIZER_SUFFIX);
     return name[1];
   }
 

@@ -250,7 +250,9 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		try
         {
 	        TypeSerializerCreator tsc = new TypeSerializerCreator(logger, typesSentFromBrowser, typesSentToBrowser, context, 
-	        										SerializationUtils.getTypeSerializerQualifiedName(baseProxyType));
+	        										SerializationUtils.getTypeSerializerQualifiedName(baseProxyType),
+	        						                SerializationUtils.getTypeSerializerSimpleName(baseProxyType));
+	        
 	        tsc.realize(logger);
         }
         catch (Exception e)
@@ -454,14 +456,14 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	    String exceptionName = nameFactory.createName("ex");
 	    w.println(exceptionName + ") {");
 		w.indent();
-		w.println("throw new CrossDocumentException(ex.getMessage(), ex);");
+		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
 		w.outdent();
 	    w.print("} catch (Throwable ");
 	    exceptionName = nameFactory.createName("ex");
 	    w.println(exceptionName + ") {");
 		w.indent();
 		generateRethrowForInvocationMethod(w, method, exceptionName);
-		w.println("throw new CrossDocumentException(ex.getMessage(), ex);");
+		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
 		w.outdent();
 		w.println("}");
     }

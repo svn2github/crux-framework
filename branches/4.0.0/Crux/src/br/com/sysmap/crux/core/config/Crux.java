@@ -50,9 +50,6 @@ public interface Crux
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
-	String enableClientFactoryTracing();
-	
-	@DefaultServerMessage("false")
 	String useCompileTimeClassScanning();
 
 	void setEnableWebRootScannerCache(Boolean value);

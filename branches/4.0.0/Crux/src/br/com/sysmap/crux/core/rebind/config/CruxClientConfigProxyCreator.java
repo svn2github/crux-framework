@@ -66,7 +66,6 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
     {
 		generateEnableChildrenWindowsDebugMethod(sourceWriter);
 		generateRenderWidgetsWithIDsMethod(sourceWriter);
-		generateEnableClientFactoryTracing(sourceWriter);
 		generateEnableRuntimeLazyWidgetsInitialization(sourceWriter);
     }
 
@@ -99,18 +98,6 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 		sourceWriter.println("}");
 	}
 
-	/**
-	 * @param sourceWriter
-	 */
-	protected void generateEnableClientFactoryTracing(SourceWriter sourceWriter)
-	{
-		sourceWriter.println("public boolean enableClientFactoryTracing(){");
-		sourceWriter.indent();
-		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().enableClientFactoryTracing() + ";");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-	}
-	
 	/**
 	 * @param sourceWriter
 	 */

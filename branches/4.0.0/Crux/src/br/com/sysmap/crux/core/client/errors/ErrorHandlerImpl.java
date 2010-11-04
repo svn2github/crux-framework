@@ -15,7 +15,12 @@
  */
 package br.com.sysmap.crux.core.client.errors;
 
-import com.google.gwt.core.client.GWT;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import br.com.sysmap.crux.core.client.Crux;
+
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -24,6 +29,8 @@ import com.google.gwt.user.client.Window;
  */
 public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 {
+	private static Logger logger = Logger.getLogger(Crux.class.getName());
+
 	/**
 	 * 
 	 */
@@ -47,7 +54,10 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 	{
 		if (t != null)
 		{
-			GWT.log(t.getLocalizedMessage(), t);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.SEVERE, errorMessage, t);
+			}
 		}
 		if (errorMessage != null)
 		{

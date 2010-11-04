@@ -5,7 +5,9 @@
 	<inherits name='com.google.gwt.user.User'/>
 	<inherits name='com.google.gwt.json.JSON'/>
     <inherits name='com.google.gwt.xml.XML'/>
-	
+	<inherits name="com.google.gwt.logging.Logging"/>
+    <set-property name="gwt.logging.enabled" value="FALSE"/>    
+		
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='br.com.sysmap.crux.core.client.Crux'/>
 

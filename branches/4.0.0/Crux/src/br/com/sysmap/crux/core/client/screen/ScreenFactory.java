@@ -15,7 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
-import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
@@ -31,13 +32,13 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -47,8 +48,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ScreenFactory {
-	
+public class ScreenFactory 
+{
+	private static Logger logger = Logger.getLogger(ScreenFactory.class.getName());
+
 	protected static final String ENCLOSING_PANEL_PREFIX = "_crux_";
 	private static ScreenFactory instance = null;
 	 
@@ -59,7 +62,6 @@ public class ScreenFactory {
 	private RegisteredWidgetFactories registeredWidgetFactories = null;
 	private Screen screen = null;
 	private String screenId = null;
-	private StringBuilder traceOutput = null;
 	private FastList<ParserInfo> parserStack = new FastList<ParserInfo>();
 	
 	
@@ -196,13 +198,9 @@ public class ScreenFactory {
 	 */
 	public Widget newWidget(CruxMetaData metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
 	{
-		Date start = null;
-		if (Crux.getConfig().enableClientFactoryTracing())
-		{// This statement is like this to generate a better code when compiling with GWT compiler. Do not join the statements
-			if(traceOutput != null)
-			{
-				start = new Date();
-			}
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Creating new widget: WidgetID=["+widgetId+"], WidgetType=["+widgetType+"], AddToScreen=["+addToScreen+"]");
 		}
 		WidgetFactory<? extends Widget> widgetFactory = registeredWidgetFactories.getWidgetFactory(widgetType);
 		if (widgetFactory == null)
@@ -226,13 +224,9 @@ public class ScreenFactory {
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryErrorCreateWidget(widgetId));
 		}
 		
-		if (Crux.getConfig().enableClientFactoryTracing())
-		{// This statement is like this to generate a better code when compiling with GWT compiler. Do not join the statements
-			if(traceOutput != null)
-			{
-				Date end = new Date();
-				traceOutput.append("newWidget [widgetId = "+widgetId+"; type = "+widgetType+"] - ("+(end.getTime() - start.getTime())+" ms)<br/>");
-			}
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "widget ["+widgetId+"] created.");
 		}
 		return widget;
 	}
@@ -284,11 +278,20 @@ public class ScreenFactory {
 		this.parsing = true;
 		try
 		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Starting a new factory parsing cycle...");
+			}
 			ParserInfo cruxMetaElements = nextFromParserStack();
 			while (cruxMetaElements != null)
 			{
 				parseDocument(cruxMetaElements);
 				cruxMetaElements = nextFromParserStack();
+			}
+
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Factory parsing cycle completed.");
 			}
 		}
 		finally
@@ -324,12 +327,6 @@ public class ScreenFactory {
 	 */
 	private void parseDocument(ParserInfo parserInfo) 
 	{
-		Date start = null;
-		if (Crux.getConfig().enableClientFactoryTracing())
-		{// This statement is like this to generate a better code when compiling with GWT compiler. Do not extract the previous command.
-			traceOutput = new StringBuilder();;
-			start = new Date();
-		}
 		Array<CruxMetaData> cruxMetaElements = parserInfo.parserElements;
 		int elementsLength = cruxMetaElements.size();
 		for (int i=0; i<elementsLength; i++)
@@ -355,14 +352,6 @@ public class ScreenFactory {
 					}
 				}
 			}
-		}
-
-		if (Crux.getConfig().enableClientFactoryTracing())
-		{
-			Date end = new Date();
-			traceOutput.append("parseDocument - ("+(end.getTime() - start.getTime())+" ms)<br/>");
-			createTraceOutput().setInnerHTML(traceOutput.toString());
-			traceOutput = null;
 		}
 	}
 	
@@ -394,17 +383,6 @@ public class ScreenFactory {
 	private ParserInfo nextFromParserStack()
 	{
 		return parserStack.extractFirst();
-	}
-	
-	/**
-	 * @return
-	 */
-	private Element createTraceOutput()
-	{
-		Element traceDiv = DOM.createDiv();
-		UIObject.setVisible(traceDiv, false);
-		RootPanel.getBodyElement().appendChild(traceDiv);
-		return traceDiv;
 	}
 	
 	/**

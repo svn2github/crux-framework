@@ -22,8 +22,8 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
@@ -242,6 +242,8 @@ class TypeParameterExposureComputer {
     }
 
     private void computeIndirectExposureCauses() {
+      // TODO(spoon): this only needs to consider immediate subtypes, not all
+      // subtypes
       JClassType[] subtypes = baseType.getSubtypes();
       for (JClassType subtype : subtypes) {
         JGenericType isGeneric = subtype.isGenericType();

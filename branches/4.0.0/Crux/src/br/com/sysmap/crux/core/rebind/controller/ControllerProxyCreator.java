@@ -178,7 +178,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			try
             {
 	            TypeSerializerCreator tsc = new TypeSerializerCreator(logger, typesSentToBrowser, typesSentFromBrowser, context, 
-	            		SerializationUtils.getTypeDeserializerQualifiedName(baseProxyType));
+	            		SerializationUtils.getTypeDeserializerQualifiedName(baseProxyType),
+		                SerializationUtils.getTypeDeserializerSimpleName(baseProxyType));
 	            tsc.realize(logger);
             }
             catch (Exception e)

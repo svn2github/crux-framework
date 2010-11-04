@@ -18,6 +18,8 @@ package br.com.sysmap.crux.core.client.screen;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastList;
@@ -47,6 +49,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -63,6 +66,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Screen
 {
+	private static Logger logger = Logger.getLogger(Screen.class.getName());
+
 	protected FastList<Element> blockingDivs = new FastList<Element>();
 	protected String[] declaredControllers;
 	protected String[] declaredDataSources;
@@ -863,6 +868,10 @@ public class Screen
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "Adding lazy dependency. Widget["+lazy+"] depends on ["+dependentId+"].");
+			}
 			this.lazyWidgets.put(lazy, dependentId);
 		}
 	}
