@@ -189,7 +189,7 @@ public class ScreenFactory
 	}
 	
 	/**
-	 * Creates a new widget based on a HTML SPAN tag 
+	 * Creates a new widget based on its meta-data element 
 	 * @param metaElem
 	 * @param widgetId
 	 * @param addToScreen

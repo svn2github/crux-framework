@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A Panel which content is only rendered when it becomes visible for the first time.
+ * A Factory that wraps an element with a panel which content is only rendered when it is accessed for the first time.
  * 
  * @author Thiago da Rosa de Bustamante
  */
@@ -46,7 +46,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	private static LazyPanelFactory instance = null; 
 	
 	/**
-	 * 
+	 * Singleton constructor
 	 */
 	private LazyPanelFactory() 
 	{
@@ -74,6 +74,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	
 
 	/**
+	 * Return the id created to the panel that wraps the given widget id.
 	 * @param wrappedWidgetId
 	 * @return
 	 */
@@ -83,6 +84,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	}
 	
 	/**
+	 * Return the id of the widget wrapped by the given lazy panel id.
 	 * @param lazyPanelId
 	 * @return
 	 */
@@ -93,8 +95,10 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	}
 
 	/**
-	 * @param element
-	 * @param widgetId
+	 * Create an wrapper lazyPanel capable of creating an widget for the given CruxMetaData element. 
+	 * 
+	 * @param element CruxMetaData element that will be used to create the wrapped widget
+	 * @param panelId Identifier of the parent panel, that required the lazy wrapping operation.
 	 * @return
 	 */
 	public static LazyPanel getLazyPanel(final CruxMetaData element, String panelId) 
@@ -113,38 +117,56 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	}
 
 	/**
+	 * This method builds the dependency list for a given element. It is only called when 
+	 * Crux is configured to build the dependency list in runtime. Runtime strategy is only used when application is running in 
+	 * debug mode. In production, that list is created during GWT compilation, by a generator. 
+	 * 
+	 * The runtime approach exists to turn development easier, allowing Crux to make hot deployment for its .crux.xml pages
+	 * 
 	 * @param element
-	 * @param widgetId
+	 * @param parentWidgetId
 	 */
-	private static void maybeBuildLazyDependencyList(final CruxMetaData element, String widgetId)
+	private static void maybeBuildLazyDependencyList(final CruxMetaData element, String parentWidgetId)
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
 			ScreenFactory factory = ScreenFactory.getInstance();
-			if (!factory.getScreen().containsLazyDependents(widgetId))
+			if (!factory.getScreen().containsLazyDependents(parentWidgetId))
 			{
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+widgetId+"]...");
+					logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+parentWidgetId+"]...");
 				}
 				
 				WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
-				assert(element.containsKey("id"));
-				factory.getScreen().addLazyWidgetDependency(element.getProperty("id"), widgetId);
-				buildLazyDependencyList(element, widgetId, checkers);
+				assert(element.containsKey("id") && factory.isValidWidget(element));
+				factory.getScreen().addLazyWidgetDependency(element.getProperty("id"), parentWidgetId);
+				/*
+				 * if the wrapped element is also an element marked to be rendered lazily, all its children must be dependent
+				 * of a wrapper lazyPanel created around it and not be dependent of the a wrapper created over its parent.
+				 */
+				String lazyId = (mustRenderLazily(element, checkers)?getLazyPanelId(element.getProperty("id")):parentWidgetId);
+				buildLazyDependencyListForChildren(element, lazyId, checkers);
 
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+widgetId+"] created.");
+					logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+parentWidgetId+"] created.");
 				}
 			}
 		}
 	}
+	
 	/**
+	 * This method recursively search the element's children to build the dependency list. It is only called when 
+	 * Crux is configured to build the dependency list in runtime. Runtime strategy is only used when application is running in 
+	 * debug mode. In production, that list is created during GWT compilation, by a generator. 
+	 * 
+	 * The runtime approach exists to turn development easier, allowing Crux to make hot deployment for its .crux.xml pages
+	 * 
 	 * @param element
-	 * @param widgetId
+	 * @param parentWidgetId
 	 */
-	private static void buildLazyDependencyList(final CruxMetaData element, String widgetId, WidgetLazyRuntimeCheckers checkers)
+	private static void buildLazyDependencyListForChildren(final CruxMetaData element, String parentWidgetId, WidgetLazyRuntimeCheckers checkers)
 	{
 		Array<CruxMetaData> children = element.getChildren();
 		if (children != null)
@@ -157,21 +179,21 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 				CruxMetaData child = children.get(i);
 				if (child != null)
 				{
-					String lazyId = widgetId;
+					String lazyId = parentWidgetId;
 					boolean childIsLazyPanel = false;
 					if (factory.isValidWidget(child))
 					{
 						String childId = child.getProperty("id");
-						factory.getScreen().addLazyWidgetDependency(childId, widgetId);
+						factory.getScreen().addLazyWidgetDependency(childId, parentWidgetId);
 						if (mustRenderLazily(child, checkers))
 						{
 							childIsLazyPanel = true;
-							lazyId = LazyPanelFactory.getLazyPanelId(childId);
+							lazyId = getLazyPanelId(childId);
 						}
 					}
 					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(lazyId))
 					{
-						buildLazyDependencyList(child, lazyId, checkers);
+						buildLazyDependencyListForChildren(child, lazyId, checkers);
 					}
 				}
 			}

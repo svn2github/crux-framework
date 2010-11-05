@@ -1043,6 +1043,10 @@ public class Screen
 	}
 	
 	/**
+	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if
+	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 
+	 * required panel (according with {@code lazyWidgets} map) and try again.
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -1058,8 +1062,25 @@ public class Screen
 				{
 					logger.log(Level.FINE, "Found a lazy dependency. Widget["+id+"] depends on ["+lazyPanelId+"].");
 				}
-				initializeLazyDependentWidget(lazyPanelId);
-				widget = widgets.get(id);
+				if (initializeLazyDependentWidget(lazyPanelId))
+				{
+					widget = widgets.get(id);
+					if (widget == null)
+					{
+						/*
+						 * If a lazyPanel contains as child a panel that is not visible, the enclosing
+						 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
+						 * method is called. It means that a new dependency was created during the initialization
+						 * of the first panel. We must check for this situation and add this new dependency here.
+						 */
+						lazyPanelId = LazyPanelFactory.getLazyPanelId(id);
+						if (widgets.containsKey(lazyPanelId))
+						{
+							lazyWidgets.put(id, lazyPanelId);
+							widget = getWidget(id);
+						}
+					}
+				}
 			}
 		}
 		return widget;
@@ -1104,10 +1125,16 @@ public class Screen
 	}
 	
 	/**
-	 * @param string
+	 * Call the {@code LazyPanel.ensureWidget()} method of the given lazyPanel.
+	 * This method can trigger other dependent lazyPanel initialization, through 
+	 * a recursive call to {@code Screen.getWidget(String)}.
+	 * 
+	 * @param widgetId lazyPanel to be initialized
+	 * @return true if some lazyPanel was really initialized for this request
 	 */
-	protected void initializeLazyDependentWidget(String widgetId)
+	protected boolean initializeLazyDependentWidget(String widgetId)
 	{
+		boolean ret = false;
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.FINE, "Initializing lazy dependents widgets of lazyPanel ["+widgetId+"]...");
@@ -1125,6 +1152,7 @@ public class Screen
 		if (lazyPanel != null)
 		{
 			lazyPanel.ensureWidget();
+			ret = true;
 		}
 		else
 		{
@@ -1135,6 +1163,7 @@ public class Screen
 		{
 			logger.log(Level.FINE, " Lazy dependents widgets of lazyPanel ["+widgetId+"] are now initialized.");
 		}
+		return ret;
 	}
 
 	/**
