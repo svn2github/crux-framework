@@ -35,6 +35,10 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T> implements HasWidgetsFactory<T>
 {
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	protected static class CruxHTMLPanel extends HTMLPanel
 	{
 		/**
