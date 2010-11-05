@@ -307,15 +307,12 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		source.append("_w = createChildWidget(c.getChildElement());\n");
 		source.append("} else {\n");
 		source.append("CruxMetaData _elem = c.getChildElement();\n");
-		source.append("assert(_elem.getProperty(\"id\") != null);\n");
-		source.append("String _lazyPanelId = \""+LazyPanelFactory.LAZY_PANEL_PREFIX+"\"+_elem.getProperty(\"id\");\n");
+		source.append("String _lazyPanelId = c.getRootWidgetId();\n");
 		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId);\n");
-		source.append("Screen.add(_lazyPanelId, _w);\n");
+		source.append("Screen.add("+LazyPanelFactory.class.getCanonicalName()+".getLazyPanelId(_lazyPanelId), _w);\n");
 		source.append("}\n");
 		 
-		
 		return source.toString();
-		//readRootWidgetProperty
     }
 
 	/**

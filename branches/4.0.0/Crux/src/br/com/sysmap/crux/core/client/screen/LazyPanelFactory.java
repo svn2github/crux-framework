@@ -40,7 +40,8 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	private static Logger logger = Logger.getLogger(LazyPanelFactory.class.getName());
 	
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
-	public static final String LAZY_PANEL_PREFIX = "_lazy_";
+	private static final String LAZY_PANEL_PREFIX = "_lazy_";
+	private static final int LAZY_PANEL_PREFIX_LENGTH = LAZY_PANEL_PREFIX.length();
 	
 	private static LazyPanelFactory instance = null; 
 	
@@ -71,16 +72,37 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 		parent.add(widget);
 	}
 	
+
+	/**
+	 * @param wrappedWidgetId
+	 * @return
+	 */
+	public static String getLazyPanelId(String wrappedWidgetId)
+	{
+		return LAZY_PANEL_PREFIX+wrappedWidgetId;
+	}
+	
+	/**
+	 * @param lazyPanelId
+	 * @return
+	 */
+	public static String getWrapperWidgetIdFromLazyPanel(String lazyPanelId)
+	{
+		assert(lazyPanelId != null && lazyPanelId.length() > LAZY_PANEL_PREFIX_LENGTH);
+		return lazyPanelId.substring(LAZY_PANEL_PREFIX_LENGTH);
+	}
+
 	/**
 	 * @param element
 	 * @param widgetId
 	 * @return
 	 */
-	public static LazyPanel getLazyPanel(final CruxMetaData element, String widgetId) 
+	public static LazyPanel getLazyPanel(final CruxMetaData element, String panelId) 
 	{
+		String widgetId = getLazyPanelId(panelId);
 		if (LogConfiguration.loggingIsEnabled())
 		{
-			logger.log(Level.FINE, "Delaying the widget ["+element.getProperty("id")+"] creation. Intantiating a new lazyPanel ["+widgetId+"] to wrap this widget...");
+			logger.log(Level.FINE, "Delaying the widget ["+element.getProperty("id")+"] creation. Instantiating a new lazyPanel ["+widgetId+"] to wrap this widget...");
 		}
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
@@ -98,19 +120,23 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	{
 		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
 		{
-			if (LogConfiguration.loggingIsEnabled())
+			ScreenFactory factory = ScreenFactory.getInstance();
+			if (!factory.getScreen().containsLazyDependents(widgetId))
 			{
-				logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+widgetId+"]...");
-			}
-			WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+widgetId+"]...");
+				}
+				
+				WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
+				assert(element.containsKey("id"));
+				factory.getScreen().addLazyWidgetDependency(element.getProperty("id"), widgetId);
+				buildLazyDependencyList(element, widgetId, checkers);
 
-			assert(element.containsKey("id"));
-			ScreenFactory.getInstance().getScreen().addLazyWidgetDependency(element.getProperty("id"), widgetId);
-			
-			buildLazyDependencyList(element, widgetId, checkers);
-			if (LogConfiguration.loggingIsEnabled())
-			{
-				logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+widgetId+"] created.");
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+widgetId+"] created.");
+				}
 			}
 		}
 	}
@@ -126,27 +152,26 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 			ScreenFactory factory = ScreenFactory.getInstance();
 
 			int size = children.size();
-			String childId = widgetId;
 			for (int i=0; i<size; i++)
 			{
 				CruxMetaData child = children.get(i);
 				if (child != null)
 				{
-					String childWidgetId = widgetId;
+					String lazyId = widgetId;
 					boolean childIsLazyPanel = false;
 					if (factory.isValidWidget(child))
 					{
-						childId = child.getProperty("id");
+						String childId = child.getProperty("id");
 						factory.getScreen().addLazyWidgetDependency(childId, widgetId);
 						if (mustRenderLazily(child, checkers))
 						{
 							childIsLazyPanel = true;
-							childWidgetId = childId;
+							lazyId = LazyPanelFactory.getLazyPanelId(childId);
 						}
 					}
-					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(childWidgetId))
+					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(lazyId))
 					{
-						buildLazyDependencyList(child, childWidgetId, checkers);
+						buildLazyDependencyList(child, lazyId, checkers);
 					}
 				}
 			}

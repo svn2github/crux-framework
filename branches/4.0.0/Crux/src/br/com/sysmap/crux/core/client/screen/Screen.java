@@ -870,7 +870,7 @@ public class Screen
 		{
 			if (LogConfiguration.loggingIsEnabled())
 			{
-				logger.log(Level.FINE, "Adding lazy dependency. Widget["+lazy+"] depends on ["+dependentId+"].");
+				logger.log(Level.FINE, "Adding lazy dependency (resolved at runtime). Widget["+lazy+"] depends on ["+dependentId+"].");
 			}
 			this.lazyWidgets.put(lazy, dependentId);
 		}
@@ -959,10 +959,18 @@ public class Screen
 	 */
 	protected void cleanLazyDependentWidgets(String widgetId)
 	{
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Cleaning lazy dependencies of lazyPanel ["+widgetId+"]...");
+		}
 		FastList<String> dependentWidgets = getDependentWidgets(widgetId);
 		for (int i=0; i<dependentWidgets.size(); i++)
 		{
 			lazyWidgets.remove(dependentWidgets.get(i));
+		}
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Lazy dependencies of lazyPanel ["+widgetId+"] removed.");
 		}
 	}
 	
@@ -1046,6 +1054,10 @@ public class Screen
 			String lazyPanelId = lazyWidgets.get(id);
 			if (lazyPanelId != null)
 			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Found a lazy dependency. Widget["+id+"] depends on ["+lazyPanelId+"].");
+				}
 				initializeLazyDependentWidget(lazyPanelId);
 				widget = widgets.get(id);
 			}
@@ -1096,7 +1108,20 @@ public class Screen
 	 */
 	protected void initializeLazyDependentWidget(String widgetId)
 	{
-		LazyPanel lazyPanel = (LazyPanel) getWidget(widgetId);
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, "Initializing lazy dependents widgets of lazyPanel ["+widgetId+"]...");
+		}
+
+		LazyPanel lazyPanel = (LazyPanel) widgets.get(widgetId);
+		if (lazyPanel == null)
+		{
+			if (getWidget(LazyPanelFactory.getWrapperWidgetIdFromLazyPanel(widgetId)) != null)
+			{
+				lazyPanel = (LazyPanel) widgets.get(widgetId);
+			}
+		}
+		
 		if (lazyPanel != null)
 		{
 			lazyPanel.ensureWidget();
@@ -1104,6 +1129,11 @@ public class Screen
 		else
 		{
 			cleanLazyDependentWidgets(widgetId);
+		}
+
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logger.log(Level.FINE, " Lazy dependents widgets of lazyPanel ["+widgetId+"] are now initialized.");
 		}
 	}
 

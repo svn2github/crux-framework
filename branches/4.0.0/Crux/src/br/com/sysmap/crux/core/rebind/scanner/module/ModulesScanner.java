@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.module;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -30,6 +31,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import br.com.sysmap.crux.classpath.PackageFileURLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandler;
@@ -70,6 +74,20 @@ public class ModulesScanner extends AbstractScanner
 		{
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			this.documentBuilder.setEntityResolver(new EntityResolver() {
+				public InputSource resolveEntity(String publicId, String systemId)
+				throws SAXException, IOException
+				{
+					if (systemId.contains("gwt-module.dtd"))
+					{
+						return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
+					}
+					else 
+					{
+						return null;
+					}
+				}
+			});			
 			initializeAllowedPackages();
 		}
 		catch (ParserConfigurationException e)

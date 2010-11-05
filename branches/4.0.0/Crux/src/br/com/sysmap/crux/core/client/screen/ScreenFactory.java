@@ -211,9 +211,8 @@ public class ScreenFactory
 		Widget widget;
 		if (mustRenderLazily((DeclarativeWidgetFactory) widgetFactory, metaElem, widgetId))
 		{
-			String lazyId = LazyPanelFactory.LAZY_PANEL_PREFIX+widgetId;
-			widget = LazyPanelFactory.getLazyPanel(metaElem, lazyId);
-			Screen.add(lazyId, widget);
+			widget = LazyPanelFactory.getLazyPanel(metaElem, widgetId);
+			Screen.add(LazyPanelFactory.getLazyPanelId(widgetId), widget);
 		}
 		else
 		{
@@ -315,7 +314,7 @@ public class ScreenFactory
 			String visible = metaElem.getProperty("visible");
 			if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
 			{
-				String lazyId = LazyPanelFactory.LAZY_PANEL_PREFIX+widgetId;
+				String lazyId = LazyPanelFactory.getLazyPanelId(widgetId);
 				return !screen.containsWidget(lazyId);
 			}
 		}

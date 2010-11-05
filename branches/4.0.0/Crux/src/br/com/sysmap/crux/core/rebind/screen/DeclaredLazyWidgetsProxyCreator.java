@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
@@ -27,6 +29,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -42,6 +45,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -50,7 +54,6 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
-	private Map<String, WidgetLazyChecker> lazyWidgetCheckers = new HashMap<String, WidgetLazyChecker>();
 	private WidgetLazyChecker defaultLazyChecker = new WidgetLazyChecker() 
 	{
 		public boolean isLazy(Widget widget) 
@@ -59,6 +62,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 			return visible != null && !Boolean.parseBoolean(visible);
 		}
 	};
+	private Map<String, WidgetLazyChecker> lazyWidgetCheckers = new HashMap<String, WidgetLazyChecker>();
 	
 	/**
 	 * Constructor
@@ -70,19 +74,6 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	    super(logger, context, invokerIntf);
     }
 	
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator#getImports()
-	 */
-	@Override
-    protected String[] getImports()
-    {
-		String[] imports = new String[] {
-				FastMap.class.getCanonicalName(),
-				DeclaredLazyWidgets.class.getCanonicalName()
-		};
-		return imports;       
-    }
-
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
 	 */
@@ -97,6 +88,8 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	@Override
 	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
 	{
+		srcWriter.println("private static Logger logger = Logger.getLogger(DeclaredLazyWidgets.class.getName());");
+		
 	}
 
 	/**
@@ -127,6 +120,67 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	}
 
 	/**
+	 * @see br.com.sysmap.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
+	 */
+	@Override
+	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+	}
+
+	/**
+	 * @see br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator#getImports()
+	 */
+	@Override
+    protected String[] getImports()
+    {
+		String[] imports = new String[] {
+				FastMap.class.getCanonicalName(),
+				DeclaredLazyWidgets.class.getCanonicalName(),
+				Logger.class.getCanonicalName(), 
+				Level.class.getCanonicalName(), 
+				LogConfiguration.class.getCanonicalName()
+		};
+		return imports;       
+    }
+
+	/**
+	 * Return true if the parent widget informed, must render its children lazily.
+	 * 
+	 * @param parent
+	 * @return
+	 * @throws NotFoundException 
+	 */
+	private boolean checkLazy(Widget parent) throws NotFoundException 
+	{
+		if (defaultLazyChecker.isLazy(parent))
+		{
+			return true;
+		}
+
+		if (!lazyWidgetCheckers.containsKey(parent.getType()))
+		{
+			initializeLazyChecker(parent.getType());
+		}
+		WidgetLazyChecker checker = lazyWidgetCheckers.get(parent.getType());
+		return checker != null && checker.isLazy(parent);
+	}
+
+	/**
+	 * @param srcWriter
+	 * @param widget
+	 * @param lazyId
+	 */
+	private void generateAddLazyMapEntry(SourceWriter srcWriter, String widgetId, String lazyId)
+    {
+	    srcWriter.println("if (LogConfiguration.loggingIsEnabled()){");
+	    srcWriter.indent();
+		srcWriter.println("logger.log(Level.FINE, "+EscapeUtils.quote("Adding lazy dependency (resolved at compile time). Widget["+EscapeUtils.quote(widgetId)+"] depends on ["+EscapeUtils.quote(lazyId)+"].")+");");
+	    srcWriter.outdent();
+	    srcWriter.println("}");
+	    srcWriter.println("result.put("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(lazyId)+");");
+    }
+
+	/**
 	 * @param srcWriter
 	 * @param screen
 	 */
@@ -142,12 +196,12 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	        {
 	        	Widget widget = widgets.next();
 	        	Widget parent = widget.getParent();
-	        	
 	        	while (parent != null)
 	        	{
-	        		if (checkLazy(parent))
+	        		if(checkLazy(parent))
 	        		{
-	        			srcWriter.println("result.put("+EscapeUtils.quote(widget.getId())+", "+EscapeUtils.quote(parent.getId())+");");
+	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId());
+	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
 	        		}
 	        		else
@@ -166,23 +220,43 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	}
 
 	/**
-	 * @param parent
+	 * @param screen
 	 * @return
-	 * @throws NotFoundException 
 	 */
-	private boolean checkLazy(Widget parent) throws NotFoundException 
+	private String getScreenId(Screen screen)
 	{
-		if (defaultLazyChecker.isLazy(parent))
-		{
-			return true;
-		}
-		if (!lazyWidgetCheckers.containsKey(parent.getType()))
-		{
-			initializeLazyChecker(parent.getType());
-		}
-		WidgetLazyChecker checker = lazyWidgetCheckers.get(parent.getType());
-		return checker != null && checker.isLazy(parent);
+		Module module = Modules.getInstance().getModule(screen.getModule());
+		return Modules.getInstance().getRelativeScreenId(module, screen.getId());
 	}
+
+	/**
+	 * @param childrenMethod
+	 * @param factoryHelper
+	 * @param declaredCheckers
+	 * @throws NotFoundException
+	 */
+	private void initializeLazyChecker(JMethod childrenMethod, WidgetFactoryHelper factoryHelper, List<WidgetLazyChecker> declaredCheckers) throws NotFoundException
+    {
+		TagChildren tagChildren = childrenMethod.getAnnotation(TagChildren.class);
+		if (tagChildren != null)
+		{
+			for (TagChild child : tagChildren.value())
+            {
+				JClassType childProcessor = context.getTypeOracle().getType(child.value().getCanonicalName());
+				TagChildLazyConditions lazyConditions = childProcessor.getAnnotation(TagChildLazyConditions.class);
+				if (lazyConditions != null)
+				{
+					WidgetLazyChecker lazyChecker = initializeLazyChecker(lazyConditions);
+					if (lazyChecker != null)
+					{
+						declaredCheckers.add(lazyChecker);
+					}
+				}
+				JMethod childProcessorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
+				initializeLazyChecker(childProcessorMethod, factoryHelper, declaredCheckers);
+            }
+		}
+    }
 
 	/**
 	 * @param type
@@ -223,35 +297,6 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 		}
 		
 	}
-
-	/**
-	 * @param childrenMethod
-	 * @param factoryHelper
-	 * @param declaredCheckers
-	 * @throws NotFoundException
-	 */
-	private void initializeLazyChecker(JMethod childrenMethod, WidgetFactoryHelper factoryHelper, List<WidgetLazyChecker> declaredCheckers) throws NotFoundException
-    {
-		TagChildren tagChildren = childrenMethod.getAnnotation(TagChildren.class);
-		if (tagChildren != null)
-		{
-			for (TagChild child : tagChildren.value())
-            {
-				JClassType childProcessor = context.getTypeOracle().getType(child.value().getCanonicalName());
-				TagChildLazyConditions lazyConditions = childProcessor.getAnnotation(TagChildLazyConditions.class);
-				if (lazyConditions != null)
-				{
-					WidgetLazyChecker lazyChecker = initializeLazyChecker(lazyConditions);
-					if (lazyChecker != null)
-					{
-						declaredCheckers.add(lazyChecker);
-					}
-				}
-				JMethod childProcessorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
-				initializeLazyChecker(childProcessorMethod, factoryHelper, declaredCheckers);
-            }
-		}
-    }
 
 	/**
 	 * @param lazyConditions
@@ -317,24 +362,6 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	    }
 	    return null;
     }
-
-	/**
-	 * @param screen
-	 * @return
-	 */
-	private String getScreenId(Screen screen)
-	{
-		Module module = Modules.getInstance().getModule(screen.getModule());
-		return Modules.getInstance().getRelativeScreenId(module, screen.getId());
-	}
-
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
-	 */
-	@Override
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-	{
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
