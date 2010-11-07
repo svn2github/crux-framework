@@ -38,6 +38,7 @@ import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
@@ -308,8 +309,8 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		source.append("} else {\n");
 		source.append("CruxMetaData _elem = c.getChildElement();\n");
 		source.append("String _lazyPanelId = c.getRootWidgetId();\n");
-		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId);\n");
-		source.append("Screen.add("+LazyPanelFactory.class.getCanonicalName()+".getLazyPanelId(_lazyPanelId), _w);\n");
+		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren);\n");
+		source.append("Screen.add("+LazyPanelFactory.class.getCanonicalName()+".getLazyPanelId(_lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren), _w);\n");
 		source.append("}\n");
 		 
 		return source.toString();

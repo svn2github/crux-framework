@@ -40,8 +40,9 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	private static Logger logger = Logger.getLogger(LazyPanelFactory.class.getName());
 	
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
+	private static final String LAZY_CHILDREN_PANEL_PREFIX = "_chld_";
 	private static final String LAZY_PANEL_PREFIX = "_lazy_";
-	private static final int LAZY_PANEL_PREFIX_LENGTH = LAZY_PANEL_PREFIX.length();
+	private static final int LAZY_PANEL_PREFIX_LENGTH = LAZY_CHILDREN_PANEL_PREFIX.length();
 	
 	private static LazyPanelFactory instance = null; 
 	
@@ -76,11 +77,19 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	/**
 	 * Return the id created to the panel that wraps the given widget id.
 	 * @param wrappedWidgetId
+	 * @param wrappingType 
 	 * @return
 	 */
-	public static String getLazyPanelId(String wrappedWidgetId)
+	public static String getLazyPanelId(String wrappedWidgetId, LazyPanelWrappingType wrappingType)
 	{
-		return LAZY_PANEL_PREFIX+wrappedWidgetId;
+		if (wrappingType == LazyPanelWrappingType.wrapChildren)
+		{
+			return LAZY_CHILDREN_PANEL_PREFIX+wrappedWidgetId;
+		}
+		else
+		{
+			return LAZY_PANEL_PREFIX+wrappedWidgetId;
+		}
 	}
 	
 	/**
@@ -88,7 +97,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	 * @param lazyPanelId
 	 * @return
 	 */
-	public static String getWrapperWidgetIdFromLazyPanel(String lazyPanelId)
+	public static String getWrappedWidgetIdFromLazyPanel(String lazyPanelId)
 	{
 		assert(lazyPanelId != null && lazyPanelId.length() > LAZY_PANEL_PREFIX_LENGTH);
 		return lazyPanelId.substring(LAZY_PANEL_PREFIX_LENGTH);
@@ -99,11 +108,12 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	 * 
 	 * @param element CruxMetaData element that will be used to create the wrapped widget
 	 * @param panelId Identifier of the parent panel, that required the lazy wrapping operation.
+	 * @param wrappingType the lazyPanel wrapping model.
 	 * @return
 	 */
-	public static LazyPanel getLazyPanel(final CruxMetaData element, String panelId) 
+	public static LazyPanel getLazyPanel(final CruxMetaData element, String panelId, LazyPanelWrappingType wrappingType) 
 	{
-		String widgetId = getLazyPanelId(panelId);
+		String widgetId = getLazyPanelId(panelId, wrappingType);
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.FINE, "Delaying the widget ["+element.getProperty("id")+"] creation. Instantiating a new lazyPanel ["+widgetId+"] to wrap this widget...");
@@ -145,7 +155,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 				 * if the wrapped element is also an element marked to be rendered lazily, all its children must be dependent
 				 * of a wrapper lazyPanel created around it and not be dependent of the a wrapper created over its parent.
 				 */
-				String lazyId = (mustRenderLazily(element, checkers)?getLazyPanelId(element.getProperty("id")):parentWidgetId);
+				String lazyId = (mustRenderChildrenLazily(element, checkers)?getLazyPanelId(element.getProperty("id"), LazyPanelWrappingType.wrapChildren):parentWidgetId);
 				buildLazyDependencyListForChildren(element, lazyId, checkers);
 
 				if (LogConfiguration.loggingIsEnabled())
@@ -185,10 +195,15 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 					{
 						String childId = child.getProperty("id");
 						factory.getScreen().addLazyWidgetDependency(childId, parentWidgetId);
-						if (mustRenderLazily(child, checkers))
+						if (mustRenderChildrenLazily(child, checkers))
 						{
 							childIsLazyPanel = true;
-							lazyId = getLazyPanelId(childId);
+							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
+						}
+						else if (mustRenderLazily(child, checkers))
+						{
+							childIsLazyPanel = true;
+							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapWholeWidget);
 						}
 					}
 					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(lazyId))
@@ -208,13 +223,29 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	private static boolean mustRenderLazily(CruxMetaData child, WidgetLazyRuntimeCheckers checkers)
 	{
 		String visible = child.getProperty("visible");
-		if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
-		{
-			return true;
-		}
+		return (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible));
+	}
+
+	/**
+	 * @param child
+	 * @param checkers
+	 * @return
+	 */
+	private static boolean mustRenderChildrenLazily(CruxMetaData child, WidgetLazyRuntimeCheckers checkers)
+	{
 		WidgetLazyChecker checker = checkers.getWidgetLazyChecker(ScreenFactory.getInstance().getMetaElementType(child));
 		return checker != null && checker.isLazy(child);
 	}
+	
+	/**
+	 * Contains the available lazyPanel wrapping models. {@code wrapChildren} is used 
+	 * by widgets that needs to create some of its children lazily. {@code wrapWholeWidget}
+	 * is used when the whole widget must be rendered lazily, like when {@code ScreenFactory}
+	 * is parsing the CruxMetaData and find an invisible panel.
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 */
+	public static enum LazyPanelWrappingType{wrapChildren, wrapWholeWidget}
 	
 	/**
 	 * A default lazy panel implementation, used by Crux engine to lazily parse the entire Document.

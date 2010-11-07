@@ -26,6 +26,7 @@ import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.DOMUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -211,8 +212,8 @@ public class ScreenFactory
 		Widget widget;
 		if (mustRenderLazily((DeclarativeWidgetFactory) widgetFactory, metaElem, widgetId))
 		{
-			widget = LazyPanelFactory.getLazyPanel(metaElem, widgetId);
-			Screen.add(LazyPanelFactory.getLazyPanelId(widgetId), widget);
+			widget = LazyPanelFactory.getLazyPanel(metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
+			Screen.add(LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget), widget);
 		}
 		else
 		{
@@ -314,7 +315,7 @@ public class ScreenFactory
 			String visible = metaElem.getProperty("visible");
 			if (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible))
 			{
-				String lazyId = LazyPanelFactory.getLazyPanelId(widgetId);
+				String lazyId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 				return !screen.containsWidget(lazyId);
 			}
 		}

@@ -29,6 +29,7 @@ import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -1073,7 +1074,7 @@ public class Screen
 						 * method is called. It means that a new dependency was created during the initialization
 						 * of the first panel. We must check for this situation and add this new dependency here.
 						 */
-						lazyPanelId = LazyPanelFactory.getLazyPanelId(id);
+						lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
 						if (widgets.containsKey(lazyPanelId))
 						{
 							lazyWidgets.put(id, lazyPanelId);
@@ -1143,7 +1144,7 @@ public class Screen
 		LazyPanel lazyPanel = (LazyPanel) widgets.get(widgetId);
 		if (lazyPanel == null)
 		{
-			if (getWidget(LazyPanelFactory.getWrapperWidgetIdFromLazyPanel(widgetId)) != null)
+			if (getWidget(LazyPanelFactory.getWrappedWidgetIdFromLazyPanel(widgetId)) != null)
 			{
 				lazyPanel = (LazyPanel) widgets.get(widgetId);
 			}

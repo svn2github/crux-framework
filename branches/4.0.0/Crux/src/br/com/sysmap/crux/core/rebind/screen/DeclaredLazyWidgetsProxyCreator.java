@@ -30,6 +30,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
+import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -152,11 +153,18 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 */
 	private boolean checkLazy(Widget parent) throws NotFoundException 
 	{
-		if (defaultLazyChecker.isLazy(parent))
-		{
-			return true;
-		}
+		return defaultLazyChecker.isLazy(parent);
+	}
 
+	/**
+	 * Return true if the parent widget informed, must render its children lazily.
+	 * 
+	 * @param parent
+	 * @return
+	 * @throws NotFoundException 
+	 */
+	private boolean checkChildrenLazy(Widget parent) throws NotFoundException 
+	{
 		if (!lazyWidgetCheckers.containsKey(parent.getType()))
 		{
 			initializeLazyChecker(parent.getType());
@@ -198,9 +206,15 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	        	Widget parent = widget.getParent();
 	        	while (parent != null)
 	        	{
-	        		if(checkLazy(parent))
+	        		if(checkChildrenLazy(parent))
 	        		{
-	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId());
+	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapChildren);
+	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
+	        			break;
+	        		}
+	        		else if(checkLazy(parent))
+	        		{
+	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapWholeWidget);
 	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
 	        		}
