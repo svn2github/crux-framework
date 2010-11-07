@@ -206,15 +206,15 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	        	Widget parent = widget.getParent();
 	        	while (parent != null)
 	        	{
-	        		if(checkChildrenLazy(parent))
+	        		if(checkLazy(parent))
 	        		{
-	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapChildren);
+	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapWholeWidget);
 	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
 	        		}
-	        		else if(checkLazy(parent))
+	        		else if(checkChildrenLazy(parent))
 	        		{
-	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapWholeWidget);
+	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapChildren);
 	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
 	        		}

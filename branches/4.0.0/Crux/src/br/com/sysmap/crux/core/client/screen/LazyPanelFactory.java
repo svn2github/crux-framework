@@ -195,15 +195,15 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 					{
 						String childId = child.getProperty("id");
 						factory.getScreen().addLazyWidgetDependency(childId, parentWidgetId);
-						if (mustRenderChildrenLazily(child, checkers))
-						{
-							childIsLazyPanel = true;
-							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
-						}
-						else if (mustRenderLazily(child, checkers))
+						if (mustRenderLazily(child, checkers))
 						{
 							childIsLazyPanel = true;
 							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapWholeWidget);
+						}
+						else if (mustRenderChildrenLazily(child, checkers))
+						{
+							childIsLazyPanel = true;
+							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
 						}
 					}
 					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(lazyId))

@@ -1074,7 +1074,7 @@ public class Screen
 						 * method is called. It means that a new dependency was created during the initialization
 						 * of the first panel. We must check for this situation and add this new dependency here.
 						 */
-						lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
+						lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapChildren);
 						if (widgets.containsKey(lazyPanelId))
 						{
 							lazyWidgets.put(id, lazyPanelId);
