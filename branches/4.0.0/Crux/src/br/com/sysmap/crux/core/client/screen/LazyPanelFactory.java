@@ -73,6 +73,29 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 		parent.add(widget);
 	}
 	
+	/**
+	 * Check if the wrappedWidgetId is a valid lazy id generated for a {@code LazyPanelWrappingType.wrapWholeWidget}
+	 * lazy model 
+	 * @param wrappedWidgetId
+	 * @return
+	 */
+	public static boolean isWholeWidgetLazyWrapper(String wrappedWidgetId)
+	{
+		assert(wrappedWidgetId != null);
+		return wrappedWidgetId.startsWith(LAZY_PANEL_PREFIX);
+	}
+	
+	/**
+	 * Check if the wrappedWidgetId is a valid lazy id generated for a {@code LazyPanelWrappingType.wrapChidren}
+	 * lazy model 
+	 * @param wrappedWidgetId
+	 * @return
+	 */
+	public static boolean isChildrenWidgetLazyWrapper(String wrappedWidgetId)
+	{
+		assert(wrappedWidgetId != null);
+		return wrappedWidgetId.startsWith(LAZY_CHILDREN_PANEL_PREFIX);
+	}
 
 	/**
 	 * Return the id created to the panel that wraps the given widget id.

@@ -1074,18 +1074,52 @@ public class Screen
 						 * method is called. It means that a new dependency was created during the initialization
 						 * of the first panel. We must check for this situation and add this new dependency here.
 						 */
-						lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapChildren);
-						if (widgets.containsKey(lazyPanelId))
-						{
-							lazyWidgets.put(id, lazyPanelId);
-							widget = getWidget(id);
-						}
+						widget = getRuntimeDependencyWidget(id, widget, lazyPanelId);
 					}
 				}
 			}
 		}
 		return widget;
 	}
+
+	/**
+	 * If a lazyPanel contains as child a panel that is not visible, the enclosing
+	 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
+	 * method is called. It means that a new dependency was created during the initialization
+	 * of the first panel. We must check for this situation and add this new dependency here.
+	 * 
+	 * @param id
+	 * @param widget
+	 * @param lazyPanelId
+	 * @return
+	 */
+	private Widget getRuntimeDependencyWidget(String id, Widget widget, String lazyPanelId)
+    {
+	    if (LazyPanelFactory.isWholeWidgetLazyWrapper(lazyPanelId))  
+	    {
+	    	lazyPanelId = LazyPanelFactory.getWrappedWidgetIdFromLazyPanel(lazyPanelId); 
+	    	lazyPanelId = LazyPanelFactory.getLazyPanelId(lazyPanelId, LazyPanelWrappingType.wrapChildren);
+	    	if (widgets.containsKey(lazyPanelId))  
+	    	{
+	    		/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapChildren
+	    	     lazy instantiation.*/
+	    		lazyWidgets.put(id, lazyPanelId);
+	    		widget = getWidget(id);
+	    	}
+	    }
+	    else
+	    {
+	    	/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
+	    	 lazy instantiation.*/
+	    	lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
+	    	if (widgets.containsKey(lazyPanelId))  
+	    	{
+	    		lazyWidgets.put(id, lazyPanelId);
+	    		widget = getWidget(id);
+	    	}
+	    }
+	    return widget;
+    }
 	
 	/**
 	 * Generic version of <code>getWidget</code> method
