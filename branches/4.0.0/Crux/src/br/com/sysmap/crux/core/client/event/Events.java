@@ -15,11 +15,15 @@
  */
 package br.com.sysmap.crux.core.client.event;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * 
@@ -28,6 +32,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class Events 
 {
 	private static RegisteredControllers registeredControllers;
+	private static Logger logger = Logger.getLogger(Events.class.getName());
 	
 	
 	/**
@@ -154,11 +159,19 @@ public class Events
 		{
 			public void processEvent(GwtEvent<?> sourceEvent)
 			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Invoking method ["+event.getMethod()+"] on controller ["+event.getController()+"]...");
+				}
 				getRegisteredControllers().invokeController(event.getController(), event.getMethod(), false, sourceEvent, this);
 			}
 
 			public void processEvent(CruxEvent<?> sourceEvent, boolean fromOutOfModule)
 			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Invoking method ["+event.getMethod()+"] on controller ["+event.getController()+"]...");
+				}
 				getRegisteredControllers().invokeController(event.getController(), event.getMethod(), fromOutOfModule, sourceEvent, this);
 			}
 		};

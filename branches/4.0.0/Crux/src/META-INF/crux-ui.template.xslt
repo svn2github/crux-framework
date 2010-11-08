@@ -327,11 +327,9 @@
 									<xsl:element name="div" namespace="{$xhtmlNS}">
 										<xsl:attribute name="id" select="'__CruxMetaData_'" />
 										<xsl:attribute name="style" select="'display: none;'" />
-										<!-- xsl:comment-->	
 											<xsl:value-of select="'['"></xsl:value-of>
 											<xsl:call-template name="createWidgetsMetaData" />
 											<xsl:value-of select="']'"></xsl:value-of>
-										<!-- /xsl:comment-->
 									</xsl:element>
 								</xsl:if>
 							</xsl:copy>

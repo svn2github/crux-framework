@@ -47,8 +47,8 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
@@ -75,7 +75,7 @@ public class Screen
 	protected String[] declaredFormatters;
 	@Deprecated
 	protected String[] declaredSerializables;
-	protected HandlerManager handlerManager;
+	protected SimpleEventBus eventBus;
 	protected IFrameElement historyFrame = null;
 	protected String id;
 	
@@ -83,7 +83,7 @@ public class Screen
 	
 	protected boolean loaded = false;
 	
-	protected FastList<ScreenLoadHandler>  loadHandlers = new FastList<ScreenLoadHandler>();
+	protected FastList<HandlerRegistration>  loadHandlers = new FastList<HandlerRegistration>();
 	
 	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	
@@ -96,7 +96,7 @@ public class Screen
     protected Screen(String id) 
 	{
 		this.id = id;
-		this.handlerManager = new HandlerManager(this);
+		this.eventBus = new SimpleEventBus();
 		initializeLazyWidgets(id);
 		this.serializer = new ModuleComunicationSerializer();
 		createControllerAccessor(this);
@@ -883,8 +883,8 @@ public class Screen
 	 */
 	protected void addLoadHandler(final ScreenLoadHandler handler) 
 	{
-		handlerManager.addHandler(ScreenLoadEvent.TYPE, handler);
-		loadHandlers.add(handler);
+		HandlerRegistration addHandler = eventBus.addHandler(ScreenLoadEvent.TYPE, handler);
+		loadHandlers.add(addHandler);
 	}	
 	
 	/**
@@ -989,7 +989,7 @@ public class Screen
 	 */
 	protected void fireEvent(ScreenLoadEvent event) 
 	{
-		handlerManager.fireEvent(event);
+		eventBus.fireEventFromSource(event, this);
 		cleanLoadhandlers();
 	}
 	
@@ -1264,7 +1264,7 @@ public class Screen
 	 */
 	protected void load() 
 	{
-		if (handlerManager.getHandlerCount(ScreenLoadEvent.TYPE) > 0)
+		if (loadHandlers.size() > 0)
 		{
 			Scheduler.get().scheduleDeferred(new ScheduledCommand(){
 				public void execute()
@@ -1492,8 +1492,8 @@ public class Screen
 			{
 				for (int i=0; i<loadHandlers.size(); i++)
 				{
-					ScreenLoadHandler handler = loadHandlers.get(i);
-					handlerManager.removeHandler(ScreenLoadEvent.TYPE, handler);
+					HandlerRegistration handler = loadHandlers.get(i);
+					handler.removeHandler();
 				}
 				loadHandlers.clear();
 			}
