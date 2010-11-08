@@ -55,6 +55,9 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
+	/**
+	 * Lazy checker for invisible panels
+	 */
 	private WidgetLazyChecker defaultLazyChecker = new WidgetLazyChecker() 
 	{
 		public boolean isLazy(Widget widget) 
@@ -63,6 +66,10 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 			return visible != null && !Boolean.parseBoolean(visible);
 		}
 	};
+	
+	/**
+	 * Checkers for widgets that lazily create its children
+	 */
 	private Map<String, WidgetLazyChecker> lazyWidgetCheckers = new HashMap<String, WidgetLazyChecker>();
 	
 	/**
@@ -151,9 +158,14 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 * @return
 	 * @throws NotFoundException 
 	 */
-	private boolean checkLazy(Widget parent) throws NotFoundException 
+	private boolean checkChildrenLazy(Widget parent) throws NotFoundException 
 	{
-		return defaultLazyChecker.isLazy(parent);
+		if (!lazyWidgetCheckers.containsKey(parent.getType()))
+		{
+			initializeLazyChecker(parent.getType());
+		}
+		WidgetLazyChecker checker = lazyWidgetCheckers.get(parent.getType());
+		return checker != null && checker.isLazy(parent);
 	}
 
 	/**
@@ -163,14 +175,9 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 * @return
 	 * @throws NotFoundException 
 	 */
-	private boolean checkChildrenLazy(Widget parent) throws NotFoundException 
+	private boolean checkLazy(Widget parent) throws NotFoundException 
 	{
-		if (!lazyWidgetCheckers.containsKey(parent.getType()))
-		{
-			initializeLazyChecker(parent.getType());
-		}
-		WidgetLazyChecker checker = lazyWidgetCheckers.get(parent.getType());
-		return checker != null && checker.isLazy(parent);
+		return defaultLazyChecker.isLazy(parent);
 	}
 
 	/**
@@ -229,9 +236,9 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
         }
         catch (NotFoundException e)
         {
-        	throw new CruxGeneratorException(e);//TODO message
+        	throw new CruxGeneratorException(e.getMessage(), e);
         }
-	}
+	}//TODO não está adicionando panels invisiveis que nao tenham filhos!!
 
 	/**
 	 * @param screen

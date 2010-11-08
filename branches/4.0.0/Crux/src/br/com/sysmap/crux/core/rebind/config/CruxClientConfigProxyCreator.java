@@ -105,8 +105,7 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 	{
 		sourceWriter.println("public boolean enableRuntimeLazyWidgetsInitialization(){");
 		sourceWriter.indent();
-//		sourceWriter.println("return " + !Environment.isProduction() + ";");
-		sourceWriter.println("return false;");
+		sourceWriter.println("return " + !Environment.isProduction() + ";");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
