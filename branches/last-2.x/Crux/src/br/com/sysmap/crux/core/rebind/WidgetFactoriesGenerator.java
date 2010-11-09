@@ -66,8 +66,8 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class WidgetFactoriesGenerator extends AbstractGenerator
 {
 	private static final int UNBOUNDED = -1;
-	private static Map<Class<?>, String> attributesFromClass = new HashMap<Class<?>, String>();
-	private static Map<Class<?>, EventBinderData> eventsFromClass = new HashMap<Class<?>, EventBinderData>();
+	private static Map<String, String> attributesFromClass = new HashMap<String, String>();
+	private static Map<String, EventBinderData> eventsFromClass = new HashMap<String, EventBinderData>();
 	private int variableNameSuffixCounter = 0;
 	
 	/**
@@ -289,9 +289,10 @@ public class WidgetFactoriesGenerator extends AbstractGenerator
 	 */
 	private String generateProcessAttributesBlock(TreeLogger logger, Class<?> factoryClass, Class<?> widgetType)
 	{
-		if (attributesFromClass.containsKey(factoryClass))
+		String factoryClassName = factoryClass.getCanonicalName();
+		if (attributesFromClass.containsKey(factoryClassName))
 		{
-			return attributesFromClass.get(factoryClass);
+			return attributesFromClass.get(factoryClassName);
 		}
 		StringBuilder result = new StringBuilder();
 		
@@ -363,7 +364,7 @@ public class WidgetFactoriesGenerator extends AbstractGenerator
 			result.append(generateProcessAttributesBlock(logger, interfaceClass, widgetType)+"\n");
 		}
 		String attributes = result.toString();
-		attributesFromClass.put(factoryClass, attributes);
+		attributesFromClass.put(factoryClassName, attributes);
 		return attributes;
 	}
 	
@@ -379,10 +380,11 @@ public class WidgetFactoriesGenerator extends AbstractGenerator
 											   Class<?> factoryClass, 
 											   Map<String, String> evtBinderVariables) throws Exception
 	{
-		if (eventsFromClass.containsKey(factoryClass))
+		String factoryClassName = factoryClass.getCanonicalName();
+		if (eventsFromClass.containsKey(factoryClassName))
 		{
-			evtBinderVariables.putAll(eventsFromClass.get(factoryClass).evtBinderVariables);
-			return eventsFromClass.get(factoryClass).evtBinderCalls;
+			evtBinderVariables.putAll(eventsFromClass.get(factoryClassName).evtBinderVariables);
+			return eventsFromClass.get(factoryClassName).evtBinderCalls;
 		}
 		
 		StringBuilder result = new StringBuilder();
@@ -426,7 +428,7 @@ public class WidgetFactoriesGenerator extends AbstractGenerator
 		}
 		
 		String events = result.toString();
-		eventsFromClass.put(factoryClass, new EventBinderData(events, evtBinderVariables));
+		eventsFromClass.put(factoryClassName, new EventBinderData(events, evtBinderVariables));
 		return events;
 	}
 
