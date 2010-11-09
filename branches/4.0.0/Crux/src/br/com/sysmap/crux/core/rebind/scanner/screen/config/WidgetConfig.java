@@ -40,7 +40,7 @@ import br.com.sysmap.crux.core.server.scan.ClassScanner;
 public class WidgetConfig 
 {
 	private static Map<String, String> config = null;
-	private static Map<Type, String> widgets = null;
+	private static Map<String, String> widgets = null;
 	private static Map<String, Set<String>> registeredLibraries = null;
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Log logger = LogFactory.getLog(WidgetConfig.class);
@@ -75,7 +75,7 @@ public class WidgetConfig
 	protected static void initializeWidgetConfig()
 	{
 		config = new HashMap<String, String>(100);
-		widgets = new HashMap<Type, String>();
+		widgets = new HashMap<String, String>();
 		registeredLibraries = new HashMap<String, Set<String>>();
 		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
 		if (factoriesNames != null)
@@ -99,9 +99,13 @@ public class WidgetConfig
 					Type type = ((ParameterizedType)factoryClass.getGenericSuperclass()).getActualTypeArguments()[0];
 					if (type instanceof ParameterizedType)
 					{
-						widgets.put(((ParameterizedType) type).getRawType(), widgetType);
+						Type rawType = ((ParameterizedType) type).getRawType();
+						if (rawType instanceof Class)
+						{
+							widgets.put(((Class<?>)rawType).getCanonicalName(), widgetType);
+						}
 					}
-					widgets.put(type, widgetType);
+					widgets.put(((Class<?>)type).getCanonicalName(), widgetType);
 				} 
 				catch (ClassNotFoundException e) 
 				{
@@ -177,12 +181,12 @@ public class WidgetConfig
 	 * @param widgetClass
 	 * @return
 	 */
-	public static String getWidgetType(Type widgetClass)
+	public static String getWidgetType(Class<?> widgetClass)
     {
 		if (widgets == null)
 		{
 			initializeWidgetConfig();
 		}
-		return widgets.get(widgetClass);
+		return widgets.get(widgetClass.getCanonicalName());
     }
 }
