@@ -21,9 +21,11 @@ import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 import br.com.sysmap.crux.core.client.formatter.MaskedFormatter;
 import br.com.sysmap.crux.widgets.client.event.paste.HasPasteHandlers;
 import br.com.sysmap.crux.widgets.client.event.paste.PasteEvent;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
 import br.com.sysmap.crux.widgets.client.event.paste.PasteEventSourceRegisterFactory;
+import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -48,8 +50,6 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.HasDirection;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.TextBox;
@@ -156,9 +156,9 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 		{
 			if (applyMask && (formatter instanceof MaskedFormatter))
 			{
-				DeferredCommand.addCommand(new Command() 
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
-					public void execute()
+					public void execute() 
 					{
 						((MaskedFormatter)formatter).applyMask(MaskedTextBox.this);
 					}
@@ -166,9 +166,9 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 			}
 			else if (formatter instanceof FilterFormatter)
 			{
-				DeferredCommand.addCommand(new Command() 
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 				{
-					public void execute()
+					public void execute() 
 					{
 						((FilterFormatter)formatter).applyFilter(MaskedTextBox.this);
 					}
