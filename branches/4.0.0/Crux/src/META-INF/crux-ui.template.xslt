@@ -184,7 +184,8 @@
 				<xsl:value-of select="','"></xsl:value-of>
 				<xsl:call-template name="writeMetaAttribute"/>
 			</xsl:for-each>
-		<xsl:value-of select="'}'"></xsl:value-of>
+		<xsl:value-of select="'},'"></xsl:value-of>
+		<xsl:call-template name="createWidgetsMetaData" />
 	</xsl:template>
 
 	<!-- 
@@ -254,7 +255,7 @@
 				<xsl:call-template name="createWidgetsMetaData" />
 				<xsl:value-of select="']'"></xsl:value-of>
 			</xsl:if>
-			<xsl:value-of select="'}'"></xsl:value-of>
+			<xsl:value-of select="'},'"></xsl:value-of>
 	</xsl:template>
 
 	<!-- 
@@ -268,15 +269,9 @@
 			<xsl:choose>
 				<xsl:when test="namespace-uri() = 'http://www.sysmap.com.br/crux' and local-name() = 'screen'">
 					<xsl:call-template name="cruxScreenMetaTag" />
-					<xsl:if test="position() != last() or f:isHTMLChild(current())">
-						<xsl:value-of select="','"></xsl:value-of>
-					</xsl:if>
 				</xsl:when>
 				<xsl:when test="string-length(namespace-uri()) > 30 and (contains(namespace-uri(), 'http://www.sysmap.com.br/crux/'))">
 					<xsl:call-template name="cruxInnerMetaTags" />
-					<xsl:if test="position() != last() or f:isHTMLChild(current())">
-						<xsl:value-of select="','"></xsl:value-of>
-					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="createWidgetsMetaData" />
