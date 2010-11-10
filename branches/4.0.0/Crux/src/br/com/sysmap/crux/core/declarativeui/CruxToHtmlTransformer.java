@@ -16,47 +16,27 @@
 package br.com.sysmap.crux.core.declarativeui;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
+import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import net.sf.saxon.TransformerFactoryImpl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.declarativeui.template.TemplatesPreProcessor;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 
@@ -72,7 +52,7 @@ public class CruxToHtmlTransformer
 
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
-	private static Transformer transformer = null;
+	private static HTMLBuilder htmlBuilder = null;
 	private static DocumentBuilder documentBuilder = null;
 
 	private static List<CruxXmlPreProcessor> preProcessors;
@@ -93,11 +73,11 @@ public class CruxToHtmlTransformer
 		
 		try
 		{
-			ByteArrayOutputStream buff = new ByteArrayOutputStream();
+			StringWriter buff = new StringWriter();
 			Document source = loadCruxPage(file);
-			transformer.transform(new DOMSource(source), new StreamResult(buff));
-			String result = new String(buff.toByteArray(), "UTF-8");
-			result = handleHtmlDocument(source, result);
+			htmlBuilder.build(source, buff);
+//			String result = new String(buff.toByteArray(), "UTF-8");
+			String result = buff.toString();
 			StreamUtils.write(new ByteArrayInputStream(result.getBytes()), out, false);
 		}
 		catch (Exception e)
@@ -126,7 +106,6 @@ public class CruxToHtmlTransformer
 		}
 	}
 	
-	
 	/**
 	 * Makes it easier to read the output files
 	 * @param force
@@ -149,17 +128,15 @@ public class CruxToHtmlTransformer
 	 */
 	private static void init()
 	{
-		if (transformer == null)
+		if (htmlBuilder == null)
 		{
 			lock.lock();
 
-			if (transformer == null)
+			if (htmlBuilder == null)
 			{
 				try
 				{
-					TransformerFactory tfactory = new TransformerFactoryImpl();
-					InputStream is = generateXSLT();
-					transformer = tfactory.newTransformer(new StreamSource(is));
+					htmlBuilder = new HTMLBuilder();
 					DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 					builderFactory.setNamespaceAware(true);
 					builderFactory.setIgnoringComments(true);
@@ -186,195 +163,6 @@ public class CruxToHtmlTransformer
 	{
 		preProcessors = new ArrayList<CruxXmlPreProcessor>();
 		preProcessors.add(new TemplatesPreProcessor());
-	}
-
-	/**
-	 * If source contains DOCTYPE declaration, inserts it in the result.
-	 * Removes the XMLNS declaration from the root tag
-	 * @param result
-	 * @param result2 
-	 */
-	private static String handleHtmlDocument(Document source, String result)
-	{
-		DocumentType doctype = source.getDoctype();
-		
-		if (doctype != null)
-		{
-			result = "<!DOCTYPE " + doctype.getName() + ">\n" + result;
-		}
-		
-		int htmlTagBegin = result.toUpperCase().indexOf("<HTML");
-
-		if(htmlTagBegin >= 0)
-		{
-			int htmlTagEnd = result.indexOf(">", htmlTagBegin);
-			result = result.substring(0, htmlTagBegin) + "<html>" + result.substring(htmlTagEnd + 1);
-		}
-		
-		return result;
-	}
-
-	/**
-	 * Generate the XSLT file based on template crux-ui.template.xslt, importing all files with extension .crux.xslt.
-	 * @return
-	 */
-	private static InputStream generateXSLT()
-	{
-		InputStream templateIs = CruxToHtmlTransformer.class.getResourceAsStream("/META-INF/crux-ui.template.xslt");
-		if (templateIs == null)
-		{
-			throw new DeclarativeUITransformerException(messages.transformerTemplateNotFound());
-		}
-		try
-		{
-			String template = StreamUtils.readAsUTF8(templateIs);
-			String allWidgets = generateWidgetsList();
-			String referencedWidgets = generateReferenceWidgetsList();
-			String htmlPanelWidgets = generateHtmlPanelWidgetsList();
-			template = template.replace("${allWidgets}", allWidgets);
-			template = template.replace("${referencedWidgets}", referencedWidgets);
-			template = template.replace("${htmlPanelWidgets}", htmlPanelWidgets);
-			template = template.replace("${indent}", mustIndent() ? "yes" : "no");
-			template = template.replace("${charset}", outputCharset);
-			
-			if (log.isDebugEnabled())
-			{
-				log.debug("Generated XSLT:\n" +template);
-			}
-
-			return new ByteArrayInputStream(template.getBytes("UTF-8"));
-		}
-		catch (IOException e)
-		{
-			throw new DeclarativeUITransformerException(messages.transformerErrorReadingTemplate(e.getMessage()),e);
-		}
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private static String generateHtmlPanelWidgetsList()
-	{
-		StringBuilder widgetList = new StringBuilder(",");
-		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
-		for (String library : registeredLibraries)
-		{
-			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
-			for (String widget : factories)
-			{
-				try
-				{
-					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					DeclarativeFactory factory = clientClass.getAnnotation(DeclarativeFactory.class);
-					if (factory.htmlContainer())
-					{
-						widgetList.append(library+"_"+widget+",");				
-					}
-				}
-				catch (Exception e)
-				{
-					log.error(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
-				}
-			}
-		}
-		
-		return widgetList.toString();
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private static String generateReferenceWidgetsList()
-	{
-		StringBuilder widgetList = new StringBuilder();
-		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
-		for (String library : registeredLibraries)
-		{
-			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
-			for (String widget : factories)
-			{
-				try
-				{
-					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					Method method = clientClass.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
-					generateReferenceWidgetsListFromTagChildren(widgetList, method.getAnnotation(TagChildren.class), 
-																		library, widget, new HashSet<Class<?>>());
-				}
-				catch (Exception e)
-				{
-					log.error(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
-				}
-			}
-		}
-		
-		return widgetList.toString();
-	}
-
-	/**
-	 * 
-	 * @param widgetList 
-	 * @param tagChildren
-	 * @param parentLibrary
-	 */
-	private static void generateReferenceWidgetsListFromTagChildren(StringBuilder widgetList, TagChildren tagChildren, 
-																    String parentLibrary, String parentWidget, Set<Class<?>> added)
-	{
-		if (tagChildren != null)
-		{
-			for (TagChild child : tagChildren.value())
-			{
-				Class<? extends WidgetChildProcessor<?>> processorClass = child.value();
-				if (!added.contains(processorClass))
-				{
-					added.add(processorClass);
-					TagChildAttributes childAttributes = processorClass.getAnnotation(TagChildAttributes.class);
-					if (childAttributes!= null)
-					{
-						if (WidgetFactory.class.isAssignableFrom(childAttributes.type()))
-						{
-							DeclarativeFactory declarativeFactory = childAttributes.type().getAnnotation(DeclarativeFactory.class);
-							if (declarativeFactory != null)
-							{
-								widgetList.append(","+parentLibrary+"_"+parentWidget+"_"+childAttributes.tagName()+",|"+
-													  declarativeFactory.library()+"_"+declarativeFactory.id()+"|");
-							}
-						}
-					}
-					
-					try
-					{
-						Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
-						generateReferenceWidgetsListFromTagChildren(widgetList, method.getAnnotation(TagChildren.class), 
-																	parentLibrary, parentWidget, added);
-					}
-					catch (Exception e)
-					{
-						log.error(messages.transformerErrorGeneratingWidgetsList(), e);
-					}
-				}
-			}
-		}				
-	}
-	
-	/**
-	 * 
-	 */
-	private static String generateWidgetsList() throws IOException
-	{
-		StringBuilder widgetList = new StringBuilder(",");
-		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
-		for (String library : registeredLibraries)
-		{
-			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
-			for (String widget : factories)
-			{
-				widgetList.append(library+"_"+widget+",");				
-			}
-		}
-		
-		return widgetList.toString();
 	}
 
 	/**

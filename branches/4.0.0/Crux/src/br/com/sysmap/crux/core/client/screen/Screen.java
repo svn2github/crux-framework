@@ -989,8 +989,14 @@ public class Screen
 	 */
 	protected void fireEvent(ScreenLoadEvent event) 
 	{
-		eventBus.fireEventFromSource(event, this);
-		cleanLoadhandlers();
+		try
+		{
+			eventBus.fireEventFromSource(event, this);
+		}
+		finally
+		{
+			cleanLoadhandlers();
+		}
 	}
 	
 	/**
@@ -1486,18 +1492,12 @@ public class Screen
 	 */
 	private void cleanLoadhandlers()
 	{
-		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		for (int i=0; i<loadHandlers.size(); i++)
 		{
-			public void execute()
-			{
-				for (int i=0; i<loadHandlers.size(); i++)
-				{
-					HandlerRegistration handler = loadHandlers.get(i);
-					handler.removeHandler();
-				}
-				loadHandlers.clear();
-			}
-		});
+			HandlerRegistration handler = loadHandlers.get(i);
+			handler.removeHandler();
+		}
+		loadHandlers.clear();
 	}
 	
 	@Deprecated

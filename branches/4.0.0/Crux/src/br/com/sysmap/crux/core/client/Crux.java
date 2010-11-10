@@ -171,7 +171,7 @@ public class Crux implements EntryPoint
 		final Element loadElement = DOM.getElementById("cruxSplashScreen");
 		if (loadElement != null)
 		{
-			String transactionDelay = loadElement.getAttribute("_transactionDelay");
+			String transactionDelay = loadElement.getAttribute("transactionDelay");
 			int delay = 1;
 			if (!StringUtils.isEmpty(transactionDelay))
 			{
