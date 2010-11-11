@@ -361,9 +361,7 @@ public class ScreenFactory
 	private void create()
 	{
 		screen = new Screen(getScreenId());
-		Element metaDataDiv = DOM.getElementById("__CruxMetaData_");
-		
-		Array<CruxMetaData> metaData = CruxMetaData.parse(metaDataDiv.getInnerHTML());
+		Array<CruxMetaData> metaData = CruxMetaData.loadMetaData();
 		addToParserStack(null, null, metaData);
 		parseDocument();
 	}

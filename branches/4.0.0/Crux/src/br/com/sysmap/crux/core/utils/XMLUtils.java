@@ -40,7 +40,7 @@ public class XMLUtils
 	static 
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		builderFactory.setNamespaceAware(true);
+		builderFactory.setNamespaceAware(false);
 		builderFactory.setIgnoringComments(true);
 		
 		try

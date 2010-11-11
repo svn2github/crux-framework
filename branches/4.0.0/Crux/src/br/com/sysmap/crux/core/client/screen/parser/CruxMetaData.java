@@ -16,7 +16,6 @@
 package br.com.sysmap.crux.core.client.screen.parser;
 
 import br.com.sysmap.crux.core.client.collection.Array;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -29,21 +28,18 @@ public class CruxMetaData extends JavaScriptObject
 {
 
 	/**
-	 * Evaluates a trusted JSON string and returns its Crux metadata representation.
-	 * CAUTION! For efficiency, this method is implemented using the JavaScript
-	 * <code>eval()</code> function, which can execute arbitrary script. DO NOT
-	 * pass an untrusted string into this method.
+	 * Loads the Crux Meta Data information. It is represented in JSON format and is retrieved through 
+	 * a native JS function.
 	 * 
 	 * @param metadata Crux metadata to parse
 	 * @return a List that has been built by parsing the metadata string
 	 * @throws CruxMetaDataException 
 	 */
-	public static Array<CruxMetaData> parse(String metadata) throws CruxMetaDataException
+	public static Array<CruxMetaData> loadMetaData() throws CruxMetaDataException
 	{
-		assert(!StringUtils.isEmpty(metadata));
 		try
 		{
-			return evaluate(metadata);
+			return callMetaDataNativeLoader();
 		}
 		catch (JavaScriptException ex)
 		{
@@ -52,10 +48,10 @@ public class CruxMetaData extends JavaScriptObject
 	}
 
 	/**
-	 * This method converts <code>metadata</code> into a List of CruxMetaData.
+	 * Call the native function that loads the CruxMetaData array.
 	 */
-	private static native Array<CruxMetaData> evaluate(String jsonString) /*-{
-		return eval('(' + jsonString + ')');
+	private static native Array<CruxMetaData> callMetaDataNativeLoader() /*-{
+		return $wnd.__CruxMetaData_();
 	}-*/;
 
 	/**

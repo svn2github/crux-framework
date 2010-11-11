@@ -70,10 +70,15 @@ public class HTMLUtils
 			out.write("<");
 			out.write(name);
 			writeAttributes(node, out);
-			out.write(">");
-
-			if (!voidElements.contains(name))
+			
+			if (voidElements.contains(name))
 			{
+				out.write("/>");
+			}
+			else
+			{
+				out.write(">");
+
 				NodeList children = node.getChildNodes();
 				if (children != null)
 				{
@@ -168,7 +173,7 @@ public class HTMLUtils
 	 * @param s
 	 * @return
 	 */
-	private static String escapeHTML(String s, boolean trim)
+	private static String escapeHTML(String s, boolean normalizeSpaces)
 	{
 		StringBuilder sb = new StringBuilder();
 		s = s.replaceAll("&#10;", " ");
@@ -188,22 +193,55 @@ public class HTMLUtils
 				case '\n': 
 				case '\r': 
 				case '\t': 
-				case ' ': 
-					if (!lastIsSpace)
+				case ' ':
+					if (normalizeSpaces)
+					{
+						if (!lastIsSpace)
+						{
+							sb.append(" ");
+							lastIsSpace = true;
+						}
+					}
+					else
 					{
 						sb.append(" ");
-						lastIsSpace = true;
 					}
 				break;
 				case '&': sb.append("&#38;"); break;
 				case '"': sb.append("&quot;"); break;
 				case '\'': sb.append("&#39;"); break;
-				case '<': sb.append("&lt;"); 
+				case '<': sb.append("&lt;"); break;
 				case '>': sb.append("&gt;"); break;
 	
 				default: sb.append(c); break;
 			}
 		}
-		return (trim?sb.toString().trim():sb.toString());
-	}	
+		return (normalizeSpaces?sb.toString().trim():sb.toString());
+	}
+	
+	/**
+	 * @param s
+	 * @return
+	 */
+	public static String escapeJavascriptString(String s)
+	{
+		StringBuilder sb = new StringBuilder();
+		int n = s.length();
+		
+		for (int i = 0; i < n; i++)
+		{
+			char c = s.charAt(i);
+			switch (c)
+			{
+				case '\\': sb.append("\\\\"); break;
+				case '"': sb.append("\\\""); break;
+				case '\n': sb.append("\\n"); break;
+				case '\r': sb.append("\\r"); break;
+				case '\t': sb.append("\\t"); break;
+	
+				default: sb.append(c); break;
+			}
+		}
+		return (sb.toString());
+	}
 }

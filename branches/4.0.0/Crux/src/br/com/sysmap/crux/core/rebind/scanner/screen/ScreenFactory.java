@@ -380,15 +380,10 @@ public class ScreenFactory
 
 	    if (metaData != null)
 	    {
-	    	metaData = metaData.trim();
-	    	if (metaData.startsWith("<!--"))
-	    	{
-	    		metaData = metaData.substring(4).trim();
-	    		if (metaData.endsWith("-->"))
-	    		{
-	    			metaData = metaData.substring(0, metaData.length()-3);
-	    		}
-	    	}
+	    	int indexReturnFunction = metaData.indexOf("return ");
+	    	int indexCloseFunction = metaData.lastIndexOf('}');
+	    	
+	    	metaData = metaData.substring(indexReturnFunction+7, indexCloseFunction).trim();
 	    	
 	    	JSONArray meta = new JSONArray(metaData);
 	    	return meta;
@@ -403,12 +398,12 @@ public class ScreenFactory
 	 */
 	private Element getCruxMetaDataElement(Document source)
     {
-		NodeList nodeList = source.getElementsByTagName("div");
+		NodeList nodeList = source.getElementsByTagName("script");
 		for (int i=0; i< nodeList.getLength(); i++)
 		{
 			Element item = (Element) nodeList.item(i);
 			String metaDataId = item.getAttribute("id");
-			if (metaDataId != null && metaDataId.equals("__CruxMetaData_"))
+			if (metaDataId != null && metaDataId.equals("__CruxMetaDataTag_"))
 			{
 				return item;
 			}
