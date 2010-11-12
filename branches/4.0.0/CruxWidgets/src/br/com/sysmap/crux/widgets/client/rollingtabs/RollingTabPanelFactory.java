@@ -33,9 +33,9 @@ import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
@@ -139,13 +139,13 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		}
 	}
 	
-	@TagChildAttributes(tagName="tabHtml", type=AnyTag.class)
+	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
 	public static class HTMLTabProcessor extends WidgetChildProcessor<RollingTabPanel>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException 
 		{
-			String title = "";//TODO tratar o innerHTML context.getChildElement().getInnerHTML();
+			String title = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute("titleHtml", title);
 		}
 	}

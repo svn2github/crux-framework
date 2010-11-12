@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.widgets.client.decoratedpanel.AbstractDecoratedPanelFactory;
 
 /**
@@ -61,13 +61,14 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
 	}
 	
-	@TagChildAttributes(tagName="html", type=AnyTag.class)
+	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class HTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setTitleHtml("");//TODO tratar o innerHTML
+			String innerHtml = ensureHtmlChild(context.getChildElement(),true);
+			context.getRootWidget().setTitleHtml(innerHtml);
 		}
 	}
 
@@ -118,14 +119,14 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
 	}	
 	
-	@TagChildAttributes(tagName="html", type=AnyTag.class)
+	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class BodyHTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setContentHtml("");
-			//TODO tratar o innerHTML
+			String innerHtml = ensureHtmlChild(context.getChildElement(), true);
+			context.getRootWidget().setContentHtml(innerHtml);
 		}
 	}
 
