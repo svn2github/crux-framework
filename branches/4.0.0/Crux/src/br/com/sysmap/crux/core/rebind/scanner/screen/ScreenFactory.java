@@ -90,7 +90,7 @@ public class ScreenFactory
 				return screen;
 			}
 
-			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(id);
+			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id);
 			if (stream == null)
 			{
 				throw new ScreenConfigException(messages.screenFactoryScreeResourceNotFound(id));
@@ -193,10 +193,8 @@ public class ScreenFactory
 	            		}
 	            	}
 	            }
-            }//TODO tratar o HTMLPanel no xslt.
-			//TODO tratar text dentro de tags com namespace crux (filhos de widgets)...colocar como uma propriedade chamada "_text" no elemento JSON da tag
-			//TODO fazer trim no texto interno dos spans no xslt. Fazer scape de " ao montar o array json
-            catch (JSONException e)
+            }
+			catch (JSONException e)
             {
     			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId), e);
             }

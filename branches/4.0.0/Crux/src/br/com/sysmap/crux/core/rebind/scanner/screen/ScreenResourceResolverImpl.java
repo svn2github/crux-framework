@@ -93,4 +93,9 @@ public class ScreenResourceResolverImpl implements ScreenResourceResolver
 	{
 		return new ScreenResourcesScannerImpl().getPages(module);
 	}
+
+	public InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException
+    {
+	    return getScreenResource(screenId);
+    }
 }

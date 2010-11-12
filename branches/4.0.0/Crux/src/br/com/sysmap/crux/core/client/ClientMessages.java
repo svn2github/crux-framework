@@ -66,14 +66,16 @@ public interface ClientMessages extends Messages
 	String screenFactoryInvalidWidgetParent(String widgetId);
 	@DefaultMessage("[widget 003] - Can not create widget ''{0}''. Verify the widget type.")
 	String screenFactoryErrorCreateWidget(String widgetId);
-	@DefaultMessage("[widget 004] - The span element must contain at least one child.")
+	@DefaultMessage("[widget 004] - The element must contain at least one child.")
 	String widgetFactoryEnsureChildrenSpansEmpty();
-	@DefaultMessage("[widget 005] - The span element does not represents a widget.")
+	@DefaultMessage("[widget 005] - The element does not represents a widget.")
 	String widgetFactoryEnsureWidgetFail();
 	@DefaultMessage("[widget 006] - The element is not a span.")
 	String widgetFactoryEnsureSpanFail();
-	@DefaultMessage("[widget 008] - The span element must contain a text node child.")
+	@DefaultMessage("[widget 008] - The element must contain a text node child.")
 	String widgetFactoryEnsureTextChildEmpty();
+	@DefaultMessage("[widget 008] - The element must contain an inner HTML.")
+	String widgetFactoryEnsureHtmlChildEmpty();
 	
 	@DefaultMessage("[callback 001] - An Invalid controller was passed to AsyncCallbackAdapter.")
 	String asyncCallbackInvalidHandlerError();

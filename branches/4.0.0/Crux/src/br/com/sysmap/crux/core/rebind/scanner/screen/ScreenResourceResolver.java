@@ -35,6 +35,14 @@ public interface ScreenResourceResolver
 	InputStream getScreenResource(String screenId) throws InterfaceConfigException;
 	
 	/**
+	 * Gets the resource for a given screenId, the result must be a valid XML (escaped correctly)
+	 * @param id
+	 * @return
+	 * @throws InterfaceConfigException 
+	 */
+	InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException;
+
+	/**
 	 * List all Crux screen IDs
 	 * @return
 	 * @throws ScreenConfigException 

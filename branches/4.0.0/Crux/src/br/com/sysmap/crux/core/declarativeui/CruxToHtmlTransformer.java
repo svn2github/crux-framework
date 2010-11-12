@@ -52,7 +52,6 @@ public class CruxToHtmlTransformer
 
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
-	private static HTMLBuilder htmlBuilder = null;
 	private static DocumentBuilder documentBuilder = null;
 
 	private static List<CruxXmlPreProcessor> preProcessors;
@@ -67,7 +66,7 @@ public class CruxToHtmlTransformer
 	 * @throws IOException
 	 * @throws InterfaceConfigException 
 	 */
-	public static void generateHTML(InputStream file, OutputStream out)
+	public static void generateHTML(InputStream file, OutputStream out, boolean escapeXML)
 	{
 		init();
 		
@@ -75,6 +74,7 @@ public class CruxToHtmlTransformer
 		{
 			StringWriter buff = new StringWriter();
 			Document source = loadCruxPage(file);
+			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, mustIndent());
 			htmlBuilder.build(source, buff);
 //			String result = new String(buff.toByteArray(), "UTF-8");
 			String result = buff.toString();
@@ -93,11 +93,11 @@ public class CruxToHtmlTransformer
 	 * @param out
 	 * @throws InterfaceConfigException
 	 */
-	public static void generateHTML(String filePath, OutputStream out)
+	public static void generateHTML(String filePath, OutputStream out, boolean escapeXML)
 	{
 		try
 		{
-			generateHTML(new FileInputStream(filePath), out);
+			generateHTML(new FileInputStream(filePath), out, escapeXML);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -128,15 +128,14 @@ public class CruxToHtmlTransformer
 	 */
 	private static void init()
 	{
-		if (htmlBuilder == null)
+		if (documentBuilder == null)
 		{
 			lock.lock();
 
-			if (htmlBuilder == null)
+			if (documentBuilder == null)
 			{
 				try
 				{
-					htmlBuilder = new HTMLBuilder();
 					DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 					builderFactory.setNamespaceAware(true);
 					builderFactory.setIgnoringComments(true);
@@ -146,7 +145,7 @@ public class CruxToHtmlTransformer
 				}
 				catch (Throwable e)
 				{
-					log.error(messages.transformerErrorCreatingTransformer(e.getMessage()), e);
+					log.error(messages.cruxToHtmlTransformerInitializeError(e.getMessage()), e);
 				}
 				finally
 				{

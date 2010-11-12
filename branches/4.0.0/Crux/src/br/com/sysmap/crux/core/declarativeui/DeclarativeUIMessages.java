@@ -26,14 +26,11 @@ public interface DeclarativeUIMessages
 	@DefaultServerMessage("[declarativeui 001] - Error initializing TemplateScanner.")
 	String templatesScannerInitializationError(String localizedMessage);
 	
-	@DefaultServerMessage("[declarativeui 002] - Error creating xslt file from template. Template crux-ui.template.xslt not found")
-	String transformerTemplateNotFound();
+	@DefaultServerMessage("[declarativeui 002] - Error initializing cruxToHtmlTransformer: {0}")
+	String cruxToHtmlTransformerInitializeError(String message);
 	
-	@DefaultServerMessage("[declarativeui 003] - Error creating xslt file from template. Error reading Template crux-ui.template.xslt: {0}")
-	String transformerErrorReadingTemplate(String message);
-	
-	@DefaultServerMessage("[declarativeui 004] - Error creating xsl transformer: {0}")
-	String transformerErrorCreatingTransformer(String message);
+	@DefaultServerMessage("[declarativeui 004] - Error creating htmlBuilder: {0}")
+	String htmlBuilderErrorCreatingBuilder(String message);
 	
 	@DefaultServerMessage("[declarativeui 005] - Error obtaining screen resource. Screen id: {0}. Message: {1}")
 	String declarativeUIScreenResolverError(String screenId, String message);

@@ -64,6 +64,17 @@ public class HTMLUtils
 	 */
 	public static void write(Node node, Writer out) throws IOException
 	{
+		write(node, out, false);
+	}
+
+	/**
+	 * @param node
+	 * @param out
+	 * @param indentOutput
+	 * @throws IOException
+	 */
+	public static void write(Node node, Writer out, boolean indentOutput) throws IOException
+	{
 		if (node.getNodeType() == Node.ELEMENT_NODE)
 		{
 			String name = ((Element)node).getNodeName().toLowerCase();
@@ -95,7 +106,7 @@ public class HTMLUtils
 						}
 						else
 						{
-							write(child, out);
+							write(child, out, indentOutput);
 						}
 					}
 				}
@@ -106,7 +117,14 @@ public class HTMLUtils
 		}
 		else if (node.getNodeType() == Node.TEXT_NODE)
 		{
-			out.write(escapeHTML(node.getNodeValue()));
+			if (indentOutput)
+			{
+				out.write(escapeIndentedHTML(node.getNodeValue()));
+			}
+			else
+			{
+				out.write(escapeHTML(node.getNodeValue()));
+			}
 		}
 	}
 	
@@ -223,7 +241,33 @@ public class HTMLUtils
 	 * @param s
 	 * @return
 	 */
-	public static String escapeJavascriptString(String s)
+	private static String escapeIndentedHTML(String s)
+	{
+		StringBuilder sb = new StringBuilder();
+		int n = s.length();
+		
+		for (int i = 0; i < n; i++)
+		{
+			char c = s.charAt(i);
+			switch (c)
+			{
+				case '&': sb.append("&#38;"); break;
+				case '"': sb.append("&quot;"); break;
+				case '\'': sb.append("&#39;"); break;
+				case '<': sb.append("&lt;"); break;
+				case '>': sb.append("&gt;"); break;
+	
+				default: sb.append(c); break;
+			}
+		}
+		return (sb.toString());
+	}
+
+	/**
+	 * @param s
+	 * @return
+	 */
+	public static String escapeJavascriptString(String s, boolean escapeXML)
 	{
 		StringBuilder sb = new StringBuilder();
 		int n = s.length();
@@ -238,6 +282,14 @@ public class HTMLUtils
 				case '\n': sb.append("\\n"); break;
 				case '\r': sb.append("\\r"); break;
 				case '\t': sb.append("\\t"); break;
+				case '<': 
+					if (escapeXML) sb.append("&lt;");
+					else sb.append("<");
+				break;
+				case '>': 
+					if (escapeXML) sb.append("&gt;"); 
+					else sb.append(">");
+				break;
 	
 				default: sb.append(c); break;
 			}

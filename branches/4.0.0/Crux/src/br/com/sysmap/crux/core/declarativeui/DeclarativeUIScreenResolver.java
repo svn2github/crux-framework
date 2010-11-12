@@ -51,7 +51,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	/**
 	 * 
 	 */
-	public InputStream getScreenResource(String screenId) throws InterfaceConfigException
+	public InputStream getScreenResource(String screenId, boolean escapeXML) throws InterfaceConfigException
 	{
 		try
 		{
@@ -97,7 +97,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 				return null;
 			}
 
-			return performTransformation(inputStream);
+			return performTransformation(inputStream, escapeXML);
 		}
 		catch (Exception e)
 		{
@@ -111,12 +111,22 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	 * @return
 	 * @throws IOException
 	 */
-	protected InputStream performTransformation(InputStream inputStream) throws IOException
+	protected InputStream performTransformation(InputStream inputStream, boolean escapeXML) throws IOException
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		CruxToHtmlTransformer.generateHTML(inputStream, out);			
+		CruxToHtmlTransformer.generateHTML(inputStream, out, escapeXML);			
 		return new ByteArrayInputStream(out.toByteArray());
 	}
+
+	public InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException
+    {
+	    return getScreenResource(screenId, true);
+    }
+
+	public InputStream getScreenResource(String screenId) throws InterfaceConfigException
+    {
+	    return getScreenResource(screenId, false);
+    }
 	
 	
 }

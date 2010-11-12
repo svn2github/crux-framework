@@ -17,17 +17,14 @@ package br.com.sysmap.crux.core.declarativeui.template;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +37,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
 import br.com.sysmap.crux.core.declarativeui.CruxXmlPreProcessor;
 import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
+import br.com.sysmap.crux.core.declarativeui.XPathUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
@@ -63,56 +61,12 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	public TemplatesPreProcessor()
 	{
 		this.templateParser = new TemplateParser();
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath findPath = factory.newXPath();
-		findPath.setNamespaceContext(new NamespaceContext()
-		{
-			public String getNamespaceURI(String prefix)
-			{
-				return "http://www.sysmap.com.br/crux";
-			}
-
-			public String getPrefix(String namespaceURI)
-			{
-				return "c";
-			}
-
-			public Iterator<?> getPrefixes(String namespaceURI)
-			{
-				List<String> prefixes = new ArrayList<String>();
-				prefixes.add("c");
-
-				return prefixes.iterator();
-			}
-		});
-
-		XPath htmlPath = factory.newXPath();
-		htmlPath.setNamespaceContext(new NamespaceContext()
-		{
-			public String getNamespaceURI(String prefix)
-			{
-				return "http://www.w3.org/1999/xhtml";
-			}
-
-			public String getPrefix(String namespaceURI)
-			{
-				return "h";
-			}
-
-			public Iterator<?> getPrefixes(String namespaceURI)
-			{
-				List<String> prefixes = new ArrayList<String>();
-				prefixes.add("h");
-
-				return prefixes.iterator();
-			}
-		});
-		
+		XPath findPath = XPathUtils.getCruxPagesXPath();
+		XPath htmlPath = XPathUtils.getHtmlXPath();
 		try
 		{
 			findTemplatesExpression = findPath.compile(".//*[contains(namespace-uri(), 'http://www.sysmap.com.br/templates/')]");
 			findScreensExpression = findPath.compile("//c:screen");
-			
 			findBodyExpression = htmlPath.compile("//h:body");
 		}
 		catch (XPathExpressionException e)

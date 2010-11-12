@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.declarativeui;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -25,7 +26,13 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -41,10 +48,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 
 /**
@@ -53,22 +62,21 @@ import br.com.sysmap.crux.core.utils.HTMLUtils;
  */
 class HTMLBuilder
 {
-	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
-
-	private static final String XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
-	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.sysmap.com.br/crux/";
 	private static final String CRUX_CORE_NAMESPACE= "http://www.sysmap.com.br/crux";
-	private DocumentBuilder documentBuilder;
-	private Map<String, String> referenceWidgetsList;
-
-	private Set<String> htmlPanelContainers;
-
-	/**
-	 * @throws HTMLBuilderException 
-	 * 
-	 */
-	public HTMLBuilder() throws HTMLBuilderException
-    {
+	private static DocumentBuilder documentBuilder;
+	private static XPathExpression findCruxPagesBodyExpression;
+	private static XPathExpression findHTMLHeadExpression;
+	private static Set<String> htmlPanelContainers;
+	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
+	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
+	private static Map<String, String> referenceWidgetsList;
+	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.sysmap.com.br/crux/";
+	private static Set<String> widgetsSubTags;
+	private static Set<String> hasInnerHTMLWidgetTags;
+	private static final String XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+	
+	static 
+	{
 		try
         {
 	        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -76,14 +84,158 @@ class HTMLBuilder
 	        builderFactory.setIgnoringComments(true);
 	        
 	        documentBuilder = builderFactory.newDocumentBuilder();
-	        referenceWidgetsList = generateReferenceWidgetsList();
-	        htmlPanelContainers = generateHtmlPanelWidgetsList();
+	        generateReferenceWidgetsList();
+	        generateHtmlPanelWidgetsList();
+
+	        XPath htmlPath = XPathUtils.getHtmlXPath();
+			findCruxPagesBodyExpression = htmlPath.compile("//h:body");
+			findHTMLHeadExpression = htmlPath.compile("//h:head");
         }
         catch (Exception e)
         {
-        	throw new HTMLBuilderException(e.getMessage(), e);
+        	log.error(messages.htmlBuilderErrorCreatingBuilder(e.getMessage()), e);
         }
+	}
+	private String cruxTagName;
+	private final boolean escapeXML;
+	private final boolean indentOutput;
+
+	private int jsIndentationLvl;
+	
+	
+	/**
+	 * @param indentOutput 
+	 * @throws HTMLBuilderException 
+	 * 
+	 */
+	public HTMLBuilder(boolean escapeXML, boolean indentOutput) throws HTMLBuilderException
+    {
+		this.escapeXML = escapeXML;
+		this.indentOutput = indentOutput;
     }
+	
+	/**
+	 * 
+	 * @return
+	 * @throws HTMLBuilderException 
+	 */
+	private static void generateHtmlPanelWidgetsList() throws HTMLBuilderException
+	{
+		htmlPanelContainers = new HashSet<String>();
+		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
+		for (String library : registeredLibraries)
+		{
+			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
+			for (String widget : factories)
+			{
+				try
+				{
+					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
+					DeclarativeFactory factory = clientClass.getAnnotation(DeclarativeFactory.class);
+					if (factory.htmlContainer())
+					{
+						htmlPanelContainers.add(library+"_"+widget);				
+					}
+				}
+				catch (Exception e)
+				{
+					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws HTMLBuilderException 
+	 */
+	private static void generateReferenceWidgetsList() throws HTMLBuilderException
+	{
+		referenceWidgetsList = new HashMap<String, String>();
+		widgetsSubTags = new HashSet<String>();
+		hasInnerHTMLWidgetTags = new HashSet<String>();
+		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
+		for (String library : registeredLibraries)
+		{
+			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
+			for (String widget : factories)
+			{
+				try
+				{
+					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
+					Method method = clientClass.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
+					generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
+																		library, widget, new HashSet<String>());
+				}
+				catch (Exception e)
+				{
+					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param widgetList 
+	 * @param tagChildren
+	 * @param parentLibrary
+	 * @throws HTMLBuilderException 
+	 */
+	private static void generateReferenceWidgetsListFromTagChildren(TagChildren tagChildren, 
+																    String parentLibrary, String parentWidget, Set<String> added) throws HTMLBuilderException
+	{
+		if (tagChildren != null)
+		{
+			String parentPath;
+			for (TagChild child : tagChildren.value())
+			{
+				Class<? extends WidgetChildProcessor<?>> processorClass = child.value();
+				if (!added.contains(processorClass.getCanonicalName()))
+				{
+					parentPath = parentWidget;
+					added.add(processorClass.getCanonicalName());
+					TagChildAttributes childAttributes = ClassUtils.getChildtrenAttributesAnnotation(processorClass);
+					if (childAttributes!= null)
+					{
+						if (!StringUtils.isEmpty(childAttributes.tagName()))
+						{
+							parentPath = parentWidget+"_"+childAttributes.tagName();
+							if (WidgetFactory.class.isAssignableFrom(childAttributes.type()))
+							{
+								DeclarativeFactory declarativeFactory = childAttributes.type().getAnnotation(DeclarativeFactory.class);
+								if (declarativeFactory != null)
+								{
+									referenceWidgetsList.put(parentLibrary+"_"+parentPath,
+											declarativeFactory.library()+"_"+declarativeFactory.id());
+								}
+							}
+							else
+							{
+								if (HTMLTag.class.isAssignableFrom(childAttributes.type()))
+								{
+									hasInnerHTMLWidgetTags.add(parentLibrary+"_"+parentPath);
+								}
+								widgetsSubTags.add(parentLibrary+"_"+parentPath);							
+							}
+						}
+					}
+					
+					try
+					{
+						Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+						generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
+																	parentLibrary, parentPath, added);
+					}
+					catch (Exception e)
+					{
+						throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsList(), e);
+					}
+				}
+			}
+		}				
+	}
 	
 	/**
 	 * @param cruxPageDocument
@@ -105,87 +257,103 @@ class HTMLBuilder
 	}
 
 	/**
-	 * @param cruxPageDocument
-	 * @param htmlDocument
+	 * 
 	 */
-	private void translateDocument(Document cruxPageDocument, Document htmlDocument)
+	private void clearCurrentWidget()
+	{
+		cruxTagName = "";
+	}
+
+	/**
+	 * @param cruxPageDocument
+	 * @return
+	 */
+	private Document createHTMLDocument(Document cruxPageDocument)
     {
-		Element cruxPageElement = cruxPageDocument.getDocumentElement();
-		Node htmlElement = htmlDocument.importNode(cruxPageElement, false);
-		htmlDocument.appendChild(htmlElement);
-		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
+	    Document htmlDocument;
+		DocumentType doctype = cruxPageDocument.getDoctype();
+		if (doctype != null)
+		{
+			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", doctype);
+		}
+		else
+		{
+			htmlDocument = documentBuilder.newDocument();
+		}
+	    return htmlDocument;
     }
 
 	/**
-	 * @param cruxPageElement
-	 * @param htmlElement
+	 * @param cruxPageInnerTag
+	 * @param cruxArrayMetaData
 	 * @param htmlDocument
+	 * @throws HTMLBuilderException 
 	 */
-	private void translateDocument(Node cruxPageElement, Node htmlElement, Document htmlDocument, boolean copyTextNodes)
+	private void generateCruxInnerMetaData(Element cruxPageInnerTag, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
     {
-		NodeList childNodes = cruxPageElement.getChildNodes();
-		if (childNodes != null)
+		if (indentOutput)
 		{
-			for (int i=0; i<childNodes.getLength(); i++)
+			writeIndentationSpaces(cruxArrayMetaData);
+		}
+		cruxArrayMetaData.append("{");
+		
+		String currentWidgetTag = getCurrentWidgetTag() ;
+		if (isWidget(currentWidgetTag))
+		{
+			cruxArrayMetaData.append("\"type\":\""+currentWidgetTag+"\"");
+		}
+		else
+		{
+			cruxArrayMetaData.append("\"childTag\":\""+cruxPageInnerTag.getLocalName()+"\"");
+		}
+		
+		if (allowInnerHTML(currentWidgetTag))
+		{
+			String innerHTML = getHTMLFromNode(cruxPageInnerTag);
+			if (innerHTML.length() > 0)
 			{
-				Node child = childNodes.item(i);
-				String namespaceURI = child.getNamespaceURI();
-				
-				if (namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE))
-				{
-				    translateCruxCoreElements((Element)child, (Element)htmlElement, htmlDocument);
-				}
-				else if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
-				{
-					translateCruxInnerTags((Element)child, (Element)htmlElement, htmlDocument);
-				}
-				else
-				{
-					if (copyTextNodes || child.getNodeType() != Node.TEXT_NODE)
-					{
-						Node htmlChild = htmlDocument.importNode(child, false);
-						htmlElement.appendChild(htmlChild);
-						translateDocument(child, htmlChild, htmlDocument, true);
-						String localName = child.getLocalName();
-						if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) && localName != null && localName.equals("body"))
-						{
-							generateCruxMetaDataElement((Element)child, (Element)htmlChild, htmlDocument);
-						}
-					}
-				}
+				cruxArrayMetaData.append(",\"_html\":\""+HTMLUtils.escapeJavascriptString(innerHTML, escapeXML)+"\"");
 			}
 		}
-    }
+		else
+		{
+			String innerText = getTextFromNode(cruxPageInnerTag);
+			if (innerText.length() > 0)
+			{
+				cruxArrayMetaData.append(",\"_text\":\""+HTMLUtils.escapeJavascriptString(innerText, escapeXML)+"\"");
+			}
+		}
+		generateCruxMetaDataAttributes(cruxPageInnerTag, cruxArrayMetaData);
+		NodeList childNodes = cruxPageInnerTag.getChildNodes();
+		if (childNodes != null && childNodes.getLength() > 0)
+		{
+			cruxArrayMetaData.append(",\"children\":[");
+			indent();
+			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData, htmlDocument);
+			outdent();
+			cruxArrayMetaData.append("]");
+		}
 
+		cruxArrayMetaData.append("}");
+    }
+	
 	/**
-	 * @param cruxPageBodyElement
-	 * @param htmlElement
-	 * @param htmlDocument
+	 * @param tagName
+	 * @return
 	 */
-	private void generateCruxMetaDataElement(Element cruxPageBodyElement, Element htmlElement, Document htmlDocument)
-    {
-		Element cruxMetaData = htmlDocument.createElement("script");
-		cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
-		htmlElement.appendChild(cruxMetaData);
-		
-		Text textNode = htmlDocument.createTextNode("function __CruxMetaData_(){return [");
-		cruxMetaData.appendChild(textNode);
-		
-		StringBuilder cruxArrayMetaData = new StringBuilder();
-		generateCruxMetaData(cruxPageBodyElement, cruxArrayMetaData, htmlDocument);
-		textNode = htmlDocument.createTextNode(cruxArrayMetaData.toString());
-		cruxMetaData.appendChild(textNode);
-		
-		textNode = htmlDocument.createTextNode("]}");
-		cruxMetaData.appendChild(textNode);
-    }
-
+	private boolean allowInnerHTML(String tagName)
+	{
+		return hasInnerHTMLWidgetTags.contains(tagName);	
+	}
+	
+	
 	/**
 	 * @param cruxPageBodyElement
 	 * @param cruxArrayMetaData
 	 * @param htmlDocument
+	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxMetaData(Node cruxPageBodyElement, StringBuilder cruxArrayMetaData, Document htmlDocument)
+	private void generateCruxMetaData(Node cruxPageBodyElement, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
     {
 		NodeList childNodes = cruxPageBodyElement.getChildNodes();
 		if (childNodes != null)
@@ -212,7 +380,10 @@ class HTMLBuilder
 					{
 						cruxArrayMetaData.append(",");
 					}
+					String widgetType = getCurrentWidgetTag(); 
+					updateCurrentWidgetTag((Element)child);
 					generateCruxInnerMetaData((Element)child, cruxArrayMetaData, htmlDocument);
+					setCurrentWidgetTag(widgetType);
 					needsComma = true;
 				}
 				else
@@ -232,40 +403,152 @@ class HTMLBuilder
 			}
 		}
     }
-	
-	private void generateCruxInnerMetaData(Element cruxPageInnerTag, StringBuilder cruxArrayMetaData, Document htmlDocument)
-    {
-		cruxArrayMetaData.append("{");
-		
-		String widgetType = getReferencedWidget(cruxPageInnerTag);
-		if (widgetType != null)
-		{
-			cruxArrayMetaData.append("\"type\":\""+widgetType+"\"");
-		}
-		else if (isWidget(cruxPageInnerTag))
-		{
-			widgetType = getLibraryName(cruxPageInnerTag)+"_"+cruxPageInnerTag.getLocalName();
-			cruxArrayMetaData.append("\"type\":\""+widgetType+"\"");
-		}
-		else
-		{
-			cruxArrayMetaData.append("\"childTag\":\""+cruxPageInnerTag.getLocalName()+"\"");
-		}
-	    String innerText = getTextFromNode(cruxPageInnerTag);//TODO criar um "if support inner text" que teste a tag em questao
-	    if (innerText.length() > 0)//TODO criar um "if support inner html" que teste a tag em questao
-	    {
-			cruxArrayMetaData.append(",\"_text\":\""+HTMLUtils.escapeJavascriptString(innerText)+"\"");
-	    }
-		generateCruxMetaDataAttributes(cruxPageInnerTag, cruxArrayMetaData);
-		NodeList childNodes = cruxPageInnerTag.getChildNodes();
-		if (childNodes != null && childNodes.getLength() > 0)
-		{
-			cruxArrayMetaData.append(",\"children\":[");
-			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData, htmlDocument);
-			cruxArrayMetaData.append("]");
-		}
 
+	/**
+	 * @param cruxPageMetaData
+	 * @param cruxArrayMetaData
+	 */
+	private void generateCruxMetaDataAttributes(Element cruxPageMetaData, StringBuilder cruxArrayMetaData)
+	{
+		NamedNodeMap attributes = cruxPageMetaData.getAttributes();
+		if (attributes != null)
+		{
+			for (int i=0; i<attributes.getLength(); i++)
+			{
+				Node attribute = attributes.item(i);
+				cruxArrayMetaData.append(",");
+				cruxArrayMetaData.append("\""+attribute.getLocalName()+"\":");
+				cruxArrayMetaData.append("\""+HTMLUtils.escapeJavascriptString(attribute.getNodeValue(), escapeXML)+"\"");
+			}
+		}
+	}
+
+	/**
+	 * @param cruxPageBodyElement
+	 * @param htmlElement
+	 * @param htmlDocument
+	 * @throws HTMLBuilderException 
+	 */
+	private void generateCruxMetaDataElement(Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
+    {
+		Element cruxMetaData = htmlDocument.createElement("script");
+		cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
+		htmlElement.appendChild(cruxMetaData);
+		
+		Text textNode = htmlDocument.createTextNode("function __CruxMetaData_(){return [");
+		cruxMetaData.appendChild(textNode);
+		
+		StringBuilder cruxArrayMetaData = new StringBuilder();
+		generateCruxMetaData(cruxPageBodyElement, cruxArrayMetaData, htmlDocument);
+		textNode = htmlDocument.createTextNode(cruxArrayMetaData.toString());
+		cruxMetaData.appendChild(textNode);
+		
+		textNode = htmlDocument.createTextNode("]}");
+		cruxMetaData.appendChild(textNode);
+    }
+	
+	/**
+	 * @param cruxPageScreen
+	 * @param cruxArrayMetaData
+	 * @param htmlDocument
+	 * @throws HTMLBuilderException 
+	 */
+	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
+    {
+		if (indentOutput)
+		{
+			writeIndentationSpaces(cruxArrayMetaData);
+		}
+		cruxArrayMetaData.append("{");
+		cruxArrayMetaData.append("\"type\":\"screen\"");
+		
+		generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
+		
 		cruxArrayMetaData.append("}");
+		StringBuilder childrenMetaData = new StringBuilder();
+		generateCruxMetaData(cruxPageScreen, childrenMetaData, htmlDocument);
+		
+		if (childrenMetaData.length() > 0)
+		{
+			cruxArrayMetaData.append(",");
+			cruxArrayMetaData.append(childrenMetaData);
+		}		
+    }
+	
+	/**
+	 * @param cruxPageDocument
+	 * @return
+	 * @throws HTMLBuilderException
+	 */
+	private Element getCruxPageBodyElement(Document cruxPageDocument) throws HTMLBuilderException
+	{
+		try
+        {
+	        NodeList bodyNodes = (NodeList)findCruxPagesBodyExpression.evaluate(cruxPageDocument, XPathConstants.NODESET);
+	        if (bodyNodes.getLength() > 0)
+	        {
+	        	return (Element)bodyNodes.item(0);
+	        }
+	        return null;
+        }
+        catch (XPathExpressionException e)
+        {
+        	throw new HTMLBuilderException(e.getMessage(), e);
+        }
+	}
+	
+	/**
+	 * @return
+	 */
+	private String getCurrentWidgetTag()
+	{
+		return cruxTagName;
+	}
+
+	/**
+	 * @param htmlDocument
+	 * @return
+	 * @throws HTMLBuilderException
+	 */
+	private Element getHtmlHeadElement(Document htmlDocument) throws HTMLBuilderException
+	{
+		try
+        {
+	        NodeList headNodes = (NodeList)findHTMLHeadExpression.evaluate(htmlDocument, XPathConstants.NODESET);
+	        if (headNodes.getLength() > 0)
+	        {
+	        	return (Element)headNodes.item(0);
+	        }
+	        return null;
+        }
+        catch (XPathExpressionException e)
+        {
+        	throw new HTMLBuilderException(e.getMessage(), e);
+        }
+	}
+
+	/**
+	 * @param node
+	 * @return
+	 */
+	private String getLibraryName(Node node)
+	{
+		String namespaceURI = node.getNamespaceURI();
+		
+		if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
+		{
+			return namespaceURI.substring(WIDGETS_NAMESPACE_PREFIX.length());
+		}
+		return null;
+	}
+
+	/**
+	 * @param node
+	 * @return
+	 */
+	private String getReferencedWidget(String tagName)
+    {
+	    return referenceWidgetsList.get(tagName);
     }
 
 	/**
@@ -292,123 +575,37 @@ class HTMLBuilder
 		return text.toString().trim();
 	}
 	
-	
-/*
-	<xsl:template name="cruxInnerMetaTags">
-		<xsl:param name="libraryName" select="f:getLibraryName(current())"></xsl:param>
-		<xsl:param name="innerText" select="string-join(text(), '')"></xsl:param>
-		<xsl:value-of select="'{'"></xsl:value-of>
-			<xsl:variable name="tagName" select="f:getTagName(current(), local-name())" />
-			<xsl:choose>
-				<xsl:when test="f:isReferencedWidget($tagName)">
-					<xsl:value-of select="concat('&quot;type&quot;:&quot;', f:getTagType($tagName), '&quot;')"></xsl:value-of>
-				</xsl:when>
-				<xsl:when test="f:isWidget($libraryName, local-name())">
-					<xsl:value-of select="concat('&quot;type&quot;:&quot;', $libraryName, '_', local-name(), '&quot;')"></xsl:value-of>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('&quot;childTag&quot;:&quot;', local-name(), '&quot;')"></xsl:value-of>
-				</xsl:otherwise>
-			</xsl:choose>			
-			
-			<xsl:if test="string-length(normalize-space($innerText)) > 0">
-				<xsl:value-of select="concat(',&quot;_text&quot;:&quot;', f:escapeString($innerText), '&quot;')"></xsl:value-of>
-			</xsl:if>			
-			<xsl:for-each select="current()/@*">
-				<xsl:value-of select="','"></xsl:value-of>
-				<xsl:call-template name="writeMetaAttribute"/>
-			</xsl:for-each>
-			
-			<xsl:if test="count(child::*) > 0 ">
-				<xsl:value-of select="',&quot;children&quot;:['"></xsl:value-of>
-				<xsl:call-template name="createWidgetsMetaData" />
-				<xsl:value-of select="']'"></xsl:value-of>
-			</xsl:if>
-			<xsl:value-of select="'},'"></xsl:value-of>
-	</xsl:template>	
- */
-	
-	/**
-	 * @param cruxPageScreen
-	 * @param cruxArrayMetaData
-	 * @param htmlDocument
-	 */
-	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData, Document htmlDocument)
-    {
-		cruxArrayMetaData.append("{");
-		cruxArrayMetaData.append("\"type\":\"screen\"");
-		
-		generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
-		
-		cruxArrayMetaData.append("}");
-		StringBuilder childrenMetaData = new StringBuilder();
-		generateCruxMetaData(cruxPageScreen, childrenMetaData, htmlDocument);
-		
-		if (childrenMetaData.length() > 0)
-		{
-			cruxArrayMetaData.append(",");
-			cruxArrayMetaData.append(childrenMetaData);
-		}		
-    }
-
-	/**
-	 * @param cruxPageMetaData
-	 * @param cruxArrayMetaData
-	 */
-	private void generateCruxMetaDataAttributes(Element cruxPageMetaData, StringBuilder cruxArrayMetaData)
-	{
-		NamedNodeMap attributes = cruxPageMetaData.getAttributes();
-		if (attributes != null)
-		{
-			for (int i=0; i<attributes.getLength(); i++)
-			{
-				Node attribute = attributes.item(i);
-				cruxArrayMetaData.append(",");
-				cruxArrayMetaData.append("\""+attribute.getLocalName()+"\":");
-				cruxArrayMetaData.append("\""+HTMLUtils.escapeJavascriptString(attribute.getNodeValue())+"\"");
-			}
-		}
-	}
-
-	/**
-	 * @param cruxPageElement
-	 * @param htmlElement
-	 * @param htmlDocument
-	 */
-	private void translateCruxInnerTags(Element cruxPageElement, Element htmlElement, Document htmlDocument)
-    {
-		
-		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
-		if (htmlContainerWidget || ((isReferencedWidget(cruxPageElement) || isWidget(cruxPageElement)) && isHTMLChild(cruxPageElement)))
-		{
-			Element widgetHolder = htmlDocument.createElement("div");
-			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
-			htmlElement.appendChild(widgetHolder);
-			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
-		}
-		else
-		{
-			translateDocument(cruxPageElement, htmlElement, htmlDocument, false);
-		}
-    }
-
 	/**
 	 * @param node
-	 * @param elementName
 	 * @return
+	 * @throws HTMLBuilderException 
 	 */
-	private String getTagName(Node node, String elementName)
+	private String getHTMLFromNode(Element elem) throws HTMLBuilderException
 	{
-		String libraryName = getLibraryName(node);
-		Node parentNode = node.getParentNode();
-		if (StringUtils.isEmpty(libraryName) || isWidget(parentNode))
+		try
 		{
-			return libraryName+"_"+parentNode.getLocalName()+"_"+elementName;
+			StringWriter innerHTML = new StringWriter(); 
+			NodeList children = elem.getChildNodes();
+			
+			for (int i=0; i<children.getLength(); i++)
+			{
+				Node child = children.item(i);
+				HTMLUtils.write(child, innerHTML);
+			}
+	        return innerHTML.toString();
 		}
-		else
+		catch (IOException e)
 		{
-			return getTagName(parentNode, elementName);
+			throw new HTMLBuilderException(e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void indent()
+	{
+		jsIndentationLvl++;
 	}
 	
 	/**
@@ -422,6 +619,77 @@ class HTMLBuilder
 		return (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode));
 	}
 	
+	/**
+	 * @param node
+	 * @return
+	 */
+	private boolean isHtmlContainerWidget(Node node)
+	{
+		if (node instanceof Element)
+		{
+			return isHtmlContainerWidget(node.getLocalName(), getLibraryName(node));
+		}
+		return false;
+	}
+	
+	/**
+	 * @param localName
+	 * @param libraryName
+	 * @return
+	 */
+	private boolean isHtmlContainerWidget(String localName, String libraryName)
+	{
+	    return htmlPanelContainers.contains(libraryName+"_"+localName);
+	}
+	
+	/**
+	 * @param tagName
+	 * @return
+	 */
+	private boolean isReferencedWidget(String tagName)
+    {
+	    return referenceWidgetsList.containsKey(tagName);
+    }
+
+	/**
+	 * @param localName
+	 * @param libraryName
+	 * @return
+	 */
+	private boolean isWidget(String tagName)
+    {
+	    return (WidgetConfig.getClientClass(tagName) != null);
+    }
+	
+	/**
+	 * @param cruxTagName
+	 * @return
+	 */
+	private boolean isWidgetSubTag(String cruxTagName)
+    {
+		if (cruxTagName.indexOf('_') == cruxTagName.lastIndexOf('_'))
+		{
+			return false;
+		}
+		return widgetsSubTags.contains(cruxTagName);
+    }
+	
+	/**
+	 * 
+	 */
+	private void outdent()
+	{
+		jsIndentationLvl--;
+	}
+
+	/**
+	 * @param cruxTagName
+	 */
+	private void setCurrentWidgetTag(String cruxTagName)
+	{
+		this.cruxTagName = cruxTagName;
+	}
+
 	/**
 	 * @param cruxPageElement
 	 * @param htmlElement
@@ -439,7 +707,88 @@ class HTMLBuilder
 	    	translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
 	    }
     }
+	
+	/**
+	 * @param cruxPageElement
+	 * @param htmlElement
+	 * @param htmlDocument
+	 */
+	private void translateCruxInnerTags(Element cruxPageElement, Element htmlElement, Document htmlDocument)
+    {
+		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
+		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && isHTMLChild(cruxPageElement)))
+		{
+			Element widgetHolder = htmlDocument.createElement("div");
+			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
+			htmlElement.appendChild(widgetHolder);
+			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
+		}
+		else
+		{
+			translateDocument(cruxPageElement, htmlElement, htmlDocument, false);
+		}
+    }
 
+	/**
+	 * @param cruxPageDocument
+	 * @param htmlDocument
+	 * @throws HTMLBuilderException 
+	 */
+	private void translateDocument(Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
+    {
+		Element cruxPageElement = cruxPageDocument.getDocumentElement();
+		Node htmlElement = htmlDocument.importNode(cruxPageElement, false);
+		htmlDocument.appendChild(htmlElement);
+		clearCurrentWidget();
+		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
+		clearCurrentWidget();
+		generateCruxMetaDataElement(getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+    }
+
+	/**
+	 * @param cruxPageElement
+	 * @param htmlElement
+	 * @param htmlDocument
+	 */
+	private void translateDocument(Node cruxPageElement, Node htmlElement, Document htmlDocument, boolean copyHtmlNodes)
+    {
+		NodeList childNodes = cruxPageElement.getChildNodes();
+		if (childNodes != null)
+		{
+			for (int i=0; i<childNodes.getLength(); i++)
+			{
+				Node child = childNodes.item(i);
+				String namespaceURI = child.getNamespaceURI();
+				
+				if (namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE))
+				{
+				    translateCruxCoreElements((Element)child, (Element)htmlElement, htmlDocument);
+				}
+				else if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
+				{
+					String widgetType = getCurrentWidgetTag(); 
+					updateCurrentWidgetTag((Element)child);
+					translateCruxInnerTags((Element)child, (Element)htmlElement, htmlDocument);
+					setCurrentWidgetTag(widgetType);
+				}
+				else
+				{
+					Node htmlChild;
+					if (copyHtmlNodes)
+					{
+						htmlChild = htmlDocument.importNode(child, false);
+						htmlElement.appendChild(htmlChild);
+					}
+					else
+					{
+						htmlChild = htmlElement;
+					}
+					translateDocument(child, htmlChild, htmlDocument, copyHtmlNodes);
+				}
+			}
+		}
+    }
+	
 	/**
 	 * @param cruxPageNode
 	 * @param htmlNode
@@ -463,114 +812,34 @@ class HTMLBuilder
 		htmlNode.appendChild(splashScreen);
 	}
 	
+	
 	/**
-	 * @param cruxPageDocument
+	 * @param cruxPageElement
 	 * @return
 	 */
-	private Document createHTMLDocument(Document cruxPageDocument)
+	private String updateCurrentWidgetTag(Element cruxPageElement)
     {
-	    Document htmlDocument;
-		DocumentType doctype = cruxPageDocument.getDoctype();
-		if (doctype != null)
+		String canditateWidgetType = getLibraryName(cruxPageElement)+"_"+cruxPageElement.getLocalName();
+		if (StringUtils.isEmpty(cruxTagName))
 		{
-			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", doctype);
+			cruxTagName = canditateWidgetType;
 		}
 		else
 		{
-			htmlDocument = documentBuilder.newDocument();
+			cruxTagName += "_"+cruxPageElement.getLocalName(); 
 		}
-	    return htmlDocument;
-    }
-	
-	/**
-	 * @param node
-	 * @return
-	 */
-	private boolean isWidget(Node node)
-	{
-		if (node instanceof Element)
+		if (!isWidgetSubTag(cruxTagName) && (isWidget(canditateWidgetType)))
 		{
-			return isWidget(node.getLocalName(), getLibraryName(node));
+			cruxTagName = canditateWidgetType;
 		}
 		
-		return false;
-	}
-	
-	/**
-	 * @param localName
-	 * @param libraryName
-	 * @return
-	 */
-	private boolean isWidget(String localName, String libraryName)
-    {
-	    return (WidgetConfig.getClientClass(libraryName, localName) != null);
-    }
-
-	/**
-	 * @param tagName
-	 * @return
-	 */
-	private boolean isReferencedWidget(String tagName)
-    {
-	    return referenceWidgetsList.containsKey(tagName);
-    }
-
-	/**
-	 * @param localName
-	 * @param libraryName
-	 * @return
-	 */
-	private boolean isHtmlContainerWidget(String localName, String libraryName)
-	{
-	    return htmlPanelContainers.contains(libraryName+"_"+localName);
-	}
-	
-	/**
-	 * @param node
-	 * @return
-	 */
-	private boolean isHtmlContainerWidget(Node node)
-	{
-		if (node instanceof Element)
+		if (isReferencedWidget(cruxTagName))
 		{
-			return isHtmlContainerWidget(node.getLocalName(), getLibraryName(node));
+			cruxTagName = getReferencedWidget(cruxTagName);
 		}
-		return false;
-	}
-
-	/**
-	 * @param node
-	 * @return
-	 */
-	private boolean isReferencedWidget(Node node)
-    {
-	    return isReferencedWidget(getTagName(node, node.getLocalName()));
+		return cruxTagName;
     }
 
-	/**
-	 * @param node
-	 * @return
-	 */
-	private String getReferencedWidget(Node node)
-    {
-	    return referenceWidgetsList.get(getTagName(node, node.getLocalName()));
-    }
-
-	/**
-	 * @param node
-	 * @return
-	 */
-	private String getLibraryName(Node node)
-	{
-		String namespaceURI = node.getNamespaceURI();
-		
-		if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
-		{
-			return namespaceURI.substring(WIDGETS_NAMESPACE_PREFIX.length());
-		}
-		return null;
-	}
-	
 	/**
 	 * @param out
 	 * @throws IOException
@@ -583,118 +852,18 @@ class HTMLBuilder
 		{
 			out.write("<!DOCTYPE " + doctype.getName() + ">\n");
 		}
-	    HTMLUtils.write(htmlDocument.getDocumentElement(), out);
-	}
-	
-	
-	/**
-	 * 
-	 * @return
-	 * @throws HTMLBuilderException 
-	 */
-	private Map<String, String> generateReferenceWidgetsList() throws HTMLBuilderException
-	{
-		Map<String, String> referencedWidgets = new HashMap<String, String>();
-		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
-		for (String library : registeredLibraries)
-		{
-			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
-			for (String widget : factories)
-			{
-				try
-				{
-					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					Method method = clientClass.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
-					generateReferenceWidgetsListFromTagChildren(referencedWidgets, method.getAnnotation(TagChildren.class), 
-																		library, widget, new HashSet<String>());
-				}
-				catch (Exception e)
-				{
-					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
-				}
-			}
-		}
-		
-		return referencedWidgets;
-	}
-
-	/**
-	 * 
-	 * @param widgetList 
-	 * @param tagChildren
-	 * @param parentLibrary
-	 * @throws HTMLBuilderException 
-	 */
-	private void generateReferenceWidgetsListFromTagChildren(Map<String, String> referencedWidgets, TagChildren tagChildren, 
-																    String parentLibrary, String parentWidget, Set<String> added) throws HTMLBuilderException
-	{
-		if (tagChildren != null)
-		{
-			for (TagChild child : tagChildren.value())
-			{
-				Class<? extends WidgetChildProcessor<?>> processorClass = child.value();
-				if (!added.contains(processorClass.getCanonicalName()))
-				{
-					added.add(processorClass.getCanonicalName());
-					TagChildAttributes childAttributes = processorClass.getAnnotation(TagChildAttributes.class);
-					if (childAttributes!= null)
-					{
-						if (WidgetFactory.class.isAssignableFrom(childAttributes.type()))
-						{
-							DeclarativeFactory declarativeFactory = childAttributes.type().getAnnotation(DeclarativeFactory.class);
-							if (declarativeFactory != null)
-							{
-								referencedWidgets.put(parentLibrary+"_"+parentWidget+"_"+childAttributes.tagName(),
-													  declarativeFactory.library()+"_"+declarativeFactory.id());
-							}
-						}
-					}
-					
-					try
-					{
-						Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
-						generateReferenceWidgetsListFromTagChildren(referencedWidgets, method.getAnnotation(TagChildren.class), 
-																	parentLibrary, parentWidget, added);
-					}
-					catch (Exception e)
-					{
-						throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsList(), e);
-					}
-				}
-			}
-		}				
+	    HTMLUtils.write(htmlDocument.getDocumentElement(), out, indentOutput);
 	}
 	
 	/**
-	 * 
-	 * @return
-	 * @throws HTMLBuilderException 
+	 * @param cruxArrayMetaData
 	 */
-	private Set<String> generateHtmlPanelWidgetsList() throws HTMLBuilderException
-	{
-		Set<String> htmlContainers = new HashSet<String>();
-		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
-		for (String library : registeredLibraries)
-		{
-			Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
-			for (String widget : factories)
-			{
-				try
-				{
-					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					DeclarativeFactory factory = clientClass.getAnnotation(DeclarativeFactory.class);
-					if (factory.htmlContainer())
-					{
-						htmlContainers.add(library+"_"+widget);				
-					}
-				}
-				catch (Exception e)
-				{
-					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
-				}
-			}
-		}
-		
-		return htmlContainers;
-	}	
+	private void writeIndentationSpaces(StringBuilder cruxArrayMetaData)
+    {
+	    cruxArrayMetaData.append("\n");
+	    for (int i=0; i< jsIndentationLvl; i++)
+	    {
+	    	cruxArrayMetaData.append("  ");
+	    }
+    }	
 }

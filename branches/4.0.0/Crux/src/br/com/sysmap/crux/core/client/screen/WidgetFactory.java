@@ -142,6 +142,19 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	/**
+	 * 
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 */
+	protected static String ensureHtmlChild(CruxMetaData metaElem, boolean acceptsNoChild)
+	{
+		String result = metaElem.getProperty("_html");
+		assert(acceptsNoChild || (result != null && result.length() > 0)):Crux.getMessages().widgetFactoryEnsureHtmlChildEmpty();
+		return result;
+	}
+
+	/**
 	 * Creates a sequential id
 	 * @return
 	 */
