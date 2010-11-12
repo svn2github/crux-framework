@@ -1333,6 +1333,10 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			return "xs:anyType";
 		}
+		else if (HTMLTag.class.isAssignableFrom(type))
+		{
+			return "xs:anyType";
+		}
 		return null;
 	}
 	
