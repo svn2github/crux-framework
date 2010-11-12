@@ -22,9 +22,9 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -75,13 +75,13 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlTitle", type=AnyTag.class)
+	@TagChildAttributes(tagName="htmlTitle", type=HTMLTag.class)
 	public abstract static class AbstractTitleHTMLProcessor<T extends StackPanel> extends WidgetChildProcessor<T>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			context.setAttribute(KEY_TITLE, ensureTextChild(context.getChildElement(), true));//TODO tratar o innerHTML
+			context.setAttribute(KEY_TITLE, ensureHtmlChild(context.getChildElement(), true));
 			context.setAttribute(KEY_IS_HTML, true);
 		}
 	}

@@ -29,17 +29,17 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
+import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.TabBar.Tab;
 
 /**
  * Factory for TabPanel widgets
@@ -103,13 +103,13 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		}
 	}
 	
-	@TagChildAttributes(tagName="tabHtml", type=AnyTag.class)
+	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
 	public static abstract class AbstractHTMLTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = ensureTextChild(context.getChildElement(), true);//TODO tratar o innerHTML
+			String title = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute("titleHtml", title);
 		}
 	}

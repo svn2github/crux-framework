@@ -24,18 +24,18 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.ui.HTMLTable.RowFormatter;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -196,7 +196,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		}
 	}
 	
-	@TagChildAttributes(tagName="html", type=AnyTag.class)
+	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class CellHTMLProcessor<T extends HTMLTable> extends WidgetChildProcessor<T>
 	{
 		@Override
@@ -204,8 +204,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setHTML(indexRow.intValue(), indexCol.intValue(), ensureTextChild(context.getChildElement(), true));
-			//TODO tratar o innerHTML
+			context.getRootWidget().setHTML(indexRow.intValue(), indexCol.intValue(), ensureHtmlChild(context.getChildElement(), true));
 		}
 	}
 	

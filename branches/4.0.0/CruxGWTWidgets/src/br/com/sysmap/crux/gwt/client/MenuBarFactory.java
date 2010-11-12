@@ -33,8 +33,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
@@ -156,13 +156,13 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlCaption", type=AnyTag.class)
+	@TagChildAttributes(tagName="htmlCaption", type=HTMLTag.class)
 	public static class HtmlCaptionProcessor extends WidgetChildProcessor<MenuBar>
 	{
 		@Override
 		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
 		{
-			String captionHtml = "";//TODO traatar o innerHTML context.getChildElement().getInnerHTML();
+			String captionHtml = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute(CURRENT_MENU_ITEM_CAPTION, captionHtml);
 			context.setAttribute(CURRENT_MENU_ITEM_IS_HTML, true);
 		}

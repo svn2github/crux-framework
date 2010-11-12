@@ -28,16 +28,16 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.TabBar;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TabBar.Tab;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Factory for TabBar widgets
@@ -101,13 +101,13 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 		}
 	}
 	
-	@TagChildAttributes(tagName="html", type=AnyTag.class)
+	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public abstract static class AbstractHTMLTabProcessor<T extends TabBar> extends WidgetChildProcessor<T>
 	{
 		@Override
 		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
 		{
-			String title = ensureTextChild(context.getChildElement(), true);//TODO tratar o innerHTML
+			String title = ensureHtmlChild(context.getChildElement(), true);
 			context.getRootWidget().addTab(title, true);
 			updateTabState(context);
 		}
