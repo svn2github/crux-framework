@@ -51,7 +51,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = "";// TODO tratar o innerHTML context.getElement().getInnerHTML();
+			String innerHtml = ensureHtmlChild(context.getElement(), true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(ScreenFactory.getInstance().getDeclaredMessage(innerHtml));

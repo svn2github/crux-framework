@@ -18,8 +18,13 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
@@ -50,18 +55,28 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
 	{
 		super.processAttributes(context);
 		
-		CruxMetaData element = context.getElement();
 		InlineHyperlink widget = context.getWidget();
 		
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
+			String innerHtml = ensureHtmlChild(context.getElement(), true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);
 			}
 		}
 	}
+	
+	@Override
+	@TagChildren({
+		@TagChild(value=ContentProcessor.class, autoProcess=false)
+	})
+	public void processChildren(WidgetFactoryContext<InlineHyperlink> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHyperlink> {}	
 	
 }

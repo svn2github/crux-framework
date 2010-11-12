@@ -16,7 +16,12 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.HasHTML;
@@ -48,13 +53,23 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 		String text = context.readWidgetProperty("text");
 		if ((text == null || text.length() ==0))
 		{
-			String innerHtml = "";//element.getInnerHTML();//TODO rever esta factory. Deveria ser similar ao HTMLFactory
-			
-			//TODO tratar o innerHTML
+			String innerHtml = ensureHtmlChild(element, true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);
 			}
 		}
 	}
+	
+	@Override
+	@TagChildren({
+		@TagChild(value=ContentProcessor.class, autoProcess=false)
+	})
+	public void processChildren(WidgetFactoryContext<InlineHTML> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHTML> {}
+	
 }//TODO as factories HasHTML nao estao suportando i18n declarativo.

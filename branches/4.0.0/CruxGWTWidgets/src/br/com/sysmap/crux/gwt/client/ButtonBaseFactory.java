@@ -17,7 +17,6 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -32,13 +31,12 @@ public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFac
 	{
 		super.processAttributes(context);
 
-		CruxMetaData element = context.getElement();
 		Button widget = context.getWidget();
 
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
+			String innerHtml = ensureHtmlChild(context.getElement(), true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);

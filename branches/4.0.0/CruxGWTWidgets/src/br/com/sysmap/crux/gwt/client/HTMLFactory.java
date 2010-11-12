@@ -53,7 +53,7 @@ public class HTMLFactory extends AbstractLabelFactory<HTML>
 		String text = context.readWidgetProperty("text");
 		if ((text == null || text.length() ==0))
 		{
-			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
+			String innerHtml = ensureHtmlChild(element, true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);

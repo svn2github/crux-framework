@@ -16,13 +16,15 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HasHTML;
 
 /**
  * CheckBoxFactory DeclarativeFactory.
@@ -32,41 +34,20 @@ import com.google.gwt.user.client.ui.HasHTML;
 @DeclarativeFactory(id="checkBox", library="gwt")
 public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
 {
-	/**
-	 * process widget attributes
-	 * @throws InterfaceConfigException 
-	 */
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="checked", type=Boolean.class)
-	})
-	public void processAttributes(WidgetFactoryContext<CheckBox> context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-		
-		CruxMetaData element = context.getElement();
-		CheckBox widget = context.getWidget();
-
-		String checked = context.readWidgetProperty("checked");
-		if (checked != null && checked.trim().length() > 0)
-		{
-			widget.setValue(Boolean.parseBoolean(checked));
-		}
-
-		String text = context.readWidgetProperty("text");
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = "";//TODO tratar innerHTML element.getInnerHTML();
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}	
-	}
-	
 	@Override
 	public CheckBox instantiateWidget(CruxMetaData element, String widgetId) 
 	{
 		return new CheckBox();
 	}
+
+	@Override
+	@TagChildren({
+		@TagChild(value=ContentProcessor.class, autoProcess=false)
+	})
+	public void processChildren(WidgetFactoryContext<CheckBox> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
+	public static class ContentProcessor extends WidgetChildProcessor<CheckBox> {}
 }

@@ -23,7 +23,6 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -51,7 +50,6 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 	{
 		super.processAttributes(context);
 		
-		CruxMetaData element = context.getElement();
 		T widget = context.getWidget();
 
 		String checked = context.readWidgetProperty("checked");
@@ -63,7 +61,7 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 		String text = context.readWidgetProperty("text");		
 		if (text == null || text.length() ==0)
 		{
-			String innerHtml = "";//TODO tratar o innerHTML element.getInnerHTML();
+			String innerHtml = ensureHtmlChild(context.getElement(), true);
 			if (innerHtml != null && innerHtml.length() > 0)
 			{
 				((HasHTML)widget).setHTML(innerHtml);

@@ -16,6 +16,12 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagChild;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildren;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 
 import com.google.gwt.user.client.ui.Button;
@@ -32,4 +38,15 @@ public class ButtonFactory extends ButtonBaseFactory<Button>
 	{
 		return new Button();
 	}
+	
+	@Override
+	@TagChildren({
+		@TagChild(value=ContentProcessor.class, autoProcess=false)
+	})
+	public void processChildren(WidgetFactoryContext<Button> context) throws InterfaceConfigException
+	{
+	}
+	
+	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
+	public static class ContentProcessor extends WidgetChildProcessor<Button> {}	
 }
