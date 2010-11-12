@@ -213,12 +213,12 @@ class HTMLBuilder
 							}
 							else
 							{
-								if (HTMLTag.class.isAssignableFrom(childAttributes.type()))
-								{
-									hasInnerHTMLWidgetTags.add(parentLibrary+"_"+parentPath);
-								}
 								widgetsSubTags.add(parentLibrary+"_"+parentPath);							
 							}
+						}
+						if (HTMLTag.class.isAssignableFrom(childAttributes.type()))
+						{
+							hasInnerHTMLWidgetTags.add(parentLibrary+"_"+parentPath);
 						}
 					}
 					
