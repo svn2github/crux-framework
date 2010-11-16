@@ -17,6 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
+import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
@@ -39,7 +40,7 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	protected static class CruxHTMLPanel extends HTMLPanel
+	protected static class CruxHTMLPanel extends HTMLPanel implements HTMLContainer
 	{
 		/**
 		 * Constructor
@@ -54,6 +55,12 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	        panelElement.removeFromParent();
 	        getElement().appendChild(panelElement);
         }
+		
+		@Override
+		public void onAttach()
+		{
+		    super.onAttach();
+		}
 	}
 	
 	/**
