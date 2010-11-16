@@ -17,9 +17,11 @@ package br.com.sysmap.crux.core.rebind.screen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +73,8 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 * Checkers for widgets that lazily create its children
 	 */
 	private Map<String, WidgetLazyChecker> lazyWidgetCheckers = new HashMap<String, WidgetLazyChecker>();
+
+	private Set<String> lazyPanels = new HashSet<String>();
 	
 	/**
 	 * Constructor
@@ -108,7 +112,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	{
 		srcWriter.println("public FastMap<String> getLazyWidgets(String screenId){");
 		srcWriter.indent();
-		srcWriter.println("FastMap<String> result = new FastMap<String>();");
+		srcWriter.println("FastMap<String> r = new FastMap<String>();");
 		
 		List<Screen> screens = getScreens();
 		boolean first = true;
@@ -122,7 +126,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 			generateGetLazyBlock(srcWriter, screen);
 		}
 		
-		srcWriter.println("return result;");
+		srcWriter.println("return r;");
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}
@@ -173,9 +177,8 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 * 
 	 * @param parent
 	 * @return
-	 * @throws NotFoundException 
 	 */
-	private boolean checkLazy(Widget parent) throws NotFoundException 
+	private boolean checkLazy(Widget parent)
 	{
 		return defaultLazyChecker.isLazy(parent);
 	}
@@ -192,7 +195,8 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 		srcWriter.println("logger.log(Level.FINE, "+EscapeUtils.quote("Adding lazy dependency (resolved at compile time). Widget["+EscapeUtils.quote(widgetId)+"] depends on ["+EscapeUtils.quote(lazyId)+"].")+");");
 	    srcWriter.outdent();
 	    srcWriter.println("}");
-	    srcWriter.println("result.put("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(lazyId)+");");
+	    srcWriter.println("r.put("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(lazyId)+");");
+	    
     }
 
 	/**
@@ -215,12 +219,14 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	        	{
 	        		if(checkLazy(parent))
 	        		{
+	        			lazyPanels.add(parent.getId());
 	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapWholeWidget);
 	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
 	        		}
 	        		else if(checkChildrenLazy(parent))
 	        		{
+	        			lazyPanels.add(parent.getId());
 	        			String lazyId = LazyPanelFactory.getLazyPanelId(parent.getId(), LazyPanelWrappingType.wrapChildren);
 	        			generateAddLazyMapEntry(srcWriter, widget.getId(), lazyId);
 	        			break;
@@ -231,6 +237,9 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	        		}
 	        	}
 	        }
+	        
+	        checkSolitaryLazyPanels(srcWriter, screen);
+	        
 	        srcWriter.outdent();
 	        srcWriter.println("}");
         }
@@ -238,7 +247,30 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
         {
         	throw new CruxGeneratorException(e.getMessage(), e);
         }
-	}//TODO não está adicionando panels invisiveis que nao tenham filhos!!
+	}
+
+	/**
+	 * @param srcWriter
+	 * @param screen
+	 */
+	private void checkSolitaryLazyPanels(SourceWriter srcWriter, Screen screen)
+    {
+        Iterator<Widget> widgets = screen.iterateWidgets();
+        while (widgets.hasNext())
+        {
+        	Widget widget = widgets.next();
+        	if (WidgetConfig.isWidgetContainer(widget.getType()) && checkLazy(widget))
+        	{
+        		String widgetId = widget.getId();
+				if (!lazyPanels.contains(widgetId))
+        		{
+        			lazyPanels.add(widgetId);
+        			String lazyId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
+        			generateAddLazyMapEntry(srcWriter, widgetId, lazyId);
+        		}
+        	}
+        }
+    }
 
 	/**
 	 * @param screen

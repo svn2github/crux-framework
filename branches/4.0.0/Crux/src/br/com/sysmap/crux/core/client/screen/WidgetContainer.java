@@ -15,22 +15,13 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
-import com.google.gwt.user.client.ui.Widget;
-
 /**
- * A Class that implements this interface does not create its children. It delegates the children 
- * creation to the {@code ScreenFactory} parser.  
+ * A marker interface to inform Crux that a {@code WidgetFactory} can contain
+ * other widgets
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasWidgetsFactory <T extends Widget>
+public interface WidgetContainer
 {
-	/**
-	 * @param parent
-	 * @param parentId
-	 * @param widget
-	 * @param widgetId
-	 */
-	void add(T parent, String parentId, Widget widget, String widgetId);
 
 }

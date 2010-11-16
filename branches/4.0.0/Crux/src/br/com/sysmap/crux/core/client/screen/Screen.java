@@ -1049,6 +1049,26 @@ public class Screen
 		return id;
 	}
 	
+	
+	/**
+	 * Retrieve a widget contained on this screen. 
+	 * 
+	 * @param id
+	 * @param checkLazyDependencies
+	 * @return
+	 */
+	protected Widget getWidget(String id, boolean checkLazyDependencies)
+	{
+		if (checkLazyDependencies)
+		{
+			return getWidget(id);
+		}
+		else
+		{
+			return widgets.get(id);
+		}
+	}
+	
 	/**
 	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if
 	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 

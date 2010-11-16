@@ -402,7 +402,7 @@ public class ScreenFactory
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetIdRequired());
 		}
-		Widget widget = screen.getWidget(widgetId);
+		Widget widget = screen.getWidget(widgetId, false);//Does not fire any lazy initialization here.
 		if (widget != null)
 		{
 			return widget;

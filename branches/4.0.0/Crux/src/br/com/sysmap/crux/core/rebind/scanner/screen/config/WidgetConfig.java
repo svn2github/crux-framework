@@ -27,6 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.com.sysmap.crux.core.client.screen.WidgetContainer;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.server.ServerMessages;
@@ -41,6 +42,7 @@ public class WidgetConfig
 {
 	private static Map<String, String> config = null;
 	private static Map<String, String> widgets = null;
+	private static Set<String> widgetContainers = null;
 	private static Map<String, Set<String>> registeredLibraries = null;
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Log logger = LogFactory.getLog(WidgetConfig.class);
@@ -76,6 +78,7 @@ public class WidgetConfig
 	{
 		config = new HashMap<String, String>(100);
 		widgets = new HashMap<String, String>();
+		widgetContainers = new HashSet<String>();
 		registeredLibraries = new HashMap<String, Set<String>>();
 		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
 		if (factoriesNames != null)
@@ -95,6 +98,11 @@ public class WidgetConfig
 					String widgetType = annot.library() + "_" + annot.id();
 					
 					config.put(widgetType, factoryClass.getCanonicalName());
+					
+					if (WidgetContainer.class.isAssignableFrom(factoryClass))
+					{
+						widgetContainers.add(widgetType);
+					}
 					
 					Type type = ((ParameterizedType)factoryClass.getGenericSuperclass()).getActualTypeArguments()[0];
 					if (type instanceof ParameterizedType)
@@ -192,4 +200,17 @@ public class WidgetConfig
 		}
 		return widgets.get(widgetClass.getCanonicalName());
     }
+	
+	/**
+	 * @param type
+	 * @return
+	 */
+	public static boolean isWidgetContainer(String type)
+	{
+		if (widgetContainers == null)
+		{
+			initializeWidgetConfig();
+		}
+		return widgetContainers.contains(type);
+	}
 }

@@ -139,7 +139,7 @@ public class Array<E> extends JavaScriptObject
 	}-*/;
 
 	private native int jsniIndexOf(E elem)/*-{
-		for (var i = 0; i < this.length; i++) {
+		for (var i = 0, len = this.length; i < len; i++) {
 			if (this[i] == elem){
 				return i;
 			}

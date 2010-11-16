@@ -416,9 +416,15 @@ class HTMLBuilder
 			for (int i=0; i<attributes.getLength(); i++)
 			{
 				Node attribute = attributes.item(i);
-				cruxArrayMetaData.append(",");
-				cruxArrayMetaData.append("\""+attribute.getLocalName()+"\":");
-				cruxArrayMetaData.append("\""+HTMLUtils.escapeJavascriptString(attribute.getNodeValue(), escapeXML)+"\"");
+				String attrName = attribute.getLocalName();
+				String attrValue = attribute.getNodeValue();
+				
+				if (!StringUtils.isEmpty(attrValue))
+				{
+					cruxArrayMetaData.append(",");
+					cruxArrayMetaData.append("\""+attrName+"\":");
+					cruxArrayMetaData.append("\""+HTMLUtils.escapeJavascriptString(attrValue, escapeXML)+"\"");
+				}
 			}
 		}
 	}
