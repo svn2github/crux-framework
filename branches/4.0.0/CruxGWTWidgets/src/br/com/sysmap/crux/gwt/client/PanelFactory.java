@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import br.com.sysmap.crux.core.client.screen.WidgetContainer;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 
 import com.google.gwt.user.client.ui.Panel;
@@ -23,6 +24,6 @@ import com.google.gwt.user.client.ui.Panel;
  * Base factory class for all panels
  * @author Thiago Bustamante
  */
-public abstract class PanelFactory <T extends Panel> extends WidgetFactory<T>
+public abstract class PanelFactory <T extends Panel> extends WidgetFactory<T> implements WidgetContainer
 {
 }
