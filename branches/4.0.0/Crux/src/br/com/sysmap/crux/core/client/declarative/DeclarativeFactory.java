@@ -30,6 +30,15 @@ public @interface DeclarativeFactory
 {
 	String id();
 	String library();
+	
+	/**
+	 * if false, the annotated widgetFactory will not be attached to DOM. It will only be logically attached to the {@code Screen} object
+	 */
 	boolean attachToDOM() default true;
+	/**
+	 * HTMLContainers are widgets that can have innerHTML content AND, at same time, are Panels, (that can receive another widgets as children).
+	 * The transformation made at server side, during Crux pages compilation, keeps the html content inside the {@code <span>} tag, that 
+	 * marks the widget position. It allows ScreenFactory to just wrap those elements into created widget, for a very better performance.
+	 */
 	boolean htmlContainer() default false;
 }

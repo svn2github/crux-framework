@@ -33,6 +33,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.LazyPanel;
@@ -416,6 +417,10 @@ public class ScreenFactory
 			assert(!StringUtils.isEmpty(parentId) && !StringUtils.isEmpty(parentType));
 			widget = createWidgetAndAttachToParent(metaElem, widgetId, widgetType, parentId, parentType);
 		}
+		else if (widgetFactory.isHtmlContainer())
+		{
+			widget = createHtmlContainerAndAttach(metaElem, widgetId, widgetType);
+		}
 		else
 		{
 			widget = createWidgetAndAttach(metaElem, widgetId, widgetType);
@@ -455,8 +460,37 @@ public class ScreenFactory
 
 	/**
 	 * 
-	 * @param element
+	 * @param metaElem
 	 * @param widgetId
+	 * @param widgetType
+	 * @return
+	 * @throws InterfaceConfigException
+	 */
+	private Widget createHtmlContainerAndAttach(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	{
+		Element panelElement = getEnclosingPanelElement(widgetId);
+		Element parentElement = panelElement.getParentElement();
+		Node previousSibling = panelElement.getPreviousSibling();
+		Widget widget = newWidget(metaElem, widgetId, widgetType);
+
+		if (previousSibling != null)
+		{
+			parentElement.insertAfter(widget.getElement(), previousSibling);
+		}
+		else
+		{
+			parentElement.appendChild(widget.getElement());
+		}
+		((HTMLContainer)widget).onAttach();
+	    RootPanel.detachOnWindowClose(widget);		
+		return widget;
+	}
+	
+	/**
+	 * 
+	 * @param metaElem
+	 * @param widgetId
+	 * @param widgetType
 	 * @return
 	 * @throws InterfaceConfigException
 	 */

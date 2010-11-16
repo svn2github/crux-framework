@@ -16,12 +16,13 @@
 package br.com.sysmap.crux.core.client.screen;
 
 /**
- * @author Thiago da Rosa de Bustamante - <code>thiago@sysmap.com.br</code>
+ * HTMLContainers are widgets that can have innerHTML content AND, at same time, are Panels, (that can receive another widgets as children).
+ * The transformation made at server side, during Crux pages compilation, keeps the HTML content inside the {@code <span>} tag, that 
+ * marks the widget position. It allows ScreenFactory to just wrap those elements into created widget, for a very better performance.
+ * @author Thiago da Rosa de Bustamante
  *
  */
-public interface DeclarativeWidgetFactory
+public interface HTMLContainer
 {
-	boolean isAttachToDOM();
-	boolean isPanel();
-	boolean isHtmlContainer();
+	void onAttach();
 }

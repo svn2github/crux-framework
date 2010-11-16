@@ -475,6 +475,5 @@ public abstract class WidgetFactory <T extends Widget>
 		{
 			this.attributes.put(key, value);
 		}
-		//TODO ler apenas o que foi passado. public FastList<String>
 	}
 }

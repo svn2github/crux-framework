@@ -137,6 +137,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		generateProcessChildrenMethod(srcWriter);
 		generateIsAttachMethod(srcWriter);
 		generateIsPanelMethod(srcWriter);
+		generateIsHtmlContainerMethod(srcWriter);
     }
 	
 	@Override
@@ -301,7 +302,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		}
 		else
 		{
-			throw new CruxGeneratorException();//TODO message
+			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidLazyCondition());
 		}
 		source.append(Widget.class.getName()+" _w;\n");
 		source.append("if (!_lazy){\n");
@@ -417,6 +418,20 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 			String binderClass = processorVariables.get(processorVar);
 			sourceWriter.println(binderClass + " " + processorVar + "= new " + binderClass + "();");
 		}
+	}
+	
+	/**
+	 * @param sourceWriter
+	 */
+	private void generateIsHtmlContainerMethod(SourceWriter sourceWriter)
+	{
+		DeclarativeFactory declarativeFactory = factoryHelper.getFactoryClass().getAnnotation(DeclarativeFactory.class);
+		
+		sourceWriter.println("public boolean isHtmlContainer(){"); 
+		sourceWriter.indent();
+		sourceWriter.println("return "+(declarativeFactory==null?false:declarativeFactory.htmlContainer())+";");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
 	}
 	
 	/**

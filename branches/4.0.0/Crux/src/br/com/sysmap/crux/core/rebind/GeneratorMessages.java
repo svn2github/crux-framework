@@ -232,4 +232,7 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 052] - Error searching for module pages. Module Name = {0}")
 	String modulesErrorSearchingModulepages(String moduleName);
 
+	@DefaultServerMessage("[generator 053] - Error generating widgetFactory. LazyCondition must declare one of properties : equals or notEquals")
+	String errorGeneratingWidgetFactoryInvalidLazyCondition();
+
 }
