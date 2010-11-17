@@ -10,4 +10,9 @@
 	<generate-with class="br.com.sysmap.crux.gadget.rebind.rpc.CruxGadgetServiceGenerator">
 		<when-type-assignable class="com.google.gwt.user.client.rpc.RemoteService"/>
 	</generate-with>
+
+	<!-- Specify the generator for RPC stubs.                   -->
+	<generate-with class="br.com.sysmap.crux.gadget.rebind.gadget.GadgetGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.gadget.client.Gadget"/>
+	</generate-with>
 </module>

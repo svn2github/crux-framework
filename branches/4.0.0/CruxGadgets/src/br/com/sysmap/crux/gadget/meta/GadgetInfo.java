@@ -30,20 +30,20 @@ import java.lang.annotation.Target;
 public interface GadgetInfo
 {
 
-	/**
+	/*
 	 * Annotation to turn on browser's quirks mode.
 	 * 
 	 * By default, generated content will trigger browser's standards mode. If
 	 * you want override default behavior please use this annotation.
-	 */
+	 *
 	@Target(ElementType.TYPE)
 	public @interface AllowHtmlQuirksMode
 	{
 		/**
 		 * Set to <code>true</code> to use .
-		 */
+		 *
 		boolean value() default true;
-	}
+	}*/
 
 	/**
 	 * Specifies the type of content and the list of views.
@@ -286,7 +286,7 @@ public interface GadgetInfo
 	 * the same class name.
 	 * 
 	 * For now, the linker will complain if this annotation is missing.
-	 * Eventually, the default will be to create short filenames by default and
+	 * Eventually, the default will be to create short filenames and
 	 * to not require this annotation.
 	 * 
 	 */

@@ -15,42 +15,77 @@
  */
 package br.com.sysmap.crux.gadget.client.widget;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.HasWidgetsHandler;
+import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 import br.com.sysmap.crux.gwt.client.AbstractHTMLPanelFactory;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="gadgetView", library="gadget")
+@DeclarativeFactory(id="gadgetView", library="gadget", htmlContainer=true)
 public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 {
-	@Override
-	public GadgetView instantiateWidget(Element element, String widgetId) 
-	{
-		GadgetView ret = new GadgetView("");
-		FastList<Node> children = extractChildren(element);
-		for (int i=0; i<children.size(); i++)
-		{
-			Node node = children.get(i);
-			ret.getElement().appendChild(node);
-		}
-		HasWidgetsHandler.handleWidgetElement(ret, widgetId, "gadget_gadgetView");
 
-		return ret;
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	protected static class CruxGadgetView extends GadgetView implements HTMLContainer
+	{
+		/**
+		 * Constructor
+		 * @param element
+		 */
+		public CruxGadgetView(CruxMetaData element)
+        {
+	        super("");
+	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
+	        Element panelElement = WidgetFactory.getEnclosingPanelElement(element.getProperty("id"));
+	        assert Document.get().getBody().isOrHasChild(panelElement);
+	        panelElement.removeFromParent();
+	        getElement().appendChild(panelElement);
+        }
+		
+		@Override
+		public void onAttach()
+		{
+		    super.onAttach();
+		}
+	}	
+	
+	@Override
+	public GadgetView instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	{
+		CruxGadgetView gadgetView = new CruxGadgetView(element);
+		createChildren(widgetId, element);
+		return gadgetView;
 	}
 
+	@TagAttributes({
+		@TagAttribute(value="view", type=View.class, required=true)
+	})
+	@Override
+	public void processAttributes(WidgetFactoryContext<GadgetView> context) throws InterfaceConfigException
+	{
+	    super.processAttributes(context);
+	}
+	
 	@Override
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
@@ -61,4 +96,10 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<GadgetView> {}
+
+	@Override
+    protected String getFactoryType()
+    {
+	    return "gadget_gadgetView";
+    }
 }

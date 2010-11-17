@@ -41,6 +41,11 @@ public class GadgetRemoteServiceServlet extends br.com.sysmap.crux.core.server.d
 	@Override
 	protected String readContent(HttpServletRequest request) throws ServletException, IOException
 	{
-		return RPCServletUtils.readContentAsUtf8(request, false);
+		return RPCServletUtils.readContent(request, null, "UTF-8");
+	}
+	
+	@Override
+	protected void checkPermutationStrongName() throws SecurityException
+	{
 	}
 }

@@ -16,9 +16,11 @@
 package br.com.sysmap.crux.gadget.client.widget;
 
 import br.com.sysmap.crux.core.client.screen.Screen;
+import br.com.sysmap.crux.gadget.client.Gadget;
 import br.com.sysmap.crux.gadget.client.GadgetException;
 import br.com.sysmap.crux.gadget.client.GadgetMsgFactory;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -37,13 +39,31 @@ public class GadgetView extends HTMLPanel
 	
 	private View view = View.noViews;
 	
+	private static Gadget gadget = null;
+	
+	/**
+	 * @return
+	 */
+	public static Gadget getGadget()
+	{
+		if (gadget == null)
+		{
+			gadget = GWT.create(Gadget.class);
+		}
+		return gadget;
+	}
+	
 	/**
 	 * @param html
 	 */
 	public GadgetView(String html)
 	{
 		super(html);
-		checkUniquess();
+		checkUnique();
+		if (gadget == null)
+		{
+			gadget = GWT.create(Gadget.class);
+		}
 	}
 
 	/**
@@ -53,7 +73,7 @@ public class GadgetView extends HTMLPanel
 	public GadgetView(String tag, String html)
 	{
 		super(tag, html);
-		checkUniquess();
+		checkUnique();
 	}
 
 	/**
@@ -75,7 +95,7 @@ public class GadgetView extends HTMLPanel
 	/**
 	 * 
 	 */
-	private void checkUniquess()
+	private void checkUnique()
 	{
 		Widget unique = Screen.get(GADGET_VIEW_ID);
 		if (unique != null)

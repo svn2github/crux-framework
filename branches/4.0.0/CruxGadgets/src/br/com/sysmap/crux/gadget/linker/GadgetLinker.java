@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.gwt.gadgets.linker;
+package br.com.sysmap.crux.gadget.linker;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.LinkerContext;
