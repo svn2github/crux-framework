@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default="export" name="CruxModules" basedir="../">
+<project default="export" name="CruxGadgets" basedir="../">
 
 	<tstamp>
 		<format property="build.date" pattern="dd/MM/yyyy hh:mm:ss" />
@@ -12,9 +12,9 @@
 	<property name="libdir" value="lib" />
 	<property name="classesdir" value="bin/classes" />
 	<property name="distdir" value="dist" />
-	<property name="final.name" value="crux-modules" />
+	<property name="final.name" value="crux-gadgets" />
 	<property name="cruxdistdir" value="../Crux/dist" />
-	<property name="cruxscannotationdistdir" value="../CruxScannotation/dist" />
+	<property name="cruxgwtwidgetsdir" value="../CruxGWTWidgets/dist" />
 	<property name="crux.libs.project" value="../CruxLibs/crux"/>	
 
 	<path id="build.classpath">
@@ -45,7 +45,7 @@
 				</fileset>
 			</classpath>
 			<classpath>
-				<fileset dir="${cruxscannotationdistdir}">
+				<fileset dir="${cruxgwtwidgetsdir}">
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
