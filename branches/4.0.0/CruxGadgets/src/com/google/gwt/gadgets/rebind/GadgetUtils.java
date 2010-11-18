@@ -24,10 +24,10 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.GadgetLocale;
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.UseLongManifestName;
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.UserPreferences;
-import br.com.sysmap.crux.gadget.meta.LanguageDirection;
+import br.com.sysmap.crux.gadget.client.meta.LanguageDirection;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.GadgetLocale;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UseLongManifestName;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UserPreferences;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;

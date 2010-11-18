@@ -48,14 +48,14 @@ public interface Gadget
 	DynamicHeightFeature getDynamicHeightFeature();
 
 	/**
-	 * Returns the GoogleAnalyticsFeature. Your class must implement NeedsGoogleAnalytics to retrieve this value. If does not, null will be returned
+	 * Returns the GoogleAnalyticsFeature. Your class must implement NeedsGoogleAnalyticsFeature to retrieve this value. If does not, null will be returned
 	 * @return GoogleAnalyticsFeature
 	 */
 	GoogleAnalyticsFeature getGoogleAnalyticsFeature();
 
 	/**
-	 * Returns the GoogleAnalyticsFeature. Your class must implement NeedsGoogleAnalytics to retrieve this value. If does not, null will be returned
-	 * @return GoogleAnalyticsFeature
+	 * Returns the OsapiFeature. Your class must implement NeedsOsapiFeature to retrieve this value. If does not, null will be returned
+	 * @return OsapiFeature
 	 */
 	OsapiFeature getOsapiFeature();
 

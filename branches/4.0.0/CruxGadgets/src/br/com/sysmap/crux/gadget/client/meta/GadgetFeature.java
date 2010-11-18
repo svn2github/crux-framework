@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.gadget.meta;
+package br.com.sysmap.crux.gadget.client.meta;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -78,5 +78,108 @@ public interface GadgetFeature
 		{
 			return featureClass;
 		}
+	}
+	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.ads)
+	})
+	public interface NeedsAdsFeature
+	{
+		/**
+		 * Returns the AdsFeature. 
+		 * @return AdsFeature
+		 */
+		AdsFeature getAdsFeature();		
+	}
+	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.dynamicHeight)
+	})
+	public interface NeedsDynamicHeightFeature
+	{
+		/**
+		 * Returns the DynamicHeightFeature. 
+		 * @return DynamicHeightFeature
+		 */
+		DynamicHeightFeature getDynamicHeightFeature();	
+	}
+	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.googleAnalytics)
+	})
+	public interface NeedsGoogleAnalyticsFeature
+	{
+		/**
+		 * Returns the GoogleAnalyticsFeature. 
+		 * @return GoogleAnalyticsFeature
+		 */
+		GoogleAnalyticsFeature getGoogleAnalyticsFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.lockedDomain)
+	})
+	public interface NeedsLockedDomain
+	{
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.osapi)
+	})
+	public interface NeedsOsapiFeature
+	{
+		/**
+		 * Returns the OsapiFeature. 
+		 * @return OsapiFeature
+		 */
+		OsapiFeature getOsapiFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.rpc)
+	})
+	public interface NeedsRpcFeature
+	{
+		/**
+		 * Returns the RpcFeature.
+		 * @return RpcFeature
+		 */
+		RpcFeature getRpcFeature();
+	}
+	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.setPrefs)
+	})
+	public interface NeedsSetPrefsFeature
+	{
+		/**
+		 * Returns the SetPrefsFeature.
+		 * @return SetPrefsFeature
+		 */
+		SetPrefsFeature getSetPrefsFeature();
+	}
+	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.setTitle)
+	})
+	public interface NeedsSetTitleFeature
+	{
+		/**
+		 * Returns the SetTitleFeature.
+		 * @return SetTitleFeature
+		 */
+		SetTitleFeature getSetTitleFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.views)
+	})
+	public interface NeedsViewFeature
+	{
+		/**
+		 * Returns the ViewFeature. 
+		 * @return ViewFeature
+		 */
+		ViewFeature getViewFeature();	
 	}
 }

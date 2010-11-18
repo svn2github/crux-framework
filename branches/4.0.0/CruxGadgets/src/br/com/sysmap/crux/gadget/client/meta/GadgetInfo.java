@@ -14,29 +14,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.gadget.meta;
+package br.com.sysmap.crux.gadget.client.meta;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * This is class declares the annotations defined on
- * com.google.gwt.gadget.client.Gadget.
+ * Inherits this interface to provide Gadget informations, like user preferences, 
+ * required features and supported locales.
  * 
  * @author Thiago da Rosa de Bustamante
  * 
  */
 public interface GadgetInfo
 {
-	/**
-	 * A Marker annotation to help Crux to identify the gadget descriptor class.
-	 */
-	@Target(ElementType.TYPE)
-	public @interface GadgetDescriptor
-	{
-	}
-	
 	/**
 	 * Specifies the type of content and the list of views.
 	 */
@@ -300,4 +292,9 @@ public interface GadgetInfo
 		Class<? extends com.google.gwt.gadgets.client.UserPreferences> value() 
 		        default com.google.gwt.gadgets.client.UserPreferences.class;
 	}
+	
+	/**
+	 * @return the UserPreferences object
+	 */
+	com.google.gwt.gadgets.client.UserPreferences getUserPreferences();	
 }

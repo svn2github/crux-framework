@@ -15,8 +15,13 @@
 		<when-type-assignable class="com.google.gwt.user.client.rpc.RemoteService"/>
 	</generate-with>
 
-	<!-- Specify the generator for RPC stubs.                   -->
+	<!-- Specify the generator for Gadget.                   -->
 	<generate-with class="br.com.sysmap.crux.gadget.rebind.gadget.GadgetGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.gadget.client.Gadget"/>
+	</generate-with>
+
+	<!-- Specify the generator for GadgetInfo.                   -->
+	<generate-with class="br.com.sysmap.crux.gadget.rebind.gadget.GadgetInfoGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.gadget.client.meta.GadgetInfo"/>
 	</generate-with>
 </module>

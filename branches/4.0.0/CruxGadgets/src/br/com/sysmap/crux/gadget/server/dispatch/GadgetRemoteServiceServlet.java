@@ -41,7 +41,8 @@ public class GadgetRemoteServiceServlet extends br.com.sysmap.crux.core.server.d
 	@Override
 	protected String readContent(HttpServletRequest request) throws ServletException, IOException
 	{
-		return RPCServletUtils.readContent(request, null, "UTF-8");
+//		return RPCServletUtils.readContent(request, null, "UTF-8");//iGoogle sends 'null' on charset
+		return RPCServletUtils.readContent(request, null, null);
 	}
 	
 	@Override

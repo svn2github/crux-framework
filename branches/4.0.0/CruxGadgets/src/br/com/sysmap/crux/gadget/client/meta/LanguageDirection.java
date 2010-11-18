@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.gadget.meta;
+package br.com.sysmap.crux.gadget.client.meta;
 
 /**
  * Enum used in the {@link GadgetInfo.GadgetLocale} annotation to specify the language

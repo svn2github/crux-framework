@@ -48,12 +48,12 @@ import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 import br.com.sysmap.crux.core.utils.XMLUtils;
 import br.com.sysmap.crux.gadget.client.Gadget;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
+import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
+import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.Feature;
+import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
-import br.com.sysmap.crux.gadget.meta.GadgetFeature.ContainerFeature;
-import br.com.sysmap.crux.gadget.meta.GadgetFeature.Feature;
-import br.com.sysmap.crux.gadget.meta.GadgetFeature.NeedsFeatures;
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.GadgetDescriptor;
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.ModulePrefs;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -89,15 +89,19 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    super(logger, context, context.getTypeOracle().findType(Gadget.class.getCanonicalName()));
 		try
 		{
-			Set<String> descriptorClasses = ClassScanner.searchClassesByAnnotation(GadgetDescriptor.class);
+			Set<String> descriptorClasses = ClassScanner.searchClassesByInterface(GadgetInfo.class);
 			if (descriptorClasses == null || descriptorClasses.size() != 1)
 			{
-				logger.log(TreeLogger.ERROR, "Error generating gadget proxy. You must declare a class (only noe class) anotated with @GadgetDescriptor");//TODO message here
+				logger.log(TreeLogger.ERROR, "Error generating gadget proxy. You must declare a interface (only one) that implements the interface GadgetInfo");//TODO message here
 				throw new CruxGeneratorException();
-				
 			}
 			
 			moduleMetaClass = baseIntf.getOracle().getType(descriptorClasses.iterator().next());
+			if (moduleMetaClass.isInterface() == null)
+			{
+				logger.log(TreeLogger.ERROR, "Gadget Descriptor must be an interface");//TODO message here
+				throw new CruxGeneratorException();
+			}
 			generateGadgetManifestFile();
 		}
 		catch (Exception e)
@@ -162,7 +166,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    
 	    generateModulePreferences(d, modulePrefs);
 		generateUserPreferences(d, module);
-		generateFeaturesList(d, modulePrefs);
+		generateFeaturesList(d, modulePrefs, moduleMetaClass, new HashSet<String>());
 		generateContentSections(d, module);
 		
 	    serializer.write(d, output);
@@ -319,7 +323,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param d
 	 * @param modulePrefs
 	 */
-	private void generateFeaturesList(Document d, Element modulePrefs)
+	private void generateFeaturesList(Document d, Element modulePrefs, JClassType moduleMetaClass, Set<String> added)
     {
 		NeedsFeatures needsFeature = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		
@@ -331,11 +335,24 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				for (Feature feature : features)
                 {
 	                ContainerFeature containerFeature = feature.value();
-	                
-					Element require = (Element) modulePrefs.appendChild(d.createElement("Require"));
-					require.setAttribute("feature", containerFeature.getFeatureName());
+	                if (!added.contains(containerFeature.getFeatureName()))
+	                {
+	                	Element require = (Element) modulePrefs.appendChild(d.createElement("Require"));
+	                	require.setAttribute("feature", containerFeature.getFeatureName());
+
+	                	added.add(containerFeature.getFeatureName());
+	                }
                 }
 			}
+		}
+		
+		JClassType[] interfaces = moduleMetaClass.getImplementedInterfaces();
+		if (interfaces != null)
+		{
+			for (JClassType interfaceType : interfaces)
+            {
+				generateFeaturesList(d, modulePrefs, interfaceType, added);
+            }
 		}
     }
 
@@ -433,14 +450,14 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 */
 	protected void generateFeatureInitialization(SourceWriter srcWriter)
 	{
-		generateFeaturesInitialization(srcWriter, moduleMetaClass);
+		generateFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
 	}
 
 	/**
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	protected void generateFeaturesInitialization(SourceWriter srcWriter, JClassType moduleMetaClass)
+	protected void generateFeaturesInitialization(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
 	{
 		NeedsFeatures needsFeatures = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		if (needsFeatures != null)
@@ -448,9 +465,23 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			Feature[] features = needsFeatures.value();
 			for (Feature feature : features)
 			{
-				initializeFeature(srcWriter, feature.value());
+				if (!added.contains(feature.value().getFeatureName()))
+				{
+					initializeFeature(srcWriter, feature.value());
+					added.add(feature.value().getFeatureName());
+				}
 			}
 		}
+		
+		JClassType[] interfaces = moduleMetaClass.getImplementedInterfaces();
+		if (interfaces != null)
+		{
+			for (JClassType interfaceType : interfaces)
+            {
+				generateFeaturesInitialization(srcWriter, interfaceType, added);
+            }
+		}
+		
 	}
 
 	/**
