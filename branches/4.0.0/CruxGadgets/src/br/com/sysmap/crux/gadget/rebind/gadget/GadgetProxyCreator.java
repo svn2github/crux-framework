@@ -65,6 +65,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.gadgets.client.UserPreferences.DataType;
 import com.google.gwt.gadgets.client.UserPreferences.Preference;
 import com.google.gwt.gadgets.client.UserPreferences.PreferenceAttributes;
+import com.google.gwt.gadgets.rebind.GadgetUtils;
 import com.google.gwt.gadgets.rebind.PreferenceGenerator;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.rebind.SourceWriter;
