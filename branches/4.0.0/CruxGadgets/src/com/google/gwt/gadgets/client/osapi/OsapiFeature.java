@@ -15,7 +15,6 @@
  */
 package com.google.gwt.gadgets.client.osapi;
 
-import com.google.gwt.gadgets.client.GadgetFeature;
 import com.google.gwt.gadgets.client.osapi.people.PeopleService;
 
 /**
@@ -23,7 +22,7 @@ import com.google.gwt.gadgets.client.osapi.people.PeopleService;
  *
  * @see "http://code.google.com/intl/pl/apis/opensocial/"
  */
-public class OsapiFeature implements GadgetFeature {
+public class OsapiFeature {
 
   // Special values for UserId
   public static final String USER_OWNER = "@owner";
