@@ -74,6 +74,16 @@ public class XMLUtils
 	}
 	
 	/**
+	 * Creates a {@link Document}. 
+	 * @return
+	 * @throws XMLException
+	 */
+	public static Document createNSUnawareDocument() 
+	{
+		return nsUnawareDocumentBuilder.newDocument();
+	}
+
+	/**
 	 * A XML manipulation error.
 	 * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
 	 */
