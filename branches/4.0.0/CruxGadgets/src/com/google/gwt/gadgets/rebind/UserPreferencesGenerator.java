@@ -15,6 +15,8 @@
  */
 package com.google.gwt.gadgets.rebind;
 
+import java.io.PrintWriter;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -27,8 +29,6 @@ import com.google.gwt.gadgets.client.UserPreferences.Preference;
 import com.google.gwt.gadgets.client.impl.PreferencesUtil;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-
-import java.io.PrintWriter;
 
 /**
  * Provides a binding from a UserPreferences subtype to the Gadget container's
