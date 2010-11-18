@@ -3,6 +3,10 @@
 	<inherits name='br.com.sysmap.crux.core.Crux'/>
 	<inherits name='com.google.gwt.gadgets.Gadgets' />
 
+	<!-- Produces the final Gadget manifest -->
+	<define-linker name="gadget" class="br.com.sysmap.crux.gadget.linker.GadgetLinker"/>
+	<add-linker name="gadget"/>
+
 	<!-- Servlet used to handle RPC event calls.                -->
 	<servlet path="/crux.rpc" class="br.com.sysmap.crux.gadget.server.dispatch.GadgetRemoteServiceServlet"/>
 

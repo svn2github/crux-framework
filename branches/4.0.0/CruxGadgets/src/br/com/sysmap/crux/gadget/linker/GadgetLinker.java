@@ -209,7 +209,7 @@ public final class GadgetLinker extends XSLinker {
   @Override
   protected String getSelectionScriptTemplate(TreeLogger logger,
       LinkerContext context) {
-    return "com/google/gwt/gadgets/linker/GadgetTemplate.js";
+    return "br/com/sysmap/crux/gadget/linker/GadgetTemplate.js";
   }
 
 }

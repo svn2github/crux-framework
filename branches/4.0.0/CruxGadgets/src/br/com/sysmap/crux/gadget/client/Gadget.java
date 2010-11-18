@@ -36,10 +36,10 @@ import com.google.gwt.gadgets.client.rpc.RpcFeature;
 public interface Gadget 
 {
 	/**
-	 * Returns the AddsFeature. Your class must implement NeedsAds to retrieve this value. If does not, null will be returned
-	 * @return AddsFeature
+	 * Returns the AdsFeature. Your class must implement NeedsAds to retrieve this value. If does not, null will be returned
+	 * @return AdsFeature
 	 */
-	AdsFeature getAddFeature();
+	AdsFeature getAdsFeature();
 	
 	/**
 	 * Returns the DynamicHeightFeature. Your class must implement NeedsDynamicHeight to retrieve this value. If does not, null will be returned

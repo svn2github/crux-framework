@@ -40,12 +40,11 @@ import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.module.Module;
-import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
+import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 import br.com.sysmap.crux.core.utils.XMLUtils;
 import br.com.sysmap.crux.gadget.client.Gadget;
@@ -53,8 +52,8 @@ import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 import br.com.sysmap.crux.gadget.meta.GadgetFeature.ContainerFeature;
 import br.com.sysmap.crux.gadget.meta.GadgetFeature.Feature;
 import br.com.sysmap.crux.gadget.meta.GadgetFeature.NeedsFeatures;
+import br.com.sysmap.crux.gadget.meta.GadgetInfo.GadgetDescriptor;
 import br.com.sysmap.crux.gadget.meta.GadgetInfo.ModulePrefs;
-import br.com.sysmap.crux.gadget.meta.GadgetInfo.UserPreferences;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -62,6 +61,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.gadgets.client.UserPreferences;
 import com.google.gwt.gadgets.client.UserPreferences.DataType;
 import com.google.gwt.gadgets.client.UserPreferences.Preference;
 import com.google.gwt.gadgets.client.UserPreferences.PreferenceAttributes;
@@ -89,9 +89,15 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    super(logger, context, context.getTypeOracle().findType(Gadget.class.getCanonicalName()));
 		try
 		{
-			br.com.sysmap.crux.core.rebind.scanner.screen.Screen screen = getRequestedScreen();
-			Module module = Modules.getInstance().getModule(screen.getModule());
-			moduleMetaClass = baseIntf.getOracle().getType(module.getFullName());
+			Set<String> descriptorClasses = ClassScanner.searchClassesByAnnotation(GadgetDescriptor.class);
+			if (descriptorClasses == null || descriptorClasses.size() != 1)
+			{
+				logger.log(TreeLogger.ERROR, "Error generating gadget proxy. You must declare a class (only noe class) anotated with @GadgetDescriptor");//TODO message here
+				throw new CruxGeneratorException();
+				
+			}
+			
+			moduleMetaClass = baseIntf.getOracle().getType(descriptorClasses.iterator().next());
 			generateGadgetManifestFile();
 		}
 		catch (Exception e)
@@ -116,13 +122,11 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 		}
 		OutputStream manifestOut = context.tryCreateResource(logger, manifestName + ".gadget.xml");
-		if (manifestOut == null)
+		if (manifestOut != null)
 		{
-			logger.log(TreeLogger.ERROR, "Gadget manifest was already created", null);// TODO message here
-			throw new UnableToCompleteException();
+			generateGadgetManifest(new PrintWriter(new OutputStreamWriter(manifestOut)));
+			context.commitResource(logger, manifestOut);
 		}
-		generateGadgetManifest(new PrintWriter(new OutputStreamWriter(manifestOut)));
-		context.commitResource(logger, manifestOut);
 	}
 
 	/**
@@ -141,7 +145,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		{
 			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
 			DOMImplementation impl = registry.getDOMImplementation("Core 3.0");
-			d = impl.createDocument(null, null, null);
+			d = impl.createDocument(null, "Module", null);
 			DOMImplementationLS implLS = (DOMImplementationLS) impl.getFeature("LS", "3.0");
 			output = implLS.createLSOutput();
 			output.setCharacterStream(out);
@@ -153,7 +157,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			throw new UnableToCompleteException();
 		}
 
-		Element module = (Element) d.appendChild(d.createElement("Module"));
+		Element module = d.getDocumentElement();
 		Element modulePrefs = (Element) module.appendChild(d.createElement("ModulePrefs"));	    
 	    
 	    generateModulePreferences(d, modulePrefs);
@@ -475,7 +479,11 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		
 		for (ContainerFeature feature : ContainerFeature.values())
 		{
-			srcWriter.println("private " + feature.getClass().getCanonicalName() + " "+feature.toString()+"Feature = null;");
+			Class<?> featureClass = feature.getFeatureClass();
+			if (featureClass != null)
+			{
+				srcWriter.println("private " + featureClass.getCanonicalName() + " "+feature.toString()+"Feature = null;");
+			}
 		}
     }
 
@@ -485,8 +493,24 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	@Override
 	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
 	{
-		// TODO Auto-generated method stub
-		
+		srcWriter.println("public " + UserPreferences.class.getSimpleName() + " getUserPreferences(){");
+		srcWriter.indent();
+		srcWriter.println("return userPreferences;");
+		srcWriter.outdent();
+		srcWriter.println("}");
+		for (ContainerFeature feature : ContainerFeature.values())
+		{
+			
+			Class<?> featureClass = feature.getFeatureClass();
+			if (featureClass != null)
+			{
+				srcWriter.println("public " + featureClass.getCanonicalName() + " get"+featureClass.getSimpleName()+"(){");
+				srcWriter.indent();
+				srcWriter.println("return "+feature.toString()+"Feature;");
+				srcWriter.outdent();
+				srcWriter.println("}");
+			}
+		}
 	}
 
 	/**
@@ -518,7 +542,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 */
 	private void initializeFeature(SourceWriter srcWriter, ContainerFeature feature)
 	{
-		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getClass()+".class);");
+		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
 		neededFeatures.add(feature.getFeatureName());
 	}
 }

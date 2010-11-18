@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="lib/gwt-user.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CruxGWTWidgets"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CruxScannotation"/>
-	<classpathentry kind="lib" path="lib/gwt-gadgets.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -29,22 +29,14 @@ import java.lang.annotation.Target;
  */
 public interface GadgetInfo
 {
-
-	/*
-	 * Annotation to turn on browser's quirks mode.
-	 * 
-	 * By default, generated content will trigger browser's standards mode. If
-	 * you want override default behavior please use this annotation.
-	 *
+	/**
+	 * A Marker annotation to help Crux to identify the gadget descriptor class.
+	 */
 	@Target(ElementType.TYPE)
-	public @interface AllowHtmlQuirksMode
+	public @interface GadgetDescriptor
 	{
-		/**
-		 * Set to <code>true</code> to use .
-		 *
-		boolean value() default true;
-	}*/
-
+	}
+	
 	/**
 	 * Specifies the type of content and the list of views.
 	 */

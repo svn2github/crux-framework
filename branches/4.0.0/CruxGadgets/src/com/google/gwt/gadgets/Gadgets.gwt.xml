@@ -13,9 +13,8 @@
 <!-- implied. License for the specific language governing permissions and   -->
 <!-- limitations under the License.                                         -->
 <module>
-  <!-- Produces the final Gadget manifest -->
-  <define-linker name="gadget" class="br.com.sysmap.crux.gadget.linker.GadgetLinker"/>
-  <add-linker name="gadget"/>
+  <inherits name='com.google.gwt.ajaxloader.AjaxLoader' />
+
   <!-- Automatically write Gadget property accessor implementations -->
   <generate-with class="com.google.gwt.gadgets.rebind.UserPreferencesGenerator">
     <when-type-assignable class="com.google.gwt.gadgets.client.UserPreferences"/>
