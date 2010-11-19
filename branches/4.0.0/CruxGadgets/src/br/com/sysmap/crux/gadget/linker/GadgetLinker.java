@@ -1,12 +1,12 @@
 /*
- * Copyright 2008 Google Inc.
- *
+ * Copyright 2010 Sysmap Solutions Software e Consultoria Ltda.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,201 +15,228 @@
  */
 package br.com.sysmap.crux.gadget.linker;
 
-import com.google.gwt.core.client.GWT;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
-import com.google.gwt.core.linker.XSLinker;
+import com.google.gwt.core.ext.linker.ScriptReference;
+import com.google.gwt.core.ext.linker.StylesheetReference;
+import com.google.gwt.core.linker.CrossSiteIframeLinker;
 import com.google.gwt.dev.About;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.google.gwt.util.tools.Utility;
 
 /**
  * Finalizes the module manifest file with the selection script.
  */
-public final class GadgetLinker extends XSLinker {
+public final class GadgetLinker extends CrossSiteIframeLinker
+{
+	  private static final String INSTALL_LOCATION_JS_PROPERTY = "com/google/gwt/core/ext/linker/impl/installLocationIframe.js";
+	  private static final String WAIT_FOR_BODY_LOADED_JS = "br/com/sysmap/crux/gadget/linker/waitForBodyLoaded.js";
+	  private static final String GADGET_PROCESS_METAS_JS = "br/com/sysmap/crux/gadget/linker/processMetas.js";
+	  private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "br/com/sysmap/crux/gadget/linker/computeScriptBase.js";
+	  
+	  private EmittedArtifact manifestArtifact;
 
-  /**
-   * TODO(zundel): remove this code once GWT 1.5 & 1.6 is obsolete and replace
-   * with About.getGwtVersionArray()
-   *
-   * Workaround for issue 275 - wrong version in hosted mode. The static final
-   * constants were being inlined into the gwt-gadgets jar file.
-   *
-   * @return version number as an array of 3 integers.
-   */
-  private static int[] getVersionArray() throws UnableToCompleteException {
-    // Fails because in GWT 1.5, GWT_VERSION_NUMBER is static final and cached
-    // result = About.GWT_VERSION_NUM.split("\\.");
-    // GWT 2.0 has a new method for version parsing
-    try {
-      Method versionNumMethod = About.class.getMethod("getGwtVersionArray");
-      return (int[]) versionNumMethod.invoke(null, (Object[]) null);
-    } catch (NoSuchMethodException ex) {
-      GWT.log("Couldn't fetch version from constant or method", ex);
-    } catch (InvocationTargetException ex) {
-      GWT.log("Couldn't fetch version from constant or method", ex);
-    } catch (IllegalAccessException ex) {
-      GWT.log("Couldn't fetch version from constant or method", ex);
-    }
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getDescription()
+	 */
+	@Override
+	public String getDescription()
+	{
+		return "Crux Gadget";
+	}
 
-    // GWT 1.6 and prior has only a string constant
-    try {
-      Field versionNumField = About.class.getField("GWT_VERSION_NUM");
-      String versionNumString = (String) versionNumField.get(null);
-      String[] result = versionNumString.split("\\.");
-      assert (result.length == 3);
-      int[] val = {
-          Integer.valueOf(result[0]), Integer.valueOf(result[1]),
-          Integer.valueOf(result[2])};
-      return val;
-    } catch (NoSuchFieldException ex) {
-      // No problem, just try another way to get the version
-    } catch (IllegalAccessException ex) {
-      GWT.log("Error trying to retrieve version", ex);
-      // Fall through, there may be another way
-    }
-    throw new UnableToCompleteException();
-  }
+	/**
+	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#link(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
+	 */
+	@Override
+	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	{
+		ArtifactSet toLink = new ArtifactSet(artifacts);
 
-  private EmittedArtifact manifestArtifact;
+		// Mask the stub manifest created by the generator
+		for (EmittedArtifact res : toLink.find(EmittedArtifact.class))
+		{
+			if (res.getPartialPath().endsWith(".gadget.xml"))
+			{
+				manifestArtifact = res;
+				toLink.remove(res);
+				break;
+			}
+		}
 
-  @Override
-  public String getDescription() {
-    return "Google Gadget";
-  }
+		if (manifestArtifact == null)
+		{
+			if (artifacts.find(CompilationResult.class).isEmpty())
+			{
+				// Maybe hosted mode or junit, defer to XSLinker.
+				return new CrossSiteIframeLinker().link(logger, context, toLink);
+			}
+			else
+			{
+				// When compiling for web mode, enforce that the manifest is
+				// present.
+				logger.log(TreeLogger.ERROR, "No gadget manifest found in ArtifactSet.");
+				throw new UnableToCompleteException();
+			}
+		}
+		return super.link(logger, context, toLink);
+	}
 
-  @Override
-  public ArtifactSet link(TreeLogger logger, LinkerContext context,
-      ArtifactSet artifacts) throws UnableToCompleteException {
-    ArtifactSet toLink = new ArtifactSet(artifacts);
+	/**
+	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#emitSelectionScript(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
+	 */
+	@Override
+	protected EmittedArtifact emitSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	{
 
-    // Mask the stub manifest created by the generator
-    for (EmittedArtifact res : toLink.find(EmittedArtifact.class)) {
-      if (res.getPartialPath().endsWith(".gadget.xml")) {
-        manifestArtifact = res;
-        toLink.remove(res);
-        break;
-      }
-    }
+		logger = logger.branch(TreeLogger.DEBUG, "Building gadget manifest", null);
 
-    if (manifestArtifact == null) {
-      if (artifacts.find(CompilationResult.class).isEmpty()) {
-        // Maybe hosted mode or junit, defer to XSLinker.
-        return new XSLinker().link(logger, context, toLink);
-      } else {
-        // When compiling for web mode, enforce that the manifest is present.
-        logger.log(TreeLogger.ERROR, "No gadget manifest found in ArtifactSet.");
-        throw new UnableToCompleteException();
-      }
-    }
-    return super.link(logger, context, toLink);
-  }
+		String bootstrap = "<script>" + context.optimizeJavaScript(logger, generateSelectionScript(logger, context, artifacts)) + 
+		                   "</script>\n" + "<div id=\"__gwt_gadget_content_div\"></div>";
 
-  @Override
-  protected EmittedArtifact emitSelectionScript(TreeLogger logger,
-      LinkerContext context, ArtifactSet artifacts)
-      throws UnableToCompleteException {
+		// Read the content
+		StringBuffer manifest = new StringBuffer();
 
-    logger = logger.branch(TreeLogger.DEBUG, "Building gadget manifest", null);
+		try
+		{
+			BufferedReader in = new BufferedReader(new InputStreamReader(manifestArtifact.getContents(logger)));
+			for (String line = in.readLine(); line != null; line = in.readLine())
+			{
+				manifest.append(line).append("\n");
+			}
+			in.close();
+		}
+		catch (IOException e)
+		{
+			logger.log(TreeLogger.ERROR, "Unable to read manifest stub", e);
+			throw new UnableToCompleteException();
+		}
 
-    String bootstrap = "<script>"
-        + context.optimizeJavaScript(logger, generateSelectionScript(logger,
-            context, artifacts)) + "</script>\n"
-        + "<div id=\"__gwt_gadget_content_div\"></div>";
+		replaceAll(manifest, "__BOOTSTRAP__", bootstrap);
 
-    // Read the content
-    StringBuffer manifest = new StringBuffer();
+		return emitString(logger, manifest.toString(), manifestArtifact.getPartialPath());
+	}
 
-    try {
-      BufferedReader in = new BufferedReader(new InputStreamReader(
-          manifestArtifact.getContents(logger)));
-      for (String line = in.readLine(); line != null; line = in.readLine()) {
-        manifest.append(line).append("\n");
-      }
-      in.close();
-    } catch (IOException e) {
-      logger.log(TreeLogger.ERROR, "Unable to read manifest stub", e);
-      throw new UnableToCompleteException();
-    }
+	/**
+	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#generateScriptInjector(java.lang.String)
+	 */
+	@Override
+	protected String generateScriptInjector(String scriptUrl)
+	{
+		if (isRelativeURL(scriptUrl))
+		{
+			return "  if (!__gwt_scriptsLoaded['" + scriptUrl + "']) {\n" + 
+			       "    __gwt_scriptsLoaded['" + scriptUrl + "'] = true;\n" + 
+			       "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl(base+'" + 
+			       scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
+		}
+		else
+		{
+			return "  if (!__gwt_scriptsLoaded['" + scriptUrl + "']) {\n" + 
+			       "    __gwt_scriptsLoaded['" + scriptUrl + "'] = true;\n" + 
+			       "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl('" + 
+			       scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
+		}
+	}
 
-    replaceAll(manifest, "__BOOTSTRAP__", bootstrap);
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#generateSelectionScript(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
+	 */
+	@Override
+	protected String generateSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	{
+		StringBuffer selectionScript = getSelectionScriptStringBuffer(logger, context);
 
-    return emitString(logger, manifest.toString(),
-        manifestArtifact.getPartialPath());
-  }
+		String waitForBodyLoadedJs;
+		String installLocationJs;
+		String computeScriptBase;
+		String processMetas;
 
-  @Override
-  protected String generateScriptInjector(String scriptUrl) {
-    if (isRelativeURL(scriptUrl)) {
-      return "  if (!__gwt_scriptsLoaded['"
-          + scriptUrl
-          + "']) {\n"
-          + "    __gwt_scriptsLoaded['"
-          + scriptUrl
-          + "'] = true;\n"
-          + "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl(base+'"
-          + scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
-    } else {
-      return "  if (!__gwt_scriptsLoaded['"
-          + scriptUrl
-          + "']) {\n"
-          + "    __gwt_scriptsLoaded['"
-          + scriptUrl
-          + "'] = true;\n"
-          + "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl('"
-          + scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
-    }
-  }
+		try
+		{
+			waitForBodyLoadedJs = Utility.getFileFromClassPath(WAIT_FOR_BODY_LOADED_JS);
+			installLocationJs = Utility.getFileFromClassPath(INSTALL_LOCATION_JS_PROPERTY);
+			processMetas = Utility.getFileFromClassPath(GADGET_PROCESS_METAS_JS);
+			computeScriptBase = Utility.getFileFromClassPath(GADGET_COMPUTE_SCRIPT_BASE_JS);
+		}
+		catch (IOException e)
+		{
+			logger.log(TreeLogger.ERROR, "Unable to read selection script template", e);
+			throw new UnableToCompleteException();
+		}
 
-  @Override
-  protected String generateSelectionScript(TreeLogger logger,
-      LinkerContext context, ArtifactSet artifacts)
-      throws UnableToCompleteException {
-    StringBuffer scriptContents = new StringBuffer(
-        super.generateSelectionScript(logger, context, artifacts));
-    // Add a substitution for the GWT major release number. e.g. "1.6"
-    int gwtVersions[] = getVersionArray();
-    replaceAll(scriptContents, "__GWT_MAJOR_VERSION__", gwtVersions[0] + "."
-        + gwtVersions[1]);
-    return scriptContents.toString();
-  }
+		replaceAll(selectionScript, "__INSTALL_LOCATION__", installLocationJs);
+		replaceAll(selectionScript, "__WAIT_FOR_BODY_LOADED__", waitForBodyLoadedJs);
+		replaceAll(selectionScript, "__START_DOWNLOAD_IMMEDIATELY__", "true");
+		replaceAll(selectionScript, "__PROCESS_METAS__", processMetas);
+		replaceAll(selectionScript, "__COMPUTE_SCRIPT_BASE__", computeScriptBase);
 
-  @Override
-  protected String generateStylesheetInjector(String stylesheetUrl) {
-    if (isRelativeURL(stylesheetUrl)) {
-      return "  if (!__gwt_stylesLoaded['"
-          + stylesheetUrl
-          + "']) {\n"
-          + "    __gwt_stylesLoaded['"
-          + stylesheetUrl
-          + "'] = true;\n"
-          + "    document.write('<link rel=\\\"stylesheet\\\" href=\\\"'+gadgets.io.getProxyUrl(base+'"
-          + stylesheetUrl + "') + '\\\">');\n" + "  }\n";
-    } else {
-      return "  if (!__gwt_stylesLoaded['"
-          + stylesheetUrl
-          + "']) {\n"
-          + "    __gwt_stylesLoaded['"
-          + stylesheetUrl
-          + "'] = true;\n"
-          + "    document.write('<link rel=\\\"stylesheet\\\" href=\\\"'+gadgets.io.getProxyUrl('"
-          + stylesheetUrl + "') + '\\\">');\n" + "  }\n";
-    }
-  }
+	    // Add external dependencies
+	    int startPos = selectionScript.indexOf("// __MODULE_STYLES_END__");
+	    if (startPos != -1) {
+	      for (StylesheetReference resource : artifacts.find(StylesheetReference.class)) {
+	        String text = generateStylesheetInjector(resource.getSrc());
+	        selectionScript.insert(startPos, text);
+	        startPos += text.length();
+	      }
+	    }
+		
+	    startPos = selectionScript.indexOf("// __MODULE_SCRIPTS_END__");
+	    if (startPos != -1) {
+	      for (ScriptReference resource : artifacts.find(ScriptReference.class)) {
+	        String text = generateScriptInjector(resource.getSrc());
+	        selectionScript.insert(startPos, text);
+	        startPos += text.length();
+	      }
+	    }
 
-  @Override
-  protected String getSelectionScriptTemplate(TreeLogger logger,
-      LinkerContext context) {
-    return "br/com/sysmap/crux/gadget/linker/GadgetTemplate.js";
-  }
+		// This method needs to be called after all of the .js files have been
+		// swapped into the selectionScript since it will fill in
+		// __MODULE_NAME__
+		// and many of the .js files contain that template variable
+		selectionScript = processSelectionScriptCommon(selectionScript, logger, context);
 
+		// Add a substitution for the GWT major release number. e.g. "2.1"
+		int gwtVersions[] = About.getGwtVersionArray();
+		replaceAll(selectionScript, "__GWT_MAJOR_VERSION__", gwtVersions[0] + "." + gwtVersions[1]);
+		return selectionScript.toString();
+	}
+	
+	/**
+	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#generateStylesheetInjector(java.lang.String)
+	 */
+	@Override
+	protected String generateStylesheetInjector(String stylesheetUrl)
+	{
+		String hrefExpr = "'" + stylesheetUrl + "'";
+		if (isRelativeURL(stylesheetUrl))
+		{
+			hrefExpr = "base + " + hrefExpr;
+		}
+		hrefExpr = "gadgets.io.getProxyUrl(" + hrefExpr + ")";
+
+		return "if (!__gwt_stylesLoaded['" + stylesheetUrl + "']) {\n           " +
+		       "  var l = $doc.createElement('link');\n                          " + 
+		       "  __gwt_stylesLoaded['" + stylesheetUrl + "'] = l;\n             " + 
+		       "  l.setAttribute('rel', 'stylesheet');\n                         " + 
+		       "  l.setAttribute('href', " + hrefExpr + ");\n                    " + 
+		       "  $doc.getElementsByTagName('head')[0].appendChild(l);\n         " + 
+		       "}\n";
+	}
+    
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getSelectionScriptTemplate(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext)
+	 */
+	@Override
+	protected String getSelectionScriptTemplate(TreeLogger logger, LinkerContext context)
+	{
+		return "br/com/sysmap/crux/gadget/linker/GadgetTemplate.js";
+	}
 }
