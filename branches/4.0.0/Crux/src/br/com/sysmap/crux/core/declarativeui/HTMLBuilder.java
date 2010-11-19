@@ -274,11 +274,15 @@ class HTMLBuilder
 		DocumentType doctype = cruxPageDocument.getDoctype();
 		if (doctype != null)
 		{
-			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", doctype);
+			DocumentType newDoctype =  documentBuilder.getDOMImplementation().createDocumentType(doctype.getName(), doctype.getPublicId(), doctype.getSystemId());
+			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", newDoctype);
 		}
 		else
 		{
 			htmlDocument = documentBuilder.newDocument();
+			Element cruxPageElement = cruxPageDocument.getDocumentElement();
+			Node htmlElement = htmlDocument.importNode(cruxPageElement, false);
+			htmlDocument.appendChild(htmlElement);
 		}
 	    return htmlDocument;
     }
@@ -743,8 +747,7 @@ class HTMLBuilder
 	private void translateDocument(Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
     {
 		Element cruxPageElement = cruxPageDocument.getDocumentElement();
-		Node htmlElement = htmlDocument.importNode(cruxPageElement, false);
-		htmlDocument.appendChild(htmlElement);
+		Node htmlElement = htmlDocument.getDocumentElement();
 		clearCurrentWidget();
 		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
 		clearCurrentWidget();
