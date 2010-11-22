@@ -286,7 +286,11 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    NodeList bodyChildren = element.getChildNodes();
 	    for(int j=0; j<bodyChildren.getLength(); j++)
 	    {
-	    	HTMLUtils.write(bodyChildren.item(j), out);
+	    	Node child = bodyChildren.item(j);
+	    	if (child.getNodeType() != Node.ELEMENT_NODE || !isModuleScriptTag((Element) child))
+	    	{
+	    		HTMLUtils.write(child, out);
+	    	}
 	    }
     }
 
@@ -300,22 +304,34 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    NodeList headChildren = element.getChildNodes();
 	    for (int j = 0; j < headChildren.getLength(); j++)
 	    {
-	    	Element item = (Element) headChildren.item(j);
+	    	
+	    	Node child = headChildren.item(j);
+			if (child.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element item = (Element) child;
 
-	    	if (item.getNodeName().equalsIgnoreCase("script"))
-	    	{
-	    		String src = item.getAttribute("src");
-	    		if (src == null || !src.endsWith(".nocache.js"))
-	    		{
-	    			HTMLUtils.write(item, out);
-	    		}
-	    	}
-	    	else if (item.getNodeName().equalsIgnoreCase("link") || item.getNodeName().equalsIgnoreCase("style"))
-	    	{
-	    		HTMLUtils.write(item, out);
-	    	}
+				String nodeName = item.getNodeName();
+				if (!isModuleScriptTag(item) && (nodeName.equalsIgnoreCase("link") || nodeName.equalsIgnoreCase("style") || nodeName.equalsIgnoreCase("script") ))
+				{
+					HTMLUtils.write(item, out);
+				}
+			}
 	    }
     }
+	
+	private boolean isModuleScriptTag(Element elem)
+	{
+		if (elem.getNodeName().equalsIgnoreCase("script"))
+		{
+			String src = elem.getAttribute("src");
+			if (src != null && src.endsWith(".nocache.js"))
+			{
+				return true;
+			}
+		}
+		return false;
+		
+	}
 	
 	/**
 	 * Add required features to the manifest
