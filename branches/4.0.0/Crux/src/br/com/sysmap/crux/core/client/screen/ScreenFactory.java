@@ -28,7 +28,6 @@ import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
-import br.com.sysmap.crux.core.client.utils.DOMUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -63,7 +62,6 @@ public class ScreenFactory
 	private RegisteredDataSources registeredDataSources = null;
 	private RegisteredWidgetFactories registeredWidgetFactories = null;
 	private Screen screen = null;
-	private String screenId = null;
 	private FastList<ParserInfo> parserStack = new FastList<ParserInfo>();
 	
 	
@@ -160,24 +158,6 @@ public class ScreenFactory
 		return screen;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getScreenId()
-	{
-		if (screenId == null)
-		{
-			String fileName = DOMUtils.getDocumentName();
-			int indexBeg = fileName.indexOf(GWT.getModuleName());
-			int indexEnd = fileName.indexOf("?");
-			int begin = (indexBeg == -1) ? 0 : indexBeg;
-			int end = (indexEnd == -1) ? fileName.length() : indexEnd;
-			screenId = fileName.substring(begin, end);
-		}
-		return screenId;
-	}
-
 	/**
 	 * Creates a new widget based on a HTML SPAN tag and attaches it on the Screen object.
 	 * @param metaElem
@@ -361,7 +341,7 @@ public class ScreenFactory
 	 */
 	private void create()
 	{
-		screen = new Screen(getScreenId());
+		screen = new Screen(CruxMetaData.getScreenId());
 		Array<CruxMetaData> metaData = CruxMetaData.loadMetaData();
 		addToParserStack(null, null, metaData);
 		parseDocument();

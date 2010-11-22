@@ -52,6 +52,8 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
@@ -242,12 +244,12 @@ class HTMLBuilder
 	 * @param out
 	 * @throws HTMLBuilderException
 	 */
-	public void build(Document cruxPageDocument, Writer out) throws HTMLBuilderException
+	public void build(String screenId, Document cruxPageDocument, Writer out) throws HTMLBuilderException
 	{
 		try
         {
 			Document htmlDocument = createHTMLDocument(cruxPageDocument);
-			translateDocument(cruxPageDocument, htmlDocument);
+			translateDocument(screenId, cruxPageDocument, htmlDocument);
 	        write(htmlDocument, out);
         }
         catch (IOException e)
@@ -434,12 +436,13 @@ class HTMLBuilder
 	}
 
 	/**
+	 * @param screenId 
 	 * @param cruxPageBodyElement
 	 * @param htmlElement
 	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxMetaDataElement(Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
+	private void generateCruxMetaDataElement(String screenId, Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
     {
 		Element cruxMetaData = htmlDocument.createElement("script");
 		cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
@@ -455,6 +458,17 @@ class HTMLBuilder
 		
 		textNode = htmlDocument.createTextNode("]}");
 		cruxMetaData.appendChild(textNode);
+		try
+        {
+	        String screenModule = ScreenFactory.getInstance().getScreenModule(htmlDocument);
+			screenId = ScreenFactory.getInstance().getRelativeScreenId(screenId, screenModule);
+			textNode = htmlDocument.createTextNode(";var __CruxScreenId_=\""+screenModule+"/"+HTMLUtils.escapeJavascriptString(screenId, escapeXML)+"\";");
+			cruxMetaData.appendChild(textNode);
+        }
+		catch (ScreenConfigException e)
+		{
+			throw new HTMLBuilderException(e.getMessage(), e);
+		}
     }
 	
 	/**
@@ -740,18 +754,19 @@ class HTMLBuilder
     }
 
 	/**
+	 * @param screenId 
 	 * @param cruxPageDocument
 	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void translateDocument(Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
+	private void translateDocument(String screenId, Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
     {
 		Element cruxPageElement = cruxPageDocument.getDocumentElement();
 		Node htmlElement = htmlDocument.getDocumentElement();
 		clearCurrentWidget();
 		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
 		clearCurrentWidget();
-		generateCruxMetaDataElement(getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+		generateCruxMetaDataElement(screenId, getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
     }
 
 	/**

@@ -66,7 +66,7 @@ public class CruxToHtmlTransformer
 	 * @throws IOException
 	 * @throws InterfaceConfigException 
 	 */
-	public static void generateHTML(InputStream file, OutputStream out, boolean escapeXML)
+	public static void generateHTML(String screenId, InputStream file, OutputStream out, boolean escapeXML)
 	{
 		init();
 		
@@ -75,7 +75,7 @@ public class CruxToHtmlTransformer
 			StringWriter buff = new StringWriter();
 			Document source = loadCruxPage(file);
 			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, mustIndent());
-			htmlBuilder.build(source, buff);
+			htmlBuilder.build(screenId, source, buff);
 //			String result = new String(buff.toByteArray(), "UTF-8");
 			String result = buff.toString();
 			StreamUtils.write(new ByteArrayInputStream(result.getBytes()), out, false);
@@ -93,11 +93,11 @@ public class CruxToHtmlTransformer
 	 * @param out
 	 * @throws InterfaceConfigException
 	 */
-	public static void generateHTML(String filePath, OutputStream out, boolean escapeXML)
+	public static void generateHTML(String screenId, String filePath, OutputStream out, boolean escapeXML)
 	{
 		try
 		{
-			generateHTML(new FileInputStream(filePath), out, escapeXML);
+			generateHTML(screenId, new FileInputStream(filePath), out, escapeXML);
 		}
 		catch (FileNotFoundException e)
 		{

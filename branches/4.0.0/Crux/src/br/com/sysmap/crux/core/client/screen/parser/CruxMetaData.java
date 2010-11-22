@@ -26,7 +26,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class CruxMetaData extends JavaScriptObject
 {
-
+	/**
+	 * Retrive the screen identifier
+	 * @return
+	 */
+	public native static String getScreenId()/*-{
+		return $wnd.__CruxScreenId_;
+	}-*/;
+	
 	/**
 	 * Loads the Crux Meta Data information. It is represented in JSON format and is retrieved through 
 	 * a native JS function.

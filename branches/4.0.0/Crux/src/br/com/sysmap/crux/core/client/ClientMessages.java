@@ -58,6 +58,10 @@ public interface ClientMessages extends Messages
 	String screenFactoryLayoutPanelWithoutSize(String widgetId);
 	@DefaultMessage("[screenFactory 004] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String screenFactoryMetaElementDoesNotContainsType();
+	
+	// screen
+	@DefaultMessage("[screen 001] - The id attribute is required for CRUX Screens.")
+	String screenFactoryScreenIdRequired();
 
 	//  widget
 	@DefaultMessage("[widget 001] - The id attribute is required for CRUX widgets.")

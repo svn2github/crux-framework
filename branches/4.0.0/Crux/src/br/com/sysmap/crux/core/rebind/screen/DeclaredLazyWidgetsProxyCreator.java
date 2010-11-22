@@ -34,10 +34,9 @@ import br.com.sysmap.crux.core.client.screen.DeclaredLazyWidgets;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.module.Module;
-import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
@@ -150,7 +149,8 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 				DeclaredLazyWidgets.class.getCanonicalName(),
 				Logger.class.getCanonicalName(), 
 				Level.class.getCanonicalName(), 
-				LogConfiguration.class.getCanonicalName()
+				LogConfiguration.class.getCanonicalName(), 
+				StringUtils.class.getCanonicalName()
 		};
 		return imports;       
     }
@@ -207,7 +207,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	{
 		try
         {
-	        srcWriter.println("if (screenId.endsWith("+EscapeUtils.quote(getScreenId(screen))+")){");
+	        srcWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
 	        srcWriter.indent();
 
 	        Iterator<Widget> widgets = screen.iterateWidgets();
@@ -271,16 +271,6 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
         	}
         }
     }
-
-	/**
-	 * @param screen
-	 * @return
-	 */
-	private String getScreenId(Screen screen)
-	{
-		Module module = Modules.getInstance().getModule(screen.getModule());
-		return Modules.getInstance().getRelativeScreenId(module, screen.getId());
-	}
 
 	/**
 	 * @param childrenMethod

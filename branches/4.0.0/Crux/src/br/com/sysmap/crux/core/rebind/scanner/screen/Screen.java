@@ -34,6 +34,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 public class Screen 
 {
 	protected String id;
+	protected String relativeId;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -45,9 +46,10 @@ public class Screen
 	
 	protected String module;
 	
-	public Screen(String id, String module) 
+	public Screen(String id, String relativeId, String module) 
 	{
 		this.id = id;
+		this.relativeId = relativeId;
 		this.module = module;
 	}
 
@@ -102,6 +104,17 @@ public class Screen
 		return id;
 	}
 	
+	/**
+	 * @return
+	 */
+	public String getRelativeId()
+	{
+		return relativeId;
+	}
+	
+	/**
+	 * @return
+	 */
 	public String getModule()
 	{
 		return module;

@@ -35,6 +35,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
+import br.com.sysmap.crux.core.rebind.scanner.module.Module;
+import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.datasource.DataSources;
 import br.com.sysmap.crux.core.rebind.scanner.screen.formatter.Formatters;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
@@ -121,6 +123,12 @@ public class ScreenFactory
 		}
 	}
 
+	public String getRelativeScreenId(String id, String module)
+	{
+		Module mod = Modules.getInstance().getModule(module);
+		return Modules.getInstance().getRelativeScreenId(mod, id);
+	}
+	
 	/**
 	 * Creates a widget based in its &lt;span&gt; tag definition.
 	 * 
@@ -206,10 +214,11 @@ public class ScreenFactory
 	 * @return
 	 * @throws ScreenConfigException
 	 */
-	private String getScreenModule(NodeList nodeList) throws ScreenConfigException
+	public String getScreenModule(Document source) throws ScreenConfigException
 	{
 		String result = null;
 		
+		NodeList nodeList = source.getElementsByTagName("script");
 		int length = nodeList.getLength();
 		for (int i = 0; i < length; i++)
 		{
@@ -322,13 +331,13 @@ public class ScreenFactory
 			throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()));
 		}
 
-		String screenModule = getScreenModule(source.getElementsByTagName("script"));
+		String screenModule = getScreenModule(source);
 		
 		try
         {
 	        if(screenModule != null)
 	        {
-	        	screen = new Screen(id, screenModule);
+	        	screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule);
 	        	
 	        	JSONArray metaData = getMetaData(source, id);
 	        	
@@ -357,7 +366,7 @@ public class ScreenFactory
         }
         catch (JSONException e)
         {
-        	throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()));
+        	throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()), e);
         }
 		
 		return screen;
