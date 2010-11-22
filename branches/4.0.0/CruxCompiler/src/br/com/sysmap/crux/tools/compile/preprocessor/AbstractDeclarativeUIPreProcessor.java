@@ -97,7 +97,7 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 		CruxToHtmlTransformer.setForceIndent(indent);
 		CruxToHtmlTransformer.setOutputCharset(outputCharset);
 		FileOutputStream out = new FileOutputStream(preprocessedFile);
-		CruxToHtmlTransformer.generateHTML(url.openStream(), out, false);
+		CruxToHtmlTransformer.generateHTML(url.toString(), url.openStream(), out, false);
 		out.flush();
 		out.close();
 		
