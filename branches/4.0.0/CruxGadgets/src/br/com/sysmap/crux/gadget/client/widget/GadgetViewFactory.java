@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 import br.com.sysmap.crux.gwt.client.AbstractHTMLPanelFactory;
 
@@ -52,7 +52,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 		 * Constructor
 		 * @param element
 		 */
-		public CruxGadgetView(CruxMetaData element)
+		public CruxGadgetView(CruxMetaDataElement element)
         {
 	        super("");
 	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
@@ -70,7 +70,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 	}	
 	
 	@Override
-	public GadgetView instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	public GadgetView instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
 	{
 		CruxGadgetView gadgetView = new CruxGadgetView(element);
 		createChildren(widgetId, element);
