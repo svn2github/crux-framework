@@ -32,9 +32,6 @@ public interface Crux
 	String classPathResolver();
 	
 	@DefaultServerMessage("true")
-	String wrapSiblingWidgets();
-
-	@DefaultServerMessage("true")
 	String enableChildrenWindowsDebug();
 
 	@DefaultServerMessage("true")
@@ -54,11 +51,9 @@ public interface Crux
 
 	void setEnableWebRootScannerCache(Boolean value);
 	void setEnableChildrenWindowsDebug(Boolean value);
-	void setWrapSiblingWidgets(Boolean value);
 	void setEnableHotDeploymentForWebDirs(Boolean value);
 	void setEnableHotDeploymentForWidgetFactories(Boolean value);
 	void setRenderWidgetsWithIDs(Boolean value);
-	void setEnableClientFactoryTracing(Boolean value);
 	void setUseCompileTimeClassScanning(Boolean value);
 	void setClassPathResolver(String value);
 	void setScreenResourceResolver(String value);

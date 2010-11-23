@@ -22,20 +22,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.collection.FastMap;
+import br.com.sysmap.crux.core.client.collection.Map;
 import br.com.sysmap.crux.core.client.context.ContextManager;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -48,7 +48,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
@@ -75,15 +74,10 @@ public class Screen
 	protected String[] declaredFormatters;
 	@Deprecated
 	protected String[] declaredSerializables;
-	protected SimpleEventBus eventBus;
 	protected IFrameElement historyFrame = null;
 	protected String id;
 	
-	protected FastMap<String> lazyWidgets = null;
-	
-	protected boolean loaded = false;
-	
-	protected FastList<HandlerRegistration>  loadHandlers = new FastList<HandlerRegistration>();
+	protected Map<String> lazyWidgets = null;
 	
 	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	
@@ -93,11 +87,18 @@ public class Screen
 	protected FastMap<Widget> widgets = new FastMap<Widget>();
 
 	@SuppressWarnings("deprecation")
-    protected Screen(String id) 
+    protected Screen(String id, Map<String> lazyWidgets) 
 	{
 		this.id = id;
-		this.eventBus = new SimpleEventBus();
-		initializeLazyWidgets(id);
+		this.lazyWidgets = lazyWidgets;
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			Array<String> keys = lazyWidgets.keys();
+			for(int i=0; i< keys.size(); i++)
+			{
+				logger.log(Level.FINE, "Adding lazy dependency. Widget["+keys.get(i)+"] depends on ["+lazyWidgets.get(keys.get(i))+"].");
+			}
+		}
 		this.serializer = new ModuleComunicationSerializer();
 		createControllerAccessor(this);
 		this.addWindowCloseHandler(new CloseHandler<Window>()
@@ -652,14 +653,6 @@ public class Screen
 	}
 	
 	/**
-	 * @return
-	 */
-	public static boolean isLoaded()
-	{
-		return Screen.get().isScreenLoaded();
-	}
-	
-	/**
 	 * 
 	 * @return
 	 */
@@ -844,47 +837,12 @@ public class Screen
 	}
 	
 	/**
-	 * @param widgetId
-	 * @return
-	 */
-	public boolean containsLazyDependents(String widgetId)
-	{
-		FastList<String> keys = lazyWidgets.keys();
-		for (int i=0; i<keys.size(); i++)
-		{
-			String key = keys.get(i);
-			if (lazyWidgets.get(key).equals(widgetId))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @param lazy
-	 * @param depedentId
-	 */
-	protected void addLazyWidgetDependency(String lazy, String dependentId)
-	{
-		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
-		{
-			if (LogConfiguration.loggingIsEnabled())
-			{
-				logger.log(Level.FINE, "Adding lazy dependency (resolved at runtime). Widget["+lazy+"] depends on ["+dependentId+"].");
-			}
-			this.lazyWidgets.put(lazy, dependentId);
-		}
-	}
-	
-	/**
 	 * Adds an event handler that is called only once, when the screen is loaded
 	 * @param handler
 	 */
 	protected void addLoadHandler(final ScreenLoadHandler handler) 
 	{
-		HandlerRegistration addHandler = eventBus.addHandler(ScreenLoadEvent.TYPE, handler);
-		loadHandlers.add(addHandler);
+		ScreenFactory.getInstance().addLoadHandler(handler);
 	}	
 	
 	/**
@@ -982,21 +940,6 @@ public class Screen
 	protected boolean containsWidget(String id)
 	{
 		return widgets.containsKey(id);
-	}
-	
-	/**
-	 * Fires the load event. This method has no effect when called more than one time.
-	 */
-	protected void fireEvent(ScreenLoadEvent event) 
-	{
-		try
-		{
-			eventBus.fireEventFromSource(event, this);
-		}
-		finally
-		{
-			cleanLoadhandlers();
-		}
 	}
 	
 	/**
@@ -1228,30 +1171,6 @@ public class Screen
 	}
 
 	/**
-	 * @param id
-	 */
-	protected void initializeLazyWidgets(String id)
-	{
-		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
-		{
-			this.lazyWidgets = new FastMap<String>();
-		}
-		else
-		{
-			DeclaredLazyWidgets declaredLazyWidgets = GWT.create(DeclaredLazyWidgets.class);
-			this.lazyWidgets = declaredLazyWidgets.getLazyWidgets(id);
-		}
-	}
-
-	/**
-	 * @return if this screen is completely loaded
-	 */
-	protected boolean isScreenLoaded()
-	{
-		return loaded;
-	}
-
-	/**
 	 * @return
 	 * @deprecated Use widgetsList() instead
 	 */
@@ -1286,34 +1205,10 @@ public class Screen
 	}
 
 	/**
-	 * Fires the load event. This method has no effect when called more than one time.
-	 */
-	protected void load() 
-	{
-		if (loadHandlers.size() > 0)
-		{
-			Scheduler.get().scheduleDeferred(new ScheduledCommand(){
-				public void execute()
-				{
-					try 
-					{
-						ScreenLoadEvent.fire(Screen.this);
-						Screen.this.loaded = true;
-					} 
-					catch (RuntimeException e) 
-					{
-						Crux.getErrorHandler().handleError(e);
-					}
-				}
-			});
-		}
-	}
-
-	/**
 	 * 
 	 * @param element
 	 */
-	protected void parse(CruxMetaData metaElem) 
+	protected void parse(CruxMetaDataElement metaElem) 
 	{
 		String title = metaElem.getProperty("title");
 		if (title != null && title.length() >0)
@@ -1507,19 +1402,6 @@ public class Screen
 		return values;
 	}
 	
-	/**
-	 * 
-	 */
-	private void cleanLoadhandlers()
-	{
-		for (int i=0; i<loadHandlers.size(); i++)
-		{
-			HandlerRegistration handler = loadHandlers.get(i);
-			handler.removeHandler();
-		}
-		loadHandlers.clear();
-	}
-	
 	@Deprecated
 	private native void createControllerAccessor(Screen handler)/*-{
 		$wnd._cruxScreenControllerAccessor = function(call, serializedData){
@@ -1544,7 +1426,7 @@ public class Screen
 	 * @param attributeName
 	 * @return
 	 */
-	private String[] extractReferencedResourceList(CruxMetaData metaElem, String attributeName)
+	private String[] extractReferencedResourceList(CruxMetaDataElement metaElem, String attributeName)
 	{
 		String attr = metaElem.getProperty(attributeName);
 		if (!StringUtils.isEmpty(attr))
@@ -1566,8 +1448,9 @@ public class Screen
 	private FastList<String> getDependentWidgets(String widgetId)
 	{
 		FastList<String> dependentWidgets = new FastList<String>();
-		FastList<String> keys = lazyWidgets.keys();
-		for (int i=0; i<keys.size(); i++)
+		Array<String> keys = lazyWidgets.keys();
+		int size = keys.size();
+		for (int i=0; i<size; i++)
 		{
 			String key = keys.get(i);
 			if (lazyWidgets.get(key).equals(widgetId))

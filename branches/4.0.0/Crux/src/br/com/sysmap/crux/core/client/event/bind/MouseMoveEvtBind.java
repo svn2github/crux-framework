@@ -17,7 +17,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.event.dom.client.HasMouseMoveHandlers;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -35,7 +35,7 @@ public class MouseMoveEvtBind implements EvtBinder<HasMouseMoveHandlers>
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	public void bindEvent(CruxMetaData element, HasMouseMoveHandlers widget)
+	public void bindEvent(CruxMetaDataElement element, HasMouseMoveHandlers widget)
 	{
 		final Event eventMouseMove = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (eventMouseMove != null)

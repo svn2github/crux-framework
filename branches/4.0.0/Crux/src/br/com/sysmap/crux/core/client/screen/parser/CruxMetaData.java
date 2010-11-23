@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.client.screen.parser;
 
 import br.com.sysmap.crux.core.client.collection.Array;
+import br.com.sysmap.crux.core.client.collection.Map;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -27,22 +28,14 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class CruxMetaData extends JavaScriptObject
 {
 	/**
-	 * Retrive the screen identifier
-	 * @return
-	 */
-	public native static String getScreenId()/*-{
-		return $wnd.__CruxScreenId_;
-	}-*/;
-	
-	/**
 	 * Loads the Crux Meta Data information. It is represented in JSON format and is retrieved through 
 	 * a native JS function.
 	 * 
 	 * @param metadata Crux metadata to parse
-	 * @return a List that has been built by parsing the metadata string
+	 * @return an object that has been built by parsing the metadata string
 	 * @throws CruxMetaDataException 
 	 */
-	public static Array<CruxMetaData> loadMetaData() throws CruxMetaDataException
+	public static CruxMetaData loadMetaData() throws CruxMetaDataException
 	{
 		try
 		{
@@ -55,9 +48,9 @@ public class CruxMetaData extends JavaScriptObject
 	}
 
 	/**
-	 * Call the native function that loads the CruxMetaData array.
+	 * Call the native function that loads the CruxMetaData object.
 	 */
-	private static native Array<CruxMetaData> callMetaDataNativeLoader() /*-{
+	private static native CruxMetaData callMetaDataNativeLoader() /*-{
 		return $wnd.__CruxMetaData_();
 	}-*/;
 
@@ -69,70 +62,24 @@ public class CruxMetaData extends JavaScriptObject
     }
 	
 	/**
-	 * @param key
 	 * @return
 	 */
-	public final boolean containsKey(String key)
-	{
-		return key != null && jsniContainsKey(key);
-	}
-	
-	/**
-	 * @return
-	 */
-	public final Array<CruxMetaData> getChildren()
-	{
-		return jsniGetArray("children");
-	}
-	
-	/**
-	 * @param key
-	 * @return
-	 */
-	public final String getProperty(String key)
-	{
-		return key == null ? null : jsniGetString(key);
-	}
-
-	/**
-	 * @param key
-	 * @param property
-	 */
-	public final void setProperty(String key, String property)
-	{
-		assert key != null;
-		jsniPut(key, property);
-	}	
-	
-	/**
-	 * @param index
-	 * @return
-	 */
-	private native boolean jsniContainsKey(String index) /*-{
-		return this[index] !== undefined;
-	}-*/;	
-	
-	/**
-	 * @param index
-	 * @return
-	 */
-	private native Array<CruxMetaData> jsniGetArray(String index) /*-{
-		return this[index];
-	}-*/;
-
-	/**
-	 * @param index
-	 * @return
-	 */
-	private native String jsniGetString(String index) /*-{
-		return this[index];
+	public final native Array<CruxMetaDataElement> getElementsMetaData()/*-{
+		return this['elements'];
 	}-*/;
 	
 	/**
-	 * @param index
-	 * @param value
+	 * @return
 	 */
-	private native void jsniPut(String index, String value) /*-{
-		this[index] = value;
-	}-*/;	
+	public final native String getScreenId()/*-{
+		return this['id'];
+	}-*/;
+	
+	/**
+	 * @return
+	 */
+	public final native Map<String> getLazyDependencies()/*-{
+		return this['lazyDeps'];
+	}-*/;
+	
 }

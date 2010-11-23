@@ -272,7 +272,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws JSONException
 	 */
-	private boolean isValidWidget(JSONObject cruxObject) throws JSONException
+	public boolean isValidWidget(JSONObject cruxObject) throws JSONException
 	{
 		if (cruxObject.has("type"))
 		{
@@ -392,8 +392,8 @@ public class ScreenFactory
 	    	
 	    	metaData = metaData.substring(indexReturnFunction+7, indexCloseFunction).trim();
 	    	
-	    	JSONArray meta = new JSONArray(metaData);
-	    	return meta;
+	    	JSONObject meta = new JSONObject(metaData);
+	    	return meta.getJSONArray("elements");
 	    }
 	    
 	    throw new ScreenConfigException(messages.screenFactoryErrorParsingScreenMetaData(id));

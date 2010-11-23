@@ -17,7 +17,7 @@ package br.com.sysmap.crux.core.rebind.widget;
 
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
@@ -50,7 +50,7 @@ public class WidgetFactoryHelper
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
 
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
+		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaDataElement.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
 		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
@@ -129,7 +129,7 @@ public class WidgetFactoryHelper
 	 */
 	private JClassType getWidgetTypeFromClass()
 	{
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaData.class.getCanonicalName());
+		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaDataElement.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
 		
 		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{cruxMetaDataType, stringType});

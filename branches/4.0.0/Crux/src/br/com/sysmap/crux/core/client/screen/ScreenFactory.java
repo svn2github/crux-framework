@@ -28,11 +28,16 @@ import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.LazyPanel;
@@ -44,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Factory for CRUX screen. It parses the document searching for crux meta tags. 
- * Based on the type (extracted from _type attribute from crux meta tag), 
+ * Based on the type (extracted from type attribute from crux meta tag), 
  * determine which class to create for all screen widgets.
  * @author Thiago da Rosa de Bustamante
  *
@@ -63,6 +68,8 @@ public class ScreenFactory
 	private RegisteredWidgetFactories registeredWidgetFactories = null;
 	private Screen screen = null;
 	private FastList<ParserInfo> parserStack = new FastList<ParserInfo>();
+
+	private ParserInfo currentParserInfo;
 	
 	
 	/**
@@ -139,7 +146,7 @@ public class ScreenFactory
 	 * @param cruxMetaElement
 	 * @return
 	 */
-	public String getMetaElementType(CruxMetaData cruxMetaElement)
+	public String getMetaElementType(CruxMetaDataElement cruxMetaElement)
 	{
 		return cruxMetaElement.getProperty("type");
 	}
@@ -165,7 +172,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	public Widget newWidget(CruxMetaDataElement metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		return newWidget(metaElem, widgetId, widgetType, true);
 	}
@@ -178,7 +185,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public Widget newWidget(CruxMetaData metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
+	public Widget newWidget(CruxMetaDataElement metaElem, String widgetId, String widgetType, boolean addToScreen) throws InterfaceConfigException
 	{
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -235,7 +242,7 @@ public class ScreenFactory
 	 * @param element
 	 * @return
 	 */
-	boolean isValidWidget(CruxMetaData metaElem)
+	boolean isValidWidget(CruxMetaDataElement metaElem)
 	{
 		String type =  metaElem.getProperty("type");
 		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
@@ -263,11 +270,12 @@ public class ScreenFactory
 			{
 				logger.log(Level.FINE, "Starting a new factory parsing cycle...");
 			}
-			ParserInfo cruxMetaElements = nextFromParserStack();
-			while (cruxMetaElements != null)
+			nextFromParserStack();
+			while (currentParserInfo != null)
 			{
-				parseDocument(cruxMetaElements);
-				cruxMetaElements = nextFromParserStack();
+				parseCurrentInfo();
+				fireLoadEvent();
+				nextFromParserStack();
 			}
 
 			if (LogConfiguration.loggingIsEnabled())
@@ -279,8 +287,41 @@ public class ScreenFactory
 		{
 			this.parsing = false;
 		}
-		screen.load();
 	}
+	
+	/**
+	 * Fires the load event. Called when a parsing step is completed.
+	 */
+	protected void fireEvent(ScreenLoadEvent event) 
+	{
+		assert(currentParserInfo != null);
+		currentParserInfo.fireLoadEvent(event, this);
+	}	
+	
+	/**
+	 * Adds an event handler that is called only once, when the screen is loaded
+	 * @param handler
+	 */
+	protected void addLoadHandler(final ScreenLoadHandler handler) 
+	{
+		assert(currentParserInfo != null);
+		currentParserInfo.addLoadHandler(ScreenLoadEvent.TYPE, handler);
+	}		
+	
+	/**
+	 * Fires the load event.
+	 */
+	protected void fireLoadEvent() 
+	{
+		try 
+		{
+			ScreenLoadEvent.fire(ScreenFactory.this);
+		} 
+		catch (RuntimeException e) 
+		{
+			Crux.getErrorHandler().handleError(e);
+		}
+	}	
 	
 	/**
 	 * @param widgetFactory
@@ -289,7 +330,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private boolean mustRenderLazily(DeclarativeWidgetFactory widgetFactory, CruxMetaData metaElem, String widgetId) throws InterfaceConfigException 
+	private boolean mustRenderLazily(DeclarativeWidgetFactory widgetFactory, CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException 
 	{
 		if (widgetFactory.isPanel())
 		{
@@ -306,13 +347,13 @@ public class ScreenFactory
 	/**
 	 * @param cruxMetaElements
 	 */
-	private void parseDocument(ParserInfo parserInfo) 
+	private void parseCurrentInfo() 
 	{
-		Array<CruxMetaData> cruxMetaElements = parserInfo.parserElements;
+		Array<CruxMetaDataElement> cruxMetaElements = currentParserInfo.parserElements;
 		int elementsLength = cruxMetaElements.size();
 		for (int i=0; i<elementsLength; i++)
 		{
-			CruxMetaData metaElement = cruxMetaElements.get(i);
+			CruxMetaDataElement metaElement = cruxMetaElements.get(i);
 			if (metaElement != null)
 			{
 				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
@@ -325,7 +366,7 @@ public class ScreenFactory
 				{
 					try 
 					{
-						createWidget(metaElement, type, screen, parserInfo.parentId, parserInfo.parentType);
+						createWidget(metaElement, type, screen, currentParserInfo.parentId, currentParserInfo.parentType);
 					}
 					catch (Throwable e) 
 					{
@@ -341,16 +382,16 @@ public class ScreenFactory
 	 */
 	private void create()
 	{
-		screen = new Screen(CruxMetaData.getScreenId());
-		Array<CruxMetaData> metaData = CruxMetaData.loadMetaData();
-		addToParserStack(null, null, metaData);
+		CruxMetaData metaData = CruxMetaData.loadMetaData();
+		screen = new Screen(metaData.getScreenId(), metaData.getLazyDependencies());
+		addToParserStack(null, null, metaData.getElementsMetaData());
 		parseDocument();
 	}
 	
 	/**
 	 * @param array
 	 */
-	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaData> parserElements)
+	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaDataElement> parserElements)
 	{
 		assert(parserElements != null);
 		parserStack.add(new ParserInfo(parentType, parentId, parserElements));
@@ -359,9 +400,9 @@ public class ScreenFactory
 	/**
 	 * @return
 	 */
-	private ParserInfo nextFromParserStack()
+	private void nextFromParserStack()
 	{
-		return parserStack.extractFirst();
+		currentParserInfo = parserStack.extractFirst();
 	}
 	
 	/**
@@ -374,7 +415,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidget(CruxMetaData metaElem, String widgetType, Screen screen, String parentId, String parentType) throws InterfaceConfigException
+	private Widget createWidget(CruxMetaDataElement metaElem, String widgetType, Screen screen, String parentId, String parentType) throws InterfaceConfigException
 	{
 		assert(metaElem.containsKey("id") && metaElem.getProperty("id") != null) :Crux.getMessages().screenFactoryWidgetIdRequired();
 		String widgetId = metaElem.getProperty("id");
@@ -418,7 +459,7 @@ public class ScreenFactory
 	 * @throws InterfaceConfigException 
 	 */
 	@SuppressWarnings("unchecked")
-	private Widget createWidgetAndAttachToParent(CruxMetaData metaElem, String widgetId, String widgetType, String parentId, String parentType) throws InterfaceConfigException 
+	private Widget createWidgetAndAttachToParent(CruxMetaDataElement metaElem, String widgetId, String widgetType, String parentId, String parentType) throws InterfaceConfigException 
 	{
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
 		Widget parent = screen.getWidget(parentId);
@@ -446,7 +487,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createHtmlContainerAndAttach(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	private Widget createHtmlContainerAndAttach(CruxMetaDataElement metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		Element panelElement = getEnclosingPanelElement(widgetId);
 		Element parentElement = panelElement.getParentElement();
@@ -474,7 +515,7 @@ public class ScreenFactory
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private Widget createWidgetAndAttach(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	private Widget createWidgetAndAttach(CruxMetaDataElement metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		Element panelElement = getEnclosingPanelElement(widgetId);
 		Widget widget = newWidget(metaElem, widgetId, widgetType);
@@ -509,15 +550,36 @@ public class ScreenFactory
 	 */
 	private static class ParserInfo
 	{
-		private ParserInfo(String parentType, String parentId, Array<CruxMetaData> parserElements) 
+		private ParserInfo(String parentType, String parentId, Array<CruxMetaDataElement> parserElements) 
 		{
 			this.parentType = parentType;
 			this.parentId = parentId;
 			this.parserElements = parserElements;
+			this.eventBus = new SimpleEventBus();
 		}
 		
+		void addLoadHandler(Type<ScreenLoadHandler> type, ScreenLoadHandler handler)
+        {
+			eventBus.addHandler(ScreenLoadEvent.TYPE, handler);
+		}
+
+		/**
+		 * @param event
+		 * @param source
+		 */
+		void fireLoadEvent(final ScreenLoadEvent event, final ScreenFactory source)
+        {
+			Scheduler.get().scheduleDeferred(new ScheduledCommand(){
+				public void execute()
+				{
+					ParserInfo.this.eventBus.fireEventFromSource(event, source);
+				}
+			});
+        }
+
 		String parentType;
 		String parentId;
-		Array<CruxMetaData> parserElements;
+		Array<CruxMetaDataElement> parserElements;
+		SimpleEventBus eventBus;
 	}
 }

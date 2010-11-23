@@ -156,9 +156,7 @@ public class FastMap<V>
 	 */
 	private final native void jsniKeys(Map<V> jsMap, FastList<String> keys, FastMap<V> map) /*-{
 	    for (var k in jsMap) {
-	      if (k != "adapter" && k != "frozen") {
-	        map.@br.com.sysmap.crux.core.client.collection.FastMap::addKey(Lbr/com/sysmap/crux/core/client/collection/FastList;Ljava/lang/String;)(keys, k);
-	      }
+        	map.@br.com.sysmap.crux.core.client.collection.FastMap::addKey(Lbr/com/sysmap/crux/core/client/collection/FastList;Ljava/lang/String;)(keys, k);
 	    }
     }-*/;
 	

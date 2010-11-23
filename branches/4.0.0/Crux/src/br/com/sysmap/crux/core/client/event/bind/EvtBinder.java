@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.event.bind;
 
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -23,6 +23,6 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
  */
 public interface EvtBinder<T>
 {
-	void bindEvent(CruxMetaData element, T widget);
+	void bindEvent(CruxMetaDataElement element, T widget);
 	String getEventName();
 }

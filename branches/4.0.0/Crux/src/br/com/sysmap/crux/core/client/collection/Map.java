@@ -86,6 +86,15 @@ public class Map<V> extends JavaScriptObject
 		return true;
 	}-*/;
 
+	public final native Array<String> keys()/*-{
+		var result = Array();
+		for (var k in this) {
+			result.push(k);
+		}
+		return result;
+	}-*/;
+	
+	
 	/**
 	 * Put the value in the map at the given key. {@code key} must be a value
 	 * accepted by the underlying adapter; that is, a call to {@code

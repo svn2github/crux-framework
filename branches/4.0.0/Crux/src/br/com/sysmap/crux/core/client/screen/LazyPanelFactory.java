@@ -18,14 +18,10 @@ package br.com.sysmap.crux.core.client.screen;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.CollectionFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetLazyRuntimeCheckers.WidgetLazyChecker;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,17 +69,13 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	 * @param wrappingType the lazyPanel wrapping model.
 	 * @return
 	 */
-	public static LazyPanel getLazyPanel(final CruxMetaData element, String panelId, LazyPanelWrappingType wrappingType) 
+	public static LazyPanel getLazyPanel(final CruxMetaDataElement element, String panelId, LazyPanelWrappingType wrappingType) 
 	{
 		String widgetId = getLazyPanelId(panelId, wrappingType);
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.FINE, "Delaying the widget ["+element.getProperty("id")+"] creation. Instantiating a new lazyPanel ["+widgetId+"] to wrap this widget...");
 		}
-		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
-		{
-			maybeBuildLazyDependencyList(element, widgetId);
-		}		
 		
 		return new CruxLazyPanel(element, widgetId);
 	}
@@ -142,117 +134,6 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	}
 
 	/**
-	 * This method recursively search the element's children to build the dependency list. It is only called when 
-	 * Crux is configured to build the dependency list in runtime. Runtime strategy is only used when application is running in 
-	 * debug mode. In production, that list is created during GWT compilation, by a generator. 
-	 * 
-	 * The runtime approach exists to turn development easier, allowing Crux to make hot deployment for its .crux.xml pages
-	 * 
-	 * @param element
-	 * @param parentWidgetId
-	 */
-	private static void buildLazyDependencyListForChildren(final CruxMetaData element, String parentWidgetId, WidgetLazyRuntimeCheckers checkers)
-	{
-		Array<CruxMetaData> children = element.getChildren();
-		if (children != null)
-		{
-			ScreenFactory factory = ScreenFactory.getInstance();
-
-			int size = children.size();
-			for (int i=0; i<size; i++)
-			{
-				CruxMetaData child = children.get(i);
-				if (child != null)
-				{
-					String lazyId = parentWidgetId;
-					boolean childIsLazyPanel = false;
-					if (factory.isValidWidget(child))
-					{
-						String childId = child.getProperty("id");
-						factory.getScreen().addLazyWidgetDependency(childId, parentWidgetId);
-						if (mustRenderLazily(child, checkers))
-						{
-							childIsLazyPanel = true;
-							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapWholeWidget);
-						}
-						else if (mustRenderChildrenLazily(child, checkers))
-						{
-							childIsLazyPanel = true;
-							lazyId = getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
-						}
-					}
-					if (!childIsLazyPanel || !factory.getScreen().containsLazyDependents(lazyId))
-					{
-						buildLazyDependencyListForChildren(child, lazyId, checkers);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * This method builds the dependency list for a given element. It is only called when 
-	 * Crux is configured to build the dependency list in runtime. Runtime strategy is only used when application is running in 
-	 * debug mode. In production, that list is created during GWT compilation, by a generator. 
-	 * 
-	 * The runtime approach exists to turn development easier, allowing Crux to make hot deployment for its .crux.xml pages
-	 * 
-	 * @param element
-	 * @param parentWidgetId
-	 */
-	private static void maybeBuildLazyDependencyList(final CruxMetaData element, String parentWidgetId)
-	{
-		if (Crux.getConfig().enableRuntimeLazyWidgetsInitialization())
-		{
-			ScreenFactory factory = ScreenFactory.getInstance();
-			if (!factory.getScreen().containsLazyDependents(parentWidgetId))
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.FINE, "Building runtime lazy dependency list for widget ["+parentWidgetId+"]...");
-				}
-				
-				WidgetLazyRuntimeCheckers checkers = GWT.create(WidgetLazyRuntimeCheckers.class);
-				assert(element.containsKey("id") && factory.isValidWidget(element));
-				factory.getScreen().addLazyWidgetDependency(element.getProperty("id"), parentWidgetId);
-				/*
-				 * if the wrapped element is also an element marked to be rendered lazily, all its children must be dependent
-				 * of a wrapper lazyPanel created around it and not be dependent of the a wrapper created over its parent.
-				 */
-				String lazyId = (mustRenderChildrenLazily(element, checkers)?getLazyPanelId(element.getProperty("id"), LazyPanelWrappingType.wrapChildren):parentWidgetId);
-				buildLazyDependencyListForChildren(element, lazyId, checkers);
-
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.FINE, "Runtime lazy dependency list for widget ["+parentWidgetId+"] created.");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @param child
-	 * @param checkers
-	 * @return
-	 */
-	private static boolean mustRenderChildrenLazily(CruxMetaData child, WidgetLazyRuntimeCheckers checkers)
-	{
-		WidgetLazyChecker checker = checkers.getWidgetLazyChecker(ScreenFactory.getInstance().getMetaElementType(child));
-		return checker != null && checker.isLazy(child);
-	}
-	
-	/**
-	 * @param child
-	 * @param checkers
-	 * @return
-	 */
-	private static boolean mustRenderLazily(CruxMetaData child, WidgetLazyRuntimeCheckers checkers)
-	{
-		String visible = child.getProperty("visible");
-		return (!StringUtils.isEmpty(visible) && !Boolean.parseBoolean(visible));
-	}
-
-	/**
 	 * @see br.com.sysmap.crux.core.client.screen.HasWidgetsFactory#add(com.google.gwt.user.client.ui.Widget, java.lang.String, com.google.gwt.user.client.ui.Widget, java.lang.String)
 	 */
 	public void add(LazyPanel parent, String parentId, Widget widget, String widgetId)
@@ -272,14 +153,14 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 	public static class CruxLazyPanel extends LazyPanel implements br.com.sysmap.crux.core.client.screen.LazyPanel{
 		private boolean initialized = false;
 		private final String lazyId;
-		private CruxMetaData metaData;
+		private CruxMetaDataElement metaData;
 		
 		/**
 		 * Constructor
 		 * @param innerHTML
 		 * @param lazyId
 		 */
-		public CruxLazyPanel(CruxMetaData metaData, String lazyId)
+		public CruxLazyPanel(CruxMetaDataElement metaData, String lazyId)
 		{
 			this.metaData = metaData;
 			this.lazyId = lazyId;
@@ -309,7 +190,7 @@ public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
 			{
 				logger.log(Level.FINE, "Creating ["+lazyId+"] wrapped widget...");
 			}
-			Array<CruxMetaData> children = CollectionFactory.createArray();
+			Array<CruxMetaDataElement> children = CollectionFactory.createArray();
 			children.add(metaData);
 			metaData = null;
 			ScreenFactory factory = ScreenFactory.getInstance();

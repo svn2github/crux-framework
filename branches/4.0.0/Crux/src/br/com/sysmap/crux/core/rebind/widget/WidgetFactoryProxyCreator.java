@@ -45,7 +45,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
@@ -154,7 +154,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
     		GWT.class.getCanonicalName(), 
     		ScreenFactory.class.getCanonicalName(),
     		Screen.class.getCanonicalName(),
-    		CruxMetaData.class.getCanonicalName(),
+    		CruxMetaDataElement.class.getCanonicalName(),
     		Array.class.getCanonicalName(),
     		FastList.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
@@ -308,7 +308,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		source.append("if (!_lazy){\n");
 		source.append("_w = createChildWidget(c.getChildElement());\n");
 		source.append("} else {\n");
-		source.append("CruxMetaData _elem = c.getChildElement();\n");
+		source.append(CruxMetaDataElement.class.getSimpleName()+" _elem = c.getChildElement();\n");
 		source.append("String _lazyPanelId = c.getRootWidgetId();\n");
 		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren);\n");
 		source.append("Screen.add("+LazyPanelFactory.class.getCanonicalName()+".getLazyPanelId(_lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren), _w);\n");
@@ -591,7 +591,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass());
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
-			sourceWriter.println("CruxMetaData element = context.getElement();");
+			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getElement();");
 			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(attributesBlock);
@@ -634,16 +634,16 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 						}
 						else
 						{
-							source.append("CruxMetaData child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
+							source.append(CruxMetaDataElement.class.getSimpleName()+" child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
 						}
 						source.append("if (child != null){\n");
 					}
 					else
 					{
-						source.append("Array<CruxMetaData> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
+						source.append("Array<"+CruxMetaDataElement.class.getSimpleName()+"> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
 						source.append("if (children != null){\n");
 						source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
-						source.append("CruxMetaData child = children.get(_i_);\n");
+						source.append(CruxMetaDataElement.class.getSimpleName()+" child = children.get(_i_);\n");
 						source.append("if (child != null){\n");
 					}
 					if (hasChildElement)
@@ -769,7 +769,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		String eventsBlock = generateProcessEventsBlock(factoryHelper.getFactoryClass(), evtBinderVariables);
 		if (!StringUtils.isEmpty(eventsBlock))
 		{
-			sourceWriter.println("CruxMetaData element = context.getElement();");
+			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getElement();");
 			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(eventsBlock);

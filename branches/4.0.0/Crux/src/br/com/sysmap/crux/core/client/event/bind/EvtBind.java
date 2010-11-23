@@ -17,7 +17,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * Helper Class for events binding
@@ -32,7 +32,7 @@ public class EvtBind
 	 * @param evtId
 	 * @return
 	 */
-	public static Event getWidgetEvent(CruxMetaData metaElem, String evtId)
+	public static Event getWidgetEvent(CruxMetaDataElement metaElem, String evtId)
 	{
 		String evt = metaElem.getProperty(evtId);
 		if (evt != null)

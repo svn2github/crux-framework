@@ -13,19 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen;
-
-import br.com.sysmap.crux.core.client.collection.FastMap;
+package br.com.sysmap.crux.core.declarativeui;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface DeclaredLazyWidgets
+public class LazyExeption extends Exception
 {
-	/** Create a map of all widgets that depends on some lazyPanel initialization
-	 * @param screenId
-	 * @return
+    private static final long serialVersionUID = 4912641377912410093L;
+
+	/**
+	 * 
 	 */
-	FastMap<String> getLazyWidgets(String screenId);
+	public LazyExeption()
+	{
+	}
+
+	/**
+	 * @param message
+	 */
+	public LazyExeption(String message)
+	{
+		super(message);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public LazyExeption(Throwable cause)
+	{
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public LazyExeption(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }

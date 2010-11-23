@@ -43,7 +43,7 @@ public class ScreenLoadEvent extends GwtEvent<ScreenLoadHandler>
 		return TYPE;
 	}
 
-	public static <T> void fire(Screen source) 
+	public static <T> void fire(ScreenFactory source) 
 	{
 		source.fireEvent(new ScreenLoadEvent());
 	}	

@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 
@@ -47,20 +47,11 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param childElement the span element representing the child
 	 * @return child name
 	 */
-	public static String getChildName(CruxMetaData childElement)
+	public static String getChildName(CruxMetaDataElement childElement)
 	{
 		return childElement.getProperty("childTag");
 	}
 	
-	/**
-	 * @param lazy
-	 * @param dependentId
-	 */
-	protected static void addLazyWidgetDependency(String lazy, String dependentId)
-	{
-		ScreenFactory.getInstance().getScreen().addLazyWidgetDependency(lazy, dependentId);
-	}
-
 	/**
 	 * Used by widgets that need to create new widgets as children, like tree. 
 	 * 
@@ -69,7 +60,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected static Widget createChildWidget(CruxMetaData metaElem) throws InterfaceConfigException
+	protected static Widget createChildWidget(CruxMetaDataElement metaElem) throws InterfaceConfigException
 	{
 		ScreenFactory factory = ScreenFactory.getInstance();
 		assert(metaElem.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
@@ -86,7 +77,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected static Widget createChildWidget(CruxMetaData metaElem, String widgetId, String widgetType) throws InterfaceConfigException
+	protected static Widget createChildWidget(CruxMetaDataElement metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
 		return ScreenFactory.getInstance().newWidget(metaElem, widgetId, widgetType);
 	}
@@ -96,11 +87,11 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	protected static Array<CruxMetaData> ensureChildren(CruxMetaData metaElem, boolean acceptsNoChild) 
+	protected static Array<CruxMetaDataElement> ensureChildren(CruxMetaDataElement metaElem, boolean acceptsNoChild) 
 	{
 		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		
-		Array<CruxMetaData> children = metaElem.getChildren();
+		Array<CruxMetaDataElement> children = metaElem.getChildren();
 		if (acceptsNoChild && children == null)
 		{
 			return null;
@@ -114,16 +105,16 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	protected static CruxMetaData ensureFirstChild(CruxMetaData metaElem, boolean acceptsNoChild) throws InterfaceConfigException
+	protected static CruxMetaDataElement ensureFirstChild(CruxMetaDataElement metaElem, boolean acceptsNoChild) throws InterfaceConfigException
 	{
 		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
-		Array<CruxMetaData> children = metaElem.getChildren();
+		Array<CruxMetaDataElement> children = metaElem.getChildren();
 		if (acceptsNoChild && children == null)
 		{
 			return null;
 		}
 		assert(acceptsNoChild || (children != null && children.size()>0)):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
-		CruxMetaData firstChild = children.get(0);
+		CruxMetaDataElement firstChild = children.get(0);
 		assert(acceptsNoChild || firstChild != null):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		return firstChild;
 	}
@@ -134,7 +125,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	protected static String ensureTextChild(CruxMetaData metaElem, boolean acceptsNoChild)
+	protected static String ensureTextChild(CruxMetaDataElement metaElem, boolean acceptsNoChild)
 	{
 		String result = metaElem.getProperty("_text");
 		assert(acceptsNoChild || (result != null && result.length() > 0)):Crux.getMessages().widgetFactoryEnsureTextChildEmpty();
@@ -147,7 +138,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	protected static String ensureHtmlChild(CruxMetaData metaElem, boolean acceptsNoChild)
+	protected static String ensureHtmlChild(CruxMetaDataElement metaElem, boolean acceptsNoChild)
 	{
 		String result = metaElem.getProperty("_html");
 		assert(acceptsNoChild || (result != null && result.length() > 0)):Crux.getMessages().widgetFactoryEnsureHtmlChildEmpty();
@@ -185,7 +176,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasHeight(CruxMetaData metaElem)
+	protected static boolean hasHeight(CruxMetaDataElement metaElem)
 	{
 		String width = metaElem.getProperty("height");
 		return width != null && (width.length() > 0);
@@ -196,7 +187,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasWidth(CruxMetaData metaElem)
+	protected static boolean hasWidth(CruxMetaDataElement metaElem)
 	{
 		String width = metaElem.getProperty("width");
 		return width != null && (width.length() > 0);
@@ -207,7 +198,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean isWidget(CruxMetaData metaElem)
+	protected static boolean isWidget(CruxMetaDataElement metaElem)
 	{
 		return ScreenFactory.getInstance().isValidWidget(metaElem);
 	}
@@ -219,7 +210,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public final T createWidget(CruxMetaData metaElem, String widgetId) throws InterfaceConfigException
+	public final T createWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException
 	{
 		return createWidget(metaElem, widgetId, true);
 	}
@@ -232,7 +223,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	public T createWidget(CruxMetaData metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	public T createWidget(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
 		WidgetFactoryContext<T> context = createContext(metaElem, widgetId, addToScreen);
 		if (context != null)
@@ -246,7 +237,7 @@ public abstract class WidgetFactory <T extends Widget>
 		return null;
 	}
 	
-	public abstract T instantiateWidget(CruxMetaData metaElem, String widgetId) throws InterfaceConfigException;
+	public abstract T instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException;
 	
 	/**
 	 * Process element children
@@ -356,7 +347,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 */
 	protected void addScreenLoadedHandler(ScreenLoadHandler loadHandler)
 	{
-		Screen.get().addLoadHandler(loadHandler);
+		ScreenFactory.getInstance().addLoadHandler(loadHandler);
 	}
 	
 	/**
@@ -364,7 +355,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param parentId
 	 * @param parserElements
 	 */
-	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaData> parserElements)
+	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaDataElement> parserElements)
 	{
 		ScreenFactory.getInstance().addToParserStack(parentType, parentId, parserElements);
 	}
@@ -376,7 +367,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected WidgetFactoryContext<T> createContext(CruxMetaData metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	protected WidgetFactoryContext<T> createContext(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
 		T widget = instantiateWidget(metaElem, widgetId);
 		if (widget != null)
@@ -399,7 +390,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param element
 	 * @return
 	 */
-	protected CruxMetaData ensureWidget(CruxMetaData metaElem) 
+	protected CruxMetaDataElement ensureWidget(CruxMetaDataElement metaElem) 
 	{
 		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
 		return metaElem;
@@ -427,11 +418,11 @@ public abstract class WidgetFactory <T extends Widget>
 	public static class WidgetFactoryContext<W>
 	{
 		private FastMap<Object> attributes;
-		private CruxMetaData element;
+		private CruxMetaDataElement element;
 		private W widget;
 		private String widgetId;
 		
-		WidgetFactoryContext(W widget, CruxMetaData metaElem, String widgetId)
+		WidgetFactoryContext(W widget, CruxMetaDataElement metaElem, String widgetId)
 		{
 			this.widget = widget;
 			this.element = metaElem;
@@ -451,7 +442,7 @@ public abstract class WidgetFactory <T extends Widget>
 		{
 			return attributes.get(key);
 		}
-		public CruxMetaData getElement()
+		public CruxMetaDataElement getElement()
 		{
 			return element;
 		}

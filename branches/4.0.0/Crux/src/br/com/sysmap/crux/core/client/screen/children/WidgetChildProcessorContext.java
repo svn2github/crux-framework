@@ -16,7 +16,7 @@
 package br.com.sysmap.crux.core.client.screen.children;
 
 import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
  */
 public class WidgetChildProcessorContext<W>
 {
-	private CruxMetaData childElement;
+	private CruxMetaDataElement childElement;
 	
 	private WidgetFactoryContext<W> context;
 	
@@ -38,7 +38,7 @@ public class WidgetChildProcessorContext<W>
 		return context.getWidget();
 	}
 
-	public CruxMetaData getRootElement()
+	public CruxMetaDataElement getRootElement()
 	{
 		return context.getElement();
 	}
@@ -58,7 +58,7 @@ public class WidgetChildProcessorContext<W>
 		return childElement.getProperty(propertyName);
 	}
 	
-	public CruxMetaData getChildElement()
+	public CruxMetaDataElement getChildElement()
 	{
 		return childElement;
 	}
@@ -73,7 +73,7 @@ public class WidgetChildProcessorContext<W>
 		return context.containsAttribute(key);
 	}
 	
-	public void setChildElement(CruxMetaData childElement)
+	public void setChildElement(CruxMetaDataElement childElement)
 	{
 		this.childElement = childElement;
 	}
