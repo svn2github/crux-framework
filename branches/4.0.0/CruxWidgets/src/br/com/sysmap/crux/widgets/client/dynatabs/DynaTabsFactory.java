@@ -29,7 +29,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
@@ -42,7 +42,7 @@ import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
 public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 {
 	@Override
-	public DynaTabs instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public DynaTabs instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		return new DynaTabs();
 	}
@@ -74,7 +74,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 		})
 		public void processChildren(WidgetChildProcessorContext<DynaTabs> context) throws InterfaceConfigException
 		{
-			CruxMetaData childElement = context.getChildElement();
+			CruxMetaDataElement childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
 			String id = childElement.getProperty("id");
 			String label = context.readChildProperty("label");

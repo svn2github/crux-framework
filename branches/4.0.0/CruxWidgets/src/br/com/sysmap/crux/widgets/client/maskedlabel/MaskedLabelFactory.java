@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
@@ -43,7 +43,7 @@ public class MaskedLabelFactory extends WidgetFactory<MaskedLabel>
 				           HasWordWrapFactory<MaskedLabel>
 {
 	@Override
-	public MaskedLabel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public MaskedLabel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String formatter = element.getProperty("formatter");
 		if (formatter != null && formatter.length() > 0)

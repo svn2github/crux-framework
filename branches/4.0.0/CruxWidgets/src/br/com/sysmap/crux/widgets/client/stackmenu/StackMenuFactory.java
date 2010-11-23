@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * Factory for Stack Menu
@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 public class StackMenuFactory extends WidgetFactory<StackMenu>
 {
 	@Override
-	public StackMenu instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public StackMenu instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		return new StackMenu();
 	}

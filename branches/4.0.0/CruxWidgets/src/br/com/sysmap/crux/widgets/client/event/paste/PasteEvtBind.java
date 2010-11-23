@@ -18,7 +18,7 @@ package br.com.sysmap.crux.widgets.client.event.paste;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
 {
@@ -28,7 +28,7 @@ public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(CruxMetaData element, HasPasteHandlers widget)
+	public void bindEvent(CruxMetaDataElement element, HasPasteHandlers widget)
 	{
 		final Event pasteEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		

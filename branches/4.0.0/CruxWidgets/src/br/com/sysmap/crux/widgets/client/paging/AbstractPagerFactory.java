@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.paging.PageEvtBind;
 
@@ -38,7 +38,7 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 	/**
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public T instantiateWidget(CruxMetaData elem, String widgetId) throws InterfaceConfigException
+	public T instantiateWidget(CruxMetaDataElement elem, String widgetId) throws InterfaceConfigException
 	{
 		return createPagerInstance();
 	}
@@ -97,7 +97,7 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 	})
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
-		CruxMetaData element = context.getElement();
+		CruxMetaDataElement element = context.getElement();
 		T widget = context.getWidget();
 		PageEvtBind.bindEvent(element, widget);
 		super.processEvents(context);

@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * Factory for Decorated Panel widget
@@ -35,7 +35,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<DecoratedPanel>
 {
 	@Override
-	public DecoratedPanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public DecoratedPanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String height = element.getProperty("height");
 		String width = element.getProperty("width");

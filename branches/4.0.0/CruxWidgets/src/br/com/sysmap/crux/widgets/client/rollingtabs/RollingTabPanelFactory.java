@@ -38,7 +38,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
@@ -55,7 +55,7 @@ implements HasAnimationFactory<RollingTabPanel>,
 HasBeforeSelectionHandlersFactory<RollingTabPanel>
 {
 	@Override
-	public RollingTabPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public RollingTabPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new RollingTabPanel();
 	}
@@ -212,7 +212,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		
 		private void updateTabState(WidgetChildProcessorContext<RollingTabPanel> context)
 		{
-			CruxMetaData tabElement = (CruxMetaData) context.getAttribute("tabElement");
+			CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
 			String enabled = tabElement.getProperty("enabled");
 			int tabCount = context.getRootWidget().getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)

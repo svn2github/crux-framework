@@ -17,7 +17,7 @@ package br.com.sysmap.crux.widgets.client.titlepanel;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * Factory for Title Panel widget
@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 public class TitlePanelFactory extends AbstractTitlePanelFactory<TitlePanel>
 {
 	@Override
-	public TitlePanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public TitlePanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String height = element.getProperty("height");
 		String width = element.getProperty("width");

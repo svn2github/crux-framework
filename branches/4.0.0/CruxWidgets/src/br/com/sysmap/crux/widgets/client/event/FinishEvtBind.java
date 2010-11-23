@@ -18,7 +18,7 @@ package br.com.sysmap.crux.widgets.client.event;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 public class FinishEvtBind implements EvtBinder<HasFinishHandlers>
 {
@@ -28,7 +28,7 @@ public class FinishEvtBind implements EvtBinder<HasFinishHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(CruxMetaData element, HasFinishHandlers widget)
+	public void bindEvent(CruxMetaDataElement element, HasFinishHandlers widget)
 	{
 		final Event finishEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (finishEvent != null)

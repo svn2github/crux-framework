@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvtBind;
 
 /**
@@ -40,7 +40,7 @@ public class TimerFactory extends WidgetFactory<Timer>
 	/**
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public Timer instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public Timer instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		long initial = 0;
 		boolean regressive = false;

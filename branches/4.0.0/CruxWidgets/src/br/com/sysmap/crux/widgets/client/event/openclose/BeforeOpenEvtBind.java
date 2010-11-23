@@ -18,7 +18,7 @@ package br.com.sysmap.crux.widgets.client.event.openclose;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 public class BeforeOpenEvtBind implements EvtBinder<HasBeforeOpenHandlers>
 {
@@ -28,7 +28,7 @@ public class BeforeOpenEvtBind implements EvtBinder<HasBeforeOpenHandlers>
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(CruxMetaData element, HasBeforeOpenHandlers widget)
+	public void bindEvent(CruxMetaDataElement element, HasBeforeOpenHandlers widget)
 	{
 		final Event beforeOpenEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (beforeOpenEvent != null)

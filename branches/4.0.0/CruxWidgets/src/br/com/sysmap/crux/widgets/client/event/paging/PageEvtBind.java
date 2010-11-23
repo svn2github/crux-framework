@@ -17,7 +17,7 @@ package br.com.sysmap.crux.widgets.client.event.paging;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.Events;
 
 /**
@@ -29,7 +29,7 @@ public class PageEvtBind extends EvtBind
 	/**
 	 * @param widget
 	 */
-	public static void bindEvent(CruxMetaData element, HasPageHandlers widget)
+	public static void bindEvent(CruxMetaDataElement element, HasPageHandlers widget)
 	{
 		final Event pageEvent = getWidgetEvent(element, Events.PAGE);
 		if (pageEvent != null)

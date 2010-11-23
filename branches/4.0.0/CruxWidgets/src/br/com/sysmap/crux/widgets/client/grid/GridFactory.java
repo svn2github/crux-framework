@@ -33,7 +33,7 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
@@ -56,7 +56,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param autoLoad 
 	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public Grid instantiateWidget(CruxMetaData gridElem, String widgetId) throws InterfaceConfigException
+	public Grid instantiateWidget(CruxMetaDataElement gridElem, String widgetId) throws InterfaceConfigException
 	{
 		Grid grid = new Grid(getColumnDefinitions(gridElem), getPageSize(gridElem), 
 				                               getRowSelectionModel(gridElem), getCellSpacing(gridElem), 
@@ -65,7 +65,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return grid;
 	}
 	
-	private SortingType getSortingType(CruxMetaData gridElem)
+	private SortingType getSortingType(CruxMetaDataElement gridElem)
 	{
 		String sortingType = gridElem.getProperty("defaultSortingType");
 		if(!StringUtils.isEmpty(sortingType))
@@ -76,12 +76,12 @@ public class GridFactory extends WidgetFactory<Grid>
 		return null;
 	}
 
-	private String getSortingColumn(CruxMetaData gridElem)
+	private String getSortingColumn(CruxMetaDataElement gridElem)
 	{
 		return gridElem.getProperty("defaultSortingColumn");
 	}
 
-	private boolean isFixedCellSize(CruxMetaData gridElem)
+	private boolean isFixedCellSize(CruxMetaDataElement gridElem)
 	{
 		String fixedCellSize = gridElem.getProperty("fixedCellSize");
 		
@@ -93,7 +93,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 	
-	private String getEmptyDataFilling(CruxMetaData gridElem)
+	private String getEmptyDataFilling(CruxMetaDataElement gridElem)
 	{
 		String emptyDataFilling = gridElem.getProperty("emptyDataFilling");
 		
@@ -105,7 +105,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return null;
 	}
 	
-	private boolean getHighlightRowOnMouseOver(CruxMetaData gridElem)
+	private boolean getHighlightRowOnMouseOver(CruxMetaDataElement gridElem)
 	{
 		String highlight = gridElem.getProperty("highlightRowOnMouseOver");
 		
@@ -117,7 +117,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 
-	private boolean getAutoLoad(CruxMetaData gridElem)
+	private boolean getAutoLoad(CruxMetaDataElement gridElem)
 	{
 		String autoLoad = gridElem.getProperty("autoLoadData");
 		
@@ -129,7 +129,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 	
-	private boolean getStretchColumns(CruxMetaData gridElem)
+	private boolean getStretchColumns(CruxMetaDataElement gridElem)
 	{
 		String stretchColumns = gridElem.getProperty("stretchColumns");
 		
@@ -141,7 +141,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		return false;
 	}
 
-	private int getCellSpacing(CruxMetaData gridElem)
+	private int getCellSpacing(CruxMetaDataElement gridElem)
 	{
 		String spacing = gridElem.getProperty("cellSpacing");
 		
@@ -174,7 +174,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param gridElem
 	 * @return
 	 */
-	private RowSelectionModel getRowSelectionModel(CruxMetaData gridElem)
+	private RowSelectionModel getRowSelectionModel(CruxMetaDataElement gridElem)
 	{
 		String rowSelection = gridElem.getProperty("rowSelection");
 		
@@ -213,7 +213,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param gridElem
 	 * @return
 	 */
-	private int getPageSize(CruxMetaData gridElem)
+	private int getPageSize(CruxMetaDataElement gridElem)
 	{
 		String pageSize = gridElem.getProperty("pageSize");
 		
@@ -230,17 +230,17 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	private ColumnDefinitions getColumnDefinitions(CruxMetaData gridElem) throws InterfaceConfigException
+	private ColumnDefinitions getColumnDefinitions(CruxMetaDataElement gridElem) throws InterfaceConfigException
 	{
 		ColumnDefinitions defs = new ColumnDefinitions();
 
-		Array<CruxMetaData> colElems = ensureChildren(gridElem, false);
+		Array<CruxMetaDataElement> colElems = ensureChildren(gridElem, false);
 		int colsSize = colElems.size();
 		if(colsSize > 0)
 		{
 			for (int i=0; i<colsSize; i++)
 			{
-				CruxMetaData colElem = colElems.get(i);
+				CruxMetaDataElement colElem = colElems.get(i);
 				if (colElem != null)
 				{
 					String width = colElem.getProperty("width");
@@ -323,7 +323,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	})
 	public void processEvents(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
 	{
-		CruxMetaData element = context.getElement();
+		CruxMetaDataElement element = context.getElement();
 		Grid widget = context.getWidget();
 
 		RowEventsBind.bindClickRowEvent(element, widget);

@@ -29,7 +29,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
@@ -47,7 +47,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 {
 
 	@Override
-	public RollingPanel instantiateWidget(CruxMetaData element, String widgetId)
+	public RollingPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		String verticalAttr = element.getProperty("vertical");
 		boolean vertical = false;

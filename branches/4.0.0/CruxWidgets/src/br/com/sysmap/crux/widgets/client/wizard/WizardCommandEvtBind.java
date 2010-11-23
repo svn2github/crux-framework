@@ -18,7 +18,7 @@ package br.com.sysmap.crux.widgets.client.wizard;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -32,7 +32,7 @@ public class WizardCommandEvtBind implements EvtBinder<HasWizardCommandHandlers<
 	 * @param element
 	 * @param widget
 	 */
-	public void bindEvent(CruxMetaData element, HasWizardCommandHandlers<?> widget)
+	public void bindEvent(CruxMetaDataElement element, HasWizardCommandHandlers<?> widget)
 	{
 		final Event commandEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (commandEvent != null)

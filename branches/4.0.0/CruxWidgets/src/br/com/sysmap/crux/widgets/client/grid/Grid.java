@@ -37,7 +37,7 @@ import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
@@ -334,7 +334,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	{
 		try
 		{
-			CruxMetaData template = column.getWidgetTemplate();
+			CruxMetaDataElement template = column.getWidgetTemplate();
 			assert(template.containsKey("id")): Crux.getMessages().screenFactoryWidgetIdRequired();
 			String id = template.getProperty("id"); 
 			setRandomId(template);
@@ -354,7 +354,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * Generates and sets a random ID on the given element and its children.
 	 * @param template
 	 */
-	private void setRandomId(CruxMetaData template)
+	private void setRandomId(CruxMetaDataElement template)
 	{
 		String templateId;
 		if (template.containsKey("id"))
@@ -368,13 +368,13 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		
 		template.setProperty("id", templateId + "_" + generateWidgetIdSufix());
 		
-		Array<CruxMetaData> children = template.getChildren();
+		Array<CruxMetaDataElement> children = template.getChildren();
 		if(children != null)
 		{
 			int length = children.size();
 			for(int i = 0; i < length; i++)
 			{
-				CruxMetaData child = children.get(i);
+				CruxMetaDataElement child = children.get(i);
 				if(child != null)
 				{
 					setRandomId(child);

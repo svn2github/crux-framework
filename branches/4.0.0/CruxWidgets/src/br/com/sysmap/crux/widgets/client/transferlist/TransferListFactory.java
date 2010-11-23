@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
 
@@ -33,7 +33,7 @@ import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
 public class TransferListFactory extends CompositeFactory<TransferList>
 {
 	@Override
-	public TransferList instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public TransferList instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		return new TransferList();
 	}

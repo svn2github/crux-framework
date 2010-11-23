@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlersFactory;
 
 /**
@@ -33,7 +33,7 @@ public class PopupFactory extends WidgetFactory<Popup>
        implements HasAnimationFactory<Popup>, HasBeforeCloseHandlersFactory<Popup>
 {
 	@Override
-	public Popup instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public Popup instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		return new Popup();
 	}

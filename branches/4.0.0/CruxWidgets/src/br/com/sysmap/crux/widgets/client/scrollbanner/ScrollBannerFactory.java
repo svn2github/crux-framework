@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
  * Factory for Scroll Banner widget
@@ -35,7 +35,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
 public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 {
 	@Override
-	public ScrollBanner instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public ScrollBanner instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String period = element.getProperty("messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)

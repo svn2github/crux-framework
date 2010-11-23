@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 public class BeforeExpandEvtBind implements EvtBinder<HasBeforeExpandHandlers>
 {
@@ -29,7 +29,7 @@ public class BeforeExpandEvtBind implements EvtBinder<HasBeforeExpandHandlers>
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 
-	public void bindEvent(CruxMetaData element, HasBeforeExpandHandlers widget)
+	public void bindEvent(CruxMetaDataElement element, HasBeforeExpandHandlers widget)
 	{
 		final Event beforeExpandEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
 		if (beforeExpandEvent != null)

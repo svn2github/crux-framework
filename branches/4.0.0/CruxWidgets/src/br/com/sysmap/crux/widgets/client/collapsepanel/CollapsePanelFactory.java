@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvtBind;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvtBind;
 import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
@@ -43,7 +43,7 @@ import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
 public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePanel>
 {
 	@Override
-	public CollapsePanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public CollapsePanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String height = element.getProperty("height");
 		String width = element.getProperty("width");

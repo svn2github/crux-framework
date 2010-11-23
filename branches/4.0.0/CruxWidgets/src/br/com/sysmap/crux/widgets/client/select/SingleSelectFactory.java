@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.AbstractListBoxFactory;
 
 /**
@@ -36,7 +36,7 @@ public class SingleSelectFactory extends AbstractListBoxFactory<SingleSelect>
 	public void processChildren(WidgetFactoryContext<SingleSelect> context) throws InterfaceConfigException {}	
 	
 	@Override
-	public SingleSelect instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public SingleSelect instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		return new SingleSelect();
 	}

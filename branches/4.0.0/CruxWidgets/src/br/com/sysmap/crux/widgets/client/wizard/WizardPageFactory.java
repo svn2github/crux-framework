@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -46,7 +46,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 
 	@Override
-    public WizardPage<?> instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+    public WizardPage<?> instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
     {
 	    String wizardContextObject = element.getProperty("wizardContextObject");
 	    String wizardId = element.getProperty("wizardId");

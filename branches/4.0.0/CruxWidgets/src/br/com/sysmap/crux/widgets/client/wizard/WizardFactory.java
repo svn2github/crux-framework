@@ -37,7 +37,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.FinishEvtBind;
@@ -58,7 +58,7 @@ public class WizardFactory extends WidgetFactory<Wizard<?>>
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 	
 	@Override
-    public Wizard<?> instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+    public Wizard<?> instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
     {
 	    String wizardContextObject = element.getProperty("wizardContextObject");
 		return instantiator.createWizard(widgetId, wizardContextObject);
