@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -69,7 +69,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	{
 		super.processEvents(context);
 		
-		CruxMetaData element = context.getElement();
+		CruxMetaDataElement element = context.getElement();
 		FormPanel widget = context.getWidget();
 		
 		final Event eventSubmitComplete = EvtBind.getWidgetEvent(element, "onSubmitComplete");
@@ -98,7 +98,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	}
 	
 	@Override
-	public FormPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public FormPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		String target = element.getProperty("target");
 		if (target != null && target.length() >0)

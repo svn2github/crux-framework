@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.PushButton;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.PushButton;
 public class PushButtonFactory extends CustomButtonFactory<PushButton> 
 {
 	@Override
-	public PushButton instantiateWidget(CruxMetaData element, String widgetId) 
+	public PushButton instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new PushButton();
 	}

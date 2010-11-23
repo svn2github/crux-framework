@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
@@ -45,7 +45,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
 	
 	@Override
-	public DockPanel instantiateWidget(CruxMetaData element, String widgetId)
+	public DockPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		return new DockPanel();
 	}
@@ -125,7 +125,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@Override
 		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException
 		{
-			CruxMetaData childElement = context.getChildElement();
+			CruxMetaDataElement childElement = context.getChildElement();
 			Widget child = createChildWidget(childElement);
 			DockPanel parent = context.getRootWidget();
 			

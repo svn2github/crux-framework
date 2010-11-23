@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanel>
 {
 	@Override
-	public DockLayoutPanel instantiateWidget(CruxMetaData element, String widgetId)
+	public DockLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		Unit unit = getUnit(element.getProperty("unit"));
 		return new DockLayoutPanel(unit);

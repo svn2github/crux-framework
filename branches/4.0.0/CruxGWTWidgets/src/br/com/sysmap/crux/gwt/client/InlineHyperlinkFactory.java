@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -42,7 +42,7 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
        implements HasTextFactory<InlineHyperlink>, HasClickHandlersFactory<InlineHyperlink>
 {
 	@Override
-	public InlineHyperlink instantiateWidget(CruxMetaData element, String widgetId) 
+	public InlineHyperlink instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new InlineHyperlink();
 	}

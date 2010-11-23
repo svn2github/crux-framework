@@ -33,7 +33,7 @@ import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 
@@ -95,7 +95,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
-		CruxMetaData element = context.getElement();
+		CruxMetaDataElement element = context.getElement();
 		T widget = context.getWidget();
 		new ClickEvtBind().bindEvent(element, widget);
 		new FocusEvtBind().bindEvent(element, widget);

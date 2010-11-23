@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.DecoratedTabPanel;
 public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedTabPanel>
 {
 	@Override
-	public DecoratedTabPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public DecoratedTabPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new DecoratedTabPanel();
 	}

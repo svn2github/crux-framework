@@ -33,7 +33,7 @@ import br.com.sysmap.crux.core.client.event.bind.MouseOverEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FocusPanel;
 
@@ -76,7 +76,7 @@ public class FocusPanelFactory extends PanelFactory<FocusPanel>
 	}
 	
 	@Override
-	public FocusPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public FocusPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new FocusPanel();
 	}

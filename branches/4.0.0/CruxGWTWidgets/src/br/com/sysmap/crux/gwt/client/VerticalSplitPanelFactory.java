@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.VerticalSplitPanel;
 public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel>
 {
 	@Override
-	public VerticalSplitPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public VerticalSplitPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new VerticalSplitPanel();
 	}

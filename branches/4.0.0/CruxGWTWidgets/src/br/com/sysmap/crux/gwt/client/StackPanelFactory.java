@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.StackPanel;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.StackPanel;
 public class StackPanelFactory extends AbstractStackPanelFactory<StackPanel>
 {
 	@Override
-	public StackPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public StackPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new StackPanel();
 	}

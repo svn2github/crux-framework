@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
@@ -56,7 +56,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public MenuBar instantiateWidget(CruxMetaData element, String widgetId) 
+	public MenuBar instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new MenuBar(isMenuVertical(element));
 	}
@@ -88,7 +88,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	})
 	public void processChildren(WidgetFactoryContext<MenuBar> context) throws InterfaceConfigException {}
 
-	private boolean isMenuVertical(CruxMetaData element)
+	private boolean isMenuVertical(CruxMetaDataElement element)
 	{
 		String verticalStr = element.getProperty("vertical");
 		boolean vertical = false;

@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.PasswordTextBox;
 
@@ -44,7 +44,7 @@ public class PasswordTextBoxFactory extends TextBoxBaseFactory<PasswordTextBox>
 	}
 	
 	@Override
-	public PasswordTextBox instantiateWidget(CruxMetaData element, String widgetId) 
+	public PasswordTextBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new PasswordTextBox();
 	}

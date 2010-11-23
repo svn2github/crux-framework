@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 
@@ -54,7 +54,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 	{
 		super.processAttributes(context);
 
-		CruxMetaData element = context.getElement();
+		CruxMetaDataElement element = context.getElement();
 		Anchor widget = context.getWidget();
 		
 		String horizontalAlignment = context.readWidgetProperty("horizontalAlignment");
@@ -75,7 +75,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 	}
 
 	@Override
-	public Anchor instantiateWidget(CruxMetaData element, String widgetId) 
+	public Anchor instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new Anchor();
 	}	

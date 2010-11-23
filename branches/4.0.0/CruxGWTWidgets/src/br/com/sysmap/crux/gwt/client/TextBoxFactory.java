@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -47,7 +47,7 @@ public class TextBoxFactory extends TextBoxBaseFactory<TextBox>
 	}
 
 	@Override
-	public TextBox instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	public TextBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
 	{
 		return new TextBox();
 	}

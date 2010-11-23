@@ -29,7 +29,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -60,7 +60,7 @@ public class SuggestBoxFactory extends CompositeFactory<SuggestBox>
 	}
 	
 	@Override
-	public SuggestBox instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	public SuggestBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
 	{
 		Event eventLoadOracle = EvtBind.getWidgetEvent(element, "onLoadOracle");
 		

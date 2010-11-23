@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TabBar;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.TabBar;
 public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 {
 	@Override
-	public TabBar instantiateWidget(CruxMetaData element, String widgetId) 
+	public TabBar instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new TabBar();
 	}

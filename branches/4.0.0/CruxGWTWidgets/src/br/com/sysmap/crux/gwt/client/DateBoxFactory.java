@@ -34,7 +34,7 @@ import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -93,9 +93,9 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	}
 	
 	@Override
-	public DateBox instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	public DateBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
 	{
-		Array<CruxMetaData> children = ensureChildren(element, true);
+		Array<CruxMetaDataElement> children = ensureChildren(element, true);
 		
 		if (children != null && children.size() > 0)
 		{
@@ -104,7 +104,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 			
 			for (int i=0; i<length; i++)
 			{
-				CruxMetaData childElement = children.get(i);
+				CruxMetaDataElement childElement = children.get(i);
 				if (childElement != null)
 				{
 					if (isWidget(childElement))
@@ -138,7 +138,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	 * @param widgetId 
 	 * @return
 	 */
-	public Format getFormat(CruxMetaData element, String widgetId)
+	public Format getFormat(CruxMetaDataElement element, String widgetId)
 	{
 		Format format = null;
 		String pattern = element.getProperty("pattern");

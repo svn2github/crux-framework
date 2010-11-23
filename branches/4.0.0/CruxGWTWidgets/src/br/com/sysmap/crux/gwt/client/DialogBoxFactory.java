@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.DialogBox;
 
@@ -37,7 +37,7 @@ public class DialogBoxFactory extends PanelFactory<DialogBox>
        implements HasAnimationFactory<DialogBox>, HasCloseHandlersFactory<DialogBox>, HasTextFactory<DialogBox>
 {
 	@Override
-	public DialogBox instantiateWidget(CruxMetaData element, String widgetId) 
+	public DialogBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		String autoHideStr = element.getProperty("autoHide");
 		boolean autoHide = false;

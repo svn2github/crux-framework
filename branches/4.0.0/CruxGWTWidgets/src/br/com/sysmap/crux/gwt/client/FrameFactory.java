@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.Frame;
@@ -48,7 +48,7 @@ public class FrameFactory extends WidgetFactory<Frame>
 	}
 
 	@Override
-	public Frame instantiateWidget(CruxMetaData element, String widgetId) 
+	public Frame instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new Frame();
 	}	

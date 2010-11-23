@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class LazyPanelFactory extends PanelFactory<LazyPanel> 
 {
 	@Override
-	public LazyPanel instantiateWidget(CruxMetaData metaElem, String widgetId) throws InterfaceConfigException 
+	public LazyPanel instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException 
 	{
 		return new LazyPanel()
 		{

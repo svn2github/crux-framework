@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FileUpload;
 
@@ -30,7 +30,7 @@ public class FileUploadFactory extends WidgetFactory<FileUpload>
 {
 
 	@Override
-	public FileUpload instantiateWidget(CruxMetaData element, String widgetId) 
+	public FileUpload instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new FileUpload();
 	}

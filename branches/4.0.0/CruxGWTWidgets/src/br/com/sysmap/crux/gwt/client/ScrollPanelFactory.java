@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.factory.HasScrollHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -45,7 +45,7 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel>
 	public static enum HorizontalScrollPosition{left,right};
 
 	@Override
-	public ScrollPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public ScrollPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new ScrollPanel();
 	}

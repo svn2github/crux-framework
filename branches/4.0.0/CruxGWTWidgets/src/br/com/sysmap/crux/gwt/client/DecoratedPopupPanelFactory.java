@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 
@@ -36,7 +36,7 @@ public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel
              implements HasAnimationFactory<DecoratedPopupPanel>, HasCloseHandlersFactory<DecoratedPopupPanel>
 {
 	@Override
-	public DecoratedPopupPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public DecoratedPopupPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		String autoHideStr = element.getProperty("autoHide");
 		boolean autoHide = false;

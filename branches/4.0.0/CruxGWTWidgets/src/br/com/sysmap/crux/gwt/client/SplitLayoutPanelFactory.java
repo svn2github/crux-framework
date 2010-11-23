@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.Scheduler;
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanel>
 {
 	@Override
-	public SplitLayoutPanel instantiateWidget(CruxMetaData element, String widgetId)
+	public SplitLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		return new SplitLayoutPanel();
 	}

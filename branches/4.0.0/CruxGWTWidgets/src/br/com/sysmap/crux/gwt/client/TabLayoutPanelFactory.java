@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -48,7 +48,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanel>, HasSelectionHandlersFactory<TabLayoutPanel>
 {
 	@Override
-	public TabLayoutPanel instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException
+	public TabLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
 		String height = element.getProperty("barHeight");
 		if (StringUtils.isEmpty(height))

@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 {
 	@Override
-	public StackLayoutPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public StackLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new StackLayoutPanel(AbstractLayoutPanelFactory.getUnit(element.getProperty("unit")));
 	}

@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasShowRangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.datepicker.client.DatePicker;
 
@@ -60,7 +60,7 @@ public class DatePickerFactory extends CompositeFactory<DatePicker>
 	}
 	
 	@Override
-	public DatePicker instantiateWidget(CruxMetaData element, String widgetId) throws InterfaceConfigException 
+	public DatePicker instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
 	{
 		return new DatePicker();
 	}

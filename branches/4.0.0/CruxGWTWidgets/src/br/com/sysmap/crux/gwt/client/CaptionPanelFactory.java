@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.CaptionPanel;
 
@@ -55,7 +55,7 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel>
 	public void processChildren(WidgetFactoryContext<CaptionPanel> context) throws InterfaceConfigException {}
 	
 	@Override
-	public CaptionPanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public CaptionPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new CaptionPanel();
 	}

@@ -44,7 +44,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Tree;
@@ -66,7 +66,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public Tree instantiateWidget(CruxMetaData element, String widgetId) 
+	public Tree instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		Event eventLoadImage = EvtBind.getWidgetEvent(element, "onLoadImage");
 		

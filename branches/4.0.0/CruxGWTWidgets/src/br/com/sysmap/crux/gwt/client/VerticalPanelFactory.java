@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
@@ -41,7 +41,7 @@ public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel>
 {
 
 	@Override
-	public VerticalPanel instantiateWidget(CruxMetaData element, String widgetId)
+	public VerticalPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		return new VerticalPanel();
 	}

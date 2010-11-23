@@ -16,7 +16,7 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.Label;
 
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Label;
 public class LabelFactory extends AbstractLabelFactory<Label>
 {	
 	@Override
-	public Label instantiateWidget(CruxMetaData element, String widgetId) 
+	public Label instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new Label();
 	}	

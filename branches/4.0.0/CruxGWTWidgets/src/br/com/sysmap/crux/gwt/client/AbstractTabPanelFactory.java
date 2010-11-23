@@ -35,7 +35,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContex
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -156,7 +156,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 		
 		private void updateTabState(WidgetChildProcessorContext<T> context)
 		{
-			CruxMetaData tabElement = (CruxMetaData) context.getAttribute("tabElement");
+			CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
 			String enabled = tabElement.getProperty("enabled");
 			int tabCount = context.getRootWidget().getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)

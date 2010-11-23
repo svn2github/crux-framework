@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.RadioButton;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 public class RadioButtonFactory extends AbstractCheckBoxFactory<RadioButton>
 {
 	@Override
-	public RadioButton instantiateWidget(CruxMetaData element, String widgetId) 
+	public RadioButton instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new RadioButton(element.getProperty("name"));
 	}

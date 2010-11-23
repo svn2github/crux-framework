@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -46,7 +46,7 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 		 * Constructor
 		 * @param element
 		 */
-		public CruxHTMLPanel(CruxMetaData element)
+		public CruxHTMLPanel(CruxMetaDataElement element)
         {
 	        super("");
 	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
@@ -77,9 +77,9 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
 	 * @param element
 	 * @throws InterfaceConfigException
 	 */
-	protected void createChildren(String parentId, CruxMetaData element) throws InterfaceConfigException
+	protected void createChildren(String parentId, CruxMetaDataElement element) throws InterfaceConfigException
     {
-		Array<CruxMetaData> children = element.getChildren();
+		Array<CruxMetaDataElement> children = element.getChildren();
 		if (children != null)
 		{
 			addToParserStack(getFactoryType(), parentId, children);

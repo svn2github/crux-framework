@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Grid;
@@ -37,7 +37,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 {
 
 	@Override
-	public Grid instantiateWidget(CruxMetaData element, String widgetId)
+	public Grid instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		return new Grid();
 	}
@@ -53,7 +53,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	})
 	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException	
 	{
-		Array<CruxMetaData> children = ensureChildren(context.getElement(), true);
+		Array<CruxMetaDataElement> children = ensureChildren(context.getElement(), true);
 		
 		int count = getNonNullChildrenCount(children);
 		
@@ -64,7 +64,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	 * @param children
 	 * @return
 	 */
-	private static int getNonNullChildrenCount(Array<CruxMetaData> children)
+	private static int getNonNullChildrenCount(Array<CruxMetaDataElement> children)
     {
 	    int count = 0;
 		int size = children.size();
@@ -90,7 +90,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 			Boolean cellsInitialized = (Boolean) context.getAttribute("cellsInitialized");
 			if (cellsInitialized == null || !cellsInitialized)
 			{
-				Array<CruxMetaData> children = ensureChildren(context.getChildElement(), true);
+				Array<CruxMetaDataElement> children = ensureChildren(context.getChildElement(), true);
 				context.getRootWidget().resizeColumns(getNonNullChildrenCount(children));
 				context.setAttribute("cellsInitialized", new Boolean(true));
 			}

@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.RichTextArea.Justification;
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implements HasTextFactory<RichTextArea>
 {
 	@Override
-	public RichTextArea instantiateWidget(CruxMetaData element, String widgetId) 
+	public RichTextArea instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new RichTextArea();
 	}

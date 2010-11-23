@@ -33,7 +33,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabBar.Tab;
@@ -127,7 +127,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	
 	private static <T extends TabBar> void updateTabState(WidgetChildProcessorContext<T> context)
 	{
-		CruxMetaData tabElement = (CruxMetaData) context.getAttribute("tabElement");
+		CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
 		String enabled = tabElement.getProperty("enabled");
 		int tabCount = context.getRootWidget().getTabCount();
 		if (enabled != null && enabled.length() >0)

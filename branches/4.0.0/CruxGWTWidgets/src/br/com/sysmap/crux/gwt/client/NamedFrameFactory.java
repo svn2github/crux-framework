@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.NamedFrame;
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.NamedFrame;
 public class NamedFrameFactory extends WidgetFactory<NamedFrame>
 {
 	@Override
-	public NamedFrame instantiateWidget(CruxMetaData element, String widgetId) 
+	public NamedFrame instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new NamedFrame(element.getProperty("name"));
 	}

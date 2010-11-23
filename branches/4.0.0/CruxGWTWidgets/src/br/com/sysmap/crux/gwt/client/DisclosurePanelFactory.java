@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContex
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -48,7 +48,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 	
 	
 	@Override
-	public DisclosurePanel instantiateWidget(CruxMetaData element, String widgetId) 
+	public DisclosurePanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		String headerText = element.getProperty("headerText");
 		return new DisclosurePanel(headerText);

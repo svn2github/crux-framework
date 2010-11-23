@@ -16,7 +16,7 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.InlineLabel;
 
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 public class InlineLabelFactory extends AbstractLabelFactory<InlineLabel>
 {
 	@Override
-	public InlineLabel instantiateWidget(CruxMetaData element, String widgetId) 
+	public InlineLabel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new InlineLabel();
 	}
