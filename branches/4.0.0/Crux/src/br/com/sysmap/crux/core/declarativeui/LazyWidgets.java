@@ -402,7 +402,7 @@ public class LazyWidgets
 				 */
 				if (widgetChildrenLazy)
 				{
-					wrapperId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
+					wrapperId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren);
 				}
 				generateLazyDepsForChildren(widget, wrapperId, dependencies);
 			}

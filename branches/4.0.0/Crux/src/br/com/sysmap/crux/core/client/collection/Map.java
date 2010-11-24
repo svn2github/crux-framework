@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.collection;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -86,7 +87,28 @@ public class Map<V> extends JavaScriptObject
 		return true;
 	}-*/;
 
-	public final native Array<String> keys()/*-{
+	/**
+	 * @return
+	 */
+	public final Array<String> keys()
+	{
+		if (!GWT.isScript())
+		{
+			Array<String> jsniKeys = jsniKeys();
+			int index = jsniKeys.indexOf("__gwt_ObjectId");
+			if (index >= 0)
+			{
+				jsniKeys.remove(index);
+			}
+			return jsniKeys;
+		}
+		else
+		{
+			return jsniKeys();
+		}
+	}
+	
+	private native Array<String> jsniKeys()/*-{
 		var result = Array();
 		for (var k in this) {
 			result.push(k);
