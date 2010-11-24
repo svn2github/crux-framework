@@ -21,8 +21,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.DOMImplementation;
@@ -51,6 +53,7 @@ import br.com.sysmap.crux.gadget.client.Gadget;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.Feature;
+import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsDynamicHeightFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
@@ -179,8 +182,6 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 */
 	private void generateContentSections(Document d, Element module) throws UnableToCompleteException
     {
-	    //TODO boolean quirksMode = GadgetUtils.allowHtmlQuirksMode(logger, context.getTypeOracle(), this.moduleMetaClass);
-	    
     	try
         {
 	        Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(getRequestedScreen().getModule());
@@ -189,7 +190,12 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(screenId);
 				Document screenElement = XMLUtils.createNSUnawareDocument(stream);
 				Screen screen = ScreenFactory.getInstance().getScreen(screenId);
-				module.appendChild(getContentElement(d, screenElement, screen));
+				
+				List<Widget> gadgetViewWidgets = getGadgetViewWidget(screen);
+				for (Widget gadgetViewWidget : gadgetViewWidgets)
+		        {
+					module.appendChild(getContentElement(d, screenElement, gadgetViewWidget));
+		        }
             }
         }
         catch (Exception e)
@@ -206,7 +212,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @return
 	 * @throws IOException
 	 */
-	private Element getContentElement(Document d, Document screenDocument, Screen screen) throws IOException
+	private Element getContentElement(Document d, Document screenDocument, Widget gadgetViewWidget) throws IOException
 	{
 		Element html = screenDocument.getDocumentElement();
 		StringWriter out = new StringWriter();
@@ -239,7 +245,6 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		Element content = d.createElement("Content");
 		content.setAttribute("type", "html");
 
-		Widget gadgetViewWidget = getGadgetViewWidget(screen);
 		String viewName = gadgetViewWidget.getProperty("view");
 		if (!StringUtils.isEmpty(viewName) && !viewName.equals(View.noViews.toString())) 
 		{
@@ -262,18 +267,20 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param screen
 	 * @return
 	 */
-	private Widget getGadgetViewWidget(Screen screen)
+	private List<Widget> getGadgetViewWidget(Screen screen)
     {
+		List<Widget> result = new ArrayList<Widget>();
+		
 	    Iterator<Widget> widgets = screen.iterateWidgets();
 		while (widgets.hasNext())
 		{
 			Widget widget = widgets.next();
 			if (widget.getType().equals("gadget_gadgetView"))
 			{
-				return widget;
+				result.add(widget);
 			}
 		}
-		return null;
+		return result;
     }
 
 	/**
@@ -284,6 +291,14 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private void getBodyContent(StringWriter out, Element element) throws IOException
     {
 	    NodeList bodyChildren = element.getChildNodes();
+	    JClassType needsDynamicHeightFeatureType = context.getTypeOracle().findType(NeedsDynamicHeightFeature.class.getCanonicalName());
+	    
+	    boolean hasDynamicFeature = this.moduleMetaClass.isAssignableTo(needsDynamicHeightFeatureType);
+	    
+	    if (hasDynamicFeature)
+	    {
+	    	out.write("<div id=\"__gwt_gadget_content_div\">");
+	    }
 	    for(int j=0; j<bodyChildren.getLength(); j++)
 	    {
 	    	Node child = bodyChildren.item(j);
@@ -291,6 +306,10 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    	{
 	    		HTMLUtils.write(child, out);
 	    	}
+	    }
+	    if (hasDynamicFeature)
+	    {
+	    	out.write("</div>");
 	    }
     }
 

@@ -19,6 +19,4 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface GadgetMessages extends Messages
 {
-	@DefaultMessage("[crux-gadgets 001] - A valid Crux Gadget Page must declare only one gadgetView.")
-	String gadgetViewDuplicatedWidget();
 }

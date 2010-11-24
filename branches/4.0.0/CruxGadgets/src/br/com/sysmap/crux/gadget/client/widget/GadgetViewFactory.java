@@ -74,6 +74,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 	{
 		CruxGadgetView gadgetView = new CruxGadgetView(element);
 		createChildren(widgetId, element);
+		CruxGadgetView.getGadget();//initializes the gadget
 		return gadgetView;
 	}
 

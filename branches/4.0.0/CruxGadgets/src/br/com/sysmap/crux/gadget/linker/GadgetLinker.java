@@ -99,7 +99,7 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 		logger = logger.branch(TreeLogger.DEBUG, "Building gadget manifest", null);
 
 		String bootstrap = "<script>" + context.optimizeJavaScript(logger, generateSelectionScript(logger, context, artifacts)) + 
-		                   "</script>\n" + "<div id=\"__gwt_gadget_content_div\"></div>";
+		                   "</script>";
 
 		// Read the content
 		StringBuffer manifest = new StringBuffer();

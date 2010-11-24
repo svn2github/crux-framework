@@ -15,14 +15,10 @@
  */
 package br.com.sysmap.crux.gadget.client.widget;
 
-import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.gadget.client.Gadget;
-import br.com.sysmap.crux.gadget.client.GadgetException;
-import br.com.sysmap.crux.gadget.client.GadgetMsgFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This widget is used to limit the area, inside a .crux.xml page, that will
@@ -35,8 +31,6 @@ public class GadgetView extends HTMLPanel
 {
 	public static enum View{canvas, home, noViews, profile}
 
-	public static final String GADGET_VIEW_ID = "__Crux_Gadget_View";
-	
 	private View view = View.noViews;
 	
 	private static Gadget gadget = null;
@@ -59,7 +53,6 @@ public class GadgetView extends HTMLPanel
 	public GadgetView(String html)
 	{
 		super(html);
-		checkUnique();
 		if (gadget == null)
 		{
 			gadget = GWT.create(Gadget.class);
@@ -73,7 +66,6 @@ public class GadgetView extends HTMLPanel
 	public GadgetView(String tag, String html)
 	{
 		super(tag, html);
-		checkUnique();
 	}
 
 	/**
@@ -90,18 +82,5 @@ public class GadgetView extends HTMLPanel
 	public void setView(View view)
 	{
 		this.view = view;
-	}
-
-	/**
-	 * 
-	 */
-	private void checkUnique()
-	{
-		Widget unique = Screen.get(GADGET_VIEW_ID);
-		if (unique != null)
-		{
-			throw new GadgetException(GadgetMsgFactory.getMessages().gadgetViewDuplicatedWidget());
-		}
-		Screen.add(GADGET_VIEW_ID, this);
 	}
 }
