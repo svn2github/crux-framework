@@ -17,7 +17,10 @@ package br.com.sysmap.crux.core.rebind.widget;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
@@ -48,8 +51,9 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
+import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
@@ -72,7 +76,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class WidgetFactoryProxyCreator extends AbstractProxyCreator
+public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 
 	/**
@@ -101,13 +105,13 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 			this.evtBinderVariables = evtBinderVariables;
 		}
 	}
-	private static final String FACTORY_PROXY_SUFFIX = "_Impl";
 	private static final int UNBOUNDED = -1;
 	private Map<String, String> attributesFromClass = new HashMap<String, String>();
 	private Map<String, EventBinderData> eventsFromClass = new HashMap<String, EventBinderData>();
 	private int variableNameSuffixCounter = 0;
 	private final WidgetFactoryHelper factoryHelper;
-
+	private Set<String> widgetProperties = new HashSet<String>();
+	
 	/**
 	 * @param logger
 	 * @param context
@@ -115,8 +119,31 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	 */
 	public WidgetFactoryProxyCreator(TreeLogger logger, GeneratorContext context, JClassType factoryClass)
 	{
-		super(logger, context);
+		super(logger, context, factoryClass);
 		this.factoryHelper = new WidgetFactoryHelper(factoryClass);
+		if (Environment.isProduction())
+		{
+			initializeWidgetPropertiesMap();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void initializeWidgetPropertiesMap() 
+	{
+		List<br.com.sysmap.crux.core.rebind.scanner.screen.Screen> screens = getScreens();
+		
+		String widgetType = factoryHelper.getWidgetDeclarationType();
+		
+		for (br.com.sysmap.crux.core.rebind.scanner.screen.Screen screen : screens) 
+		{
+			Set<String> widgetPropertiesFromScreen = screen.getWidgetProperties(widgetType);
+			if (widgetPropertiesFromScreen != null)
+			{
+				widgetProperties.addAll(widgetPropertiesFromScreen);
+			}
+		}
 	}
 
 	@Override
@@ -164,27 +191,11 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	    return imports;
     }	
 	
-	/**
-	 * @return the full qualified name of the proxy object.
-	 */
-	protected String getProxyQualifiedName()
-	{
-		return factoryHelper.getFactoryClass().getPackage().getName() + "." + getProxySimpleName();
-	}	
-	
-	/**
-	 * @return the simple name of the proxy object.
-	 */
-	protected String getProxySimpleName()
-	{
-		return ClassUtils.getSourceName(factoryHelper.getFactoryClass()) + FACTORY_PROXY_SUFFIX;
-	}
-
 	@Override
     protected SourceWriter getSourceWriter()
     {
-		JPackage crossDocIntfPkg = factoryHelper.getFactoryClass().getPackage();
-		String packageName = crossDocIntfPkg == null ? "" : crossDocIntfPkg.getName();
+		JPackage pkg = factoryHelper.getFactoryClass().getPackage();
+		String packageName = pkg == null ? "" : pkg.getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, getProxySimpleName());
 
 		if (printWriter == null)
@@ -509,45 +520,48 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	        			String attrName = attr.value();
 	        			if (isValidName(attrName))
 	        			{
-	        				String setterMethod = ClassUtils.getSetterMethod(attrName);
-	        				JClassType type = factoryClass.getOracle().getType(attr.type().getCanonicalName());
-	        				if (ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
+	        				if (!Environment.isProduction() || widgetProperties.contains(attrName))
 	        				{
-	        					String expression;
-	        					JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-	        					if (type.equals(stringType) && attr.supportsI18N())
+	        					String setterMethod = ClassUtils.getSetterMethod(attrName);
+	        					JClassType type = factoryClass.getOracle().getType(attr.type().getCanonicalName());
+	        					if (ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
 	        					{
-	        						expression = "ScreenFactory.getInstance().getDeclaredMessage("+attrName+")";
-	        					}
-	        					else
-	        					{
-	        						expression = ClassUtils.getParsingExpressionForSimpleType(attrName, type);
-	        					}
-	        					if (expression == null)
-	        					{
-	        						logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
-	        					}
-	        					else
-	        					{
-	        						result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
-	        						if (attr.defaultValue().length() > 0)
+	        						String expression;
+	        						JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
+	        						if (type.equals(stringType) && attr.supportsI18N())
 	        						{
-	        							result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
-	        							result.append(attrName + " = \"" + attr.defaultValue() + "\";");
-	        							result.append("}\n");
-	        							result.append("else {\n");
+	        							expression = "ScreenFactory.getInstance().getDeclaredMessage("+attrName+")";
 	        						}
 	        						else
 	        						{
-	        							result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
+	        							expression = ClassUtils.getParsingExpressionForSimpleType(attrName, type);
 	        						}
-	        						result.append("widget."+setterMethod+"("+expression+");\n");
-	        						result.append("}\n");
+	        						if (expression == null)
+	        						{
+	        							logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+	        						}
+	        						else
+	        						{
+	        							result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
+	        							if (attr.defaultValue().length() > 0)
+	        							{
+	        								result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
+	        								result.append(attrName + " = \"" + attr.defaultValue() + "\";");
+	        								result.append("}\n");
+	        								result.append("else {\n");
+	        							}
+	        							else
+	        							{
+	        								result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
+	        							}
+	        							result.append("widget."+setterMethod+"("+expression+");\n");
+	        							result.append("}\n");
+	        						}
 	        					}
-	        				}
-	        				else
-	        				{
-	        					logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+	        					else
+	        					{
+	        						logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+	        					}
 	        				}
 	        			}
 	        			else
@@ -720,9 +734,25 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 				for (TagEvent evt : evts.value())
 				{
 					Class<? extends EvtBinder<?>> binderClass = evt.value();
-					String binderClassName = binderClass.getCanonicalName();
-					String evtBinderVar = getEvtBinderVariableName("ev", evtBinderVariables, binderClassName);
-					result.append(evtBinderVar+".bindEvent(element, widget);\n");
+					boolean generateEventBlock = true;
+					if (Environment.isProduction())
+					{
+						try 
+						{
+							String eventName = binderClass.newInstance().getEventName();
+							generateEventBlock = widgetProperties.contains(eventName);
+						} 
+						catch (Exception e) 
+						{
+							throw new CruxGeneratorException(e.getMessage(), e);//TODO message
+						}
+					}
+					if (generateEventBlock)
+					{
+						String binderClassName = binderClass.getCanonicalName();
+						String evtBinderVar = getEvtBinderVariableName("ev", evtBinderVariables, binderClassName);
+						result.append(evtBinderVar+".bindEvent(element, widget);\n");
+					}
 				}
 			}
 		}

@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
@@ -68,6 +69,20 @@ public class WidgetFactoryHelper
     	return factoryClass;
     }
 
+	public String getWidgetDeclarationType()
+	{
+		DeclarativeFactory declarativeFactory = factoryClass.getAnnotation(DeclarativeFactory.class);
+		if (declarativeFactory != null)
+		{
+			return declarativeFactory.library()+"_"+declarativeFactory.id();
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * @return
 	 */

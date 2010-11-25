@@ -107,6 +107,11 @@ public class Widget
 		return properties.values().iterator();
 	}
 
+	public Iterator<String> iteratePropertyNames()
+	{
+		return properties.keySet().iterator();
+	}
+
 	public void setDataSource(String dataSource)
 	{
 		this.dataSource = dataSource;

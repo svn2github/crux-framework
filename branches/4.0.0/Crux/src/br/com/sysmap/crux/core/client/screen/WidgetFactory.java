@@ -18,7 +18,9 @@ package br.com.sysmap.crux.core.client.screen;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastMap;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
@@ -259,26 +261,18 @@ public abstract class WidgetFactory <T extends Widget>
 	 */
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="id", required=true),
-		@TagAttributeDeclaration("width"),
-		@TagAttributeDeclaration("height"),
-		@TagAttributeDeclaration("styleName"),
-		@TagAttributeDeclaration(value="visible", type=Boolean.class),
-		@TagAttributeDeclaration(value="tooltip", supportsI18N=true),
-		@TagAttributeDeclaration("style")
+		@TagAttributeDeclaration("style"),
+		@TagAttributeDeclaration(value="tooltip", supportsI18N=true)
+	})
+	@TagAttributes({
+		@TagAttribute("width"),
+		@TagAttribute("height"),
+		@TagAttribute("styleName"),
+		@TagAttribute(value="visible", type=Boolean.class)
 	})
 	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
-		String styleName = context.readWidgetProperty("styleName");
 		T widget = context.getWidget();
-		if (styleName != null && styleName.length() > 0)
-		{
-			widget.setStyleName(styleName);
-		}
-		String visible = context.readWidgetProperty("visible");
-		if (visible != null && visible.length() > 0)
-		{
-			widget.setVisible(Boolean.parseBoolean(visible));
-		}
 		String style = context.readWidgetProperty("style");
 		if (style != null && style.length() > 0)
 		{
@@ -291,16 +285,6 @@ public abstract class WidgetFactory <T extends Widget>
 					StyleUtils.addStyleProperty(widget.getElement(), attr[0], attr[1]);
 				}
 			}
-		}
-		String width = context.readWidgetProperty("width");
-		if (width != null && width.length() > 0)
-		{
-			widget.setWidth(width);
-		}
-		String height = context.readWidgetProperty("height");
-		if (height != null && height.length() > 0)
-		{
-			widget.setHeight(height);
 		}
 		String tooltip = context.readWidgetProperty("tooltip");
 		if (tooltip != null && tooltip.length() > 0)
@@ -329,7 +313,7 @@ public abstract class WidgetFactory <T extends Widget>
 		@TagEventDeclaration("onLoadWidget"),
 		@TagEventDeclaration("onAttach"),
 		@TagEventDeclaration("onDettach")
-	})
+	})//TODO colocar eventbind para esses eventos, para usar tagEvents que gera codigo mais eficiente
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
 		CruxMetaDataElement element = context.getElement();

@@ -123,6 +123,11 @@ public class ScreenFactory
 		}
 	}
 
+	/**
+	 * @param id
+	 * @param module
+	 * @return
+	 */
 	public String getRelativeScreenId(String id, String module)
 	{
 		Module mod = Modules.getInstance().getModule(module);
