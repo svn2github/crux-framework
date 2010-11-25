@@ -30,6 +30,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -324,11 +326,14 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @throws InterfaceConfigException
 	 */
 	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadWidget")
+		@TagEventDeclaration("onLoadWidget"),
+		@TagEventDeclaration("onAttach"),
+		@TagEventDeclaration("onDettach")
 	})
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
-		final Event eventLoad = EvtBind.getWidgetEvent(context.getElement(), "onLoadWidget");
+		CruxMetaDataElement element = context.getElement();
+		final Event eventLoad = EvtBind.getWidgetEvent(element, "onLoadWidget");
 		if (eventLoad != null)
 		{
 			addScreenLoadedHandler(new ScreenLoadHandler()
@@ -336,6 +341,25 @@ public abstract class WidgetFactory <T extends Widget>
 				public void onLoad(ScreenLoadEvent event)
 				{
 					Events.callEvent(eventLoad, event);
+				}
+			});
+		}
+		final Event eventAttach = EvtBind.getWidgetEvent(element, "onAttach");
+		final Event eventDettach = EvtBind.getWidgetEvent(element, "onDettach");
+		if (eventAttach != null || eventDettach != null)
+		{
+			context.getWidget().addAttachHandler(new Handler()
+			{
+				public void onAttachOrDetach(AttachEvent event)
+				{
+					if (event.isAttached())
+					{
+						if (eventAttach != null) Events.callEvent(eventAttach, event);
+					}
+					else
+					{
+						if (eventDettach != null) Events.callEvent(eventDettach, event);
+					}
 				}
 			});
 		}

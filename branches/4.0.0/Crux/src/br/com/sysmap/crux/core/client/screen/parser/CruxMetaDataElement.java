@@ -17,7 +17,6 @@ package br.com.sysmap.crux.core.client.screen.parser;
 
 import br.com.sysmap.crux.core.client.collection.Array;
 
-import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
