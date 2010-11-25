@@ -15,10 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagEvent;
+import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.BlurEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.FocusEvtBind;
@@ -33,7 +33,6 @@ import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 
@@ -50,64 +49,34 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 	 * @throws InterfaceConfigException 
 	 */
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="tabIndex", type=Integer.class),
-		@TagAttributeDeclaration(value="enabled", type=Boolean.class),
-		@TagAttributeDeclaration(value="accessKey", type=Character.class),
-		@TagAttributeDeclaration(value="focus", type=Boolean.class)
+	@TagAttributes({
+		@TagAttribute(value="tabIndex", type=Integer.class),
+		@TagAttribute(value="enabled", type=Boolean.class),
+		@TagAttribute(value="accessKey", type=Character.class),
+		@TagAttribute(value="focus", type=Boolean.class)
 	})
 	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		String tabIndex = context.readWidgetProperty("tabIndex");
-		if (tabIndex != null && tabIndex.length() > 0){
-			context.getWidget().setTabIndex(Integer.parseInt(tabIndex));
-		}
-		String enabled = context.readWidgetProperty("enabled");
-		if (enabled != null && enabled.length() > 0){
-			context.getWidget().setEnabled(Boolean.parseBoolean(enabled));
-		}
-		String accessKey = context.readWidgetProperty("accessKey");
-		if (accessKey != null && accessKey.length() > 0){
-			context.getWidget().setAccessKey(accessKey.charAt(0));
-		}
-		String focus = context.readWidgetProperty("focus");
-		if (focus != null && focus.length() > 0){
-			context.getWidget().setFocus(Boolean.parseBoolean(focus));
-		}
 	}
 	
 	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onClick"),
-		@TagEventDeclaration("onFocus"),
-		@TagEventDeclaration("onBlur"),
-		@TagEventDeclaration("onKeyPress"),
-		@TagEventDeclaration("onKeyUp"),
-		@TagEventDeclaration("onKeyDown"),
-		@TagEventDeclaration("onMouseDown"),
-		@TagEventDeclaration("onMouseUp"),
-		@TagEventDeclaration("onMouseOver"),
-		@TagEventDeclaration("onMouseOut"),
-		@TagEventDeclaration("onMouseMove"),
-		@TagEventDeclaration("onMouseWheel")
+	@TagEvents({
+		@TagEvent(ClickEvtBind.class),
+		@TagEvent(FocusEvtBind.class),
+		@TagEvent(BlurEvtBind.class),
+		@TagEvent(KeyPressEvtBind.class),
+		@TagEvent(KeyUpEvtBind.class),
+		@TagEvent(KeyDownEvtBind.class),
+		@TagEvent(MouseDownEvtBind.class),
+		@TagEvent(MouseUpEvtBind.class),
+		@TagEvent(MouseOverEvtBind.class),
+		@TagEvent(MouseOutEvtBind.class),
+		@TagEvent(MouseMoveEvtBind.class),
+		@TagEvent(MouseWheelEvtBind.class)
 	})
 	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
-		CruxMetaDataElement element = context.getElement();
-		T widget = context.getWidget();
-		new ClickEvtBind().bindEvent(element, widget);
-		new FocusEvtBind().bindEvent(element, widget);
-		new BlurEvtBind().bindEvent(element, widget);
-		new KeyUpEvtBind().bindEvent(element, widget);
-		new KeyPressEvtBind().bindEvent(element, widget);
-		new KeyDownEvtBind().bindEvent(element, widget);
-		new MouseDownEvtBind().bindEvent(element, widget);
-		new MouseUpEvtBind().bindEvent(element, widget);
-		new MouseOverEvtBind().bindEvent(element, widget);
-		new MouseOutEvtBind().bindEvent(element, widget);
-		new MouseMoveEvtBind().bindEvent(element, widget);
-		new MouseWheelEvtBind().bindEvent(element, widget);
 	}
 }
