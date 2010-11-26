@@ -76,7 +76,7 @@ public class TimerFactory extends WidgetFactory<Timer>
 	@TagAttributes({
 		@TagAttribute(value="pattern")
 	})
-	public void processAttributes(WidgetFactoryContext<Timer> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -85,7 +85,7 @@ public class TimerFactory extends WidgetFactory<Timer>
 	@TagChildren({
 		@TagChild(TimerChildrenProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<Timer> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
 	public static class TimerChildrenProcessor extends WidgetChildProcessor<Timer>
@@ -95,9 +95,10 @@ public class TimerFactory extends WidgetFactory<Timer>
 			@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
 			@TagAttributeDeclaration(value="execute", required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext<Timer> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			TimeoutEvtBind.bindEventForChildTag(context.getChildElement(), context.getRootWidget());
+			Timer rootWidget = context.getRootWidget();
+			TimeoutEvtBind.bindEventForChildTag(context.getChildElement(), rootWidget);
 		}
 	}
 }

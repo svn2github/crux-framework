@@ -38,7 +38,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@TagChild(TitleProcessor.class),
 		@TagChild(BodyProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<T> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="title", minOccurs="0")
 	public static class TitleProcessor extends WidgetChildProcessor<TitlePanel>
@@ -47,7 +47,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@TagChildren({
 			@TagChild(TitleChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException	{}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException	{}
 	}
 
 	public static class TitleChildrenProcessor extends ChoiceChildProcessor<TitlePanel>
@@ -58,29 +58,33 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 			@TagChild(TitlePanelTextChildProcessor.class),
 			@TagChild(TitlePanelWidgetChildProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class HTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String innerHtml = ensureHtmlChild(context.getChildElement(),true);
-			context.getRootWidget().setTitleHtml(innerHtml);
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setTitleHtml(innerHtml);
 		}
 	}
 
 	@TagChildAttributes(tagName="text", type=String.class)
 	public static abstract class TextChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String innerText = ensureTextChild(context.getChildElement(),true);
 			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
-			context.getRootWidget().setTitleText(i18nText);
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setTitleText(i18nText);
 		}
 	}
 		
@@ -91,7 +95,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@TagChildren({
 			@TagChild(TitleWidgetTitleProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="titleWidget")
@@ -105,7 +109,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@TagChildren({
 			@TagChild(BodyChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class BodyChildrenProcessor extends ChoiceChildProcessor<TitlePanel>
@@ -116,29 +120,33 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 			@TagChild(TitlePanelBodyTextChildProcessor.class),
 			@TagChild(TitlePanelBodyWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}	
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class BodyHTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String innerHtml = ensureHtmlChild(context.getChildElement(), true);
-			context.getRootWidget().setContentHtml(innerHtml);
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setContentHtml(innerHtml);
 		}
 	}
 
 	@TagChildAttributes(tagName="text", type=String.class)
 	public static abstract class BodyTextChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String innerText = ensureTextChild(context.getChildElement(), true);
 			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
-			context.getRootWidget().setContentText(i18nText);
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setContentText(i18nText);
 		}
 	}
 	
@@ -149,7 +157,7 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 		@TagChildren({
 			@TagChild(BodyWidgetContentProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<TitlePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")

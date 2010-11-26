@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
@@ -47,7 +47,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 	@TagChildren({
 		@TagChild(ChildrenProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<DecoratedPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	public static class ChildrenProcessor extends ChoiceChildProcessor<DecoratedPanel>
 	{
@@ -57,16 +57,17 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 			@TagChild(TextChildProcessor.class),
 			@TagChild(WidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<DecoratedPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static class HTMLChildProcessor extends WidgetChildProcessor<DecoratedPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<DecoratedPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setContentHtml(ensureHtmlChild(context.getChildElement(), true));
+			DecoratedPanel rootWidget = context.getRootWidget();
+			rootWidget.setContentHtml(ensureHtmlChild(context.getChildElement(), true));
 		}
 	}
 
@@ -74,9 +75,10 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 	public static class TextChildProcessor extends WidgetChildProcessor<DecoratedPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<DecoratedPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			context.getRootWidget().setContentText(ensureTextChild(context.getChildElement(), true));
+			DecoratedPanel rootWidget = context.getRootWidget();
+			rootWidget.setContentText(ensureTextChild(context.getChildElement(), true));
 		}
 	}
 	
@@ -87,7 +89,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<DecoratedPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="contentWidget")

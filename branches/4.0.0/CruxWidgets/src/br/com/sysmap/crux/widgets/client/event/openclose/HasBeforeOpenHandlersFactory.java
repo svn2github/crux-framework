@@ -29,5 +29,5 @@ public interface HasBeforeOpenHandlersFactory<T extends HasBeforeOpenHandlers>
 	@TagEvents({
 		@TagEvent(BeforeOpenEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

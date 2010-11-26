@@ -49,16 +49,17 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 	 */
 	protected abstract T createPagerInstance();
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("pageable"),
 		@TagAttributeDeclaration(value="enabled", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	
-		final T widget = context.getWidget();
+		final T widget = (T)context.getWidget();
 		final String pageableId = context.readWidgetProperty("pageable");
 		final String strEnabled = context.readWidgetProperty("enabled");
 		
@@ -91,14 +92,15 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 		);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onPage")
 	})
-	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		CruxMetaDataElement element = context.getElement();
-		T widget = context.getWidget();
+		T widget = (T)context.getWidget();
 		PageEvtBind.bindEvent(element, widget);
 		super.processEvents(context);
 	}

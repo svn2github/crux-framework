@@ -41,16 +41,17 @@ public class StackMenuFactory extends WidgetFactory<StackMenu>
 	@TagChildren({
 		@TagChild(StackMenuItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<StackMenu> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
 	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenu>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<StackMenu> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
-			context.getRootWidget().add(childWidget);
+			StackMenu rootWidget = context.getRootWidget();
+			rootWidget.add(childWidget);
 		}
 	}
 }

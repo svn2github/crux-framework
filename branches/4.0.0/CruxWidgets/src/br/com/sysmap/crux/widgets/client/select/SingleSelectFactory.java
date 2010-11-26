@@ -33,7 +33,7 @@ public class SingleSelectFactory extends AbstractListBoxFactory<SingleSelect>
 	@TagChildren({
 		@TagChild(SelectItemsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<SingleSelect> context) throws InterfaceConfigException {}	
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}	
 	
 	@Override
 	public SingleSelect instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException

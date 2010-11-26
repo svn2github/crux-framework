@@ -49,7 +49,7 @@ public class ConfirmFactory extends WidgetFactory<Confirm>
 		@TagAttribute(value="okButtonText", supportsI18N=true),
 		@TagAttribute(value="cancelButtonText", supportsI18N=true)
 	})
-	public void processAttributes(WidgetFactoryContext<Confirm> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class ConfirmFactory extends WidgetFactory<Confirm>
 		@TagEvent(CancelEvtBind.class),
 		@TagEvent(OkEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<Confirm> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

@@ -74,7 +74,7 @@ public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox>
 		@TagAttributeDeclaration(value="formatter", required=true),
 		@TagAttributeDeclaration("value")
 	})
-	public void processAttributes(WidgetFactoryContext<MaskedTextBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		MaskedTextBox widget = context.getWidget();
 

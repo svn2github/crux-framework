@@ -66,7 +66,7 @@ public class FilterFactory extends CompositeFactory<Filter>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("filterable")
 	})
-	public void processAttributes(final WidgetFactoryContext<Filter> context) throws InterfaceConfigException
+	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		final Filter widget = context.getWidget();
 
@@ -99,7 +99,7 @@ public class FilterFactory extends CompositeFactory<Filter>
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadOracle")
 	})
-	public void processEvents(WidgetFactoryContext<Filter> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);		
 	}

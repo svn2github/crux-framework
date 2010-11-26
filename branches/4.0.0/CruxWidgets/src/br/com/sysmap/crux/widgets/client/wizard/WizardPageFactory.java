@@ -58,7 +58,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		@TagAttributeDeclaration(value="wizardId", required=true),
 		@TagAttributeDeclaration("wizardContextObject")
 	})
-	public void processAttributes(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext<WizardPage<?>> context) throws InterfaceConfigException
+	public void processAttributes(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -68,7 +68,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		@TagEvent(EnterEvtBind.class),
 		@TagEvent(LeaveEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<WizardPage<?>> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	    super.processEvents(context);
 	}
@@ -77,7 +77,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 	@TagChildren({
 		@TagChild(CommandsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<WizardPage<?>> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
@@ -88,7 +88,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		@TagChildren({
 			@TagChild(WizardCommandsProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<WizardPage<?>> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
@@ -104,7 +104,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 			@TagAttributeDeclaration("height"),
 			@TagAttributeDeclaration(value="onCommand", required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext<WizardPage<?>> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
 			String id =context.getChildElement().getProperty("id");
@@ -113,22 +113,23 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 			
 			final Event commandEvent = EvtBind.getWidgetEvent(context.getChildElement(), "onCommand");
 			
-			context.getRootWidget().addCommand(id, label, commandEvent, order);
+			WizardPage<?> rootWidget = context.getRootWidget();
+			rootWidget.addCommand(id, label, commandEvent, order);
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))
 			{
-				context.getRootWidget().getCommand(id).setStyleName(styleName);
+				rootWidget.getCommand(id).setStyleName(styleName);
 			}
 			String width = context.readChildProperty("width");
 			if (!StringUtils.isEmpty(width))
 			{
-				context.getRootWidget().getCommand(id).setWidth(width);
+				rootWidget.getCommand(id).setWidth(width);
 			}
 			String height = context.readChildProperty("height");
 			if (!StringUtils.isEmpty(height))
 			{
-				context.getRootWidget().getCommand(id).setHeight(height);
+				rootWidget.getCommand(id).setHeight(height);
 			}
 		}
 	}

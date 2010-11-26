@@ -51,7 +51,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 	@TagChildren({
 		@TagChild(DynaTabProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<DynaTabs> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
 	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs>
@@ -72,7 +72,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 			@TagEventDeclaration("onBeforeBlur"),
 			@TagEventDeclaration("onBeforeClose")
 		})
-		public void processChildren(WidgetChildProcessorContext<DynaTabs> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			CruxMetaDataElement childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
@@ -88,7 +88,8 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 				closeable = Boolean.parseBoolean(strCloseable);
 			}
 			
-			Tab tab = context.getRootWidget().openTab(id, label, url, closeable, false);
+			DynaTabs rootWidget = context.getRootWidget();
+			Tab tab = rootWidget.openTab(id, label, url, closeable, false);
 			
 			beforeFocusEvtBind.bindEvent(childElement, tab);			
 			beforeBlurEvtBind.bindEvent(childElement, tab);			

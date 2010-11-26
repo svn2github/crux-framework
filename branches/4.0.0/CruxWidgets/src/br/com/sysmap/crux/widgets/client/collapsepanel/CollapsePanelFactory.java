@@ -71,7 +71,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagEvent(BeforeCollapseEvtBind.class),
 		@TagEvent(BeforeExpandEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<CollapsePanel> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -81,7 +81,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagAttributeDeclaration(value="collapsed", type=Boolean.class),
 		@TagAttributeDeclaration(value="collapsible", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<CollapsePanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -91,7 +91,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChild(TitleProcessor.class),
 		@TagChild(BodyProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<CollapsePanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="title", minOccurs="0")
 	public static class TitleProcessor extends WidgetChildProcessor<CollapsePanel>
@@ -100,7 +100,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChildren({
 			@TagChild(TitleChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException	{}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException	{}
 	}
 
 	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CollapsePanel>
@@ -111,7 +111,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 			@TagChild(CollapsePanelTextChildProcessor.class),
 			@TagChild(CollapsePanelWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
@@ -121,7 +121,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChildren({
 			@TagChild(TitleWidgetTitleProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="titleWidget")
@@ -134,7 +134,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChildren({
 			@TagChild(BodyChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CollapsePanel>
@@ -145,7 +145,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 			@TagChild(CollapsePanelBodyTextChildProcessor.class),
 			@TagChild(CollapsePanelBodyWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
@@ -155,7 +155,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChildren({
 			@TagChild(BodyWidgetContentProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<CollapsePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")

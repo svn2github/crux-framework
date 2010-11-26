@@ -64,7 +64,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="visibleTab", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<RollingTabPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
@@ -87,7 +87,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<RollingTabPanel> context) throws InterfaceConfigException 
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 	}
 	
@@ -108,7 +108,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			context.setAttribute("tabElement", context.getChildElement());
 		}
@@ -124,7 +124,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 		
 	}
 	
@@ -132,7 +132,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 	public static class TextTabProcessor extends WidgetChildProcessor<RollingTabPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.setAttribute("titleText", title);
@@ -143,7 +143,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 	public static class HTMLTabProcessor extends WidgetChildProcessor<RollingTabPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute("titleHtml", title);
@@ -157,14 +157,14 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetTitleProcessor extends WidgetChildProcessor<RollingTabPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("titleWidget", titleWidget);
@@ -178,49 +178,51 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel>
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetContentProcessor extends WidgetChildProcessor<RollingTabPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<RollingTabPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget widget = createChildWidget(context.getChildElement());
+			RollingTabPanel rootWidget = context.getRootWidget();
 			
 			String titleText = (String) context.getAttribute("titleText");
 			if (titleText != null)
 			{
-				context.getRootWidget().add(widget, titleText);
+				rootWidget.add(widget, titleText);
 			}
 			else
 			{
 				String titleHtml = (String) context.getAttribute("titleHtml");
 				if (titleHtml != null)
 				{
-					context.getRootWidget().add(widget, titleHtml, true);
+					rootWidget.add(widget, titleHtml, true);
 				}
 				else
 				{
 					Widget titleWidget = (Widget) context.getAttribute("titleWidget");
-					context.getRootWidget().add(widget, titleWidget);
+					rootWidget.add(widget, titleWidget);
 				}
 			}
 			updateTabState(context);
 		}
 		
-		private void updateTabState(WidgetChildProcessorContext<RollingTabPanel> context)
+		private void updateTabState(WidgetChildProcessorContext context)
 		{
 			CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
 			String enabled = tabElement.getProperty("enabled");
-			int tabCount = context.getRootWidget().getTabBar().getTabCount();
+			RollingTabPanel rootWidget = context.getRootWidget();
+			int tabCount = rootWidget.getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)
 			{
-				context.getRootWidget().getTabBar().setTabEnabled(tabCount-1, Boolean.parseBoolean(enabled));
+				rootWidget.getTabBar().setTabEnabled(tabCount-1, Boolean.parseBoolean(enabled));
 			}
 
-			Tab currentTab = context.getRootWidget().getTabBar().getTab(tabCount-1);
+			Tab currentTab = rootWidget.getTabBar().getTab(tabCount-1);
 			
 			String wordWrap = tabElement.getProperty("wordWrap");
 			if (wordWrap != null && wordWrap.trim().length() > 0)

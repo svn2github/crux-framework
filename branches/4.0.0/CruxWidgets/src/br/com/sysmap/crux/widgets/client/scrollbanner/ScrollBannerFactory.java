@@ -50,7 +50,7 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("messageScrollingPeriod")
 	})
-	public void processAttributes(WidgetFactoryContext<ScrollBanner> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,16 +59,17 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 	@TagChildren({
 		@TagChild(MessageProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<ScrollBanner> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
 	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<ScrollBanner> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String message = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
-			context.getRootWidget().addMessage(message);
+			ScrollBanner rootWidget = context.getRootWidget();
+			rootWidget.addMessage(message);
 		}
 	}
 }

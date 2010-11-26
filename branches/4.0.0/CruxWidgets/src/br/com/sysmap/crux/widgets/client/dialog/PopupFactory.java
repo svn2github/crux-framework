@@ -44,7 +44,7 @@ public class PopupFactory extends WidgetFactory<Popup>
 		@TagAttribute("url"),
 		@TagAttribute(value="closeable", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<Popup> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

@@ -29,5 +29,5 @@ public interface HasBeforeCloseHandlersFactory<T extends HasBeforeCloseHandlers>
 	@TagEvents({
 		@TagEvent(BeforeCloseEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

@@ -36,7 +36,7 @@ public abstract class AbstractDecoratedPanelFactory<T extends DecoratedPanel> ex
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		processAlignment(context);
@@ -46,7 +46,7 @@ public abstract class AbstractDecoratedPanelFactory<T extends DecoratedPanel> ex
 	 * @param widget
 	 * @param element
 	 */
-	private void processAlignment(WidgetFactoryContext<T> context)
+	private void processAlignment(WidgetFactoryContext context)
 	{
 		DecoratedPanel widget = context.getWidget();
 

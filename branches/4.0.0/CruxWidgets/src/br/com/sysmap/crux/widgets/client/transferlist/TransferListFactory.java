@@ -48,7 +48,7 @@ public class TransferListFactory extends CompositeFactory<TransferList>
 		@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
 		@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
 	})
-	public void processAttributes(WidgetFactoryContext<TransferList> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -58,7 +58,7 @@ public class TransferListFactory extends CompositeFactory<TransferList>
 	@TagEvents({
 		@TagEvent(BeforeMoveItemsEvtBind.class)
 	})
-	public void processEvents(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext<TransferList> context) throws InterfaceConfigException
+	public void processEvents(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

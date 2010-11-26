@@ -64,7 +64,7 @@ public class MaskedLabelFactory extends WidgetFactory<MaskedLabel>
 		@TagAttributeDeclaration(value="formatter", required=true),
 		@TagAttributeDeclaration("text")
 	})
-	public void processAttributes(WidgetFactoryContext<MaskedLabel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		MaskedLabel widget = context.getWidget();
 

@@ -72,7 +72,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 		@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
 		@TagAttribute(value="spacing", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<RollingPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
@@ -95,7 +95,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 	@TagChildren({
 		@TagChild(RollingPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<RollingPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
 	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanel> 
@@ -105,7 +105,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 			@TagChild(RollingCellProcessor.class),
 			@TagChild(VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<RollingPanel> context) throws InterfaceConfigException  {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException  {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
@@ -120,7 +120,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 		@TagChildren({
 			@TagChild(value=VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<RollingPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("height", context.readChildProperty("height"));
 			context.setAttribute("width", context.readChildProperty("width"));
@@ -133,32 +133,33 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 	public static class VerticalWidgetProcessor extends WidgetChildProcessor<RollingPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<RollingPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			context.getRootWidget().add(child);
+			RollingPanel rootWidget = context.getRootWidget();
+			rootWidget.add(child);
 
 			String cellHeight = (String) context.getAttribute("height");
 			if (cellHeight != null && cellHeight.length() > 0)
 			{
-				context.getRootWidget().setCellHeight(child, cellHeight);
+				rootWidget.setCellHeight(child, cellHeight);
 			}
 			
 			String cellHorizontalAlignment = (String) context.getAttribute("horizontalAlignment");
 			if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
 			{
-				context.getRootWidget().setCellHorizontalAlignment(child, 
+				rootWidget.setCellHorizontalAlignment(child, 
 					  AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
 			}
 			String cellVerticalAlignment = (String) context.getAttribute("verticalAlignment");
 			if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
 			{
-				context.getRootWidget().setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
+				rootWidget.setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
 			}
 			String cellWidth = (String) context.getAttribute("width");
 			if (cellWidth != null && cellWidth.length() > 0)
 			{
-				context.getRootWidget().setCellWidth(child, cellWidth);
+				rootWidget.setCellWidth(child, cellWidth);
 			}
 			
 			context.setAttribute("height", null);

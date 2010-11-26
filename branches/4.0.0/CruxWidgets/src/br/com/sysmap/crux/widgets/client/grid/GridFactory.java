@@ -157,7 +157,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	 * @param grid
 	 * @param gridElem
 	 */
-	private void bindDataSource(WidgetFactoryContext<Grid> context)
+	private void bindDataSource(WidgetFactoryContext context)
 	{
 		final Grid widget = context.getWidget();
 
@@ -308,7 +308,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
 		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
 	})
-	public void processAttributes(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		bindDataSource(context);
@@ -321,7 +321,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagEventDeclaration("onRowRender"),
 		@TagEventDeclaration("onBeforeRowSelect")
 	})
-	public void processEvents(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		CruxMetaDataElement element = context.getElement();
 		Grid widget = context.getWidget();
@@ -338,7 +338,7 @@ public class GridFactory extends WidgetFactory<Grid>
 	@TagChildren({
 		@TagChild(value=ColumnProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	
 	@TagChildAttributes(maxOccurs="unbounded")
@@ -349,7 +349,7 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagChild(DataColumnProcessor.class),
 			@TagChild(WidgetColumnProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	
@@ -367,7 +367,7 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
@@ -385,7 +385,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<Grid>{}
