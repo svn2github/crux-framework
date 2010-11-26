@@ -35,6 +35,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.DeclarativeWidgetFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
@@ -42,12 +43,14 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
+import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -111,6 +114,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private int variableNameSuffixCounter = 0;
 	private final WidgetFactoryHelper factoryHelper;
 	private Set<String> widgetProperties = new HashSet<String>();
+	private final JClassType widgetChildProcessorContextType;
+	private final JClassType widgetFactoryContextType;
 	
 	/**
 	 * @param logger
@@ -121,6 +126,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	{
 		super(logger, context, factoryClass);
 		this.factoryHelper = new WidgetFactoryHelper(factoryClass);
+		this.widgetFactoryContextType = factoryClass.getOracle().findType(WidgetFactoryContext.class.getCanonicalName());
+		this.widgetChildProcessorContextType = factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
 		if (Environment.isProduction())
 		{
 			initializeWidgetPropertiesMap();
@@ -260,11 +267,11 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		}
 		if (processorAttributes != null && processorAttributes.widgetProperty().length() > 0)
 		{
-			source.append("c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(_w);\n");						
+			source.append("rootWidget."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(_w);\n");						
 		}
 		else
 		{
-			source.append("c.getRootWidget().add(_w);\n");						
+			source.append("rootWidget.add(_w);\n");						
 		}
 		
 		return source.toString();
@@ -481,7 +488,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private void generateMethodsForInnerProcessingChildren(SourceWriter sourceWriter, Map<String, String> methodsForInnerProcessing)
 	{
-        String contextDeclaration = factoryHelper.getWidgetChildProcessorContextType().getParameterizedQualifiedSourceName();
+        String contextDeclaration = widgetChildProcessorContextType.getQualifiedSourceName();
 		
 		for (String methodName : methodsForInnerProcessing.keySet())
 		{
@@ -509,7 +516,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        }
 	        StringBuilder result = new StringBuilder();
 	        
-	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{factoryHelper.getWidgetFactoryContextType()});
+	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{widgetFactoryContextType});
 	        if (method != null)
 	        {
 	        	TagAttributes attrs = method.getAnnotation(TagAttributes.class);
@@ -522,45 +529,13 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        			{
 	        				if (!Environment.isProduction() || widgetProperties.contains(attrName))
 	        				{
-	        					String setterMethod = ClassUtils.getSetterMethod(attrName);
-	        					JClassType type = factoryClass.getOracle().getType(attr.type().getCanonicalName());
-	        					if (ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
+	        					if (AttributeParser.NoParser.class.isAssignableFrom(attr.parser()))
 	        					{
-	        						String expression;
-	        						JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-	        						if (type.equals(stringType) && attr.supportsI18N())
-	        						{
-	        							expression = "ScreenFactory.getInstance().getDeclaredMessage("+attrName+")";
-	        						}
-	        						else
-	        						{
-	        							expression = ClassUtils.getParsingExpressionForSimpleType(attrName, type);
-	        						}
-	        						if (expression == null)
-	        						{
-	        							logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
-	        						}
-	        						else
-	        						{
-	        							result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
-	        							if (attr.defaultValue().length() > 0)
-	        							{
-	        								result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
-	        								result.append(attrName + " = \"" + attr.defaultValue() + "\";");
-	        								result.append("}\n");
-	        								result.append("else {\n");
-	        							}
-	        							else
-	        							{
-	        								result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
-	        							}
-	        							result.append("widget."+setterMethod+"("+expression+");\n");
-	        							result.append("}\n");
-	        						}
+	        						generateAutomaticProcessAttributeBlock(factoryClass, result, attr);
 	        					}
 	        					else
 	        					{
-	        						logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+	        						generateAttributeParserProcessAttributeBlock(factoryClass, result, attr);
 	        					}
 	        				}
 	        			}
@@ -591,6 +566,86 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
         }
 	}
 
+	private void generateAttributeParserProcessAttributeBlock(JClassType factoryClass, StringBuilder result, TagAttribute attr) throws NotFoundException
+	{
+		JClassType type = factoryClass.getOracle().getType(attr.parser().getCanonicalName());
+		String attrName = attr.value();
+		result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
+		if (attr.defaultValue().length() > 0)
+		{
+			result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
+			result.append(attrName + " = \"" + attr.defaultValue() + "\";");
+			result.append("}\n");
+			result.append("else {\n");
+		}
+		else
+		{
+			result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
+		}
+		result.append("new "+type.getParameterizedQualifiedSourceName()+"().processAttribute(context, "+attrName+");\n");
+		result.append("}\n");
+		
+	}
+	
+	/**
+	 * @param factoryClass
+	 * @param result
+	 * @param attr
+	 * @throws NotFoundException
+	 */
+	private void generateAutomaticProcessAttributeBlock(JClassType factoryClass, StringBuilder result, TagAttribute attr) throws NotFoundException 
+	{
+		String attrName = attr.value();
+		String setterMethod;
+		if (!StringUtils.isEmpty(attr.property()))
+		{
+			setterMethod = ClassUtils.getSetterMethod(attr.property());
+		}
+		else
+		{
+			setterMethod = ClassUtils.getSetterMethod(attrName);
+		}
+		JClassType type = factoryClass.getOracle().getType(attr.type().getCanonicalName());
+		if (ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
+		{
+			String expression;
+			JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
+			if (type.equals(stringType) && attr.supportsI18N())
+			{
+				expression = "ScreenFactory.getInstance().getDeclaredMessage("+attrName+")";
+			}
+			else
+			{
+				expression = ClassUtils.getParsingExpressionForSimpleType(attrName, type);
+			}
+			if (expression == null)
+			{
+				logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+			}
+			else
+			{
+				result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
+				if (attr.defaultValue().length() > 0)
+				{
+					result.append("if ("+attrName+" == null || "+attrName+".length() == 0){\n");
+					result.append(attrName + " = \"" + attr.defaultValue() + "\";");
+					result.append("}\n");
+					result.append("else {\n");
+				}
+				else
+				{
+					result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
+				}
+				result.append("widget."+setterMethod+"("+expression+");\n");
+				result.append("}\n");
+			}
+		}
+		else
+		{
+			logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+		}
+	}
+
 	/**
 	 * 
 	 * @param sourceWriter
@@ -598,7 +653,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private void generateProcessAttributesMethod(SourceWriter sourceWriter)
 	{
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processAttributes("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processAttributes("+widgetFactoryContextType.getQualifiedSourceName()
 		         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.indent();
 		sourceWriter.println("super.processAttributes(context);");
@@ -638,6 +693,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 				if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs >= 1)
 				{
+					source.append(this.factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" rootWidget = c.getRootWidget();\n");
 					boolean hasChildElement = true;
 					if (allowedChildren.maxOccurs == 1)
 					{
@@ -725,7 +781,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		StringBuilder result = new StringBuilder();
 		
-		JMethod method = factoryClass.findMethod("processEvents", new JType[]{factoryHelper.getWidgetFactoryContextType()});
+		JMethod method = factoryClass.findMethod("processEvents", new JType[]{widgetFactoryContextType});
 		if (method != null)
 		{
 			TagEvents evts = method.getAnnotation(TagEvents.class);
@@ -793,7 +849,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		Map<String, String> evtBinderVariables = new HashMap<String, String>();
 		
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processEvents("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processEvents("+widgetFactoryContextType.getQualifiedSourceName()
 				         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processEvents(context);");
 		String eventsBlock = generateProcessEventsBlock(factoryHelper.getFactoryClass(), evtBinderVariables);
@@ -882,11 +938,11 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        
 	        if (processorAttributes.widgetProperty().length() > 0)
 	        {
-	        	return "if (child.length() > 0) c.getRootWidget()."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(child);";
+	        	return "if (child.length() > 0) rootWidget."+ClassUtils.getSetterMethod(processorAttributes.widgetProperty())+"(child);";
 	        }
 	        else if (hasTextType.isAssignableFrom(factoryHelper.getWidgetType()))
 	        {
-	        	return "if (child.length() > 0) c.getRootWidget().setText(child);";
+	        	return "if (child.length() > 0) rootWidget.setText(child);";
 	        	
 	        }
 	        return "";
@@ -907,10 +963,10 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			Map<String, String> methodsForInnerProcessing, Map<String, String> processorVariables) 
 	{
 		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, method, processorVariables);
-        String contextDeclaration = factoryHelper.getWidgetChildProcessorContextType().getParameterizedQualifiedSourceName();
+        String contextDeclaration = widgetChildProcessorContextType.getParameterizedQualifiedSourceName();
 
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processChildren("+factoryHelper.getWidgetFactoryContextType().getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processChildren("+widgetFactoryContextType.getParameterizedQualifiedSourceName()
 				               +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processChildren(context);");
 		if (childrenProcessorMethodName != null)
@@ -982,7 +1038,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
 
-				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{factoryHelper.getWidgetChildProcessorContextType()});
+				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{widgetChildProcessorContextType});
 				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{

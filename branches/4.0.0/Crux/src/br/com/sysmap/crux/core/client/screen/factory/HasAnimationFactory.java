@@ -31,5 +31,5 @@ public interface HasAnimationFactory<T extends HasAnimation>
 	@TagAttributes({
 		@TagAttribute(value="animationEnabled", type=Boolean.class)
 	})	
-	void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
 }

@@ -36,5 +36,5 @@ public interface HasAllKeyHandlersFactory<T extends HasAllKeyHandlers>
 		@TagEvent(KeyPressEvtBind.class),
 		@TagEvent(KeyDownEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

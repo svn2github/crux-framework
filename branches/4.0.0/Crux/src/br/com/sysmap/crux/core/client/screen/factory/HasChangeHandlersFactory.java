@@ -32,5 +32,5 @@ public interface HasChangeHandlersFactory<T extends HasChangeHandlers>
 	@TagEvents({
 		@TagEvent(ChangeEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

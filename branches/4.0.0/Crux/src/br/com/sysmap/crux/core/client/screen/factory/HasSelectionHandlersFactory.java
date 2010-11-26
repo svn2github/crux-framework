@@ -32,5 +32,5 @@ public interface HasSelectionHandlersFactory<T extends HasSelectionHandlers<?>>
 	@TagEvents({
 		@TagEvent(SelectionEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

@@ -32,5 +32,5 @@ public interface HasClickHandlersFactory<T extends HasClickHandlers>
 	@TagEvents({
 		@TagEvent(ClickEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

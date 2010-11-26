@@ -32,5 +32,5 @@ public interface HasOpenHandlersFactory<T extends HasOpenHandlers<?>>
 	@TagEvents({
 		@TagEvent(OpenEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

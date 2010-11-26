@@ -32,5 +32,5 @@ public interface HasHighlightHandlersFactory<T extends HasHighlightHandlers<?>>
 	@TagEvents({
 		@TagEvent(HighlightEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

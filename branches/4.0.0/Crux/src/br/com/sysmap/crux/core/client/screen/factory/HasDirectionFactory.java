@@ -32,5 +32,5 @@ public interface HasDirectionFactory<T extends HasDirection>
 	@TagAttributes({
 		@TagAttribute(value="direction", type=Direction.class)
 	})	
-	void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
 }

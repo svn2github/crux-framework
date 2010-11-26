@@ -22,20 +22,21 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class WidgetChildProcessorContext<W>
+public class WidgetChildProcessorContext
 {
 	private CruxMetaDataElement childElement;
 	
-	private WidgetFactoryContext<W> context;
+	private WidgetFactoryContext context;
 	
-	public WidgetChildProcessorContext(WidgetFactoryContext<W> context)
+	public WidgetChildProcessorContext(WidgetFactoryContext context)
 	{
 		this.context = context;
 	}
 
-	public W getRootWidget()
+	@SuppressWarnings("unchecked")
+	public <W> W getRootWidget()
 	{
-		return context.getWidget();
+		return (W) context.getWidget();
 	}
 
 	public CruxMetaDataElement getRootElement()

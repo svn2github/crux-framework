@@ -32,5 +32,5 @@ public interface HasShowRangeHandlersFactory<T extends HasShowRangeHandlers<?>>
 	@TagEvents({
 		@TagEvent(ShowRangeEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

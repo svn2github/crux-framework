@@ -34,5 +34,5 @@ public interface HasAllFocusHandlersFactory<T extends HasAllFocusHandlers>
 		@TagEvent(FocusEvtBind.class),
 		@TagEvent(BlurEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

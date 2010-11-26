@@ -17,6 +17,7 @@ package br.com.sysmap.crux.core.rebind.widget;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
+import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -25,9 +26,7 @@ import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 
 /**
@@ -50,15 +49,8 @@ public class WidgetFactoryHelper
     {
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
-
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaDataElement.class.getCanonicalName());
-		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-		
-		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
-				new JType[]{cruxMetaDataType, stringType, JPrimitiveType.BOOLEAN});
-
-		JGenericType type = (JGenericType) factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
-		this.widgetChildProcessorContextType = factoryClass.getOracle().getParameterizedType(type, new JClassType[]{widgetType});
+		this.widgetFactoryContextType = factoryClass.getOracle().findType(WidgetFactoryContext.class.getCanonicalName());
+		this.widgetChildProcessorContextType = factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
     }
 
 	/**
@@ -81,23 +73,6 @@ public class WidgetFactoryHelper
 			return null;
 		}
 	}
-	
-	
-	/**
-	 * @return
-	 */
-	public JClassType getWidgetChildProcessorContextType()
-    {
-    	return widgetChildProcessorContextType;
-    }
-
-	/**
-	 * @return
-	 */
-	public JClassType getWidgetFactoryContextType()
-    {
-    	return widgetFactoryContextType;
-    }
 
 	/**
 	 * @return
@@ -123,7 +98,7 @@ public class WidgetFactoryHelper
 	 */
 	public JMethod getChildProcessorMethod(JClassType childProcessor)
     {
-	    JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{getWidgetChildProcessorContextType()});
+	    JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{widgetChildProcessorContextType});
 	    return processorMethod;
     }
 
@@ -132,7 +107,7 @@ public class WidgetFactoryHelper
 	 */
 	public JMethod getProcessChildrenMethod()
     {
-		JMethod processorMethod = ClassUtils.getMethod(getFactoryClass(), "processChildren", new JType[]{getWidgetFactoryContextType()});
+		JMethod processorMethod = ClassUtils.getMethod(getFactoryClass(), "processChildren", new JType[]{widgetFactoryContextType});
 	    return processorMethod;
     }
 	

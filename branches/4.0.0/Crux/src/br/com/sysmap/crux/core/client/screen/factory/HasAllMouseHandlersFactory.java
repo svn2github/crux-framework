@@ -42,5 +42,5 @@ public interface HasAllMouseHandlersFactory<T extends HasAllMouseHandlers>
 		@TagEvent(MouseMoveEvtBind.class),
 		@TagEvent(MouseWheelEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

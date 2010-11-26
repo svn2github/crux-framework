@@ -31,5 +31,5 @@ public interface HasNameFactory<T extends HasName>
 	@TagAttributes({
 		@TagAttribute("name")
 	})	
-	void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
 }

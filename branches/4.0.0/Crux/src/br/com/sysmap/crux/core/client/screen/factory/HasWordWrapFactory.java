@@ -31,5 +31,5 @@ public interface HasWordWrapFactory<T extends HasWordWrap>
 	@TagAttributes({
 		@TagAttribute(value="wordWrap", type=Boolean.class)
 	})	
-	void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
 }

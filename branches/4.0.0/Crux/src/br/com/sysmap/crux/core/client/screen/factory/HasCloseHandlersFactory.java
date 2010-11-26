@@ -32,5 +32,5 @@ public interface HasCloseHandlersFactory<T extends HasCloseHandlers<?>>
 	@TagEvents({
 		@TagEvent(CloseEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

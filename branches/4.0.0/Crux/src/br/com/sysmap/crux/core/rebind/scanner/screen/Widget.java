@@ -25,9 +25,7 @@ import java.util.Map;
  */
 public class Widget
 {
-	protected String dataSource;
 	protected Map<String, Event> events = new HashMap<String, Event>();
-	protected String formatter;
 	protected String id;
 	protected Widget parent = null;
 
@@ -53,20 +51,10 @@ public class Widget
     	String compId2 = ((Widget)obj).getId();
     	return (compId1 == null?compId2==null:compId1.equals(compId2));
     }
-
-	public String getDataSource()
-	{
-		return dataSource;
-	}
 	
 	public Event getEvent(String evtId)
 	{
 		return events.get(evtId);
-	}
-	
-	public String getFormatter() 
-	{
-		return formatter;
 	}
 	
 	public String getId() 
@@ -110,16 +98,6 @@ public class Widget
 	public Iterator<String> iteratePropertyNames()
 	{
 		return properties.keySet().iterator();
-	}
-
-	public void setDataSource(String dataSource)
-	{
-		this.dataSource = dataSource;
-	}
-
-	public void setFormatter(String formatter) 
-	{
-		this.formatter = formatter;
 	}
 
 	protected void addEvent(Event event)

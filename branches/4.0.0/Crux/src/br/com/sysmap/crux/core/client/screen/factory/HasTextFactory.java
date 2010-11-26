@@ -31,5 +31,5 @@ public interface HasTextFactory<T extends HasText>
 	@TagAttributes({
 		@TagAttribute(value="text", supportsI18N=true)
 	})	
-	void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
 }

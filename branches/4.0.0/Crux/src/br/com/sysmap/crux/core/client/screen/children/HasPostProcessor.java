@@ -25,5 +25,5 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
  */
 public interface HasPostProcessor<T extends Widget>
 {
-	void postProcessChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException;
+	void postProcessChildren(WidgetChildProcessorContext context) throws InterfaceConfigException;
 }

@@ -302,7 +302,7 @@ public class ScreenFactory
 	 * Adds an event handler that is called only once, when the screen is loaded
 	 * @param handler
 	 */
-	protected void addLoadHandler(final ScreenLoadHandler handler) 
+	public void addLoadHandler(final ScreenLoadHandler handler) 
 	{
 		assert(currentParserInfo != null);
 		currentParserInfo.addLoadHandler(ScreenLoadEvent.TYPE, handler);

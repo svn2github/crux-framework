@@ -32,5 +32,5 @@ public interface HasScrollHandlersFactory<T extends HasScrollHandlers>
 	@TagEvents({
 		@TagEvent(ScrollEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException;
+	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
 }

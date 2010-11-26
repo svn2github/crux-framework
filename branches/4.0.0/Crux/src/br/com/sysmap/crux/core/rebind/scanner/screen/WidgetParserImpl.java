@@ -123,14 +123,6 @@ public class WidgetParserImpl implements WidgetParser
 			{
 				setEvent(widget, attrName, elem.getString(attrName));
 			}
-			else if (attrName.equalsIgnoreCase("formatter"))
-			{
-				widget.setFormatter(elem.getString(attrName));
-			}
-			else if (attrName.equalsIgnoreCase("datasource"))
-			{
-				widget.setDataSource(elem.getString(attrName));
-			}
 			else
 			{
 				widget.addProperty(attrName, elem.getString(attrName));

@@ -22,18 +22,16 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
+import br.com.sysmap.crux.core.client.declarative.TagEvent;
+import br.com.sysmap.crux.core.client.declarative.TagEvents;
+import br.com.sysmap.crux.core.client.event.bind.AttachEvtBind;
+import br.com.sysmap.crux.core.client.event.bind.DettachEvtBind;
+import br.com.sysmap.crux.core.client.event.bind.LoadWidgetEvtBind;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -227,16 +225,17 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
+	@SuppressWarnings("unchecked")
 	public T createWidget(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
-		WidgetFactoryContext<T> context = createContext(metaElem, widgetId, addToScreen);
+		WidgetFactoryContext context = createContext(metaElem, widgetId, addToScreen);
 		if (context != null)
 		{
 			processAttributes(context);
 			processEvents(context);
 			processChildren(context);
 			postProcess(context);
-			return context.getWidget();
+			return (T)context.getWidget();
 		}
 		return null;
 	}
@@ -250,7 +249,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param widgetId
 	 * @throws InterfaceConfigException 
 	 */
-	public void postProcess(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void postProcess(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
@@ -260,36 +259,38 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @throws InterfaceConfigException 
 	 */
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="id", required=true),
-		@TagAttributeDeclaration("style"),
-		@TagAttributeDeclaration(value="tooltip", supportsI18N=true)
+		@TagAttributeDeclaration(value="id", required=true)
 	})
 	@TagAttributes({
 		@TagAttribute("width"),
 		@TagAttribute("height"),
 		@TagAttribute("styleName"),
-		@TagAttribute(value="visible", type=Boolean.class)
+		@TagAttribute(value="visible", type=Boolean.class),
+		@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
+		@TagAttribute(value="style", parser=StyleProcessor.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
-		T widget = context.getWidget();
-		String style = context.readWidgetProperty("style");
-		if (style != null && style.length() > 0)
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class StyleProcessor implements AttributeParser
+	{
+		public void processAttribute(WidgetFactoryContext context, String style)
 		{
 			String[] styleAttributes = style.split(";");
+			Element element = context.getWidget().getElement();
 			for (int i=0; i<styleAttributes.length; i++)
 			{
 				String[] attr = styleAttributes[i].split(":");
 				if (attr != null && attr.length == 2)
 				{
-					StyleUtils.addStyleProperty(widget.getElement(), attr[0], attr[1]);
+					StyleUtils.addStyleProperty(element, attr[0], attr[1]);
 				}
 			}
-		}
-		String tooltip = context.readWidgetProperty("tooltip");
-		if (tooltip != null && tooltip.length() > 0)
-		{
-			widget.setTitle(ScreenFactory.getInstance().getDeclaredMessage(tooltip));
 		}
 	}
 	
@@ -300,7 +301,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param widgetId
 	 * @throws InterfaceConfigException 
 	 */
-	public void processChildren(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
@@ -309,44 +310,13 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param element page DOM element representing the widget (Its &lt;span&gt; tag)
 	 * @throws InterfaceConfigException
 	 */
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadWidget"),
-		@TagEventDeclaration("onAttach"),
-		@TagEventDeclaration("onDettach")
-	})//TODO colocar eventbind para esses eventos, para usar tagEvents que gera codigo mais eficiente
-	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	@TagEvents({
+		@TagEvent(LoadWidgetEvtBind.class),
+		@TagEvent(AttachEvtBind.class),
+		@TagEvent(DettachEvtBind.class)
+	})
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
-		CruxMetaDataElement element = context.getElement();
-		final Event eventLoad = EvtBind.getWidgetEvent(element, "onLoadWidget");
-		if (eventLoad != null)
-		{
-			addScreenLoadedHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent event)
-				{
-					Events.callEvent(eventLoad, event);
-				}
-			});
-		}
-		final Event eventAttach = EvtBind.getWidgetEvent(element, "onAttach");
-		final Event eventDettach = EvtBind.getWidgetEvent(element, "onDettach");
-		if (eventAttach != null || eventDettach != null)
-		{
-			context.getWidget().addAttachHandler(new Handler()
-			{
-				public void onAttachOrDetach(AttachEvent event)
-				{
-					if (event.isAttached())
-					{
-						if (eventAttach != null) Events.callEvent(eventAttach, event);
-					}
-					else
-					{
-						if (eventDettach != null) Events.callEvent(eventDettach, event);
-					}
-				}
-			});
-		}
 	}
 	
 	/**
@@ -375,7 +345,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected WidgetFactoryContext<T> createContext(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	protected WidgetFactoryContext createContext(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
 		T widget = instantiateWidget(metaElem, widgetId);
 		if (widget != null)
@@ -388,7 +358,7 @@ public abstract class WidgetFactory <T extends Widget>
 			{
 				updateWidgetElementId(widgetId, widget);
 			}
-			return new WidgetFactoryContext<T>(widget, metaElem, widgetId);
+			return new WidgetFactoryContext(widget, metaElem, widgetId);
 		}
 		return null;
 	}
@@ -421,16 +391,15 @@ public abstract class WidgetFactory <T extends Widget>
 	 * 
 	 * @author Thiago da Rosa de Bustamante
 	 *
-	 * @param <W>
 	 */
-	public static class WidgetFactoryContext<W>
+	public static class WidgetFactoryContext
 	{
 		private FastMap<Object> attributes;
 		private CruxMetaDataElement element;
-		private W widget;
+		private Widget widget;
 		private String widgetId;
 		
-		WidgetFactoryContext(W widget, CruxMetaDataElement metaElem, String widgetId)
+		WidgetFactoryContext(Widget widget, CruxMetaDataElement metaElem, String widgetId)
 		{
 			this.widget = widget;
 			this.element = metaElem;
@@ -454,9 +423,10 @@ public abstract class WidgetFactory <T extends Widget>
 		{
 			return element;
 		}
-		public W getWidget()
+		@SuppressWarnings("unchecked")
+		public <W extends Widget> W getWidget()
 		{
-			return widget;
+			return (W) widget;
 		}
 		public String getWidgetId()
 		{

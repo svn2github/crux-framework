@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WidgetChildProcessor<T extends Widget>
 {
-	public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException{}
+	public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException{}
 	
 	public static class AnyWidget{}
 	public static class AnyTag{}
