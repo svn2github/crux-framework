@@ -41,15 +41,16 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="visibleStack", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException 
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 		
-		final T widget = context.getWidget();
+		final T widget = (T)context.getWidget();
 
 		final String visibleStack = context.readWidgetProperty("visibleStack");
 		if (visibleStack != null && visibleStack.length() > 0)
@@ -68,7 +69,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	public abstract static class AbstractTitleTextProcessor<T extends StackPanel> extends WidgetChildProcessor<T>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute(KEY_TITLE, ensureTextChild(context.getChildElement(), true));
 			context.setAttribute(KEY_IS_HTML, false);
@@ -79,7 +80,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	public abstract static class AbstractTitleHTMLProcessor<T extends StackPanel> extends WidgetChildProcessor<T>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute(KEY_TITLE, ensureHtmlChild(context.getChildElement(), true));
 			context.setAttribute(KEY_IS_HTML, true);
@@ -89,26 +90,28 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	@TagChildAttributes(minOccurs="0", type=AnyWidget.class)
 	public abstract static class AbstractContentWidgetProcessor<T extends StackPanel> extends WidgetChildProcessor<T> 
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Widget child = createChildWidget(context.getChildElement());
+			T widget = (T)context.getRootWidget();
 			
 			String title = (String)context.getAttribute(KEY_TITLE);
 			if (title == null)
 			{
-				context.getRootWidget().add(child);
+				widget.add(child);
 			}
 			else
 			{
 				Boolean isHtml = (Boolean)context.getAttribute(KEY_IS_HTML);
 				if (isHtml == null)
 				{
-					context.getRootWidget().add(child, title);
+					widget.add(child, title);
 				}
 				else
 				{
-					context.getRootWidget().add(child, title, isHtml);
+					widget.add(child, title, isHtml);
 				}
 			}
 			context.setAttribute(KEY_TITLE, null);

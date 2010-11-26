@@ -36,7 +36,7 @@ public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
 	@TagChildren({
 		@TagChild(ListBoxItemsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<ListBox> context) throws InterfaceConfigException {}	
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}	
 	
 	public static class ListBoxItemsProcessor extends ItemsProcessor<ListBox>
 	{		
@@ -46,7 +46,7 @@ public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="multiple", type=Boolean.class)
 	})
-	public void processAttributes(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext<ListBox> context) throws InterfaceConfigException
+	public void processAttributes(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

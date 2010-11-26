@@ -55,7 +55,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 	})
-	public void processAttributes(WidgetFactoryContext<DockPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
@@ -77,7 +77,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 	@TagChildren({
 		@TagChild(DockPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<DockPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
 	public static class DockPanelProcessor extends AbstractCellPanelProcessor<DockPanel> 
@@ -87,7 +87,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 			@TagChild(DockCellProcessor.class),
 			@TagChild(DockWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 			context.setAttribute("direction", "center");
@@ -104,7 +104,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@TagChildren({
 			@TagChild(value=DockWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 
@@ -123,7 +123,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
 
 		@Override
-		public void processChildren(WidgetChildProcessorContext<DockPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			CruxMetaDataElement childElement = context.getChildElement();
 			Widget child = createChildWidget(childElement);

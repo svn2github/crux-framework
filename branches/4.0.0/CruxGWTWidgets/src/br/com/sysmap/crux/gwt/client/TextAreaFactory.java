@@ -44,7 +44,7 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 		@TagAttribute(value="characterWidth", type=Integer.class),
 		@TagAttribute(value="visibleLines", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<TextArea> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 	@TagChildren({
 		@TagChild(InnerTextProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<TextArea> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

@@ -50,7 +50,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class, defaultValue="PX")
 	})
-	public void processAttributes(WidgetFactoryContext<StackLayoutPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<StackLayoutPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processChildren(context);
 	}
@@ -75,7 +75,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="selected", type=Boolean.class, defaultValue="false")
 		})
-		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.clearAttributes();
 			String selected = context.readChildProperty("selected");
@@ -96,7 +96,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="size", type=Double.class, required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("headerSize", Double.parseDouble(context.readChildProperty("size")));
 		}
@@ -106,7 +106,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget childWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("header", childWidget);
@@ -120,24 +120,25 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@TagChildren({
 			@TagChild(StackContentWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<StackLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget contentWidget = createChildWidget(context.getChildElement());
 			Widget headerWidget = (Widget) context.getAttribute("header");
 			Double headerSize = (Double) context.getAttribute("headerSize");
-			context.getRootWidget().add(contentWidget, headerWidget, headerSize);
+			StackLayoutPanel rootWidget = context.getRootWidget();
+			rootWidget.add(contentWidget, headerWidget, headerSize);
 
 			Boolean selected = (Boolean) context.getAttribute("selected");
 			if (selected != null && selected)
 			{
-				context.getRootWidget().showWidget(contentWidget);
+				rootWidget.showWidget(contentWidget);
 			}
 		}
 	}

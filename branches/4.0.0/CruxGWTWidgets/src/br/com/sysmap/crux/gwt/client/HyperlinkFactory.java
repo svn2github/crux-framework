@@ -45,7 +45,7 @@ public class HyperlinkFactory extends WidgetFactory<Hyperlink>
 	@TagAttributes({
 		@TagAttribute("targetHistoryToken")
 	})
-	public void processAttributes(WidgetFactoryContext<Hyperlink> context) throws InterfaceConfigException 
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 		
@@ -72,7 +72,7 @@ public class HyperlinkFactory extends WidgetFactory<Hyperlink>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<Hyperlink> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

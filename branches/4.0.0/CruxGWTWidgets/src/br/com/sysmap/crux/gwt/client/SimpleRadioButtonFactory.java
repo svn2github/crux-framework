@@ -36,7 +36,7 @@ public class SimpleRadioButtonFactory extends FocusWidgetFactory<SimpleRadioButt
 	@TagAttributes({
 		@TagAttribute(value="checked", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<SimpleRadioButton> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

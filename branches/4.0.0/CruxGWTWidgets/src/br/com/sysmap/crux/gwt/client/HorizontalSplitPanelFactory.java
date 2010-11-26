@@ -44,7 +44,7 @@ public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPan
 		@TagChild(LeftProcessor.class),
 		@TagChild(RightProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<HorizontalSplitPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="left", minOccurs="0")
 	public static class LeftProcessor extends WidgetChildProcessor<HorizontalSplitPanel>
@@ -53,7 +53,7 @@ public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPan
 		@TagChildren({
 			@TagChild(LeftWidgeProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<HorizontalSplitPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="right", minOccurs="0")
@@ -63,7 +63,7 @@ public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPan
 		@TagChildren({
 			@TagChild(RightWidgeProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<HorizontalSplitPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="leftWidget")

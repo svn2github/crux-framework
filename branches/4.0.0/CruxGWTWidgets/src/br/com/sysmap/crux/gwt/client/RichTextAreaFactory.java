@@ -64,7 +64,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 		@TagAttributeDeclaration(value="underline", type=Boolean.class),
 		@TagAttributeDeclaration(value="strikethrough", type=Boolean.class)
 	})
-	public void processAttributes(final WidgetFactoryContext<RichTextArea> context) throws InterfaceConfigException 
+	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 		
@@ -98,7 +98,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 	 * to initialise the basic formatter. It will be done by method initBasicFormatterOptions
 	 * @param element
 	 */
-	protected FastMap<String> readDeclaredProperties(WidgetFactoryContext<RichTextArea> context)
+	protected FastMap<String> readDeclaredProperties(WidgetFactoryContext context)
 	{
 		FastMap<String> declaredProperties = new FastMap<String>();
 		String backColor = context.readWidgetProperty("backColor");
@@ -261,7 +261,7 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<RichTextArea> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

@@ -43,7 +43,7 @@ public class SubmitButtonFactory extends ButtonBaseFactory<SubmitButton>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<SubmitButton> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

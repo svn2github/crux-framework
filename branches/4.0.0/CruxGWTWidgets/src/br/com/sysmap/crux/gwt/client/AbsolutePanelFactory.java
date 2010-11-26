@@ -48,7 +48,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 	@TagChildren({
 		@TagChild(AbsoluteChildrenProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<AbsolutePanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}	
 	
@@ -63,7 +63,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 		@TagChildren({
 			@TagChild(AbsoluteWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<AbsolutePanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String left = context.readChildProperty("left");
 			String top = context.readChildProperty("top");
@@ -76,7 +76,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<AbsolutePanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String left = (String) context.getAttribute("left");
 			String top = (String) context.getAttribute("top");

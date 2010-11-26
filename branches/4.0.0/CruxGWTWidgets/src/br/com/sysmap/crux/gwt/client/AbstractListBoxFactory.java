@@ -38,7 +38,7 @@ public abstract class AbstractListBoxFactory<T extends ListBox> extends FocusWid
 	@TagAttributes({
 		@TagAttribute(value="visibleItemCount", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context); 
 	}
@@ -46,13 +46,14 @@ public abstract class AbstractListBoxFactory<T extends ListBox> extends FocusWid
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	public abstract static class ItemsProcessor<T extends ListBox> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("value"),
 			@TagAttributeDeclaration("label"),
 			@TagAttributeDeclaration(value="selected", type=Boolean.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Integer index = (Integer) context.getAttribute("index");
 			if (index == null)
@@ -72,12 +73,13 @@ public abstract class AbstractListBoxFactory<T extends ListBox> extends FocusWid
 			{
 				value = label;
 			}
-			context.getRootWidget().insertItem(label, value, index);
+			T widget = (T)context.getRootWidget();
+			widget.insertItem(label, value, index);
 
 			String selected = context.readChildProperty("selected");
 			if (selected != null && selected.trim().length() > 0)
 			{
-				context.getRootWidget().setItemSelected(index, Boolean.parseBoolean(selected));
+				widget.setItemSelected(index, Boolean.parseBoolean(selected));
 			}
 			context.setAttribute("index", (index+1));
 		}

@@ -44,7 +44,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<TabPanel> context) throws InterfaceConfigException 
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 	}
 	
@@ -54,7 +54,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
@@ -70,7 +70,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<TabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 		
 	}
 	
@@ -85,7 +85,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor<TabPanel> {}
@@ -97,7 +97,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetContentProcessor extends AbstractWidgetContentProcessor<TabPanel> {}	

@@ -41,12 +41,13 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 	 * Render component attributes
 	 * @throws InterfaceConfigException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
-		T widget = context.getWidget();
+		T widget = (T)context.getWidget();
 		
 		String text = context.readWidgetProperty("text");
 		if (text == null || text.length() ==0)
@@ -62,60 +63,72 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 	@TagChildAttributes(tagName="up")
 	abstract static class AbstractUpFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getUpFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getUpFace());
 		}
 	}
 	
 	@TagChildAttributes(tagName="upDisabled")
 	abstract static class AbstractUpDisabledFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getUpDisabledFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getUpDisabledFace());
 		}
 	}
 
 	@TagChildAttributes(tagName="upHovering")
 	abstract static class AbstractUpHoveringFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getUpHoveringFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getUpHoveringFace());
 		}
 	}
 
 	@TagChildAttributes(tagName="down")
 	abstract static class AbstractDownFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getDownFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getDownFace());
 		}
 	}
 	
 	@TagChildAttributes(tagName="downDisabled")
 	abstract static class AbstractDownDisabledFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getDownDisabledFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getDownDisabledFace());
 		}
 	}
 
 	@TagChildAttributes(tagName="downHovering")
 	abstract static class AbstractDownHoveringFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("face", context.getRootWidget().getDownHoveringFace());
+			W widget = (W)context.getRootWidget();
+			context.setAttribute("face", widget.getDownHoveringFace());
 		}
 	}
 	
@@ -126,7 +139,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="value", required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Face face = (Face)context.getAttribute("face");
 			face.setText(context.readChildProperty("value"));
@@ -137,7 +150,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 	abstract static class AbstractHTMLFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Face face = (Face)context.getAttribute("face");
 			face.setText(ensureTextChild(context.getChildElement(), true));
@@ -155,7 +168,7 @@ public abstract class CustomButtonFactory<T extends CustomButton> extends FocusW
 			@TagAttributeDeclaration(value="width", type=Integer.class),
 			@TagAttributeDeclaration(value="height", type=Integer.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Face face = (Face)context.getAttribute("face");
 			String leftStr = context.readChildProperty("left");

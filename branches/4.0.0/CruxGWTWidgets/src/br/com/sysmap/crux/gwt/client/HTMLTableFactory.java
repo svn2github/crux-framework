@@ -50,7 +50,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 		@TagAttribute(value="cellPadding",type=Integer.class),
 		@TagAttribute(value="cellSpacing",type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -58,13 +58,14 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	public static class TableRowProcessor<T extends HTMLTable> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("styleName"),
 			@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			int index;
 			
@@ -81,7 +82,8 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 			try
 			{
 				String styleName = context.readChildProperty("styleName");
-				RowFormatter rowFormatter = context.getRootWidget().getRowFormatter();
+				T rootWidget = (T)context.getRootWidget();
+				RowFormatter rowFormatter = rootWidget.getRowFormatter();
 				if (styleName != null && styleName.length() > 0)
 				{
 					rowFormatter.setStyleName(index, styleName);
@@ -117,7 +119,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			HTMLTable widget = context.getRootWidget();
 
@@ -186,12 +188,14 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 	@TagChildAttributes(tagName="text", type=String.class)
 	public static abstract class CellTextProcessor<T extends HTMLTable> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setText(indexRow.intValue(), indexCol.intValue(), 
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setText(indexRow.intValue(), indexCol.intValue(), 
 					ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true)));
 		}
 	}
@@ -199,12 +203,14 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class CellHTMLProcessor<T extends HTMLTable> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setHTML(indexRow.intValue(), indexCol.intValue(), ensureHtmlChild(context.getChildElement(), true));
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setHTML(indexRow.intValue(), indexCol.intValue(), ensureHtmlChild(context.getChildElement(), true));
 		}
 	}
 	
@@ -214,12 +220,14 @@ public abstract class HTMLTableFactory <T extends HTMLTable> extends PanelFactor
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetProcessor<T extends HTMLTable> extends WidgetChildProcessor<T> 
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
 			Integer indexCol = (Integer) context.getAttribute("colIndex");
-			context.getRootWidget().setWidget(indexRow.intValue(), indexCol.intValue(), createChildWidget(context.getChildElement()));
+			T rootWidget = (T)context.getRootWidget();
+			rootWidget.setWidget(indexRow.intValue(), indexCol.intValue(), createChildWidget(context.getChildElement()));
 		}
 	}
 }

@@ -55,7 +55,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -75,7 +75,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 		@TagEvent(MouseMoveEvtBind.class),
 		@TagEvent(MouseWheelEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

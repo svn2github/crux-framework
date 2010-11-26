@@ -54,7 +54,7 @@ public class SuggestBoxFactory extends CompositeFactory<SuggestBox>
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute("value")
 	})
-	public void processAttributes(WidgetFactoryContext<SuggestBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -78,7 +78,7 @@ public class SuggestBoxFactory extends CompositeFactory<SuggestBox>
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadOracle")
 	})
-	public void processEvents(WidgetFactoryContext<SuggestBox> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);		
 	}

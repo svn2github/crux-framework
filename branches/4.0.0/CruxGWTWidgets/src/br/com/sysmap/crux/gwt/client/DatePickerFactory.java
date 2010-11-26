@@ -40,7 +40,7 @@ public class DatePickerFactory extends CompositeFactory<DatePicker>
 		@TagAttributeDeclaration(value="value", type=String.class),
 		@TagAttributeDeclaration(value="datePattern")
 	})
-	public void processAttributes(WidgetFactoryContext<DatePicker> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		

@@ -39,6 +39,7 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 	 * process widget attributes
 	 * @throws InterfaceConfigException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="checked", type=Boolean.class)
@@ -46,11 +47,11 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 	@TagAttributes({
 		@TagAttribute("formValue")	
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
-		T widget = context.getWidget();
+		T widget = (T)context.getWidget();
 
 		String checked = context.readWidgetProperty("checked");
 		if (checked != null && checked.trim().length() > 0)

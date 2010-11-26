@@ -61,7 +61,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("headerText")
 	})
-	public void processAttributes(WidgetFactoryContext<DisclosurePanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -71,7 +71,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 		@TagChild(HeaderProcessor.class),
 		@TagChild(ContentProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<DisclosurePanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 
 	@TagChildAttributes(minOccurs="0", tagName="widgetHeader")
 	public static class HeaderProcessor extends WidgetChildProcessor<DisclosurePanel> 
@@ -80,7 +80,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 		@TagChildren({
 			@TagChild(WidgetHeaderProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<DisclosurePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 		
 	@TagChildAttributes(minOccurs="0", tagName="widgetContent")
@@ -90,7 +90,7 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<DisclosurePanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="content")

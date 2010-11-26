@@ -51,7 +51,7 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 	@TagChildren({
 		@TagChild(SplitLayoutPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<SplitLayoutPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	public static class SplitLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<SplitLayoutPanel>
 	{
@@ -62,7 +62,7 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 		@TagChildren({
 			@TagChild(SplitLayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<SplitLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			context.setAttribute("minSize", context.readChildProperty("minSize"));
 			super.processChildren(context);
@@ -73,7 +73,7 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		protected void processAnimatedChild(final WidgetChildProcessorContext<SplitLayoutPanel> context, final Widget childWidget,
+		protected void processAnimatedChild(final WidgetChildProcessorContext context, final Widget childWidget,
 				                            final Direction direction, final double size)
 		{
 			List<Command> animationConstraints = (List<Command>) context.getAttribute("animationCommands");
@@ -87,12 +87,12 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 		}
 		
 		@Override
-		protected void processChild(WidgetChildProcessorContext<SplitLayoutPanel> context, Widget childWidget, Direction direction, double size)
+		protected void processChild(WidgetChildProcessorContext context, Widget childWidget, Direction direction, double size)
 		{
 			processChild(context, childWidget, direction, size, (String) context.getAttribute("minSize"));
 		}
 
-		protected void processChild(final WidgetChildProcessorContext<SplitLayoutPanel> context, final Widget childWidget, Direction direction, double size, final String minSize)
+		protected void processChild(final WidgetChildProcessorContext context, final Widget childWidget, Direction direction, double size, final String minSize)
 		{
 			super.processChild(context, childWidget, direction, size);
 			if (!StringUtils.isEmpty(minSize))
@@ -100,7 +100,8 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 				Scheduler.get().scheduleDeferred(new ScheduledCommand(){
 					public void execute()
 					{
-						context.getRootWidget().setWidgetMinSize(childWidget, Integer.parseInt(minSize));
+						SplitLayoutPanel rootWidget = context.getRootWidget();
+						rootWidget.setWidgetMinSize(childWidget, Integer.parseInt(minSize));
 					}
 				});
 			}

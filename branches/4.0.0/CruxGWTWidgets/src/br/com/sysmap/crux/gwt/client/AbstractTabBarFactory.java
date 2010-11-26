@@ -46,15 +46,16 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeFactory<T> 
        implements HasBeforeSelectionHandlersFactory<T>, HasSelectionHandlersFactory<T>
 {
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="visibleTab", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 				
-		final T widget = context.getWidget();
+		final T widget = (T)context.getWidget();
 
 		final String visibleTab = context.readWidgetProperty("visibleTab");
 		if (visibleTab != null && visibleTab.length() > 0)
@@ -83,7 +84,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 			@TagEventDeclaration("onKeyDown"),
 			@TagEventDeclaration("onKeyPress")
 		})
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			context.setAttribute("tabElement", context.getChildElement());
 		}
@@ -92,11 +93,13 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	@TagChildAttributes(tagName="text", type=String.class)
 	public abstract static class AbstractTextTabProcessor<T extends TabBar> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ensureTextChild(context.getChildElement(), true);
-			context.getRootWidget().addTab(title);
+			T widget = (T)context.getRootWidget();
+			widget.addTab(title);
 			updateTabState(context);
 		}
 	}
@@ -104,11 +107,13 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public abstract static class AbstractHTMLTabProcessor<T extends TabBar> extends WidgetChildProcessor<T>
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ensureHtmlChild(context.getChildElement(), true);
-			context.getRootWidget().addTab(title, true);
+			T widget = (T)context.getRootWidget();
+			widget.addTab(title, true);
 			updateTabState(context);
 		}
 	}
@@ -116,26 +121,30 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	@TagChildAttributes(type=AnyWidget.class)
 	public abstract static class AbstractWidgetProcessor<T extends TabBar> extends WidgetChildProcessor<T> 
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget titleWidget = createChildWidget(context.getChildElement());
-			context.getRootWidget().addTab(titleWidget);
+			T widget = (T)context.getRootWidget();
+			widget.addTab(titleWidget);
 			updateTabState(context);
 		}
 	}
 	
-	private static <T extends TabBar> void updateTabState(WidgetChildProcessorContext<T> context)
+	@SuppressWarnings("unchecked")
+	private static <T extends TabBar> void updateTabState(WidgetChildProcessorContext context)
 	{
 		CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
 		String enabled = tabElement.getProperty("enabled");
-		int tabCount = context.getRootWidget().getTabCount();
+		T widget = (T)context.getRootWidget();
+		int tabCount = widget.getTabCount();
 		if (enabled != null && enabled.length() >0)
 		{
-			context.getRootWidget().setTabEnabled(tabCount-1, Boolean.parseBoolean(enabled));
+			widget.setTabEnabled(tabCount-1, Boolean.parseBoolean(enabled));
 		}
 
-		Tab currentTab = context.getRootWidget().getTab(tabCount-1);
+		Tab currentTab = widget.getTab(tabCount-1);
 
 		String wordWrap = tabElement.getProperty("wordWrap");
 		if (wordWrap != null && wordWrap.trim().length() > 0)

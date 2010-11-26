@@ -52,7 +52,7 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<FlexTable> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	public static class GridRowProcessor extends TableRowProcessor<FlexTable>
@@ -61,10 +61,11 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<FlexTable> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			int r = context.getRootWidget().getRowCount();
-			context.getRootWidget().insertRow(r);
+			FlexTable widget = context.getRootWidget();
+			int r = widget.getRowCount();
+			widget.insertRow(r);
 			super.processChildren(context);
 		}
 	}
@@ -80,10 +81,11 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<FlexTable> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
+			FlexTable widget = context.getRootWidget();
 			Integer indexRow = (Integer) context.getAttribute("rowIndex");
-			context.getRootWidget().addCell(indexRow);
+			widget.addCell(indexRow);
 			
 			super.processChildren(context);
 
@@ -91,14 +93,14 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 			if(colspan != null && colspan.length() > 0)
 			{
 				Integer indexCol = (Integer) context.getAttribute("colIndex");
-				context.getRootWidget().getFlexCellFormatter().setColSpan(indexRow, indexCol, Integer.parseInt(colspan));
+				widget.getFlexCellFormatter().setColSpan(indexRow, indexCol, Integer.parseInt(colspan));
 			}
 			
 			String rowSpan = context.readChildProperty("rowSpan");
 			if(rowSpan != null && rowSpan.length() > 0)
 			{
 				Integer indexCol = (Integer) context.getAttribute("colIndex");
-				context.getRootWidget().getFlexCellFormatter().setRowSpan(indexRow, indexCol, Integer.parseInt(rowSpan));
+				widget.getFlexCellFormatter().setRowSpan(indexRow, indexCol, Integer.parseInt(rowSpan));
 			}
 		}
 	}
@@ -114,7 +116,7 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 			@TagChild(FlexCellHTMLProcessor.class),
 			@TagChild(FlexCellWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<FlexTable> context) throws InterfaceConfigException	{}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException	{}
 	}
 	
 	public static class FlexCellTextProcessor extends CellTextProcessor<FlexTable>{}
@@ -125,7 +127,7 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 		@TagChildren({
 			@TagChild(FlexWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<FlexTable> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 		
 	}
 	public static class FlexWidgetProcessor extends WidgetProcessor<FlexTable>{} 

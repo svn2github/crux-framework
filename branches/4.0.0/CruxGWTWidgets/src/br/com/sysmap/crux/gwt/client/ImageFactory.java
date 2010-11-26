@@ -50,7 +50,7 @@ public class ImageFactory extends WidgetFactory<Image>
 		@TagAttributeDeclaration("widthRect"),
 		@TagAttributeDeclaration("heightRect")
 	})	
-	public void processAttributes(WidgetFactoryContext<Image> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
@@ -73,7 +73,7 @@ public class ImageFactory extends WidgetFactory<Image>
 		@TagEvent(LoadEvtBind.class),
 		@TagEvent(LoadErrorEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<Image> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

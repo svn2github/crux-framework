@@ -41,7 +41,7 @@ public class TextBoxFactory extends TextBoxBaseFactory<TextBox>
 		@TagAttribute(value="maxLength", type=Integer.class),
 		@TagAttribute(value="visibleLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<TextBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -56,7 +56,7 @@ public class TextBoxFactory extends TextBoxBaseFactory<TextBox>
 	@TagChildren({
 		@TagChild(InnerTextProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<TextBox> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

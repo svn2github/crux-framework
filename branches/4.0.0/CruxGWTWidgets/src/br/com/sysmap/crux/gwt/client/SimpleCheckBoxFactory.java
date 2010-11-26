@@ -36,7 +36,7 @@ public class SimpleCheckBoxFactory extends FocusWidgetFactory<SimpleCheckBox> im
 	@TagAttributes({
 		@TagAttribute(value="checked", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<SimpleCheckBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

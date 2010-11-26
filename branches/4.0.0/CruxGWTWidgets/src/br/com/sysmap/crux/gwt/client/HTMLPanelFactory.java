@@ -46,7 +46,7 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<HTMLPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

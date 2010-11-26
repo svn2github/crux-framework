@@ -44,7 +44,7 @@ public class StackPanelFactory extends AbstractStackPanelFactory<StackPanel>
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<StackPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
@@ -56,7 +56,7 @@ public class StackPanelFactory extends AbstractStackPanelFactory<StackPanel>
 			@TagChild(TitleProcessor.class),
 			@TagChild(ContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<StackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
@@ -67,7 +67,7 @@ public class StackPanelFactory extends AbstractStackPanelFactory<StackPanel>
 			@TagChild(TitleTextProcessor.class),
 			@TagChild(TitleHTMLProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<StackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class TitleTextProcessor extends AbstractTitleTextProcessor<StackPanel> {}
@@ -81,7 +81,7 @@ public class StackPanelFactory extends AbstractStackPanelFactory<StackPanel>
 		@TagChildren({
 			@TagChild(ContentWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<StackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor<StackPanel> {}

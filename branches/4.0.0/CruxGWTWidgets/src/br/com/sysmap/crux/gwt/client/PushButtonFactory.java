@@ -44,7 +44,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 	@TagChildren({
 		@TagChild(FacesProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<PushButton> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processChildren(context);
 	}
@@ -61,7 +61,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 			@TagChild(DownDisabledFaceProcessor.class),
 			@TagChild(DownHoveringFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class FaceChildrenProcessor extends ChoiceChildProcessor<PushButton>
@@ -72,7 +72,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 			@TagChild(HTMLFaceProcessor.class),
 			@TagChild(ImageFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class UpFaceProcessor extends AbstractUpFaceProcessor<PushButton>
@@ -81,7 +81,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -93,7 +93,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -105,7 +105,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -117,7 +117,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -129,7 +129,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -141,7 +141,7 @@ public class PushButtonFactory extends CustomButtonFactory<PushButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<PushButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}

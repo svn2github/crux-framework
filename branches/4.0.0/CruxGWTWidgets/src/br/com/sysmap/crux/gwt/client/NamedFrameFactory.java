@@ -46,12 +46,13 @@ public class NamedFrameFactory extends WidgetFactory<NamedFrame>
 		@TagAttributeDeclaration("url"),
 		@TagAttributeDeclaration("name")
 	})
-	public void processAttributes(WidgetFactoryContext<NamedFrame> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		String url = context.readWidgetProperty("url");
 		if (!StringUtils.isEmpty(url))
 		{
-			context.getWidget().setUrl(Screen.appendDebugParameters(url));
+			NamedFrame widget = context.getWidget();
+			widget.setUrl(Screen.appendDebugParameters(url));
 		}
 		super.processAttributes(context);
 	}

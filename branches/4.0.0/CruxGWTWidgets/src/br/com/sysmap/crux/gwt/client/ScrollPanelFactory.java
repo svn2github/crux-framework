@@ -59,7 +59,7 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel>
 		@TagAttributeDeclaration(value="horizontalScrollPosition", type=HorizontalScrollPosition.class),
 		@TagAttributeDeclaration("ensureVisible")
 	})
-	public void processAttributes(WidgetFactoryContext<ScrollPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		

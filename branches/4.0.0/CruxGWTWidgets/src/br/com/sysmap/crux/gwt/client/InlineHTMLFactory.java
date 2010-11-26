@@ -43,7 +43,7 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 	}
 	
 	@Override
-	public void processAttributes(WidgetFactoryContext<InlineHTML> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
@@ -65,7 +65,7 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<InlineHTML> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

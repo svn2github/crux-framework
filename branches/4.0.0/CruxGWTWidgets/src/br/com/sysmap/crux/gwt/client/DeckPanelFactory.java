@@ -46,7 +46,7 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="visibleWidget", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<DeckPanel> context) throws InterfaceConfigException 
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 		
@@ -63,7 +63,7 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel>
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<DeckPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

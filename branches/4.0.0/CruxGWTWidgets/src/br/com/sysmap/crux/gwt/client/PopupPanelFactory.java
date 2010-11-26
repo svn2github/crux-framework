@@ -68,7 +68,7 @@ public class PopupPanelFactory extends PanelFactory<PopupPanel>
 		@TagAttributeDeclaration(value="modal", type=Boolean.class),
 		@TagAttributeDeclaration(value="autoHide", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<PopupPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

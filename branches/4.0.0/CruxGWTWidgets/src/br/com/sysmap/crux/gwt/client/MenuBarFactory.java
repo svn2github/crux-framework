@@ -68,7 +68,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="vertical", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<MenuBar> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);		
 	}
@@ -77,7 +77,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	@TagEvents({
 		@TagEvent(CloseEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext<MenuBar> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -86,7 +86,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	@TagChildren({
 		@TagChild(MenutItemsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<MenuBar> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 
 	private boolean isMenuVertical(CruxMetaDataElement element)
 	{
@@ -107,7 +107,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 			@TagChild(MenutItemProcessor.class),
 			@TagChild(MenutItemSeparatorProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="menuItem")
@@ -118,16 +118,17 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 			@TagChild(CaptionProcessor.class),
 			@TagChild(MenuChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="separator")
 	public static class MenutItemSeparatorProcessor extends WidgetChildProcessor<MenuBar>
 	{
 		@Override
-		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
+		public void processChildren(final WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			context.getRootWidget().addSeparator();
+			MenuBar widget = context.getRootWidget();
+			widget.addSeparator();
 		}
 	}
 	
@@ -138,7 +139,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 			@TagChild(TextCaptionProcessor.class),
 			@TagChild(HtmlCaptionProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(tagName="textCaption")
@@ -148,7 +149,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="text", required=true, supportsI18N=true)
 		})
-		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
+		public void processChildren(final WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String captionText = context.readChildProperty("text");
 			context.setAttribute(CURRENT_MENU_ITEM_CAPTION, captionText);
@@ -160,7 +161,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	public static class HtmlCaptionProcessor extends WidgetChildProcessor<MenuBar>
 	{
 		@Override
-		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
+		public void processChildren(final WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			String captionHtml = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute(CURRENT_MENU_ITEM_CAPTION, captionHtml);
@@ -175,7 +176,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 			@TagChild(CommandProcessor.class),
 			@TagChild(SubMenuProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="command")
@@ -185,7 +186,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="onExecute", required=true)
 		})
-		public void processChildren(final WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException 
+		public void processChildren(final WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			final Event evt = EvtBind.getWidgetEvent(context.getChildElement(), "onExecute");
 			if (evt != null)
@@ -195,7 +196,8 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 				{
 					public void execute() 
 					{
-						Events.callEvent(evt, new ExecuteEvent<MenuBar>(context.getRootWidget(), context.getRootWidgetId()));
+						MenuBar widget= context.getRootWidget();
+						Events.callEvent(evt, new ExecuteEvent<MenuBar>(widget, context.getRootWidgetId()));
 					}
 				};
 				item.setCommand(cmd);
@@ -208,7 +210,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	public static class SubMenuProcessor extends WidgetChildProcessor<MenuBar>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			MenuBar subMenu = getSubMenu(context);
 			MenuItem item = createMenuItem(context);
@@ -222,7 +224,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	 * @return
 	 * @throws InterfaceConfigException 
 	 */
-	protected static MenuBar getSubMenu(WidgetChildProcessorContext<MenuBar> context) throws InterfaceConfigException
+	protected static MenuBar getSubMenu(WidgetChildProcessorContext context) throws InterfaceConfigException
 	{
 		MenuBar widget = context.getRootWidget();
 		MenuBar subMenu = (MenuBar) createChildWidget(context.getChildElement());	
@@ -235,7 +237,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 	 * @param context
 	 * @return
 	 */
-	protected static  MenuItem createMenuItem(final WidgetChildProcessorContext<MenuBar> context)
+	protected static  MenuItem createMenuItem(final WidgetChildProcessorContext context)
 	{
 		String caption = (String) context.getAttribute(CURRENT_MENU_ITEM_CAPTION);
 		Boolean isHtml = (Boolean) context.getAttribute(CURRENT_MENU_ITEM_IS_HTML);
@@ -243,6 +245,7 @@ public class MenuBarFactory extends WidgetFactory<MenuBar>
 		{
 			isHtml = false;
 		}
-		return context.getRootWidget().addItem(new MenuItem(caption, isHtml, (Command)null));
+		MenuBar widget = context.getRootWidget();
+		return widget.addItem(new MenuItem(caption, isHtml, (Command)null));
 	}
 }

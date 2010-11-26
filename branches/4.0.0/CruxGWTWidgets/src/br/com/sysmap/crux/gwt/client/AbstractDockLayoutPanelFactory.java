@@ -47,7 +47,7 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 			@TagAttributeDeclaration(value="direction", type=Direction.class, defaultValue="CENTER"),
 			@TagAttributeDeclaration(value="size", type=Double.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("direction", getDirection(context.readChildProperty("direction")));
 			context.setAttribute("size", context.readChildProperty("size"));
@@ -75,7 +75,7 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 		GWTMessages messages = GWT.create(GWTMessages.class);
 		
 		@Override
-		public void processChildren(WidgetChildProcessorContext<W> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Widget childWidget = createChildWidget(context.getChildElement());
 			
@@ -104,7 +104,7 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 		}
 
 		@SuppressWarnings("unchecked")
-		protected void processAnimatedChild(final WidgetChildProcessorContext<W> context, final Widget childWidget, final Direction direction, final double size)
+		protected void processAnimatedChild(final WidgetChildProcessorContext context, final Widget childWidget, final Direction direction, final double size)
 		{
 			List<Command> animationConstraints = (List<Command>) context.getAttribute("animationCommands");
 			animationConstraints.add(new Command(){
@@ -122,27 +122,29 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 		 * @param direction
 		 * @param size
 		 */
-		protected void processChild(WidgetChildProcessorContext<W> context, Widget childWidget, Direction direction, double size)
+		@SuppressWarnings("unchecked")
+		protected void processChild(WidgetChildProcessorContext context, Widget childWidget, Direction direction, double size)
 		{
+			W rootWidget = (W)context.getRootWidget();
 			if (direction.equals(Direction.CENTER))
 			{
-				context.getRootWidget().add(childWidget);	
+				rootWidget.add(childWidget);	
 			}
 			else if (direction.equals(Direction.EAST))
 			{
-				context.getRootWidget().addEast(childWidget, size);
+				rootWidget.addEast(childWidget, size);
 			}
 			else if (direction.equals(Direction.NORTH))
 			{
-				context.getRootWidget().addNorth(childWidget, size);
+				rootWidget.addNorth(childWidget, size);
 			}
 			else if (direction.equals(Direction.SOUTH))
 			{
-				context.getRootWidget().addSouth(childWidget, size);				
+				rootWidget.addSouth(childWidget, size);				
 			}
 			else if (direction.equals(Direction.WEST))
 			{
-				context.getRootWidget().addWest(childWidget, size);
+				rootWidget.addWest(childWidget, size);
 			}
 		}
 	}

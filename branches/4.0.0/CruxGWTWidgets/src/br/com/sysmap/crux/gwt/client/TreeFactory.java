@@ -98,7 +98,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 		@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class),
 		@TagAttributeDeclaration(value="openSelectedItem", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<Tree> context) throws InterfaceConfigException 
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 		
@@ -118,7 +118,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadImage")
 	})
-	public void processEvents(WidgetFactoryContext<Tree> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -127,7 +127,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	@TagChildren({
 		@TagChild(TreeItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<Tree> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	public static class TreeItemProcessor extends WidgetChildProcessor<Tree> implements HasPostProcessor<Tree>
@@ -141,14 +141,14 @@ public class TreeFactory extends WidgetFactory<Tree>
 			@TagChild(TreeCaptionProcessor.class),
 			@TagChild(TreeItemProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			LinkedList<TreeItem> itemStack = new LinkedList<TreeItem>();
 			context.setAttribute("itemStack", itemStack);
 		}
 		
 		@SuppressWarnings("unchecked")
-		public void postProcessChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
+		public void postProcessChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 			itemStack.removeFirst();
@@ -162,7 +162,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 			@TagChild(TextCaptionProcessor.class),
 			@TagChild(WidgetCaptionProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="textTitle", type=String.class)
@@ -170,16 +170,17 @@ public class TreeFactory extends WidgetFactory<Tree>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String textCaption = ensureTextChild(context.getChildElement(), true);
 			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 			
 			TreeItem parent = itemStack.peek();
 			TreeItem currentItem;
+			Tree rootWidget = context.getRootWidget();
 			if (parent == null)
 			{
-				currentItem = context.getRootWidget().addItem(textCaption);
+				currentItem = rootWidget.addItem(textCaption);
 			}
 			else
 			{
@@ -196,7 +197,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 		@TagChildren({
 			@TagChild(WidgetCaptionWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}	
 
 
@@ -205,7 +206,7 @@ public class TreeFactory extends WidgetFactory<Tree>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<Tree> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Widget child = createChildWidget(context.getChildElement());
 			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
@@ -214,7 +215,8 @@ public class TreeFactory extends WidgetFactory<Tree>
 			TreeItem currentItem;
 			if (parent == null)
 			{
-				currentItem = context.getRootWidget().addItem(child);
+				Tree rootWidget = context.getRootWidget();
+				currentItem = rootWidget.addItem(child);
 			}
 			else
 			{

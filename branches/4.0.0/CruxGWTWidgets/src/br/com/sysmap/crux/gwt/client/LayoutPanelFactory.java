@@ -53,7 +53,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 	@TagChildren({
 		@TagChild(LayoutPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<LayoutPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="layer")
 	public static class LayoutPanelProcessor extends WidgetChildProcessor<LayoutPanel> 
@@ -84,7 +84,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 		@TagChildren({
 			@TagChild(LayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<LayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("left", context.readChildProperty("left"));
 			context.setAttribute("right", context.readChildProperty("right"));
@@ -113,10 +113,11 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 	public static class LayoutPanelWidgetProcessor extends WidgetChildProcessor<LayoutPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<LayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			Widget childWidget = createChildWidget(context.getChildElement());
-			context.getRootWidget().add(childWidget);
+			LayoutPanel rootWidget = context.getRootWidget();
+			rootWidget.add(childWidget);
 			
 			String left = (String) context.getAttribute("left");
 			String right = (String) context.getAttribute("right");
@@ -140,21 +141,21 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 			}
 			else
 			{
-				setConstraints(context.getRootWidget(), childWidget, left, right, top, bottom, width, height, leftUnit, rightUnit, topUnit, bottomUnit, widthUnit, heightUnit);
+				setConstraints(rootWidget, childWidget, left, right, top, bottom, width, height, leftUnit, rightUnit, topUnit, bottomUnit, widthUnit, heightUnit);
 			}
 			
 			if (!StringUtils.isEmpty(horizontalPosition))
 			{
-				context.getRootWidget().setWidgetHorizontalPosition(childWidget, Alignment.valueOf(horizontalPosition));
+				rootWidget.setWidgetHorizontalPosition(childWidget, Alignment.valueOf(horizontalPosition));
 			}
 			if (!StringUtils.isEmpty(verticalPosition))
 			{
-				context.getRootWidget().setWidgetVerticalPosition(childWidget, Alignment.valueOf(verticalPosition));
+				rootWidget.setWidgetVerticalPosition(childWidget, Alignment.valueOf(verticalPosition));
 			}
 		}
 
 		@SuppressWarnings("unchecked")
-		private void processAnimation(final WidgetChildProcessorContext<LayoutPanel> context, final Widget childWidget, 
+		private void processAnimation(final WidgetChildProcessorContext context, final Widget childWidget, 
 				final String left, final String right, final String top, final String bottom, final String width, final String height,
 				final Unit leftUnit, final Unit rightUnit, final Unit topUnit, final Unit bottomUnit, final Unit widthUnit,
 				final Unit heightUnit)
@@ -168,14 +169,15 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel>
 			if (!StringUtils.isEmpty(animationStartLeft) || !StringUtils.isEmpty(animationStartRight) || !StringUtils.isEmpty(animationStartTop)
 					|| !StringUtils.isEmpty(animationStartBottom) || !StringUtils.isEmpty(animationStartWidth) || !StringUtils.isEmpty(animationStartHeight))
 			{
-				setConstraints(context.getRootWidget(), childWidget, animationStartLeft, animationStartRight, animationStartTop, 
+				final LayoutPanel rootWidget = context.getRootWidget();
+				setConstraints(rootWidget, childWidget, animationStartLeft, animationStartRight, animationStartTop, 
 						animationStartBottom, animationStartWidth, animationStartHeight, 
 						leftUnit, rightUnit, topUnit, bottomUnit, widthUnit, heightUnit);
 				List<Command> animationConstraints = (List<Command>) context.getAttribute("animationCommands");
 				animationConstraints.add(new Command(){
 					public void execute()
 					{
-						setConstraints(context.getRootWidget(), childWidget, left, right, top, bottom, width, height, 
+						setConstraints(rootWidget, childWidget, left, right, top, bottom, width, height, 
 								leftUnit, rightUnit, topUnit, bottomUnit, widthUnit, heightUnit);
 					}
 				});

@@ -39,15 +39,16 @@ public abstract class AbstractLabelFactory<T extends Label> extends WidgetFactor
        implements HasDirectionFactory<T>, HasWordWrapFactory<T>, HasTextFactory<T>,
                   HasClickHandlersFactory<T>, HasAllMouseHandlersFactory<T>
 {
+	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign")
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
-		T widget = context.getWidget();
+		T widget = (T)context.getWidget();
 
 		String horizontalAlignment = context.readWidgetProperty("horizontalAlignment");
 		if (horizontalAlignment != null && horizontalAlignment.length() > 0)

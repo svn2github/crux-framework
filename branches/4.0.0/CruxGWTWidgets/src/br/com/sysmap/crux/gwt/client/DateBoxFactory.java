@@ -62,7 +62,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 		@TagAttributeDeclaration("pattern"),
 		@TagAttributeDeclaration(value="reportFormatError", type=Boolean.class)
 	})
-	public void processAttributes(final WidgetFactoryContext<DateBox> context) throws InterfaceConfigException
+	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
@@ -87,7 +87,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadFormat")
 	})
-	public void processEvents(WidgetFactoryContext<DateBox> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -128,7 +128,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	@TagChildren({
 		@TagChild(value=DateBoxProcessor.class,autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<DateBox> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
 	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox>{}

@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFactory<T> implements HasTextFactory<T>
 {
 	@Override
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 

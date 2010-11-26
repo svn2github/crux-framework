@@ -44,7 +44,7 @@ public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<CheckBox> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

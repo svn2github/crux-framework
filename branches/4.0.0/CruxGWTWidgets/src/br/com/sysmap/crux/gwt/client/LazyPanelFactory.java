@@ -59,7 +59,7 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel>
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<LazyPanel> context) throws InterfaceConfigException 
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processChildren(context);
 	}

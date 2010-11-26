@@ -44,7 +44,7 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<TabBar> context) throws InterfaceConfigException {}		
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}		
 
 	public static class TabProcessor extends AbstractTabProcessor<TabBar> 
 	{
@@ -52,7 +52,7 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 		@TagChildren({
 			@TagChild(TabItemProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabBar> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
@@ -66,7 +66,7 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<TabBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
@@ -76,7 +76,7 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabBar> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class TextTabProcessor extends AbstractTextTabProcessor<TabBar> {}

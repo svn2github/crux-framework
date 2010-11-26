@@ -67,7 +67,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@TagAttributeDeclaration(value="unit", type=Unit.class),
 		@TagAttributeDeclaration(value="visibleTab", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<TabLayoutPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
@@ -90,7 +90,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<TabLayoutPanel> context) throws InterfaceConfigException 
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 	}
 
@@ -102,7 +102,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(minOccurs="0")
@@ -114,7 +114,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 		
 	}
 	
@@ -122,7 +122,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 	public static class TextTabProcessor extends WidgetChildProcessor<TabLayoutPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.setAttribute("titleText", title);
@@ -133,7 +133,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 	public static class HTMLTabProcessor extends WidgetChildProcessor<TabLayoutPanel>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			String title = ensureHtmlChild(context.getChildElement(), true);
 			context.setAttribute("titleHtml", title);
@@ -147,14 +147,14 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetTitleProcessor extends WidgetChildProcessor<TabLayoutPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget titleWidget = createChildWidget(context.getChildElement());
 			context.setAttribute("titleWidget", titleWidget);
@@ -168,33 +168,34 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel>
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetContentProcessor extends WidgetChildProcessor<TabLayoutPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<TabLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget widget = createChildWidget(context.getChildElement());
 			
 			String titleText = (String) context.getAttribute("titleText");
+			TabLayoutPanel rootWidget = context.getRootWidget();
 			if (titleText != null)
 			{
-				context.getRootWidget().add(widget, titleText);
+				rootWidget.add(widget, titleText);
 			}
 			else
 			{
 				String titleHtml = (String) context.getAttribute("titleHtml");
 				if (titleHtml != null)
 				{
-					context.getRootWidget().add(widget, titleHtml, true);
+					rootWidget.add(widget, titleHtml, true);
 				}
 				else
 				{
 					Widget titleWidget = (Widget) context.getAttribute("titleWidget");
-					context.getRootWidget().add(widget, titleWidget);
+					rootWidget.add(widget, titleWidget);
 				}
 			}
 		}

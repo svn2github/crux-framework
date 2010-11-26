@@ -51,13 +51,14 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException	
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException	
 	{
 		Array<CruxMetaDataElement> children = ensureChildren(context.getElement(), true);
 		
 		int count = getNonNullChildrenCount(children);
 		
-		context.getWidget().resizeRows(count);
+		Grid widget = context.getWidget();
+		widget.resizeRows(count);
 	}
 
 	/**
@@ -85,13 +86,14 @@ public class GridFactory extends HTMLTableFactory<Grid>
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Boolean cellsInitialized = (Boolean) context.getAttribute("cellsInitialized");
 			if (cellsInitialized == null || !cellsInitialized)
 			{
 				Array<CruxMetaDataElement> children = ensureChildren(context.getChildElement(), true);
-				context.getRootWidget().resizeColumns(getNonNullChildrenCount(children));
+				Grid rootWidget = context.getRootWidget();
+				rootWidget.resizeColumns(getNonNullChildrenCount(children));
 				context.setAttribute("cellsInitialized", new Boolean(true));
 			}
 			
@@ -106,7 +108,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			
 			super.processChildren(context);
@@ -124,7 +126,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 			@TagChild(GridCellHTMLProcessor.class),
 			@TagChild(GridCellWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class GridCellTextProcessor extends CellTextProcessor<Grid>{}
@@ -135,7 +137,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 		@TagChildren({
 			@TagChild(GridWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 		
 	}
 	public static class GridWidgetProcessor extends WidgetProcessor<Grid>{} 

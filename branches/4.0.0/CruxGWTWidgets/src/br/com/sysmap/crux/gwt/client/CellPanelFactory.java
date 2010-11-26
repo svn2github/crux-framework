@@ -50,7 +50,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 		@TagAttribute(value="borderWidth",type=Integer.class),
 		@TagAttribute(value="spacing",type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 	@TagChildren({
 		@TagChild(CellPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<T> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanel>{} 
 
@@ -71,7 +71,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 			@TagChild(CellProcessor.class),
 			@TagChild(CellWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("horizontalAlignment", DEFAULT_H_ALIGN);
 			context.setAttribute("verticalAlignment", DEFAULT_V_ALIGN);
@@ -93,7 +93,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 		@TagChildren({
 			@TagChild(value=CellWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			context.setAttribute("height", context.readChildProperty("height"));
 			context.setAttribute("width", context.readChildProperty("width"));
@@ -105,7 +105,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 	public static class CellWidgetProcessor extends AbstractCellWidgetProcessor<CellPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<CellPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
 			context.setAttribute("child", child);
@@ -117,10 +117,11 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 	@TagChildAttributes(type=AnyWidget.class)
 	static class AbstractCellWidgetProcessor<T extends CellPanel> extends WidgetChildProcessor<T> 
 	{
+		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext<T> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
-			T parent = context.getRootWidget();
+			T parent = (T)context.getRootWidget();
 			Widget child = (Widget) context.getAttribute("child");
 			String cellHeight = (String) context.getAttribute("height");
 			if (cellHeight != null && cellHeight.length() > 0)

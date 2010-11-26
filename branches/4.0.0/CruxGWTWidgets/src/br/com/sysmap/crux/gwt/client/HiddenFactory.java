@@ -36,7 +36,7 @@ public class HiddenFactory extends WidgetFactory<Hidden>
 		@TagAttribute("name"),
 		@TagAttribute(value="value", supportsI18N=true)
 	})
-	public void processAttributes(WidgetFactoryContext<Hidden> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

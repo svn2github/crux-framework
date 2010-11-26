@@ -44,7 +44,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 	@TagAttributes({
 		@TagAttribute(value="down", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<ToggleButton> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 	@TagChildren({
 		@TagChild(FacesProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<ToggleButton> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processChildren(context);
 	}
@@ -76,7 +76,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(DownDisabledFaceProcessor.class),
 			@TagChild(DownHoveringFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class FaceChildrenProcessor extends ChoiceChildProcessor<ToggleButton>
@@ -87,7 +87,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(HTMLFaceProcessor.class),
 			@TagChild(ImageFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class UpFaceProcessor extends AbstractUpFaceProcessor<ToggleButton>
@@ -96,7 +96,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -108,7 +108,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -120,7 +120,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -132,7 +132,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -144,7 +144,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -156,7 +156,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<ToggleButton> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}

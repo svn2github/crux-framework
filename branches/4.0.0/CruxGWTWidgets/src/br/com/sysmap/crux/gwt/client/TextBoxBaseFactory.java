@@ -16,9 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
@@ -40,20 +39,23 @@ public abstract class TextBoxBaseFactory<T extends TextBoxBase> extends FocusWid
 	@Override
 	@TagAttributes({
 		@TagAttribute("value"),
-		@TagAttribute(value="readOnly", type=Boolean.class)
+		@TagAttribute(value="readOnly", type=Boolean.class),
+		@TagAttribute(value="textAlignment", type=TextAlign.class, parser=TextAlignmentProcessor.class)
 	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="textAlignment", type=TextAlign.class)
-	})
-	public void processAttributes(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-
-		T widget = context.getWidget();
-		
-		String textAlignment = context.readWidgetProperty("textAlignment");
-		if (textAlignment != null)
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class TextAlignmentProcessor implements AttributeParser
+	{
+		public void processAttribute(WidgetFactoryContext context, String textAlignment)
 		{
+			TextBoxBase widget = (TextBoxBase) context.getWidget();
 			if ("center".equalsIgnoreCase(textAlignment))
 			{
 				widget.setTextAlignment(com.google.gwt.user.client.ui.TextBoxBase.ALIGN_CENTER);
@@ -69,7 +71,7 @@ public abstract class TextBoxBaseFactory<T extends TextBoxBase> extends FocusWid
 			else if ("right".equalsIgnoreCase(textAlignment))
 			{
 				widget.setTextAlignment(com.google.gwt.user.client.ui.TextBoxBase.ALIGN_RIGHT);
-			} 
+			} 		
 		}
-	}
+	}	
 }

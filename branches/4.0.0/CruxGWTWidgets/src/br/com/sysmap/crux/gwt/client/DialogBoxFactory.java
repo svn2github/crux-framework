@@ -63,7 +63,7 @@ public class DialogBoxFactory extends PanelFactory<DialogBox>
 		@TagAttributeDeclaration(value="autoHide", type=Boolean.class),
 		@TagAttributeDeclaration(value="modal", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext<DialogBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

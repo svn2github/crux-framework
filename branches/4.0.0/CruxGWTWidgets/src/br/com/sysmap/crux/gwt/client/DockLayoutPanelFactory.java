@@ -45,7 +45,7 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class)
 	})
-	public void processAttributes(WidgetFactoryContext<DockLayoutPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -54,7 +54,7 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 	@TagChildren({
 		@TagChild(DockLayoutPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<DockLayoutPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanel>
 	{
@@ -62,7 +62,7 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 		@TagChildren({
 			@TagChild(DockLayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<DockLayoutPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}

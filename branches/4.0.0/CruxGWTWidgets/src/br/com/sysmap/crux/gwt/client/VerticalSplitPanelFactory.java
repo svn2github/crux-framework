@@ -45,7 +45,7 @@ public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel>
 		@TagChild(TopProcessor.class),
 		@TagChild(BottomProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<VerticalSplitPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="top", minOccurs="0")
 	public static class TopProcessor extends WidgetChildProcessor<VerticalSplitPanel>
@@ -54,7 +54,7 @@ public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel>
 		@TagChildren({
 			@TagChild(TopWidgeProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<VerticalSplitPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="bottom", minOccurs="0")
@@ -64,7 +64,7 @@ public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel>
 		@TagChildren({
 			@TagChild(BottomWidgeProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext<VerticalSplitPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="topWidget")

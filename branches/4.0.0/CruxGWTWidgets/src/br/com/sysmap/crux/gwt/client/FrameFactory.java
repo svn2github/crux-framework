@@ -37,13 +37,14 @@ public class FrameFactory extends WidgetFactory<Frame>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("url")
 	})
-	public void processAttributes(WidgetFactoryContext<Frame> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		String url = context.readWidgetProperty("url");
 		if (!StringUtils.isEmpty(url))
 		{
-			context.getWidget().setUrl(Screen.appendDebugParameters(url));
+			Frame widget = context.getWidget();
+			widget.setUrl(Screen.appendDebugParameters(url));
 		}
 	}
 

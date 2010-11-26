@@ -38,7 +38,7 @@ public class PasswordTextBoxFactory extends TextBoxBaseFactory<PasswordTextBox>
 		@TagAttribute(value="maxLength", type=Integer.class),
 		@TagAttribute(value="visibleLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext<PasswordTextBox> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

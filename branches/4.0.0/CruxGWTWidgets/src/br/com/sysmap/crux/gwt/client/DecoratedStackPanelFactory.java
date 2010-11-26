@@ -45,7 +45,7 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext<DecoratedStackPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
@@ -57,7 +57,7 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 			@TagChild(TitleProcessor.class),
 			@TagChild(ContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<DecoratedStackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
@@ -68,7 +68,7 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 			@TagChild(TitleTextProcessor.class),
 			@TagChild(TitleHTMLProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<DecoratedStackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 
 	public static class TitleTextProcessor extends AbstractTitleTextProcessor<DecoratedStackPanel> {}
@@ -82,7 +82,7 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 		@TagChildren({
 			@TagChild(ContentWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext<DecoratedStackPanel> context) throws InterfaceConfigException {}
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor<DecoratedStackPanel> {}	

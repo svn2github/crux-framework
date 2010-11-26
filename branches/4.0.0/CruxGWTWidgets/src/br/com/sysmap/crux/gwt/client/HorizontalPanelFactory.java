@@ -51,7 +51,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 	})
-	public void processAttributes(WidgetFactoryContext<HorizontalPanel> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		
@@ -73,7 +73,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 	@TagChildren({
 		@TagChild(HorizontalPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext<HorizontalPanel> context) throws InterfaceConfigException {}
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
 	public static class  HorizontalPanelProcessor extends AbstractCellPanelProcessor<HorizontalPanel> 
@@ -83,7 +83,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 			@TagChild(HorizontalProcessor.class),
 			@TagChild(HorizontalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<HorizontalPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -100,7 +100,7 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 		@TagChildren({
 			@TagChild(value=HorizontalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext<HorizontalPanel> context) throws InterfaceConfigException 
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -109,10 +109,11 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel>
 	public static class HorizontalWidgetProcessor extends AbstractCellWidgetProcessor<HorizontalPanel> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext<HorizontalPanel> context) throws InterfaceConfigException
+		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			context.getRootWidget().add(child);
+			HorizontalPanel rootWidget = context.getRootWidget();
+			rootWidget.add(child);
 			context.setAttribute("child", child);
 			super.processChildren(context);
 			context.setAttribute("child", null);

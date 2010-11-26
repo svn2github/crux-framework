@@ -44,7 +44,7 @@ public class RadioButtonFactory extends AbstractCheckBoxFactory<RadioButton>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<RadioButton> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

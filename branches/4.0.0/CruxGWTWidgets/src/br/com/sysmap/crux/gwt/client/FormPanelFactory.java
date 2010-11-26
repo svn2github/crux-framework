@@ -55,7 +55,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("target")
 	})
-    public void processAttributes(WidgetFactoryContext<FormPanel> context) throws InterfaceConfigException 
+    public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}
@@ -65,7 +65,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 		@TagEventDeclaration("onSubmitComplete"),
 		@TagEventDeclaration("onSubmit")
 	})
-	public void processEvents(WidgetFactoryContext<FormPanel> context) throws InterfaceConfigException 
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processEvents(context);
 		
@@ -115,7 +115,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext<FormPanel> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	

@@ -50,7 +50,7 @@ public class AnchorFactory extends FocusWidgetFactory<Anchor>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign")
 	})
-	public void processAttributes(WidgetFactoryContext<Anchor> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 

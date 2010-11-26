@@ -44,7 +44,7 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="animationDuration", type=Integer.class)
 	})
-	public void processAttributes(final WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 		String animationDuration = context.readWidgetProperty("animationDuration");
@@ -60,16 +60,16 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends
 		@TagEventDeclaration("onAnimationComplete"), 
 		@TagEventDeclaration("onAnimationStep") 
 	})
-	public void processEvents(WidgetFactoryContext<T> context) throws InterfaceConfigException
+	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
 	
     @SuppressWarnings("unchecked")
 	@Override
-    public void postProcess(WidgetFactoryContext<T> context) throws InterfaceConfigException
+    public void postProcess(WidgetFactoryContext context) throws InterfaceConfigException
     {
-		final T widget = context.getWidget();
+		final T widget = (T)context.getWidget();
 		
 		final FastList<Command> animationConstraints = (FastList<Command>) context.getAttribute("animationCommands");
 		final Integer animationDuration = (Integer) context.getAttribute("animationDuration");
