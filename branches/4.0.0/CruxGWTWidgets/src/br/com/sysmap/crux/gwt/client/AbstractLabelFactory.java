@@ -15,8 +15,9 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * Represents a LabelFactory DeclarativeFactory
+ * Represents a Label DeclarativeFactory
  * @author Thiago Bustamante
  *
  */
@@ -39,21 +40,21 @@ public abstract class AbstractLabelFactory<T extends Label> extends WidgetFactor
        implements HasDirectionFactory<T>, HasWordWrapFactory<T>, HasTextFactory<T>,
                   HasClickHandlersFactory<T>, HasAllMouseHandlersFactory<T>
 {
-	@SuppressWarnings("unchecked")
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign")
+	@TagAttributes({
+		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", parser=HorizontalAlignmentParser.class)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		
-		T widget = (T)context.getWidget();
-
-		String horizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (horizontalAlignment != null && horizontalAlignment.length() > 0)
+	}
+	
+	public static class HorizontalAlignmentParser implements AttributeParser
+	{
+		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
 		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+			Label widget = context.getWidget();
+			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(propertyValue, HasHorizontalAlignment.ALIGN_DEFAULT));
 		}
 	}
 }
