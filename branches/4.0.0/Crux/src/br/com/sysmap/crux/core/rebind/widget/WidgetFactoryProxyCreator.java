@@ -97,20 +97,20 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	private static class EventBinderData
+	private static class BindData
 	{
-		String evtBinderCalls;
-		Map<String, String> evtBinderVariables;
+		String binderParseCode;
+		Map<String, String> binderVariables;
 
-		public EventBinderData(String evtBinderCalls, Map<String, String> evtBinderVariables)
+		public BindData(String binderParseCode, Map<String, String> binderVariables)
 		{
-			this.evtBinderCalls = evtBinderCalls;
-			this.evtBinderVariables = evtBinderVariables;
+			this.binderParseCode = binderParseCode;
+			this.binderVariables = binderVariables;
 		}
 	}
 	private static final int UNBOUNDED = -1;
-	private Map<String, String> attributesFromClass = new HashMap<String, String>();
-	private Map<String, EventBinderData> eventsFromClass = new HashMap<String, EventBinderData>();
+	private Map<String, BindData> attributesFromClass = new HashMap<String, BindData>();
+	private Map<String, BindData> eventsFromClass = new HashMap<String, BindData>();
 	private int variableNameSuffixCounter = 0;
 	private final WidgetFactoryHelper factoryHelper;
 	private Set<String> widgetProperties = new HashSet<String>();
@@ -411,7 +411,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		StringBuilder source = new StringBuilder();
 		
 		String processorName = childProcessor.getParameterizedQualifiedSourceName();
-		String evtBinderVar = getEvtBinderVariableName("p", processorVariables, processorName);
+		String evtBinderVar = getBinderVariableName("p", processorVariables, processorName);
 		source.append(evtBinderVar+".processChildren(c);\n");
 		
 		JMethod processorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
@@ -437,7 +437,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			sourceWriter.println(binderClass + " " + processorVar + "= new " + binderClass + "();");
 		}
 	}
-	
+
 	/**
 	 * @param sourceWriter
 	 */
@@ -501,18 +501,19 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 	/**
 	 * 
-	 * @param logger
 	 * @param sourceWriter
-	 * @param factoryClass
+	 * @param logger
+	 * @param attributeParserVariables
 	 */
-	private String generateProcessAttributesBlock(JClassType factoryClass)
+	private String generateProcessAttributesBlock(JClassType factoryClass, Map<String, String> attributeParserVariables)
 	{
 		try
         {
 	        String factoryClassName = factoryClass.getQualifiedSourceName();
 			if (attributesFromClass.containsKey(factoryClassName))
 	        {
-	        	return attributesFromClass.get(factoryClassName);
+				attributeParserVariables.putAll(attributesFromClass.get(factoryClassName).binderVariables);
+	        	return attributesFromClass.get(factoryClassName).binderParseCode;
 	        }
 	        StringBuilder result = new StringBuilder();
 	        
@@ -535,7 +536,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        					}
 	        					else
 	        					{
-	        						generateAttributeParserProcessAttributeBlock(factoryClass, result, attr);
+	        						generateAttributeParserProcessAttributeBlock(factoryClass, result, attr, attributeParserVariables);
 	        					}
 	        				}
 	        			}
@@ -549,15 +550,27 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        JClassType superclass = factoryClass.getSuperclass();
 	        if (superclass!= null && !superclass.equals(superclass.getOracle().getJavaLangObject()))
 	        {
-	        	result.append(generateProcessAttributesBlock(superclass)+"\n");
+				Map<String, String> attributeParserVariablesSubClasses = new HashMap<String, String>();
+				String superClassBlock = generateProcessAttributesBlock(superclass, attributeParserVariablesSubClasses);
+				if (result.indexOf(superClassBlock) < 0)
+				{
+					result.append(superClassBlock+"\n");
+					attributeParserVariables.putAll(attributeParserVariablesSubClasses);
+				}
 	        }
 	        JClassType[] interfaces = factoryClass.getImplementedInterfaces();
 	        for (JClassType interfaceClass : interfaces)
 	        {
-	        	result.append(generateProcessAttributesBlock(interfaceClass)+"\n");
+				Map<String, String> attributeParserVariablesSubClasses = new HashMap<String, String>();
+				String superClassBlock = generateProcessAttributesBlock(interfaceClass, attributeParserVariablesSubClasses);
+				if (result.indexOf(superClassBlock) < 0)
+				{
+					result.append(superClassBlock+"\n");
+					attributeParserVariables.putAll(attributeParserVariablesSubClasses);
+				}
 	        }
 	        String attributes = result.toString();
-	        attributesFromClass.put(factoryClassName, attributes);
+	        attributesFromClass.put(factoryClassName, new BindData(attributes, attributeParserVariables));
 	        return attributes;
         }
         catch (NotFoundException e)
@@ -566,7 +579,15 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
         }
 	}
 
-	private void generateAttributeParserProcessAttributeBlock(JClassType factoryClass, StringBuilder result, TagAttribute attr) throws NotFoundException
+	/**
+	 * @param factoryClass
+	 * @param result
+	 * @param attr
+	 * @param attributeParserVariables
+	 * @throws NotFoundException
+	 */
+	private void generateAttributeParserProcessAttributeBlock(JClassType factoryClass, StringBuilder result, TagAttribute attr, 
+			                                             Map<String, String> attributeParserVariables) throws NotFoundException
 	{
 		JClassType type = factoryClass.getOracle().getType(attr.parser().getCanonicalName());
 		String attrName = attr.value();
@@ -582,9 +603,12 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		{
 			result.append("if ("+attrName+" != null && "+attrName+".length() > 0){\n");
 		}
-		result.append("new "+type.getParameterizedQualifiedSourceName()+"().processAttribute(context, "+attrName+");\n");
+
+		String binderClassName = type.getQualifiedSourceName();
+		String evtBinderVar = getBinderVariableName("at", attributeParserVariables, binderClassName);
+		result.append(evtBinderVar+".processAttribute(context, "+attrName+");\n");
+
 		result.append("}\n");
-		
 	}
 	
 	/**
@@ -652,12 +676,14 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private void generateProcessAttributesMethod(SourceWriter sourceWriter)
 	{
+		Map<String, String> attributeParserVariables = new HashMap<String, String>();
+
 		sourceWriter.println("@Override");
 		sourceWriter.println("public void processAttributes("+widgetFactoryContextType.getQualifiedSourceName()
 		         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.indent();
 		sourceWriter.println("super.processAttributes(context);");
-		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass());
+		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass(), attributeParserVariables);
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
 			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getElement();");
@@ -666,6 +692,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		sourceWriter.print(attributesBlock);
 		sourceWriter.outdent();
 		sourceWriter.println("}");
+		
+		generateInnerProcessorsvariables(sourceWriter, attributeParserVariables);		
 	}
 	
 	/**
@@ -775,8 +803,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		String factoryClassName = factoryClass.getQualifiedSourceName();
 		if (eventsFromClass.containsKey(factoryClassName))
 		{
-			evtBinderVariables.putAll(eventsFromClass.get(factoryClassName).evtBinderVariables);
-			return eventsFromClass.get(factoryClassName).evtBinderCalls;
+			evtBinderVariables.putAll(eventsFromClass.get(factoryClassName).binderVariables);
+			return eventsFromClass.get(factoryClassName).binderParseCode;
 		}
 		
 		StringBuilder result = new StringBuilder();
@@ -806,7 +834,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 					if (generateEventBlock)
 					{
 						String binderClassName = binderClass.getCanonicalName();
-						String evtBinderVar = getEvtBinderVariableName("ev", evtBinderVariables, binderClassName);
+						String evtBinderVar = getBinderVariableName("ev", evtBinderVariables, binderClassName);
 						result.append(evtBinderVar+".bindEvent(element, widget);\n");
 					}
 				}
@@ -836,7 +864,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		}
 		
 		String events = result.toString();
-		eventsFromClass.put(factoryClassName, new EventBinderData(events, evtBinderVariables));
+		eventsFromClass.put(factoryClassName, new BindData(events, evtBinderVariables));
 		return events;
 	}
 
@@ -884,7 +912,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 					AllChildProcessor.class.isAssignableFrom(childProcessor))
 				{
 					String processorName = childProcessor.getCanonicalName();
-					String evtBinderVar = getEvtBinderVariableName("p", processorVariables, processorName);
+					String evtBinderVar = getBinderVariableName("p", processorVariables, processorName);
 					source.append(evtBinderVar+".processChildren(c);\n");
 				}
 			}
@@ -1085,7 +1113,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param binderClassName
 	 * @return
 	 */
-	private String getEvtBinderVariableName(String varPrefix, Map<String, String> variables, String binderClassName)
+	private String getBinderVariableName(String varPrefix, Map<String, String> variables, String binderClassName)
 	{
 		String evtBinderVar = null;
 		if (variables.containsValue(binderClassName))

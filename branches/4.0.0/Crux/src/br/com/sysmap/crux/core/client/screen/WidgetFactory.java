@@ -307,7 +307,7 @@ public abstract class WidgetFactory <T extends Widget>
 	
 	/**
 	 * Process widget events
-	 * @param element page DOM element representing the widget (Its &lt;span&gt; tag)
+	 * @param element 
 	 * @throws InterfaceConfigException
 	 */
 	@TagEvents({
