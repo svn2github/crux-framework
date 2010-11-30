@@ -15,7 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.client.paging;
 
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
@@ -51,8 +53,10 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@TagAttributes({
+		@TagAttribute("pageable"),//TODO terminar isso aki
+	})
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("pageable"),
 		@TagAttributeDeclaration(value="enabled", type=Boolean.class)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
