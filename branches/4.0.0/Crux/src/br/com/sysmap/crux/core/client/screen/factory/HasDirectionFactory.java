@@ -18,7 +18,7 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.client.HasDirection.Direction;
@@ -27,10 +27,10 @@ import com.google.gwt.i18n.client.HasDirection.Direction;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasDirectionFactory<T extends HasDirection>
+public interface HasDirectionFactory<T extends HasDirection, C extends WidgetFactoryContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="direction", type=Direction.class)
 	})	
-	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processAttributes(C context) throws InterfaceConfigException;
 }

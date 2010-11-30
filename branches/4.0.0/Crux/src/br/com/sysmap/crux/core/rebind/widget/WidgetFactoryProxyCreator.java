@@ -43,14 +43,12 @@ import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -114,8 +112,6 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private int variableNameSuffixCounter = 0;
 	private final WidgetFactoryHelper factoryHelper;
 	private Set<String> widgetProperties = new HashSet<String>();
-	private final JClassType widgetChildProcessorContextType;
-	private final JClassType widgetFactoryContextType;
 	
 	/**
 	 * @param logger
@@ -126,8 +122,6 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	{
 		super(logger, context, factoryClass);
 		this.factoryHelper = new WidgetFactoryHelper(factoryClass);
-		this.widgetFactoryContextType = factoryClass.getOracle().findType(WidgetFactoryContext.class.getCanonicalName());
-		this.widgetChildProcessorContextType = factoryClass.getOracle().findType(WidgetChildProcessorContext.class.getCanonicalName());
 		if (Environment.isProduction())
 		{
 			initializeWidgetPropertiesMap();
@@ -488,7 +482,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private void generateMethodsForInnerProcessingChildren(SourceWriter sourceWriter, Map<String, String> methodsForInnerProcessing)
 	{
-        String contextDeclaration = widgetChildProcessorContextType.getQualifiedSourceName();
+        String contextDeclaration = factoryHelper.getContextType().getParameterizedQualifiedSourceName();
 		
 		for (String methodName : methodsForInnerProcessing.keySet())
 		{
@@ -517,7 +511,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        }
 	        StringBuilder result = new StringBuilder();
 	        
-	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{widgetFactoryContextType});
+	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{factoryHelper.getContextType()});
 	        if (method != null)
 	        {
 	        	TagAttributes attrs = method.getAnnotation(TagAttributes.class);
@@ -679,7 +673,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		Map<String, String> attributeParserVariables = new HashMap<String, String>();
 
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processAttributes("+widgetFactoryContextType.getQualifiedSourceName()
+		sourceWriter.println("public void processAttributes("+factoryHelper.getContextType().getParameterizedQualifiedSourceName()
 		         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.indent();
 		sourceWriter.println("super.processAttributes(context);");
@@ -809,7 +803,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		StringBuilder result = new StringBuilder();
 		
-		JMethod method = factoryClass.findMethod("processEvents", new JType[]{widgetFactoryContextType});
+		JMethod method = factoryClass.findMethod("processEvents", new JType[]{factoryHelper.getContextType()});
 		if (method != null)
 		{
 			TagEvents evts = method.getAnnotation(TagEvents.class);
@@ -877,7 +871,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		Map<String, String> evtBinderVariables = new HashMap<String, String>();
 		
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processEvents("+widgetFactoryContextType.getQualifiedSourceName()
+		sourceWriter.println("public void processEvents("+factoryHelper.getContextType().getParameterizedQualifiedSourceName()
 				         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processEvents(context);");
 		String eventsBlock = generateProcessEventsBlock(factoryHelper.getFactoryClass(), evtBinderVariables);
@@ -905,7 +899,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		{
 			if (child.autoProcess())
 			{
-				Class<? extends WidgetChildProcessor<?>> childProcessor = child.value();
+				Class<? extends WidgetChildProcessor<?,?>> childProcessor = child.value();
 				
 				if (ChoiceChildProcessor.class.isAssignableFrom(childProcessor) ||
 					SequenceChildProcessor.class.isAssignableFrom(childProcessor) ||
@@ -991,17 +985,15 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			Map<String, String> methodsForInnerProcessing, Map<String, String> processorVariables) 
 	{
 		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, method, processorVariables);
-        String contextDeclaration = widgetChildProcessorContextType.getParameterizedQualifiedSourceName();
+        String contextDeclaration = factoryHelper.getContextType().getParameterizedQualifiedSourceName();
 
 		sourceWriter.println("@Override");
-		sourceWriter.println("public void processChildren("+widgetFactoryContextType.getParameterizedQualifiedSourceName()
+		sourceWriter.println("public void processChildren("+contextDeclaration
 				               +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processChildren(context);");
 		if (childrenProcessorMethodName != null)
 		{
-			sourceWriter.println(contextDeclaration+" c = new "+contextDeclaration+"(context);");
-			sourceWriter.println("c.setChildElement(context.getElement());");
-			sourceWriter.println(childrenProcessorMethodName+"(c);");
+			sourceWriter.println(childrenProcessorMethodName+"(context);");
 		}
 		sourceWriter.println("}");
 	}
@@ -1066,7 +1058,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
 
-				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{widgetChildProcessorContextType});
+				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{factoryHelper.getContextType()});
 				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{

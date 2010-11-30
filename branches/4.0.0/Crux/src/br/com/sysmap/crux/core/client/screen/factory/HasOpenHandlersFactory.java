@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.OpenEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 
@@ -27,10 +27,10 @@ import com.google.gwt.event.logical.shared.HasOpenHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasOpenHandlersFactory<T extends HasOpenHandlers<?>>
+public interface HasOpenHandlersFactory<T extends HasOpenHandlers<?>, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(OpenEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

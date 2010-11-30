@@ -15,12 +15,14 @@
  */
 package br.com.sysmap.crux.core.client.screen.children;
 
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AllChildProcessor<T extends Widget> extends WidgetChildProcessor<T>
+public abstract class AllChildProcessor<T extends Widget, C extends WidgetFactoryContext> extends WidgetChildProcessor<T, C>
 {
 }

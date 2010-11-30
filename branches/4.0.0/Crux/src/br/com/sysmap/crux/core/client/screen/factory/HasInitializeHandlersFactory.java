@@ -17,20 +17,20 @@ package br.com.sysmap.crux.core.client.screen.factory;
 
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
+import br.com.sysmap.crux.core.client.event.bind.InitializeEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasInitializeHandlers;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasClickHandlersFactory<T extends HasClickHandlers, C extends WidgetFactoryContext>
+public interface HasInitializeHandlersFactory<T extends HasInitializeHandlers, C extends WidgetFactoryContext>
 {
 	@TagEvents({
-		@TagEvent(ClickEvtBind.class)
+		@TagEvent(InitializeEvtBind.class)
 	})	
 	void processEvents(C context) throws InterfaceConfigException;
 }

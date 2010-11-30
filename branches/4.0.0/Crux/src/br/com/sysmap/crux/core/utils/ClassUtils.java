@@ -21,6 +21,7 @@ import java.util.Set;
 
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -286,6 +287,54 @@ public class ClassUtils
 			
 		}
 
+		return null;
+	}
+
+	/**
+	 * @param factoryType
+	 * @return
+	 */
+	public static Method getProcessChildrenMethod(Class<?> factoryType)
+	{
+		Method[] methods = factoryType.getMethods();
+		if (methods != null)
+		{
+			for (Method method : methods)
+            {
+	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
+	            {
+	            	Class<?> paramClass = method.getParameterTypes()[0];
+	            	if (WidgetFactoryContext.class.isAssignableFrom(paramClass))
+	            	{
+	            		return method;
+	            	}
+	            }
+            }
+		}
+		return null;
+	}
+
+	/**
+	 * @param factoryType
+	 * @return
+	 */
+	public static Method getDeclaredProcessChildrenMethod(Class<?> factoryType)
+	{
+		Method[] methods = factoryType.getDeclaredMethods();
+		if (methods != null)
+		{
+			for (Method method : methods)
+            {
+	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
+	            {
+	            	Class<?> paramClass = method.getParameterTypes()[0];
+	            	if (WidgetFactoryContext.class.isAssignableFrom(paramClass))
+	            	{
+	            		return method;
+	            	}
+	            }
+            }
+		}
 		return null;
 	}
 

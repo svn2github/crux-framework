@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.BeforeSelectionEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
 
@@ -27,10 +27,10 @@ import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasBeforeSelectionHandlersFactory<T extends HasBeforeSelectionHandlers<?>>
+public interface HasBeforeSelectionHandlersFactory<T extends HasBeforeSelectionHandlers<?>, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(BeforeSelectionEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

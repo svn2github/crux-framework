@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel>
+public class LazyPanelFactory implements HasWidgetsFactory<LazyPanel, WidgetFactoryContext>
 {
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
 	

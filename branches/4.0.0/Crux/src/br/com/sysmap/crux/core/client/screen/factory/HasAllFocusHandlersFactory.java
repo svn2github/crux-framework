@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.BlurEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.FocusEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 
@@ -28,11 +28,11 @@ import com.google.gwt.event.dom.client.HasAllFocusHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAllFocusHandlersFactory<T extends HasAllFocusHandlers>
+public interface HasAllFocusHandlersFactory<T extends HasAllFocusHandlers, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(FocusEvtBind.class),
 		@TagEvent(BlurEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

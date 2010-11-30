@@ -15,22 +15,24 @@
  */
 package br.com.sysmap.crux.core.client.screen.factory;
 
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignmentAttributeParser;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasClickHandlersFactory<T extends HasClickHandlers, C extends WidgetFactoryContext>
+public interface HasHorizontalAlignmentFactory<T extends HasHorizontalAlignment, C extends WidgetFactoryContext>
 {
-	@TagEvents({
-		@TagEvent(ClickEvtBind.class)
+	@TagAttributes({
+		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", 
+			      parser=HorizontalAlignmentAttributeParser.class)
 	})	
-	void processEvents(C context) throws InterfaceConfigException;
+	void processAttributes(C context) throws InterfaceConfigException;
 }

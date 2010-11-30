@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasWidgetsFactory <T extends Widget>
+public interface HasWidgetsFactory <T extends Widget, C extends WidgetFactoryContext>
 {
 	/**
 	 * @param parent

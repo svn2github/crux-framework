@@ -46,10 +46,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
@@ -165,7 +163,7 @@ class HTMLBuilder
 				try
 				{
 					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					Method method = clientClass.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
+					Method method = ClassUtils.getProcessChildrenMethod(clientClass); 
 					generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
 																		library, widget, new HashSet<String>());
 				}
@@ -192,7 +190,7 @@ class HTMLBuilder
 			String parentPath;
 			for (TagChild child : tagChildren.value())
 			{
-				Class<? extends WidgetChildProcessor<?>> processorClass = child.value();
+				Class<? extends WidgetChildProcessor<?,?>> processorClass = child.value();
 				if (!added.contains(processorClass.getCanonicalName()))
 				{
 					parentPath = parentWidget;
@@ -225,7 +223,7 @@ class HTMLBuilder
 					
 					try
 					{
-						Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+						Method method = ClassUtils.getProcessChildrenMethod(processorClass);
 						generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
 																	parentLibrary, parentPath, added);
 					}

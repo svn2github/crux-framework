@@ -17,19 +17,37 @@ package br.com.sysmap.crux.core.client.screen.factory;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
-import com.google.gwt.user.client.ui.HasWordWrap;
+import com.google.gwt.user.client.ui.HasHTML;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasWordWrapFactory<T extends HasWordWrap, C extends WidgetFactoryContext>
+public interface HasHTMLFactory<T extends HasHTML, C extends WidgetFactoryContext> extends HasTextFactory<T, C>
 {
 	@TagAttributes({
-		@TagAttribute(value="wordWrap", type=Boolean.class)
+		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, parser=HTMLParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	class HTMLParser implements AttributeParser<WidgetFactoryContext>
+	{
+		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		{
+			HasHTML widget = (HasHTML)context.getWidget();
+			String text = context.readWidgetProperty("text");
+			if (text == null || text.length() ==0)
+			{
+				widget.setHTML(propertyValue);
+			}
+		}
+	}
 }

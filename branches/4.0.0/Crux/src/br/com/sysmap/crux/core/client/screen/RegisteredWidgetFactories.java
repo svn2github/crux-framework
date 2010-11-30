@@ -24,5 +24,5 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface RegisteredWidgetFactories 
 {
-	WidgetFactory<? extends Widget> getWidgetFactory(String type) throws InterfaceConfigException;
+	WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> getWidgetFactory(String type) throws InterfaceConfigException;
 }

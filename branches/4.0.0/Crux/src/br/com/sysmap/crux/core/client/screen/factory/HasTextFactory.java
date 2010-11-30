@@ -18,7 +18,7 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.user.client.ui.HasText;
 
@@ -26,10 +26,10 @@ import com.google.gwt.user.client.ui.HasText;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasTextFactory<T extends HasText>
+public interface HasTextFactory<T extends HasText, C extends WidgetFactoryContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="text", supportsI18N=true)
 	})	
-	void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processAttributes(C context) throws InterfaceConfigException;
 }

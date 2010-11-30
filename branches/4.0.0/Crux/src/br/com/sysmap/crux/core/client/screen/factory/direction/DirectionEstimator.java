@@ -13,24 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen.factory;
-
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
+package br.com.sysmap.crux.core.client.screen.factory.direction;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasClickHandlersFactory<T extends HasClickHandlers, C extends WidgetFactoryContext>
+public enum DirectionEstimator
 {
-	@TagEvents({
-		@TagEvent(ClickEvtBind.class)
-	})	
-	void processEvents(C context) throws InterfaceConfigException;
+	anyRtl, firstStrong, wordCount
 }

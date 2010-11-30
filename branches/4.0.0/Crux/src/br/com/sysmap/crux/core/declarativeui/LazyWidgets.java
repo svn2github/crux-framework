@@ -33,10 +33,9 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
 import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -70,55 +69,6 @@ public class LazyWidgets
 		this.escapeXML = escapeXML;
     }
 	
-	
-	/**
-	 * @param factoryType
-	 * @return
-	 */
-	private static Method getChildProcessorMethod(Class<?> factoryType)
-	{
-		Method[] methods = factoryType.getMethods();
-		if (methods != null)
-		{
-			for (Method method : methods)
-            {
-	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
-	            {
-	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetChildProcessorContext.class.isAssignableFrom(paramClass))
-	            	{
-	            		return method;
-	            	}
-	            }
-            }
-		}
-		return null;
-	}
-
-	/**
-	 * @param factoryType
-	 * @return
-	 */
-	private static Method getProcessChildrenMethod(Class<?> factoryType)
-	{
-		Method[] methods = factoryType.getMethods();
-		if (methods != null)
-		{
-			for (Method method : methods)
-            {
-	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
-	            {
-	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetFactoryContext.class.isAssignableFrom(paramClass))
-	            	{
-	            		return method;
-	            	}
-	            }
-            }
-		}
-		return null;
-	}
-
 	/**
 	 * @param childrenMethod
 	 * @param factoryHelper
@@ -146,7 +96,7 @@ public class LazyWidgets
 							declaredCheckers.add(lazyChecker);
 						}
 					}
-					Method childProcessorMethod = getChildProcessorMethod(childProcessor);
+					Method childProcessorMethod = ClassUtils.getProcessChildrenMethod(childProcessor);
 					initializeLazyChecker(childProcessorMethod, childProcessor, declaredCheckers, added);
 				}
 			}
@@ -163,7 +113,7 @@ public class LazyWidgets
 		String widgetFactoryClass = WidgetConfig.getClientClass(type);
 		Class<?> factoryType = Class.forName(widgetFactoryClass);
 		
-		Method childrenMethod = getProcessChildrenMethod(factoryType);
+		Method childrenMethod = ClassUtils.getProcessChildrenMethod(factoryType);
 		
 		final List<WidgetLazyChecker> declaredCheckers = new ArrayList<WidgetLazyChecker>();
 		initializeLazyChecker(childrenMethod, factoryType, declaredCheckers, new HashSet<String>());

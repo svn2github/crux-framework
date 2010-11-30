@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.client.screen.children;
 
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -25,6 +26,6 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 @TagChildAttributes(type=AnyWidget.class)
-public class AnyWidgetChildProcessor<T extends Widget> extends WidgetChildProcessor<T>
+public class AnyWidgetChildProcessor<T extends Widget, C extends WidgetFactoryContext> extends WidgetChildProcessor<T, C>
 {
 }

@@ -36,5 +36,6 @@ public @interface TagAttribute
 	String property() default "";
 	boolean required() default false;
 	boolean supportsI18N() default false;
-	Class<? extends AttributeParser> parser() default AttributeParser.NoParser.class;
+	Class<?> parser() default AttributeParser.NoParser.class;
+	boolean xsdIgnore() default false;
 }

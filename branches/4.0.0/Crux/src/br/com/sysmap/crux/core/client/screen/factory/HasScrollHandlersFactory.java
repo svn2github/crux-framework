@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.ScrollEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.dom.client.HasScrollHandlers;
 
@@ -27,10 +27,10 @@ import com.google.gwt.event.dom.client.HasScrollHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasScrollHandlersFactory<T extends HasScrollHandlers>
+public interface HasScrollHandlersFactory<T extends HasScrollHandlers, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(ScrollEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

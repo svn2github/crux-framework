@@ -15,15 +15,16 @@
  */
 package br.com.sysmap.crux.core.client.screen.children;
 
-import com.google.gwt.user.client.ui.Widget;
-
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasPostProcessor<T extends Widget>
+public interface HasPostProcessor<T extends Widget, C extends WidgetFactoryContext>
 {
-	void postProcessChildren(WidgetChildProcessorContext context) throws InterfaceConfigException;
+	void postProcessChildren(C context) throws InterfaceConfigException;
 }

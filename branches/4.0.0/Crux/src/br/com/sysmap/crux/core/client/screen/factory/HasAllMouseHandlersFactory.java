@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.client.event.bind.MouseOverEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 
@@ -32,7 +32,7 @@ import com.google.gwt.event.dom.client.HasAllMouseHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAllMouseHandlersFactory<T extends HasAllMouseHandlers>
+public interface HasAllMouseHandlersFactory<T extends HasAllMouseHandlers, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(MouseDownEvtBind.class),
@@ -42,5 +42,5 @@ public interface HasAllMouseHandlersFactory<T extends HasAllMouseHandlers>
 		@TagEvent(MouseMoveEvtBind.class),
 		@TagEvent(MouseWheelEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

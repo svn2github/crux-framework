@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 
@@ -29,12 +29,12 @@ import com.google.gwt.event.dom.client.HasAllKeyHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAllKeyHandlersFactory<T extends HasAllKeyHandlers>
+public interface HasAllKeyHandlersFactory<T extends HasAllKeyHandlers, C extends WidgetFactoryContext>
 {
 	@TagEvents({
 		@TagEvent(KeyUpEvtBind.class),
 		@TagEvent(KeyPressEvtBind.class),
 		@TagEvent(KeyDownEvtBind.class)
 	})	
-	void processEvents(WidgetFactoryContext context) throws InterfaceConfigException;
+	void processEvents(C context) throws InterfaceConfigException;
 }

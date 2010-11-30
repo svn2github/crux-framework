@@ -15,16 +15,15 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface AttributeParser 
+public interface AttributeParser<C extends WidgetFactoryContext> 
 {
-	interface NoParser extends AttributeParser
+	interface NoParser extends AttributeParser<WidgetFactoryContext>
 	{
 	}
-	void processAttribute(WidgetFactoryContext context, String propertyValue);
+	void processAttribute(C context, String propertyValue);
 }

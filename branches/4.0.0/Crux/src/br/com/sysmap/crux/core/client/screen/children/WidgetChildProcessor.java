@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.client.screen.children;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,9 +24,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class WidgetChildProcessor<T extends Widget>
+public class WidgetChildProcessor<T extends Widget, C extends WidgetFactoryContext>
 {
-	public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException{}
+	public void processChildren(C context) throws InterfaceConfigException{}
 	
 	public static class AnyWidget{}
 	public static class AnyTag{}

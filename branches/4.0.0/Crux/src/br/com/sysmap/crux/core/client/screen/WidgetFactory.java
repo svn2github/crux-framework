@@ -17,7 +17,6 @@ package br.com.sysmap.crux.core.client.screen;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.Array;
-import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -40,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class WidgetFactory <T extends Widget>
+public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryContext>
 {
 	private static int currentId = 0;
 	
@@ -228,7 +227,7 @@ public abstract class WidgetFactory <T extends Widget>
 	@SuppressWarnings("unchecked")
 	public T createWidget(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
-		WidgetFactoryContext context = createContext(metaElem, widgetId, addToScreen);
+		C context = createContext(metaElem, widgetId, addToScreen);
 		if (context != null)
 		{
 			processAttributes(context);
@@ -241,7 +240,13 @@ public abstract class WidgetFactory <T extends Widget>
 	}
 	
 	public abstract T instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException;
-	
+
+	@SuppressWarnings("unchecked")
+	protected C instantiateContext()
+	{
+		return (C)new WidgetFactoryContext();
+	}
+
 	/**
 	 * Process element children
 	 * @param widget
@@ -249,7 +254,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param widgetId
 	 * @throws InterfaceConfigException 
 	 */
-	public void postProcess(WidgetFactoryContext context) throws InterfaceConfigException
+	public void postProcess(C context) throws InterfaceConfigException
 	{
 	}
 	
@@ -269,7 +274,7 @@ public abstract class WidgetFactory <T extends Widget>
 		@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 		@TagAttribute(value="style", parser=StyleProcessor.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(C context) throws InterfaceConfigException
 	{
 	}
 	
@@ -277,7 +282,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class StyleProcessor implements AttributeParser
+	public static class StyleProcessor implements AttributeParser<WidgetFactoryContext>
 	{
 		public void processAttribute(WidgetFactoryContext context, String style)
 		{
@@ -301,7 +306,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @param widgetId
 	 * @throws InterfaceConfigException 
 	 */
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(C context) throws InterfaceConfigException
 	{
 	}
 	
@@ -315,7 +320,7 @@ public abstract class WidgetFactory <T extends Widget>
 		@TagEvent(AttachEvtBind.class),
 		@TagEvent(DettachEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(C context) throws InterfaceConfigException
 	{
 	}
 	
@@ -345,7 +350,7 @@ public abstract class WidgetFactory <T extends Widget>
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
-	protected WidgetFactoryContext createContext(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
+	protected C createContext(CruxMetaDataElement metaElem, String widgetId, boolean addToScreen) throws InterfaceConfigException
 	{
 		T widget = instantiateWidget(metaElem, widgetId);
 		if (widget != null)
@@ -358,11 +363,16 @@ public abstract class WidgetFactory <T extends Widget>
 			{
 				updateWidgetElementId(widgetId, widget);
 			}
-			return new WidgetFactoryContext(widget, metaElem, widgetId);
+			C context = instantiateContext();
+			context.setWidget(widget);
+			context.setWidgetElement(metaElem);
+			context.setWidgetId(widgetId);
+			context.setChildElement(metaElem);
+			return context;
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 
 	 * @param element
@@ -386,63 +396,4 @@ public abstract class WidgetFactory <T extends Widget>
 	    	element.setId(widgetId);
 	    }
     }
-	
-	/**
-	 * 
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	public static class WidgetFactoryContext
-	{
-		private FastMap<Object> attributes;
-		private CruxMetaDataElement element;
-		private Widget widget;
-		private String widgetId;
-		
-		WidgetFactoryContext(Widget widget, CruxMetaDataElement metaElem, String widgetId)
-		{
-			this.widget = widget;
-			this.element = metaElem;
-			this.widgetId = widgetId;
-			this.attributes = new FastMap<Object>();
-		}
-		
-		public void clearAttributes()
-		{
-			this.attributes.clear();
-		}
-		public boolean containsAttribute(String key)
-		{
-			return attributes.containsKey(key);
-		}
-		public Object getAttribute(String key)
-		{
-			return attributes.get(key);
-		}
-		public CruxMetaDataElement getElement()
-		{
-			return element;
-		}
-		@SuppressWarnings("unchecked")
-		public <W extends Widget> W getWidget()
-		{
-			return (W) widget;
-		}
-		public String getWidgetId()
-		{
-			return widgetId;
-		}
-		public String readWidgetProperty(String propertyName)
-		{
-			return element.getProperty(propertyName);
-		}
-		public void removeAttribute(String key)
-		{
-			this.attributes.remove(key);
-		}
-		public void setAttribute(String key, Object value)
-		{
-			this.attributes.put(key, value);
-		}
-	}
 }

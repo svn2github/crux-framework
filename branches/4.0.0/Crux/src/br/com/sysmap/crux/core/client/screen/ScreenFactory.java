@@ -191,7 +191,7 @@ public class ScreenFactory
 		{
 			logger.log(Level.FINE, "Creating new widget: WidgetID=["+widgetId+"], WidgetType=["+widgetType+"], AddToScreen=["+addToScreen+"]");
 		}
-		WidgetFactory<? extends Widget> widgetFactory = registeredWidgetFactories.getWidgetFactory(widgetType);
+		WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> widgetFactory = registeredWidgetFactories.getWidgetFactory(widgetType);
 		if (widgetFactory == null)
 		{
 			throw new InterfaceConfigException(Crux.getMessages().screenFactoryWidgetFactoryNotFound(widgetType));
@@ -471,9 +471,9 @@ public class ScreenFactory
 		}
 		else
 		{
-			WidgetFactory<?> factory = registeredWidgetFactories.getWidgetFactory(parentType);
+			WidgetFactory<?,?> factory = registeredWidgetFactories.getWidgetFactory(parentType);
 			assert (factory instanceof HasWidgetsFactory);
-			HasWidgetsFactory<Widget> parentWidgetFactory = (HasWidgetsFactory<Widget>) factory;
+			HasWidgetsFactory<Widget, WidgetFactoryContext> parentWidgetFactory = (HasWidgetsFactory<Widget, WidgetFactoryContext>) factory;
 			parentWidgetFactory.add(parent, parentId, widget, widgetId);
 		}
 		return widget;

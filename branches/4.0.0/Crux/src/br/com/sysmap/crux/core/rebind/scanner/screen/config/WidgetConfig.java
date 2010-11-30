@@ -87,7 +87,7 @@ public class WidgetConfig
 			{
 				try 
 				{
-					Class<? extends WidgetFactory<?>> factoryClass = (Class<? extends WidgetFactory<?>>)Class.forName(name);
+					Class<? extends WidgetFactory<?,?>> factoryClass = (Class<? extends WidgetFactory<?,?>>)Class.forName(name);
 					br.com.sysmap.crux.core.client.declarative.DeclarativeFactory annot = 
 						factoryClass.getAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
 					if (!registeredLibraries.containsKey(annot.library()))
