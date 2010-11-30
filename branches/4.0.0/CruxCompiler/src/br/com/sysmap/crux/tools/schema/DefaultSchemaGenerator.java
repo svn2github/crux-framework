@@ -45,14 +45,13 @@ import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
@@ -84,7 +83,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	protected DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	protected Map<String, File> namespacesForCatalog;
 	protected File projectBaseDir;
-	protected Stack<Class<? extends WidgetChildProcessor<?>>> subTagTypes;
+	protected Stack<Class<? extends WidgetChildProcessor<?,?>>> subTagTypes;
 	protected TemplateParser templateParser;
 		
 	/**
@@ -98,7 +97,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		this.destDir.mkdirs();
 		this.enumTypes = new HashMap<String, Class<?>>();
 		this.namespacesForCatalog = new HashMap<String, File>();
-		this.subTagTypes = new Stack<Class<? extends WidgetChildProcessor<?>>>();
+		this.subTagTypes = new Stack<Class<? extends WidgetChildProcessor<?,?>>>();
 		this.templateParser = new TemplateParser();
 		
 		initializeSchemaGenerator(projectBaseDir, webDir);
@@ -254,7 +253,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param widgetFactory
 	 * @return
 	 */
-	private boolean factorySupportsInnerText(Class<? extends WidgetFactory<?>> widgetFactory)
+	private boolean factorySupportsInnerText(Class<? extends WidgetFactory<?,?>> widgetFactory)
 	{
 		try
 		{
@@ -427,9 +426,9 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateChild(PrintStream out, TagChild tagChild, boolean parentIsAnAgregator, String library) throws SecurityException, NoSuchMethodException
 	{
-		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
+		Class<? extends WidgetChildProcessor<?,?>> processorClass = tagChild.value();
 		TagChildAttributes attributes = ClassUtils.getChildtrenAttributesAnnotation(processorClass);
-		Method processorMethod = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+		Method processorMethod = ClassUtils.getProcessChildrenMethod(processorClass);
 		TagChildren children = processorMethod.getAnnotation(TagChildren.class);
 		
 		if (ChoiceChildProcessor.class.isAssignableFrom(processorClass))
@@ -500,7 +499,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetFactory<?>> widgetFactory, String library)
+	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetFactory<?,?>> widgetFactory, String library)
 	{
 		try
 		{
@@ -519,11 +518,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param widgetFactory
 	 * @param library
 	 */
-	private void generateChildrenForProcessor(PrintStream out, Class<? extends WidgetChildProcessor<?>> processorClass, String library)
+	private void generateChildrenForProcessor(PrintStream out, Class<? extends WidgetChildProcessor<?,?>> processorClass, String library)
 	{
 		try
 		{
-			Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
 			generateChildren(out, library, method);
 		}
 		catch (Exception e)
@@ -797,7 +796,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
 			if (method != null)
 			{
 				generateEvents(out, added, method);
@@ -821,7 +820,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param processorClass
 	 * @param attributes
 	 */
-	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?>> processorClass, TagChildAttributes attributes)
+	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?,?>> processorClass, TagChildAttributes attributes)
 	{
 		Class<?> type = attributes.type();
 		String tagName = attributes.tagName();
@@ -912,7 +911,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
 	        for (String id : factories)
 	        {
-	        	Class<? extends WidgetFactory<?>> widgetFactory = (Class<? extends WidgetFactory<?>>) 
+	        	Class<? extends WidgetFactory<?,?>> widgetFactory = (Class<? extends WidgetFactory<?,?>>) 
 	        				Class.forName(WidgetConfig.getClientClass(library, id));
 	        	generateTypeForFactory(out, widgetFactory, library);
 	        }
@@ -1105,7 +1104,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetFactory<?>> widgetFactory, String library)
+	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetFactory<?,?>> widgetFactory, String library)
 	{
 		DeclarativeFactory annot = widgetFactory.getAnnotation(DeclarativeFactory.class);
 		String elementName = annot.id();
@@ -1185,7 +1184,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		Set<String> added = new HashSet<String>();
 		while (subTagTypes.size() > 0)
 		{
-			Class<? extends WidgetChildProcessor<?>> type = subTagTypes.pop();
+			Class<? extends WidgetChildProcessor<?,?>> type = subTagTypes.pop();
 			String elementName = type.getCanonicalName().replace('.', '_');
 			if (!added.contains(elementName))
 			{
@@ -1242,7 +1241,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			return factoryClass.getDeclaredMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+			return ClassUtils.getDeclaredProcessChildrenMethod(factoryClass);
 		}
 		catch (Exception e)
 		{
@@ -1326,7 +1325,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		else if (WidgetChildProcessor.class.isAssignableFrom(type))
 		{
 			String typeName = type.getCanonicalName().replace('.', '_');
-			this.subTagTypes.add((Class<? extends WidgetChildProcessor<?>>) type);
+			this.subTagTypes.add((Class<? extends WidgetChildProcessor<?,?>>) type);
 			return typeName;
 		}
 		else if (AnyTag.class.isAssignableFrom(type))
@@ -1358,7 +1357,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private boolean isChildAnAgregator(TagChild tagChild)
 	{
-		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
+		Class<? extends WidgetChildProcessor<?,?>> processorClass = tagChild.value();
 		return processorClass != null && (ChoiceChildProcessor.class.isAssignableFrom(processorClass) || 
 										  SequenceChildProcessor.class.isAssignableFrom(processorClass) ||
 										  AllChildProcessor.class.isAssignableFrom(processorClass));
@@ -1369,11 +1368,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param type
 	 * @return
 	 */
-	private boolean processorSupportsInnerText(Class<? extends WidgetChildProcessor<?>> processorClass)
+	private boolean processorSupportsInnerText(Class<? extends WidgetChildProcessor<?,?>> processorClass)
 	{
 		try
 		{
-			Method method = processorClass.getMethod("processChildren", new Class[]{WidgetChildProcessorContext.class});
+			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
 			return hasTextChild(method);
 		}
 		catch (Exception e)
