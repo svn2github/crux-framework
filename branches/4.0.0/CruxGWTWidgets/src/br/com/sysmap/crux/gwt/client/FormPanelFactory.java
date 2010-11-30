@@ -23,20 +23,13 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
+import br.com.sysmap.crux.core.client.declarative.TagEvent;
+import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 /**
  * Represents a FormPanelFactory.
@@ -61,40 +54,13 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	}
 	
 	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onSubmitComplete"),
-		@TagEventDeclaration("onSubmit")
+	@TagEvents({
+		@TagEvent(SubmitCompleteEvtBind.class),
+		@TagEvent(SubmitEvtBind.class)
 	})
 	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
 		super.processEvents(context);
-		
-		CruxMetaDataElement element = context.getElement();
-		FormPanel widget = context.getWidget();
-		
-		final Event eventSubmitComplete = EvtBind.getWidgetEvent(element, "onSubmitComplete");
-		if (eventSubmitComplete != null)
-		{
-			widget.addSubmitCompleteHandler(new SubmitCompleteHandler()
-			{
-				public void onSubmitComplete(SubmitCompleteEvent event) 
-				{
-					Events.callEvent(eventSubmitComplete, event);
-				}
-			});
-		}
-		
-		final Event eventSubmit = EvtBind.getWidgetEvent(element, "onSubmit");
-		if (eventSubmitComplete != null)
-		{
-			widget.addSubmitHandler(new SubmitHandler()
-			{
-				public void onSubmit(SubmitEvent event) 
-				{
-					Events.callEvent(eventSubmit, event);
-				}
-			});
-		}
 	}
 	
 	@Override
