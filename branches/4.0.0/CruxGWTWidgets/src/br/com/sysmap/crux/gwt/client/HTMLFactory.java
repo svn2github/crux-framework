@@ -20,12 +20,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHTML;
 
 
 /**
@@ -34,7 +35,7 @@ import com.google.gwt.user.client.ui.HasHTML;
  *
  */
 @DeclarativeFactory(id="HTML", library="gwt")
-public class HTMLFactory extends AbstractLabelFactory<HTML>
+public class HTMLFactory extends AbstractLabelFactory<HTML> implements HasHTMLFactory<HTML, WidgetFactoryContext>
 {
 	@Override
 	public HTML instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -42,25 +43,6 @@ public class HTMLFactory extends AbstractLabelFactory<HTML>
 		return new HTML();
 	}
 	
-	@Override
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-		
-		CruxMetaDataElement element = context.getElement();
-		HTML widget = context.getWidget();
-
-		String text = context.readWidgetProperty("text");
-		if ((text == null || text.length() ==0))
-		{
-			String innerHtml = ensureHtmlChild(element, true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
@@ -70,5 +52,5 @@ public class HTMLFactory extends AbstractLabelFactory<HTML>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<HTML> {}
+	public static class ContentProcessor extends WidgetChildProcessor<HTML, WidgetFactoryContext> {}
 }

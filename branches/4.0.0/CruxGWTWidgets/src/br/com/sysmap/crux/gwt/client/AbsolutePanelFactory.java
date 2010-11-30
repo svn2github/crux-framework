@@ -22,22 +22,30 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
+
+
+class AbsolutePanelContext extends WidgetFactoryContext
+{
+	String left;
+	String top;
+}
+
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="absolutePanel", library="gwt")
-public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
+public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel, AbsolutePanelContext>
 {
-
 	@Override
 	public AbsolutePanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
@@ -48,12 +56,12 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 	@TagChildren({
 		@TagChild(AbsoluteChildrenProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
 	{
 	}	
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="widget" )
-	public static class AbsoluteChildrenProcessor extends WidgetChildProcessor<AbsolutePanel> 
+	public static class AbsoluteChildrenProcessor extends WidgetChildProcessor<AbsolutePanel, AbsolutePanelContext> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -63,37 +71,32 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel>
 		@TagChildren({
 			@TagChild(AbsoluteWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
 		{
-			String left = context.readChildProperty("left");
-			String top = context.readChildProperty("top");
-			context.setAttribute("left", left);
-			context.setAttribute("top", top);
+			context.left = context.readChildProperty("left");
+			context.top = context.readChildProperty("top");
 		}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanel> 
+	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanel, AbsolutePanelContext> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
 		{
-			String left = (String) context.getAttribute("left");
-			String top = (String) context.getAttribute("top");
-
 			Widget child = createChildWidget(context.getChildElement());
-			AbsolutePanel absolutePanel = context.getRootWidget();
-			if (left != null && left.length() > 0 && top != null && top.length() > 0)
+			AbsolutePanel absolutePanel = context.getWidget();
+			if (!StringUtils.isEmpty(context.left) && !StringUtils.isEmpty(context.top))
 			{
-				absolutePanel.add(child, Integer.parseInt(left), Integer.parseInt(top));
+				absolutePanel.add(child, Integer.parseInt(context.left), Integer.parseInt(context.top));
 			}
 			else
 			{
 				absolutePanel.add(child);
 			}
 			
-			context.setAttribute("left", null);
-			context.setAttribute("top", null);
+			context.left = null;
+			context.top = null;
 		}
 	}	
 }

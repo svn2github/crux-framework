@@ -20,11 +20,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
-import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
 
@@ -34,31 +35,12 @@ import com.google.gwt.user.client.ui.InlineHTML;
  *
  */
 @DeclarativeFactory(id="inlineHTML", library="gwt")
-public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
+public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML> implements HasHTMLFactory<InlineHTML, WidgetFactoryContext>
 {
 	@Override
 	public InlineHTML instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new InlineHTML();
-	}
-	
-	@Override
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-		
-		CruxMetaDataElement element = context.getElement();
-		InlineHTML widget = context.getWidget();
-
-		String text = context.readWidgetProperty("text");
-		if ((text == null || text.length() ==0))
-		{
-			String innerHtml = ensureHtmlChild(element, true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
 	}
 	
 	@Override
@@ -70,6 +52,6 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<InlineHTML> {}
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHTML, WidgetFactoryContext> {}
 	
-}//TODO as factories HasHTML nao estao suportando i18n declarativo.
+}

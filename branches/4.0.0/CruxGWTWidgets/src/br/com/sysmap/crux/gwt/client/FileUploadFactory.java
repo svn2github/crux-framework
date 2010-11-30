@@ -16,7 +16,13 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FileUpload;
@@ -26,12 +32,23 @@ import com.google.gwt.user.client.ui.FileUpload;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="fileUpload", library="gwt")
-public class FileUploadFactory extends WidgetFactory<FileUpload>
-{
+public class FileUploadFactory extends WidgetFactory<FileUpload, WidgetFactoryContext> 
+	   implements HasChangeHandlersFactory<FileUpload, WidgetFactoryContext>, 
+	   			  HasNameFactory<FileUpload, WidgetFactoryContext>
+{//TODO should implement HasEnabledFactory, but GWT FileUploadWidget does not implement HasEnabled. GWT Issue 5677
 
 	@Override
 	public FileUpload instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		return new FileUpload();
+	}
+	
+	@Override
+	@TagAttributes({
+		@TagAttribute(value="enabled", type=Boolean.class)
+	})
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	{
+		super.processAttributes(context);
 	}
 }

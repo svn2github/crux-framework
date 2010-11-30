@@ -20,6 +20,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
@@ -48,5 +49,5 @@ public class ButtonFactory extends ButtonBaseFactory<Button>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<Button> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<Button, WidgetFactoryContext> {}	
 }

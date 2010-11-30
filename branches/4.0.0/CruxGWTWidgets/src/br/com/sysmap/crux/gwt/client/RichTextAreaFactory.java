@@ -25,24 +25,33 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasInitializeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
-import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.RichTextArea.FontSize;
 import com.google.gwt.user.client.ui.RichTextArea.Formatter;
 import com.google.gwt.user.client.ui.RichTextArea.Justification;
 
 
+class RichTextAreaContext extends WidgetFactoryContext
+{
+
+	protected FastMap<String> declaredProperties;
+	
+}
+
 /**
  * Represents a rich text area component
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="richTextArea", library="gwt")
-public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implements HasTextFactory<RichTextArea>
+public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea, RichTextAreaContext> 
+implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandlersFactory<RichTextArea, RichTextAreaContext>
 {
 	@Override
 	public RichTextArea instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -64,33 +73,26 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 		@TagAttributeDeclaration(value="underline", type=Boolean.class),
 		@TagAttributeDeclaration(value="strikethrough", type=Boolean.class)
 	})
-	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(final RichTextAreaContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
-		
+		context.declaredProperties = readDeclaredProperties(context);
+	}
+	
+	@Override
+	public void postProcess(final RichTextAreaContext context) throws InterfaceConfigException 
+	{
+		super.postProcess(context);
 		final RichTextArea widget = context.getWidget();
-		
-		final FastMap<String> declaredProperties = readDeclaredProperties(context);
-
 		// We need to give UI thread time to render the textArea before try to focus it
 		addScreenLoadedHandler(new ScreenLoadHandler()
 		{
 			public void onLoad(ScreenLoadEvent event) 
 			{
 				widget.setFocus(true);// Necessary to work around a bug in mozzila
-				initFormatterOptions(widget, declaredProperties);
+				initFormatterOptions(widget, context.declaredProperties);
 			}
 		});
-
-		String text = context.readWidgetProperty("text");
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = ensureHtmlChild(context.getElement(), true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
 	}
 	
 	/**
@@ -261,11 +263,11 @@ public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea> implem
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(RichTextAreaContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<RichTextArea> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<RichTextArea, RichTextAreaContext> {}	
 	
 }

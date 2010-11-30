@@ -16,13 +16,14 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.Frame;
 
@@ -31,23 +32,30 @@ import com.google.gwt.user.client.ui.Frame;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="frame", library="gwt")
-public class FrameFactory extends WidgetFactory<Frame>
+public class FrameFactory extends WidgetFactory<Frame, WidgetFactoryContext>
 {
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("url")
+	@TagAttributes({
+		@TagAttribute(value="url", parser=URLAttributeParser.class)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		String url = context.readWidgetProperty("url");
-		if (!StringUtils.isEmpty(url))
-		{
-			Frame widget = context.getWidget();
-			widget.setUrl(Screen.appendDebugParameters(url));
-		}
 	}
 
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class URLAttributeParser implements AttributeParser<WidgetFactoryContext>
+	{
+		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		{
+			Frame widget = context.getWidget();
+			widget.setUrl(Screen.appendDebugParameters(propertyValue));
+		}
+	}
+	
 	@Override
 	public Frame instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{

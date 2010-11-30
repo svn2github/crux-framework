@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.BlurEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
+import br.com.sysmap.crux.core.client.event.bind.DoubleClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.FocusEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
@@ -33,6 +34,7 @@ import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 
@@ -42,7 +44,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
  * @author Thiago Bustamante
  *
  */
-public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetFactory<T> 
+public abstract class FocusWidgetFactory <T extends FocusWidget, C extends WidgetFactoryContext> extends WidgetFactory<T, C> 
 {
 	/**
 	 * Process widget attributes
@@ -55,7 +57,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(C context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -63,6 +65,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 	@Override
 	@TagEvents({
 		@TagEvent(ClickEvtBind.class),
+		@TagEvent(DoubleClickEvtBind.class),
 		@TagEvent(FocusEvtBind.class),
 		@TagEvent(BlurEvtBind.class),
 		@TagEvent(KeyPressEvtBind.class),
@@ -75,7 +78,7 @@ public abstract class FocusWidgetFactory <T extends FocusWidget> extends WidgetF
 		@TagEvent(MouseMoveEvtBind.class),
 		@TagEvent(MouseWheelEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(C context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

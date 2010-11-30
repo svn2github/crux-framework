@@ -21,8 +21,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -32,11 +32,19 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 
+
+
+class DockLayoutPanelContext extends WidgetFactoryContext
+{
+	String left;
+	String top;
+}
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> extends AbstractLayoutPanelFactory<T>
+public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> extends AbstractLayoutPanelFactory<T, DockLayoutPanelContext>
 {
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")

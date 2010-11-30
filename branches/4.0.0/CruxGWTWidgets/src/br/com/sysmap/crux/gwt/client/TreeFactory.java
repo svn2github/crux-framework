@@ -30,12 +30,13 @@ import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.HasPostProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
@@ -52,16 +53,22 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Tree.Resources;
 
+
+class TreeContext extends WidgetFactoryContext
+{
+	LinkedList<TreeItem> itemStack;
+}
+
 /**
  * Represents a TreeFactory DeclarativeFactory
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="tree", library="gwt")
-public class TreeFactory extends WidgetFactory<Tree> 
-       implements HasAnimationFactory<Tree>, HasAllFocusHandlersFactory<Tree>,
-                  HasOpenHandlersFactory<Tree>, HasCloseHandlersFactory<Tree>, 
-                  HasAllMouseHandlersFactory<Tree>, HasAllKeyHandlersFactory<Tree>,
-                  HasSelectionHandlersFactory<Tree>
+public class TreeFactory extends WidgetFactory<Tree, TreeContext> 
+       implements HasAnimationFactory<Tree, TreeContext>, HasAllFocusHandlersFactory<Tree, TreeContext>,
+                  HasOpenHandlersFactory<Tree, TreeContext>, HasCloseHandlersFactory<Tree, TreeContext>, 
+                  HasAllMouseHandlersFactory<Tree, TreeContext>, HasAllKeyHandlersFactory<Tree, TreeContext>,
+                  HasSelectionHandlersFactory<Tree, TreeContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
@@ -92,33 +99,37 @@ public class TreeFactory extends WidgetFactory<Tree>
 	@TagAttributes({
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute(value="accessKey", type=Character.class),
+		@TagAttribute(value="openSelectedItem", type=Boolean.class, parser=OpenSelectedItemAttributeParser.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class),
-		@TagAttributeDeclaration(value="openSelectedItem", type=Boolean.class)
+		@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(TreeContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
-		
-		Tree widget = context.getWidget();
-		
-		String openSelectedItem = context.readWidgetProperty("openSelectedItem");
-		if (openSelectedItem != null && openSelectedItem.length() > 0)
+	}
+
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 */
+	public static class OpenSelectedItemAttributeParser implements AttributeParser<TreeContext>
+	{
+		public void processAttribute(TreeContext context, String propertyValue) 
 		{
-			if(Boolean.parseBoolean(openSelectedItem))
+			if(Boolean.parseBoolean(propertyValue))
 			{
+				Tree widget = context.getWidget();
 				widget.ensureSelectedItemVisible();
 			}
 		}
 	}
-
+	
 	@Override
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadImage")
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(TreeContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -127,10 +138,10 @@ public class TreeFactory extends WidgetFactory<Tree>
 	@TagChildren({
 		@TagChild(TreeItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(TreeContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
-	public static class TreeItemProcessor extends WidgetChildProcessor<Tree> implements HasPostProcessor<Tree>
+	public static class TreeItemProcessor extends WidgetChildProcessor<Tree, TreeContext> implements HasPostProcessor<Tree, TreeContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -141,43 +152,38 @@ public class TreeFactory extends WidgetFactory<Tree>
 			@TagChild(TreeCaptionProcessor.class),
 			@TagChild(TreeItemProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(TreeContext context) throws InterfaceConfigException 
 		{
-			LinkedList<TreeItem> itemStack = new LinkedList<TreeItem>();
-			context.setAttribute("itemStack", itemStack);
+			context.itemStack = new LinkedList<TreeItem>();
 		}
 		
-		@SuppressWarnings("unchecked")
-		public void postProcessChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void postProcessChildren(TreeContext context) throws InterfaceConfigException 
 		{
-			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
-			itemStack.removeFirst();
+			context.itemStack.removeFirst();
 		}
 	}
 	
-	public static class TreeCaptionProcessor extends ChoiceChildProcessor<Tree>
+	public static class TreeCaptionProcessor extends ChoiceChildProcessor<Tree, TreeContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TextCaptionProcessor.class),
 			@TagChild(WidgetCaptionProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TreeContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="textTitle", type=String.class)
-	public static class TextCaptionProcessor extends WidgetChildProcessor<Tree>
+	public static class TextCaptionProcessor extends WidgetChildProcessor<Tree, TreeContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(TreeContext context) throws InterfaceConfigException 
 		{
 			String textCaption = ensureTextChild(context.getChildElement(), true);
-			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 			
-			TreeItem parent = itemStack.peek();
+			TreeItem parent = context.itemStack.peek();
 			TreeItem currentItem;
-			Tree rootWidget = context.getRootWidget();
+			Tree rootWidget = context.getWidget();
 			if (parent == null)
 			{
 				currentItem = rootWidget.addItem(textCaption);
@@ -186,43 +192,41 @@ public class TreeFactory extends WidgetFactory<Tree>
 			{
 				currentItem = parent.addItem(textCaption);
 			}
-			itemStack.addFirst(currentItem);
+			context.itemStack.addFirst(currentItem);
 		}
 	}	
 
 	@TagChildAttributes(tagName="widgetTitle")
-	public static class WidgetCaptionProcessor extends WidgetChildProcessor<Tree>
+	public static class WidgetCaptionProcessor extends WidgetChildProcessor<Tree, TreeContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetCaptionWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TreeContext context) throws InterfaceConfigException {}
 	}	
 
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<Tree>
+	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<Tree, TreeContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(TreeContext context) throws InterfaceConfigException 
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			LinkedList<TreeItem> itemStack = (LinkedList<TreeItem>) context.getAttribute("itemStack");
 
-			TreeItem parent = itemStack.peek();
+			TreeItem parent = context.itemStack.peek();
 			TreeItem currentItem;
 			if (parent == null)
 			{
-				Tree rootWidget = context.getRootWidget();
+				Tree rootWidget = context.getWidget();
 				currentItem = rootWidget.addItem(child);
 			}
 			else
 			{
 				currentItem = parent.addItem(child);
 			}
-			itemStack.addFirst(currentItem);
+			context.itemStack.addFirst(currentItem);
 		}
 	}
 }

@@ -17,61 +17,36 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * Represents an AnchorFactory component
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="anchor", library="gwt")
-public class AnchorFactory extends FocusWidgetFactory<Anchor> 
-	   implements HasTextFactory<Anchor>, HasNameFactory<Anchor>, 
-	              HasWordWrapFactory<Anchor>, HasDirectionFactory<Anchor>
+public class AnchorFactory extends FocusWidgetFactory<Anchor, WidgetFactoryContext> 
+	   implements HasHTMLFactory<Anchor, WidgetFactoryContext>, HasNameFactory<Anchor, WidgetFactoryContext>, 
+	              HasWordWrapFactory<Anchor, WidgetFactoryContext>, HasDirectionFactory<Anchor, WidgetFactoryContext>, 
+	              HasHorizontalAlignmentFactory<Anchor, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute("href"),
 		@TagAttribute("target")
 	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign")
-	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-
-		CruxMetaDataElement element = context.getElement();
-		Anchor widget = context.getWidget();
-		
-		String horizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (horizontalAlignment != null && horizontalAlignment.length() > 0)
-		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}
-		String text = context.readWidgetProperty("text");
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = "";//Tratar o innerHTML element.getInnerHTML();
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
-	
 	}
 
 	@Override

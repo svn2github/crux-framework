@@ -23,13 +23,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
-import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
 /**
@@ -38,8 +38,8 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
  *
  */
 @DeclarativeFactory(id="inlineHyperlink", library="gwt")
-public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
-       implements HasTextFactory<InlineHyperlink>, HasClickHandlersFactory<InlineHyperlink>
+public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink, WidgetFactoryContext>
+       implements HasHTMLFactory<InlineHyperlink, WidgetFactoryContext>, HasClickHandlersFactory<InlineHyperlink, WidgetFactoryContext>
 {
 	@Override
 	public InlineHyperlink instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -53,19 +53,6 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
 	{
-		super.processAttributes(context);
-		
-		InlineHyperlink widget = context.getWidget();
-		
-		String text = context.readWidgetProperty("text");
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = ensureHtmlChild(context.getElement(), true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
 	}
 	
 	@Override
@@ -77,6 +64,6 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<InlineHyperlink> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHyperlink, WidgetFactoryContext> {}	
 	
 }

@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.dom.client.Document;
@@ -34,7 +35,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T> implements HasWidgetsFactory<T>
+public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T, WidgetFactoryContext> 
+				implements HasWidgetsFactory<T, WidgetFactoryContext>
 {
 	/**
 	 * @author Thiago da Rosa de Bustamante

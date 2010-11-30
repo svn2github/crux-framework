@@ -16,57 +16,36 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
 
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HasHTML;
 
 /**
  * CheckBoxFactory DeclarativeFactory.
  * @author Thiago Bustamante
  *
  */
-public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusWidgetFactory<T> 
-       implements HasNameFactory<T>, HasValueChangeHandlersFactory<T>, HasTextFactory<T>
+public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusWidgetFactory<T, WidgetFactoryContext> 
+       implements HasNameFactory<T, WidgetFactoryContext>, HasValueChangeHandlersFactory<T, WidgetFactoryContext>, 
+       			  HasHTMLFactory<T, WidgetFactoryContext>, HasWordWrapFactory<T, WidgetFactoryContext>
 {
 	/**
 	 * process widget attributes
 	 * @throws InterfaceConfigException 
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="checked", type=Boolean.class)
-	})
 	@TagAttributes({
+		@TagAttribute(value="checked", type=Boolean.class, property="value"),
 		@TagAttribute("formValue")	
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		
-		T widget = (T)context.getWidget();
-
-		String checked = context.readWidgetProperty("checked");
-		if (checked != null && checked.trim().length() > 0)
-		{
-			widget.setValue(Boolean.parseBoolean(checked));
-		}
-
-		String text = context.readWidgetProperty("text");		
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = ensureHtmlChild(context.getElement(), true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
 	}
 }

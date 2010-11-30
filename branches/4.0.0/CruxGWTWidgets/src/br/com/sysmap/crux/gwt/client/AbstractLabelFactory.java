@@ -15,46 +15,28 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasAutoHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
 
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 
 /**
  * Represents a Label DeclarativeFactory
- * @author Thiago Bustamante
+ * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractLabelFactory<T extends Label> extends WidgetFactory<T> 
-       implements HasDirectionFactory<T>, HasWordWrapFactory<T>, HasTextFactory<T>,
-                  HasClickHandlersFactory<T>, HasAllMouseHandlersFactory<T>
+public abstract class AbstractLabelFactory<T extends Label> extends WidgetFactory<T, WidgetFactoryContext> 
+       implements HasDirectionFactory<T, WidgetFactoryContext>, HasWordWrapFactory<T, WidgetFactoryContext>, 
+       			  HasTextFactory<T, WidgetFactoryContext>, HasClickHandlersFactory<T, WidgetFactoryContext>, 
+       			  HasDoubleClickHandlersFactory<T, WidgetFactoryContext>, HasAllMouseHandlersFactory<T, WidgetFactoryContext>, 
+                  HasAutoHorizontalAlignmentFactory<T, WidgetFactoryContext>, HasDirectionEstimatorFactory<T, WidgetFactoryContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", parser=HorizontalAlignmentParser.class)
-	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-	}
-	
-	public static class HorizontalAlignmentParser implements AttributeParser
-	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
-		{
-			Label widget = context.getWidget();
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(propertyValue, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}
-	}
 }

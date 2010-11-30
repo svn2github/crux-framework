@@ -16,31 +16,20 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHTML;
 
 /**
- * @author Thiago Bustamante
+ * @author Thiago da Rosa de Bustamante
  */
-public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFactory<T> implements HasTextFactory<T>
+public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFactory<T, WidgetFactoryContext> 
+										  implements HasHTMLFactory<T, WidgetFactoryContext>
 {
 	@Override
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-
-		Button widget = context.getWidget();
-
-		String text = context.readWidgetProperty("text");
-		if (text == null || text.length() ==0)
-		{
-			String innerHtml = ensureHtmlChild(context.getElement(), true);
-			if (innerHtml != null && innerHtml.length() > 0)
-			{
-				((HasHTML)widget).setHTML(innerHtml);
-			}
-		}
 	}
 }

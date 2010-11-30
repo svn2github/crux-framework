@@ -20,6 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.Hidden;
@@ -29,12 +31,12 @@ import com.google.gwt.user.client.ui.Hidden;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="hidden", library="gwt")
-public class HiddenFactory extends WidgetFactory<Hidden> 
+public class HiddenFactory extends WidgetFactory<Hidden, WidgetFactoryContext> implements HasNameFactory<Hidden, WidgetFactoryContext> 
 {
 	@Override
 	@TagAttributes({
-		@TagAttribute("name"),
-		@TagAttribute(value="value", supportsI18N=true)
+		@TagAttribute(value="value", supportsI18N=true),
+		@TagAttribute(value="defaultValue", supportsI18N=true)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{

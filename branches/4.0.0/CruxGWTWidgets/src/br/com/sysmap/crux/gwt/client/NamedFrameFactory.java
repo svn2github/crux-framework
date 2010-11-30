@@ -16,13 +16,16 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.NamedFrame;
 
@@ -33,7 +36,7 @@ import com.google.gwt.user.client.ui.NamedFrame;
  *
  */
 @DeclarativeFactory(id="namedFrame", library="gwt")
-public class NamedFrameFactory extends WidgetFactory<NamedFrame>
+public class NamedFrameFactory extends WidgetFactory<NamedFrame, WidgetFactoryContext>
 {
 	@Override
 	public NamedFrame instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -43,17 +46,27 @@ public class NamedFrameFactory extends WidgetFactory<NamedFrame>
 	
 	@Override
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("url"),
 		@TagAttributeDeclaration("name")
+	})	
+	@TagAttributes({
+		@TagAttribute(value="url", parser=URLAttributeParser.class)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
-		String url = context.readWidgetProperty("url");
-		if (!StringUtils.isEmpty(url))
-		{
-			NamedFrame widget = context.getWidget();
-			widget.setUrl(Screen.appendDebugParameters(url));
-		}
 		super.processAttributes(context);
 	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class URLAttributeParser implements AttributeParser<WidgetFactoryContext>
+	{
+		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		{
+			NamedFrame widget = context.getWidget();
+			widget.setUrl(Screen.appendDebugParameters(propertyValue));
+		}
+	}
+	
 }

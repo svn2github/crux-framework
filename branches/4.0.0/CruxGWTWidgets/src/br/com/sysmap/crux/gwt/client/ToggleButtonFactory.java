@@ -23,7 +23,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -44,7 +43,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 	@TagAttributes({
 		@TagAttribute(value="down", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(CustomButtonContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,13 +58,13 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 	@TagChildren({
 		@TagChild(FacesProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(CustomButtonContext context) throws InterfaceConfigException
 	{
 		super.processChildren(context);
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="6")
-	public static class FacesProcessor extends ChoiceChildProcessor<ToggleButton> 
+	public static class FacesProcessor extends ChoiceChildProcessor<ToggleButton, CustomButtonContext> 
 	{
 		@Override
 		@TagChildren({
@@ -76,10 +75,10 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(DownDisabledFaceProcessor.class),
 			@TagChild(DownHoveringFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException {}
 	}
 	
-	public static class FaceChildrenProcessor extends ChoiceChildProcessor<ToggleButton>
+	public static class FaceChildrenProcessor extends ChoiceChildProcessor<ToggleButton, CustomButtonContext>
 	{
 		@Override
 		@TagChildren({
@@ -87,7 +86,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(HTMLFaceProcessor.class),
 			@TagChild(ImageFaceProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException {}
 	}
 
 	public static class UpFaceProcessor extends AbstractUpFaceProcessor<ToggleButton>
@@ -96,7 +95,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -108,7 +107,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -120,7 +119,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -132,7 +131,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -144,7 +143,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
@@ -156,7 +155,7 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
