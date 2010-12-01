@@ -22,6 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
@@ -34,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="lazyPanel", library="gwt")
-public class LazyPanelFactory extends PanelFactory<LazyPanel> 
+public class LazyPanelFactory extends PanelFactory<LazyPanel, WidgetFactoryContext> 
 {
 	@Override
 	public LazyPanel instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException 
@@ -68,5 +69,5 @@ public class LazyPanelFactory extends PanelFactory<LazyPanel>
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="visible", notEquals="true")
 	})	
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<LazyPanel> {}	
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<LazyPanel, WidgetFactoryContext> {}	
 }

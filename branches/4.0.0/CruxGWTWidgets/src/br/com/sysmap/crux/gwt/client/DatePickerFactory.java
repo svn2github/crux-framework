@@ -21,6 +21,8 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasHighlightHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasShowRangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
@@ -32,12 +34,15 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="datePicker", library="gwt")
-public class DatePickerFactory extends CompositeFactory<DatePicker> 
-       implements HasValueChangeHandlersFactory<DatePicker>, HasShowRangeHandlersFactory<DatePicker>
+public class DatePickerFactory extends CompositeFactory<DatePicker, WidgetFactoryContext> 
+       implements HasValueChangeHandlersFactory<DatePicker, WidgetFactoryContext>, 
+                  HasShowRangeHandlersFactory<DatePicker, WidgetFactoryContext>, 
+                  HasHighlightHandlersFactory<DatePicker, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="value", type=String.class),
+		@TagAttributeDeclaration(value="currentMonth", type=String.class),
 		@TagAttributeDeclaration(value="datePattern")
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
@@ -45,17 +50,25 @@ public class DatePickerFactory extends CompositeFactory<DatePicker>
 		super.processAttributes(context);
 		
 		DatePicker widget = context.getWidget();
+
+		String datePattern = context.readWidgetProperty("datePattern");
+		if (datePattern == null || datePattern.length() == 0)
+		{
+			datePattern = DateFormatUtil.MEDIUM_DATE_PATTERN;
+		}
 		
 		String value = context.readWidgetProperty("value");
 		if (value != null && value.length() > 0)
 		{
-			String datePattern = context.readWidgetProperty("datePattern");
-			if (datePattern == null || datePattern.length() == 0)
-			{
-				datePattern = DateFormatUtil.MEDIUM_DATE_PATTERN;
-			}
 			Date date = DateFormatUtil.getDateTimeFormat(datePattern).parse(value);;
 			widget.setValue(date);
+		}		
+
+		String currentMonth = context.readWidgetProperty("currentMonth");
+		if (currentMonth != null && currentMonth.length() > 0)
+		{
+			Date date = DateFormatUtil.getDateTimeFormat(datePattern).parse(currentMonth);;
+			widget.setCurrentMonth(date);
 		}		
 	}
 	

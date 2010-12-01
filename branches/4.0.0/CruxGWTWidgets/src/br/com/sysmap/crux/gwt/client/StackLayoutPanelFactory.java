@@ -23,9 +23,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -33,12 +37,32 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+class StackLayoutContext extends WidgetFactoryContext
+{
+	boolean selected = false;
+	double headerSize;
+	Widget headerWidget;
+	String title;
+	boolean isHtmlTitle;
+	
+	public void clearAttributes() 
+	{
+		title = null;
+		isHtmlTitle = false;
+		selected = false;
+		headerSize = 0;
+		headerWidget = null;
+	}
+}
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="stackLayoutPanel", library="gwt")
-public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
+public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel, StackLayoutContext> 
+	   implements HasBeforeSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>, 
+	   			  HasSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>
 {
 	@Override
 	public StackLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -50,7 +74,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class, defaultValue="PX")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(StackLayoutContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,13 +83,13 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(StackLayoutContext context) throws InterfaceConfigException
 	{
 		super.processChildren(context);
 	}
 
 	@TagChildAttributes(tagName="item", maxOccurs="unbounded")
-	public static class StackItemProcessor extends WidgetChildProcessor<StackLayoutPanel>
+	public static class StackItemProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
@@ -75,68 +99,108 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="selected", type=Boolean.class, defaultValue="false")
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
 		{
 			context.clearAttributes();
 			String selected = context.readChildProperty("selected");
 			if (!StringUtils.isEmpty(selected))
 			{
-				context.setAttribute("selected", Boolean.parseBoolean(selected));
+				context.selected = Boolean.parseBoolean(selected);
 			}
 		}
 	}
 
 	@TagChildAttributes(tagName="header")
-	public static class StackHeaderProcessor extends WidgetChildProcessor<StackLayoutPanel>
+	public static class StackHeaderProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
-			@TagChild(StackHeaderWidgetProcessor.class)
+			@TagChild(StackHeader.class)
 		})
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="size", type=Double.class, required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("headerSize", Double.parseDouble(context.readChildProperty("size")));
+			context.headerSize = Double.parseDouble(context.readChildProperty("size"));
 		}
 	}
 
-	@TagChildAttributes(type=AnyWidget.class)
-	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel>
+	public static class StackHeader extends ChoiceChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		@TagChildren({
+			@TagChild(StackHeaderWidgetProcessor.class),
+			@TagChild(StackHeaderTextProcessor.class),
+			@TagChild(StackHeaderHTMLProcessor.class)
+		})
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		{
+		}
+	}
+	
+	@TagChildAttributes(tagName="text", type=String.class)
+	public abstract static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	{
+		@Override
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		{
+			context.title = ensureTextChild(context.getChildElement(), true);
+			context.isHtmlTitle = false;
+		}
+	}
+	
+	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	public abstract static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	{
+		@Override
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		{
+			context.title = ensureHtmlChild(context.getChildElement(), true);
+			context.isHtmlTitle = true;
+		}
+	}
+
+	@TagChildAttributes(tagName="widget", type=AnyWidget.class)
+	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	{
+		@Override
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException
 		{
 			Widget childWidget = createChildWidget(context.getChildElement());
-			context.setAttribute("header", childWidget);
+			context.headerWidget = childWidget;
 		}
 	}
 
 	@TagChildAttributes(tagName="content")
-	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutPanel>
+	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(StackContentWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel>
+	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(StackLayoutContext context) throws InterfaceConfigException
 		{
 			Widget contentWidget = createChildWidget(context.getChildElement());
-			Widget headerWidget = (Widget) context.getAttribute("header");
-			Double headerSize = (Double) context.getAttribute("headerSize");
-			StackLayoutPanel rootWidget = context.getRootWidget();
-			rootWidget.add(contentWidget, headerWidget, headerSize);
+			StackLayoutPanel rootWidget = context.getWidget();
+			
+			if (context.headerWidget != null)
+			{
+				rootWidget.add(contentWidget, context.headerWidget, context.headerSize);
+			}
+			else
+			{
+				rootWidget.add(contentWidget, context.title, context.isHtmlTitle, context.headerSize);
+			}
 
-			Boolean selected = (Boolean) context.getAttribute("selected");
-			if (selected != null && selected)
+			if (context.selected)
 			{
 				rootWidget.showWidget(contentWidget);
 			}

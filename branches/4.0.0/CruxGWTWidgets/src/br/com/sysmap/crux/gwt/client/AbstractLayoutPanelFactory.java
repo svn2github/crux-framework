@@ -16,15 +16,17 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -34,46 +36,68 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AnimatedLayout;
 import com.google.gwt.user.client.ui.ComplexPanel;
 
+class AbstractLayoutPanelContext extends WidgetFactoryContext
+{
+	int animationDuration = 0;
+	FastList<Command> childProcessingAnimations;
+
+	/**
+	 * @param context
+	 * @param command
+	 */
+	protected void addChildWithAnimation(Command command)
+	{
+		childProcessingAnimations.add(command);
+	}
+}
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends ComplexPanelFactory<T>
+public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel, C extends AbstractLayoutPanelContext> 
+			    extends ComplexPanelFactory<T, C>
 {
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="animationDuration", type=Integer.class)
+	@TagAttributes({
+		@TagAttribute(value="animationDuration", type=Integer.class, parser=AnimationDurationAttributeParser.class)
 	})
-	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(final C context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		String animationDuration = context.readWidgetProperty("animationDuration");
-		if (!StringUtils.isEmpty(animationDuration))
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class AnimationDurationAttributeParser implements AttributeParser<AbstractLayoutPanelContext>
+	{
+		public void processAttribute(AbstractLayoutPanelContext context, String propertyValue) 
 		{
-			context.setAttribute("animationDuration", Integer.parseInt(animationDuration));
-			context.setAttribute("animationCommands", new FastList<Command>());
+			context.animationDuration = Integer.parseInt(propertyValue);
+			context.childProcessingAnimations = new FastList<Command>();			
 		}
 	}
+	
 	
 	@Override
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onAnimationComplete"), 
 		@TagEventDeclaration("onAnimationStep") 
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(C context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
 	
     @SuppressWarnings("unchecked")
 	@Override
-    public void postProcess(WidgetFactoryContext context) throws InterfaceConfigException
+    public void postProcess(final C context) throws InterfaceConfigException
     {
 		final T widget = (T)context.getWidget();
 		
-		final FastList<Command> animationConstraints = (FastList<Command>) context.getAttribute("animationCommands");
-		final Integer animationDuration = (Integer) context.getAttribute("animationDuration");
-		if (animationDuration != null)
+		if (context.animationDuration > 0)
 		{
 			final Event onAnimationComplete = Events.getEvent("onAnimationComplete", context.readWidgetProperty("onAnimationComplete"));
 			final Event onAnimationStep = Events.getEvent("onAnimationStep", context.readWidgetProperty("onAnimationStep"));
@@ -83,8 +107,8 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends
 				addScreenLoadedHandler(new ScreenLoadHandler(){
 					public void onLoad(ScreenLoadEvent screenLoadEvent)
 					{
-						setAnimationConstraints(animationConstraints);
-						((AnimatedLayout)widget).animate(animationDuration, new AnimationCallback(){
+						runChildProcessingAnimations(context.childProcessingAnimations);
+						((AnimatedLayout)widget).animate(context.animationDuration, new AnimationCallback(){
 							public void onAnimationComplete()
 							{
 								if (onAnimationComplete != null)
@@ -108,8 +132,8 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends
 				addScreenLoadedHandler(new ScreenLoadHandler(){
 					public void onLoad(ScreenLoadEvent screenLoadEvent)
 					{
-						setAnimationConstraints(animationConstraints);
-						((AnimatedLayout)widget).animate(animationDuration);
+						runChildProcessingAnimations(context.childProcessingAnimations);
+						((AnimatedLayout)widget).animate(context.animationDuration);
 					}
 				});
 			}
@@ -118,17 +142,21 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel> extends
 	
 	/**
 	 * 
-	 * @param animationConstraints
+	 * @param childProcessingAnimations
 	 */
-	protected void setAnimationConstraints(FastList<Command> animationConstraints)
+	protected void runChildProcessingAnimations(FastList<Command> childProcessingAnimations)
 	{
-		for (int i=0; i<animationConstraints.size(); i++)
+		for (int i=0; i<childProcessingAnimations.size(); i++)
 		{
-			Command command = animationConstraints.get(i);
+			Command command = childProcessingAnimations.get(i);
 			command.execute();
 		}
 	}
 
+	/**
+	 * @param sizeUnit
+	 * @return
+	 */
 	public static Unit getUnit(String sizeUnit)
 	{
 		Unit unit;

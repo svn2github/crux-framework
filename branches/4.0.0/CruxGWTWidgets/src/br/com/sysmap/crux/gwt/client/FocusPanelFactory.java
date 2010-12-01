@@ -18,21 +18,13 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.BlurEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.FocusEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseDownEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseMoveEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseOutEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseOverEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -42,28 +34,14 @@ import com.google.gwt.user.client.ui.FocusPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="focusPanel", library="gwt")
-public class FocusPanelFactory extends PanelFactory<FocusPanel>
+public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetFactoryContext>
+	   implements HasAllMouseHandlersFactory<FocusPanel, WidgetFactoryContext>, 
+	   			  HasClickHandlersFactory<FocusPanel, WidgetFactoryContext>, 
+	   			  HasAllFocusHandlersFactory<FocusPanel, WidgetFactoryContext>, 
+	   			  HasDoubleClickHandlersFactory<FocusPanel, WidgetFactoryContext>,
+	   			  HasAllKeyHandlersFactory<FocusPanel, WidgetFactoryContext>
+	   			
 {
-	@Override
-	@TagEvents({
-		@TagEvent(ClickEvtBind.class),
-		@TagEvent(FocusEvtBind.class),
-		@TagEvent(BlurEvtBind.class),
-		@TagEvent(KeyUpEvtBind.class),
-		@TagEvent(KeyPressEvtBind.class),
-		@TagEvent(KeyDownEvtBind.class),
-		@TagEvent(MouseDownEvtBind.class),
-		@TagEvent(MouseUpEvtBind.class),
-		@TagEvent(MouseOverEvtBind.class),
-		@TagEvent(MouseOutEvtBind.class),
-		@TagEvent(MouseMoveEvtBind.class),
-		@TagEvent(MouseWheelEvtBind.class)
-	})	
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException 
-	{
-		super.processEvents(context);
-	}
-	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="tabIndex", type=Integer.class),

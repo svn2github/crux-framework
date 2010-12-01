@@ -15,15 +15,12 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import java.util.List;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -34,12 +31,18 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 
+class SplitLayoutPanelContext extends DockLayoutPanelContext
+{
+
+	public String minSize;
+}
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="splitLayoutPanel", library="gwt")
-public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanel>
+public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanel, SplitLayoutPanelContext>
 {
 	@Override
 	public SplitLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
@@ -51,9 +54,9 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 	@TagChildren({
 		@TagChild(SplitLayoutPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(SplitLayoutPanelContext context) throws InterfaceConfigException {}
 	
-	public static class SplitLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<SplitLayoutPanel>
+	public static class SplitLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<SplitLayoutPanel, SplitLayoutPanelContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -62,37 +65,52 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 		@TagChildren({
 			@TagChild(SplitLayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(SplitLayoutPanelContext context) throws InterfaceConfigException
 		{
-			context.setAttribute("minSize", context.readChildProperty("minSize"));
+			context.minSize = context.readChildProperty("minSize");
 			super.processChildren(context);
 		}
 	}
 	
-	public static class SplitLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<SplitLayoutPanel> 
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class SplitLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<SplitLayoutPanel, SplitLayoutPanelContext> 
 	{
-		@SuppressWarnings("unchecked")
+		/**
+		 * @see br.com.sysmap.crux.gwt.client.AbstractDockLayoutPanelFactory.AbstractDockPanelWidgetProcessor#processAnimatedChild(br.com.sysmap.crux.gwt.client.DockLayoutPanelContext, com.google.gwt.user.client.ui.Widget, com.google.gwt.user.client.ui.DockLayoutPanel.Direction, double)
+		 */
 		@Override
-		protected void processAnimatedChild(final WidgetChildProcessorContext context, final Widget childWidget,
+		protected void processAnimatedChild(final SplitLayoutPanelContext context, final Widget childWidget,
 				                            final Direction direction, final double size)
 		{
-			List<Command> animationConstraints = (List<Command>) context.getAttribute("animationCommands");
-			final String minSize = (String) context.getAttribute("minSize");
-			animationConstraints.add(new Command(){
+			
+			context.addChildWithAnimation(new Command(){
 				public void execute()
 				{
-					processChild(context, childWidget, direction, size, minSize);
+					processChild(context, childWidget, direction, size, context.minSize);
 				}
 			});
 		}
 		
+		/**
+		 * @see br.com.sysmap.crux.gwt.client.AbstractDockLayoutPanelFactory.AbstractDockPanelWidgetProcessor#processChild(br.com.sysmap.crux.gwt.client.DockLayoutPanelContext, com.google.gwt.user.client.ui.Widget, com.google.gwt.user.client.ui.DockLayoutPanel.Direction, double)
+		 */
 		@Override
-		protected void processChild(WidgetChildProcessorContext context, Widget childWidget, Direction direction, double size)
+		protected void processChild(SplitLayoutPanelContext context, Widget childWidget, Direction direction, double size)
 		{
-			processChild(context, childWidget, direction, size, (String) context.getAttribute("minSize"));
+			processChild(context, childWidget, direction, size, context.minSize);
 		}
 
-		protected void processChild(final WidgetChildProcessorContext context, final Widget childWidget, Direction direction, double size, final String minSize)
+		/**
+		 * @param context
+		 * @param childWidget
+		 * @param direction
+		 * @param size
+		 * @param minSize
+		 */
+		protected void processChild(final SplitLayoutPanelContext context, final Widget childWidget, Direction direction, double size, final String minSize)
 		{
 			super.processChild(context, childWidget, direction, size);
 			if (!StringUtils.isEmpty(minSize))
@@ -100,7 +118,7 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 				Scheduler.get().scheduleDeferred(new ScheduledCommand(){
 					public void execute()
 					{
-						SplitLayoutPanel rootWidget = context.getRootWidget();
+						SplitLayoutPanel rootWidget = context.getWidget();
 						rootWidget.setWidgetMinSize(childWidget, Integer.parseInt(minSize));
 					}
 				});

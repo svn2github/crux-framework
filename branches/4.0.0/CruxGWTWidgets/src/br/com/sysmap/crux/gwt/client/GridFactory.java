@@ -22,18 +22,22 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Grid;
+
+class GridFactoryContext extends HTMLTableFactoryContext
+{
+	boolean cellsInitialized = false;
+}
 
 /**
  * Factory for Grid widget
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="grid", library="gwt")
-public class GridFactory extends HTMLTableFactory<Grid>
+public class GridFactory extends HTMLTableFactory<Grid, GridFactoryContext>
 {
 
 	@Override
@@ -51,9 +55,9 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException	
+	public void processChildren(GridFactoryContext context) throws InterfaceConfigException	
 	{
-		Array<CruxMetaDataElement> children = ensureChildren(context.getElement(), true);
+		Array<CruxMetaDataElement> children = ensureChildren(context.getWidgetElement(), true);
 		
 		int count = getNonNullChildrenCount(children);
 		
@@ -80,21 +84,20 @@ public class GridFactory extends HTMLTableFactory<Grid>
     }
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
-	public static class GridRowProcessor extends TableRowProcessor<Grid>
+	public static class GridRowProcessor extends TableRowProcessor<Grid, GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(GridFactoryContext context) throws InterfaceConfigException
 		{
-			Boolean cellsInitialized = (Boolean) context.getAttribute("cellsInitialized");
-			if (cellsInitialized == null || !cellsInitialized)
+			if (!context.cellsInitialized)
 			{
 				Array<CruxMetaDataElement> children = ensureChildren(context.getChildElement(), true);
-				Grid rootWidget = context.getRootWidget();
+				Grid rootWidget = context.getWidget();
 				rootWidget.resizeColumns(getNonNullChildrenCount(children));
-				context.setAttribute("cellsInitialized", new Boolean(true));
+				context.cellsInitialized = true;
 			}
 			
 			super.processChildren(context);
@@ -102,13 +105,13 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class GridCellProcessor extends TableCellProcessor<Grid>
+	public static class GridCellProcessor extends TableCellProcessor<Grid, GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(GridFactoryContext context) throws InterfaceConfigException
 		{
 			
 			super.processChildren(context);
@@ -116,7 +119,7 @@ public class GridFactory extends HTMLTableFactory<Grid>
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class GridChildrenProcessor extends ChoiceChildProcessor<Grid> 
+	public static class GridChildrenProcessor extends ChoiceChildProcessor<Grid, GridFactoryContext> 
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
 		
@@ -126,20 +129,20 @@ public class GridFactory extends HTMLTableFactory<Grid>
 			@TagChild(GridCellHTMLProcessor.class),
 			@TagChild(GridCellWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(GridFactoryContext context) throws InterfaceConfigException {}
 	}
 	
-	public static class GridCellTextProcessor extends CellTextProcessor<Grid>{}
-	public static class GridCellHTMLProcessor extends CellHTMLProcessor<Grid>{}
-	public static class GridCellWidgetProcessor extends CellWidgetProcessor<Grid>
+	public static class GridCellTextProcessor extends CellTextProcessor<Grid, GridFactoryContext>{}
+	public static class GridCellHTMLProcessor extends CellHTMLProcessor<Grid, GridFactoryContext>{}
+	public static class GridCellWidgetProcessor extends CellWidgetProcessor<Grid, GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(GridFactoryContext context) throws InterfaceConfigException {}
 		
 	}
-	public static class GridWidgetProcessor extends WidgetProcessor<Grid>{} 
+	public static class GridWidgetProcessor extends WidgetProcessor<Grid, GridFactoryContext>{} 
 	
 }

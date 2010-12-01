@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
@@ -33,28 +32,15 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="popupPanel", library="gwt")
-public class PopupPanelFactory extends PanelFactory<PopupPanel>
-       implements HasAnimationFactory<PopupPanel>, HasCloseHandlersFactory<PopupPanel>
+@DeclarativeFactory(id="popupPanel", library="gwt", attachToDOM=false)
+public class PopupPanelFactory extends PanelFactory<PopupPanel, WidgetFactoryContext>
+       implements HasAnimationFactory<PopupPanel, WidgetFactoryContext>, HasCloseHandlersFactory<PopupPanel, WidgetFactoryContext>
 {
 
 	@Override
 	public PopupPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
-		String autoHideStr = element.getProperty("autoHide");
-		boolean autoHide = false;
-		if (autoHideStr != null && autoHideStr.length() >0)
-		{
-			autoHide = Boolean.parseBoolean(autoHideStr);
-		}
-		String modalStr = element.getProperty("modal");
-		boolean modal = false;
-		if (modalStr != null && modalStr.length() >0)
-		{
-			modal = Boolean.parseBoolean(modalStr);
-		}
-
-		return new PopupPanel(autoHide, modal);
+		return new PopupPanel();
 	}
 	
 	@Override
@@ -62,11 +48,9 @@ public class PopupPanelFactory extends PanelFactory<PopupPanel>
 		@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),
 		@TagAttribute(value="autoHideOnHistoryEventsEnabled", type=Boolean.class),
 		@TagAttribute("glassStyleName"),
-		@TagAttribute(value="glassEnabled", type=Boolean.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="modal", type=Boolean.class),
-		@TagAttributeDeclaration(value="autoHide", type=Boolean.class)
+		@TagAttribute(value="glassEnabled", type=Boolean.class),
+		@TagAttribute(value="modal", type=Boolean.class),
+		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{

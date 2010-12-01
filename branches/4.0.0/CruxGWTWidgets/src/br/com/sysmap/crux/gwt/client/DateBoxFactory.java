@@ -32,9 +32,11 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -47,8 +49,8 @@ import com.google.gwt.user.datepicker.client.DateBox.Format;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="dateBox", library="gwt")
-public class DateBoxFactory extends CompositeFactory<DateBox> 
-       implements HasValueChangeHandlersFactory<DateBox>
+public class DateBoxFactory extends CompositeFactory<DateBox, WidgetFactoryContext> 
+       implements HasValueChangeHandlersFactory<DateBox, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributes({
@@ -126,12 +128,12 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 	
 	@Override
 	@TagChildren({
-		@TagChild(value=DateBoxProcessor.class,autoProcess=false)
+		@TagChild(value=DateBoxProcessor.class, autoProcess=false)
 	})
 	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
-	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox>{}
+	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox, WidgetFactoryContext>{}
 	
 	/**
 	 * @param element
@@ -143,7 +145,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox>
 		Format format = null;
 		String pattern = element.getProperty("pattern");
 		
-		if (pattern != null && pattern.trim().length() > 0)
+		if (!StringUtils.isEmpty(pattern))
 		{
 			format = new DateBox.DefaultFormat(DateFormatUtil.getDateTimeFormat(pattern));
 		}

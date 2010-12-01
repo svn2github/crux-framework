@@ -22,17 +22,23 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.LazyPanel;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 
 /**
@@ -40,9 +46,10 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="disclosurePanel", library="gwt")
-public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel> 
-       implements HasAnimationFactory<DisclosurePanel>, 
-                  HasOpenHandlersFactory<DisclosurePanel>, HasCloseHandlersFactory<DisclosurePanel>
+public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel, WidgetFactoryContext> 
+       implements HasAnimationFactory<DisclosurePanel, WidgetFactoryContext>, 
+                  HasOpenHandlersFactory<DisclosurePanel, WidgetFactoryContext>, 
+                  HasCloseHandlersFactory<DisclosurePanel, WidgetFactoryContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
@@ -51,7 +58,28 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 	public DisclosurePanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
 	{
 		String headerText = element.getProperty("headerText");
-		return new DisclosurePanel(headerText);
+		final DisclosurePanel ret;
+		if (!StringUtils.isEmpty(headerText))
+		{
+			ret = new DisclosurePanel(headerText);
+		}
+		else
+		{
+			ret = new DisclosurePanel();
+		}
+		
+		String open = element.getProperty("open");
+		if (open == null || !StringUtils.unsafeEquals(open, "true"))
+		{
+			ret.addOpenHandler(new OpenHandler<DisclosurePanel>() {
+				public void onOpen(OpenEvent<DisclosurePanel> event) 
+				{
+					LazyPanel widget = (LazyPanel)ret.getContent();
+					widget.ensureWidget();
+				}
+			});
+		}
+		return ret;
 	}
 	
 	@Override
@@ -74,28 +102,31 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel>
 	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 
 	@TagChildAttributes(minOccurs="0", tagName="widgetHeader")
-	public static class HeaderProcessor extends WidgetChildProcessor<DisclosurePanel> 
+	public static class HeaderProcessor extends WidgetChildProcessor<DisclosurePanel, WidgetFactoryContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetHeaderProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 		
 	@TagChildAttributes(minOccurs="0", tagName="widgetContent")
-	public static class ContentProcessor extends WidgetChildProcessor<DisclosurePanel> 
+	public static class ContentProcessor extends WidgetChildProcessor<DisclosurePanel, WidgetFactoryContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="content")
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<DisclosurePanel> {}
+	@TagChildLazyConditions(all={
+		@TagChildLazyCondition(property="open", notEquals="true")
+	})
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<DisclosurePanel, WidgetFactoryContext> {}
 	
 	@TagChildAttributes(widgetProperty="header")
-	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<DisclosurePanel> {}
+	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<DisclosurePanel, WidgetFactoryContext> {}
 }

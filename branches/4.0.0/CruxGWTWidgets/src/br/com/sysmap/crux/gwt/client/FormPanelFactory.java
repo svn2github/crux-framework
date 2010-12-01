@@ -26,6 +26,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
@@ -36,7 +37,7 @@ import com.google.gwt.user.client.ui.FormPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="formPanel", library="gwt")
-public class FormPanelFactory extends PanelFactory<FormPanel>
+public class FormPanelFactory extends PanelFactory<FormPanel, WidgetFactoryContext>
 {
 	
 	@Override
@@ -86,5 +87,5 @@ public class FormPanelFactory extends PanelFactory<FormPanel>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<FormPanel> {}	
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<FormPanel, WidgetFactoryContext> {}	
 }

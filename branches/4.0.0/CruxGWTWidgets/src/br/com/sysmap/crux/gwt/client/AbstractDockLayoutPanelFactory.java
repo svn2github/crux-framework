@@ -15,13 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import java.util.List;
-
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -32,33 +29,43 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 
-
-
-class DockLayoutPanelContext extends WidgetFactoryContext
+class DockLayoutPanelContext extends AbstractLayoutPanelContext
 {
 	String left;
 	String top;
+	Direction direction;
+	Double size = -1.0;
 }
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> extends AbstractLayoutPanelFactory<T, DockLayoutPanelContext>
+public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel, C extends DockLayoutPanelContext> 
+	  extends AbstractLayoutPanelFactory<T, C>
 {
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static abstract class AbstractDockLayoutPanelProcessor<W extends DockLayoutPanel> extends WidgetChildProcessor<W> 
+	public static abstract class AbstractDockLayoutPanelProcessor<W extends DockLayoutPanel, C extends DockLayoutPanelContext> 
+	                       extends WidgetChildProcessor<W, C> 
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="direction", type=Direction.class, defaultValue="CENTER"),
 			@TagAttributeDeclaration(value="size", type=Double.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(C context) throws InterfaceConfigException 
 		{
-			context.setAttribute("direction", getDirection(context.readChildProperty("direction")));
-			context.setAttribute("size", context.readChildProperty("size"));
+			context.direction = getDirection(context.readChildProperty("direction"));
+			String sizeStr = context.readChildProperty("size");
+			if (StringUtils.isEmpty(sizeStr))
+			{
+				context.size = -1.0;
+			}
+			else
+			{
+				context.size = Double.parseDouble(sizeStr);
+			}
 		}
 
 		private Direction getDirection(String direction)
@@ -78,44 +85,40 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 	
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class AbstractDockPanelWidgetProcessor<W extends DockLayoutPanel> extends WidgetChildProcessor<W> 
+	public static class AbstractDockPanelWidgetProcessor<W extends DockLayoutPanel, C extends DockLayoutPanelContext> extends WidgetChildProcessor<W, C> 
 	{
 		GWTMessages messages = GWT.create(GWTMessages.class);
 		
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(C context) throws InterfaceConfigException 
 		{
 			Widget childWidget = createChildWidget(context.getChildElement());
 			
-			Direction direction = (Direction) context.getAttribute("direction");
-			String sizeStr = (String) context.getAttribute("size");
-			double size = -1;
-			if (!StringUtils.isEmpty(sizeStr))
+			
+			if (!context.direction.equals(Direction.CENTER) && context.size == -1)
 			{
-				size = Double.parseDouble(sizeStr);			
+				throw new InterfaceConfigException(messages.dockLayoutPanelRequiredSize(context.getWidgetId()));
 			}
 			
-			if (!direction.equals(Direction.CENTER) && size == -1)
+			if (context.animationDuration > 0)
 			{
-				throw new InterfaceConfigException(messages.dockLayoutPanelRequiredSize(context.getRootWidgetId()));
-			}
-			
-			Integer animationDuration = (Integer) context.getAttribute("animationDuration");
-			if (animationDuration != null)
-			{
-				processAnimatedChild(context, childWidget, direction, size);
+				processAnimatedChild(context, childWidget, context.direction, context.size);
 			}
 			else
 			{
-				processChild(context, childWidget, direction, size);
+				processChild(context, childWidget, context.direction, context.size);
 			}
 		}
 
-		@SuppressWarnings("unchecked")
-		protected void processAnimatedChild(final WidgetChildProcessorContext context, final Widget childWidget, final Direction direction, final double size)
+		/**
+		 * @param context
+		 * @param childWidget
+		 * @param direction
+		 * @param size
+		 */
+		protected void processAnimatedChild(final C context, final Widget childWidget, final Direction direction, final double size)
 		{
-			List<Command> animationConstraints = (List<Command>) context.getAttribute("animationCommands");
-			animationConstraints.add(new Command(){
+			context.addChildWithAnimation(new Command(){
 				public void execute()
 				{
 					processChild(context, childWidget, direction, size);
@@ -131,9 +134,9 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 		 * @param size
 		 */
 		@SuppressWarnings("unchecked")
-		protected void processChild(WidgetChildProcessorContext context, Widget childWidget, Direction direction, double size)
+		protected void processChild(C context, Widget childWidget, Direction direction, double size)
 		{
-			W rootWidget = (W)context.getRootWidget();
+			W rootWidget = (W)context.getWidget();
 			if (direction.equals(Direction.CENTER))
 			{
 				rootWidget.add(childWidget);	
@@ -153,6 +156,14 @@ public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel> 
 			else if (direction.equals(Direction.WEST))
 			{
 				rootWidget.addWest(childWidget, size);
+			}
+			else if (direction.equals(Direction.LINE_START))
+			{
+				rootWidget.addLineStart(childWidget, size);
+			}
+			else if (direction.equals(Direction.LINE_END))
+			{
+				rootWidget.addLineEnd(childWidget, size);
 			}
 		}
 	}

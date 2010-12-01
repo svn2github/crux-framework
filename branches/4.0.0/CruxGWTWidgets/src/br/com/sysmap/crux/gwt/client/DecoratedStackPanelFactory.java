@@ -22,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.DecoratedStackPanel;
@@ -45,30 +44,30 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="stackItem")
-	public static class StackItemProcessor extends WidgetChildProcessor<DecoratedStackPanel>
+	public static class StackItemProcessor extends WidgetChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleProcessor.class),
 			@TagChild(ContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TitleProcessor extends ChoiceChildProcessor<DecoratedStackPanel>
+	public static class TitleProcessor extends ChoiceChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleTextProcessor.class),
 			@TagChild(TitleHTMLProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
 	}
 
 	public static class TitleTextProcessor extends AbstractTitleTextProcessor<DecoratedStackPanel> {}
@@ -76,13 +75,13 @@ public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<Decora
 	public static class TitleHTMLProcessor extends AbstractTitleHTMLProcessor<DecoratedStackPanel> {}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<DecoratedStackPanel> 
+	public static class ContentProcessor extends WidgetChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(ContentWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor<DecoratedStackPanel> {}	

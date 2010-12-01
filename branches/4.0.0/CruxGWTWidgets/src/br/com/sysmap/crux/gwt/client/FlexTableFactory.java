@@ -23,7 +23,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.core.client.GWT;
@@ -34,7 +33,7 @@ import com.google.gwt.user.client.ui.FlexTable;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="flexTable", library="gwt")
-public class FlexTableFactory extends HTMLTableFactory<FlexTable>
+public class FlexTableFactory extends HTMLTableFactory<FlexTable, HTMLTableFactoryContext>
 {
 
 	@Override
@@ -52,18 +51,18 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
-	public static class GridRowProcessor extends TableRowProcessor<FlexTable>
+	public static class GridRowProcessor extends TableRowProcessor<FlexTable, HTMLTableFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException
 		{
-			FlexTable widget = context.getRootWidget();
+			FlexTable widget = context.getWidget();
 			int r = widget.getRowCount();
 			widget.insertRow(r);
 			super.processChildren(context);
@@ -71,7 +70,7 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class GridCellProcessor extends TableCellProcessor<FlexTable>
+	public static class GridCellProcessor extends TableCellProcessor<FlexTable, HTMLTableFactoryContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -81,32 +80,29 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException
 		{
-			FlexTable widget = context.getRootWidget();
-			Integer indexRow = (Integer) context.getAttribute("rowIndex");
-			widget.addCell(indexRow);
+			FlexTable widget = context.getWidget();
+			widget.addCell(context.rowIndex);
 			
 			super.processChildren(context);
 
 			String colspan = context.readChildProperty("colSpan");
 			if(colspan != null && colspan.length() > 0)
 			{
-				Integer indexCol = (Integer) context.getAttribute("colIndex");
-				widget.getFlexCellFormatter().setColSpan(indexRow, indexCol, Integer.parseInt(colspan));
+				widget.getFlexCellFormatter().setColSpan(context.rowIndex, context.colIndex, Integer.parseInt(colspan));
 			}
 			
 			String rowSpan = context.readChildProperty("rowSpan");
 			if(rowSpan != null && rowSpan.length() > 0)
 			{
-				Integer indexCol = (Integer) context.getAttribute("colIndex");
-				widget.getFlexCellFormatter().setRowSpan(indexRow, indexCol, Integer.parseInt(rowSpan));
+				widget.getFlexCellFormatter().setRowSpan(context.rowIndex, context.colIndex, Integer.parseInt(rowSpan));
 			}
 		}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class GridChildrenProcessor extends ChoiceChildProcessor<FlexTable> 
+	public static class GridChildrenProcessor extends ChoiceChildProcessor<FlexTable, HTMLTableFactoryContext> 
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
 
@@ -116,20 +112,20 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable>
 			@TagChild(FlexCellHTMLProcessor.class),
 			@TagChild(FlexCellWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException	{}
+		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException	{}
 	}
 	
-	public static class FlexCellTextProcessor extends CellTextProcessor<FlexTable>{}
-	public static class FlexCellHTMLProcessor extends CellHTMLProcessor<FlexTable>{}
-	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<FlexTable>
+	public static class FlexCellTextProcessor extends CellTextProcessor<FlexTable, HTMLTableFactoryContext>{}
+	public static class FlexCellHTMLProcessor extends CellHTMLProcessor<FlexTable, HTMLTableFactoryContext>{}
+	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<FlexTable, HTMLTableFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FlexWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException {}
 		
 	}
-	public static class FlexWidgetProcessor extends WidgetProcessor<FlexTable>{} 
+	public static class FlexWidgetProcessor extends WidgetProcessor<FlexTable, HTMLTableFactoryContext>{} 
 		
 }

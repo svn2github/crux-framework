@@ -21,7 +21,6 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -32,7 +31,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
  *
  */
 @DeclarativeFactory(id="dockLayoutPanel", library="gwt")
-public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanel>
+public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanel, DockLayoutPanelContext>
 {
 	@Override
 	public DockLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
@@ -45,7 +44,7 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(DockLayoutPanelContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -54,19 +53,19 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 	@TagChildren({
 		@TagChild(DockLayoutPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(DockLayoutPanelContext context) throws InterfaceConfigException {}
 	
-	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanel>
+	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanel, DockLayoutPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(DockLayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(DockLayoutPanelContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
 	}
 	
-	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanel> {}
+	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanel, DockLayoutPanelContext> {}
 }
