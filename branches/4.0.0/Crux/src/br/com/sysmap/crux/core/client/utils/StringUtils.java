@@ -184,4 +184,14 @@ public class StringUtils
 			return a.equals(b);
 		}
 	}
+	
+	public static double safeParseDouble(String value)
+	{
+		if (!isEmpty(value))
+		{
+			return Double.parseDouble(value);
+		}
+		return Double.MIN_VALUE;
+	}
+	
 }
