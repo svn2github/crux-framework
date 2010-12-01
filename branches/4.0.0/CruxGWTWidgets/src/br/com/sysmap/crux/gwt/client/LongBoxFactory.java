@@ -15,28 +15,36 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
-import com.google.gwt.user.client.ui.TextBoxBase;
-
+import com.google.gwt.user.client.ui.LongBox;
 
 /**
- * Base class for text box based widgets
- * @author Thiago Bustamante
- *
+ * A Factory for LongBox widgets
+ * @author Thiago da Rosa de Bustamante
  */
-public abstract class TextBoxBaseFactory<T extends TextBoxBase> extends ValueBoxBaseFactory<String, T>
+@DeclarativeFactory(id="longBox", library="gwt")
+public class LongBoxFactory extends ValueBoxBaseFactory<Long, LongBox> 
 {	
 	@Override
 	@TagAttributes({
-		@TagAttribute("value"),
-		@TagAttribute(value="textAlignment", type=TextAlign.class, parser=TextAlignmentProcessor.class)
+		@TagAttribute(value="value", type=Long.class),
+		@TagAttribute(value="maxLength", type=Integer.class),
+		@TagAttribute(value="visibleLength", type=Integer.class)
 	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
+	}
+
+	@Override
+	public LongBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	{
+		return new LongBox();
 	}
 }

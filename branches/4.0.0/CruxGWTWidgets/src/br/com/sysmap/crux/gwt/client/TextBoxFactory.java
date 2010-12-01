@@ -18,23 +18,18 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
-import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
- * Represents a TextBoxFactory component
- * @author Thiago Bustamante
+ * A Factory for TextBox widgets
+ * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="textBox", library="gwt")
 public class TextBoxFactory extends TextBoxBaseFactory<TextBox> 
-       implements HasDirectionFactory<TextBox>
 {	
 	@Override
 	@TagAttributes({
@@ -51,15 +46,4 @@ public class TextBoxFactory extends TextBoxBaseFactory<TextBox>
 	{
 		return new TextBox();
 	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(InnerTextProcessor.class)
-	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-	}
-	
-	@TagChildAttributes(minOccurs="0", widgetProperty="value")
-	public static class InnerTextProcessor extends TextChildProcessor<TextBox> {}	
 }

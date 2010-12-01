@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
@@ -30,7 +31,8 @@ import com.google.gwt.user.client.ui.SimpleRadioButton;
  *
  */
 @DeclarativeFactory(id="simpleRadioButton", library="gwt")
-public class SimpleRadioButtonFactory extends FocusWidgetFactory<SimpleRadioButton> implements HasNameFactory<SimpleRadioButton>
+public class SimpleRadioButtonFactory extends FocusWidgetFactory<SimpleRadioButton, WidgetFactoryContext> 
+		implements HasNameFactory<SimpleRadioButton, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributes({

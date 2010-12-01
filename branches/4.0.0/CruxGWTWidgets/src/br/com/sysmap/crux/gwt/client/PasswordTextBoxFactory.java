@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -30,8 +30,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
  *
  */
 @DeclarativeFactory(id="passwordTextBox", library="gwt")
-public class PasswordTextBoxFactory extends TextBoxBaseFactory<PasswordTextBox> 
-       implements HasDirectionFactory<PasswordTextBox>  
+public class PasswordTextBoxFactory extends TextBoxBaseFactory<PasswordTextBox>  
 {
 	@Override
 	@TagAttributes({

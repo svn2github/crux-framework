@@ -22,13 +22,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -37,7 +36,9 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 @DeclarativeFactory(id="verticalPanel", library="gwt")
-public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel>
+public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel, CellPanelContext>
+	   implements HasHorizontalAlignmentFactory<VerticalPanel, CellPanelContext>, 
+	   			  HasVerticalAlignmentFactory<VerticalPanel, CellPanelContext>
 {
 
 	@Override
@@ -47,50 +48,26 @@ public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel>
 	}
 
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-
-		VerticalPanel widget = context.getWidget();
-		
-		String cellHorizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
-		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}
-		
-		String cellVerticalAlignment = context.readWidgetProperty("verticalAlignment");
-		if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
-		{
-			widget.setVerticalAlignment(AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
-		}
-	}
-	
-	@Override
 	@TagChildren({
 		@TagChild(VerticalPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<VerticalPanel> 
+	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<VerticalPanel, CellPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(VerticalProcessor.class),
 			@TagChild(VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
 	}
 	
-	public static class VerticalProcessor extends AbstractCellProcessor<VerticalPanel>
+	public static class VerticalProcessor extends AbstractCellProcessor<VerticalPanel, CellPanelContext>
 	{
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("height"),
@@ -101,22 +78,22 @@ public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel>
 		@TagChildren({
 			@TagChild(value=VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 		}
 	}
 		
-	public static class VerticalWidgetProcessor extends AbstractCellWidgetProcessor<VerticalPanel> 
+	public static class VerticalWidgetProcessor extends AbstractCellWidgetProcessor<VerticalPanel, CellPanelContext> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			VerticalPanel rootWidget = context.getRootWidget();
+			VerticalPanel rootWidget = context.getWidget();
 			rootWidget.add(child);
-			context.setAttribute("child", child);
+			context.child = child;
 			super.processChildren(context);
-			context.setAttribute("child", null);
+			context.child = null;
 		}
 	}	}

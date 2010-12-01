@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
@@ -30,7 +31,8 @@ import com.google.gwt.user.client.ui.SimpleCheckBox;
  *
  */
 @DeclarativeFactory(id="simpleCheckBox", library="gwt")
-public class SimpleCheckBoxFactory extends FocusWidgetFactory<SimpleCheckBox> implements HasNameFactory<SimpleCheckBox>
+public class SimpleCheckBoxFactory extends FocusWidgetFactory<SimpleCheckBox, WidgetFactoryContext> 
+		implements HasNameFactory<SimpleCheckBox, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributes({

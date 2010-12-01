@@ -31,13 +31,11 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-
 class AbsolutePanelContext extends WidgetFactoryContext
 {
 	String left;
 	String top;
 }
-
 
 /**
  * @author Thiago da Rosa de Bustamante

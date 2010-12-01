@@ -22,81 +22,68 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
+import br.com.sysmap.crux.gwt.client.DockPanelContext.DockDirection;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
+
+@SuppressWarnings("deprecation")
+class DockPanelContext extends CellPanelContext
+{
+	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
+	public DockDirection direction;
+	
+}
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@SuppressWarnings("deprecation")
 @DeclarativeFactory(id="dockPanel", library="gwt")
-public class DockPanelFactory extends CellPanelFactory<DockPanel>
+public class DockPanelFactory extends CellPanelFactory<DockPanel, DockPanelContext> 
+       implements HasHorizontalAlignmentFactory<DockPanel, DockPanelContext>, 
+                  HasVerticalAlignmentFactory<DockPanel, DockPanelContext>
 {
-	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
 	
 	@Override
 	public DockPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
 	{
 		return new DockPanel();
 	}
-
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-		
-		DockPanel widget = context.getWidget();
-		
-		String cellHorizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
-		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}		
-		String cellVerticalAlignment = context.readWidgetProperty("verticalAlignment");
-		if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
-		{
-			widget.setVerticalAlignment(AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
-		}
-	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(DockPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(DockPanelContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class DockPanelProcessor extends AbstractCellPanelProcessor<DockPanel> 
+	public static class DockPanelProcessor extends AbstractCellPanelProcessor<DockPanel, DockPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(DockCellProcessor.class),
 			@TagChild(DockWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(DockPanelContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
-			context.setAttribute("direction", "center");
+			context.direction = DockDirection.center;
 		}
 	}
 	
 	@TagChildAttributes(tagName="cell", minOccurs="0", maxOccurs="unbounded")
-	public static class DockCellProcessor extends AbstractCellProcessor<DockPanel> 
+	public static class DockCellProcessor extends AbstractCellProcessor<DockPanel, DockPanelContext> 
 	{
+		protected GWTMessages messages = GWT.create(GWTMessages.class);
+		
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="direction", type=DockDirection.class, defaultValue="center")
@@ -104,70 +91,63 @@ public class DockPanelFactory extends CellPanelFactory<DockPanel>
 		@TagChildren({
 			@TagChild(value=DockWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(DockPanelContext context) throws InterfaceConfigException 
 		{
 			super.processChildren(context);
 
-			String direction = context.readChildProperty("direction");
-			if (StringUtils.isEmpty(direction))
+			String directionProp = context.readChildProperty("direction");
+			if (!StringUtils.isEmpty(directionProp))
 			{
-				direction = "center";
+				try
+				{
+					context.direction = DockDirection.valueOf(directionProp);
+				}
+				catch (Exception e) 
+				{
+					String childId = context.readChildProperty("id");
+					throw new InterfaceConfigException(messages.dockPanelInvalidDirection(childId, context.getWidgetId()));
+				}
 			}
-			context.setAttribute("direction", direction);
+			else
+			{
+				context.direction = DockDirection.center;
+			}
 		}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class DockWidgetProcessor extends AbstractCellWidgetProcessor<DockPanel> 
+	public static class DockWidgetProcessor extends AbstractCellWidgetProcessor<DockPanel, DockPanelContext> 
 	{
-		protected GWTMessages messages = GWT.create(GWTMessages.class);
-
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(DockPanelContext context) throws InterfaceConfigException
 		{
 			CruxMetaDataElement childElement = context.getChildElement();
 			Widget child = createChildWidget(childElement);
-			DockPanel parent = context.getRootWidget();
+			DockPanel parent = context.getWidget();
 			
-			String direction = (String) context.getAttribute("direction");
-			if("center".equals(direction))
-			{
-				parent.add(child, DockPanel.CENTER);
+			switch (context.direction) {
+				case center: parent.add(child, DockPanel.CENTER);
+				break;
+				case lineStart: parent.add(child, DockPanel.LINE_START);
+				break;
+				case lineEnd: parent.add(child, DockPanel.LINE_END);
+				break;
+				case east: parent.add(child, DockPanel.EAST);
+				break;
+				case north: parent.add(child, DockPanel.NORTH);
+				break;
+				case south: parent.add(child, DockPanel.SOUTH);
+				break;
+				case west: parent.add(child, DockPanel.WEST);
+				break;
+
+			default:
+				break;
 			}
-			else if("line_start".equals(direction))
-			{
-				parent.add(child, DockPanel.LINE_START);
-			}
-			else if("line_end".equals(direction))
-			{
-				parent.add(child, DockPanel.LINE_END);
-			}
-			else if("east".equals(direction))
-			{
-				parent.add(child, DockPanel.EAST);
-			}
-			else if("north".equals(direction))
-			{
-				parent.add(child, DockPanel.NORTH);
-			}
-			else if("south".equals(direction))
-			{
-				parent.add(child, DockPanel.SOUTH);
-			}
-			else if("west".equals(direction))
-			{
-				parent.add(child, DockPanel.WEST);
-			}
-			else
-			{
-				String childId = childElement.getProperty("id");
-				throw new InterfaceConfigException(messages.dockPanelInvalidDirection(childId, context.getRootWidgetId()));
-			}
-			
-			context.setAttribute("direction", "center");
-			context.setAttribute("child", child);
+			context.direction = DockDirection.center;
+			context.child = child;
 			super.processChildren(context);
-			context.setAttribute("child", null);
+			context.child = null;
 		}
 	}
 }

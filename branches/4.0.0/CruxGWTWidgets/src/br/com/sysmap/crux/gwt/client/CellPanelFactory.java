@@ -25,22 +25,23 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.AlignmentAttributeParser;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPanelFactory<T>
+public abstract class CellPanelFactory <T extends CellPanel, C extends CellPanelContext> extends ComplexPanelFactory<T, C>
 {
 	private static final String DEFAULT_V_ALIGN = HasVerticalAlignment.ALIGN_MIDDLE.getVerticalAlignString();
 	private static final String DEFAULT_H_ALIGN = HasHorizontalAlignment.ALIGN_CENTER.getTextAlignString();
@@ -50,7 +51,7 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 		@TagAttribute(value="borderWidth",type=Integer.class),
 		@TagAttribute(value="spacing",type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(C context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,29 +60,29 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 	@TagChildren({
 		@TagChild(CellPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(C context) throws InterfaceConfigException {}
 	
-	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanel>{} 
+	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanel, CellPanelContext>{} 
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static abstract class AbstractCellPanelProcessor<T extends CellPanel> extends ChoiceChildProcessor<T> 
+	public static abstract class AbstractCellPanelProcessor<T extends CellPanel, C extends CellPanelContext> extends ChoiceChildProcessor<T, C> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CellProcessor.class),
 			@TagChild(CellWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(C context) throws InterfaceConfigException 
 		{
-			context.setAttribute("horizontalAlignment", DEFAULT_H_ALIGN);
-			context.setAttribute("verticalAlignment", DEFAULT_V_ALIGN);
+			context.horizontalAlignment = DEFAULT_H_ALIGN;
+			context.verticalAlignment = DEFAULT_V_ALIGN;
 		}
 	}
 	
-	public static class CellProcessor extends AbstractCellProcessor<CellPanel>{}
+	public static class CellProcessor extends AbstractCellProcessor<CellPanel, CellPanelContext>{}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static abstract class AbstractCellProcessor<T extends CellPanel> extends WidgetChildProcessor<T> 
+	public static abstract class AbstractCellProcessor<T extends CellPanel, C extends CellPanelContext> extends WidgetChildProcessor<T, C> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -93,63 +94,57 @@ public abstract class CellPanelFactory <T extends CellPanel> extends ComplexPane
 		@TagChildren({
 			@TagChild(value=CellWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(C context) throws InterfaceConfigException 
 		{
-			context.setAttribute("height", context.readChildProperty("height"));
-			context.setAttribute("width", context.readChildProperty("width"));
-			context.setAttribute("horizontalAlignment", context.readChildProperty("horizontalAlignment"));
-			context.setAttribute("verticalAlignment", context.readChildProperty("verticalAlignment"));
+			context.height = context.readChildProperty("height");
+			context.width = context.readChildProperty("width");
+			context.horizontalAlignment = context.readChildProperty("horizontalAlignment");
+			context.verticalAlignment = context.readChildProperty("verticalAlignment");
 		}
 	}
 	
-	public static class CellWidgetProcessor extends AbstractCellWidgetProcessor<CellPanel> 
+	public static class CellWidgetProcessor extends AbstractCellWidgetProcessor<CellPanel, CellPanelContext> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			context.setAttribute("child", child);
+			context.child = child;
 			super.processChildren(context);
-			context.setAttribute("child", null);
+			context.child = null;
 		}
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	static class AbstractCellWidgetProcessor<T extends CellPanel> extends WidgetChildProcessor<T> 
+	static class AbstractCellWidgetProcessor<T extends CellPanel, C extends CellPanelContext> extends WidgetChildProcessor<T, C> 
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(C context) throws InterfaceConfigException
 		{
-			T parent = (T)context.getRootWidget();
-			Widget child = (Widget) context.getAttribute("child");
-			String cellHeight = (String) context.getAttribute("height");
-			if (cellHeight != null && cellHeight.length() > 0)
+			T parent = (T)context.getWidget();
+			if (!StringUtils.isEmpty(context.height))
 			{
-				parent.setCellHeight(child, cellHeight);
+				parent.setCellHeight(context.child, context.height);
+			}
+			if (!StringUtils.isEmpty(context.horizontalAlignment))
+			{
+				parent.setCellHorizontalAlignment(context.child, 
+					  AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+			}
+			if (!StringUtils.isEmpty(context.verticalAlignment))
+			{
+				parent.setCellVerticalAlignment(context.child, AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment));
+			}
+			if (!StringUtils.isEmpty(context.width))
+			{
+				parent.setCellWidth(context.child, context.width);
 			}
 			
-			String cellHorizontalAlignment = (String) context.getAttribute("horizontalAlignment");
-			if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
-			{
-				parent.setCellHorizontalAlignment(child, 
-					  AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-			}
-			String cellVerticalAlignment = (String) context.getAttribute("verticalAlignment");
-			if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
-			{
-				parent.setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
-			}
-			String cellWidth = (String) context.getAttribute("width");
-			if (cellWidth != null && cellWidth.length() > 0)
-			{
-				parent.setCellWidth(child, cellWidth);
-			}
-			
-			context.setAttribute("height", null);
-			context.setAttribute("width", null);
-			context.setAttribute("horizontalAlignment", DEFAULT_H_ALIGN);
-			context.setAttribute("verticalAlignment", DEFAULT_V_ALIGN);
+			context.height = null;
+			context.width = null;
+			context.horizontalAlignment = DEFAULT_H_ALIGN;
+			context.verticalAlignment = DEFAULT_V_ALIGN;
 		}
 	}
 }
