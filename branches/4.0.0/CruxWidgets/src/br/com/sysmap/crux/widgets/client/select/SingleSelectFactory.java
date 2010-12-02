@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.gwt.client.AbstractListBoxFactory;
+import br.com.sysmap.crux.gwt.client.ListBoxContext;
 
 /**
  * Represents a List Box component
@@ -33,7 +34,7 @@ public class SingleSelectFactory extends AbstractListBoxFactory<SingleSelect>
 	@TagChildren({
 		@TagChild(SelectItemsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}	
+	public void processChildren(ListBoxContext context) throws InterfaceConfigException {}	
 	
 	@Override
 	public SingleSelect instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException

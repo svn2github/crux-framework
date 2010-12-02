@@ -29,8 +29,8 @@ import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -41,7 +41,7 @@ import com.google.gwt.core.client.GWT;
  *
  */
 @DeclarativeFactory(id="wizardPage", library="widgets")
-public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
+public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactoryContext>
 {
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 
@@ -58,7 +58,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 		@TagAttributeDeclaration(value="wizardId", required=true),
 		@TagAttributeDeclaration("wizardContextObject")
 	})
-	public void processAttributes(br.com.sysmap.crux.core.client.screen.WidgetFactory.WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -82,17 +82,17 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 	}
 	
 	@TagChildAttributes(tagName="commands", minOccurs="0")
-	public static class CommandsProcessor extends WidgetChildProcessor<WizardPage<?>>
+	public static class CommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WizardCommandsProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
-	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardPage<?>>
+	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetFactoryContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -104,7 +104,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 			@TagAttributeDeclaration("height"),
 			@TagAttributeDeclaration(value="onCommand", required=true)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
 			String id =context.getChildElement().getProperty("id");
@@ -113,7 +113,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>>
 			
 			final Event commandEvent = EvtBind.getWidgetEvent(context.getChildElement(), "onCommand");
 			
-			WizardPage<?> rootWidget = context.getRootWidget();
+			WizardPage<?> rootWidget = context.getWidget();
 			rootWidget.addCommand(id, label, commandEvent, order);
 			
 			String styleName = context.readChildProperty("styleName");

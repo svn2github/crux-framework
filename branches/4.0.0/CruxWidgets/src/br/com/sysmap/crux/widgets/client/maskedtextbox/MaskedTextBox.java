@@ -31,12 +31,14 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -61,7 +63,7 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 public class MaskedTextBox extends Composite implements HasFormatter, HasDirection, HasChangeHandlers, HasValueChangeHandlers<String>,
 														HasClickHandlers, HasAllFocusHandlers, HasAllKeyHandlers,
-														HasAllMouseHandlers, HasName, HasPasteHandlers
+														HasAllMouseHandlers, HasName, HasPasteHandlers, HasDoubleClickHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-MaskedTextBox" ;
 
@@ -388,4 +390,9 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	{
 		return addHandler(handler, PasteEvent.getType());
 	}
+
+	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
+    {
+	    return textBox.addDoubleClickHandler(handler);
+    }
 }

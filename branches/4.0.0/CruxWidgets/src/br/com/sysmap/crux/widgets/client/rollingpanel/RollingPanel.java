@@ -33,19 +33,20 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public class RollingPanel extends Composite implements InsertPanel
+@SuppressWarnings("deprecation")
+public class RollingPanel extends Composite implements InsertPanel, HasHorizontalAlignment, HasVerticalAlignment
 {
 	public static final String DEFAULT_NEXT_HORIZONTAL_STYLE_NAME = "crux-RollingPanelHNext";
 
@@ -55,7 +56,7 @@ public class RollingPanel extends Composite implements InsertPanel
 	public static final String DEFAULT_STYLE_NAME = "crux-RollingPanel";
 
 	protected CellPanel itemsPanel;
-	protected DockPanel layoutPanel;
+    protected DockPanel layoutPanel;
 	
 	private String horizontalNextButtonStyleName = DEFAULT_NEXT_HORIZONTAL_STYLE_NAME;
 	private Button horizontalNextButton = null;
@@ -70,6 +71,10 @@ public class RollingPanel extends Composite implements InsertPanel
 	private Button verticalNextButton = null;
 	private String verticalPreviousButtonStyleName = DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME;
 	private Button verticalPreviousButton = null;
+
+	private HorizontalAlignmentConstant horizontalAlign;
+
+	private VerticalAlignmentConstant verticalAlign;
 	
 	/**
 	 * @param vertical
@@ -345,6 +350,7 @@ public class RollingPanel extends Composite implements InsertPanel
 	 */
 	public void setHorizontalAlignment(HorizontalAlignmentConstant align)
     {
+		this.horizontalAlign = align;
 		this.layoutPanel.setCellHorizontalAlignment(this.itemsScrollPanel, align);
     }
 	
@@ -401,6 +407,7 @@ public class RollingPanel extends Composite implements InsertPanel
 	 */
 	public void setVerticalAlignment(VerticalAlignmentConstant verticalAlign)
     {
+		this.verticalAlign = verticalAlign;
 		this.layoutPanel.setCellVerticalAlignment(this.itemsScrollPanel, verticalAlign);
     }
 
@@ -717,4 +724,14 @@ public class RollingPanel extends Composite implements InsertPanel
 			setVerticalScrollPosition(position);
 	    }
 	}
+
+	public VerticalAlignmentConstant getVerticalAlignment()
+    {
+	    return this.verticalAlign;
+    }
+
+	public HorizontalAlignmentConstant getHorizontalAlignment()
+    {
+	    return this.horizontalAlign;
+    }
 }

@@ -23,8 +23,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 /**
@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
  * @author Gesse S. F. Dafe
  */
 @br.com.sysmap.crux.core.client.declarative.DeclarativeFactory(id="scrollBanner", library="widgets")
-public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
+public class ScrollBannerFactory extends WidgetFactory<ScrollBanner, WidgetFactoryContext>
 {
 	@Override
 	public ScrollBanner instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -62,13 +62,13 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner>
 	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
-	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner>
+	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner, WidgetFactoryContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 		{
 			String message = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
-			ScrollBanner rootWidget = context.getRootWidget();
+			ScrollBanner rootWidget = context.getWidget();
 			rootWidget.addMessage(message);
 		}
 	}

@@ -25,25 +25,39 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.align.AlignmentAttributeParser;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
+
+class RollingPanelContext extends WidgetFactoryContext
+{
+
+	public String verticalAlignment;
+	public String horizontalAlignment;
+	public String width;
+	public String height;
+	
+}
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="rollingPanel", library="widgets")
-public class RollingPanelFactory extends WidgetFactory<RollingPanel>
+public class RollingPanelFactory extends WidgetFactory<RollingPanel, RollingPanelContext>
+       implements HasHorizontalAlignmentFactory<RollingPanel, RollingPanelContext>, 
+                  HasVerticalAlignmentFactory<RollingPanel, RollingPanelContext>
 {
 
 	@Override
@@ -61,8 +75,6 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 	})
 	@TagAttributes({
 		@TagAttribute("horizontalNextButtonStyleName"),
@@ -72,44 +84,31 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 		@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
 		@TagAttribute(value="spacing", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(RollingPanelContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
-		RollingPanel widget = context.getWidget();
-		
-		String cellHorizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
-		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}
-		
-		String cellVerticalAlignment = context.readWidgetProperty("verticalAlignment");
-		if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
-		{
-			widget.setVerticalAlignment(AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
-		}
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(RollingPanelProcessor.class)
 	})		
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(RollingPanelContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanel> 
+	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanel, RollingPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(RollingCellProcessor.class),
 			@TagChild(VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException  {}
+		public void processChildren(RollingPanelContext context) throws InterfaceConfigException  {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class RollingCellProcessor extends WidgetChildProcessor<RollingPanel>
+	public static class RollingCellProcessor extends WidgetChildProcessor<RollingPanel, RollingPanelContext>
 	{
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("height"),
@@ -120,52 +119,47 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel>
 		@TagChildren({
 			@TagChild(value=VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(RollingPanelContext context) throws InterfaceConfigException 
 		{
-			context.setAttribute("height", context.readChildProperty("height"));
-			context.setAttribute("width", context.readChildProperty("width"));
-			context.setAttribute("horizontalAlignment", context.readChildProperty("horizontalAlignment"));
-			context.setAttribute("verticalAlignment", context.readChildProperty("verticalAlignment"));
+			context.height = context.readChildProperty("height");
+			context.width = context.readChildProperty("width");
+			context.horizontalAlignment = context.readChildProperty("horizontalAlignment");
+			context.verticalAlignment = context.readChildProperty("verticalAlignment");
 		}
 	}
 		
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class VerticalWidgetProcessor extends WidgetChildProcessor<RollingPanel> 
+	public static class VerticalWidgetProcessor extends WidgetChildProcessor<RollingPanel, RollingPanelContext> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(RollingPanelContext context) throws InterfaceConfigException
 		{
 			Widget child = createChildWidget(context.getChildElement());
-			RollingPanel rootWidget = context.getRootWidget();
+			RollingPanel rootWidget = context.getWidget();
 			rootWidget.add(child);
 
-			String cellHeight = (String) context.getAttribute("height");
-			if (cellHeight != null && cellHeight.length() > 0)
+			if (!StringUtils.isEmpty(context.height))
 			{
-				rootWidget.setCellHeight(child, cellHeight);
+				rootWidget.setCellHeight(child, context.height);
 			}
-			
-			String cellHorizontalAlignment = (String) context.getAttribute("horizontalAlignment");
-			if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
+			if (!StringUtils.isEmpty(context.horizontalAlignment))
 			{
 				rootWidget.setCellHorizontalAlignment(child, 
-					  AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+					  AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
 			}
-			String cellVerticalAlignment = (String) context.getAttribute("verticalAlignment");
-			if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
+			if (!StringUtils.isEmpty(context.verticalAlignment))
 			{
-				rootWidget.setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
+				rootWidget.setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment));
 			}
-			String cellWidth = (String) context.getAttribute("width");
-			if (cellWidth != null && cellWidth.length() > 0)
+			if (!StringUtils.isEmpty(context.width))
 			{
-				rootWidget.setCellWidth(child, cellWidth);
+				rootWidget.setCellWidth(child, context.width);
 			}
 			
-			context.setAttribute("height", null);
-			context.setAttribute("width", null);
-			context.setAttribute("horizontalAlignment", null);
-			context.setAttribute("verticalAlignment", null);
+			context.height = null;
+			context.width = null;
+			context.horizontalAlignment = null;
+			context.verticalAlignment = null;
 		}
 	}	
 }

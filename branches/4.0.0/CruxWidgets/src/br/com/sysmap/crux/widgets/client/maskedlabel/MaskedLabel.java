@@ -20,8 +20,10 @@ import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -31,7 +33,7 @@ import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasWordWrap;
 import com.google.gwt.user.client.ui.Label;
 
@@ -39,8 +41,8 @@ import com.google.gwt.user.client.ui.Label;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MaskedLabel extends Composite implements HasFormatter, HasHorizontalAlignment, 
-HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers
+public class MaskedLabel extends Composite implements HasFormatter, HasAutoHorizontalAlignment, 
+HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers, HasDoubleClickHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-MaskedLabel" ;
 
@@ -171,6 +173,7 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers
 	/**
 	 * @see com.google.gwt.i18n.client.HasDirection#getDirection()
 	 */
+	@Deprecated
 	public Direction getDirection()
 	{
 		return label.getDirection();
@@ -179,6 +182,7 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers
 	/**
 	 * @see com.google.gwt.i18n.client.HasDirection#setDirection(com.google.gwt.i18n.client.HasDirection.Direction)
 	 */
+	@Deprecated
 	public void setDirection(Direction direction)
 	{
 		label.setDirection(direction);
@@ -239,4 +243,19 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers
 	{
 		return label.addMouseWheelHandler(handler);
 	}
+
+	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
+    {
+	    return label.addDoubleClickHandler(handler);
+    }
+
+	public AutoHorizontalAlignmentConstant getAutoHorizontalAlignment()
+    {
+		return label.getAutoHorizontalAlignment();
+    }
+
+	public void setAutoHorizontalAlignment(AutoHorizontalAlignmentConstant autoHorizontalAlignment)
+    {
+	    label.setAutoHorizontalAlignment(autoHorizontalAlignment);
+    }
 }
