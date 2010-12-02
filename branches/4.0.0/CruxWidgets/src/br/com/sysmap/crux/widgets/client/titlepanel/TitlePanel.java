@@ -28,6 +28,15 @@ public class TitlePanel extends DecoratedPanel
 	public static final String DEFAULT_STYLE_NAME = "crux-TitlePanel" ;
 	
 	/**
+	 * 
+	 */
+	public TitlePanel()
+	{
+		super();
+		setStyleName(DEFAULT_STYLE_NAME);
+	}
+	
+	/**
 	 * @param width
 	 * @param height
 	 * @param styleName

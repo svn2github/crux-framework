@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.widgets.client.collapsepanel;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
@@ -26,13 +26,17 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.LazyPanel;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.gwt.client.CellPanelContext;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvtBind;
+import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvent;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvtBind;
+import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandHandler;
 import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
 
 /**
@@ -45,25 +49,27 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 	@Override
 	public CollapsePanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
-		String height = element.getProperty("height");
-		String width = element.getProperty("width");
-		String styleName = element.getProperty("styleName");
-
-		String strCollapsible = element.getProperty("collapsible");
-		boolean collapsible = true;
-		if(strCollapsible != null && strCollapsible.length() > 0)
+		final CollapsePanel ret = new CollapsePanel();
+		String collapsible = element.getProperty("collapsible");
+		String collapsed = element.getProperty("collapsed");
+		if ((collapsible == null || !StringUtils.unsafeEquals(collapsible, "false")) &&
+			(collapsed != null && StringUtils.unsafeEquals(collapsed, "true")))
 		{
-			collapsible = Boolean.parseBoolean(strCollapsible);
-		}
-		
-		String strCollapsed = element.getProperty("collapsed");
-		boolean collapsed = false;
-		if(strCollapsed != null && strCollapsed.length() > 0)
-		{
-			collapsed = Boolean.parseBoolean(strCollapsed);
-		}
-		
-		return new CollapsePanel(width, height, styleName, collapsible, collapsed);
+			ret.addBeforeExpandHandler(new BeforeExpandHandler()
+			{
+				private boolean loaded = false;
+				public void onBeforeExpand(BeforeExpandEvent event)
+				{
+					if (!loaded)
+					{
+						LazyPanel widget = (LazyPanel)ret.getContentWidget();
+						widget.ensureWidget();
+						loaded = true;
+					}
+				}
+			});
+		}		
+		return ret;
 	}
 	
 	@Override
@@ -77,9 +83,9 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 	}
 	
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="collapsed", type=Boolean.class),
-		@TagAttributeDeclaration(value="collapsible", type=Boolean.class)
+	@TagAttributes({
+		@TagAttribute(value="collapsed", type=Boolean.class),
+		@TagAttribute(value="collapsible", type=Boolean.class)
 	})
 	public void processAttributes(CellPanelContext context) throws InterfaceConfigException
 	{

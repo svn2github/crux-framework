@@ -48,7 +48,6 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	private Widget contentWidget;
 
 	private VerticalAlignmentConstant verticalAlign;
-
 	private HorizontalAlignmentConstant horizontalAlign;
 	
 	/**
@@ -59,10 +58,19 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	 */
 	public DecoratedPanel(String width, String height, String styleName)
 	{
+		this();
 		Element table = getTable();
 		table.setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
 		table.setPropertyString("width", (width==null?"":width));
 		table.getStyle().setProperty("height", (height==null?"":height));
+		
+	}
+	/**
+	 * Constructor
+	 */
+	public DecoratedPanel()
+	{
+		setStyleName(DEFAULT_STYLE_NAME);
 //		getTable().getStyle().setProperty("tableLayout", "fixed");
 	 	
 		Element templateTR = DOM.createTR();

@@ -37,10 +37,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 	@Override
 	public DecoratedPanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
-		String height = element.getProperty("height");
-		String width = element.getProperty("width");
-		String styleName = element.getProperty("styleName");
-		return new DecoratedPanel(width, height, styleName);
+		return new DecoratedPanel();
 	}
 
 	@Override

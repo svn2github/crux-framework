@@ -29,9 +29,6 @@ public class TitlePanelFactory extends AbstractTitlePanelFactory<TitlePanel>
 	@Override
 	public TitlePanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
-		String height = element.getProperty("height");
-		String width = element.getProperty("width");
-		String styleName = element.getProperty("styleName");
-		return new TitlePanel(width, height, styleName);
+		return new TitlePanel();
 	}	
 }

@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.collapsepanel;
 
-import br.com.sysmap.crux.core.client.screen.LazyPanel;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseOrBeforeExpandEvent;
@@ -37,12 +36,17 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBeforeExpandHandlers
 {
-	private static final String DEFAULT_STYLE_NAME = "crux-CollapsePanel" ;
+	private static final String DEFAULT_STYLE_NAME = "crux-CollapsePanel";
 	private boolean collapsible = false;
 	private boolean collapsed = false;
 	private String height;
 	private FocusPanel button = null;
-	private boolean contentLoeaded = false;
+	
+	public CollapsePanel()
+	{
+		super();
+		setStyleName(DEFAULT_STYLE_NAME);
+	}
 	
 	/**
 	 * Constructor
@@ -135,10 +139,6 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 	public void setContentWidget(Widget widget)
 	{
 		super.setContentWidget(widget);
-		if (!collapsible || !collapsed)
-		{
-			ensureContentWidgetLoaded();
-		}
 	}
 	
 	/**
@@ -169,23 +169,6 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 			super.setHeight("");
 		}
 	}
-	
-	/**
-	 * @param panel
-	 * @param collapsed
-	 */
-	protected void ensureContentWidgetLoaded()
-	{
-		if (!contentLoeaded)
-		{
-			Widget contentWidget = getContentWidget();
-			if (contentWidget != null && (contentWidget instanceof LazyPanel))
-			{
-				((LazyPanel)contentWidget).ensureWidget();
-			}
-			contentLoeaded = true;
-		}
-	}
 }
 
 /**
@@ -202,10 +185,6 @@ class ExpandButtonClickHandler implements ClickHandler
 		FocusPanel button = (FocusPanel) event.getSource();
 		CollapsePanel panel = (CollapsePanel) button.getParent();
 		boolean collapsed = panel.isCollapsed();
-		if (collapsed)
-		{
-			panel.ensureContentWidgetLoaded();
-		}
 		BeforeCollapseOrBeforeExpandEvent preEvent = null;
 		
 		if(!collapsed)
