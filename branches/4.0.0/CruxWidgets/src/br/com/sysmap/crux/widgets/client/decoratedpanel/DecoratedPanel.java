@@ -21,14 +21,12 @@ import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 /**
  * Panel based on a 3x3 table, useful to build rounded corners boxes. 
  * @author Gesse S. F. Dafe
  */
-public class DecoratedPanel extends CellPanel
+public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment, HasVerticalAlignment
 {
 	private static final String DEFAULT_STYLE_NAME = "crux-DecoratedPanel" ;
 	
@@ -48,6 +46,10 @@ public class DecoratedPanel extends CellPanel
 	private Element bottomCenterCell;
 	private Element bottomRightCell;
 	private Widget contentWidget;
+
+	private VerticalAlignmentConstant verticalAlign;
+
+	private HorizontalAlignmentConstant horizontalAlign;
 	
 	/**
 	 * Constructor
@@ -320,6 +322,7 @@ public class DecoratedPanel extends CellPanel
 	 */
 	public void setHorizontalAlignment(HorizontalAlignmentConstant align)
 	{
+		this.horizontalAlign = align;
 		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getTextAlignString());		
 	}
 	
@@ -329,6 +332,17 @@ public class DecoratedPanel extends CellPanel
 	 */
 	public void setVerticalAlignment(VerticalAlignmentConstant align)
 	{
+		this.verticalAlign = align;
 		DOM.setElementProperty(getMiddleCenterCell(), "align", align.getVerticalAlignString());		
 	}
+
+	public VerticalAlignmentConstant getVerticalAlignment()
+    {
+	    return this.verticalAlign;
+    }
+
+	public HorizontalAlignmentConstant getHorizontalAlignment()
+    {
+	    return this.horizontalAlign;
+    }
 }

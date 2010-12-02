@@ -15,50 +15,16 @@
  */
 package br.com.sysmap.crux.widgets.client.decoratedpanel;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.gwt.client.CellPanelContext;
 import br.com.sysmap.crux.gwt.client.CellPanelFactory;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * Base factory for Decorated Panels
  * @author Gesse S. F. Dafe
  */
-public abstract class AbstractDecoratedPanelFactory<T extends DecoratedPanel> extends CellPanelFactory<T>
+public abstract class AbstractDecoratedPanelFactory<T extends DecoratedPanel> extends CellPanelFactory<T, CellPanelContext>
+		implements HasHorizontalAlignmentFactory<T, CellPanelContext>, HasVerticalAlignmentFactory<T, CellPanelContext>
 {
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
-	{
-		super.processAttributes(context);
-		processAlignment(context);
-	}
-
-	/**
-	 * @param widget
-	 * @param element
-	 */
-	private void processAlignment(WidgetFactoryContext context)
-	{
-		DecoratedPanel widget = context.getWidget();
-
-		String cellHorizontalAlignment = context.readWidgetProperty("horizontalAlignment");
-		if (cellHorizontalAlignment != null && cellHorizontalAlignment.length() > 0)
-		{
-			widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(cellHorizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
-		}		
-		String cellVerticalAlignment = context.readWidgetProperty("verticalAlignment");
-		if (cellVerticalAlignment != null && cellVerticalAlignment.length() > 0)
-		{
-			widget.setVerticalAlignment(AlignmentAttributeParser.getVerticalAlignment(cellVerticalAlignment));
-		}
-	}	
 }
