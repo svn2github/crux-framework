@@ -74,7 +74,7 @@ public class RollingPanelFactory extends WidgetFactory<RollingPanel, RollingPane
 
 	@Override
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false"),
+		@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false")
 	})
 	@TagAttributes({
 		@TagAttribute("horizontalNextButtonStyleName"),
