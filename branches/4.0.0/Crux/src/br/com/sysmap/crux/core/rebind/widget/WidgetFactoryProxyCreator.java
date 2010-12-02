@@ -79,7 +79,6 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
-
 	/**
 	 * 
 	 * @author Thiago da Rosa de Bustamante
@@ -90,6 +89,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		int maxOccurs = 0;
 		int minOccurs = 0;
 	}
+	
 	/**
 	 * 
 	 * @author Thiago da Rosa de Bustamante
@@ -106,8 +106,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			this.binderVariables = binderVariables;
 		}
 	}
+	
 	private static final int UNBOUNDED = -1;
-	private Map<String, BindData> attributesFromClass = new HashMap<String, BindData>();
 	private Map<String, BindData> eventsFromClass = new HashMap<String, BindData>();
 	private int variableNameSuffixCounter = 0;
 	private final WidgetFactoryHelper factoryHelper;
@@ -166,6 +166,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		generateIsAttachMethod(srcWriter);
 		generateIsPanelMethod(srcWriter);
 		generateIsHtmlContainerMethod(srcWriter);
+		generateinstantiateContextMethod(srcWriter);
     }
 	
 	@Override
@@ -284,7 +285,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			for (TagChildLazyCondition lazyCondition : lazyConditions.all())
             {
 				String varName = "prop_"+getVariableNameSuffixCounter();
-	            source.append("String "+varName+" = c.readRootWidgetProperty(\""+lazyCondition.property()+"\");\n");
+	            source.append("String "+varName+" = c.readWidgetProperty(\""+lazyCondition.property()+"\");\n");
 	            if (lazyCondition.equals().length() >0)
 	            {
 	            	 source.append("_lazy = _lazy && "+varName+"!=null && "+varName+".equals("+EscapeUtils.quote(lazyCondition.equals())+");\n"); 
@@ -301,7 +302,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			for (TagChildLazyCondition lazyCondition : lazyConditions.any())
             {
 				String varName = "prop_"+getVariableNameSuffixCounter();
-	            source.append("String "+varName+" = c.readRootWidgetProperty(\""+lazyCondition.property()+"\")\n");
+	            source.append("String "+varName+" = c.readWidgetProperty(\""+lazyCondition.property()+"\")\n");
 	            if (lazyCondition.equals().length() >0)
 	            {
 	            	 source.append("_lazy = lazy || ("+varName+"!=null && "+varName+".equals("+EscapeUtils.quote(lazyCondition.equals())+"));\n"); 
@@ -321,7 +322,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		source.append("_w = createChildWidget(c.getChildElement());\n");
 		source.append("} else {\n");
 		source.append(CruxMetaDataElement.class.getSimpleName()+" _elem = c.getChildElement();\n");
-		source.append("String _lazyPanelId = c.getRootWidgetId();\n");
+		source.append("String _lazyPanelId = c.getWidgetId();\n");
 		source.append("_w = "+LazyPanelFactory.class.getCanonicalName()+".getLazyPanel(_elem, _lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren);\n");
 		source.append("Screen.add("+LazyPanelFactory.class.getCanonicalName()+".getLazyPanelId(_lazyPanelId, "+ LazyPanelWrappingType.class.getCanonicalName()+".wrapChildren), _w);\n");
 		source.append("}\n");
@@ -449,6 +450,19 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	/**
 	 * @param sourceWriter
 	 */
+	private void generateinstantiateContextMethod(SourceWriter sourceWriter)
+	{
+		String contextName = factoryHelper.getContextType().getParameterizedQualifiedSourceName();
+		sourceWriter.println("public "+contextName+" instantiateContext(){"); 
+		sourceWriter.indent();
+		sourceWriter.println("return new "+contextName+"();");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+	}
+	
+	/**
+	 * @param sourceWriter
+	 */
 	private void generateIsAttachMethod(SourceWriter sourceWriter)
 	{
 		DeclarativeFactory declarativeFactory = factoryHelper.getFactoryClass().getAnnotation(DeclarativeFactory.class);
@@ -499,16 +513,10 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param logger
 	 * @param attributeParserVariables
 	 */
-	private String generateProcessAttributesBlock(JClassType factoryClass, Map<String, String> attributeParserVariables)
+	private String generateProcessAttributesBlock(JClassType factoryClass, Map<String, String> attributeParserVariables, Set<String> added)
 	{
 		try
         {
-	        String factoryClassName = factoryClass.getQualifiedSourceName();
-			if (attributesFromClass.containsKey(factoryClassName))
-	        {
-				attributeParserVariables.putAll(attributesFromClass.get(factoryClassName).binderVariables);
-	        	return attributesFromClass.get(factoryClassName).binderParseCode;
-	        }
 	        StringBuilder result = new StringBuilder();
 	        
 	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{factoryHelper.getContextType()});
@@ -520,23 +528,27 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        		for (TagAttribute attr : attrs.value())
 	        		{
 	        			String attrName = attr.value();
-	        			if (isValidName(attrName))
+	        			if (!added.contains(attrName))
 	        			{
-	        				if (!Environment.isProduction() || widgetProperties.contains(attrName))
+	        				added.add(attrName);
+	        				if (isValidName(attrName))
 	        				{
-	        					if (AttributeParser.NoParser.class.isAssignableFrom(attr.parser()))
+	        					if (!Environment.isProduction() || widgetProperties.contains(attrName))
 	        					{
-	        						generateAutomaticProcessAttributeBlock(factoryClass, result, attr);
-	        					}
-	        					else
-	        					{
-	        						generateAttributeParserProcessAttributeBlock(factoryClass, result, attr, attributeParserVariables);
+	        						if (AttributeParser.NoParser.class.isAssignableFrom(attr.parser()))
+	        						{
+	        							generateAutomaticProcessAttributeBlock(factoryClass, result, attr);
+	        						}
+	        						else
+	        						{
+	        							generateAttributeParserProcessAttributeBlock(factoryClass, result, attr, attributeParserVariables);
+	        						}
 	        					}
 	        				}
-	        			}
-	        			else
-	        			{
-	        				logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidAttrName(attrName));
+	        				else
+	        				{
+	        					logger.log(TreeLogger.ERROR, messages.errorGeneratingWidgetFactoryInvalidAttrName(attrName));
+	        				}
 	        			}
 	        		}
 	        	}
@@ -544,28 +556,16 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        JClassType superclass = factoryClass.getSuperclass();
 	        if (superclass!= null && !superclass.equals(superclass.getOracle().getJavaLangObject()))
 	        {
-				Map<String, String> attributeParserVariablesSubClasses = new HashMap<String, String>();
-				String superClassBlock = generateProcessAttributesBlock(superclass, attributeParserVariablesSubClasses);
-				if (result.indexOf(superClassBlock) < 0)
-				{
-					result.append(superClassBlock+"\n");
-					attributeParserVariables.putAll(attributeParserVariablesSubClasses);
-				}
+				String superClassBlock = generateProcessAttributesBlock(superclass, attributeParserVariables, added);
+				result.append(superClassBlock+"\n");
 	        }
 	        JClassType[] interfaces = factoryClass.getImplementedInterfaces();
 	        for (JClassType interfaceClass : interfaces)
 	        {
-				Map<String, String> attributeParserVariablesSubClasses = new HashMap<String, String>();
-				String superClassBlock = generateProcessAttributesBlock(interfaceClass, attributeParserVariablesSubClasses);
-				if (result.indexOf(superClassBlock) < 0)
-				{
-					result.append(superClassBlock+"\n");
-					attributeParserVariables.putAll(attributeParserVariablesSubClasses);
-				}
+				String superClassBlock = generateProcessAttributesBlock(interfaceClass, attributeParserVariables, added);
+				result.append(superClassBlock+"\n");
 	        }
-	        String attributes = result.toString();
-	        attributesFromClass.put(factoryClassName, new BindData(attributes, attributeParserVariables));
-	        return attributes;
+	        return result.toString();
         }
         catch (NotFoundException e)
         {
@@ -677,10 +677,10 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		         +" context) throws InterfaceConfigException{"); 
 		sourceWriter.indent();
 		sourceWriter.println("super.processAttributes(context);");
-		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass(), attributeParserVariables);
+		String attributesBlock = generateProcessAttributesBlock(factoryHelper.getFactoryClass(), attributeParserVariables, new HashSet<String>());
 		if (!StringUtils.isEmpty(attributesBlock))
 		{
-			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getElement();");
+			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getWidgetElement();");
 			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(attributesBlock);
@@ -715,7 +715,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 				if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs >= 1)
 				{
-					source.append(this.factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" rootWidget = c.getRootWidget();\n");
+					source.append(this.factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" rootWidget = c.getWidget();\n");
 					boolean hasChildElement = true;
 					if (allowedChildren.maxOccurs == 1)
 					{
@@ -877,7 +877,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		String eventsBlock = generateProcessEventsBlock(factoryHelper.getFactoryClass(), evtBinderVariables);
 		if (!StringUtils.isEmpty(eventsBlock))
 		{
-			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getElement();");
+			sourceWriter.println(CruxMetaDataElement.class.getSimpleName()+" element = context.getWidgetElement();");
 			sourceWriter.println(factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" widget = context.getWidget();");
 		}
 		sourceWriter.print(eventsBlock);

@@ -30,7 +30,7 @@ public class WidgetFactoryContext
 	private Widget widget;
 	private String widgetId;
 
-	protected WidgetFactoryContext()
+	public WidgetFactoryContext()
 	{
 	}
 	public CruxMetaDataElement getWidgetElement()

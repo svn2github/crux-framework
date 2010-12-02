@@ -23,6 +23,7 @@ import java.util.Set;
 
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.screen.RegisteredWidgetFactories;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -71,7 +72,7 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 	        	JClassType widgetClass = baseIntf.getOracle().getType(WidgetConfig.getClientClass(type));
 	        	if (widgetClass != null)
 	        	{
-	        		sourceWriter.println("widgetFactories.put(\""+type+"\", (WidgetFactory<? extends Widget>)GWT.create("+
+	        		sourceWriter.println("widgetFactories.put(\""+type+"\", (WidgetFactory<? extends Widget, ? extends WidgetFactoryContext>)GWT.create("+
 	        				widgetClass.getQualifiedSourceName()+".class));");
 	        		widgetFactories.put(type, true);
 	        	}
@@ -143,13 +144,13 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 	@Override
     protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
     {
-		srcWriter.println("private FastMap<WidgetFactory<? extends Widget>> widgetFactories = new FastMap<WidgetFactory<? extends Widget>>();");
+		srcWriter.println("private FastMap<WidgetFactory<? extends Widget, ? extends WidgetFactoryContext>> widgetFactories = new FastMap<WidgetFactory<? extends Widget, ? extends WidgetFactoryContext>>();");
     }
 
 	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
-		sourceWriter.println("public WidgetFactory<? extends Widget> getWidgetFactory(String type) throws InterfaceConfigException{ ");
+		sourceWriter.println("public WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> getWidgetFactory(String type) throws InterfaceConfigException{ ");
 		sourceWriter.indent();
 		sourceWriter.println("if (!widgetFactories.containsKey(type)) {");
 		sourceWriter.indent();
@@ -173,7 +174,8 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 				GWT.class.getCanonicalName(),
 				FastMap.class.getCanonicalName(),
 				RegisteredWidgetFactories.class.getCanonicalName(),
-				com.google.gwt.user.client.ui.Widget.class.getCanonicalName()
+				com.google.gwt.user.client.ui.Widget.class.getCanonicalName(), 
+				WidgetFactoryContext.class.getCanonicalName()
 		};
 		return imports;
 	}

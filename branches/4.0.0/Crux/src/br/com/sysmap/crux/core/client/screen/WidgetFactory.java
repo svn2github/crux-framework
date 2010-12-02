@@ -241,6 +241,9 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	
 	public abstract T instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException;
 
+	/**
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	protected C instantiateContext()
 	{
