@@ -22,18 +22,11 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 
 import com.google.gwt.user.client.ui.ListBox;
-
-class ListBoxContext extends WidgetFactoryContext
-{
-	int index = 0;
-}
-
 
 /**
  * Base class for implementing factories for many kinds of list boxes.

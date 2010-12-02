@@ -53,6 +53,14 @@ class TabPanelContext extends WidgetFactoryContext
 	public boolean isHTMLTitle;
 	public Widget titleWidget;
 	
+	public void clearAttributes()
+    {
+	    isHTMLTitle = false;
+	    title = null;
+	    titleWidget = null;
+	    tabElement = null;
+    }
+	
 }
 
 /**
@@ -190,7 +198,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 			keyPressEvtBind.bindEvent(context.tabElement, currentTab);
 			keyDownEvtBind.bindEvent(context.tabElement, currentTab);
 
-			context.tabElement = null;
+			context.clearAttributes();
 		}	
 		private static ClickEvtBind clickEvtBind = new ClickEvtBind();
 		private static KeyUpEvtBind keyUpEvtBind = new KeyUpEvtBind();
