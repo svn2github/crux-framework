@@ -44,8 +44,7 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 	
 	public CollapsePanel()
 	{
-		super();
-		setStyleName(DEFAULT_STYLE_NAME);
+		this(null, null, null, true, false);
 	}
 	
 	/**

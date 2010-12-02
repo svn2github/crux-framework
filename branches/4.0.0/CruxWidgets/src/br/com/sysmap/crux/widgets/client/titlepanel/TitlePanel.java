@@ -32,8 +32,7 @@ public class TitlePanel extends DecoratedPanel
 	 */
 	public TitlePanel()
 	{
-		super();
-		setStyleName(DEFAULT_STYLE_NAME);
+		this(null, null, null);
 	}
 	
 	/**
