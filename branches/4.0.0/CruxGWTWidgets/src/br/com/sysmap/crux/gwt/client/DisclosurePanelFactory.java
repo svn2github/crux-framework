@@ -72,10 +72,15 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel, Wi
 		if (open == null || !StringUtils.unsafeEquals(open, "true"))
 		{
 			ret.addOpenHandler(new OpenHandler<DisclosurePanel>() {
+				private boolean loaded = false;
 				public void onOpen(OpenEvent<DisclosurePanel> event) 
 				{
-					LazyPanel widget = (LazyPanel)ret.getContent();
-					widget.ensureWidget();
+					if (!loaded)
+					{
+						LazyPanel widget = (LazyPanel)ret.getContent();
+						widget.ensureWidget();
+						loaded = true;
+					}
 				}
 			});
 		}
