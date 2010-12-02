@@ -25,6 +25,7 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
@@ -82,7 +83,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 		@TagAttribute(value="view", type=View.class, required=true)
 	})
 	@Override
-	public void processAttributes(WidgetFactoryContext<GadgetView> context) throws InterfaceConfigException
+	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	    super.processAttributes(context);
 	}
@@ -91,12 +92,12 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext<GadgetView> context) throws InterfaceConfigException
+	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<GadgetView> {}
+	public static class ContentProcessor extends WidgetChildProcessor<GadgetView, WidgetFactoryContext> {}
 
 	@Override
     protected String getFactoryType()
