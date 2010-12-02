@@ -43,7 +43,8 @@ public class Array<E> extends JavaScriptObject
 
 	public final E get(int index)
 	{
-		Assertions.assertIndexInRange(index, 0, size());
+	    assert 0 < size() : "Attempt to access an element in an empty array";
+	    assert (index >= 0 && index < size()) : "Index " + index + " was not in the acceptable range [" + 0 + ", " + size() + ")";
 		return jsniGet(index);
 	}
 
@@ -72,10 +73,7 @@ public class Array<E> extends JavaScriptObject
 	 */
 	public final void insert(int index, E elem)
 	{
-		// TODO: fix gwtc to optimize away Assertions.assertIndexInRange
-		assert (index >= 0 && index < size() + 1) : "Index " + index
-				+ " was not in the acceptable range [" + 0 + ", "
-				+ (size() + 1) + ")";
+		assert (index >= 0 && index < size() + 1) : "Index " + index + " was not in the acceptable range [" + 0 + ", " + (size() + 1) + ")";
 		jsniInsert(index, elem);
 	}
 
@@ -84,11 +82,8 @@ public class Array<E> extends JavaScriptObject
 	 */
 	public final void remove(int index)
 	{
-		// TODO: fix gwtc to optimize away Assertions.assertIndexInRange
-		assert 0 < size() : Assertions.ACCESS_EMPTY_ARRAY_MESSAGE;
-		assert (index >= 0 && index < size()) : "Index " + index
-				+ " was not in the acceptable range [" + 0 + ", " + size()
-				+ ")";
+	    assert 0 < size() : "Attempt to access an element in an empty array";
+	    assert (index >= 0 && index < size()) : "Index " + index + " was not in the acceptable range [" + 0 + ", " + size() + ")";
 		jsniRemove(index);
 	}
 
@@ -102,11 +97,8 @@ public class Array<E> extends JavaScriptObject
 	 */
 	public final void set(int index, E elem)
 	{
-		// TODO: fix gwtc to optimize away Assertions.assertIndexInRange
-		assert 0 < size() : Assertions.ACCESS_EMPTY_ARRAY_MESSAGE;
-		assert (index >= 0 && index < size()) : "Index " + index
-				+ " was not in the acceptable range [" + 0 + ", " + size()
-				+ ")";
+	    assert 0 < size() : "Attempt to access an element in an empty array";
+	    assert (index >= 0 && index < size()) : "Index " + index + " was not in the acceptable range [" + 0 + ", " + size() + ")";
 
 		jsniSet(index, elem);
 	}

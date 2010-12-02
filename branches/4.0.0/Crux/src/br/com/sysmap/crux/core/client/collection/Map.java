@@ -129,7 +129,7 @@ public class Map<V> extends JavaScriptObject
 	 */
 	public final void put(String key, V value)
 	{
-		assert key != null : Assertions.ACCESS_UNSUPPORTED_VALUE;
+		assert key != null : "Unsupported value";
 		jsniPut(key, value);
 	}
 
