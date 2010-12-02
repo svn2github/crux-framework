@@ -85,9 +85,9 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeParser<TabBarContext>
+	public static class VisibleTabAttributeParser implements AttributeParser<TabPanelContext>
 	{
-		public void processAttribute(TabBarContext context, final String propertyValue)
+		public void processAttribute(TabPanelContext context, final String propertyValue)
         {
 			final TabPanel widget = context.getWidget();
 			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()

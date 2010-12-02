@@ -140,7 +140,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel, Sta
 	}
 	
 	@TagChildAttributes(tagName="text", type=String.class)
-	public abstract static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
 		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
@@ -151,7 +151,7 @@ public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel, Sta
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public abstract static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
 	{
 		@Override
 		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
