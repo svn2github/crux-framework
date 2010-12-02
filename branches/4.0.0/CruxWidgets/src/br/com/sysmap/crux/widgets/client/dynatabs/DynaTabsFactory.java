@@ -27,8 +27,8 @@ import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
@@ -39,7 +39,7 @@ import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="dynaTabs", library="widgets")
-public class DynaTabsFactory extends WidgetFactory<DynaTabs>
+public class DynaTabsFactory extends WidgetFactory<DynaTabs, WidgetFactoryContext>
 {
 	@Override
 	public DynaTabs instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -54,7 +54,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
-	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs>
+	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs, WidgetFactoryContext>
 	{
 		protected BeforeFocusEvtBind beforeFocusEvtBind = new BeforeFocusEvtBind();
 		protected BeforeBlurEvtBind beforeBlurEvtBind = new BeforeBlurEvtBind();
@@ -72,7 +72,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 			@TagEventDeclaration("onBeforeBlur"),
 			@TagEventDeclaration("onBeforeClose")
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
 		{
 			CruxMetaDataElement childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
@@ -88,7 +88,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs>
 				closeable = Boolean.parseBoolean(strCloseable);
 			}
 			
-			DynaTabs rootWidget = context.getRootWidget();
+			DynaTabs rootWidget = context.getWidget();
 			Tab tab = rootWidget.openTab(id, label, url, closeable, false);
 			
 			beforeFocusEvtBind.bindEvent(childElement, tab);			

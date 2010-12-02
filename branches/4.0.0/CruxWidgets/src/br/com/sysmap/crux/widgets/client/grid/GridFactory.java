@@ -18,28 +18,34 @@ package br.com.sysmap.crux.widgets.client.grid;
 import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.datasource.PagedDataSource;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagEvent;
+import br.com.sysmap.crux.core.client.declarative.TagEvents;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
+import br.com.sysmap.crux.core.client.screen.factory.align.AlignmentAttributeParser;
+import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.gwt.client.align.AlignmentAttributeParser;
-import br.com.sysmap.crux.gwt.client.align.HorizontalAlignment;
-import br.com.sysmap.crux.gwt.client.align.VerticalAlignment;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind;
+import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.BeforeRowSelectEvtBind;
+import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.RowClickEvtBind;
+import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.RowDoubleClickEvtBind;
+import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.RowRenderEvtBind;
 import br.com.sysmap.crux.widgets.client.grid.Grid.SortingType;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -49,7 +55,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="grid", library="widgets")
-public class GridFactory extends WidgetFactory<Grid>
+public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 {
 	/**
 	 * @param cellSpacing 
@@ -154,20 +160,24 @@ public class GridFactory extends WidgetFactory<Grid>
 	}
 
 	/**
-	 * @param grid
-	 * @param gridElem
+	 * @author Gesse Dafe
 	 */
-	private void bindDataSource(WidgetFactoryContext context)
+	public static class DataSourceAttributeParser implements AttributeParser<WidgetFactoryContext>
 	{
-		final Grid widget = context.getWidget();
-
-		final String dataSourceName = context.readWidgetProperty("dataSource");
-		
-		if(dataSourceName != null && dataSourceName.length() > 0)
+		/**
+		 * @see br.com.sysmap.crux.core.client.screen.AttributeParser#processAttribute(br.com.sysmap.crux.core.client.screen.WidgetFactoryContext, java.lang.String)
+		 */
+		public void processAttribute(WidgetFactoryContext context, String propertyValue)
 		{
-			PagedDataSource<?> dataSource = (PagedDataSource<?>) Screen.createDataSource(dataSourceName);
-			widget.setDataSource(dataSource);
-		}
+			String dataSourceName = context.readWidgetProperty("dataSource");
+			
+			if(!StringUtils.isEmpty(dataSourceName))
+			{
+				PagedDataSource<?> dataSource = (PagedDataSource<?>) Screen.createDataSource(dataSourceName);
+				Grid widget = context.getWidget();			
+				widget.setDataSource(dataSource);
+			}
+		}		
 	}
 
 	/**
@@ -298,7 +308,6 @@ public class GridFactory extends WidgetFactory<Grid>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="pageSize", type=Integer.class, defaultValue="8"),
 		@TagAttributeDeclaration(value="rowSelection", type=RowSelectionModel.class, defaultValue="unselectable"),
-		@TagAttributeDeclaration("dataSource"),
 		@TagAttributeDeclaration(value="cellSpacing", type=Integer.class, defaultValue="1"),
 		@TagAttributeDeclaration(value="autoLoadData", type=Boolean.class, defaultValue="false"),
 		@TagAttributeDeclaration(value="stretchColumns", type=Boolean.class, defaultValue="false"),
@@ -308,29 +317,23 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
 		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
 	})
+	@TagAttributes({
+		@TagAttribute(value="dataSource", parser=DataSourceAttributeParser.class)
+	})
 	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-		bindDataSource(context);
 	}
 	
 	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onRowClick"),
-		@TagEventDeclaration("onRowDoubleClick"),
-		@TagEventDeclaration("onRowRender"),
-		@TagEventDeclaration("onBeforeRowSelect")
+	@TagEvents({
+		@TagEvent(RowClickEvtBind.class),
+		@TagEvent(RowDoubleClickEvtBind.class),
+		@TagEvent(RowRenderEvtBind.class),
+		@TagEvent(BeforeRowSelectEvtBind.class)
 	})
 	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
 	{
-		CruxMetaDataElement element = context.getElement();
-		Grid widget = context.getWidget();
-
-		RowEventsBind.bindClickRowEvent(element, widget);
-		RowEventsBind.bindDoubleClickRowEvent(element, widget);
-		RowEventsBind.bindRenderRowEvent(element, widget);
-		RowEventsBind.bindBeforeSelectRowEvent(element, widget);
-		
 		super.processEvents(context);
 	}
 	
@@ -342,19 +345,19 @@ public class GridFactory extends WidgetFactory<Grid>
 	
 	
 	@TagChildAttributes(maxOccurs="unbounded")
-	public static class ColumnProcessor extends ChoiceChildProcessor<Grid>
+	public static class ColumnProcessor extends ChoiceChildProcessor<Grid, WidgetFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(DataColumnProcessor.class),
 			@TagChild(WidgetColumnProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 
 	
 	@TagChildAttributes(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class DataColumnProcessor extends WidgetChildProcessor<Grid>
+	public static class DataColumnProcessor extends WidgetChildProcessor<Grid, WidgetFactoryContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -367,11 +370,11 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class WidgetColumnProcessor extends WidgetChildProcessor<Grid>
+	public static class WidgetColumnProcessor extends WidgetChildProcessor<Grid, WidgetFactoryContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -385,8 +388,8 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	}
 	
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<Grid>{}
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<Grid, WidgetFactoryContext>{}
 }

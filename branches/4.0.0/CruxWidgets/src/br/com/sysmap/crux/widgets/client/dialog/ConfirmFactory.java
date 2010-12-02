@@ -22,6 +22,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
@@ -32,10 +33,8 @@ import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
  *
  */
 @DeclarativeFactory(id="confirm", library="widgets")
-public class ConfirmFactory extends WidgetFactory<Confirm> 
-       implements HasAnimationFactory<Confirm>
+public class ConfirmFactory extends WidgetFactory<Confirm, WidgetFactoryContext> implements HasAnimationFactory<Confirm, WidgetFactoryContext>
 {
-
 	@Override
 	public Confirm instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{

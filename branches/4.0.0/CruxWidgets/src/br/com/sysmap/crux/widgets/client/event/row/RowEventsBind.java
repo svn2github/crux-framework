@@ -16,76 +16,158 @@
 package br.com.sysmap.crux.widgets.client.event.row;
 
 import br.com.sysmap.crux.core.client.event.Event;
+import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
+import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.widgets.client.event.Events;
 
 /**
- * TODO - Gesse - Comment this
+ * All event binders for grid row events
  * @author Gesse S. F. Dafe
  */
-public class RowEventsBind extends EvtBind
+public class RowEventsBind
 {
 	/**
-	 * @param widget
+	 * @author Gesse S. F. Dafe
 	 */
-	public static void bindClickRowEvent(CruxMetaDataElement element, HasRowClickHandlers widget)
+	public static class RowClickEvtBind implements EvtBinder<HasRowClickHandlers>
 	{
-		final Event clickLineEvent = getWidgetEvent(element, Events.ROW_CLICK);
-		if (clickLineEvent != null)
+		private static final String EVENT_NAME = "onrowclick";
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 */
+		public void bindEvent(CruxMetaDataElement element, HasRowClickHandlers widget)
 		{
-			widget.addRowClickHandler(new RowClickHandler()
+			final Event eventRowClick = EvtBind.getWidgetEvent(element, EVENT_NAME);
+			if (eventRowClick != null)
 			{
-				public void onRowClick(RowClickEvent event)
+				RowClickHandler handler = new RowClickHandler()
 				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(clickLineEvent, event);					
-				}
-			});
+					public void onRowClick(RowClickEvent event)
+					{
+						Events.callEvent(eventRowClick, event);						
+					}
+				};
+				
+				widget.addRowClickHandler(handler);
+			}
 		}
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
 	}
 	
-	public static void bindDoubleClickRowEvent(CruxMetaDataElement element, HasRowDoubleClickHandlers widget)
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class RowDoubleClickEvtBind implements EvtBinder<HasRowDoubleClickHandlers>
 	{
-		final Event doubleClickLineEvent = getWidgetEvent(element, Events.ROW_DOUBLE_CLICK);
-		if (doubleClickLineEvent != null)
+		private static final String EVENT_NAME = "onrowdoubleclick";
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 */
+		public void bindEvent(CruxMetaDataElement element, HasRowDoubleClickHandlers widget)
 		{
-			widget.addRowDoubleClickHandler(new RowDoubleClickHandler()
+			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
+			if (rowEvent != null)
 			{
-				public void onRowDoubleClick(RowDoubleClickEvent event)
+				RowDoubleClickHandler handler = new RowDoubleClickHandler()
 				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(doubleClickLineEvent, event);					
-				}
-			});
+					public void onRowDoubleClick(RowDoubleClickEvent event)
+					{
+						Events.callEvent(rowEvent, event);						
+					}
+				};
+				
+				widget.addRowDoubleClickHandler(handler);
+			}
 		}
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
 	}
 	
-	public static void bindRenderRowEvent(CruxMetaDataElement element, HasRowRenderHandlers widget)
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class RowRenderEvtBind implements EvtBinder<HasRowRenderHandlers>
 	{
-		final Event renderEvent = getWidgetEvent(element, Events.ROW_RENDER);
-		if (renderEvent != null)
+		private static final String EVENT_NAME = "onrowrender";
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 */
+		public void bindEvent(CruxMetaDataElement element, HasRowRenderHandlers widget)
 		{
-			widget.addRowRenderHandler(new RowRenderHandler()
+			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
+			if (rowEvent != null)
 			{
-				public void onRowRender(RowRenderEvent event)
+				RowRenderHandler handler = new RowRenderHandler()
 				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(renderEvent, event);					
-				}				
-			});
+					public void onRowRender(RowRenderEvent event)
+					{
+						Events.callEvent(rowEvent, event);						
+					}
+				};
+				
+				widget.addRowRenderHandler(handler);
+			}
 		}
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
 	}
 	
-	public static void bindBeforeSelectRowEvent(CruxMetaDataElement element, HasBeforeRowSelectHandlers widget)
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class BeforeRowSelectEvtBind implements EvtBinder<HasBeforeRowSelectHandlers>
 	{
-		final Event evt = getWidgetEvent(element, Events.BEFORE_ROW_SELECT);
-		if (evt != null)
+		private static final String EVENT_NAME = "onbeforerowselect";
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 */
+		public void bindEvent(CruxMetaDataElement element, HasBeforeRowSelectHandlers widget)
 		{
-			widget.addBeforeRowSelectHandler(new BeforeRowSelectHandler()
+			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
+			if (rowEvent != null)
 			{
-				public void onBeforeRowSelect(BeforeRowSelectEvent event)
+				BeforeRowSelectHandler handler = new BeforeRowSelectHandler()
 				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(evt, event);					
-				}				
-			});
+					public void onBeforeRowSelect(BeforeRowSelectEvent event)
+					{
+						Events.callEvent(rowEvent, event);
+					}
+				};
+				
+				widget.addBeforeRowSelectHandler(handler);
+			}
 		}
+
+		/**
+		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
 	}
 }

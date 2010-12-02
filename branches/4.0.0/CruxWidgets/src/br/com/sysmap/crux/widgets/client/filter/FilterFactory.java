@@ -17,15 +17,14 @@ package br.com.sysmap.crux.widgets.client.filter;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
@@ -42,11 +41,12 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="filter", library="widgets")
-public class FilterFactory extends CompositeFactory<Filter> 
-	   implements HasAnimationFactory<Filter>, HasTextFactory<Filter>, 
-	              HasValueChangeHandlersFactory<Filter>, HasSelectionHandlersFactory<Filter>,
-	              HasAllKeyHandlersFactory<Filter>
+public class FilterFactory extends CompositeFactory<Filter, WidgetFactoryContext> 
+	   implements HasAnimationFactory<Filter, WidgetFactoryContext>, HasTextFactory<Filter, WidgetFactoryContext>, 
+	              HasValueChangeHandlersFactory<Filter, WidgetFactoryContext>, HasSelectionHandlersFactory<Filter, WidgetFactoryContext>,
+	              HasAllKeyHandlersFactory<Filter, WidgetFactoryContext>
 {
+
 	@Override
 	public Filter instantiateWidget(final CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
@@ -61,46 +61,49 @@ public class FilterFactory extends CompositeFactory<Filter>
 		@TagAttribute(value="limit", type=Integer.class),
 		@TagAttribute("popupStyleName"),
 		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute("value")
+		@TagAttribute("value"),
+		@TagAttribute(value="filterable", parser=FilterableAttributeParser.class)
 	})
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("filterable")
 	})
 	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
 	{
-		final Filter widget = context.getWidget();
-
 		super.processAttributes(context);
-		addScreenLoadedHandler(
-				new ScreenLoadHandler()
-				{
-					public void onLoad(ScreenLoadEvent screenLoadEvent)
-					{					
-						String filterableId =context.readWidgetProperty("filterable");
-						Widget filterableWidget = null;
-						if(filterableId != null)
-						{
-							filterableWidget = Screen.get(filterableId);
-						}
-						
-						if(filterableWidget != null)
-						{
-							widget.setFilterable((Filterable<?>) filterableWidget);
-						}
-						else
-						{
-							throw new RuntimeException(WidgetMsgFactory.getMessages().filterableNotFoundWhenInstantiantingFilter(filterableId));
-						}							
-					}				
-				}		
-			);
 	}
 	
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadOracle")
-	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	/**
+	 * @author Gesse Dafe
+	 */
+	public class FilterableAttributeParser implements AttributeParser<WidgetFactoryContext>
 	{
-		super.processEvents(context);		
+		/**
+		 * @see br.com.sysmap.crux.core.client.screen.AttributeParser#processAttribute(br.com.sysmap.crux.core.client.screen.WidgetFactoryContext, java.lang.String)
+		 */
+		public void processAttribute(WidgetFactoryContext context, String propertyValue)
+		{
+			final Filter widget = context.getWidget();
+			final String filterableId =context.readWidgetProperty("filterable");
+			
+			addScreenLoadedHandler(new ScreenLoadHandler()
+			{
+				public void onLoad(ScreenLoadEvent screenLoadEvent)
+				{					
+					Widget filterableWidget = null;
+					if(filterableId != null)
+					{
+						filterableWidget = Screen.get(filterableId);
+					}
+					
+					if(filterableWidget != null)
+					{
+						widget.setFilterable((Filterable<?>) filterableWidget);
+					}
+					else
+					{
+						throw new RuntimeException(WidgetMsgFactory.getMessages().filterableNotFoundWhenInstantiantingFilter(filterableId));
+					}							
+				}				
+			});			
+		}		
 	}
 }
