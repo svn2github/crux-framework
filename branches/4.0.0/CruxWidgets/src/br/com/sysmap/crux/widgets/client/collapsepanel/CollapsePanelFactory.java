@@ -29,8 +29,8 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.gwt.client.CellPanelContext;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvtBind;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvtBind;
 import br.com.sysmap.crux.widgets.client.titlepanel.AbstractTitlePanelFactory;
@@ -71,7 +71,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagEvent(BeforeCollapseEvtBind.class),
 		@TagEvent(BeforeExpandEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(CellPanelContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -81,7 +81,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagAttributeDeclaration(value="collapsed", type=Boolean.class),
 		@TagAttributeDeclaration(value="collapsible", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(CellPanelContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -91,19 +91,19 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChild(TitleProcessor.class),
 		@TagChild(BodyProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="title", minOccurs="0")
-	public static class TitleProcessor extends WidgetChildProcessor<CollapsePanel>
+	public static class TitleProcessor extends WidgetChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException	{}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 
-	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CollapsePanel>
+	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
@@ -111,33 +111,33 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 			@TagChild(CollapsePanelTextChildProcessor.class),
 			@TagChild(CollapsePanelWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class CollapsePanelWidgetProcessor extends WidgetChildProcessor<CollapsePanel>
+	public static class CollapsePanelWidgetProcessor extends WidgetChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleWidgetTitleProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="titleWidget")
-	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CollapsePanel> {}
+	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CollapsePanel, CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="body", minOccurs="0")
-	public static class BodyProcessor extends WidgetChildProcessor<CollapsePanel>
+	public static class BodyProcessor extends WidgetChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(BodyChildrenProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 
-	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CollapsePanel>
+	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
@@ -145,17 +145,17 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 			@TagChild(CollapsePanelBodyTextChildProcessor.class),
 			@TagChild(CollapsePanelBodyWidgetProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class CollapsePanelBodyWidgetProcessor extends WidgetChildProcessor<CollapsePanel>
+	public static class CollapsePanelBodyWidgetProcessor extends WidgetChildProcessor<CollapsePanel, CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(BodyWidgetContentProcessor.class)
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")
@@ -163,7 +163,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory<CollapsePane
 		@TagChildLazyCondition(property="collapsible", notEquals="false"),
 		@TagChildLazyCondition(property="collapsed", equals="true")
 	})
-	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CollapsePanel> {}
+	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CollapsePanel, CellPanelContext> {}
 
 	public static class CollapsePanelHTMLChildProcessor extends HTMLChildProcessor<CollapsePanel>{}
 	public static class CollapsePanelTextChildProcessor extends TextChildProcessor<CollapsePanel>{}
