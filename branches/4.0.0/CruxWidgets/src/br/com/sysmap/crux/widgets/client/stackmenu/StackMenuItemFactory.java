@@ -26,8 +26,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.WidgetFactory;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
@@ -36,8 +36,8 @@ import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="stackMenuItem", library="widgets")
-public class StackMenuItemFactory extends WidgetFactory<StackMenuItem>
-       implements HasClickHandlersFactory<StackMenuItem>
+public class StackMenuItemFactory extends WidgetFactory<StackMenuItem, WidgetFactoryContext>
+       implements HasClickHandlersFactory<StackMenuItem, WidgetFactoryContext>
 {
 	@Override
 	public StackMenuItem instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -67,13 +67,13 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem>
 	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
-	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuItem>
+	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuItem, WidgetFactoryContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
 		{
 			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
-			StackMenuItem rootWidget = context.getRootWidget();
+			StackMenuItem rootWidget = context.getWidget();
 			rootWidget.add(childWidget);
 		}
 	}
