@@ -22,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
@@ -44,7 +43,7 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processChildren(TabPanelContext context) throws InterfaceConfigException 
 	{
 	}
 	
@@ -54,7 +53,7 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
@@ -62,7 +61,7 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<DecoratedTabPanel> 
+	public static class TabTitleProcessor extends ChoiceChildProcessor<DecoratedTabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
@@ -70,7 +69,7 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 		
 	}
 	
@@ -79,25 +78,25 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor<DecoratedTabPanel> {}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<DecoratedTabPanel> 
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<DecoratedTabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor<DecoratedTabPanel> {}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<DecoratedTabPanel> 
+	public static class TabWidgetProcessor extends WidgetChildProcessor<DecoratedTabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetContentProcessor extends AbstractWidgetContentProcessor<DecoratedTabPanel> {}	

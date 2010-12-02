@@ -15,7 +15,9 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
@@ -24,12 +26,13 @@ import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
+import br.com.sysmap.crux.core.client.screen.AttributeParser;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
@@ -37,44 +40,60 @@ import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersF
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
+import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.TabBar.Tab;
+
+@SuppressWarnings("deprecation")
+class TabPanelContext extends WidgetFactoryContext
+{
+
+	public CruxMetaDataElement tabElement;
+	public String title;
+	public boolean isHTMLTitle;
+	public Widget titleWidget;
+	
+}
 
 /**
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class AbstractTabPanelFactory<T extends TabPanel> extends CompositeFactory<T> 
-       implements HasAnimationFactory<T>, 
-                  HasBeforeSelectionHandlersFactory<T>, HasSelectionHandlersFactory<T>
+@SuppressWarnings("deprecation")
+public abstract class AbstractTabPanelFactory<T extends TabPanel> extends CompositeFactory<T, TabPanelContext> 
+       implements HasAnimationFactory<T, TabPanelContext>, 
+                  HasBeforeSelectionHandlersFactory<T, TabPanelContext>, HasSelectionHandlersFactory<T, TabPanelContext>
 {
-	@SuppressWarnings("unchecked")
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="visibleTab", type=Integer.class)
+	@TagAttributes({
+		@TagAttribute(value="visibleTab", type=Integer.class, parser=VisibleTabAttributeParser.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(TabPanelContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
-
-		final T widget = (T)context.getWidget();
-		
-		final String visibleTab = context.readWidgetProperty("visibleTab");
-		if (visibleTab != null && visibleTab.length() > 0)
-		{
-			addScreenLoadedHandler(new ScreenLoadHandler()
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class VisibleTabAttributeParser implements AttributeParser<TabBarContext>
+	{
+		public void processAttribute(TabBarContext context, final String propertyValue)
+        {
+			final TabPanel widget = context.getWidget();
+			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()
 			{
 				public void onLoad(ScreenLoadEvent event)
 				{
-					widget.selectTab(Integer.parseInt(visibleTab));
+					widget.selectTab(Integer.parseInt(propertyValue));
 				}
 			});
-		}
-	}
+        }
+	}	
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
-	public static abstract class AbstractTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T> 
+	public static abstract class AbstractTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T, TabPanelContext> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -87,82 +106,70 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 			@TagEventDeclaration("onKeyDown"),
 			@TagEventDeclaration("onKeyPress")
 		})
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException
 		{
-			context.setAttribute("tabElement", context.getChildElement());
+			context.tabElement = context.getChildElement();
 		}
 	}
 
 	@TagChildAttributes(tagName="tabText", type=String.class)
-	public static abstract class AbstractTextTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T>
+	public static abstract class AbstractTextTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T, TabPanelContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException 
 		{
-			String title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
-			context.setAttribute("titleText", title);
+			context.title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			context.isHTMLTitle = false;
 		}
 	}
 	
 	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
-	public static abstract class AbstractHTMLTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T>
+	public static abstract class AbstractHTMLTabProcessor<T extends TabPanel> extends WidgetChildProcessor<T, TabPanelContext>
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException 
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException 
 		{
-			String title = ensureHtmlChild(context.getChildElement(), true);
-			context.setAttribute("titleHtml", title);
+			context.title = ensureHtmlChild(context.getChildElement(), true);
+			context.isHTMLTitle = true;
 		}
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	public static abstract class AbstractWidgetTitleProcessor<T extends TabPanel> extends WidgetChildProcessor<T> 
+	public static abstract class AbstractWidgetTitleProcessor<T extends TabPanel> extends WidgetChildProcessor<T, TabPanelContext> 
 	{
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException
 		{
-			Widget titleWidget = createChildWidget(context.getChildElement());
-			context.setAttribute("titleWidget", titleWidget);
+			context.titleWidget = createChildWidget(context.getChildElement());
 		}
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	public static abstract class AbstractWidgetContentProcessor<T extends TabPanel> extends WidgetChildProcessor<T> 
+	public static abstract class AbstractWidgetContentProcessor<T extends TabPanel> extends WidgetChildProcessor<T, TabPanelContext> 
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException
 		{
 			Widget widget = createChildWidget(context.getChildElement());
-			T tabWidget = (T)context.getRootWidget();
+			T tabWidget = (T)context.getWidget();
 			
-			String titleText = (String) context.getAttribute("titleText");
-			if (titleText != null)
+			if (context.titleWidget != null)
 			{
-				tabWidget.add(widget, titleText);
+				tabWidget.add(widget, context.titleWidget);
 			}
 			else
 			{
-				String titleHtml = (String) context.getAttribute("titleHtml");
-				if (titleHtml != null)
-				{
-					tabWidget.add(widget, titleHtml, true);
-				}
-				else
-				{
-					Widget titleWidget = (Widget) context.getAttribute("titleWidget");
-					tabWidget.add(widget, titleWidget);
-				}
+				tabWidget.add(widget, context.title, context.isHTMLTitle);
 			}
 			updateTabState(context);
 		}
 		
 		@SuppressWarnings("unchecked")
-		private void updateTabState(WidgetChildProcessorContext context)
+		private void updateTabState(TabPanelContext context)
 		{
-			CruxMetaDataElement tabElement = (CruxMetaDataElement) context.getAttribute("tabElement");
-			String enabled = tabElement.getProperty("enabled");
-			T widget = (T)context.getRootWidget();
+			String enabled = context.tabElement.getProperty("enabled");
+			T widget = (T)context.getWidget();
 
 			int tabCount = widget.getTabBar().getTabCount();
 			if (enabled != null && enabled.length() >0)
@@ -172,18 +179,22 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 
 			Tab currentTab = widget.getTabBar().getTab(tabCount-1);
 			
-			String wordWrap = tabElement.getProperty("wordWrap");
+			String wordWrap = context.tabElement.getProperty("wordWrap");
 			if (wordWrap != null && wordWrap.trim().length() > 0)
 			{
 				currentTab.setWordWrap(Boolean.parseBoolean(wordWrap));
 			}
 
-			new ClickEvtBind().bindEvent(tabElement, currentTab);
-			new KeyUpEvtBind().bindEvent(tabElement, currentTab);
-			new KeyPressEvtBind().bindEvent(tabElement, currentTab);
-			new KeyDownEvtBind().bindEvent(tabElement, currentTab);
+			clickEvtBind.bindEvent(context.tabElement, currentTab);
+			keyUpEvtBind.bindEvent(context.tabElement, currentTab);
+			keyPressEvtBind.bindEvent(context.tabElement, currentTab);
+			keyDownEvtBind.bindEvent(context.tabElement, currentTab);
 
-			context.clearAttributes();
+			context.tabElement = null;
 		}	
+		private static ClickEvtBind clickEvtBind = new ClickEvtBind();
+		private static KeyUpEvtBind keyUpEvtBind = new KeyUpEvtBind();
+		private static KeyPressEvtBind keyPressEvtBind = new KeyPressEvtBind();
+		private static KeyDownEvtBind keyDownEvtBind = new KeyDownEvtBind();
 	}
 }

@@ -24,6 +24,7 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
@@ -39,10 +40,11 @@ import com.google.gwt.user.client.ui.SuggestOracle;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="suggestBox", library="gwt")
-public class SuggestBoxFactory extends CompositeFactory<SuggestBox> 
-       implements HasAnimationFactory<SuggestBox>, HasTextFactory<SuggestBox>, 
-                  HasValueChangeHandlersFactory<SuggestBox>, HasSelectionHandlersFactory<SuggestBox>,
-                  HasAllKeyHandlersFactory<SuggestBox>
+public class SuggestBoxFactory extends CompositeFactory<SuggestBox, WidgetFactoryContext> 
+       implements HasAnimationFactory<SuggestBox, WidgetFactoryContext>, HasTextFactory<SuggestBox, WidgetFactoryContext>, 
+                  HasValueChangeHandlersFactory<SuggestBox, WidgetFactoryContext>, 
+                  HasSelectionHandlersFactory<SuggestBox, WidgetFactoryContext>,
+                  HasAllKeyHandlersFactory<SuggestBox, WidgetFactoryContext>
 {
 	@Override
 	@TagAttributes({

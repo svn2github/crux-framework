@@ -22,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TabPanel;
@@ -31,6 +30,7 @@ import com.google.gwt.user.client.ui.TabPanel;
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
+@SuppressWarnings("deprecation")
 @DeclarativeFactory(id="tabPanel", library="gwt")
 public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel> 
 {
@@ -44,7 +44,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processChildren(TabPanelContext context) throws InterfaceConfigException 
 	{
 	}
 	
@@ -54,7 +54,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
@@ -62,7 +62,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<TabPanel> 
+	public static class TabTitleProcessor extends ChoiceChildProcessor<TabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
@@ -70,7 +70,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 		
 	}
 	
@@ -79,25 +79,25 @@ public class TabPanelFactory extends AbstractTabPanelFactory<TabPanel>
 	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor<TabPanel> {}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabPanel> 
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor<TabPanel> {}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<TabPanel> 
+	public static class TabWidgetProcessor extends WidgetChildProcessor<TabPanel, TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
 	}
 
 	public static class WidgetContentProcessor extends AbstractWidgetContentProcessor<TabPanel> {}	

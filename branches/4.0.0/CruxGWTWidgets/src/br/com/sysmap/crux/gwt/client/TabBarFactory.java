@@ -22,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessorContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.user.client.ui.TabBar;
@@ -44,7 +43,7 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}		
+	public void processChildren(TabBarContext context) throws InterfaceConfigException {}		
 
 	public static class TabProcessor extends AbstractTabProcessor<TabBar> 
 	{
@@ -52,13 +51,13 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 		@TagChildren({
 			@TagChild(TabItemProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException
+		public void processChildren(TabBarContext context) throws InterfaceConfigException
 		{
 			super.processChildren(context);
 		}
 	}
 	
-	public static class TabItemProcessor extends ChoiceChildProcessor<TabBar> 
+	public static class TabItemProcessor extends ChoiceChildProcessor<TabBar, TabBarContext> 
 	{
 		@Override
 		@TagChildren({
@@ -66,17 +65,17 @@ public class TabBarFactory extends AbstractTabBarFactory<TabBar>
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTabProcessor.class)
 		})		
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabBarContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class WidgetTabProcessor extends WidgetChildProcessor<TabBar> 
+	public static class WidgetTabProcessor extends WidgetChildProcessor<TabBar, TabBarContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetChildProcessorContext context) throws InterfaceConfigException {}
+		public void processChildren(TabBarContext context) throws InterfaceConfigException {}
 	}
 	
 	public static class TextTabProcessor extends AbstractTextTabProcessor<TabBar> {}

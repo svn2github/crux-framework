@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.gwt.client;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
 /**
  * Helper class for handle date formating.
@@ -47,51 +48,51 @@ public class DateFormatUtil
 		
 		if (FULL_DATE_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getFullDateFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_FULL);
 		}
 		else if (FULL_DATE_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getFullDateTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_FULL);
 		}
 		else if (FULL_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getFullTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.TIME_FULL);
 		}
 		else if (LONG_DATE_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getLongDateFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_LONG);
 		}
 		else if (LONG_DATE_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getLongDateTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_LONG);
 		}
 		else if (LONG_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getLongTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.TIME_LONG);
 		}
 		else if (MEDIUM_DATE_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getMediumDateFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
 		}
 		else if (MEDIUM_DATE_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getMediumDateTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
 		}
 		else if (MEDIUM_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getMediumTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.TIME_MEDIUM);
 		}
 		else if (SHORT_DATE_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getShortDateFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT);
 		}
 		else if (SHORT_DATE_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getShortDateTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_SHORT);
 		}
 		else if (SHORT_TIME_PATTERN.equals(patternString))
 		{
-			result = DateTimeFormat.getShortTimeFormat();
+			result = DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT);
 		}
 		else
 		{
