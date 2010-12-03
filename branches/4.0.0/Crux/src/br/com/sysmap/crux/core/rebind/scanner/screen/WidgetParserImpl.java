@@ -32,7 +32,7 @@ public class WidgetParserImpl implements WidgetParser
 	 */
 	public void parse(Widget widget, JSONObject elem) throws JSONException 
 	{
-		parse(elem, widget, true);
+		parse(elem, widget, true, "");
 	}
 
 	/**
@@ -42,11 +42,11 @@ public class WidgetParserImpl implements WidgetParser
 	 * @param parseIfWidget
 	 * @throws JSONException 
 	 */
-	private void parse(JSONObject elem, Widget widget, boolean parseIfWidget) throws JSONException
+	private void parse(JSONObject elem, Widget widget, boolean parseIfWidget, String prefixSubTag) throws JSONException
 	{
 			if(!isWidget(elem) || parseIfWidget)
 			{
-				extractProperties(elem, widget);
+				extractProperties(elem, widget, prefixSubTag);
 				
 				if (elem.has("children"))
 				{
@@ -58,17 +58,25 @@ public class WidgetParserImpl implements WidgetParser
 						for (int i = 0; i < length; i++)
 						{
 							JSONObject child = children.getJSONObject(i);
-
-							extractInnerText(child, widget);
-							parse(child, widget, false);
+							parse(child, widget, false, prefixSubTag+getSubtTagPrefix(child));
 						}
-					}
-					else
-					{
-						extractInnerText(elem, widget);
 					}
 				}
 			}
+	}
+	
+	/**
+	 * @param elem
+	 * @return
+	 * @throws JSONException
+	 */
+	private String getSubtTagPrefix(JSONObject elem) throws JSONException
+	{
+		if (elem.has("childTag"))
+		{
+			return elem.getString("childTag")+"_";
+		}
+		return "";
 	}
 	
 	/**
@@ -84,28 +92,10 @@ public class WidgetParserImpl implements WidgetParser
 	 * 
 	 * @param elem
 	 * @param widget
+	 * @param prefixSubTag
 	 * @throws JSONException 
 	 */
-	private void extractInnerText(JSONObject elem, Widget widget) throws JSONException
-	{
-		if (elem.has("_text"))
-		{
-			String text = elem.getString("_text");
-
-			if(text != null && text.trim().length() > 0)
-			{
-				widget.addProperty("_text", text);
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param elem
-	 * @param widget
-	 * @throws JSONException 
-	 */
-	private void extractProperties(JSONObject elem, Widget widget) throws JSONException
+	private void extractProperties(JSONObject elem, Widget widget, String prefixSubTag) throws JSONException
 	{
 		String[] attributes = JSONObject.getNames(elem);
 		
@@ -114,18 +104,18 @@ public class WidgetParserImpl implements WidgetParser
 		{
 			String attrName = attributes[i];
 			
-			if (attrName.equals("id") || attrName.equals("type"))
+			if (attrName.equals("id") || attrName.equals("type") || attrName.equals("childTag") || attrName.equals("children"))
 			{
 				continue;
 			}
 			
 			if (attrName.startsWith("on"))
 			{
-				setEvent(widget, attrName, elem.getString(attrName));
+				setEvent(widget, prefixSubTag+attrName, elem.getString(attrName));
 			}
 			else
 			{
-				widget.addProperty(attrName, elem.getString(attrName));
+				widget.addProperty(prefixSubTag+attrName, elem.getString(attrName));
 			}
 		}
 	}
