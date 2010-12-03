@@ -229,14 +229,14 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private String generateAgregatorTagProcessingBlock(Map<String, String> methodsForInnerProcessing, 
 													   TagChildren children,
 													   JClassType childProcessor, 
-													   Map<String, String> processorVariables, boolean first)
+													   Map<String, String> processorVariables, boolean first, String prefixTagName)
 	{
 		StringBuilder source = new StringBuilder();
 		
 		if (children != null)
 		{
 			TagChildren tagChildren = factoryHelper.getChildrenAnnotationFromProcessor(childProcessor);
-			source.append(generateChildrenBlockFromAnnotation(methodsForInnerProcessing, tagChildren, processorVariables, first));
+			source.append(generateChildrenBlockFromAnnotation(methodsForInnerProcessing, tagChildren, processorVariables, first, prefixTagName));
 		}
 		return source.toString();
 	}
@@ -339,7 +339,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private String generateChildrenBlockFromAnnotation(Map<String, String> methodsForInnerProcessing, 
 			                                         TagChildren children,
-			                                         Map<String, String> processorVariables, boolean first)
+			                                         Map<String, String> processorVariables, boolean first, String prefixTagName)
 	{
 		try
         {
@@ -358,30 +358,41 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        		
 	        		if (textChildProcessorType.isAssignableFrom(childProcessor))
 	        		{
-	        			source.append(generateTextProcessingBlock(childProcessor));
+	        			// Tag inner text on a .crux.xml page is mapped to a property called "_text"
+	        			if (!Environment.isProduction() || widgetProperties.contains(prefixTagName+"_text"))
+	        			{
+	        				source.append(generateTextProcessingBlock(childProcessor));
+	        				first = false;
+	        			}
 	        		}
 	        		else if (choiceChildProcessorType.isAssignableFrom(childProcessor) ||
 	        				sequenceChildProcessorType.isAssignableFrom(childProcessor) ||
 	        				allChildProcessorType.isAssignableFrom(childProcessor))
 	        		{
 	        			source.append(generateAgregatorTagProcessingBlock(methodsForInnerProcessing, 
-	        					                                          children, childProcessor, processorVariables, first));
+	        					                                          children, childProcessor, processorVariables, first, prefixTagName));
+		        		first = false;
 	        		}
 	        		else
 	        		{
-	        			source.append(generateTagIdentifierBlock(first, childProcessor));
-	        			if (anyWidgetChildProcessorType.isAssignableFrom(childProcessor))
+	        			String tagName = getTagNameForProcessor(childProcessor);
+	        			if (!Environment.isProduction() || processorSubTagIsUsedOnScreen(prefixTagName, childProcessor))
 	        			{
-	        				source.append(generateAnyWidgetProcessingBlock(childProcessor));
+	        				source.append(generateTagIdentifierBlock(first, childProcessor));
+	        				if (anyWidgetChildProcessorType.isAssignableFrom(childProcessor))
+	        				{
+	        					source.append(generateAnyWidgetProcessingBlock(childProcessor));
+	        				}
+	        				else
+	        				{
+
+	        					source.append(generateGenericProcessingBlock(methodsForInnerProcessing, 
+	        							childProcessor, processorVariables, prefixTagName+tagName+"_"));
+	        				}
+	        				source.append("}\n");
+	    	        		first = false;
 	        			}
-	        			else
-	        			{
-	        				source.append(generateGenericProcessingBlock(methodsForInnerProcessing, 
-	        						                                                  childProcessor, processorVariables));
-	        			}
-	        			source.append("}\n");
 	        		}
-	        		first = false;
 	        	}
 	        }
 	        return source.toString();
@@ -393,6 +404,21 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	}
 	
 	/**
+	 * @param childProcessor
+	 * @return
+	 */
+	private boolean processorSubTagIsUsedOnScreen(String prefixTagName, JClassType childProcessor)
+    {
+		String tagName = getTagNameForProcessor(childProcessor);
+		if (StringUtils.isEmpty(tagName))
+		{
+			return true;
+		}
+		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
+		return  WidgetFactory.class.isAssignableFrom(processorAttributes.type()) || widgetProperties.contains(prefixTagName+tagName+"_");
+    }
+
+	/**
 	 * @param methodsForInnerProcessing
 	 * @param childProcessor
 	 * @param processorVariables
@@ -400,7 +426,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private String generateGenericProcessingBlock(Map<String, String> methodsForInnerProcessing, 
 												  JClassType childProcessor, 
-												  Map<String, String> processorVariables)
+												  Map<String, String> processorVariables, String prefixTagName)
 	{
 		// TODO - Thiago - colocar todos as amarracoes de eventos do client em evtbinder 
 		StringBuilder source = new StringBuilder();
@@ -411,8 +437,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		JMethod processorMethod = factoryHelper.getChildProcessorMethod(childProcessor);
 		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, 
-				                                            processorMethod, processorVariables);
-		if (childrenProcessorMethodName != null)
+				                                            processorMethod, processorVariables, prefixTagName);
+		if (childrenProcessorMethodName != null && !StringUtils.isEmpty(methodsForInnerProcessing.get(childrenProcessorMethodName)))
 		{
 			source.append(childrenProcessorMethodName+"(c);\n");
 		}
@@ -500,9 +526,13 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		for (String methodName : methodsForInnerProcessing.keySet())
 		{
-			sourceWriter.println("protected void "+ methodName+"("+contextDeclaration+" c) throws InterfaceConfigException{");
-			sourceWriter.println(methodsForInnerProcessing.get(methodName));
-			sourceWriter.println("}");
+			String methodContent = methodsForInnerProcessing.get(methodName);
+			if (!StringUtils.isEmpty(methodContent))
+			{
+				sourceWriter.println("protected void "+ methodName+"("+contextDeclaration+" c) throws InterfaceConfigException{");
+				sourceWriter.println(methodContent);
+				sourceWriter.println("}");
+			}
 		}
 	}
 	
@@ -697,7 +727,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @return
 	 */
 	private String generateProcessChildrenBlockFromMethod(Map<String, String> methodsForInnerProcessing, 
-														   JMethod processChildrenMethod, Map<String, String> processorVariables)
+														   JMethod processChildrenMethod, Map<String, String> processorVariables, 
+														   String prefixTagName)
 	{
 		String processingMethodName = null;
 		TagChildren children = processChildrenMethod.getAnnotation(TagChildren.class);
@@ -715,44 +746,50 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 				if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs >= 1)
 				{
-					source.append(this.factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" rootWidget = c.getWidget();\n");
-					boolean hasChildElement = true;
-					if (allowedChildren.maxOccurs == 1)
+					String childrenProcessingSource = generateChildrenBlockFromAnnotation(methodsForInnerProcessing, children, 
+                            processorVariables, true, prefixTagName);
+					
+					// Just need to search children if child tags are already used by some page on application
+					if (!StringUtils.isEmpty(childrenProcessingSource))
 					{
-						if(TextChildProcessor.class.isAssignableFrom(children.value()[0].value()))
+						source.append(this.factoryHelper.getWidgetType().getParameterizedQualifiedSourceName()+" rootWidget = c.getWidget();\n");
+						boolean hasChildElement = true;
+						if (allowedChildren.maxOccurs == 1)
 						{
-							source.append("String child = ensureTextChild(c.getChildElement(), "+acceptNoChildren+");\n");
-							hasChildElement = false;
+							if(TextChildProcessor.class.isAssignableFrom(children.value()[0].value()))
+							{
+								source.append("String child = ensureTextChild(c.getChildElement(), "+acceptNoChildren+");\n");
+								hasChildElement = false;
+							}
+							else
+							{
+								source.append(CruxMetaDataElement.class.getSimpleName()+" child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
+							}
+							source.append("if (child != null){\n");
 						}
 						else
 						{
-							source.append(CruxMetaDataElement.class.getSimpleName()+" child = ensureFirstChild(c.getChildElement(), "+acceptNoChildren+");\n");
+							source.append("Array<"+CruxMetaDataElement.class.getSimpleName()+"> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
+							source.append("if (children != null){\n");
+							source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
+							source.append(CruxMetaDataElement.class.getSimpleName()+" child = children.get(_i_);\n");
+							source.append("if (child != null){\n");
 						}
-						source.append("if (child != null){\n");
-					}
-					else
-					{
-						source.append("Array<"+CruxMetaDataElement.class.getSimpleName()+"> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
-						source.append("if (children != null){\n");
-						source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
-						source.append(CruxMetaDataElement.class.getSimpleName()+" child = children.get(_i_);\n");
-						source.append("if (child != null){\n");
-					}
-					if (hasChildElement)
-					{
-						source.append("c.setChildElement(child);\n");
-					}
+						if (hasChildElement)
+						{
+							source.append("c.setChildElement(child);\n");
+						}
 
-					source.append(generateChildrenBlockFromAnnotation(methodsForInnerProcessing, children, 
-							                                                                       processorVariables, true));
+						source.append(childrenProcessingSource);
 
-					// TODO - Thiago - tratar validação de filhos obrigatorios .... espeficamente qdo parent for um agregador....
-					if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs > 1)
-					{
-						source.append("}\n");
+						// TODO - Thiago - tratar validação de filhos obrigatorios .... espeficamente qdo parent for um agregador....
+						if (allowedChildren.maxOccurs == UNBOUNDED || allowedChildren.maxOccurs > 1)
+						{
+							source.append("}\n");
+							source.append("}\n");
+						}
 						source.append("}\n");
 					}
-					source.append("}\n");
 				}
 				methodsForInnerProcessing.put(processingMethodName, source.toString());
 			}
@@ -946,6 +983,21 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		return source.toString();
 	}
+	
+	/**
+	 * @param childProcessor
+	 * @return
+	 */
+	private String getTagNameForProcessor(JClassType childProcessor)
+	{
+		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
+		if (processorAttributes != null && !StringUtils.isEmpty(processorAttributes.tagName()))
+		{
+			return processorAttributes.tagName();
+		}
+		return "";
+	}
+	
 
 	/**
 	 * @param childProcessor
@@ -984,14 +1036,14 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private void generatingChildrenProcessingBlock(SourceWriter sourceWriter, JMethod method, 
 			Map<String, String> methodsForInnerProcessing, Map<String, String> processorVariables) 
 	{
-		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, method, processorVariables);
+		String childrenProcessorMethodName = generateProcessChildrenBlockFromMethod(methodsForInnerProcessing, method, processorVariables, "");
         String contextDeclaration = factoryHelper.getContextType().getParameterizedQualifiedSourceName();
 
 		sourceWriter.println("@Override");
 		sourceWriter.println("public void processChildren("+contextDeclaration
 				               +" context) throws InterfaceConfigException{"); 
 		sourceWriter.println("super.processChildren(context);");
-		if (childrenProcessorMethodName != null)
+		if (childrenProcessorMethodName != null && !StringUtils.isEmpty(methodsForInnerProcessing.get(childrenProcessorMethodName)))
 		{
 			sourceWriter.println(childrenProcessorMethodName+"(context);");
 		}

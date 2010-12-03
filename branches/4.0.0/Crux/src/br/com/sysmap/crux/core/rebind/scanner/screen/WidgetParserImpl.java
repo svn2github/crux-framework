@@ -19,6 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.com.sysmap.crux.core.client.utils.StringUtils;
+
 /**
  * 
  * @author Thiago da Rosa de Bustamante
@@ -97,6 +99,11 @@ public class WidgetParserImpl implements WidgetParser
 	 */
 	private void extractProperties(JSONObject elem, Widget widget, String prefixSubTag) throws JSONException
 	{
+		if (!StringUtils.isEmpty(prefixSubTag))
+		{
+			widget.addProperty(prefixSubTag, "");
+		}
+		
 		String[] attributes = JSONObject.getNames(elem);
 		
 		int length = attributes.length;
