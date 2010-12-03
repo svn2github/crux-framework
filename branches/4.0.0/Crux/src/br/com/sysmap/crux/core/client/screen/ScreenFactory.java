@@ -159,7 +159,6 @@ public class ScreenFactory
 	{
 		if (screen == null)
 		{
-			this.registeredWidgetFactories = (RegisteredWidgetFactories) GWT.create(RegisteredWidgetFactories.class);
 			create();
 		}
 		return screen;
@@ -385,6 +384,7 @@ public class ScreenFactory
 		CruxMetaData metaData = CruxMetaData.loadMetaData();
 		screen = new Screen(metaData.getScreenId(), metaData.getLazyDependencies());
 		addToParserStack(null, null, metaData.getElementsMetaData());
+		this.registeredWidgetFactories = (RegisteredWidgetFactories) GWT.create(RegisteredWidgetFactories.class);
 		parseDocument();
 	}
 	

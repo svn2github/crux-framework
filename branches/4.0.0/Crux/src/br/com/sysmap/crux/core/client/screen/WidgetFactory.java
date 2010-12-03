@@ -43,6 +43,18 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 {
 	private static int currentId = 0;
 	
+	private static ScreenFactory factory = null;
+	private static Screen screen = null;
+	
+	public WidgetFactory() 
+	{
+		// For better performance, reduce the javascript scope search for those variables;
+		if (factory == null)
+		{
+			factory = ScreenFactory.getInstance();
+			screen = factory.getScreen();
+		}
+	}
 	
 	/**Retrieve the widget child element name
 	 * @param childElement the span element representing the child
@@ -63,7 +75,6 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static Widget createChildWidget(CruxMetaDataElement metaElem) throws InterfaceConfigException
 	{
-		ScreenFactory factory = ScreenFactory.getInstance();
 		assert(metaElem.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
 		String widgetId = metaElem.getProperty("id");
 		return factory.newWidget(metaElem, widgetId, factory.getMetaElementType(metaElem));
@@ -80,7 +91,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static Widget createChildWidget(CruxMetaDataElement metaElem, String widgetId, String widgetType) throws InterfaceConfigException
 	{
-		return ScreenFactory.getInstance().newWidget(metaElem, widgetId, widgetType);
+		return factory.newWidget(metaElem, widgetId, widgetType);
 	}
 	
 	/**
@@ -161,7 +172,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static Element getEnclosingPanelElement(String widgetId)
 	{
-		return ScreenFactory.getInstance().getEnclosingPanelElement(widgetId);
+		return factory.getEnclosingPanelElement(widgetId);
 	}
 	
 	/**
@@ -201,7 +212,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static boolean isWidget(CruxMetaDataElement metaElem)
 	{
-		return ScreenFactory.getInstance().isValidWidget(metaElem);
+		return factory.isValidWidget(metaElem);
 	}
 
 	/**
@@ -333,7 +344,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected void addScreenLoadedHandler(ScreenLoadHandler loadHandler)
 	{
-		ScreenFactory.getInstance().addLoadHandler(loadHandler);
+		factory.addLoadHandler(loadHandler);
 	}
 	
 	/**
@@ -343,7 +354,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected void addToParserStack(String parentType, String parentId, Array<CruxMetaDataElement> parserElements)
 	{
-		ScreenFactory.getInstance().addToParserStack(parentType, parentId, parserElements);
+		factory.addToParserStack(parentType, parentId, parserElements);
 	}
 	
 	/**
@@ -360,7 +371,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 		{
 			if(addToScreen)
 			{
-				Screen.add(widgetId, widget);
+				screen.addWidget(widgetId, widget);
 			}			
 			if (Crux.getConfig().renderWidgetsWithIDs())
 			{
