@@ -771,7 +771,8 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 						{
 							source.append("Array<"+CruxMetaDataElement.class.getSimpleName()+"> children = ensureChildren(c.getChildElement(), "+acceptNoChildren+");\n");
 							source.append("if (children != null){\n");
-							source.append("for(int _i_=0; _i_<children.size(); _i_++){\n");
+							source.append("int _s_ = children.size();\n");
+							source.append("for(int _i_=0; _i_<_s_; _i_++){\n");
 							source.append(CruxMetaDataElement.class.getSimpleName()+" child = children.get(_i_);\n");
 							source.append("if (child != null){\n");
 						}

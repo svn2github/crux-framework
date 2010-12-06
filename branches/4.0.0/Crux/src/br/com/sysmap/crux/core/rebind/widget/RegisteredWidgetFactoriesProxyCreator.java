@@ -150,13 +150,9 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
-		sourceWriter.println("public WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> getWidgetFactory(String type) throws InterfaceConfigException{ ");
+		sourceWriter.println("public WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> getWidgetFactory(String type){ ");
 		sourceWriter.indent();
-		sourceWriter.println("if (!widgetFactories.containsKey(type)) {");
-		sourceWriter.indent();
-		sourceWriter.println("throw new InterfaceConfigException(\""+messages.errorGeneratingRegisteredWidgetFactoryNotRegistered()+" \" +type);");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
+		sourceWriter.println("assert(widgetFactories.containsKey(type)):\""+messages.errorGeneratingRegisteredWidgetFactoryNotRegistered()+" \" +type;");
 		sourceWriter.println("return widgetFactories.get(type);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");

@@ -66,7 +66,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	}
 	
 	/**
-	 * Used by widgets that need to create new widgets as children, like tree. 
+	 * Used by widgets that need to create new widgets as children. 
 	 * 
 	 * @param element
 	 * @param widgetId
@@ -81,7 +81,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	}
 
 	/**
-	 * Used by widgets that need to create new widgets as children, like tree. 
+	 * Used by widgets that need to create new widgets as children. 
 	 * 
 	 * @param element
 	 * @param widgetId
