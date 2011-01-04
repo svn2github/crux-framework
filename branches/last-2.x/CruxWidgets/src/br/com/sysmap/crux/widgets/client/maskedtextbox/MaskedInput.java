@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.TextBox;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, BlurHandler, PasteHandler
+class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, BlurHandler, PasteHandler
 {
 	private static Map<Character, String> definitions = new HashMap<Character, String>();
 	static

@@ -70,6 +70,8 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	private boolean masked;
 	protected TextBox textBox;
 	
+	MaskedInput maskedInput;
+	
 	/**
 	 * 
 	 * @param element
