@@ -34,7 +34,7 @@ class GridFactoryContext extends HTMLTableFactoryContext
 
 /**
  * Factory for Grid widget
- * @author Thiago Bustamante
+ * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="grid", library="gwt")
 public class GridFactory extends HTMLTableFactory<Grid, GridFactoryContext>
