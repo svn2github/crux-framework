@@ -185,11 +185,11 @@ public class ScreenFactory
 	 */
 	private void createWidgetChildren(JSONObject elem, Screen screen, String widgetId, Widget widget) throws ScreenConfigException
     {
-	    if (elem.has("children"))
+	    if (elem.has("_children"))
 		{
 			try
             {
-	            JSONArray children = elem.getJSONArray("children");
+	            JSONArray children = elem.getJSONArray("_children");
 	            if (children != null)
 	            {
 	            	for (int i=0; i< children.length(); i++)
@@ -263,9 +263,9 @@ public class ScreenFactory
 	 */
 	private boolean isScreenDefinition(JSONObject cruxObject) throws JSONException
 	{
-		if (cruxObject.has("type"))
+		if (cruxObject.has("_type"))
 		{
-			String type = cruxObject.getString("type");
+			String type = cruxObject.getString("_type");
 			return (type != null && "screen".equals(type));
 		}
 		return false;
@@ -279,9 +279,9 @@ public class ScreenFactory
 	 */
 	public boolean isValidWidget(JSONObject cruxObject) throws JSONException
 	{
-		if (cruxObject.has("type"))
+		if (cruxObject.has("_type"))
 		{
-			String type = cruxObject.getString("type");
+			String type = cruxObject.getString("_type");
 			return (type != null && !"screen".equals(type));
 		}
 		return false;
@@ -299,7 +299,7 @@ public class ScreenFactory
 	{
 		try 
 		{
-			String type = elem.getString("type");
+			String type = elem.getString("_type");
 			WidgetParser parser = new WidgetParserImpl();
 			Widget widget = new Widget();
 			widget.setId(widgetId);
@@ -472,7 +472,7 @@ public class ScreenFactory
 	        			screen.setTitle(title);
 	        		}
 	        	}
-	        	else if (!attrName.equals("id") && !attrName.equals("type"))
+	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
 	        		if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));
 	        	}

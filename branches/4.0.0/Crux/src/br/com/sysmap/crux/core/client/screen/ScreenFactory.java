@@ -148,7 +148,7 @@ public class ScreenFactory
 	 */
 	public String getMetaElementType(CruxMetaDataElement cruxMetaElement)
 	{
-		return cruxMetaElement.getProperty("type");
+		return cruxMetaElement.getProperty("_type");
 	}
 	
 	/**
@@ -243,7 +243,7 @@ public class ScreenFactory
 	 */
 	boolean isValidWidget(CruxMetaDataElement metaElem)
 	{
-		String type =  metaElem.getProperty("type");
+		String type =  metaElem.getProperty("_type");
 		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
 		{
 			return true;
@@ -355,7 +355,7 @@ public class ScreenFactory
 			CruxMetaDataElement metaElement = cruxMetaElements.get(i);
 			if (metaElement != null)
 			{
-				assert(metaElement.containsKey("type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
+				assert(metaElement.containsKey("_type")):Crux.getMessages().screenFactoryMetaElementDoesNotContainsType();
 				String type = getMetaElementType(metaElement);
 				if (StringUtils.unsafeEquals("screen",type))
 				{

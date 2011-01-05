@@ -241,7 +241,7 @@ public class LazyWidgets
 	 */
 	private boolean checkChildrenLazy(JSONObject parent) throws JSONException, ClassNotFoundException 
 	{
-		String parentType = parent.getString("type");
+		String parentType = parent.getString("_type");
 		if (!lazyWidgetCheckers.containsKey(parentType))
 		{
 			initializeLazyChecker(parentType);
@@ -258,9 +258,9 @@ public class LazyWidgets
 	 */
 	private void checkChildrenLazyDeps(JSONObject dependencies, JSONObject widget) throws JSONException, ClassNotFoundException
     {
-	    if (widget.has("children"))
+	    if (widget.has("_children"))
 	    {
-	    	JSONArray children = widget.getJSONArray("children");
+	    	JSONArray children = widget.getJSONArray("_children");
 	    	int length = children.length();
 	    	for (int i = 0; i < length; i++) 
 	    	{
@@ -293,10 +293,10 @@ public class LazyWidgets
 	 */
 	private void generateLazyDepsForChildren(JSONObject widget, String parentId, JSONObject dependencies) throws JSONException, ClassNotFoundException
 	{
-		if (widget.has("children"))
+		if (widget.has("_children"))
 		{
 			ScreenFactory factory = ScreenFactory.getInstance();
-			JSONArray children = widget.getJSONArray("children");
+			JSONArray children = widget.getJSONArray("_children");
 			int size = children.length();
 			for (int i=0; i<size; i++)
 			{

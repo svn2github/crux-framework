@@ -46,7 +46,7 @@ public class CruxMetaDataElement extends JavaScriptObject
 	 */
 	public final Array<CruxMetaDataElement> getChildren()
 	{
-		return jsniGetArray("children");
+		return jsniGetArray("_children");
 	}
 	
 	/**

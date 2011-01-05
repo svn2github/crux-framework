@@ -51,9 +51,9 @@
 			</classpath>
 		</javac>
 
-		<!--svn failonerror="false" javahl="false" svnkit="true">
-			<info target="${basedir}" verbose="true"/>
-		</svn-->
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
 		
 		<jar jarfile="${distdir}/${final.name}.jar">
 			<fileset dir="${classesdir}" excludes="**/public/*" />
@@ -61,7 +61,7 @@
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
 				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${svn.info.rev}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
 			</manifest>
 		</jar>
 		

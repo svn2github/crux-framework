@@ -50,9 +50,9 @@ public class WidgetParserImpl implements WidgetParser
 			{
 				extractProperties(elem, widget, prefixSubTag);
 				
-				if (elem.has("children"))
+				if (elem.has("_children"))
 				{
-					JSONArray children = elem.getJSONArray("children");
+					JSONArray children = elem.getJSONArray("_children");
 
 					int length = children.length();
 					if(length > 0)
@@ -74,9 +74,9 @@ public class WidgetParserImpl implements WidgetParser
 	 */
 	private String getSubtTagPrefix(JSONObject elem) throws JSONException
 	{
-		if (elem.has("childTag"))
+		if (elem.has("_childTag"))
 		{
-			return elem.getString("childTag")+"_";
+			return elem.getString("_childTag")+"_";
 		}
 		return "";
 	}
@@ -87,7 +87,7 @@ public class WidgetParserImpl implements WidgetParser
 	 */
 	private boolean isWidget(JSONObject elem)
 	{
-		return elem.has("type");
+		return elem.has("_type");
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class WidgetParserImpl implements WidgetParser
 		{
 			String attrName = attributes[i];
 			
-			if (attrName.equals("id") || attrName.equals("type") || attrName.equals("childTag") || attrName.equals("children"))
+			if (attrName.equals("id") || attrName.equals("_type") || attrName.equals("_childTag") || attrName.equals("_children"))
 			{
 				continue;
 			}

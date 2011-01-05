@@ -62,7 +62,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	public static String getChildName(CruxMetaDataElement childElement)
 	{
-		return childElement.getProperty("childTag");
+		return childElement.getProperty("_childTag");
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static Array<CruxMetaDataElement> ensureChildren(CruxMetaDataElement metaElem, boolean acceptsNoChild) 
 	{
-		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		assert(acceptsNoChild || metaElem.containsKey("_children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		
 		Array<CruxMetaDataElement> children = metaElem.getChildren();
 		if (acceptsNoChild && children == null)
@@ -119,7 +119,7 @@ public abstract class WidgetFactory <T extends Widget, C extends WidgetFactoryCo
 	 */
 	protected static CruxMetaDataElement ensureFirstChild(CruxMetaDataElement metaElem, boolean acceptsNoChild) throws InterfaceConfigException
 	{
-		assert(acceptsNoChild || metaElem.containsKey("children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
+		assert(acceptsNoChild || metaElem.containsKey("_children")):Crux.getMessages().widgetFactoryEnsureChildrenSpansEmpty();
 		Array<CruxMetaDataElement> children = metaElem.getChildren();
 		if (acceptsNoChild && children == null)
 		{

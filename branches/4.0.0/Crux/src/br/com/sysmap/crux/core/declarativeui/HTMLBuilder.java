@@ -303,11 +303,11 @@ class HTMLBuilder
 		String currentWidgetTag = getCurrentWidgetTag() ;
 		if (isWidget(currentWidgetTag))
 		{
-			cruxArrayMetaData.append("\"type\":\""+currentWidgetTag+"\"");
+			cruxArrayMetaData.append("\"_type\":\""+currentWidgetTag+"\"");
 		}
 		else
 		{
-			cruxArrayMetaData.append("\"childTag\":\""+cruxPageInnerTag.getLocalName()+"\"");
+			cruxArrayMetaData.append("\"_childTag\":\""+cruxPageInnerTag.getLocalName()+"\"");
 		}
 		
 		if (allowInnerHTML(currentWidgetTag))
@@ -330,7 +330,7 @@ class HTMLBuilder
 		NodeList childNodes = cruxPageInnerTag.getChildNodes();
 		if (childNodes != null && childNodes.getLength() > 0)
 		{
-			cruxArrayMetaData.append(",\"children\":[");
+			cruxArrayMetaData.append(",\"_children\":[");
 			indent();
 			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData, htmlDocument);
 			outdent();
@@ -490,7 +490,7 @@ class HTMLBuilder
 			writeIndentationSpaces(cruxArrayMetaData);
 		}
 		cruxArrayMetaData.append("{");
-		cruxArrayMetaData.append("\"type\":\"screen\"");
+		cruxArrayMetaData.append("\"_type\":\"screen\"");
 		
 		generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
 		
