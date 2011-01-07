@@ -60,8 +60,8 @@ class TreeContext extends WidgetFactoryContext
 }
 
 /**
- * Represents a TreeFactory DeclarativeFactory
- * @author Thiago Bustamante
+ * A factory for Tree widgets
+ * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tree", library="gwt")
 public class TreeFactory extends WidgetFactory<Tree, TreeContext> 
