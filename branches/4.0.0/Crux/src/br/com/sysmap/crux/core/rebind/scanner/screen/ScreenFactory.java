@@ -15,8 +15,10 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.screen;
  
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -56,10 +58,12 @@ public class ScreenFactory
 	private static final Log logger = LogFactory.getLog(ScreenFactory.class);
 	
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	private static final Lock screenLock = new ReentrantLock();	
+	private static final Lock screenLock = new ReentrantLock();
+	private static final long UNCHANGED_RESOURCE = -1;
+	private static final long REPROCESS_RESOURCE = -2;	
 
-	private Map<String, Screen> screenCache = new HashMap<String, Screen>();	
-		
+	private Map<String, Screen> screenCache = new HashMap<String, Screen>();
+	private Map<String, Long> screenLastModified = new HashMap<String, Long>();		
 	/**
 	 * Singleton Constructor
 	 */
@@ -86,10 +90,18 @@ public class ScreenFactory
 	{
 		try 
 		{
+			long lastModified = getScreenLastModified(id);
 			Screen screen = screenCache.get(id);
 			if (screen != null)
 			{
-				return screen;
+				if (mustReprocessScreen(id, lastModified))
+				{
+					screenCache.remove(id);
+				}
+				else
+				{
+					return screen;
+				}
 			}
 
 			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id);
@@ -107,6 +119,7 @@ public class ScreenFactory
 					if(screen != null)
 					{
 						screenCache.put(id, screen);
+						saveScreenLastModified(id, lastModified);
 					}
 				}
 			}
@@ -122,6 +135,63 @@ public class ScreenFactory
 			throw new ScreenConfigException(messages.screenFactoryErrorRetrievingScreen(id, e.getLocalizedMessage()), e);
 		}
 	}
+
+	/**
+	 * @param id
+	 * @param lastModified
+	 * @return
+	 */
+	private boolean mustReprocessScreen(String id, long lastModified)
+	{
+		if (lastModified == REPROCESS_RESOURCE)
+		{
+			return true;
+		}
+		if (lastModified == UNCHANGED_RESOURCE)
+		{
+			return false;
+		}
+		
+		return (!screenLastModified.containsKey(id) || !screenLastModified.get(id).equals(lastModified));
+	}
+
+	/**
+	 * @param id
+	 * @param lastModified
+	 */
+	private void saveScreenLastModified(String id, long lastModified)
+	{
+	    if (id.toLowerCase().startsWith("file:"))
+	    {
+	    	screenLastModified.put(id, lastModified);
+	    }
+	    else
+	    {
+	    	screenLastModified.put(id, UNCHANGED_RESOURCE);
+	    }
+	}
+	
+	/**
+	 * @param id
+	 * @return
+	 */
+	private long getScreenLastModified(String id)
+    {
+	    if (id.toLowerCase().startsWith("file:"))
+	    {
+	    	try
+            {
+	            File screenFile = new File(new URL(id).toURI());
+	            return screenFile.lastModified();
+            }
+            catch (Exception e)
+            {
+            	return REPROCESS_RESOURCE;
+            }
+	    }
+	    
+	    return UNCHANGED_RESOURCE;
+    }
 
 	/**
 	 * @param id

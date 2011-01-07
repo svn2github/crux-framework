@@ -123,7 +123,6 @@ public abstract class ScreenResourcesScanner
 		}
 		
 		return pagesPerModule.get(module);
-		//TODO - Thiago - Caso um module herde outro, o module herdado deve adicionar a pasta publica do outro em sua lista de web roots.
 	}
 
 	/**
