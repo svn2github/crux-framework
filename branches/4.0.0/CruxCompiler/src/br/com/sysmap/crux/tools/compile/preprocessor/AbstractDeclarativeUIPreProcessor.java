@@ -41,7 +41,7 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 	protected boolean keepGeneratedFiles = false;
 	protected String pageFileExtension = "html";
 	protected boolean indent = false;
-	protected String outputCharset = "UTF-8";
+	protected String outputCharset;
 	protected File outputDir = null;
 	
 	/**

@@ -388,7 +388,7 @@ public abstract class AbstractCruxCompiler
 		parameter.addParameterOption(new ConsoleParameterOption("ignored", "Ignored packages"));
 		parametersProcessor.addSupportedParameter(parameter);
 
-		parameter = new ConsoleParameter("outputCharset", "Charset used on output files", false, true);
+		parameter = new ConsoleParameter("outputCharset", "Charset used on output files", true, true);
 		parameter.addParameterOption(new ConsoleParameterOption("charset", "Output charset"));
 		parametersProcessor.addSupportedParameter(parameter);
 		

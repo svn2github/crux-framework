@@ -44,8 +44,6 @@ import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
@@ -63,6 +61,8 @@ import br.com.sysmap.crux.core.declarativeui.template.TemplatesScanner;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.ClassUtils;
@@ -253,11 +253,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param widgetFactory
 	 * @return
 	 */
-	private boolean factorySupportsInnerText(Class<? extends WidgetFactory<?,?>> widgetFactory)
+	private boolean factorySupportsInnerText(Class<? extends WidgetCreator<?,?>> widgetFactory)
 	{
 		try
 		{
-			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
+			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetCreatorContext.class});
 			return hasTextChild(method);
 		}
 		catch (Exception e)
@@ -499,11 +499,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetFactory<?,?>> widgetFactory, String library)
+	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetCreator<?,?>> widgetFactory, String library)
 	{
 		try
 		{
-			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetFactoryContext.class});
+			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetCreatorContext.class});
 			generateChildren(out, library, method);
 		}
 		catch (Exception e)
@@ -856,7 +856,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		else
 		{
-			if ((tagName.length() == 0) && (WidgetFactory.class.isAssignableFrom(type)))
+			if ((tagName.length() == 0) && (WidgetCreator.class.isAssignableFrom(type)))
 			{
 				DeclarativeFactory annot = type.getAnnotation(DeclarativeFactory.class);
 				if (annot != null)
@@ -911,7 +911,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
 	        for (String id : factories)
 	        {
-	        	Class<? extends WidgetFactory<?,?>> widgetFactory = (Class<? extends WidgetFactory<?,?>>) 
+	        	Class<? extends WidgetCreator<?,?>> widgetFactory = (Class<? extends WidgetCreator<?,?>>) 
 	        				Class.forName(WidgetConfig.getClientClass(library, id));
 	        	generateTypeForFactory(out, widgetFactory, library);
 	        }
@@ -1104,7 +1104,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetFactory<?,?>> widgetFactory, String library)
+	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetCreator<?,?>> widgetFactory, String library)
 	{
 		DeclarativeFactory annot = widgetFactory.getAnnotation(DeclarativeFactory.class);
 		String elementName = annot.id();
@@ -1223,7 +1223,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			return factoryClass.getDeclaredMethod(methodName, new Class[]{WidgetFactoryContext.class});
+			return factoryClass.getDeclaredMethod(methodName, new Class[]{WidgetCreatorContext.class});
 		}
 		catch (Exception e)
 		{
@@ -1307,7 +1307,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			this.enumTypes.put(typeName, type);
 			return typeName;
 		}
-		else if (WidgetFactory.class.isAssignableFrom(type))
+		else if (WidgetCreator.class.isAssignableFrom(type))
 		{
 			DeclarativeFactory annot = type.getAnnotation(DeclarativeFactory.class);
 			if (annot != null)
