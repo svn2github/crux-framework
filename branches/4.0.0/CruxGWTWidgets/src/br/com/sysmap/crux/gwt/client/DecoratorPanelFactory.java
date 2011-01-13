@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="decoratorPanel", library="gwt")
-public class DecoratorPanelFactory extends PanelFactory<DecoratorPanel, WidgetFactoryContext>
+public class DecoratorPanelFactory extends PanelFactory<DecoratorPanel, WidgetCreatorContext>
 {
 	@Override
 	public DecoratorPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 

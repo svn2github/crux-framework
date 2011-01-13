@@ -18,11 +18,11 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.CheckBox;
 
@@ -31,9 +31,9 @@ import com.google.gwt.user.client.ui.CheckBox;
  * @author Thiago Bustamante
  *
  */
-public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusWidgetFactory<T, WidgetFactoryContext> 
-       implements HasNameFactory<T, WidgetFactoryContext>, HasValueChangeHandlersFactory<T, WidgetFactoryContext>, 
-       			  HasHTMLFactory<T, WidgetFactoryContext>, HasWordWrapFactory<T, WidgetFactoryContext>
+public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusWidgetFactory<T, WidgetCreatorContext> 
+       implements HasNameFactory<T, WidgetCreatorContext>, HasValueChangeHandlersFactory<T, WidgetCreatorContext>, 
+       			  HasHTMLFactory<T, WidgetCreatorContext>, HasWordWrapFactory<T, WidgetCreatorContext>
 {
 	/**
 	 * process widget attributes
@@ -44,7 +44,7 @@ public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusW
 		@TagAttribute(value="checked", type=Boolean.class, property="value"),
 		@TagAttribute("formValue")	
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

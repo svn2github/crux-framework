@@ -19,10 +19,10 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 
@@ -31,8 +31,8 @@ import com.google.gwt.user.client.ui.DecoratedPopupPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="decoratedPopupPanel", library="gwt", attachToDOM=false)
-public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel, WidgetFactoryContext>
-             implements HasAnimationFactory<DecoratedPopupPanel, WidgetFactoryContext>, HasCloseHandlersFactory<DecoratedPopupPanel, WidgetFactoryContext>
+public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel, WidgetCreatorContext>
+             implements HasAnimationFactory<DecoratedPopupPanel, WidgetCreatorContext>, HasCloseHandlersFactory<DecoratedPopupPanel, WidgetCreatorContext>
 {
 	@Override
 	public DecoratedPopupPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -49,7 +49,7 @@ public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel
 		@TagAttribute(value="modal", type=Boolean.class),
 		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

@@ -22,14 +22,14 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.LoadErrorEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.LoadEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -38,18 +38,18 @@ import com.google.gwt.user.client.ui.Image;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="image", library="gwt")
-public class ImageFactory extends WidgetFactory<Image, WidgetFactoryContext> 
-	   implements HasClickHandlersFactory<Image, WidgetFactoryContext>, 
-	   			  HasAllMouseHandlersFactory<Image, WidgetFactoryContext>, 
-	   			  HasDoubleClickHandlersFactory<Image, WidgetFactoryContext>
+public class ImageFactory extends WidgetCreator<Image, WidgetCreatorContext> 
+	   implements HasClickHandlersFactory<Image, WidgetCreatorContext>, 
+	   			  HasAllMouseHandlersFactory<Image, WidgetCreatorContext>, 
+	   			  HasDoubleClickHandlersFactory<Image, WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="url", required=true),
 		@TagAttribute(value="altText"),
-		@TagAttribute(value="visibleRect", parser=VisibleRectAttributeParser.class)
+		@TagAttribute(value="visibleRect", processor=VisibleRectAttributeParser.class)
 	})	
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -58,9 +58,9 @@ public class ImageFactory extends WidgetFactory<Image, WidgetFactoryContext>
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleRectAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class VisibleRectAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			Image widget = context.getWidget();
 			String[] coord = propertyValue.split(",");
@@ -78,7 +78,7 @@ public class ImageFactory extends WidgetFactory<Image, WidgetFactoryContext>
 		@TagEvent(LoadEvtBind.class),
 		@TagEvent(LoadErrorEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

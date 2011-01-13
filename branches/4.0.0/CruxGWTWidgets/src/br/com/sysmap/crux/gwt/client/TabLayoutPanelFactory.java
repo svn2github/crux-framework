@@ -23,12 +23,11 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
@@ -37,12 +36,13 @@ import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersF
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-class TabLayoutPanelContext extends WidgetFactoryContext
+class TabLayoutPanelContext extends WidgetCreatorContext
 {
 
 	public String title;
@@ -79,7 +79,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 		@TagAttributeDeclaration(value="unit", type=Unit.class)
 	})
 	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, parser=VisibleTabAttributeParser.class)
+		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
 	public void processAttributes(TabLayoutPanelContext context) throws InterfaceConfigException
 	{
@@ -90,7 +90,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeParser<TabLayoutPanelContext>
+	public static class VisibleTabAttributeParser implements AttributeProcessor<TabLayoutPanelContext>
 	{
 		public void processAttribute(TabLayoutPanelContext context, final String propertyValue)
         {

@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
  *
  */
 @DeclarativeFactory(id="flowPanel", library="gwt")
-public class FlowPanelFactory extends ComplexPanelFactory<FlowPanel, WidgetFactoryContext>
+public class FlowPanelFactory extends ComplexPanelFactory<FlowPanel, WidgetCreatorContext>
 {
 	@Override
 	public FlowPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 

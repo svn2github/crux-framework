@@ -25,12 +25,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasInitializeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.RichTextArea.FontSize;
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.RichTextArea.Formatter;
 import com.google.gwt.user.client.ui.RichTextArea.Justification;
 
 
-class RichTextAreaContext extends WidgetFactoryContext
+class RichTextAreaContext extends WidgetCreatorContext
 {
 
 	protected FastMap<String> declaredProperties;
@@ -100,7 +100,7 @@ implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandl
 	 * to initialise the basic formatter. It will be done by method initBasicFormatterOptions
 	 * @param element
 	 */
-	protected FastMap<String> readDeclaredProperties(WidgetFactoryContext context)
+	protected FastMap<String> readDeclaredProperties(WidgetCreatorContext context)
 	{
 		FastMap<String> declaredProperties = new FastMap<String>();
 		String backColor = context.readWidgetProperty("backColor");

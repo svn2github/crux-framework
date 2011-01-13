@@ -26,24 +26,24 @@ import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.Widget;
 
-class TabBarContext extends WidgetFactoryContext
+class TabBarContext extends WidgetCreatorContext
 {
 	public CruxMetaDataElement tabElement;
 }
@@ -58,7 +58,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 {
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, parser=VisibleTabAttributeParser.class)
+		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
 	public void processAttributes(TabBarContext context) throws InterfaceConfigException
 	{
@@ -69,7 +69,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeParser<TabBarContext>
+	public static class VisibleTabAttributeParser implements AttributeProcessor<TabBarContext>
 	{
 		public void processAttribute(TabBarContext context, final String propertyValue)
         {

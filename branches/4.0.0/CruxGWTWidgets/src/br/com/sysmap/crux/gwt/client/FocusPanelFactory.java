@@ -19,13 +19,13 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FocusPanel;
 
@@ -34,12 +34,12 @@ import com.google.gwt.user.client.ui.FocusPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="focusPanel", library="gwt")
-public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetFactoryContext>
-	   implements HasAllMouseHandlersFactory<FocusPanel, WidgetFactoryContext>, 
-	   			  HasClickHandlersFactory<FocusPanel, WidgetFactoryContext>, 
-	   			  HasAllFocusHandlersFactory<FocusPanel, WidgetFactoryContext>, 
-	   			  HasDoubleClickHandlersFactory<FocusPanel, WidgetFactoryContext>,
-	   			  HasAllKeyHandlersFactory<FocusPanel, WidgetFactoryContext>
+public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetCreatorContext>
+	   implements HasAllMouseHandlersFactory<FocusPanel, WidgetCreatorContext>, 
+	   			  HasClickHandlersFactory<FocusPanel, WidgetCreatorContext>, 
+	   			  HasAllFocusHandlersFactory<FocusPanel, WidgetCreatorContext>, 
+	   			  HasDoubleClickHandlersFactory<FocusPanel, WidgetCreatorContext>,
+	   			  HasAllKeyHandlersFactory<FocusPanel, WidgetCreatorContext>
 	   			
 {
 	@Override
@@ -48,7 +48,7 @@ public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetFactoryCon
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}

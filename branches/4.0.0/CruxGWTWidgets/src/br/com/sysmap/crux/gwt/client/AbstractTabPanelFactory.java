@@ -26,12 +26,11 @@ import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
@@ -39,13 +38,14 @@ import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.TabBar.Tab;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
-class TabPanelContext extends WidgetFactoryContext
+class TabPanelContext extends WidgetCreatorContext
 {
 
 	public CruxMetaDataElement tabElement;
@@ -74,7 +74,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 {
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, parser=VisibleTabAttributeParser.class)
+		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
 	public void processAttributes(TabPanelContext context) throws InterfaceConfigException
 	{
@@ -85,7 +85,7 @@ public abstract class AbstractTabPanelFactory<T extends TabPanel> extends Compos
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeParser<TabPanelContext>
+	public static class VisibleTabAttributeParser implements AttributeProcessor<TabPanelContext>
 	{
 		public void processAttribute(TabPanelContext context, final String propertyValue)
         {

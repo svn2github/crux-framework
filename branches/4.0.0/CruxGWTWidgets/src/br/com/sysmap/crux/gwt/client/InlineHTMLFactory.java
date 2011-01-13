@@ -20,11 +20,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
  *
  */
 @DeclarativeFactory(id="inlineHTML", library="gwt")
-public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML> implements HasHTMLFactory<InlineHTML, WidgetFactoryContext>
+public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML> implements HasHTMLFactory<InlineHTML, WidgetCreatorContext>
 {
 	@Override
 	public InlineHTML instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -47,11 +47,11 @@ public class InlineHTMLFactory extends AbstractLabelFactory<InlineHTML> implemen
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<InlineHTML, WidgetFactoryContext> {}
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHTML, WidgetCreatorContext> {}
 	
 }

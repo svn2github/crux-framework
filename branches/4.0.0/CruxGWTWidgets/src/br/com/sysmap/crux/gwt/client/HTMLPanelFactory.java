@@ -20,10 +20,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -47,12 +47,12 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory<HTMLPanel>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<HTMLPanel, WidgetFactoryContext> {}
+	public static class ContentProcessor extends WidgetChildProcessor<HTMLPanel, WidgetCreatorContext> {}
 
 	@Override
 	protected String getFactoryType() 

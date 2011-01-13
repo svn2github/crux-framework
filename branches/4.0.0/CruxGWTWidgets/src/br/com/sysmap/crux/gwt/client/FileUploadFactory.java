@@ -19,11 +19,11 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FileUpload;
 
@@ -32,9 +32,9 @@ import com.google.gwt.user.client.ui.FileUpload;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="fileUpload", library="gwt")
-public class FileUploadFactory extends WidgetFactory<FileUpload, WidgetFactoryContext> 
-	   implements HasChangeHandlersFactory<FileUpload, WidgetFactoryContext>, 
-	   			  HasNameFactory<FileUpload, WidgetFactoryContext>
+public class FileUploadFactory extends WidgetCreator<FileUpload, WidgetCreatorContext> 
+	   implements HasChangeHandlersFactory<FileUpload, WidgetCreatorContext>, 
+	   			  HasNameFactory<FileUpload, WidgetCreatorContext>
 {//TODO should implement HasEnabledFactory, but GWT FileUploadWidget does not implement HasEnabled. GWT Issue 5677
 
 	@Override
@@ -47,7 +47,7 @@ public class FileUploadFactory extends WidgetFactory<FileUpload, WidgetFactoryCo
 	@TagAttributes({
 		@TagAttribute(value="enabled", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}

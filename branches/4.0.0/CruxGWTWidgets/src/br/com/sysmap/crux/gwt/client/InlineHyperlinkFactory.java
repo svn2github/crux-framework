@@ -22,13 +22,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
@@ -38,8 +38,8 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
  *
  */
 @DeclarativeFactory(id="inlineHyperlink", library="gwt")
-public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink, WidgetFactoryContext>
-       implements HasHTMLFactory<InlineHyperlink, WidgetFactoryContext>, HasClickHandlersFactory<InlineHyperlink, WidgetFactoryContext>
+public class InlineHyperlinkFactory extends WidgetCreator<InlineHyperlink, WidgetCreatorContext>
+       implements HasHTMLFactory<InlineHyperlink, WidgetCreatorContext>, HasClickHandlersFactory<InlineHyperlink, WidgetCreatorContext>
 {
 	@Override
 	public InlineHyperlink instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -51,7 +51,7 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink, Widge
 	@TagAttributes({
 		@TagAttribute("targetHistoryToken")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 	}
 	
@@ -59,11 +59,11 @@ public class InlineHyperlinkFactory extends WidgetFactory<InlineHyperlink, Widge
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<InlineHyperlink, WidgetFactoryContext> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<InlineHyperlink, WidgetCreatorContext> {}	
 	
 }

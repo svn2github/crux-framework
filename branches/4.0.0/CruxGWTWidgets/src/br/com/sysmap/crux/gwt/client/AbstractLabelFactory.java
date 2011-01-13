@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAutoHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
@@ -25,6 +23,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Label;
 
@@ -33,10 +33,10 @@ import com.google.gwt.user.client.ui.Label;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractLabelFactory<T extends Label> extends WidgetFactory<T, WidgetFactoryContext> 
-       implements HasDirectionFactory<T, WidgetFactoryContext>, HasWordWrapFactory<T, WidgetFactoryContext>, 
-       			  HasTextFactory<T, WidgetFactoryContext>, HasClickHandlersFactory<T, WidgetFactoryContext>, 
-       			  HasDoubleClickHandlersFactory<T, WidgetFactoryContext>, HasAllMouseHandlersFactory<T, WidgetFactoryContext>, 
-                  HasAutoHorizontalAlignmentFactory<T, WidgetFactoryContext>, HasDirectionEstimatorFactory<T, WidgetFactoryContext>
+public abstract class AbstractLabelFactory<T extends Label> extends WidgetCreator<T, WidgetCreatorContext> 
+       implements HasDirectionFactory<T, WidgetCreatorContext>, HasWordWrapFactory<T, WidgetCreatorContext>, 
+       			  HasTextFactory<T, WidgetCreatorContext>, HasClickHandlersFactory<T, WidgetCreatorContext>, 
+       			  HasDoubleClickHandlersFactory<T, WidgetCreatorContext>, HasAllMouseHandlersFactory<T, WidgetCreatorContext>, 
+                  HasAutoHorizontalAlignmentFactory<T, WidgetCreatorContext>, HasDirectionEstimatorFactory<T, WidgetCreatorContext>
 {
 }

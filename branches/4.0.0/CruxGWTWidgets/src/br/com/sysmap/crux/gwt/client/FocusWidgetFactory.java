@@ -33,8 +33,8 @@ import br.com.sysmap.crux.core.client.event.bind.MouseOverEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseUpEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.MouseWheelEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
  * @author Thiago Bustamante
  *
  */
-public abstract class FocusWidgetFactory <T extends FocusWidget, C extends WidgetFactoryContext> extends WidgetFactory<T, C> 
+public abstract class FocusWidgetFactory <T extends FocusWidget, C extends WidgetCreatorContext> extends WidgetCreator<T, C> 
 {
 	/**
 	 * Process widget attributes

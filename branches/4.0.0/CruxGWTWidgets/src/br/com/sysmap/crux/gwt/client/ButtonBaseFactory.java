@@ -16,19 +16,19 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Button;
 
 /**
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFactory<T, WidgetFactoryContext> 
-										  implements HasHTMLFactory<T, WidgetFactoryContext>
+public abstract class ButtonBaseFactory<T extends Button> extends FocusWidgetFactory<T, WidgetCreatorContext> 
+										  implements HasHTMLFactory<T, WidgetCreatorContext>
 {
 	@Override
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

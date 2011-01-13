@@ -21,12 +21,12 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.DeckPanel;
 
@@ -35,8 +35,8 @@ import com.google.gwt.user.client.ui.DeckPanel;
  *
  */
 @DeclarativeFactory(id="deckPanel", library="gwt")
-public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel, WidgetFactoryContext>
-					implements HasAnimationFactory<DeckPanel, WidgetFactoryContext>
+public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel, WidgetCreatorContext>
+					implements HasAnimationFactory<DeckPanel, WidgetCreatorContext>
 {
 	@Override
 	public DeckPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -46,9 +46,9 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel, WidgetFacto
 
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="visibleWidget", type=Integer.class, parser=VisibleWidgetAttributeParser.class)
+		@TagAttribute(value="visibleWidget", type=Integer.class, processor=VisibleWidgetAttributeParser.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}
@@ -57,9 +57,9 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel, WidgetFacto
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleWidgetAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class VisibleWidgetAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			DeckPanel widget = context.getWidget();
 			widget.showWidget(Integer.parseInt(propertyValue));
@@ -70,11 +70,11 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel, WidgetFacto
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<DeckPanel, WidgetFactoryContext> {}
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<DeckPanel, WidgetCreatorContext> {}
 		
 }

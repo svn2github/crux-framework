@@ -17,14 +17,14 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.ValueBoxBase;
@@ -35,19 +35,19 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends FocusWidgetFactory<T, WidgetFactoryContext>
-                implements HasChangeHandlersFactory<T, WidgetFactoryContext>, HasNameFactory<T, WidgetFactoryContext>, 
-                           HasTextFactory<T, WidgetFactoryContext>, HasDirectionEstimatorFactory<T, WidgetFactoryContext>, 
-                           HasDirectionFactory<T, WidgetFactoryContext>
+public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends FocusWidgetFactory<T, WidgetCreatorContext>
+                implements HasChangeHandlersFactory<T, WidgetCreatorContext>, HasNameFactory<T, WidgetCreatorContext>, 
+                           HasTextFactory<T, WidgetCreatorContext>, HasDirectionEstimatorFactory<T, WidgetCreatorContext>, 
+                           HasDirectionFactory<T, WidgetCreatorContext>
 {	
 	public static enum TextAlign{center, justify, left, right}
 	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="readOnly", type=Boolean.class),
-		@TagAttribute(value="alignment", type=TextAlign.class, parser=TextAlignmentProcessor.class)
+		@TagAttribute(value="alignment", type=TextAlign.class, processor=TextAlignmentProcessor.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -56,9 +56,9 @@ public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends 
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class TextAlignmentProcessor implements AttributeParser<WidgetFactoryContext>
+	public static class TextAlignmentProcessor implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String textAlignment)
+		public void processAttribute(WidgetCreatorContext context, String textAlignment)
 		{
 			TextBoxBase widget = (TextBoxBase) context.getWidget();
 			

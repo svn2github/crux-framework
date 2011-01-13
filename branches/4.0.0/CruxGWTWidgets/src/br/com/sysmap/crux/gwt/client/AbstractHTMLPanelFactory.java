@@ -20,9 +20,9 @@ import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -35,8 +35,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T, WidgetFactoryContext> 
-				implements HasWidgetsFactory<T, WidgetFactoryContext>
+public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T, WidgetCreatorContext> 
+				implements HasWidgetsFactory<T, WidgetCreatorContext>
 {
 	/**
 	 * @author Thiago da Rosa de Bustamante
@@ -52,7 +52,7 @@ public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends Comp
         {
 	        super("");
 	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-	        Element panelElement = WidgetFactory.getEnclosingPanelElement(element.getProperty("id"));
+	        Element panelElement = WidgetCreator.getEnclosingPanelElement(element.getProperty("id"));
 	        assert Document.get().getBody().isOrHasChild(panelElement);
 	        panelElement.removeFromParent();
 	        getElement().appendChild(panelElement);

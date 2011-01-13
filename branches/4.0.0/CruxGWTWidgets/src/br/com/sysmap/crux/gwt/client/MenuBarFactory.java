@@ -27,21 +27,21 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
-class MenuBarContext extends WidgetFactoryContext
+class MenuBarContext extends WidgetCreatorContext
 {
 	String caption;
 	boolean isHtml;
@@ -58,7 +58,7 @@ class MenuBarContext extends WidgetFactoryContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="menuBar", library="gwt")
-public class MenuBarFactory extends WidgetFactory<MenuBar, MenuBarContext> 
+public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext> 
        implements HasAnimationFactory<MenuBar, MenuBarContext>, HasCloseHandlersFactory<MenuBar, MenuBarContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);

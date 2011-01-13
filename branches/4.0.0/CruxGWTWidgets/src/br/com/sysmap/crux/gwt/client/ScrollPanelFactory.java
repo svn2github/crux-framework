@@ -18,16 +18,16 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasScrollHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -38,8 +38,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="scrollPanel", library="gwt")
-public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetFactoryContext> 
-       implements HasScrollHandlersFactory<ScrollPanel, WidgetFactoryContext>
+public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetCreatorContext> 
+       implements HasScrollHandlersFactory<ScrollPanel, WidgetCreatorContext>
 {
 	public static enum VerticalScrollPosition{top,bottom};
 	public static enum HorizontalScrollPosition{left,right};
@@ -53,11 +53,11 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetFactoryC
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="alwaysShowScrollBars", type=Boolean.class),
-		@TagAttribute(value="verticalScrollPosition", type=VerticalScrollPosition.class, parser=VerticalScrollPositionAttributeParser.class),
-		@TagAttribute(value="horizontalScrollPosition", type=HorizontalScrollPosition.class, parser=HorizontalScrollPositionAttributeParser.class),
-		@TagAttribute(value="ensureVisible", parser=EnsureVisibleAttributeParser.class)
+		@TagAttribute(value="verticalScrollPosition", type=VerticalScrollPosition.class, processor=VerticalScrollPositionAttributeParser.class),
+		@TagAttribute(value="horizontalScrollPosition", type=HorizontalScrollPosition.class, processor=HorizontalScrollPositionAttributeParser.class),
+		@TagAttribute(value="ensureVisible", processor=EnsureVisibleAttributeParser.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -66,9 +66,9 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetFactoryC
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VerticalScrollPositionAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class VerticalScrollPositionAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			ScrollPanel widget = context.getWidget();
 			if (StringUtils.unsafeEquals("top", propertyValue))
@@ -86,9 +86,9 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetFactoryC
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class HorizontalScrollPositionAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class HorizontalScrollPositionAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			ScrollPanel widget = context.getWidget();
 			if (StringUtils.unsafeEquals("left", propertyValue))
@@ -106,10 +106,10 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetFactoryC
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class EnsureVisibleAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class EnsureVisibleAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
-		public void processAttribute(final WidgetFactoryContext context, final String propertyValue) 
+		public void processAttribute(final WidgetCreatorContext context, final String propertyValue) 
 		{
 			final ScrollPanel widget = context.getWidget();
 			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()

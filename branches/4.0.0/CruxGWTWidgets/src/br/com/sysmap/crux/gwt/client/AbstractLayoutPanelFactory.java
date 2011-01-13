@@ -22,12 +22,12 @@ import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.layout.client.Layout.AnimationCallback;
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AnimatedLayout;
 import com.google.gwt.user.client.ui.ComplexPanel;
 
-class AbstractLayoutPanelContext extends WidgetFactoryContext
+class AbstractLayoutPanelContext extends WidgetCreatorContext
 {
 	int animationDuration = 0;
 	FastList<Command> childProcessingAnimations;
@@ -60,7 +60,7 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel, C exten
 {
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="animationDuration", type=Integer.class, parser=AnimationDurationAttributeParser.class)
+		@TagAttribute(value="animationDuration", type=Integer.class, processor=AnimationDurationAttributeParser.class)
 	})
 	public void processAttributes(final C context) throws InterfaceConfigException
 	{
@@ -71,7 +71,7 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel, C exten
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class AnimationDurationAttributeParser implements AttributeParser<AbstractLayoutPanelContext>
+	public static class AnimationDurationAttributeParser implements AttributeProcessor<AbstractLayoutPanelContext>
 	{
 		public void processAttribute(AbstractLayoutPanelContext context, String propertyValue) 
 		{

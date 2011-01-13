@@ -20,10 +20,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.VerticalSplitPanel;
  */
 @SuppressWarnings("deprecation")
 @DeclarativeFactory(id="verticalSplitPanel", library="gwt")
-public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel, WidgetFactoryContext>
+public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel, WidgetCreatorContext>
 {
 	@Override
 	public VerticalSplitPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -46,31 +46,31 @@ public class VerticalSplitPanelFactory extends PanelFactory<VerticalSplitPanel, 
 		@TagChild(TopProcessor.class),
 		@TagChild(BottomProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="top", minOccurs="0")
-	public static class TopProcessor extends WidgetChildProcessor<VerticalSplitPanel, WidgetFactoryContext>
+	public static class TopProcessor extends WidgetChildProcessor<VerticalSplitPanel, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TopWidgeProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="bottom", minOccurs="0")
-	public static class BottomProcessor extends WidgetChildProcessor<VerticalSplitPanel, WidgetFactoryContext>
+	public static class BottomProcessor extends WidgetChildProcessor<VerticalSplitPanel, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(BottomWidgeProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="topWidget")
-	public static class TopWidgeProcessor extends AnyWidgetChildProcessor<VerticalSplitPanel, WidgetFactoryContext> {}
+	public static class TopWidgeProcessor extends AnyWidgetChildProcessor<VerticalSplitPanel, WidgetCreatorContext> {}
 	
 	@TagChildAttributes(widgetProperty="bottomWidget")
-	public static class BottomWidgeProcessor extends AnyWidgetChildProcessor<VerticalSplitPanel, WidgetFactoryContext> {}
+	public static class BottomWidgeProcessor extends AnyWidgetChildProcessor<VerticalSplitPanel, WidgetCreatorContext> {}
 }

@@ -19,11 +19,11 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.DialogBox;
 
@@ -32,10 +32,10 @@ import com.google.gwt.user.client.ui.DialogBox;
  * @author Gesse S. F. Dafe <code>gessedafe@gmail.com</code>
  */
 @DeclarativeFactory(id="dialogBox", library="gwt", attachToDOM=false)
-public class DialogBoxFactory extends PanelFactory<DialogBox, WidgetFactoryContext>
-       implements HasAnimationFactory<DialogBox, WidgetFactoryContext>, 
-                  HasCloseHandlersFactory<DialogBox, WidgetFactoryContext>, 
-                  HasHTMLFactory<DialogBox, WidgetFactoryContext>
+public class DialogBoxFactory extends PanelFactory<DialogBox, WidgetCreatorContext>
+       implements HasAnimationFactory<DialogBox, WidgetCreatorContext>, 
+                  HasCloseHandlersFactory<DialogBox, WidgetCreatorContext>, 
+                  HasHTMLFactory<DialogBox, WidgetCreatorContext>
 {
 	@Override
 	public DialogBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -52,7 +52,7 @@ public class DialogBoxFactory extends PanelFactory<DialogBox, WidgetFactoryConte
 		@TagAttribute(value="modal", type=Boolean.class),
 		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

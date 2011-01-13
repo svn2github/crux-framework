@@ -32,11 +32,11 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -49,8 +49,8 @@ import com.google.gwt.user.datepicker.client.DateBox.Format;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="dateBox", library="gwt")
-public class DateBoxFactory extends CompositeFactory<DateBox, WidgetFactoryContext> 
-       implements HasValueChangeHandlersFactory<DateBox, WidgetFactoryContext>
+public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorContext> 
+       implements HasValueChangeHandlersFactory<DateBox, WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
@@ -64,7 +64,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetFactoryConte
 		@TagAttributeDeclaration("pattern"),
 		@TagAttributeDeclaration(value="reportFormatError", type=Boolean.class)
 	})
-	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(final WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 
@@ -89,7 +89,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetFactoryConte
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadFormat")
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -130,10 +130,10 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetFactoryConte
 	@TagChildren({
 		@TagChild(value=DateBoxProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
-	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox, WidgetFactoryContext>{}
+	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox, WidgetCreatorContext>{}
 	
 	/**
 	 * @param element

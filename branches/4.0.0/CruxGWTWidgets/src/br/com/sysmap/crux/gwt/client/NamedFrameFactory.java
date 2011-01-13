@@ -20,12 +20,12 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.NamedFrame;
 
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.NamedFrame;
  *
  */
 @DeclarativeFactory(id="namedFrame", library="gwt")
-public class NamedFrameFactory extends WidgetFactory<NamedFrame, WidgetFactoryContext>
+public class NamedFrameFactory extends WidgetCreator<NamedFrame, WidgetCreatorContext>
 {
 	@Override
 	public NamedFrame instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -49,9 +49,9 @@ public class NamedFrameFactory extends WidgetFactory<NamedFrame, WidgetFactoryCo
 		@TagAttributeDeclaration("name")
 	})	
 	@TagAttributes({
-		@TagAttribute(value="url", parser=URLAttributeParser.class)
+		@TagAttribute(value="url", processor=URLAttributeParser.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -60,9 +60,9 @@ public class NamedFrameFactory extends WidgetFactory<NamedFrame, WidgetFactoryCo
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class URLAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class URLAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			NamedFrame widget = context.getWidget();
 			widget.setUrl(Screen.appendDebugParameters(propertyValue));

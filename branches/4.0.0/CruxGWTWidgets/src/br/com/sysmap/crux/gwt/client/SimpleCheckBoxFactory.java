@@ -19,9 +19,9 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.SimpleCheckBox;
 
@@ -31,14 +31,14 @@ import com.google.gwt.user.client.ui.SimpleCheckBox;
  *
  */
 @DeclarativeFactory(id="simpleCheckBox", library="gwt")
-public class SimpleCheckBoxFactory extends FocusWidgetFactory<SimpleCheckBox, WidgetFactoryContext> 
-		implements HasNameFactory<SimpleCheckBox, WidgetFactoryContext>
+public class SimpleCheckBoxFactory extends FocusWidgetFactory<SimpleCheckBox, WidgetCreatorContext> 
+		implements HasNameFactory<SimpleCheckBox, WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="checked", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}

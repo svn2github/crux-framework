@@ -26,9 +26,9 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FormPanel;
 
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.FormPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="formPanel", library="gwt")
-public class FormPanelFactory extends PanelFactory<FormPanel, WidgetFactoryContext>
+public class FormPanelFactory extends PanelFactory<FormPanel, WidgetCreatorContext>
 {
 	
 	@Override
@@ -49,7 +49,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel, WidgetFactoryConte
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("target")
 	})
-    public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+    public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class FormPanelFactory extends PanelFactory<FormPanel, WidgetFactoryConte
 		@TagEvent(SubmitCompleteEvtBind.class),
 		@TagEvent(SubmitEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processEvents(context);
 	}
@@ -82,10 +82,10 @@ public class FormPanelFactory extends PanelFactory<FormPanel, WidgetFactoryConte
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<FormPanel, WidgetFactoryContext> {}	
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<FormPanel, WidgetCreatorContext> {}	
 }

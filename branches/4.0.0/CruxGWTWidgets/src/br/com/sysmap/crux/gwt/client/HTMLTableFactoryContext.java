@@ -15,13 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Administrator
  *
  */
-public class HTMLTableFactoryContext extends WidgetFactoryContext
+public class HTMLTableFactoryContext extends WidgetCreatorContext
 {
 	int rowIndex = -1;
 	int colIndex = -1;

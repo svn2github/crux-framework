@@ -20,10 +20,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
  */
 @SuppressWarnings("deprecation")
 @DeclarativeFactory(id="horizontalSplitPanel", library="gwt")
-public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPanel, WidgetFactoryContext>
+public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPanel, WidgetCreatorContext>
 {
 	@Override
 	public HorizontalSplitPanel instantiateWidget(CruxMetaDataElement element, String widgetId) {
@@ -45,31 +45,31 @@ public class HorizontalSplitPanelFactory extends PanelFactory<HorizontalSplitPan
 		@TagChild(LeftProcessor.class),
 		@TagChild(RightProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="left", minOccurs="0")
-	public static class LeftProcessor extends WidgetChildProcessor<HorizontalSplitPanel, WidgetFactoryContext>
+	public static class LeftProcessor extends WidgetChildProcessor<HorizontalSplitPanel, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(LeftWidgeProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="right", minOccurs="0")
-	public static class RightProcessor extends WidgetChildProcessor<HorizontalSplitPanel, WidgetFactoryContext>
+	public static class RightProcessor extends WidgetChildProcessor<HorizontalSplitPanel, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(RightWidgeProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(widgetProperty="leftWidget")
-	public static class LeftWidgeProcessor extends AnyWidgetChildProcessor<HorizontalSplitPanel, WidgetFactoryContext> {}
+	public static class LeftWidgeProcessor extends AnyWidgetChildProcessor<HorizontalSplitPanel, WidgetCreatorContext> {}
 	
 	@TagChildAttributes(widgetProperty="rightWidget")
-	public static class RightWidgeProcessor extends AnyWidgetChildProcessor<HorizontalSplitPanel, WidgetFactoryContext> {}
+	public static class RightWidgeProcessor extends AnyWidgetChildProcessor<HorizontalSplitPanel, WidgetCreatorContext> {}
 }

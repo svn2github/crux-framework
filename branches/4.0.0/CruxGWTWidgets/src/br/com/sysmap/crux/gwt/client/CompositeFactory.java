@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Composite;
 
@@ -24,6 +24,6 @@ import com.google.gwt.user.client.ui.Composite;
  * Factory for a composite widget
  * @author Gesse S. F. Dafe
  */
-public abstract class CompositeFactory<T extends Composite, C extends WidgetFactoryContext> extends WidgetFactory<T, C>
+public abstract class CompositeFactory<T extends Composite, C extends WidgetCreatorContext> extends WidgetCreator<T, C>
 {
 }

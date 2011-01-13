@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  *
  */
 @DeclarativeFactory(id="simplePanel", library="gwt")
-public class SimplePanelFactory extends PanelFactory<SimplePanel, WidgetFactoryContext>
+public class SimplePanelFactory extends PanelFactory<SimplePanel, WidgetCreatorContext>
 {
 	@Override
 	public SimplePanel instantiateWidget(CruxMetaDataElement element, String widgetId) 

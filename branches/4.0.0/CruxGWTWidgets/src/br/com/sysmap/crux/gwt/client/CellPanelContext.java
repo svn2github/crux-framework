@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class CellPanelContext extends WidgetFactoryContext
+public class CellPanelContext extends WidgetCreatorContext
 {
 	public String horizontalAlignment;
 	public String verticalAlignment;

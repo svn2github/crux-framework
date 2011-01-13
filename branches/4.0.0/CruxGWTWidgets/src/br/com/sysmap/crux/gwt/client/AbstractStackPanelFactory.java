@@ -18,15 +18,15 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -42,7 +42,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="visibleStack", type=Integer.class, parser=VisibleStackAttributeParser.class)
+		@TagAttribute(value="visibleStack", type=Integer.class, processor=VisibleStackAttributeParser.class)
 	})
 	public void processAttributes(AbstractStackPanelFactoryContext context) throws InterfaceConfigException 
 	{
@@ -52,7 +52,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	/**
 	 * @author Gesse Dafe
 	 */
-	public static class VisibleStackAttributeParser implements AttributeParser<AbstractStackPanelFactoryContext>
+	public static class VisibleStackAttributeParser implements AttributeProcessor<AbstractStackPanelFactoryContext>
 	{
 		public void processAttribute(AbstractStackPanelFactoryContext context, final String propertyValue) 
 		{
@@ -113,7 +113,7 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 }
 
 
-class AbstractStackPanelFactoryContext extends WidgetFactoryContext
+class AbstractStackPanelFactoryContext extends WidgetCreatorContext
 {
 	boolean isHtmlTitle = false;
 	String title;

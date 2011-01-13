@@ -15,13 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ListBoxContext extends WidgetFactoryContext
+public class ListBoxContext extends WidgetCreatorContext
 {
 	int index = 0;
 }

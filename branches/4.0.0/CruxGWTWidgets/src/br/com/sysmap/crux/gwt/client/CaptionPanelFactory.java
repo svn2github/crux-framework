@@ -22,12 +22,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.CaptionPanel;
 
@@ -36,13 +36,13 @@ import com.google.gwt.user.client.ui.CaptionPanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="captionPanel", library="gwt")
-public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetFactoryContext>
+public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute("captionText")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -52,7 +52,7 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetFa
 		@TagChild(CaptionProcessor.class),
 		@TagChild(ContentProcessor.class)
 	})	
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@Override
 	public CaptionPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
@@ -61,34 +61,34 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetFa
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class CaptionProcessor extends ChoiceChildProcessor<CaptionPanel, WidgetFactoryContext>
+	public static class CaptionProcessor extends ChoiceChildProcessor<CaptionPanel, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CaptionTextProcessor.class),
 			@TagChild(CaptionHTMLProcessor.class)
 		})	
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<CaptionPanel, WidgetFactoryContext> 
+	public static class ContentProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(minOccurs="0", widgetProperty="contentWidget")
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<CaptionPanel, WidgetFactoryContext> {}
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<CaptionPanel, WidgetCreatorContext> {}
 	
 	@TagChildAttributes(tagName="captionText", type=String.class)
-	public static class CaptionTextProcessor extends WidgetChildProcessor<CaptionPanel, WidgetFactoryContext>
+	public static class CaptionTextProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
 		{
 			CaptionPanel widget = context.getWidget();
 			widget.setCaptionText(ensureTextChild(context.getChildElement(), true));
@@ -96,10 +96,10 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetFa
 	}
 	
 	@TagChildAttributes(tagName="captionHTML", type=HTMLTag.class)
-	public static class CaptionHTMLProcessor extends WidgetChildProcessor<CaptionPanel, WidgetFactoryContext>
+	public static class CaptionHTMLProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
 		{
 			CaptionPanel widget = context.getWidget();
 			widget.setCaptionHTML(ensureHtmlChild(context.getChildElement(), true));

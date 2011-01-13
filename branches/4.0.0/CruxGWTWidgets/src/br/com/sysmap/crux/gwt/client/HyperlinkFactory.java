@@ -22,13 +22,13 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasHTMLFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Hyperlink;
 
@@ -37,15 +37,15 @@ import com.google.gwt.user.client.ui.Hyperlink;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="hyperlink", library="gwt")
-public class HyperlinkFactory extends WidgetFactory<Hyperlink, WidgetFactoryContext>
-	   implements HasHTMLFactory<Hyperlink, WidgetFactoryContext>, HasClickHandlersFactory<Hyperlink, WidgetFactoryContext>
+public class HyperlinkFactory extends WidgetCreator<Hyperlink, WidgetCreatorContext>
+	   implements HasHTMLFactory<Hyperlink, WidgetCreatorContext>, HasClickHandlersFactory<Hyperlink, WidgetCreatorContext>
 {
 
 	@Override
 	@TagAttributes({
 		@TagAttribute("targetHistoryToken")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
 	{
 		super.processAttributes(context);
 	}
@@ -60,10 +60,10 @@ public class HyperlinkFactory extends WidgetFactory<Hyperlink, WidgetFactoryCont
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<Hyperlink, WidgetFactoryContext> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<Hyperlink, WidgetCreatorContext> {}	
 }

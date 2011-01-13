@@ -22,8 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
@@ -32,12 +30,14 @@ import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersF
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-class StackLayoutContext extends WidgetFactoryContext
+class StackLayoutContext extends WidgetCreatorContext
 {
 	boolean selected = false;
 	double headerSize;
@@ -60,7 +60,7 @@ class StackLayoutContext extends WidgetFactoryContext
  *
  */
 @DeclarativeFactory(id="stackLayoutPanel", library="gwt")
-public class StackLayoutPanelFactory extends WidgetFactory<StackLayoutPanel, StackLayoutContext> 
+public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, StackLayoutContext> 
 	   implements HasBeforeSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>, 
 	   			  HasSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>
 {

@@ -30,10 +30,8 @@ import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.HasPostProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
@@ -46,6 +44,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasOpenHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Tree;
@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Tree.Resources;
 
 
-class TreeContext extends WidgetFactoryContext
+class TreeContext extends WidgetCreatorContext
 {
 	LinkedList<TreeItem> itemStack;
 }
@@ -64,7 +64,7 @@ class TreeContext extends WidgetFactoryContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tree", library="gwt")
-public class TreeFactory extends WidgetFactory<Tree, TreeContext> 
+public class TreeFactory extends WidgetCreator<Tree, TreeContext> 
        implements HasAnimationFactory<Tree, TreeContext>, HasAllFocusHandlersFactory<Tree, TreeContext>,
                   HasOpenHandlersFactory<Tree, TreeContext>, HasCloseHandlersFactory<Tree, TreeContext>, 
                   HasAllMouseHandlersFactory<Tree, TreeContext>, HasAllKeyHandlersFactory<Tree, TreeContext>,
@@ -99,7 +99,7 @@ public class TreeFactory extends WidgetFactory<Tree, TreeContext>
 	@TagAttributes({
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="openSelectedItem", type=Boolean.class, parser=OpenSelectedItemAttributeParser.class),
+		@TagAttribute(value="openSelectedItem", type=Boolean.class, processor=OpenSelectedItemAttributeParser.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
 	@TagAttributesDeclaration({
@@ -113,7 +113,7 @@ public class TreeFactory extends WidgetFactory<Tree, TreeContext>
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 */
-	public static class OpenSelectedItemAttributeParser implements AttributeParser<TreeContext>
+	public static class OpenSelectedItemAttributeParser implements AttributeProcessor<TreeContext>
 	{
 		public void processAttribute(TreeContext context, String propertyValue) 
 		{
