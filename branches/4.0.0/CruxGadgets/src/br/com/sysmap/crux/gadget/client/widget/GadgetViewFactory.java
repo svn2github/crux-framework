@@ -24,11 +24,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 import br.com.sysmap.crux.gwt.client.AbstractHTMLPanelFactory;
 
@@ -57,7 +57,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
         {
 	        super("");
 	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-	        Element panelElement = WidgetFactory.getEnclosingPanelElement(element.getProperty("id"));
+	        Element panelElement = WidgetCreator.getEnclosingPanelElement(element.getProperty("id"));
 	        assert Document.get().getBody().isOrHasChild(panelElement);
 	        panelElement.removeFromParent();
 	        getElement().appendChild(panelElement);
@@ -83,7 +83,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 		@TagAttribute(value="view", type=View.class, required=true)
 	})
 	@Override
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	    super.processAttributes(context);
 	}
@@ -92,12 +92,12 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory<GadgetView>
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<GadgetView, WidgetFactoryContext> {}
+	public static class ContentProcessor extends WidgetChildProcessor<GadgetView, WidgetCreatorContext> {}
 
 	@Override
     protected String getFactoryType()
