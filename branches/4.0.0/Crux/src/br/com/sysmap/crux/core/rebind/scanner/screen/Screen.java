@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONArray;
+
 import com.google.gwt.dev.util.collect.HashSet;
 
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -46,12 +48,14 @@ public class Screen
 	protected String title;
 	
 	protected String module;
+	private final JSONArray metaData;
 	
-	public Screen(String id, String relativeId, String module) 
+	public Screen(String id, String relativeId, String module, JSONArray metaData) 
 	{
 		this.id = id;
 		this.relativeId = relativeId;
 		this.module = module;
+		this.metaData = metaData;
 	}
 
 	/**
@@ -82,6 +86,7 @@ public class Screen
 	public Set<String> getWidgetProperties(String widgetType)
 	{
 		return widgetPropertiesMap.get(widgetType);
+		//TODO remover as sobras de codigo aki
 	}
 	
 	/**
@@ -285,4 +290,9 @@ public class Screen
 	{
 		this.title = title;
 	}
+
+	public JSONArray getMetaData()
+    {
+    	return metaData;
+    }
 }

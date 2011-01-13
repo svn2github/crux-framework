@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,6 +36,6 @@ public @interface TagAttribute
 	String property() default "";
 	boolean required() default false;
 	boolean supportsI18N() default false;
-	Class<?> parser() default AttributeParser.NoParser.class;
+	Class<?> processor() default AttributeProcessor.NoParser.class;
 	boolean xsdIgnore() default false;
 }

@@ -35,14 +35,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.DeclarativeWidgetFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
@@ -54,6 +51,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
@@ -415,7 +413,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			return true;
 		}
 		TagChildAttributes processorAttributes = getChildtrenAttributesAnnotation(childProcessor);
-		return  WidgetFactory.class.isAssignableFrom(processorAttributes.type()) || widgetProperties.contains(prefixTagName+tagName+"_");
+		return  WidgetCreator.class.isAssignableFrom(processorAttributes.type()) || widgetProperties.contains(prefixTagName+tagName+"_");
     }
 
 	/**
@@ -565,7 +563,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	        				{
 	        					if (!Environment.isProduction() || widgetProperties.contains(attrName))
 	        					{
-	        						if (AttributeParser.NoParser.class.isAssignableFrom(attr.parser()))
+	        						if (AttributeProcessor.NoParser.class.isAssignableFrom(attr.processor()))
 	        						{
 	        							generateAutomaticProcessAttributeBlock(factoryClass, result, attr);
 	        						}
@@ -613,7 +611,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private void generateAttributeParserProcessAttributeBlock(JClassType factoryClass, StringBuilder result, TagAttribute attr, 
 			                                             Map<String, String> attributeParserVariables) throws NotFoundException
 	{
-		JClassType type = factoryClass.getOracle().getType(attr.parser().getCanonicalName());
+		JClassType type = factoryClass.getOracle().getType(attr.processor().getCanonicalName());
 		String attrName = attr.value();
 		result.append("String "+attrName+" = context.readWidgetProperty(\""+attrName+"\");\n");
 		if (attr.defaultValue().length() > 0)
@@ -972,7 +970,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			source.append("else ");
 		}
 		
-		if (processorAttributes == null || WidgetFactory.class.isAssignableFrom(processorAttributes.type())  
+		if (processorAttributes == null || WidgetCreator.class.isAssignableFrom(processorAttributes.type())  
 			|| processorAttributes.tagName().equals(""))
 		{
 			source.append("if (__tag == null || __tag.length() == 0){\n");

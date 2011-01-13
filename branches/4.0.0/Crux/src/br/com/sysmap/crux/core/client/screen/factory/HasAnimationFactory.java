@@ -18,7 +18,7 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasAnimation;
 
@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.HasAnimation;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAnimationFactory<T extends HasAnimation, C extends WidgetFactoryContext>
+public interface HasAnimationFactory<T extends HasAnimation, C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="animationEnabled", type=Boolean.class)

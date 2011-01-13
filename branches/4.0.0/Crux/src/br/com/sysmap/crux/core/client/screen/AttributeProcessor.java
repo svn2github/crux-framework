@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sysmap Solutions Software e Consultoria Ltda.
+ * Copyright 2010 Sysmap Solutions Software e Consultoria Ltda.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,18 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+
 /**
- * @author Thiago da Rosa de Bustamante - <code>thiago@sysmap.com.br</code>
+ * @author Thiago da Rosa de Bustamante
  *
  */
-public interface DeclarativeWidgetFactory
+public interface AttributeProcessor<C extends WidgetCreatorContext> 
 {
-	boolean isAttachToDOM();
-	boolean isPanel();
-	boolean isHtmlContainer();
+	interface NoParser extends AttributeProcessor<WidgetCreatorContext>
+	{
+	}
+	void processAttribute(SourcePrinter out, C context, String attributeValue);
 }

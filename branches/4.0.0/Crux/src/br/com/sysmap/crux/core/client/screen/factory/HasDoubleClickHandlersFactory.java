@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.DoubleClickEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 
@@ -27,7 +27,7 @@ import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasDoubleClickHandlersFactory<T extends HasDoubleClickHandlers, C extends WidgetFactoryContext>
+public interface HasDoubleClickHandlersFactory<T extends HasDoubleClickHandlers, C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(DoubleClickEvtBind.class)

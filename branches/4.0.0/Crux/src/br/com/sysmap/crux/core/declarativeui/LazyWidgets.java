@@ -31,10 +31,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.LazyPanelFactory;
-import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory;
+import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 

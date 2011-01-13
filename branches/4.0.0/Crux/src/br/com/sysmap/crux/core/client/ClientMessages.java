@@ -50,42 +50,28 @@ public interface ClientMessages extends Messages
 	String crossDocumentSerializationErrorStreamClosed();
 	
 	//  screenFactory
-	@DefaultMessage("[screenFactory 001] - Error Creating widget: ''{0}''. See Log for more detail.")
-	String screenFactoryGenericErrorCreateWidget(String errMsg);
-	@DefaultMessage("[screenFactory 002] - Can not found widgetFactory for type: ''{0}''.")
-	String screenFactoryWidgetFactoryNotFound(String type);
 	@DefaultMessage("[screenFactory 003] - The widget ''{0}'' is a layout panel that does not have its dimensions defined. Explicity define it, or append it directly on body element.")
 	String screenFactoryLayoutPanelWithoutSize(String widgetId);
-	@DefaultMessage("[screenFactory 004] - Crux Meta Data contains an invalid meta element (without type attribute).")
-	String screenFactoryMetaElementDoesNotContainsType();
 	
 	// screen
 	@DefaultMessage("[screen 001] - The id attribute is required for CRUX Screens.")
 	String screenFactoryScreenIdRequired();
 
 	//  widget
-	@DefaultMessage("[widget 001] - The id attribute is required for CRUX widgets.")
-	String screenFactoryWidgetIdRequired();
 	@DefaultMessage("[widget 002] - The widget ''{0}'' does not implement HasWidgets and can not contains any other widget.")
 	String screenFactoryInvalidWidgetParent(String widgetId);
-	@DefaultMessage("[widget 003] - Can not create widget ''{0}''. Verify the widget type.")
-	String screenFactoryErrorCreateWidget(String widgetId);
-	@DefaultMessage("[widget 004] - The element must contain at least one child.")
-	String widgetFactoryEnsureChildrenSpansEmpty();
 	@DefaultMessage("[widget 005] - The element does not represents a widget.")
 	String widgetFactoryEnsureWidgetFail();
 	@DefaultMessage("[widget 006] - The element is not a span.")
 	String widgetFactoryEnsureSpanFail();
-	@DefaultMessage("[widget 008] - The element must contain a text node child.")
-	String widgetFactoryEnsureTextChildEmpty();
-	@DefaultMessage("[widget 008] - The element must contain an inner HTML.")
-	String widgetFactoryEnsureHtmlChildEmpty();
 	
 	@DefaultMessage("[callback 001] - An Invalid controller was passed to AsyncCallbackAdapter.")
 	String asyncCallbackInvalidHandlerError();
 
 	@DefaultMessage("[screen 001] - An Invalid object was passed to update screen or DTOs.")
 	String screenInvalidObjectError();
+	@DefaultMessage("[screen 002] - Creating the view for screen {0}.")
+	String screenFactoryCreatingView(String identifier);
 
 	@DefaultMessage("[moduleComunication 001] - Type ''{0}'' can not be shared between modules. Only primitives (and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes implementing CruxSerializable can be used.")
 	String moduleComunicationInvalidParamType(String name);
@@ -108,4 +94,5 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("[crux 001] - Crux Engine is already initialized.")
 	String cruxAlreadyInitializedError();
+
 }

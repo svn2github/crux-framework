@@ -45,11 +45,9 @@ public abstract class AbstractProxyCreator
     }
 	
 	/**
-	 * Creates the cross document proxy.
+	 * Creates the proxy.
 	 * 
-	 * @param logger
-	 * @param context
-	 * @return a proxy class for cross document invoking.
+	 * @return a proxy class name .
 	 * @throws CruxGeneratorException 
 	 */
 	public String create() throws CruxGeneratorException

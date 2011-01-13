@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -23,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasWidgetsFactory <T extends Widget, C extends WidgetFactoryContext>
+public interface HasWidgetsFactory <T extends Widget, C extends WidgetCreatorContext>
 {
 	/**
 	 * @param parent

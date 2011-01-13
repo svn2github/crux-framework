@@ -28,8 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.client.screen.WidgetContainer;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 
@@ -87,7 +87,7 @@ public class WidgetConfig
 			{
 				try 
 				{
-					Class<? extends WidgetFactory<?,?>> factoryClass = (Class<? extends WidgetFactory<?,?>>)Class.forName(name);
+					Class<? extends WidgetCreator<?,?>> factoryClass = (Class<? extends WidgetCreator<?,?>>)Class.forName(name);
 					br.com.sysmap.crux.core.client.declarative.DeclarativeFactory annot = 
 						factoryClass.getAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
 					if (!registeredLibraries.containsKey(annot.library()))

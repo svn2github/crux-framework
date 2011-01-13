@@ -22,5 +22,4 @@ package br.com.sysmap.crux.core.client.config;
 public interface CruxClientConfig
 {
 	boolean enableDebugForURL(String url);
-	boolean renderWidgetsWithIDs();
 }

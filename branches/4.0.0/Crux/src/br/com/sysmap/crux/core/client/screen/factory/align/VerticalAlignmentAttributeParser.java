@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.screen.factory.align;
 
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class VerticalAlignmentAttributeParser<C extends WidgetFactoryContext> implements AttributeParser<C>
+public class VerticalAlignmentAttributeParser<C extends WidgetCreatorContext> implements AttributeProcessor<C>
 {
 	public void processAttribute(C context, String propertyValue) 
 	{

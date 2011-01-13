@@ -31,9 +31,8 @@ import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.LazyPanelFactory.LazyPanelWrappingType;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -43,9 +42,7 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
@@ -53,7 +50,6 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -736,16 +732,6 @@ public class Screen
 	}
 	
 	/**
-	 * 
-	 * @param handler
-	 * @return
-	 */
-	static void addScreenLoadHandler(ScreenLoadHandler handler) 
-	{
-		Screen.get().addLoadHandler(handler);
-	}
-	
-	/**
 	 * @param call
 	 * @param serializedData
 	 * @return
@@ -835,15 +821,6 @@ public class Screen
 		}
 		return id;
 	}
-	
-	/**
-	 * Adds an event handler that is called only once, when the screen is loaded
-	 * @param handler
-	 */
-	protected void addLoadHandler(final ScreenLoadHandler handler) 
-	{
-		ScreenFactory.getInstance().addLoadHandler(handler);
-	}	
 	
 	/**
 	 * 
@@ -1064,10 +1041,10 @@ public class Screen
 	 */
 	private Widget getRuntimeDependencyWidget(String id, Widget widget, String lazyPanelId)
     {
-	    if (LazyPanelFactory.isWholeWidgetLazyWrapper(lazyPanelId))  
+	    if (ViewFactoryUtils.isWholeWidgetLazyWrapper(lazyPanelId))  
 	    {
-	    	lazyPanelId = LazyPanelFactory.getWrappedWidgetIdFromLazyPanel(lazyPanelId); 
-	    	lazyPanelId = LazyPanelFactory.getLazyPanelId(lazyPanelId, LazyPanelWrappingType.wrapChildren);
+	    	lazyPanelId = ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(lazyPanelId); 
+	    	lazyPanelId = ViewFactoryUtils.getLazyPanelId(lazyPanelId, LazyPanelWrappingType.wrapChildren);
 	    	if (widgets.containsKey(lazyPanelId))  
 	    	{
 	    		/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapChildren
@@ -1080,7 +1057,7 @@ public class Screen
 	    {
 	    	/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
 	    	 lazy instantiation.*/
-	    	lazyPanelId = LazyPanelFactory.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
+	    	lazyPanelId = ViewFactoryUtils.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
 	    	if (widgets.containsKey(lazyPanelId))  
 	    	{
 	    		lazyWidgets.put(id, lazyPanelId);
@@ -1147,7 +1124,7 @@ public class Screen
 		LazyPanel lazyPanel = (LazyPanel) widgets.get(widgetId);
 		if (lazyPanel == null)
 		{
-			if (getWidget(LazyPanelFactory.getWrappedWidgetIdFromLazyPanel(widgetId)) != null)
+			if (getWidget(ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(widgetId)) != null)
 			{
 				lazyPanel = (LazyPanel) widgets.get(widgetId);
 			}
@@ -1202,95 +1179,6 @@ public class Screen
 		}
 		
 		return result.iterator();
-	}
-
-	/**
-	 * 
-	 * @param element
-	 */
-	protected void parse(CruxMetaDataElement metaElem) 
-	{
-		String title = metaElem.getProperty("title");
-		if (title != null && title.length() >0)
-		{
-			Window.setTitle(ScreenFactory.getInstance().getDeclaredMessage(title));
-		}
-
-		this.declaredControllers = extractReferencedResourceList(metaElem, "useController");
-		this.declaredDataSources = extractReferencedResourceList(metaElem, "useDataSource");
-		this.declaredSerializables = extractReferencedResourceList(metaElem, "useSerializable");
-		this.declaredFormatters = extractReferencedResourceList(metaElem, "useFormatter");
-		
-		String historyProperty = metaElem.getProperty("onHistoryChanged");
-		if (historyProperty != null)
-		{
-			final Event eventHistory = Events.getEvent("onHistoryChanged", historyProperty);
-			if (eventHistory != null)
-			{
-				addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){
-					public void onValueChange(ValueChangeEvent<String> historyEvent)
-					{
-						Events.callEvent(eventHistory, historyEvent);
-					}
-				});
-			}
-		}
-		String closingProperty = metaElem.getProperty("onClosing");
-		if (closingProperty != null)
-		{
-			final Event eventClosing = Events.getEvent("onClosing", closingProperty);
-			if (eventClosing != null)
-			{
-				addWindowClosingHandler(new Window.ClosingHandler(){
-					public void onWindowClosing(ClosingEvent closingEvent) 
-					{
-						Events.callEvent(eventClosing, closingEvent);
-					}
-				});
-			}
-		}
-		String closeProperty = metaElem.getProperty("onClose");
-		if (closeProperty != null)
-		{
-			final Event eventClose = Events.getEvent("onClose", closeProperty);
-			if (eventClose != null)
-			{
-				addWindowCloseHandler(new CloseHandler<Window>(){
-					public void onClose(CloseEvent<Window> event) 
-					{
-						Events.callEvent(eventClose, event);				
-					}
-				});
-			}
-		}
-		String resizedProperty = metaElem.getProperty("onResized");
-		if (resizedProperty != null)
-		{
-			final Event eventResized = Events.getEvent("onResized",resizedProperty);
-			if (eventResized != null)
-			{
-				addWindowResizeHandler(new ResizeHandler(){
-					public void onResize(ResizeEvent event) 
-					{
-						Events.callEvent(eventResized, event);
-					}
-				});
-			}
-		}
-		String loadProperty = metaElem.getProperty("onLoad");
-		if (loadProperty != null)
-		{
-			final Event eventLoad = Events.getEvent("onLoad", loadProperty);
-			if (eventLoad != null)
-			{
-				addLoadHandler(new ScreenLoadHandler(){
-					public void onLoad(ScreenLoadEvent screenLoadEvent) 
-					{
-						Events.callEvent(eventLoad, screenLoadEvent);
-					}
-				});
-			}
-		}
 	}
 
 	/**
@@ -1420,26 +1308,6 @@ public class Screen
 			return a?a:null;
 		};
 	}-*/;
-	
-	/**
-	 * @param element
-	 * @param attributeName
-	 * @return
-	 */
-	private String[] extractReferencedResourceList(CruxMetaDataElement metaElem, String attributeName)
-	{
-		String attr = metaElem.getProperty(attributeName);
-		if (!StringUtils.isEmpty(attr))
-		{
-			String[] result = attr.split(",");
-			for (int i = 0; i < result.length; i++)
-			{
-				result[i] = result[i].trim();
-			}
-			return result;
-		}
-		return new String[0];
-	}
 	
 	/**
 	 * @param widgetId

@@ -164,7 +164,7 @@ public interface GeneratorMessages
 	String screenFactoryWidgetIdRequired();
 
 	@DefaultServerMessage("[screenFactory 002] - Can not create widget {0}. Verify the widget type.")
-	String screenFactoryErrorCreateWidget(String widgetId);
+	String screenFactoryErrorCreatingWidget(String widgetId);
 
 	@DefaultServerMessage("[screenFactory 003] - Error creating widget. Duplicated identifier: {0}.")
 	String screenFactoryErrorDuplicatedWidget(String widgetId);
@@ -187,23 +187,23 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[screenFactory 009] - Error parsing screen metaData. Screen {0}. ")
 	String screenFactoryErrorParsingScreenMetaData(String screenId);
 
+	@DefaultServerMessage("[screenFactory 010] - Datasource {0}, declared on screen {1}, not found!")
+	String screenFactoryInvalidDataSource(String datasource, String screenId);
+	
+	@DefaultServerMessage("[screenFactory 011] - Formatter {0}, declared on screen {1}, not found!")
+	String screenFactoryInvalidFormatter(String formatter, String id);
+	
+	@DefaultServerMessage("[screenFactory 012] - Serializable {0}, declared on screen {1}, not found!")
+	String screenFactoryInvalidSerializable(String serializer, String id);
+	
+	@DefaultServerMessage("[screenFactory 013] - Controller {0}, declared on screen {1}, not found!")
+	String screenFactoryInvalidController(String handler, String id);
+
 	@DefaultServerMessage("[Screen 001] - Error setting property {0} for screen {1}.")
 	String screenPropertyError(String property, String screenId);
 	
 	@DefaultServerMessage("[generator 043] - Error for register client event handler. Error:{1}")
 	String errorGeneratingRegisteredController(String errMesg);
-
-	@DefaultServerMessage("[screenFactory 008] - Datasource {0}, declared on screen {1}, not found!")
-	String screenFactoryInvalidDataSource(String datasource, String screenId);
-
-	@DefaultServerMessage("[screenFactory 009] - Formatter {0}, declared on screen {1}, not found!")
-	String screenFactoryInvalidFormatter(String formatter, String id);
-
-	@DefaultServerMessage("[screenFactory 010] - Serializable {0}, declared on screen {1}, not found!")
-	String screenFactoryInvalidSerializable(String serializer, String id);
-
-	@DefaultServerMessage("[screenFactory 011] - Controller {0}, declared on screen {1}, not found!")
-	String screenFactoryInvalidController(String handler, String id);
 
 	@DefaultServerMessage("[generator 044] - Error generating invoker. Error:{0}")
 	String errorGeneratingInvokerWrapper(String localizedMessage);
@@ -235,4 +235,24 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 053] - Error generating widgetFactory. LazyCondition must declare one of properties : equals or notEquals")
 	String errorGeneratingWidgetFactoryInvalidLazyCondition();
 
+	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
+	String viewFactoryMetaElementDoesNotContainsType();
+
+	@DefaultServerMessage("[viewFactory 002] - Error Creating widget: {0}. See Log for more detail.")
+	String viewFactoryGenericErrorCreateWidget(String errMesg);
+
+	@DefaultServerMessage("[viewFactory 003] - Can not found widgetFactory for type: {0}.")
+	String viewFactoryWidgetFactoryNotFound(String widgetType);
+
+	@DefaultServerMessage("[viewFactory 004] - Error retrieveing widgetFactory for type {0}.")
+	String viewFactoryErrorRetrievingWidgetFactory(String widgetType);
+
+	@DefaultServerMessage("[viewFactory 005] - The element must contain at least one child.")
+	String widgetCreatorEnsureChildrenEmpty();
+
+	@DefaultServerMessage("[viewFactory 006] - The element must contain a text node child.")
+	String widgetCreatorEnsureTextChildEmpty();
+
+	@DefaultServerMessage("[viewFactory 007] - The element must contain an inner HTML.")
+	String widgetCreatorEnsureHtmlChildEmpty();
 }

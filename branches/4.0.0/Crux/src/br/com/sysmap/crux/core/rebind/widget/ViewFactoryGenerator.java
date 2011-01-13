@@ -23,16 +23,16 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
- * Generates a RegisteredWidgetFactories class.  
+ * Generates a ViewFactory class.  
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class RegisteredWidgetFactoriesGenerator extends AbstractGenerator
+public class ViewFactoryGenerator extends AbstractGenerator
 {
 	@Override
     protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf)
     {
-	    return new RegisteredWidgetFactoriesProxyCreator(logger, ctx);
+	    return new ViewFactoriesProxyCreator(logger, ctx);
     }
 }

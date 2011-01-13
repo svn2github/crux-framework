@@ -18,9 +18,9 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignmentAttributeParser;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -28,10 +28,10 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasVerticalAlignmentFactory<T extends HasVerticalAlignment, C extends WidgetFactoryContext>
+public interface HasVerticalAlignmentFactory<T extends HasVerticalAlignment, C extends WidgetCreatorContext>
 {
 	@TagAttributes({
-		@TagAttribute(value="verticalAlignment", type=VerticalAlignment.class, parser=VerticalAlignmentAttributeParser.class)
+		@TagAttribute(value="verticalAlignment", type=VerticalAlignment.class, processor=VerticalAlignmentAttributeParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
 }

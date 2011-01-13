@@ -16,35 +16,20 @@
 package br.com.sysmap.crux.core.client.screen;
 
 
-import com.google.gwt.event.shared.GwtEvent;
+import br.com.sysmap.crux.core.client.event.CruxEvent;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ScreenLoadEvent extends GwtEvent<ScreenLoadHandler>
+public class ScreenLoadEvent extends CruxEvent<Screen>
 {
-	protected static final Type<ScreenLoadHandler> TYPE = new Type<ScreenLoadHandler>();
-
 	
+	/**
+	 * Constructor
+	 */
 	protected ScreenLoadEvent()
 	{
+		super(Screen.get(), Screen.getId());
 	}
-	
-	@Override
-	protected void dispatch(ScreenLoadHandler handler)
-	{
-		handler.onLoad(this);
-	}
-
-	@Override
-	public Type<ScreenLoadHandler> getAssociatedType()
-	{
-		return TYPE;
-	}
-
-	public static <T> void fire(ScreenFactory source) 
-	{
-		source.fireEvent(new ScreenLoadEvent());
-	}	
 }

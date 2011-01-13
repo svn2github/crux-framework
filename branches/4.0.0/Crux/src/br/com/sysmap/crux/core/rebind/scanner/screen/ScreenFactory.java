@@ -236,7 +236,7 @@ public class ScreenFactory
 		widget = newWidget(elem, widgetId);
 		if (widget == null)
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId));
+			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId));
 		}
 		
 		screen.addWidget(widget);
@@ -279,7 +279,7 @@ public class ScreenFactory
             }
 			catch (JSONException e)
             {
-    			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId), e);
+    			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId), e);
             }
 		}
     }
@@ -379,7 +379,7 @@ public class ScreenFactory
 		} 
 		catch (Throwable e) 
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorCreateWidget(widgetId), e);
+			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId), e);
 		} 
 	}
 	
@@ -412,9 +412,9 @@ public class ScreenFactory
         {
 	        if(screenModule != null)
 	        {
-	        	screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule);
-	        	
 	        	JSONArray metaData = getMetaData(source, id);
+
+	        	screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule, metaData);
 	        	
 	        	int length = metaData.length();
 	        	for (int i = 0; i < length; i++) 

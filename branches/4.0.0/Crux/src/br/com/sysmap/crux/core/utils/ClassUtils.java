@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -304,7 +304,7 @@ public class ClassUtils
 	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
 	            {
 	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetFactoryContext.class.isAssignableFrom(paramClass))
+	            	if (WidgetCreatorContext.class.isAssignableFrom(paramClass))
 	            	{
 	            		return method;
 	            	}
@@ -328,7 +328,7 @@ public class ClassUtils
 	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
 	            {
 	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetFactoryContext.class.isAssignableFrom(paramClass))
+	            	if (WidgetCreatorContext.class.isAssignableFrom(paramClass))
 	            	{
 	            		return method;
 	            	}
@@ -349,7 +349,7 @@ public class ClassUtils
 		if (attributes == null)
 		{
 			Class<?> superClass = processorClass.getSuperclass();
-			if (superClass != null && !superClass.equals(WidgetFactory.class))
+			if (superClass != null && !superClass.equals(WidgetCreator.class))
 			{
 				attributes = getChildtrenAttributesAnnotation(superClass);
 			}

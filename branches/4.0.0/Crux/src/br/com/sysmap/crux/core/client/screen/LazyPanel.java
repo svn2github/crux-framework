@@ -20,7 +20,28 @@ package br.com.sysmap.crux.core.client.screen;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface LazyPanel
+public abstract class LazyPanel extends com.google.gwt.user.client.ui.LazyPanel
 {
-	void ensureWidget();
+	private boolean initialized = false;
+	private final String lazyId;
+
+	public LazyPanel(String lazyId)
+    {
+		this.lazyId = lazyId;
+    }
+	
+	/**
+	 * @see com.google.gwt.user.client.ui.LazyPanel#ensureWidget()
+	 */
+	@Override
+	public void ensureWidget()
+	{
+		if (!initialized)
+		{
+			ScreenFactory.getInstance().getScreen().cleanLazyDependentWidgets(lazyId);
+			initialized = true;
+		}
+		super.ensureWidget();
+	}
+
 }

@@ -18,9 +18,9 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.direction.DirectionEstimator;
 import br.com.sysmap.crux.core.client.screen.factory.direction.DirectionEstimatorAttributeParser;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.i18n.shared.HasDirectionEstimator;
 
@@ -28,11 +28,11 @@ import com.google.gwt.i18n.shared.HasDirectionEstimator;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasDirectionEstimatorFactory<T extends HasDirectionEstimator, C extends WidgetFactoryContext>
+public interface HasDirectionEstimatorFactory<T extends HasDirectionEstimator, C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="default", 
-			      parser=DirectionEstimatorAttributeParser.class)
+			      processor=DirectionEstimatorAttributeParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
 }

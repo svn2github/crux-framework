@@ -18,9 +18,9 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignmentAttributeParser;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
@@ -28,11 +28,11 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasHorizontalAlignmentFactory<T extends HasHorizontalAlignment, C extends WidgetFactoryContext>
+public interface HasHorizontalAlignmentFactory<T extends HasHorizontalAlignment, C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", 
-			      parser=HorizontalAlignmentAttributeParser.class)
+			      processor=HorizontalAlignmentAttributeParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
 }

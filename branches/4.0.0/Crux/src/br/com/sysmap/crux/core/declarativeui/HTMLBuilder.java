@@ -45,13 +45,13 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 
@@ -201,7 +201,7 @@ class HTMLBuilder
 						if (!StringUtils.isEmpty(childAttributes.tagName()))
 						{
 							parentPath = parentWidget+"_"+childAttributes.tagName();
-							if (WidgetFactory.class.isAssignableFrom(childAttributes.type()))
+							if (WidgetCreator.class.isAssignableFrom(childAttributes.type()))
 							{
 								DeclarativeFactory declarativeFactory = childAttributes.type().getAnnotation(DeclarativeFactory.class);
 								if (declarativeFactory != null)

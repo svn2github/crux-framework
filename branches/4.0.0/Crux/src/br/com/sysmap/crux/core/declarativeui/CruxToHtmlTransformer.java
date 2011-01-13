@@ -48,7 +48,7 @@ public class CruxToHtmlTransformer
 {
 	// Makes it easier to read the output files
 	private static boolean forceIndent = false;
-	private static String outputCharset = "UTF-8";
+	private static String outputCharset;
 
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
@@ -76,9 +76,8 @@ public class CruxToHtmlTransformer
 			Document source = loadCruxPage(file);
 			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, mustIndent());
 			htmlBuilder.build(screenId, source, buff);
-//			String result = new String(buff.toByteArray(), "UTF-8");
 			String result = buff.toString();
-			StreamUtils.write(new ByteArrayInputStream(result.getBytes()), out, false);
+			StreamUtils.write(new ByteArrayInputStream(result.getBytes(outputCharset)), out, false);
 		}
 		catch (Exception e)
 		{

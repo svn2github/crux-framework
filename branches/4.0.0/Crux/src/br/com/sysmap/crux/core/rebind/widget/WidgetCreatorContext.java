@@ -13,34 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen;
+package br.com.sysmap.crux.core.rebind.widget;
 
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-
-import com.google.gwt.user.client.ui.Widget;
+import org.json.JSONObject;
 
 /**
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public class WidgetFactoryContext
+public class WidgetCreatorContext
 {
-	private CruxMetaDataElement childElement;
-	private CruxMetaDataElement widgetElement;
-	private Widget widget;
+	private JSONObject childElement;
+	private JSONObject widgetElement;
+	private String widget;
 	private String widgetId;
 
-	public WidgetFactoryContext()
+	public WidgetCreatorContext()
 	{
 	}
-	public CruxMetaDataElement getWidgetElement()
+	public JSONObject getWidgetElement()
 	{
 		return widgetElement;
 	}
-	@SuppressWarnings("unchecked")
-	public <W extends Widget> W getWidget()
+	public String getWidget()
 	{
-		return (W) widget;
+		return widget;
 	}
 	public String getWidgetId()
 	{
@@ -48,25 +45,25 @@ public class WidgetFactoryContext
 	}
 	public String readWidgetProperty(String propertyName)
 	{
-		return widgetElement.getProperty(propertyName);
+        return widgetElement.optString(propertyName);
 	}
 	public String readChildProperty(String propertyName)
 	{
-		return childElement.getProperty(propertyName);
+		return childElement.optString(propertyName);
 	}	
-	public void setChildElement(CruxMetaDataElement childElement)
+	public void setChildElement(JSONObject childElement)
 	{
 		this.childElement = childElement;
 	}
-	public CruxMetaDataElement getChildElement()
+	public JSONObject getChildElement()
 	{
 		return childElement;
 	}
-	void setWidgetElement(CruxMetaDataElement widgetElement) 
+	void setWidgetElement(JSONObject widgetElement) 
 	{
 		this.widgetElement = widgetElement;
 	}
-	void setWidget(Widget widget) 
+	void setWidget(String widget) 
 	{
 		this.widget = widget;
 	}

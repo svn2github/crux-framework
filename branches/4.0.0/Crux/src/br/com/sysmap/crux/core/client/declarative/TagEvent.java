@@ -30,5 +30,5 @@ import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface TagEvent
 {
-	Class<? extends EvtBinder<?>> value();	
+	Class<? extends EvtBinder> value();	
 }

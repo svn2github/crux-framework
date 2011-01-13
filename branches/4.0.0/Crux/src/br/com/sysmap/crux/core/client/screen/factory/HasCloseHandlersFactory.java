@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.CloseEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 
@@ -27,7 +27,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasCloseHandlersFactory<T extends HasCloseHandlers<?>, C extends WidgetFactoryContext>
+public interface HasCloseHandlersFactory<T extends HasCloseHandlers<?>, C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(CloseEvtBind.class)

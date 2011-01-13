@@ -15,14 +15,15 @@
  */
 package br.com.sysmap.crux.core.client.event.bind;
 
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface EvtBinder<T>
+public interface EvtBinder
 {
-	void bindEvent(CruxMetaDataElement element, T widget);
+	void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue);
 	String getEventName();
 }

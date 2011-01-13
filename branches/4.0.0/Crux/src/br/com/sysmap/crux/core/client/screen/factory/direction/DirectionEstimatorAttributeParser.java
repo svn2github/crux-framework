@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.screen.factory.direction;
 
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.i18n.shared.AnyRtlDirectionEstimator;
 import com.google.gwt.i18n.shared.FirstStrongDirectionEstimator;
@@ -28,7 +28,7 @@ import com.google.gwt.i18n.shared.WordCountDirectionEstimator;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DirectionEstimatorAttributeParser<C extends WidgetFactoryContext> implements AttributeParser<C>
+public class DirectionEstimatorAttributeParser<C extends WidgetCreatorContext> implements AttributeProcessor<C>
 {
 	public void processAttribute(C context, String propertyValue) 
 	{

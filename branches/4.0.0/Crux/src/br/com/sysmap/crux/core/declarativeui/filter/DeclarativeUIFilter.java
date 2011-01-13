@@ -66,6 +66,10 @@ public class DeclarativeUIFilter extends CruxFilter
 					{
 						CruxToHtmlTransformer.setOutputCharset(charset);
 					}
+					else
+					{
+						throw new ServletException(messages.declarativeUIFilterRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
+					}
 
 					InputStream screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(screenId);
 					if (screenResource != null)

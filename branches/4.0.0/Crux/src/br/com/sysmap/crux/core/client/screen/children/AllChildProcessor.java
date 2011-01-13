@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.screen.children;
 
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,6 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AllChildProcessor<T extends Widget, C extends WidgetFactoryContext> extends WidgetChildProcessor<T, C>
+public abstract class AllChildProcessor<T extends Widget, C extends WidgetCreatorContext> extends WidgetChildProcessor<T, C>
 {
 }

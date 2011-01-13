@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.ValueChangeEvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 
@@ -27,7 +27,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasValueChangeHandlersFactory<T extends HasValueChangeHandlers<?>, C extends WidgetFactoryContext>
+public interface HasValueChangeHandlersFactory<T extends HasValueChangeHandlers<?>, C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(ValueChangeEvtBind.class)

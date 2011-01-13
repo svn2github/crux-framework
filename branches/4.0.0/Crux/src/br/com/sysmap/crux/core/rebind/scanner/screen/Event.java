@@ -21,4 +21,10 @@ public class Event extends br.com.sysmap.crux.core.client.event.Event
 	{
 		super(id, controller, method);
 	}
+	
+	@Override
+	public String toString()
+	{
+	    return getController()+"."+getMethod();
+	}
 }

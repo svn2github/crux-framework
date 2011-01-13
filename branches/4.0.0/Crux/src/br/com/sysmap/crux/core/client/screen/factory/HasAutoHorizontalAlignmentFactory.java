@@ -18,9 +18,9 @@ package br.com.sysmap.crux.core.client.screen.factory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.align.AutoHorizontalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.AutoHorizontalAlignmentAttributeParser;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
 
@@ -28,12 +28,12 @@ import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAutoHorizontalAlignmentFactory<T extends HasAutoHorizontalAlignment, C extends WidgetFactoryContext> 
+public interface HasAutoHorizontalAlignmentFactory<T extends HasAutoHorizontalAlignment, C extends WidgetCreatorContext> 
 extends HasHorizontalAlignmentFactory<T, C>
 {
 	@TagAttributes({
 		@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 
-			      parser=AutoHorizontalAlignmentAttributeParser.class)
+			      processor=AutoHorizontalAlignmentAttributeParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
 }

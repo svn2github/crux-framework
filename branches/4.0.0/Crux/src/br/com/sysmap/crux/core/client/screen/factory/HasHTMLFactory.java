@@ -17,9 +17,9 @@ package br.com.sysmap.crux.core.client.screen.factory;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -27,10 +27,10 @@ import com.google.gwt.user.client.ui.HasHTML;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasHTMLFactory<T extends HasHTML, C extends WidgetFactoryContext> extends HasTextFactory<T, C>
+public interface HasHTMLFactory<T extends HasHTML, C extends WidgetCreatorContext> extends HasTextFactory<T, C>
 {
 	@TagAttributes({
-		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, parser=HTMLParser.class)
+		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, processor=HTMLParser.class)
 	})	
 	void processAttributes(C context) throws InterfaceConfigException;
 	
@@ -38,9 +38,9 @@ public interface HasHTMLFactory<T extends HasHTML, C extends WidgetFactoryContex
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	class HTMLParser implements AttributeParser<WidgetFactoryContext>
+	class HTMLParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue) 
+		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
 		{
 			HasHTML widget = (HasHTML)context.getWidget();
 			String text = context.readWidgetProperty("text");

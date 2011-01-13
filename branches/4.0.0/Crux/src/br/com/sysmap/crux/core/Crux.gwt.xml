@@ -20,12 +20,12 @@
 	</generate-with>
 
 	<!-- Specify the generator for registered widgets.     -->
-	<generate-with class="br.com.sysmap.crux.core.rebind.widget.RegisteredWidgetFactoriesGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.RegisteredWidgetFactories" />
+	<generate-with class="br.com.sysmap.crux.core.rebind.widget.ViewFactoryGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ViewFactory" />
 	</generate-with>
 	
 	<generate-with class="br.com.sysmap.crux.core.rebind.widget.WidgetFactoryGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.WidgetFactory" />
+		<when-type-assignable class="br.com.sysmap.crux.core.rebind.widget.WidgetFactory" />
 	</generate-with>
 
 	<!-- Specify the generator for registered formatters.     -->

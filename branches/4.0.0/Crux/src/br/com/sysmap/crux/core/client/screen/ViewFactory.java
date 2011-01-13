@@ -15,14 +15,18 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
-import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Interface for keep the registered widgets
- * @author Thiago
+ * Create the view, based on the {@code .crux.xml} page.  
+ * 
+ * @author Thiago da Rosa de Bustamante
  *
  */
-public interface RegisteredWidgetFactories 
+public interface ViewFactory 
 {
-	WidgetFactory<? extends Widget, ? extends WidgetFactoryContext> getWidgetFactory(String type);
+	/**
+	 * Create the view for the informed screenId
+	 * @param screenId - the page 
+	 */
+	void createView(String screenId);
 }
