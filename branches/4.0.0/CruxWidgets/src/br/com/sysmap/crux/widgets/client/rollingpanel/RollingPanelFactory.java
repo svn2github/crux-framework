@@ -24,8 +24,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
@@ -36,11 +34,13 @@ import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
-class RollingPanelContext extends WidgetFactoryContext
+class RollingPanelContext extends WidgetCreatorContext
 {
 
 	public String verticalAlignment;
@@ -55,7 +55,7 @@ class RollingPanelContext extends WidgetFactoryContext
  *
  */
 @DeclarativeFactory(id="rollingPanel", library="widgets")
-public class RollingPanelFactory extends WidgetFactory<RollingPanel, RollingPanelContext>
+public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPanelContext>
        implements HasHorizontalAlignmentFactory<RollingPanel, RollingPanelContext>, 
                   HasVerticalAlignmentFactory<RollingPanel, RollingPanelContext>
 {

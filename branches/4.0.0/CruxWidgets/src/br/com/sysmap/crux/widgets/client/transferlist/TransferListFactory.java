@@ -21,8 +21,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
 
@@ -31,7 +31,7 @@ import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="transferList", library="widgets")
-public class TransferListFactory extends CompositeFactory<TransferList, WidgetFactoryContext>
+public class TransferListFactory extends CompositeFactory<TransferList, WidgetCreatorContext>
 {
 	@Override
 	public TransferList instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -49,7 +49,7 @@ public class TransferListFactory extends CompositeFactory<TransferList, WidgetFa
 		@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
 		@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,7 +59,7 @@ public class TransferListFactory extends CompositeFactory<TransferList, WidgetFa
 	@TagEvents({
 		@TagEvent(BeforeMoveItemsEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}

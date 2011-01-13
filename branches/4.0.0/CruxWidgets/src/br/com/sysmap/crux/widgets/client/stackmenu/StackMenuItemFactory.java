@@ -25,19 +25,19 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * Factory for Stack Menu
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="stackMenuItem", library="widgets")
-public class StackMenuItemFactory extends WidgetFactory<StackMenuItem, WidgetFactoryContext>
-       implements HasClickHandlersFactory<StackMenuItem, WidgetFactoryContext>
+public class StackMenuItemFactory extends WidgetCreator<StackMenuItem, WidgetCreatorContext>
+       implements HasClickHandlersFactory<StackMenuItem, WidgetCreatorContext>
 {
 	@Override
 	public StackMenuItem instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -55,7 +55,7 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem, WidgetFac
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="label", supportsI18N=true, required=true)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -64,13 +64,13 @@ public class StackMenuItemFactory extends WidgetFactory<StackMenuItem, WidgetFac
 	@TagChildren({
 		@TagChild(StackMenuItemProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
-	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuItem, WidgetFactoryContext>
+	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuItem, WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
 		{
 			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
 			StackMenuItem rootWidget = context.getWidget();

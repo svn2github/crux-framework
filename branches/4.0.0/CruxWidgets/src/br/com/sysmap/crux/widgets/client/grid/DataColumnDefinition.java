@@ -22,12 +22,14 @@ public class DataColumnDefinition extends ColumnDefinition
 {
 	private String formatter;
 	private boolean wrapLine;
+	private boolean sortable;
 
-	public DataColumnDefinition(String label, String width, String formatter, boolean visible, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public DataColumnDefinition(String label, String width, String formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		super(label, width, visible, horizontalAlign, verticalAlign);
 		this.formatter = formatter;
 		this.wrapLine = wrapLine;
+		this.sortable = sortable;
 	}
 
 	/**
@@ -45,4 +47,14 @@ public class DataColumnDefinition extends ColumnDefinition
 	{
 		return wrapLine;
 	}
+
+	public boolean isSortable()
+    {
+    	return sortable;
+    }
+
+	public void setSortable(boolean sortable)
+    {
+    	this.sortable = sortable;
+    }
 }

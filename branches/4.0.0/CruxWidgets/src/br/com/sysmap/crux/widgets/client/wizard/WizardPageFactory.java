@@ -28,11 +28,11 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.core.client.GWT;
 
@@ -41,7 +41,7 @@ import com.google.gwt.core.client.GWT;
  *
  */
 @DeclarativeFactory(id="wizardPage", library="widgets")
-public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactoryContext>
+public class WizardPageFactory extends WidgetCreator<WizardPage<?>, WidgetCreatorContext>
 {
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 
@@ -58,7 +58,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactor
 		@TagAttributeDeclaration(value="wizardId", required=true),
 		@TagAttributeDeclaration("wizardContextObject")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -68,7 +68,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactor
 		@TagEvent(EnterEvtBind.class),
 		@TagEvent(LeaveEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	    super.processEvents(context);
 	}
@@ -77,22 +77,22 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactor
 	@TagChildren({
 		@TagChild(CommandsProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 	}
 	
 	@TagChildAttributes(tagName="commands", minOccurs="0")
-	public static class CommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetFactoryContext>
+	public static class CommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WizardCommandsProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
-	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetFactoryContext>
+	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardPage<?>, WidgetCreatorContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -104,7 +104,7 @@ public class WizardPageFactory extends WidgetFactory<WizardPage<?>, WidgetFactor
 			@TagAttributeDeclaration("height"),
 			@TagAttributeDeclaration(value="onCommand", required=true)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
 		{
 			assert(context.getChildElement().containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
 			String id =context.getChildElement().getProperty("id");

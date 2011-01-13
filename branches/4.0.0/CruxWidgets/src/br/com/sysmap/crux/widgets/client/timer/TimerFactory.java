@@ -24,10 +24,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvtBind;
 
 /**
@@ -35,10 +35,10 @@ import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="timer", library="widgets")
-public class TimerFactory extends WidgetFactory<Timer, WidgetFactoryContext>
+public class TimerFactory extends WidgetCreator<Timer, WidgetCreatorContext>
 {
 	/**
-	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
+	 * @see br.com.sysmap.crux.core.rebind.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	public Timer instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
 	{
@@ -76,7 +76,7 @@ public class TimerFactory extends WidgetFactory<Timer, WidgetFactoryContext>
 	@TagAttributes({
 		@TagAttribute(value="pattern")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -85,17 +85,17 @@ public class TimerFactory extends WidgetFactory<Timer, WidgetFactoryContext>
 	@TagChildren({
 		@TagChild(TimerChildrenProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
-	public static class TimerChildrenProcessor extends WidgetChildProcessor<Timer, WidgetFactoryContext>
+	public static class TimerChildrenProcessor extends WidgetChildProcessor<Timer, WidgetCreatorContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
 			@TagAttributeDeclaration(value="execute", required=true)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 		{
 			Timer rootWidget = context.getWidget();
 			TimeoutEvtBind.bindEventForChildTag(context.getChildElement(), rootWidget);

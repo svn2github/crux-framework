@@ -31,14 +31,14 @@ import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.FinishEvtBind;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
@@ -48,7 +48,7 @@ import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 
-class WizardContext extends WidgetFactoryContext
+class WizardContext extends WidgetCreatorContext
 {
 
 	public String stepId;
@@ -64,7 +64,7 @@ class WizardContext extends WidgetFactoryContext
  *
  */
 @DeclarativeFactory(id="wizard", library="widgets")
-public class WizardFactory extends WidgetFactory<Wizard<?>, WizardContext>
+public class WizardFactory extends WidgetCreator<Wizard<?>, WizardContext>
 {
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);
 	

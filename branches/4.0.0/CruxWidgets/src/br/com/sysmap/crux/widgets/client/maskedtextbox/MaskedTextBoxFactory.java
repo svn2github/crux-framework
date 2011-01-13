@@ -21,11 +21,9 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
@@ -36,6 +34,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFacto
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**
@@ -43,12 +43,12 @@ import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
  *
  */
 @DeclarativeFactory(id="maskedTextBox", library="widgets")
-public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox, WidgetFactoryContext> 
-       implements HasDirectionFactory<MaskedTextBox, WidgetFactoryContext>, HasNameFactory<MaskedTextBox, WidgetFactoryContext>, 
-                  HasChangeHandlersFactory<MaskedTextBox, WidgetFactoryContext>, HasValueChangeHandlersFactory<MaskedTextBox, WidgetFactoryContext>,
-                  HasClickHandlersFactory<MaskedTextBox, WidgetFactoryContext>, HasAllFocusHandlersFactory<MaskedTextBox, WidgetFactoryContext>,
-                  HasAllKeyHandlersFactory<MaskedTextBox, WidgetFactoryContext>, HasAllMouseHandlersFactory<MaskedTextBox, WidgetFactoryContext>, 
-                  HasDoubleClickHandlersFactory<MaskedTextBox, WidgetFactoryContext>
+public class MaskedTextBoxFactory extends WidgetCreator<MaskedTextBox, WidgetCreatorContext> 
+       implements HasDirectionFactory<MaskedTextBox, WidgetCreatorContext>, HasNameFactory<MaskedTextBox, WidgetCreatorContext>, 
+                  HasChangeHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasValueChangeHandlersFactory<MaskedTextBox, WidgetCreatorContext>,
+                  HasClickHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasAllFocusHandlersFactory<MaskedTextBox, WidgetCreatorContext>,
+                  HasAllKeyHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasAllMouseHandlersFactory<MaskedTextBox, WidgetCreatorContext>, 
+                  HasDoubleClickHandlersFactory<MaskedTextBox, WidgetCreatorContext>
 {
 	@Override
 	public MaskedTextBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -73,12 +73,12 @@ public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox, WidgetFac
 		@TagAttribute(value="maxLength", type=Integer.class),
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class),
-		@TagAttribute(value="value", parser=ValueAttributeParser.class)
+		@TagAttribute(value="value", processor=ValueAttributeParser.class)
 	})
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="formatter", required=true)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -87,9 +87,9 @@ public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox, WidgetFac
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class ValueAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class ValueAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue)
+		public void processAttribute(WidgetCreatorContext context, String propertyValue)
         {
 			MaskedTextBox widget = context.getWidget();
 			widget.setUnformattedValue(widget.getFormatter().unformat(propertyValue));

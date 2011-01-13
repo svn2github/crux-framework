@@ -25,26 +25,30 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class MaskedTextBoxBaseFormatter implements MaskedFormatter
 {
-	private MaskedInput maskedInput;
-
 	public void applyMask(Widget widget)
 	{
 		if (widget instanceof MaskedTextBox)
 		{
-			maskedInput = new MaskedInput((MaskedTextBox) widget, getMask(), getPlaceHolder());
+			((MaskedTextBox) widget).setMaskedInput(new MaskedInput((MaskedTextBox) widget, getMask(), getPlaceHolder()));
 		}		
 	}
 
 	public void removeMask(Widget widget)
 	{
-		if (maskedInput != null && maskedInput.getTextBox() != null && maskedInput.getTextBox().equals(widget));
+		if (widget instanceof MaskedTextBox)
 		{
-			maskedInput.removeMask();
+			MaskedTextBox maskedTxt = (MaskedTextBox) widget;
+			
+			MaskedInput maskedInput = maskedTxt.getMaskedInput();
+			if (maskedInput != null && maskedInput.getTextBox() != null && maskedInput.getTextBox().equals(widget))
+			{
+				maskedInput.removeMask();
+			}
 		}
 	}
 	
 	protected char getPlaceHolder()
 	{
 		return '_';
-	}	
+	}
 }

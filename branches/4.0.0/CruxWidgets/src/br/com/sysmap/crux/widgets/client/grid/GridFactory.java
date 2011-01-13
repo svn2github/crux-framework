@@ -27,12 +27,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
@@ -41,6 +39,8 @@ import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.BeforeRowSelectEvtBind;
 import br.com.sysmap.crux.widgets.client.event.row.RowEventsBind.RowClickEvtBind;
@@ -55,12 +55,12 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="grid", library="widgets")
-public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
+public class GridFactory extends WidgetCreator<Grid, WidgetCreatorContext>
 {
 	/**
 	 * @param cellSpacing 
 	 * @param autoLoad 
-	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
+	 * @see br.com.sysmap.crux.core.rebind.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	public Grid instantiateWidget(CruxMetaDataElement gridElem, String widgetId) throws InterfaceConfigException
 	{
@@ -162,12 +162,12 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 	/**
 	 * @author Gesse Dafe
 	 */
-	public static class DataSourceAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class DataSourceAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.client.screen.AttributeParser#processAttribute(br.com.sysmap.crux.core.client.screen.WidgetFactoryContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.client.screen.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
 		 */
-		public void processAttribute(WidgetFactoryContext context, String propertyValue)
+		public void processAttribute(WidgetCreatorContext context, String propertyValue)
 		{
 			String dataSourceName = context.readWidgetProperty("dataSource");
 			
@@ -255,6 +255,7 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 				{
 					String width = colElem.getProperty("width");
 					String strVisible = colElem.getProperty("visible");
+					String strSortable = colElem.getProperty("sortable");					
 					String strWrapLine = colElem.getProperty("wrapLine");
 					String label = colElem.getProperty("label");
 					String key = colElem.getProperty("key");
@@ -263,6 +264,7 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 					String vAlign = colElem.getProperty("verticalAlignment");
 
 					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
+					boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
 					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
 					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
 					label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
@@ -277,6 +279,7 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 								width, 
 								formatter, 
 								visible,
+								sortable, 
 								wrapLine,
 								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
 								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
@@ -318,9 +321,9 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
 	})
 	@TagAttributes({
-		@TagAttribute(value="dataSource", parser=DataSourceAttributeParser.class)
+		@TagAttribute(value="dataSource", processor=DataSourceAttributeParser.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -332,7 +335,7 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 		@TagEvent(RowRenderEvtBind.class),
 		@TagEvent(BeforeRowSelectEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
@@ -341,28 +344,29 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 	@TagChildren({
 		@TagChild(value=ColumnProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	
 	@TagChildAttributes(maxOccurs="unbounded")
-	public static class ColumnProcessor extends ChoiceChildProcessor<Grid, WidgetFactoryContext>
+	public static class ColumnProcessor extends ChoiceChildProcessor<Grid, WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(DataColumnProcessor.class),
 			@TagChild(WidgetColumnProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 
 	
 	@TagChildAttributes(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class DataColumnProcessor extends WidgetChildProcessor<Grid, WidgetFactoryContext>
+	public static class DataColumnProcessor extends WidgetChildProcessor<Grid, WidgetCreatorContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("width"),
 			@TagAttributeDeclaration(value="visible", type=Boolean.class),
+			@TagAttributeDeclaration(value="sortable", type=Boolean.class, defaultValue="true"),
 			@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
 			@TagAttributeDeclaration("label"),
 			@TagAttributeDeclaration(value="key", required=true),
@@ -370,11 +374,11 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 
 	@TagChildAttributes(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class WidgetColumnProcessor extends WidgetChildProcessor<Grid, WidgetFactoryContext>
+	public static class WidgetColumnProcessor extends WidgetChildProcessor<Grid, WidgetCreatorContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -388,8 +392,8 @@ public class GridFactory extends WidgetFactory<Grid, WidgetFactoryContext>
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	}
 	
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<Grid, WidgetFactoryContext>{}
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<Grid, WidgetCreatorContext>{}
 }

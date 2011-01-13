@@ -73,7 +73,24 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	private boolean masked;
 	private boolean filtered;
 	protected TextBox textBox;
+	private MaskedInput maskedInput;
 	
+	/**
+	 * @return
+	 */
+	MaskedInput getMaskedInput()
+    {
+    	return maskedInput;
+    }
+
+	/**
+	 * @param maskedInput
+	 */
+	void setMaskedInput(MaskedInput maskedInput)
+    {
+    	this.maskedInput = maskedInput;
+    }
+
 	/**
 	 * 
 	 * @param element

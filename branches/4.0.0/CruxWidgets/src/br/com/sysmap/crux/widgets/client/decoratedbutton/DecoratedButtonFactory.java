@@ -17,9 +17,9 @@ package br.com.sysmap.crux.widgets.client.decoratedbutton;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.FocusWidgetFactory;
 
 /**
@@ -27,7 +27,7 @@ import br.com.sysmap.crux.gwt.client.FocusWidgetFactory;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="decoratedButton", library="widgets")
-public class DecoratedButtonFactory extends FocusWidgetFactory<DecoratedButton, WidgetFactoryContext> implements HasTextFactory<DecoratedButton, WidgetFactoryContext>
+public class DecoratedButtonFactory extends FocusWidgetFactory<DecoratedButton, WidgetCreatorContext> implements HasTextFactory<DecoratedButton, WidgetCreatorContext>
 {
 	@Override
 	public DecoratedButton instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException

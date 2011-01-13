@@ -18,13 +18,13 @@ package br.com.sysmap.crux.widgets.client.event.openclose;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasBeforeCloseHandlersFactory<T extends HasBeforeCloseHandlers, C extends WidgetFactoryContext>
+public interface HasBeforeCloseHandlersFactory<T extends HasBeforeCloseHandlers, C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(BeforeCloseEvtBind.class)

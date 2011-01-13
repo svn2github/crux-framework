@@ -29,12 +29,11 @@ import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyWidget;
@@ -42,12 +41,13 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
 import com.google.gwt.user.client.ui.Widget;
 
-class RollingTabPanelContext extends WidgetFactoryContext
+class RollingTabPanelContext extends WidgetCreatorContext
 {
 
 	public CruxMetaDataElement tabElement;
@@ -80,7 +80,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel, RollingTabPanelContext>
 	
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, parser=VisibleTabAttributeParser.class)
+		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
 	public void processAttributes(RollingTabPanelContext context) throws InterfaceConfigException
 	{
@@ -91,7 +91,7 @@ HasBeforeSelectionHandlersFactory<RollingTabPanel, RollingTabPanelContext>
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeParser<RollingTabPanelContext>
+	public static class VisibleTabAttributeParser implements AttributeProcessor<RollingTabPanelContext>
 	{
 		public void processAttribute(RollingTabPanelContext context, final String propertyValue)
         {

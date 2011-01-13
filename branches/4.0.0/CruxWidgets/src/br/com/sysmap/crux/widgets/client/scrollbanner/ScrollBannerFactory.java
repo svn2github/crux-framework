@@ -22,17 +22,17 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * Factory for Scroll Banner widget
  * @author Gesse S. F. Dafe
  */
 @br.com.sysmap.crux.core.client.declarative.DeclarativeFactory(id="scrollBanner", library="widgets")
-public class ScrollBannerFactory extends WidgetFactory<ScrollBanner, WidgetFactoryContext>
+public class ScrollBannerFactory extends WidgetCreator<ScrollBanner, WidgetCreatorContext>
 {
 	@Override
 	public ScrollBanner instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -50,7 +50,7 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner, WidgetFacto
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("messageScrollingPeriod")
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -59,13 +59,13 @@ public class ScrollBannerFactory extends WidgetFactory<ScrollBanner, WidgetFacto
 	@TagChildren({
 		@TagChild(MessageProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
-	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner, WidgetFactoryContext>
+	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner, WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 		{
 			String message = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			ScrollBanner rootWidget = context.getWidget();

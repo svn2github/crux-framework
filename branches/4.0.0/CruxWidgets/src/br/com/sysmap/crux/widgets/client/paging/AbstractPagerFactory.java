@@ -23,9 +23,9 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.paging.PageEvtBind;
 
@@ -34,10 +34,10 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Gesse S. F. Dafe
  */
-public abstract class AbstractPagerFactory<T extends AbstractPager> extends WidgetFactory<T, WidgetFactoryContext>
+public abstract class AbstractPagerFactory<T extends AbstractPager> extends WidgetCreator<T, WidgetCreatorContext>
 {
 	/**
-	 * @see br.com.sysmap.crux.core.client.screen.WidgetFactory#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
+	 * @see br.com.sysmap.crux.core.rebind.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	public T instantiateWidget(CruxMetaDataElement elem, String widgetId) throws InterfaceConfigException
 	{
@@ -56,7 +56,7 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 		@TagAttributeDeclaration("pageable"),
 		@TagAttributeDeclaration(value="enabled", type=Boolean.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	
@@ -98,7 +98,7 @@ public abstract class AbstractPagerFactory<T extends AbstractPager> extends Widg
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onPage")
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		CruxMetaDataElement element = context.getWidgetElement();
 		T widget = (T)context.getWidget();

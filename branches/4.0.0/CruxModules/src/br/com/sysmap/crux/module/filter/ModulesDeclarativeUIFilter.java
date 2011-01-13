@@ -27,6 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
+import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
 import br.com.sysmap.crux.core.utils.StreamUtils;
@@ -41,7 +43,7 @@ import br.com.sysmap.crux.module.CruxModuleBridge;
 public class ModulesDeclarativeUIFilter extends ModulesFilter
 {
 	private static final Log log = LogFactory.getLog(ModulesDeclarativeUIFilter.class);
-	
+	private DeclarativeUIMessages uiMessages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)  throws IOException, ServletException 
@@ -69,6 +71,11 @@ public class ModulesDeclarativeUIFilter extends ModulesFilter
 					{
 						CruxToHtmlTransformer.setOutputCharset(charset);
 					}
+					else
+					{
+						throw new ServletException(uiMessages.declarativeUIFilterRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
+					}
+					
 
 					InputStream screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(screenId);
 					if (screenResource != null)

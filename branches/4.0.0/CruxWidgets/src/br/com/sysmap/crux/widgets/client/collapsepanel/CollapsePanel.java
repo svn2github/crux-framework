@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.client.collapsepanel;
 
+import br.com.sysmap.crux.core.client.screen.LazyPanel;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseOrBeforeExpandEvent;
@@ -118,6 +119,18 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 		button.setVisible(collapsible);
 	}
 
+	@Override
+	public void setTitleWidget(Widget widget)
+	{
+		super.setTitleWidget(widget);
+		
+		if (widget != null && (widget instanceof LazyPanel))
+		{
+			((LazyPanel)widget).ensureWidget();
+			//TODO: checar se isso pode ser removido
+		}
+	}
+	
 	/**
 	 * @return true if collapsible
 	 */

@@ -26,10 +26,10 @@ import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
@@ -39,7 +39,7 @@ import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="dynaTabs", library="widgets")
-public class DynaTabsFactory extends WidgetFactory<DynaTabs, WidgetFactoryContext>
+public class DynaTabsFactory extends WidgetCreator<DynaTabs, WidgetCreatorContext>
 {
 	@Override
 	public DynaTabs instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -51,10 +51,10 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs, WidgetFactoryContex
 	@TagChildren({
 		@TagChild(DynaTabProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
-	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs, WidgetFactoryContext>
+	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs, WidgetCreatorContext>
 	{
 		protected BeforeFocusEvtBind beforeFocusEvtBind = new BeforeFocusEvtBind();
 		protected BeforeBlurEvtBind beforeBlurEvtBind = new BeforeBlurEvtBind();
@@ -72,7 +72,7 @@ public class DynaTabsFactory extends WidgetFactory<DynaTabs, WidgetFactoryContex
 			@TagEventDeclaration("onBeforeBlur"),
 			@TagEventDeclaration("onBeforeClose")
 		})
-		public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException
+		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
 		{
 			CruxMetaDataElement childElement = context.getChildElement();
 			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();

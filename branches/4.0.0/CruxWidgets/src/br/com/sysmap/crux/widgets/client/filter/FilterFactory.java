@@ -19,18 +19,18 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
@@ -41,10 +41,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="filter", library="widgets")
-public class FilterFactory extends CompositeFactory<Filter, WidgetFactoryContext> 
-	   implements HasAnimationFactory<Filter, WidgetFactoryContext>, HasTextFactory<Filter, WidgetFactoryContext>, 
-	              HasValueChangeHandlersFactory<Filter, WidgetFactoryContext>, HasSelectionHandlersFactory<Filter, WidgetFactoryContext>,
-	              HasAllKeyHandlersFactory<Filter, WidgetFactoryContext>
+public class FilterFactory extends CompositeFactory<Filter, WidgetCreatorContext> 
+	   implements HasAnimationFactory<Filter, WidgetCreatorContext>, HasTextFactory<Filter, WidgetCreatorContext>, 
+	              HasValueChangeHandlersFactory<Filter, WidgetCreatorContext>, HasSelectionHandlersFactory<Filter, WidgetCreatorContext>,
+	              HasAllKeyHandlersFactory<Filter, WidgetCreatorContext>
 {
 
 	@Override
@@ -62,11 +62,11 @@ public class FilterFactory extends CompositeFactory<Filter, WidgetFactoryContext
 		@TagAttribute("popupStyleName"),
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute("value"),
-		@TagAttribute(value="filterable", parser=FilterableAttributeParser.class)
+		@TagAttribute(value="filterable", processor=FilterableAttributeParser.class)
 	})
 	@TagAttributesDeclaration({
 	})
-	public void processAttributes(final WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(final WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -74,12 +74,12 @@ public class FilterFactory extends CompositeFactory<Filter, WidgetFactoryContext
 	/**
 	 * @author Gesse Dafe
 	 */
-	public class FilterableAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public class FilterableAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.client.screen.AttributeParser#processAttribute(br.com.sysmap.crux.core.client.screen.WidgetFactoryContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.client.screen.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
 		 */
-		public void processAttribute(WidgetFactoryContext context, String propertyValue)
+		public void processAttribute(WidgetCreatorContext context, String propertyValue)
 		{
 			final Filter widget = context.getWidget();
 			final String filterableId =context.readWidgetProperty("filterable");

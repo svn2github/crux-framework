@@ -22,9 +22,9 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.TextBoxBaseFactory;
 
 /**
@@ -40,7 +40,7 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 		@TagAttribute(value="visibleLines", type=Integer.class),
 		@TagAttribute(value="maxLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -55,8 +55,8 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 	@TagChildren({
 		@TagChild(InnerTextProcessor.class)
 	})
-	public void processChildren(WidgetFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
 	
 	@TagChildAttributes(minOccurs="0", widgetProperty="value")
-	public static class InnerTextProcessor extends TextChildProcessor<TextArea, WidgetFactoryContext> {}	
+	public static class InnerTextProcessor extends TextChildProcessor<TextArea, WidgetCreatorContext> {}	
 }

@@ -21,11 +21,9 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.AttributeParser;
+import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasAutoHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
@@ -33,6 +31,8 @@ import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**
@@ -40,12 +40,12 @@ import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
  *
  */
 @DeclarativeFactory(id="maskedLabel", library="widgets")
-public class MaskedLabelFactory extends WidgetFactory<MaskedLabel, WidgetFactoryContext> 
-				implements HasDirectionFactory<MaskedLabel, WidgetFactoryContext>, HasClickHandlersFactory<MaskedLabel, WidgetFactoryContext>, 
-						   HasAllMouseHandlersFactory<MaskedLabel, WidgetFactoryContext>, 
-				           HasWordWrapFactory<MaskedLabel, WidgetFactoryContext>, 
-				           HasAutoHorizontalAlignmentFactory<MaskedLabel, WidgetFactoryContext>, 
-				           HasHorizontalAlignmentFactory<MaskedLabel, WidgetFactoryContext>
+public class MaskedLabelFactory extends WidgetCreator<MaskedLabel, WidgetCreatorContext> 
+				implements HasDirectionFactory<MaskedLabel, WidgetCreatorContext>, HasClickHandlersFactory<MaskedLabel, WidgetCreatorContext>, 
+						   HasAllMouseHandlersFactory<MaskedLabel, WidgetCreatorContext>, 
+				           HasWordWrapFactory<MaskedLabel, WidgetCreatorContext>, 
+				           HasAutoHorizontalAlignmentFactory<MaskedLabel, WidgetCreatorContext>, 
+				           HasHorizontalAlignmentFactory<MaskedLabel, WidgetCreatorContext>
 {
 	@Override
 	public MaskedLabel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -65,12 +65,12 @@ public class MaskedLabelFactory extends WidgetFactory<MaskedLabel, WidgetFactory
 
 	@Override
 	@TagAttributes({
-		@TagAttribute(value="text", parser=TextAttributeParser.class)
+		@TagAttribute(value="text", processor=TextAttributeParser.class)
 	})
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="formatter", required=true)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -79,9 +79,9 @@ public class MaskedLabelFactory extends WidgetFactory<MaskedLabel, WidgetFactory
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class TextAttributeParser implements AttributeParser<WidgetFactoryContext>
+	public static class TextAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetFactoryContext context, String propertyValue)
+		public void processAttribute(WidgetCreatorContext context, String propertyValue)
         {
 			MaskedLabel widget = context.getWidget();
 			widget.setUnformattedValue(widget.getFormatter().unformat(propertyValue));

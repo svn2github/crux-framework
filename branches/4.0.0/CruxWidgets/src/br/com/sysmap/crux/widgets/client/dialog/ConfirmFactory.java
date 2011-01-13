@@ -21,10 +21,10 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.WidgetFactory;
-import br.com.sysmap.crux.core.client.screen.WidgetFactoryContext;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
 
@@ -33,7 +33,7 @@ import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
  *
  */
 @DeclarativeFactory(id="confirm", library="widgets")
-public class ConfirmFactory extends WidgetFactory<Confirm, WidgetFactoryContext> implements HasAnimationFactory<Confirm, WidgetFactoryContext>
+public class ConfirmFactory extends WidgetCreator<Confirm, WidgetCreatorContext> implements HasAnimationFactory<Confirm, WidgetCreatorContext>
 {
 	@Override
 	public Confirm instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
@@ -48,7 +48,7 @@ public class ConfirmFactory extends WidgetFactory<Confirm, WidgetFactoryContext>
 		@TagAttribute(value="okButtonText", supportsI18N=true),
 		@TagAttribute(value="cancelButtonText", supportsI18N=true)
 	})
-	public void processAttributes(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processAttributes(context);
 	}
@@ -58,7 +58,7 @@ public class ConfirmFactory extends WidgetFactory<Confirm, WidgetFactoryContext>
 		@TagEvent(CancelEvtBind.class),
 		@TagEvent(OkEvtBind.class)
 	})
-	public void processEvents(WidgetFactoryContext context) throws InterfaceConfigException
+	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
 	{
 		super.processEvents(context);
 	}
