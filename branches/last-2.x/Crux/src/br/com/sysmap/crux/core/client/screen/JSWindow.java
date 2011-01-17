@@ -19,11 +19,10 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * A Window JavaScriptObject. Useful for accessing foreign native JS objects and functions.
- * @author Gessé S. F. Dafé
+ * @author Gesse S. F. Dafe
  */
 public class JSWindow extends JavaScriptObject
 {
-	
 	/**
 	 * Returns the current window native object;
 	 * @return
@@ -53,4 +52,17 @@ public class JSWindow extends JavaScriptObject
 	protected JSWindow()
 	{
 	}
+	
+	/**
+	 * Changes the location of the window
+	 * @param newURL
+	 */
+	public final void changeLocation(String newURL)
+	{
+		changeLocation(this, newURL);
+	}
+	
+	private native static void changeLocation(JSWindow jsWnd, String newURL)/*-{
+		jsWnd.location.href = newURL;	
+	}-*/;
 }
