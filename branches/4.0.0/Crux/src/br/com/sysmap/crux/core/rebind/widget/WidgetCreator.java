@@ -29,8 +29,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.bind.AttachEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.DettachEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.LoadWidgetEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
+import br.com.sysmap.crux.core.client.event.bind.LoadWidgetEvtProcessor;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -60,6 +59,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		this.factory = factory;
 		JClassType type = this.factory.getJClassType(getClass());
 		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(type, this);
+	}
+	
+	/**
+	 * @return
+	 */
+	ViewFactoryCreator getViewFactory()
+	{
+		return this.factory;
 	}
 	
 	/**
@@ -343,7 +350,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class StyleProcessor implements AttributeProcessor<WidgetCreatorContext>
+	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
 	{
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
 		{
@@ -395,7 +402,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @throws CruxGeneratorException
 	 */
 	@TagEvents({
-		@TagEvent(LoadWidgetEvtBind.class),
+		@TagEvent(LoadWidgetEvtProcessor.class),
 		@TagEvent(AttachEvtBind.class),
 		@TagEvent(DettachEvtBind.class)
 	})

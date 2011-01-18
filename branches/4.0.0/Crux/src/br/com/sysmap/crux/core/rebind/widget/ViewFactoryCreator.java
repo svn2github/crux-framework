@@ -67,7 +67,7 @@ public class ViewFactoryCreator
 	private final GeneratorContext context;
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
 	private Map<String, WidgetCreator<?>> factories = new HashMap<String, WidgetCreator<?>>();
-	private Map<String, WidgetFactoryHelper> factoryHelpers = new HashMap<String, WidgetFactoryHelper>();
+	private Map<String, WidgetCreatorHelper> factoryHelpers = new HashMap<String, WidgetCreatorHelper>();
 	private Map<String, Boolean> htmlContainersfactories = new HashMap<String, Boolean>();
 	private final LazyPanelFactory lazyFactory;
 	private final Set<String> lazyPanels = new HashSet<String>();	
@@ -92,7 +92,7 @@ public class ViewFactoryCreator
 		this.screen = screen;
 		this.requiresResizeType = context.getTypeOracle().findType(RequiresResize.class.getCanonicalName());
 		this.panelType = context.getTypeOracle().findType(Panel.class.getCanonicalName());
-		this.lazyFactory = new LazyPanelFactory(this, logger);
+		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 
     }	
@@ -772,7 +772,7 @@ public class ViewFactoryCreator
 	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetFactory.newInstance();
 	        	factory.setViewFactory(this);
 	        	factories.put(widgetType, factory);
-	        	factoryHelpers.put(widgetType, new WidgetFactoryHelper(context.getTypeOracle().findType(factoryClassName)));
+	        	factoryHelpers.put(widgetType, new WidgetCreatorHelper(context.getTypeOracle().findType(factoryClassName)));
 	        }
         }
         catch (Exception e)
@@ -787,7 +787,7 @@ public class ViewFactoryCreator
 	 * @param widgetType
 	 * @return a helper object to create the code of the widgets of the given type. 
 	 */
-	private WidgetFactoryHelper getWidgetFactoryHelper(String widgetType)
+	private WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
 	{
 		if (!factoryHelpers.containsKey(widgetType))
 		{

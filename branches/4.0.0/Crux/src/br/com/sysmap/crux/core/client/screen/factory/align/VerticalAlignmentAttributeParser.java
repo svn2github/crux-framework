@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.screen.factory.align;
 
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasVerticalAlignment;

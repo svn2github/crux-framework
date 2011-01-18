@@ -26,24 +26,23 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * @author Thiago Bustamante
  *
  */
-public class AttachEvtBind extends EvtProcessor
+public class LoadWidgetEvtProcessor extends EvtProcessor
 {
-	private static final String EVENT_NAME = "onAttach";
+	private static final String EVENT_NAME = "onLoadWidget";
 
+	/**
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#processEvent(br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
+	 */
 	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
 	{
 		String event = ViewFactoryCreator.createVariableName("evt");
-
-		out.println("Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addAttachHandler(new Handler(){");
-		out.println("public void onAttachOrDetach(AttachEvent event){");
-		out.println("if (event.isAttached()){");
-		out.println("Events.callEvent("+event+", event);");
-		out.println("}");
-		out.println("}");
-		out.println("});");
+		printlnPostProcessing("Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+EscapeUtils.quote(eventValue)+");");
+		printlnPostProcessing("Events.callEvent("+event+", new WidgetLoadEvent("+context.getWidget()+","+EscapeUtils.quote(context.getWidgetId())+"));");
 	}
 
+	/**
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 */
 	public String getEventName()
 	{
 		return EVENT_NAME;

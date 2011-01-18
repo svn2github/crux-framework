@@ -23,7 +23,6 @@ import java.util.Set;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -48,12 +47,12 @@ class AttributesAnnotationScanner
 	
 	private final WidgetCreator<?> widgetCreator;
 
-	private WidgetFactoryHelper factoryHelper;
+	private WidgetCreatorHelper factoryHelper;
 
 	
 	AttributesAnnotationScanner(WidgetCreator<?> widgetCreator, JClassType type)
     {
-		this.factoryHelper = new WidgetFactoryHelper(type);
+		this.factoryHelper = new WidgetCreatorHelper(type);
 		this.widgetCreator = widgetCreator;
     }
 	
@@ -140,6 +139,7 @@ class AttributesAnnotationScanner
         try
         {
 	        processor = (AttributeProcessor<?>) processorClass.newInstance();
+	        processor.setWidgetCreator(widgetCreator);
         }
         catch (Exception e)
         {
@@ -192,7 +192,7 @@ class AttributesAnnotationScanner
 	    Method[] methods = processorClass.getMethods();
 		for (Method met : methods)
         {
-	        if (met.getName().equals("processAttribute") && met.getParameterTypes().length == 3)
+	        if (met.getName().equals("processAttribute") && met.getParameterTypes().length == 3)//TODO validar tipos dos parametros
 	        {
 	        	return met;
 	        }

@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
@@ -27,12 +28,12 @@ import com.google.gwt.event.dom.client.HasErrorHandlers;
  * Helper Class for load events binding
  * @author Thiago Bustamante
  */
-public class LoadErrorEvtBind implements EvtBinder<HasErrorHandlers>
+public class LoadErrorEvtBind implements EvtProcessor<HasErrorHandlers>
 {
 	private static final String EVENT_NAME = "onError";
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	public void bindEvent(CruxMetaDataElement element, HasErrorHandlers widget)
 	{
@@ -50,7 +51,7 @@ public class LoadErrorEvtBind implements EvtBinder<HasErrorHandlers>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

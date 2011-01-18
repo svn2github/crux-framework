@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -28,12 +29,12 @@ import com.google.gwt.event.dom.client.HasBlurHandlers;
  * @author Thiago Bustamante
  *
  */
-public class BlurEvtBind implements EvtBinder<HasBlurHandlers>
+public class BlurEvtBind implements EvtProcessor<HasBlurHandlers>
 {
 	private static final String EVENT_NAME = "onBlur";
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	public void bindEvent(CruxMetaDataElement element, HasBlurHandlers widget)
 	{
@@ -51,7 +52,7 @@ public class BlurEvtBind implements EvtBinder<HasBlurHandlers>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

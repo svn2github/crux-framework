@@ -34,8 +34,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.DeclarativeWidgetFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
@@ -108,7 +106,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private static final int UNBOUNDED = -1;
 	private Map<String, BindData> eventsFromClass = new HashMap<String, BindData>();
 	private int variableNameSuffixCounter = 0;
-	private final WidgetFactoryHelper factoryHelper;
+	private final WidgetCreatorHelper factoryHelper;
 	private Set<String> widgetProperties = new HashSet<String>();
 	
 	/**
@@ -119,7 +117,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	public WidgetFactoryProxyCreator(TreeLogger logger, GeneratorContext context, JClassType factoryClass)
 	{
 		super(logger, context, factoryClass);
-		this.factoryHelper = new WidgetFactoryHelper(factoryClass);
+		this.factoryHelper = new WidgetCreatorHelper(factoryClass);
 		if (Environment.isProduction())
 		{
 			initializeWidgetPropertiesMap();
@@ -847,7 +845,7 @@ public class WidgetFactoryProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			{
 				for (TagEvent evt : evts.value())
 				{
-					Class<? extends EvtBinder<?>> binderClass = evt.value();
+					Class<? extends EvtProcessor<?>> binderClass = evt.value();
 					boolean generateEventBlock = true;
 					if (Environment.isProduction())
 					{

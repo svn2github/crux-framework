@@ -15,9 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
@@ -32,6 +35,7 @@ class WidgetCreatorAnnotationsProcessor
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private List<AttributeCreator> attributes;
 	private List<EventCreator> events;
+	private ChildrenProcessor children;
 	
 	/**
 	 * Constructor
@@ -41,7 +45,8 @@ class WidgetCreatorAnnotationsProcessor
 	WidgetCreatorAnnotationsProcessor(JClassType type, WidgetCreator<?> widgetCreator)
     {
 		this.attributes = new AttributesAnnotationScanner(widgetCreator, type).scanAttributes();
-		this.events = new EventsAnnotationScanner(type).scanEvents();
+		this.events = new EventsAnnotationScanner(widgetCreator, type).scanEvents();
+		this.children = new ChildrenAnnotationScanner(widgetCreator, type).scanChildren();
     }
 	
 	/**
@@ -68,18 +73,68 @@ class WidgetCreatorAnnotationsProcessor
         }
 	}
 
+	/**
+	 * @param out
+	 * @param context
+	 */
 	void processChildren(SourcePrinter out, WidgetCreatorContext context)
 	{
-		
+		if (children != null)
+		{
+			children.processChildren(out, context);
+		}
 	}
 
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	static interface AttributeCreator
 	{
 		void createAttribute(SourcePrinter out, WidgetCreatorContext context);
 	}
 
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	static interface EventCreator
 	{
 		void createEvent(SourcePrinter out, WidgetCreatorContext context);
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static abstract class ChildrenProcessor
+	{
+		private Map<String, ChildrenProcessor> childrenProcessors = new HashMap<String, ChildrenProcessor>();
+		
+		abstract void processChildren(SourcePrinter out, WidgetCreatorContext context);
+
+		
+		/**
+		 * @param out
+		 * @param context
+		 * @param childName
+		 */
+		void processChild(SourcePrinter out, WidgetCreatorContext context, String childName)
+		{
+			if (!childrenProcessors.containsKey(childName))
+			{
+				throw new CruxGeneratorException();//TODO message
+			}
+			childrenProcessors.get(childName).processChildren(out, context);
+		}
+		
+		/**
+		 * @param tagName
+		 * @param childrenProcessor
+		 */
+		void addChildrenProcessor(String tagName, ChildrenProcessor childrenProcessor)
+		{
+			childrenProcessors.put(tagName, childrenProcessor);
+		}
 	}
 }

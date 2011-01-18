@@ -26,8 +26,6 @@ import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -40,15 +38,13 @@ public class LazyPanelFactory
 	static final String LAZY_PANEL_TYPE = "_CRUX_LAZY_PANEL_";
 	
 	private final ViewFactoryCreator factory;
-	private final TreeLogger logger;
 	
 	/**
 	 * Singleton constructor
 	 */
-	public LazyPanelFactory(ViewFactoryCreator factory, TreeLogger logger) 
+	public LazyPanelFactory(ViewFactoryCreator factory) 
 	{
 		this.factory = factory;
-		this.logger = logger;
 	}
 	
 	/**
@@ -63,7 +59,6 @@ public class LazyPanelFactory
 	public String getLazyPanel(SourcePrinter factoryPrinter, final JSONObject element, String targetPanelId, LazyPanelWrappingType wrappingType) 
 	{
 		String lazyId = ViewFactoryUtils.getLazyPanelId(targetPanelId, wrappingType);
-		logger.log(Type.INFO, "Delaying the widget ["+element.optString("id")+"] creation. Instantiating a new lazyPanel ["+lazyId+"] to wrap this widget...");
 		
 		String lazyPanel = ViewFactoryCreator.createVariableName("lazy");
 

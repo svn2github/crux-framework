@@ -13,17 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.event.bind;
+package br.com.sysmap.crux.core.client.screen;
 
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+import com.google.gwt.user.client.ui.Widget;
+
+import br.com.sysmap.crux.core.client.event.CruxEvent;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface EvtBinder
+public class WidgetLoadEvent extends CruxEvent<Widget>
 {
-	void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue);
-	String getEventName();
+	/**
+	 * Constructor
+	 */
+	protected WidgetLoadEvent(Widget source, String widgetId)
+	{
+		super(source, widgetId);
+	}
 }

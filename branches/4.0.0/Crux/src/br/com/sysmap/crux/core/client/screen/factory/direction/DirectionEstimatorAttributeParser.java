@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.client.screen.factory.direction;
 
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.i18n.shared.AnyRtlDirectionEstimator;

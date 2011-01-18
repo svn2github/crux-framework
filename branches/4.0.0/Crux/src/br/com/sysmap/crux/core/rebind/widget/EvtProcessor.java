@@ -13,23 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen.factory.align;
+package br.com.sysmap.crux.core.rebind.widget;
 
-import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
- * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HorizontalAlignmentAttributeParser<C extends WidgetCreatorContext> implements AttributeProcessor<C>
+public abstract class EvtProcessor extends AbstractProcessor
 {
-	public void processAttribute(C context, String propertyValue) 
-	{
-		HasHorizontalAlignment widget = (HasHorizontalAlignment)context.getWidget();
-		widget.setHorizontalAlignment(AlignmentAttributeParser.getHorizontalAlignment(propertyValue, HasHorizontalAlignment.ALIGN_DEFAULT));
-	}
+	
+	public abstract void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue);
+	public abstract String getEventName();
 }

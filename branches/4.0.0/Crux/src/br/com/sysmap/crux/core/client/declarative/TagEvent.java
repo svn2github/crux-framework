@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -30,5 +30,5 @@ import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface TagEvent
 {
-	Class<? extends EvtBinder> value();	
+	Class<? extends EvtProcessor> value();	
 }

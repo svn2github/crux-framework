@@ -31,9 +31,9 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
+import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
-import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory;
 import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
@@ -56,9 +56,9 @@ public class LazyWidgets
 	 */
 	private WidgetLazyChecker defaultLazyChecker = new WidgetLazyChecker() 
 	{
-		public boolean isLazy(JSONObject widget) throws JSONException 
+		public boolean isLazy(JSONObject widget) 
 		{
-			return widget.has("visible") && !widget.getBoolean("visible");
+			return widget.has("visible") && !widget.optBoolean("visible");
 		}
 	};
 
@@ -129,7 +129,7 @@ public class LazyWidgets
 		{
 			lazyWidgetCheckers.put(type, new WidgetLazyChecker()
 			{
-				public boolean isLazy(JSONObject widget) throws JSONException
+				public boolean isLazy(JSONObject widget)
 				{
 					boolean ret = false;
 					for (WidgetLazyChecker widgetLazyChecker : declaredCheckers)
@@ -147,13 +147,13 @@ public class LazyWidgets
 	 * @param lazyConditions
 	 * @return
 	 */
-	private static WidgetLazyChecker initializeLazyChecker(final TagChildLazyConditions lazyConditions)
+	public static WidgetLazyChecker initializeLazyChecker(final TagChildLazyConditions lazyConditions)
     {
 	    if (lazyConditions.all().length > 0)
 	    {
 	    	return new WidgetLazyChecker()
 			{
-				public boolean isLazy(JSONObject widget) throws JSONException
+				public boolean isLazy(JSONObject widget)
 				{
 					boolean lazy = true;
 					for (TagChildLazyCondition lazyCondition : lazyConditions.all())
@@ -161,11 +161,11 @@ public class LazyWidgets
 						String property = lazyCondition.property();
 						if (lazyCondition.equals().length() > 0)
 						{
-							lazy = lazy && (widget.has(property) && widget.getString(property).equals(lazyCondition.equals()));
+							lazy = lazy && (widget.has(property) && widget.optString(property).equals(lazyCondition.equals()));
 						}
 						else if (lazyCondition.notEquals().length() > 0)
 						{
-							lazy = lazy && (!widget.has(property) || !widget.getString(property).equals(lazyCondition.notEquals()));
+							lazy = lazy && (!widget.has(property) || !widget.optString(property).equals(lazyCondition.notEquals()));
 						}
 						if (!lazy)
 						{
@@ -181,7 +181,7 @@ public class LazyWidgets
 	    {
 	    	return new WidgetLazyChecker()
 			{
-				public boolean isLazy(JSONObject widget) throws JSONException
+				public boolean isLazy(JSONObject widget)
 				{
 					boolean lazy = false;
 					for (TagChildLazyCondition lazyCondition : lazyConditions.any())
@@ -189,11 +189,11 @@ public class LazyWidgets
 						String property = lazyCondition.property();
 						if (lazyCondition.equals().length() > 0)
 						{
-							lazy = lazy || (widget.has(property) && widget.getString(property).equals(lazyCondition.equals()));
+							lazy = lazy || (widget.has(property) && widget.optString(property).equals(lazyCondition.equals()));
 						}
 						else if (lazyCondition.notEquals().length() > 0)
 						{
-							lazy = lazy || (!widget.has(property) || !widget.getString(property).equals(lazyCondition.notEquals()));
+							lazy = lazy || (!widget.has(property) || !widget.optString(property).equals(lazyCondition.notEquals()));
 						}
 						if (lazy)
 						{
@@ -310,11 +310,11 @@ public class LazyWidgets
 					    addDependency(dependencies, childId, parentId);
 						if (checkLazy(child))
 						{
-							lazyId = LazyPanelFactory.getLazyPanelId(childId, LazyPanelWrappingType.wrapWholeWidget);
+							lazyId = ViewFactoryUtils.getLazyPanelId(childId, LazyPanelWrappingType.wrapWholeWidget);
 						}
 						else if (checkChildrenLazy(child))
 						{
-							lazyId = LazyPanelFactory.getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
+							lazyId = ViewFactoryUtils.getLazyPanelId(childId, LazyPanelWrappingType.wrapChildren);
 						}
 					}
 					generateLazyDepsForChildren(child, lazyId, dependencies);
@@ -342,7 +342,7 @@ public class LazyWidgets
 				String wrapperId = null;
 				if (wholeWidgetLazy)
 				{
-					wrapperId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
+					wrapperId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 					addDependency(dependencies, widgetId, wrapperId);
 
 				}
@@ -352,7 +352,7 @@ public class LazyWidgets
 				 */
 				if (widgetChildrenLazy)
 				{
-					wrapperId = LazyPanelFactory.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren);
+					wrapperId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren);
 				}
 				generateLazyDepsForChildren(widget, wrapperId, dependencies);
 			}
@@ -383,8 +383,8 @@ public class LazyWidgets
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	private static interface WidgetLazyChecker
+	public static interface WidgetLazyChecker
 	{
-		boolean isLazy(JSONObject widget) throws JSONException;
+		boolean isLazy(JSONObject widget);
 	}	
 }

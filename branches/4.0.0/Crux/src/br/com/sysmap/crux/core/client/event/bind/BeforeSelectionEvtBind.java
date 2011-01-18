@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
@@ -28,12 +29,12 @@ import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class BeforeSelectionEvtBind implements EvtBinder<HasBeforeSelectionHandlers<?>>
+public class BeforeSelectionEvtBind implements EvtProcessor<HasBeforeSelectionHandlers<?>>
 {
 	private static final String EVENT_NAME = "onBeforeSelection";
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	@SuppressWarnings("unchecked")
 	public void bindEvent(CruxMetaDataElement element, HasBeforeSelectionHandlers<?> widget)
@@ -52,7 +53,7 @@ public class BeforeSelectionEvtBind implements EvtBinder<HasBeforeSelectionHandl
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

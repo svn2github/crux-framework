@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -28,12 +29,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
  * @author Thiago Bustamante
  *
  */
-public class ValueChangeEvtBind implements EvtBinder<HasValueChangeHandlers<?>>
+public class ValueChangeEvtBind implements EvtProcessor<HasValueChangeHandlers<?>>
 {
 	private static final String EVENT_NAME = "onChange";
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	@SuppressWarnings("unchecked")
 	public void bindEvent(CruxMetaDataElement element, HasValueChangeHandlers<?> widget)
@@ -51,7 +52,7 @@ public class ValueChangeEvtBind implements EvtBinder<HasValueChangeHandlers<?>>
 		}
 	}
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

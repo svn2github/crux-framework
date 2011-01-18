@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.widget;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -31,7 +32,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class WidgetFactoryHelper 
+public class WidgetCreatorHelper 
 {
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
@@ -42,7 +43,7 @@ public class WidgetFactoryHelper
 	/**
 	 * @param factoryClass
 	 */
-	public WidgetFactoryHelper(JClassType factoryClass)
+	public WidgetCreatorHelper(JClassType factoryClass)
     {
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
@@ -114,6 +115,26 @@ public class WidgetFactoryHelper
 		JMethod processorMethod = getChildProcessorMethod(getFactoryClass());
 	    return processorMethod;
     }
+	
+	/**
+	 * 
+	 * @param processorClass
+	 * @return
+	 */
+	public TagChildAttributes getChildtrenAttributesAnnotation(JClassType processorClass)
+	{
+		TagChildAttributes attributes = processorClass.getAnnotation(TagChildAttributes.class);
+		if (attributes == null)
+		{
+			JClassType superClass = processorClass.getSuperclass();
+			if (superClass != null && superClass.getSuperclass() != null)
+			{
+				attributes = getChildtrenAttributesAnnotation(superClass);
+			}
+		}
+		
+		return attributes;
+	}	
 	
 	/**
 	 * 

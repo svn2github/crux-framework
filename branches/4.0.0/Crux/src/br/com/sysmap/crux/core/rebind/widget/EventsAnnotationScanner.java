@@ -22,7 +22,6 @@ import java.util.Set;
 
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -42,12 +41,14 @@ class EventsAnnotationScanner
 {
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	
-	private WidgetFactoryHelper factoryHelper;
+	private WidgetCreatorHelper factoryHelper;
 
-	
-	EventsAnnotationScanner(JClassType type)
+	private final WidgetCreator<?> widgetCreator;
+
+	EventsAnnotationScanner(WidgetCreator<?> widgetCreator, JClassType type)
     {
-		this.factoryHelper = new WidgetFactoryHelper(type);
+		this.widgetCreator = widgetCreator;
+		this.factoryHelper = new WidgetCreatorHelper(type);
     }
 	
 	/**
@@ -111,10 +112,11 @@ class EventsAnnotationScanner
 	 */
 	private EventCreator createEventProcessor(TagEvent evt)
     {
-		final EvtBinder evtBinder;
+		final EvtProcessor evtBinder;
 		try
         {
 	        evtBinder = evt.value().newInstance();
+	        evtBinder.setWidgetCreator(widgetCreator);
         }
         catch (Exception e)
         {

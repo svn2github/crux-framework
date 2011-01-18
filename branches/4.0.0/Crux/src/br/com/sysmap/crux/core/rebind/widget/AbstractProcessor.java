@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sysmap Solutions Software e Consultoria Ltda.
+ * Copyright 2009 Sysmap Solutions Software e Consultoria Ltda.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,20 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen;
-
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-
+package br.com.sysmap.crux.core.rebind.widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface AttributeProcessor<C extends WidgetCreatorContext> 
+public class AbstractProcessor 
 {
-	interface NoParser extends AttributeProcessor<WidgetCreatorContext>
+	private WidgetCreator<?> widgetCreator;
+	
+	/**
+	 * @param widgetCreator
+	 */
+	void setWidgetCreator(WidgetCreator<?> widgetCreator)
+    {
+    	this.widgetCreator = widgetCreator;
+    }
+	
+	/**
+	 * @param s
+	 */
+	protected void printlnPostProcessing(String s)
 	{
+		widgetCreator.printlnPostProcessing(s);
 	}
-	void processAttribute(SourcePrinter out, C context, String attributeValue);
+
 }

@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.client.event.bind;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -28,7 +29,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
  * @author Thiago Bustamante
  *
  */
-public class CloseEvtBind implements EvtBinder<HasCloseHandlers<?>>
+public class CloseEvtBind implements EvtProcessor<HasCloseHandlers<?>>
 {
 	private static final String EVENT_NAME = "onClick";
 	
