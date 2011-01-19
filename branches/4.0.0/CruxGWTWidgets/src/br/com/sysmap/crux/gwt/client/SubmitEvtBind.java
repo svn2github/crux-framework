@@ -18,8 +18,8 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -29,12 +29,12 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
  * Helper class for binding of submit events
  * @author Gesse Dafe
  */
-public class SubmitEvtBind implements EvtBinder<FormPanel>
+public class SubmitEvtBind implements EvtProcessor<FormPanel>
 {
 	private static final String EVENT_NAME = "onSubmit";
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
 	public void bindEvent(CruxMetaDataElement element, FormPanel widget)
 	{
@@ -52,7 +52,7 @@ public class SubmitEvtBind implements EvtBinder<FormPanel>
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

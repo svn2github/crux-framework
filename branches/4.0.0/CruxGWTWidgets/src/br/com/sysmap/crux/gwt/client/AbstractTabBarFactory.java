@@ -26,7 +26,6 @@ import br.com.sysmap.crux.core.client.event.bind.ClickEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyDownEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyPressEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.KeyUpEvtBind;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
@@ -37,6 +36,7 @@ import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLT
 import br.com.sysmap.crux.core.client.screen.factory.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.TabBar;
