@@ -43,7 +43,6 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
@@ -61,6 +60,7 @@ import br.com.sysmap.crux.core.declarativeui.template.TemplatesScanner;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
@@ -737,7 +737,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			for (TagEvent evt : evts.value())
 			{
-				Class<? extends EvtBinder<?>> evtBinder = evt.value();
+				Class<? extends EvtProcessor<?>> evtBinder = evt.value();
 				try
 				{
 					String eventName = evtBinder.newInstance().getEventName();
