@@ -15,9 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -109,7 +112,7 @@ class WidgetCreatorAnnotationsProcessor
 	 */
 	static abstract class ChildrenProcessor
 	{
-		private Map<String, ChildrenProcessor> childrenProcessors = new HashMap<String, ChildrenProcessor>();
+		private Map<String, ChildProcessor> childrenProcessors = new HashMap<String, ChildProcessor>();
 		
 		abstract void processChildren(SourcePrinter out, WidgetCreatorContext context);
 
@@ -125,16 +128,48 @@ class WidgetCreatorAnnotationsProcessor
 			{
 				throw new CruxGeneratorException();//TODO message
 			}
-			childrenProcessors.get(childName).processChildren(out, context);
+			childrenProcessors.get(childName).processChild(out, context);
+		}
+		
+		/**
+		 * @param childName
+		 * @return
+		 */
+		boolean hasChildProcessor(String childName)
+		{
+			return childrenProcessors.containsKey(childName);
 		}
 		
 		/**
 		 * @param tagName
-		 * @param childrenProcessor
+		 * @param childProcessor
 		 */
-		void addChildrenProcessor(String tagName, ChildrenProcessor childrenProcessor)
+		void addChildProcessor(String tagName, ChildProcessor childProcessor)
 		{
-			childrenProcessors.put(tagName, childrenProcessor);
+			childrenProcessors.put(tagName, childProcessor);
+		}
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static abstract class ChildProcessor
+	{
+		private ChildrenProcessor childrenProcessor;
+		abstract void processChild(SourcePrinter out, WidgetCreatorContext context);
+		
+		void processChildren(SourcePrinter out, WidgetCreatorContext context)
+		{
+			if (childrenProcessor != null)
+			{
+				childrenProcessor.processChildren(out, context);
+			}
+		}
+		
+		void setChildrenProcessor(ChildrenProcessor childrenProcessor)
+		{
+			this.childrenProcessor = childrenProcessor;
 		}
 	}
 }

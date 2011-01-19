@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.declarative.TagChild;
@@ -40,6 +40,7 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorAnnotationsProcessor.ChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorAnnotationsProcessor.ChildrenProcessor;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
@@ -88,21 +89,7 @@ class ChildrenAnnotationScanner
 
 	ChildrenProcessor scanChildren()
     {
-	    ChildrenProcessor rootProcessor = new ChildrenProcessor()
-		{
-			@Override
-			void processChildren(SourcePrinter out, WidgetCreatorContext context)
-			{
-				processChild(out, context, childName);
-			}
-		};
-	    
-	    
-	    
-	    
-	    
-	    
-	    scanChildren(factoryHelper.getProcessChildrenMethod(), rootProcessor);
+	    return scanChildren(factoryHelper.getProcessChildrenMethod());
     }
 
 	/**
@@ -129,14 +116,92 @@ class ChildrenAnnotationScanner
 		}
 		return null;
 	}
-	
-	
+		
 	private ChildrenProcessor createChildrenProcessorForMultipleChildren(TagChildren children, boolean acceptNoChildren)
     {
-	    // TODO Auto-generated method stub
-	    return null;
+		try
+		{
+			ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForMultipleChildren(acceptNoChildren);
+
+			boolean hasAgregator = false;
+			for (TagChild child : children.value())
+            {
+				JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
+				final boolean isTextProcessor = textChildProcessorType.isAssignableFrom(childProcessor);
+				if (isTextProcessor)
+				{
+					throw new CruxGeneratorException();//TODO message para nao permitir textprocessor com irmaos
+				}
+				boolean isAgregator = isAgregatorProcessor(childProcessor);
+				if (isAgregator)
+				{
+					if (hasAgregator)
+					{
+						throw new CruxGeneratorException();//TODO reportar que nao pode dois agregators alinhados
+					}
+					hasAgregator = true;
+				}
+
+				WidgetChildProcessor<?, ?> processor;
+				processor = child.value().newInstance();
+				final Method processorMethod = getChildrenProcessorMethod(child.value());
+
+
+            }
+			return childrenProcessor;
+		}
+		catch (Exception e)
+		{
+			throw new CruxGeneratorException();//TODO message
+		}
     }
 
+	/**
+	 * @param acceptNoChildren
+	 * @param processor
+	 * @param processorMethod
+	 * @param childProcessorClass
+	 * @return
+	 */
+	private ChildrenProcessor doCreateChildrenProcessorForMultipleChildren(final boolean acceptNoChildren)
+    {
+		ChildrenProcessor childrenProcessor = new ChildrenProcessor()
+		{
+			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
+			{
+				JSONArray children = WidgetCreator.ensureChildren(context.getChildElement(), acceptNoChildren);
+				if (children != null)
+				{
+					for (int i = 0; i < children.length(); i++)
+					{
+						JSONObject child = children.optJSONObject(i);
+						
+						String childName;
+						if (widgetCreator.isWidget(child))
+						{
+							childName = "_innerWidget";
+						}
+						else
+						{
+							childName = WidgetCreator.getChildName(child);
+						}
+						if (!hasChildProcessor(childName))
+						{
+							childName = "_agregator";
+						}
+						else
+						{
+							context.setChildElement(child);
+						}
+						processChild(out, context, childName);
+					}
+				}
+			}
+		};
+		
+		return childrenProcessor;
+    }
+	
 	/**
 	 * @param child
 	 * @param acceptNoChildren
@@ -144,84 +209,28 @@ class ChildrenAnnotationScanner
 	 */
 	private ChildrenProcessor createChildrenProcessorForSingleChild(TagChild child, final boolean acceptNoChildren)
     {
-		JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
-		final boolean isTextProcessor = textChildProcessorType.isAssignableFrom(childProcessor);
-		if (isTextProcessor)
+		try
 		{
-			return createChildrenProcessorForText(child, acceptNoChildren);
-		}
-		final boolean isAgregator = (choiceChildProcessorType.isAssignableFrom(childProcessor) ||
-				sequenceChildProcessorType.isAssignableFrom(childProcessor) ||
-				allChildProcessorType.isAssignableFrom(childProcessor));
-		
-		final boolean isAnyWidget = (anyWidgetChildProcessorType.isAssignableFrom(childProcessor));
-		
-		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessor);
-		final String widgetProperty = processorAttributes.widgetProperty();
-		String tagName = processorAttributes.tagName();
-		
-		TagChildLazyConditions lazyConditions = childProcessor.getAnnotation(TagChildLazyConditions.class);
-		final WidgetLazyChecker lazyChecker = (lazyConditions== null?null:LazyWidgets.initializeLazyChecker(lazyConditions));
-		
-	    ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForSingleChild(acceptNoChildren, isAgregator, isAnyWidget, widgetProperty, lazyChecker);
-		
-	    
-	    
-	    
-	    if (isAgregator)
-		{
-			childrenProcessor.addChildrenProcessor("_agregator", createGrandchildrenProcessor(child));
-
-			TagChildren tagChildren = factoryHelper.getChildrenAnnotationFromProcessor(childProcessor);
-			for (TagChild tagChild : tagChildren.value())
-            {
-				JClassType grandchildrenProcessor = oracle.findType(tagChild.value().getCanonicalName());
-				scanChildren(factoryHelper.getChildProcessorMethod(grandchildrenProcessor));
-            }
-			
-		}
-		else if (!isAnyWidget)
-		{
-			if (StringUtils.isEmpty(tagName))
+			JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
+			final boolean isTextProcessor = textChildProcessorType.isAssignableFrom(childProcessor);
+			if (isTextProcessor)
 			{
-				throw new CruxGeneratorException();//TODO message
+				return createChildProcessorForText(child, acceptNoChildren);
 			}
-			
-			childrenProcessor.addChildrenProcessor(tagName, createGrandchildrenProcessor(child));
-		}
-		
-		return childrenProcessor;
-    }
 
-	/**
-	 * @param child
-	 * @return
-	 */
-	private ChildrenProcessor createGrandchildrenProcessor(TagChild child)
-    {
-	    try
-	    {
-	        final WidgetChildProcessor<?,?> processor = child.value().newInstance();
-	        final Method method = getChildrenProcessorMethod(child.value());
-	        return new ChildrenProcessor(){
-	        	@Override
-	        	void processChildren(SourcePrinter out, WidgetCreatorContext context)
-	        	{
-	        		try
-	                {
-	                    method.invoke(processor, out, context);
-	                }
-	                catch (Exception e)
-	                {
-	                	throw new CruxGeneratorException(e);//TODO message
-	                }
-	        	}
-	        };
-	    }
-	    catch (Exception e)
-	    {
-	    	throw new CruxGeneratorException(e);//TODO message
-	    }
+			WidgetChildProcessor<?, ?> processor;
+			processor = child.value().newInstance();
+			final Method processorMethod = getChildrenProcessorMethod(child.value());
+
+			ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForSingleChild(
+					acceptNoChildren, processor, processorMethod, childProcessor);
+
+			return childrenProcessor;
+		}
+		catch (Exception e)
+		{
+			throw new CruxGeneratorException();//TODO message
+		}
     }
 
 	/**
@@ -243,40 +252,126 @@ class ChildrenAnnotationScanner
 	
 	/**
 	 * @param acceptNoChildren
+	 * @param processor
+	 * @param processorMethod
+	 * @param childProcessorClass
+	 * @return
+	 */
+	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(final boolean acceptNoChildren, WidgetChildProcessor<?, ?> processor, 
+																	  Method processorMethod, JClassType childProcessorClass)
+    {
+		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
+		final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
+		String tagName = (processorAttributes!=null?processorAttributes.tagName():"");
+
+		final boolean isAgregator = isAgregatorProcessor(childProcessorClass);
+		final boolean isAnyWidget = (anyWidgetChildProcessorType.isAssignableFrom(childProcessorClass));
+
+		TagChildLazyConditions lazyConditions = childProcessorClass.getAnnotation(TagChildLazyConditions.class);
+		final WidgetLazyChecker lazyChecker = (lazyConditions== null?null:LazyWidgets.initializeLazyChecker(lazyConditions));
+		
+		final String childName = getChildTagName(tagName, isAgregator, isAnyWidget);
+		
+		ChildrenProcessor childrenProcessor = new ChildrenProcessor()
+		{
+			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
+			{
+				if (isAgregator)
+				{
+					processChild(out, context, childName);
+				}
+				else
+				{
+					JSONObject child = WidgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren);
+					if (child != null)
+					{
+						context.setChildElement(child);
+						processChild(out, context, childName);
+					}
+				}
+			}
+		};
+		
+		ChildProcessor childProcessor = createChildProcessor(acceptNoChildren, isAgregator, isAnyWidget, 
+																		  widgetProperty, lazyChecker, processor, processorMethod);
+		if (!isAnyWidget)
+		{
+			childProcessor.setChildrenProcessor(scanChildren(factoryHelper.getChildProcessorMethod(childProcessorClass)));
+		}
+		
+		childrenProcessor.addChildProcessor(childName, childProcessor);
+		return childrenProcessor;
+    }
+
+	private boolean isAgregatorProcessor(JClassType childProcessorClass)
+    {
+	    return (choiceChildProcessorType.isAssignableFrom(childProcessorClass) ||
+				sequenceChildProcessorType.isAssignableFrom(childProcessorClass) ||
+				allChildProcessorType.isAssignableFrom(childProcessorClass));
+    }
+
+	/**
+	 * @param tagName
+	 * @param isAgregator
+	 * @param isAnyWidget
+	 * @return
+	 */
+	private String getChildTagName(String tagName, final boolean isAgregator, final boolean isAnyWidget)
+    {
+	    final String childName;
+	    if (isAnyWidget)
+	    {
+	    	childName = "_innerWidget";
+	    }
+	    else if (isAgregator)
+	    {
+	    	childName = "_agregator";
+	    }
+	    else
+	    {
+	    	childName = tagName;
+	    }
+		if (StringUtils.isEmpty(childName))
+		{
+			throw new CruxGeneratorException();//TODO message.
+		}
+	    return childName;
+    }
+
+	/**
+	 * @param acceptNoChildren
 	 * @param isAgregator
 	 * @param isAnyWidget
 	 * @param widgetProperty
 	 * @param lazyChecker
+	 * @param processor
+	 * @param processorMethod
 	 * @return
 	 */
-	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(final boolean acceptNoChildren, final boolean isAgregator, final boolean isAnyWidget, final String widgetProperty, final WidgetLazyChecker lazyChecker)
+	private ChildProcessor createChildProcessor(final boolean acceptNoChildren, final boolean isAgregator, 
+																	  final boolean isAnyWidget, final String widgetProperty, 
+																	  final WidgetLazyChecker lazyChecker, final WidgetChildProcessor<?, ?> processor, 
+																	  final Method processorMethod)
     {
-	    return new ChildrenProcessor()
+	    return new ChildProcessor()
 		{
-			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
+			public void processChild(SourcePrinter out, WidgetCreatorContext context)
 			{
-				JSONObject child = WidgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren);
-				if (child != null)
+				if (isAnyWidget)
 				{
-					context.setChildElement(child);
-
-					if (isAnyWidget)
+					processAnyWidgetChild(out, context);
+				}
+				else
+				{
+					try
 					{
-						processAnyWidgetChild(out, context);
+						processorMethod.invoke(processor, out, context);
 					}
-					else
+					catch (Exception e)
 					{
-						String childName = WidgetCreator.getChildName(child);
-						if (StringUtils.isEmpty(childName))
-						{
-							throw new CruxGeneratorException();//TODO message.
-						}
-						if (isAgregator)
-						{
-							processChild(out, context, "_agregator");
-						}
-						processChild(out, context, childName);
+						throw new CruxGeneratorException(e);//TODO message
 					}
+					processChildren(out, context);
 				}
 			}
 
@@ -310,12 +405,14 @@ class ChildrenAnnotationScanner
 		};
     }
 
+	
+	
 	/**
 	 * @param child
 	 * @param acceptNoChildren
 	 * @return
 	 */
-	private ChildrenProcessor createChildrenProcessorForText(TagChild child, final boolean acceptNoChildren)
+	private ChildrenProcessor createChildProcessorForText(TagChild child, final boolean acceptNoChildren)
     {
 		JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
 		TagChildAttributes processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessor);

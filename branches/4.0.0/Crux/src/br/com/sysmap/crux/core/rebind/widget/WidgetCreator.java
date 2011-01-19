@@ -31,6 +31,7 @@ import br.com.sysmap.crux.core.client.event.bind.AttachEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.DettachEvtBind;
 import br.com.sysmap.crux.core.client.event.bind.LoadWidgetEvtProcessor;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -182,6 +183,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		return result;
 	}
+
+	/**
+	 * @param metaElem
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	protected static boolean isTextChild(JSONObject metaElem) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_text");
+		return (!StringUtils.isEmpty(result));
+	}	
 	
 	/**
 	 * 
@@ -200,6 +212,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		return result;
 	}
 
+	/**
+	 * @param metaElem
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	protected static boolean isHtmlChild(JSONObject metaElem) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_html");
+		return (!StringUtils.isEmpty(result));
+	}		
+	
 	/**
 	 * Creates a sequential id
 	 * @return
