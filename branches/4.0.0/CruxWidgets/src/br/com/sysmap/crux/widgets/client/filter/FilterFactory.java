@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
@@ -30,6 +29,7 @@ import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory
 import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.gwt.client.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
@@ -77,7 +77,7 @@ public class FilterFactory extends CompositeFactory<Filter, WidgetCreatorContext
 	public class FilterableAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.client.screen.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.rebind.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
 		 */
 		public void processAttribute(WidgetCreatorContext context, String propertyValue)
 		{

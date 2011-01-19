@@ -27,7 +27,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.AttributeProcessor;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
@@ -39,6 +38,7 @@ import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
@@ -165,7 +165,7 @@ public class GridFactory extends WidgetCreator<Grid, WidgetCreatorContext>
 	public static class DataSourceAttributeParser implements AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.client.screen.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.rebind.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
 		 */
 		public void processAttribute(WidgetCreatorContext context, String propertyValue)
 		{

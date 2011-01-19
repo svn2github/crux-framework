@@ -17,10 +17,10 @@ package br.com.sysmap.crux.widgets.client.event;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
-public class CancelEvtBind implements EvtBinder<HasCancelHandlers>
+public class CancelEvtBind implements EvtProcessor<HasCancelHandlers>
 {
 	private static final String EVENT_NAME = "onCancel";
 
@@ -44,7 +44,7 @@ public class CancelEvtBind implements EvtBinder<HasCancelHandlers>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

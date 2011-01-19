@@ -17,10 +17,10 @@ package br.com.sysmap.crux.widgets.client.event.paste;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
-public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
+public class PasteEvtBind implements EvtProcessor<HasPasteHandlers>
 {
 	private static final String EVENT_NAME = "onPaste";
 
@@ -45,7 +45,7 @@ public class PasteEvtBind implements EvtBinder<HasPasteHandlers>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

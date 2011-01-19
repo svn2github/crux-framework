@@ -18,19 +18,19 @@ package br.com.sysmap.crux.widgets.client.event.moveitem;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * Binder for BeforeMoveItemsEvent handlers
  * @author Gesse S. F. Dafe
  */
-public class BeforeMoveItemsEvtBind implements EvtBinder<HasBeforeMoveItemsHandlers>
+public class BeforeMoveItemsEvtBind implements EvtProcessor<HasBeforeMoveItemsHandlers>
 {
 	private static final String EVENT_NAME = "onBeforeMoveItems";
 	
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
 	 */
 	public void bindEvent(CruxMetaDataElement element, HasBeforeMoveItemsHandlers widget)
 	{
@@ -49,7 +49,7 @@ public class BeforeMoveItemsEvtBind implements EvtBinder<HasBeforeMoveItemsHandl
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

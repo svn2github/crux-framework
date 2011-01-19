@@ -18,15 +18,15 @@ package br.com.sysmap.crux.widgets.client.event.focusblur;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * Helper Class for before focus events binding
  * @author Thiago Bustamante
  *
  */
-public class BeforeFocusEvtBind implements EvtBinder<HasBeforeFocusHandlers>
+public class BeforeFocusEvtBind implements EvtProcessor<HasBeforeFocusHandlers>
 {
 	private static final String EVENT_NAME = "onBeforeFocus";
 	

@@ -18,8 +18,8 @@ package br.com.sysmap.crux.widgets.client.event.row;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * All event binders for grid row events
@@ -30,12 +30,12 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowClickEvtBind implements EvtBinder<HasRowClickHandlers>
+	public static class RowClickEvtBind implements EvtProcessor<HasRowClickHandlers>
 	{
 		private static final String EVENT_NAME = "onrowclick";
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
 		 */
 		public void bindEvent(CruxMetaDataElement element, HasRowClickHandlers widget)
 		{
@@ -55,7 +55,7 @@ public class RowEventsBind
 		}
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -66,12 +66,12 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowDoubleClickEvtBind implements EvtBinder<HasRowDoubleClickHandlers>
+	public static class RowDoubleClickEvtBind implements EvtProcessor<HasRowDoubleClickHandlers>
 	{
 		private static final String EVENT_NAME = "onrowdoubleclick";
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
 		 */
 		public void bindEvent(CruxMetaDataElement element, HasRowDoubleClickHandlers widget)
 		{
@@ -91,7 +91,7 @@ public class RowEventsBind
 		}
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -102,12 +102,12 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowRenderEvtBind implements EvtBinder<HasRowRenderHandlers>
+	public static class RowRenderEvtBind implements EvtProcessor<HasRowRenderHandlers>
 	{
 		private static final String EVENT_NAME = "onrowrender";
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
 		 */
 		public void bindEvent(CruxMetaDataElement element, HasRowRenderHandlers widget)
 		{
@@ -127,7 +127,7 @@ public class RowEventsBind
 		}
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -138,12 +138,12 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class BeforeRowSelectEvtBind implements EvtBinder<HasBeforeRowSelectHandlers>
+	public static class BeforeRowSelectEvtBind implements EvtProcessor<HasBeforeRowSelectHandlers>
 	{
 		private static final String EVENT_NAME = "onbeforerowselect";
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
 		 */
 		public void bindEvent(CruxMetaDataElement element, HasBeforeRowSelectHandlers widget)
 		{
@@ -163,7 +163,7 @@ public class RowEventsBind
 		}
 
 		/**
-		 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{

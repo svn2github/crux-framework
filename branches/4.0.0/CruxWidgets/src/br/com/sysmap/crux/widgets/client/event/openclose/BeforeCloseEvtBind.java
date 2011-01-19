@@ -17,10 +17,10 @@ package br.com.sysmap.crux.widgets.client.event.openclose;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
-public class BeforeCloseEvtBind implements EvtBinder<HasBeforeCloseHandlers>
+public class BeforeCloseEvtBind implements EvtProcessor<HasBeforeCloseHandlers>
 {
 	private static final String EVENT_NAME = "onBeforeClose";
 
@@ -44,7 +44,7 @@ public class BeforeCloseEvtBind implements EvtBinder<HasBeforeCloseHandlers>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

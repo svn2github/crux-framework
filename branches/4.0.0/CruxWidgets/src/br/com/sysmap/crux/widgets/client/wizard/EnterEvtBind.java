@@ -17,14 +17,14 @@ package br.com.sysmap.crux.widgets.client.wizard;
 
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.event.bind.EvtBinder;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public class EnterEvtBind implements EvtBinder<HasEnterHandlers<?>>
+public class EnterEvtBind implements EvtProcessor<HasEnterHandlers<?>>
 {
 	private static final String EVENT_NAME = "onEnter";
 
@@ -42,7 +42,7 @@ public class EnterEvtBind implements EvtBinder<HasEnterHandlers<?>>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{
