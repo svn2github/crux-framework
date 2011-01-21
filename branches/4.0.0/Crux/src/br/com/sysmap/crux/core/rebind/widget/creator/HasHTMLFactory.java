@@ -20,8 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.HasHTML;
 
@@ -34,7 +34,7 @@ public interface HasHTMLFactory<T extends HasHTML, C extends WidgetCreatorContex
 	@TagAttributes({
 		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, processor=HTMLParser.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
