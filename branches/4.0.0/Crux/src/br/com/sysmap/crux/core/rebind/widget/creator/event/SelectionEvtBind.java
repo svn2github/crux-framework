@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
@@ -29,27 +29,20 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  * @author Thiago Bustamante
  *
  */
-public class SelectionEvtBind implements EvtProcessor<HasSelectionHandlers<?>>
+public class SelectionEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onSelection";
 
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
-	 */
-	@SuppressWarnings("unchecked")
-	public void bindEvent(CruxMetaDataElement element, HasSelectionHandlers<?> widget)
+	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
 	{
-		final Event eventChange = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventChange != null)
-		{
-			widget.addSelectionHandler(new SelectionHandler()
-			{
-				public void onSelection(SelectionEvent event) 
-				{
-					Events.callEvent(eventChange, event);
-				}
-			});
-		}
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addSelectionHandler(new "+ SelectionHandler.class.getCanonicalName()+"(){");
+		out.println("public void onSelection("+SelectionEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
 	}
 
 	/**

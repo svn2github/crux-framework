@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.event.logical.shared.HasShowRangeHandlers;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 
@@ -29,27 +29,20 @@ import com.google.gwt.event.logical.shared.ShowRangeHandler;
  * @author Thiago Bustamante
  *
  */
-public class ShowRangeEvtBind implements EvtProcessor<HasShowRangeHandlers<?>>
+public class ShowRangeEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onShowRange";
 
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, java.lang.Object)
-	 */
-	@SuppressWarnings("unchecked")
-	public void bindEvent(CruxMetaDataElement element, HasShowRangeHandlers<?> widget)
+	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
 	{
-		final Event eventShowRange = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventShowRange != null)
-		{
-			widget.addShowRangeHandler(new ShowRangeHandler()
-			{
-				public void onShowRange(ShowRangeEvent event)
-				{
-					Events.callEvent(eventShowRange, event);
-				}
-			});
-		}		
+		String event = ViewFactoryCreator.createVariableName("evt");
+
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addShowRangeHandler(new "+ShowRangeHandler.class.getCanonicalName()+"(){");
+		out.println("public void onShowRange("+ShowRangeEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
 	}
 
 	/**

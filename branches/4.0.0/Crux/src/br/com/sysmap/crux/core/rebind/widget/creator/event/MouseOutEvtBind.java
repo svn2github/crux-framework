@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.event.dom.client.HasMouseOutHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 
@@ -29,26 +29,20 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
  * @author Thiago Bustamante
  *
  */
-public class MouseOutEvtBind implements EvtProcessor<HasMouseOutHandlers>
+public class MouseOutEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onMouseOut";
 
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasMouseOutHandlers widget)
+	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
 	{
-		final Event eventMouseOut = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventMouseOut != null)
-		{
-			widget.addMouseOutHandler(new MouseOutHandler()
-			{
-				public void onMouseOut(MouseOutEvent event) 
-				{
-					Events.callEvent(eventMouseOut, event);					
-				}
-			});
-		}
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addMouseOutHandler(new "+ MouseOutHandler.class.getCanonicalName()+"(){");
+		out.println("public void onMouseOut("+MouseOutEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
 	}
 	
 	/**
