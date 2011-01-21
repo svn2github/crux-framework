@@ -253,7 +253,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param widgetFactory
 	 * @return
 	 */
-	private boolean factorySupportsInnerText(Class<? extends WidgetCreator<?,?>> widgetFactory)
+	private boolean factorySupportsInnerText(Class<? extends WidgetCreator<?>> widgetFactory)
 	{
 		try
 		{
@@ -499,7 +499,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetCreator<?,?>> widgetFactory, String library)
+	private void generateChildrenForFactory(PrintStream out, Class<? extends WidgetCreator<?>> widgetFactory, String library)
 	{
 		try
 		{
@@ -737,7 +737,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			for (TagEvent evt : evts.value())
 			{
-				Class<? extends EvtProcessor<?>> evtBinder = evt.value();
+				Class<? extends EvtProcessor> evtBinder = evt.value();
 				try
 				{
 					String eventName = evtBinder.newInstance().getEventName();
@@ -911,7 +911,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        Set<String> factories = WidgetConfig.getRegisteredLibraryFactories(library);
 	        for (String id : factories)
 	        {
-	        	Class<? extends WidgetCreator<?,?>> widgetFactory = (Class<? extends WidgetCreator<?,?>>) 
+	        	Class<? extends WidgetCreator<?>> widgetFactory = (Class<? extends WidgetCreator<?>>) 
 	        				Class.forName(WidgetConfig.getClientClass(library, id));
 	        	generateTypeForFactory(out, widgetFactory, library);
 	        }
@@ -1104,7 +1104,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param widgetFactory
 	 */
-	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetCreator<?,?>> widgetFactory, String library)
+	private void generateTypeForFactory(PrintStream out, Class<? extends WidgetCreator<?>> widgetFactory, String library)
 	{
 		DeclarativeFactory annot = widgetFactory.getAnnotation(DeclarativeFactory.class);
 		String elementName = annot.id();
