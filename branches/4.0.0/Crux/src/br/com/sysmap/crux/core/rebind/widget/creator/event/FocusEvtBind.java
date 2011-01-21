@@ -15,41 +15,23 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasFocusHandlers;
 
 /**
  * Helper Class for focus events binding
  * @author Thiago Bustamante
  *
  */
-public class FocusEvtBind implements EvtProcessor<HasFocusHandlers>
+public class FocusEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onFocus";
-
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasFocusHandlers widget)
-	{
-		final Event eventFocus = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventFocus != null)
-		{
-			widget.addFocusHandler(new FocusHandler()
-			{
-				public void onFocus(FocusEvent event) 
-				{
-					Events.callEvent(eventFocus, event);
-				}
-			});
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -57,5 +39,18 @@ public class FocusEvtBind implements EvtProcessor<HasFocusHandlers>
 	public String getEventName()
 	{
 		return EVENT_NAME;
-	}	
+	}
+
+	@Override
+    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addFocusHandler(new "+FocusHandler.class.getCanonicalName()+"(){");
+		out.println("public void onFocus("+FocusEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");	    
+    }	
 }

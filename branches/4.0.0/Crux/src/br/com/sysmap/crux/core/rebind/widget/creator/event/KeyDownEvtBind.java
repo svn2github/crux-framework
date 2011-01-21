@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 
@@ -29,27 +29,9 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
  * @author Thiago Bustamante
  *
  */
-public class KeyDownEvtBind implements EvtProcessor<HasKeyDownHandlers>
+public class KeyDownEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onKeyDown";
-
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasKeyDownHandlers widget)
-	{
-		final Event eventKeyDown = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventKeyDown != null)
-		{
-			widget.addKeyDownHandler(new KeyDownHandler()
-			{
-				public void onKeyDown(KeyDownEvent event) 
-				{
-					Events.callEvent(eventKeyDown, event);
-				}
-			});
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -57,5 +39,18 @@ public class KeyDownEvtBind implements EvtProcessor<HasKeyDownHandlers>
 	public String getEventName()
 	{
 		return EVENT_NAME;
-	}		
+	}
+
+	@Override
+    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addKeyDownHandler(new "+KeyDownHandler.class.getCanonicalName()+"(){");
+		out.println("public void onKeyDown("+KeyDownEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");	    
+    }		
 }

@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.event.logical.shared.HasHighlightHandlers;
 import com.google.gwt.event.logical.shared.HighlightEvent;
 import com.google.gwt.event.logical.shared.HighlightHandler;
 
@@ -29,28 +29,9 @@ import com.google.gwt.event.logical.shared.HighlightHandler;
  * @author Thiago Bustamante
  *
  */
-public class HighlightEvtBind implements EvtProcessor<HasHighlightHandlers<?>>
+public class HighlightEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onHighlight";
-
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
-	 */
-	@SuppressWarnings("unchecked")
-	public void bindEvent(CruxMetaDataElement element, HasHighlightHandlers<?> widget)
-	{
-		final Event eventHighlight = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (eventHighlight != null)
-		{
-			widget.addHighlightHandler(new HighlightHandler()
-			{
-				public void onHighlight(HighlightEvent event)
-				{
-					Events.callEvent(eventHighlight, event);
-				}
-			});
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -58,5 +39,18 @@ public class HighlightEvtBind implements EvtProcessor<HasHighlightHandlers<?>>
 	public String getEventName()
 	{
 		return EVENT_NAME;
-	}	
+	}
+
+	@Override
+    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addHighlightHandler(new "+HighlightHandler.class.getCanonicalName()+"(){");
+		out.println("public void onHighlight("+HighlightEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");	    
+    }	
 }
