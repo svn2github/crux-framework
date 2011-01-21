@@ -18,7 +18,9 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasHTML;
@@ -38,16 +40,16 @@ public interface HasHTMLFactory<T extends HasHTML, C extends WidgetCreatorContex
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	class HTMLParser implements AttributeProcessor<WidgetCreatorContext>
+	class HTMLParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
-		{
-			HasHTML widget = (HasHTML)context.getWidget();
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
 			String text = context.readWidgetProperty("text");
 			if (text == null || text.length() ==0)
 			{
-				widget.setHTML(propertyValue);
+				out.println(context.getWidget()+".setHTML("+EscapeUtils.quote(attributeValue)+");");
 			}
-		}
+        }
 	}
 }
