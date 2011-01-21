@@ -20,11 +20,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.gwt.client.CellPanelContext;
 
 /**

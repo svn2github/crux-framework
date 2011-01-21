@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.widgets.client.decoratedpanel;
 
-import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.gwt.client.CellPanelContext;
 import br.com.sysmap.crux.gwt.client.CellPanelFactory;
 

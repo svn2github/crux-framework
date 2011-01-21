@@ -23,16 +23,16 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAutoHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasWordWrapFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAutoHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**

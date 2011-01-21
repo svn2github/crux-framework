@@ -23,19 +23,19 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**
