@@ -88,7 +88,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected String createChildWidget(SourcePrinter out, JSONObject metaElem) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem) throws CruxGeneratorException
 	{
 		if (!metaElem.has("id"))
 		{
@@ -108,7 +108,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
 	{
 		return factory.newWidget(out, metaElem, widgetId, widgetType);
 	}

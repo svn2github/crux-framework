@@ -20,16 +20,14 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-
-import com.google.gwt.user.client.ui.HasHTML;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasHTMLFactory<T extends HasHTML, C extends WidgetCreatorContext> extends HasTextFactory<T, C>
+public interface HasHTMLFactory<C extends WidgetCreatorContext> extends HasTextFactory<C>
 {
 	@TagAttributes({
 		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, processor=HTMLParser.class)

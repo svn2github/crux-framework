@@ -18,19 +18,17 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignmentAttributeParser;
-
-import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAutoHorizontalAlignmentFactory<T extends HasAutoHorizontalAlignment, C extends WidgetCreatorContext> 
-extends HasHorizontalAlignmentFactory<T, C>
+public interface HasAutoHorizontalAlignmentFactory<C extends WidgetCreatorContext> 
+extends HasHorizontalAlignmentFactory<C>
 {
 	@TagAttributes({
 		@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 

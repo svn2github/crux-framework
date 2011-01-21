@@ -18,17 +18,15 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.ChangeEvtBind;
-
-import com.google.gwt.event.dom.client.HasChangeHandlers;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasChangeHandlersFactory<T extends HasChangeHandlers, C extends WidgetCreatorContext>
+public interface HasChangeHandlersFactory<C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(ChangeEvtBind.class)

@@ -18,17 +18,15 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.BeforeSelectionEvtBind;
-
-import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasBeforeSelectionHandlersFactory<T extends HasBeforeSelectionHandlers<?>, C extends WidgetCreatorContext>
+public interface HasBeforeSelectionHandlersFactory<C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(BeforeSelectionEvtBind.class)

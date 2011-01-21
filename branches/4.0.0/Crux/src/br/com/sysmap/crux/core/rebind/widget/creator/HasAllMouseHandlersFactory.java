@@ -18,8 +18,8 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseDownEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseMoveEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOutEvtBind;
@@ -27,13 +27,11 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOverEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseUpEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseWheelEvtBind;
 
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAllMouseHandlersFactory<T extends HasAllMouseHandlers, C extends WidgetCreatorContext>
+public interface HasAllMouseHandlersFactory<C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(MouseDownEvtBind.class),

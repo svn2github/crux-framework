@@ -18,16 +18,14 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-
-import com.google.gwt.user.client.ui.HasWordWrap;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasWordWrapFactory<T extends HasWordWrap, C extends WidgetCreatorContext>
+public interface HasWordWrapFactory<C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="wordWrap", type=Boolean.class)

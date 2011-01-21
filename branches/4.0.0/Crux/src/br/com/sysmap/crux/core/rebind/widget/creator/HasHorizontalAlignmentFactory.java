@@ -18,18 +18,16 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignmentAttributeParser;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasHorizontalAlignmentFactory<T extends HasHorizontalAlignment, C extends WidgetCreatorContext>
+public interface HasHorizontalAlignmentFactory<C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", 

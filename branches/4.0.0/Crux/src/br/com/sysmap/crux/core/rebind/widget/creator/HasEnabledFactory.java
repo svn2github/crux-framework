@@ -21,13 +21,11 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.user.client.ui.HasEnabled;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasEnabledFactory<T extends HasEnabled, C extends WidgetCreatorContext>
+public interface HasEnabledFactory<C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="enabled", type=Boolean.class)

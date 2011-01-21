@@ -18,19 +18,17 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyDownEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyPressEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyUpEvtBind;
-
-import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasAllKeyHandlersFactory<T extends HasAllKeyHandlers, C extends WidgetCreatorContext>
+public interface HasAllKeyHandlersFactory<C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(KeyUpEvtBind.class),

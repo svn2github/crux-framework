@@ -268,6 +268,8 @@ class ChildrenAnnotationScanner
 
 				WidgetChildProcessor<?> processor;
 				processor = child.value().newInstance();
+				processor.setWidgetCreator(widgetCreator);
+				
 				final Method processorMethod = getChildrenProcessorMethod(child.value());
 
 				createChildProcessorForMultipleChildrenProcessor(acceptNoChildren, childrenProcessor, 
@@ -301,6 +303,8 @@ class ChildrenAnnotationScanner
 
 			WidgetChildProcessor<?> processor;
 			processor = child.value().newInstance();
+			processor.setWidgetCreator(widgetCreator);
+
 			final Method processorMethod = getChildrenProcessorMethod(child.value());
 
 			ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForSingleChild(

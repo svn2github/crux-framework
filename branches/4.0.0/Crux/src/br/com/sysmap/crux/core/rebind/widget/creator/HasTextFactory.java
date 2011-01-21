@@ -18,16 +18,14 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-
-import com.google.gwt.user.client.ui.HasText;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasTextFactory<T extends HasText, C extends WidgetCreatorContext>
+public interface HasTextFactory<C extends WidgetCreatorContext>
 {
 	@TagAttributes({
 		@TagAttribute(value="text", supportsI18N=true)
