@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.HasAnimation;
 
@@ -31,5 +32,5 @@ public interface HasAnimationFactory<T extends HasAnimation, C extends WidgetCre
 	@TagAttributes({
 		@TagAttribute(value="animationEnabled", type=Boolean.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }

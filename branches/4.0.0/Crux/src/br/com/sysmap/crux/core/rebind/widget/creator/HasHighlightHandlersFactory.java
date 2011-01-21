@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.HighlightEvtBind;
 
 import com.google.gwt.event.logical.shared.HasHighlightHandlers;
@@ -32,5 +33,5 @@ public interface HasHighlightHandlersFactory<T extends HasHighlightHandlers<?>, 
 	@TagEvents({
 		@TagEvent(HighlightEvtBind.class)
 	})	
-	void processEvents(C context) throws InterfaceConfigException;
+	void processEvents(SourcePrinter out, C context) throws InterfaceConfigException;
 }

@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.CloseEvtBind;
 
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
@@ -32,5 +33,5 @@ public interface HasCloseHandlersFactory<T extends HasCloseHandlers<?>, C extend
 	@TagEvents({
 		@TagEvent(CloseEvtBind.class)
 	})	
-	void processEvents(C context) throws InterfaceConfigException;
+	void processEvents(SourcePrinter out, C context) throws InterfaceConfigException;
 }

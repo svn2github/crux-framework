@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.rebind.widget.creator;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -31,5 +32,5 @@ public interface HasEnabledFactory<T extends HasEnabled, C extends WidgetCreator
 	@TagAttributes({
 		@TagAttribute(value="enabled", type=Boolean.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }

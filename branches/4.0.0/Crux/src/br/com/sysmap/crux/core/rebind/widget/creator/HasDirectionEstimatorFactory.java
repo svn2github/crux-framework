@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.direction.DirectionEstimator;
 import br.com.sysmap.crux.core.rebind.widget.creator.direction.DirectionEstimatorAttributeParser;
 
@@ -34,5 +35,5 @@ public interface HasDirectionEstimatorFactory<T extends HasDirectionEstimator, C
 		@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="default", 
 			      processor=DirectionEstimatorAttributeParser.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }

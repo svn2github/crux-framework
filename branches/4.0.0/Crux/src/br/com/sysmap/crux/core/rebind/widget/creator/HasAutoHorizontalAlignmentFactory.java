@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignmentAttributeParser;
 
@@ -35,5 +36,5 @@ extends HasHorizontalAlignmentFactory<T, C>
 		@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 
 			      processor=AutoHorizontalAlignmentAttributeParser.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }
