@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-
-import com.google.gwt.user.client.ui.TextBoxBase;
 
 
 /**
@@ -28,15 +27,15 @@ import com.google.gwt.user.client.ui.TextBoxBase;
  * @author Thiago Bustamante
  *
  */
-public abstract class TextBoxBaseFactory<T extends TextBoxBase> extends ValueBoxBaseFactory<String, T>
+public abstract class TextBoxBaseFactory extends ValueBoxBaseFactory
 {	
 	@Override
 	@TagAttributes({
 		@TagAttribute("value"),
 		@TagAttribute(value="textAlignment", type=TextAlign.class, processor=TextAlignmentProcessor.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

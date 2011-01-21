@@ -23,11 +23,10 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
 
 import com.google.gwt.user.client.ui.TextArea;
@@ -40,16 +39,16 @@ import com.google.gwt.user.client.ui.TextArea;
  *
  */
 @DeclarativeFactory(id="textArea", library="gwt")
-public class TextAreaFactory extends TextBoxBaseFactory<TextArea> 
+public class TextAreaFactory extends TextBoxBaseFactory
 {	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="characterWidth", type=Integer.class),
 		@TagAttribute(value="visibleLines", type=Integer.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
