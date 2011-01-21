@@ -17,6 +17,7 @@ package br.com.sysmap.crux.core.rebind.widget.creator.children;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WidgetChildProcessor<T extends Widget, C extends WidgetCreatorContext>
 {
-	public void processChildren(C context) throws InterfaceConfigException{}
+	public void processChildren(SourcePrinter out, C context) throws InterfaceConfigException{}
 	
 	public static class AnyWidget{}
 	public static class AnyTag{}
