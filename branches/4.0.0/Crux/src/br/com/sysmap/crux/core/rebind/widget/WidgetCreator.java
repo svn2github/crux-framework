@@ -316,7 +316,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param property
 	 * @return
 	 */
-	protected String getDeclaredMessage(String property)
+	public String getDeclaredMessage(String property)
 	{
 		return factory.getDeclaredMessage(property);
 	}
