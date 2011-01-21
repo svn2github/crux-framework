@@ -17,16 +17,16 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
 
-import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 
 
@@ -35,10 +35,10 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends FocusWidgetFactory<T, WidgetCreatorContext>
-                implements HasChangeHandlersFactory<T, WidgetCreatorContext>, HasNameFactory<T, WidgetCreatorContext>, 
-                           HasTextFactory<T, WidgetCreatorContext>, HasDirectionEstimatorFactory<T, WidgetCreatorContext>, 
-                           HasDirectionFactory<T, WidgetCreatorContext>
+public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends FocusWidgetFactory<WidgetCreatorContext>
+                implements HasChangeHandlersFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
+                           HasTextFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>, 
+                           HasDirectionFactory<WidgetCreatorContext>
 {	
 	public static enum TextAlign{center, justify, left, right}
 	
@@ -47,30 +47,30 @@ public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends 
 		@TagAttribute(value="readOnly", type=Boolean.class),
 		@TagAttribute(value="alignment", type=TextAlign.class, processor=TextAlignmentProcessor.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class TextAlignmentProcessor implements AttributeProcessor<WidgetCreatorContext>
+	public static class TextAlignmentProcessor extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String textAlignment)
+		@Override
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
 		{
-			TextBoxBase widget = (TextBoxBase) context.getWidget();
-			
-			TextAlign align = TextAlign.valueOf(textAlignment);
+			TextAlign align = TextAlign.valueOf(attributeValue);
+			String textAlignClassName = TextAlign.class.getCanonicalName();
 			switch (align) {
-				case center: widget.setAlignment(ValueBoxBase.TextAlignment.CENTER);		
+				case center: out.println(context.getWidget() + ".setAlignment(" + textAlignClassName + ".CENTER);");
 				break;
-				case justify: widget.setAlignment(ValueBoxBase.TextAlignment.JUSTIFY);		
+				case justify: out.println(context.getWidget() + ".setAlignment(" + textAlignClassName + ".JUSTIFY);");
 				break;
-				case left: widget.setAlignment(ValueBoxBase.TextAlignment.LEFT);		
+				case left: out.println(context.getWidget() + ".setAlignment(" + textAlignClassName + ".LEFT);");
 				break;
-				case right: widget.setAlignment(ValueBoxBase.TextAlignment.RIGHT);		
+				case right: out.println(context.getWidget() + ".setAlignment(" + textAlignClassName + ".RIGHT);");
 				break;
 			}
 		}
