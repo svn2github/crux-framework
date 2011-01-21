@@ -15,21 +15,23 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 class AbsolutePanelContext extends WidgetCreatorContext
 {
@@ -42,24 +44,27 @@ class AbsolutePanelContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="absolutePanel", library="gwt")
-public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel, AbsolutePanelContext>
+public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelContext>
 {
 	@Override
-	public AbsolutePanel instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new AbsolutePanel();
+		String vartName = ViewFactoryCreator.createVariableName("absolutePanel");
+		String className = AbsolutePanel.class.getCanonicalName();
+		out.println(className + " " + vartName+" = new "+className+"();");
+		return vartName;
 	}
 
 	@Override
 	@TagChildren({
 		@TagChild(AbsoluteChildrenProcessor.class)
 	})	
-	public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
 	{
 	}	
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="widget" )
-	public static class AbsoluteChildrenProcessor extends WidgetChildProcessor<AbsolutePanel, AbsolutePanelContext> 
+	public static class AbsoluteChildrenProcessor extends WidgetChildProcessor<AbsolutePanelContext> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -69,7 +74,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel, Abs
 		@TagChildren({
 			@TagChild(AbsoluteWidgetProcessor.class)
 		})	
-		public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
 		{
 			context.left = context.readChildProperty("left");
 			context.top = context.readChildProperty("top");
@@ -77,20 +82,20 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanel, Abs
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanel, AbsolutePanelContext> 
+	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanelContext> 
 	{
 		@Override
-		public void processChildren(AbsolutePanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
 		{
-			Widget child = createChildWidget(context.getChildElement());
-			AbsolutePanel absolutePanel = context.getWidget();
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String absolutePanel = context.getWidget();
 			if (!StringUtils.isEmpty(context.left) && !StringUtils.isEmpty(context.top))
 			{
-				absolutePanel.add(child, Integer.parseInt(context.left), Integer.parseInt(context.top));
+				out.println(absolutePanel+".add("+child+", "+Integer.parseInt(context.left)+", "+Integer.parseInt(context.top)+");");
 			}
 			else
 			{
-				absolutePanel.add(child);
+				out.println(absolutePanel+".add("+child+");");
 			}
 			
 			context.left = null;

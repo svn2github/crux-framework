@@ -22,11 +22,12 @@ import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -34,7 +35,6 @@ import com.google.gwt.layout.client.Layout.AnimationCallback;
 import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AnimatedLayout;
-import com.google.gwt.user.client.ui.ComplexPanel;
 
 class AbstractLayoutPanelContext extends WidgetCreatorContext
 {
@@ -55,29 +55,30 @@ class AbstractLayoutPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel, C extends AbstractLayoutPanelContext> 
-			    extends ComplexPanelFactory<T, C>
+public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelContext> 
+			    extends ComplexPanelFactory<C>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="animationDuration", type=Integer.class, processor=AnimationDurationAttributeParser.class)
 	})
-	public void processAttributes(final C context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class AnimationDurationAttributeParser implements AttributeProcessor<AbstractLayoutPanelContext>
+	public static class AnimationDurationAttributeParser extends AttributeProcessor<AbstractLayoutPanelContext>
 	{
-		public void processAttribute(AbstractLayoutPanelContext context, String propertyValue) 
-		{
-			context.animationDuration = Integer.parseInt(propertyValue);
+		@Override
+        public void processAttribute(SourcePrinter out, AbstractLayoutPanelContext context, String attributeValue)
+        {
+			context.animationDuration = Integer.parseInt(attributeValue);
 			context.childProcessingAnimations = new FastList<Command>();			
-		}
+        }
 	}
 	
 	
@@ -86,14 +87,14 @@ public abstract class AbstractLayoutPanelFactory<T extends ComplexPanel, C exten
 		@TagEventDeclaration("onAnimationComplete"), 
 		@TagEventDeclaration("onAnimationStep") 
 	})
-	public void processEvents(C context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 	
     @SuppressWarnings("unchecked")
 	@Override
-    public void postProcess(final C context) throws InterfaceConfigException
+    public void postProcess(SourcePrinter out, C context) throws CruxGeneratorException
     {
 		final T widget = (T)context.getWidget();
 		

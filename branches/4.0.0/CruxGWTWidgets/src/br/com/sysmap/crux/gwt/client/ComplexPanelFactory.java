@@ -17,12 +17,10 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.user.client.ui.ComplexPanel;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class ComplexPanelFactory <T extends ComplexPanel, C extends WidgetCreatorContext> extends PanelFactory<T, C>
+public abstract class ComplexPanelFactory <C extends WidgetCreatorContext> extends PanelFactory<C>
 {
 }

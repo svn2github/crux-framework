@@ -17,35 +17,34 @@ package br.com.sysmap.crux.gwt.client;
 
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
 
-import com.google.gwt.user.client.ui.CheckBox;
-
 /**
  * CheckBoxFactory DeclarativeFactory.
  * @author Thiago Bustamante
  *
  */
-public abstract class AbstractCheckBoxFactory<T extends CheckBox> extends FocusWidgetFactory<T, WidgetCreatorContext> 
-       implements HasNameFactory<T, WidgetCreatorContext>, HasValueChangeHandlersFactory<T, WidgetCreatorContext>, 
-       			  HasHTMLFactory<T, WidgetCreatorContext>, HasWordWrapFactory<T, WidgetCreatorContext>
+public abstract class AbstractCheckBoxFactory extends FocusWidgetFactory<WidgetCreatorContext> 
+       implements HasNameFactory<WidgetCreatorContext>, HasValueChangeHandlersFactory<WidgetCreatorContext>, 
+       			  HasHTMLFactory<WidgetCreatorContext>, HasWordWrapFactory<WidgetCreatorContext>
 {
 	/**
 	 * process widget attributes
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="checked", type=Boolean.class, property="value"),
 		@TagAttribute("formValue")	
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

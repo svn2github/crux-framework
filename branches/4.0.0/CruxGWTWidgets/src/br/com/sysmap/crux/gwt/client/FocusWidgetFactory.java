@@ -19,7 +19,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.BlurEvtBind;
@@ -36,19 +37,17 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOverEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseUpEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseWheelEvtBind;
 
-import com.google.gwt.user.client.ui.FocusWidget;
-
 /**
  * This is the base factory class for widgets that can receive focus. 
  * 
  * @author Thiago Bustamante
  *
  */
-public abstract class FocusWidgetFactory <T extends FocusWidget, C extends WidgetCreatorContext> extends WidgetCreator<T, C> 
+public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> 
 {
 	/**
 	 * Process widget attributes
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
 	@Override
 	@TagAttributes({
@@ -57,9 +56,9 @@ public abstract class FocusWidgetFactory <T extends FocusWidget, C extends Widge
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
-	public void processAttributes(C context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
@@ -78,8 +77,8 @@ public abstract class FocusWidgetFactory <T extends FocusWidget, C extends Widge
 		@TagEvent(MouseMoveEvtBind.class),
 		@TagEvent(MouseWheelEvtBind.class)
 	})
-	public void processEvents(C context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 }

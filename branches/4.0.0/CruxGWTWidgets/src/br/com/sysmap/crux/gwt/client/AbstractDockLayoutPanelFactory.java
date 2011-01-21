@@ -41,8 +41,8 @@ class DockLayoutPanelContext extends AbstractLayoutPanelContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractDockLayoutPanelFactory<T extends DockLayoutPanel, C extends DockLayoutPanelContext> 
-	  extends AbstractLayoutPanelFactory<T, C>
+public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelContext> 
+	  extends AbstractLayoutPanelFactory<C>
 {
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
