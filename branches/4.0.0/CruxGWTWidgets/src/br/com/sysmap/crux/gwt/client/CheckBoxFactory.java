@@ -15,12 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
@@ -33,22 +36,25 @@ import com.google.gwt.user.client.ui.CheckBox;
  *
  */
 @DeclarativeFactory(id="checkBox", library="gwt")
-public class CheckBoxFactory extends AbstractCheckBoxFactory<CheckBox>
+public class CheckBoxFactory extends AbstractCheckBoxFactory
 {
 	@Override
-	public CheckBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new CheckBox();
+		String varName = ViewFactoryCreator.createVariableName("checkbox");
+		String className = CheckBox.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 
 	@Override
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<CheckBox, WidgetCreatorContext> {}
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

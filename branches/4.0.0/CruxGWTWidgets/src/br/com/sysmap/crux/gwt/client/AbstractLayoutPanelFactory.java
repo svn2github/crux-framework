@@ -81,7 +81,6 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
         }
 	}
 	
-	
 	@Override
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onAnimationComplete"), 

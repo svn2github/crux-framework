@@ -19,15 +19,13 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-
-import com.google.gwt.user.client.ui.ValueBoxBase;
 
 
 /**
@@ -35,7 +33,7 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class ValueBoxBaseFactory<V, T extends ValueBoxBase<V>> extends FocusWidgetFactory<WidgetCreatorContext>
+public abstract class ValueBoxBaseFactory extends FocusWidgetFactory<WidgetCreatorContext>
                 implements HasChangeHandlersFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
                            HasTextFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>, 
                            HasDirectionFactory<WidgetCreatorContext>

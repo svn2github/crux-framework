@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
@@ -34,24 +37,27 @@ import com.google.gwt.user.client.ui.Anchor;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="anchor", library="gwt")
-public class AnchorFactory extends FocusWidgetFactory<Anchor, WidgetCreatorContext> 
-	   implements HasHTMLFactory<Anchor, WidgetCreatorContext>, HasNameFactory<Anchor, WidgetCreatorContext>, 
-	              HasWordWrapFactory<Anchor, WidgetCreatorContext>, HasDirectionFactory<Anchor, WidgetCreatorContext>, 
-	              HasHorizontalAlignmentFactory<Anchor, WidgetCreatorContext>
+public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext> 
+	   implements HasHTMLFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
+	              HasWordWrapFactory<WidgetCreatorContext>, HasDirectionFactory<WidgetCreatorContext>, 
+	              HasHorizontalAlignmentFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute("href"),
 		@TagAttribute("target")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
-	public Anchor instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Anchor();
-	}	
+		String varName = ViewFactoryCreator.createVariableName("anchor");
+		String className = Anchor.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}
 }

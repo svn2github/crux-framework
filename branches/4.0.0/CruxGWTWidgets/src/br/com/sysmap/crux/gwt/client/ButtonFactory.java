@@ -15,12 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
@@ -31,23 +34,26 @@ import com.google.gwt.user.client.ui.Button;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="button", library="gwt")
-public class ButtonFactory extends ButtonBaseFactory<Button>
+public class ButtonFactory extends ButtonBaseFactory
 {
 
 	@Override
-	public Button instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Button();
+		String varName = ViewFactoryCreator.createVariableName("button");
+		String className = Button.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<Button, WidgetCreatorContext> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}	
 }

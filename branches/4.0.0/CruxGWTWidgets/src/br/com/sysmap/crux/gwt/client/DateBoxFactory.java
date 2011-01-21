@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -28,29 +28,24 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DatePicker;
-import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
-import com.google.gwt.user.datepicker.client.DateBox.Format;
 
 /**
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="dateBox", library="gwt")
-public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorContext> 
-       implements HasValueChangeHandlersFactory<DateBox, WidgetCreatorContext>
+public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext> 
+       implements HasValueChangeHandlersFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
@@ -64,11 +59,11 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorConte
 		@TagAttributeDeclaration("pattern"),
 		@TagAttributeDeclaration(value="reportFormatError", type=Boolean.class)
 	})
-	public void processAttributes(final WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 
-		DateBox widget = context.getWidget();
+		String widget = context.getWidget();
 		
 		String value = context.readWidgetProperty("value");
 		if (value != null && value.length() > 0)
@@ -80,8 +75,7 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorConte
 				reportError = Boolean.parseBoolean(reportFormatError);
 			}
 			
-			Date date = widget.getFormat().parse(widget, value, reportError);
-			widget.setValue(date);
+			out.println(widget+".setValue("+widget+".getFormat().parse("+widget+", "+EscapeUtils.quote(value)+", "+reportError+"));");
 		}		
 	}
 	
@@ -89,40 +83,44 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorConte
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadFormat")
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 	
+	
 	@Override
-	public DateBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		Array<CruxMetaDataElement> children = ensureChildren(element, true);
+		String varName = ViewFactoryCreator.createVariableName("dateBox");
+		String className = DateBox.class.getCanonicalName();
+
+		JSONArray children = ensureChildren(metaElem, true);
 		
-		if (children != null && children.size() > 0)
+		if (children != null && children.length() > 0)
 		{
-			int length = children.size();
-			DatePicker picker = null;
+			int length = children.length();
+			String picker = null;
 			
 			for (int i=0; i<length; i++)
 			{
-				CruxMetaDataElement childElement = children.get(i);
+				JSONObject childElement = children.optJSONObject(i);
 				if (childElement != null)
 				{
 					if (isWidget(childElement))
 					{
-						picker = (DatePicker) createChildWidget(childElement);
+						picker = createChildWidget(out, childElement);
 					}
 				}
 			}			
-			
-			return new DateBox(picker, null, getFormat(element, widgetId));
+			out.println(className+" "+varName+" new "+className+"("+picker+", null, "+getFormat(metaElem, widgetId)+");");
+			return varName;
 		}
 		else
 		{
-			DateBox dateBox = new DateBox();
-			dateBox.setFormat(getFormat(element, widgetId));
-			return dateBox;
+			out.println(className+" "+varName+" new "+className+"();");
+			out.println(varName+".setFormat("+getFormat(metaElem, widgetId)+");");
+			return varName;
 		}		
 	}
 	
@@ -130,37 +128,38 @@ public class DateBoxFactory extends CompositeFactory<DateBox, WidgetCreatorConte
 	@TagChildren({
 		@TagChild(value=DateBoxProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
-	public static class DateBoxProcessor extends WidgetChildProcessor<DateBox, WidgetCreatorContext>{}
+	public static class DateBoxProcessor extends WidgetChildProcessor<WidgetCreatorContext>{}
 	
 	/**
 	 * @param element
 	 * @param widgetId 
 	 * @return
 	 */
-	public Format getFormat(CruxMetaDataElement element, String widgetId)
+	public String getFormat(JSONObject element, String widgetId)
 	{
-		Format format = null;
-		String pattern = element.getProperty("pattern");
+		String format = null;
+		String pattern = element.optString("pattern");
 		
 		if (!StringUtils.isEmpty(pattern))
 		{
-			format = new DateBox.DefaultFormat(DateFormatUtil.getDateTimeFormat(pattern));
+			format = "new "+DateBox.class.getCanonicalName()+".DefaultFormat("+DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+EscapeUtils.quote(pattern)+"))";
 		}
 		else
 		{
-			Event eventLoadFormat = EvtBind.getWidgetEvent(element, "onLoadFormat");
-			
+
+			String eventLoadFormat = element.optString("onLoadFormat");
 			if (eventLoadFormat != null)
 			{
-				LoadFormatEvent<DateBox> loadFormatEvent = new LoadFormatEvent<DateBox>(widgetId);
-				format = (Format) Events.callEvent(eventLoadFormat, loadFormatEvent);
+			
+				format = "(Format) Events.callEvent(Events.getEvent(\"onLoadFormat\", "+EscapeUtils.quote(eventLoadFormat)+
+				         "), new LoadFormatEvent<"+DateBox.class.getCanonicalName()+">("+ EscapeUtils.quote(widgetId)+"))";
 			}
 			else 
 			{
-				format = GWT.create(DefaultFormat.class);
+				format = "GWT.create("+DateBox.class.getCanonicalName()+".DefaultFormat.class)";
 			}
 		}
 		

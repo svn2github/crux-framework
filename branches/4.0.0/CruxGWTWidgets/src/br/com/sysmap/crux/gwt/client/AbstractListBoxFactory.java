@@ -20,41 +20,39 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-
-import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * Base class for implementing factories for many kinds of list boxes.
  * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
  */
-public abstract class AbstractListBoxFactory<T extends ListBox> extends FocusWidgetFactory<T, ListBoxContext> 
-				implements HasChangeHandlersFactory<T, ListBoxContext>, HasNameFactory<T, ListBoxContext>
+public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxContext> 
+				implements HasChangeHandlersFactory<ListBoxContext>, HasNameFactory<ListBoxContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="visibleItemCount", type=Integer.class)
 	})
-	public void processAttributes(ListBoxContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context); 
+		super.processAttributes(out, context); 
 	}
 
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
-	public abstract static class ItemsProcessor<T extends ListBox> extends WidgetChildProcessor<T, ListBoxContext>
+	public abstract static class ItemsProcessor extends WidgetChildProcessor<ListBoxContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("value"),
-			@TagAttributeDeclaration("label"),
+			@TagAttributeDeclaration(value="label", supportsI18N=true),
 			@TagAttributeDeclaration(value="selected", type=Boolean.class)
 		})
-		public void processChildren(ListBoxContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException 
 		{
 			
 			String label = context.readChildProperty("label");
@@ -62,19 +60,18 @@ public abstract class AbstractListBoxFactory<T extends ListBox> extends FocusWid
 			
 			if(label != null && label.length() > 0)
 			{
-				label = ScreenFactory.getInstance().getDeclaredMessage(label);
+				label = getWidgetCreator().getDeclaredMessage(label);
 			}			
 			if (value == null || value.length() == 0)
 			{
 				value = label;
 			}
-			T widget = (T)context.getWidget();
-			widget.insertItem(label, value, context.index);
+			out.println(context.getWidget()+".insertItem("+EscapeUtils.quote(label)+", "+EscapeUtils.quote(value)+", "+context.index+");");
 
 			String selected = context.readChildProperty("selected");
 			if (selected != null && selected.length() > 0)
 			{
-				widget.setItemSelected(context.index, Boolean.parseBoolean(selected));
+				out.println(context.getWidget()+".setItemSelected("+context.index+", "+Boolean.parseBoolean(selected)+");");
 			}
 			context.index += 1;
 		}

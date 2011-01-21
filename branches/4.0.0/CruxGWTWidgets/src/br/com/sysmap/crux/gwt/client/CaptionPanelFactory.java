@@ -15,14 +15,19 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
@@ -36,15 +41,15 @@ import com.google.gwt.user.client.ui.CaptionPanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="captionPanel", library="gwt")
-public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetCreatorContext>
+public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute("captionText")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
@@ -52,57 +57,60 @@ public class CaptionPanelFactory extends CompositeFactory<CaptionPanel, WidgetCr
 		@TagChild(CaptionProcessor.class),
 		@TagChild(ContentProcessor.class)
 	})	
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@Override
-	public CaptionPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new CaptionPanel();
+		String varName = ViewFactoryCreator.createVariableName("captionPanel");
+		String className = CaptionPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class CaptionProcessor extends ChoiceChildProcessor<CaptionPanel, WidgetCreatorContext>
+	public static class CaptionProcessor extends ChoiceChildProcessor<WidgetCreatorContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CaptionTextProcessor.class),
 			@TagChild(CaptionHTMLProcessor.class)
 		})	
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext> 
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(minOccurs="0", widgetProperty="contentWidget")
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<CaptionPanel, WidgetCreatorContext> {}
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(tagName="captionText", type=String.class)
-	public static class CaptionTextProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext>
+	public static class CaptionTextProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			CaptionPanel widget = context.getWidget();
-			widget.setCaptionText(ensureTextChild(context.getChildElement(), true));
+			String title = getWidgetCreator().getDeclaredMessage(WidgetCreator.ensureTextChild(context.getChildElement(), false));
+			out.println(context.getWidget()+".setCaptionText("+EscapeUtils.quote(title)+");");
 		}
 	}
 	
 	@TagChildAttributes(tagName="captionHTML", type=HTMLTag.class)
-	public static class CaptionHTMLProcessor extends WidgetChildProcessor<CaptionPanel, WidgetCreatorContext>
+	public static class CaptionHTMLProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			CaptionPanel widget = context.getWidget();
-			widget.setCaptionHTML(ensureHtmlChild(context.getChildElement(), true));
+			String title = WidgetCreator.ensureHtmlChild(context.getChildElement(), false);
+			out.println(context.getWidget()+".setCaptionHTML("+EscapeUtils.quote(title)+");");
 		}
 	}
 }

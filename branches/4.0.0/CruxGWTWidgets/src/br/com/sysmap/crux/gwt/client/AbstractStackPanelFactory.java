@@ -18,25 +18,22 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractStackPanelFactory<T extends StackPanel> extends ComplexPanelFactory<T, AbstractStackPanelFactoryContext>
+public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<AbstractStackPanelFactoryContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
@@ -44,34 +41,28 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	@TagAttributes({
 		@TagAttribute(value="visibleStack", type=Integer.class, processor=VisibleStackAttributeParser.class)
 	})
-	public void processAttributes(AbstractStackPanelFactoryContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Gesse Dafe
 	 */
-	public static class VisibleStackAttributeParser implements AttributeProcessor<AbstractStackPanelFactoryContext>
+	public static class VisibleStackAttributeParser extends AttributeProcessor<AbstractStackPanelFactoryContext>
 	{
-		public void processAttribute(AbstractStackPanelFactoryContext context, final String propertyValue) 
-		{
-			final StackPanel widget = context.getWidget();
-			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent event)
-				{
-					widget.showStack(Integer.parseInt(propertyValue));
-				}
-			});
-		}		
+		@Override
+        public void processAttribute(SourcePrinter out, AbstractStackPanelFactoryContext context, String attributeValue)
+        {
+			printlnPostProcessing(context.getWidget()+".showStack("+Integer.parseInt(attributeValue)+");");
+        }		
 	}
 
 	@TagChildAttributes(tagName="textTitle", type=String.class)
-	public abstract static class AbstractTitleTextProcessor<T extends StackPanel> extends WidgetChildProcessor<T, AbstractStackPanelFactoryContext>
+	public abstract static class AbstractTitleTextProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureTextChild(context.getChildElement(), true);
 			context.isHtmlTitle = false;
@@ -79,10 +70,10 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	}
 	
 	@TagChildAttributes(tagName="htmlTitle", type=HTMLTag.class)
-	public abstract static class AbstractTitleHTMLProcessor<T extends StackPanel> extends WidgetChildProcessor<T, AbstractStackPanelFactoryContext>
+	public abstract static class AbstractTitleHTMLProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureHtmlChild(context.getChildElement(), true);
 			context.isHtmlTitle = true;
@@ -90,21 +81,21 @@ public abstract class AbstractStackPanelFactory<T extends StackPanel> extends Co
 	}
 	
 	@TagChildAttributes(minOccurs="0", type=AnyWidget.class)
-	public abstract static class AbstractContentWidgetProcessor<T extends StackPanel> extends WidgetChildProcessor<T, AbstractStackPanelFactoryContext> 
+	public abstract static class AbstractContentWidgetProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> 
 	{
 		@Override
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out,AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 		{
-			Widget child = createChildWidget(context.getChildElement());
-			StackPanel widget = context.getWidget();
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String widget = context.getWidget();
 			
 			if (context.title == null)
 			{
-				widget.add(child);
+				out.println(widget+".add("+child+");");
 			}
 			else
 			{
-				widget.add(child, context.title, context.isHtmlTitle);
+				out.println(widget+".add("+child+", "+EscapeUtils.quote(context.title)+", "+context.isHtmlTitle+");");
 			}
 			context.title = null;
 			context.isHtmlTitle = false;

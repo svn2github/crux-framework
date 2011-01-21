@@ -20,6 +20,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
@@ -37,15 +38,15 @@ class CustomButtonContext extends WidgetCreatorContext
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class CustomButtonFactory<T extends CustomButton> extends FocusWidgetFactory<T, CustomButtonContext> 
-			implements HasHTMLFactory<T, CustomButtonContext>
+public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButtonContext> 
+			implements HasHTMLFactory<CustomButtonContext>
 {
 	@TagChildAttributes(tagName="up")
-	abstract static class AbstractUpFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractUpFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws InterfaceConfigException 
 		{
 			W widget = (W)context.getWidget();
 			context.face = widget.getUpFace();

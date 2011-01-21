@@ -26,17 +26,15 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFacto
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
 
-import com.google.gwt.user.client.ui.Label;
-
 /**
  * Represents a Label DeclarativeFactory
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractLabelFactory<T extends Label> extends WidgetCreator<T, WidgetCreatorContext> 
-       implements HasDirectionFactory<T, WidgetCreatorContext>, HasWordWrapFactory<T, WidgetCreatorContext>, 
-       			  HasTextFactory<T, WidgetCreatorContext>, HasClickHandlersFactory<T, WidgetCreatorContext>, 
-       			  HasDoubleClickHandlersFactory<T, WidgetCreatorContext>, HasAllMouseHandlersFactory<T, WidgetCreatorContext>, 
-                  HasAutoHorizontalAlignmentFactory<T, WidgetCreatorContext>, HasDirectionEstimatorFactory<T, WidgetCreatorContext>
+public abstract class AbstractLabelFactory extends WidgetCreator<WidgetCreatorContext> 
+       implements HasDirectionFactory<WidgetCreatorContext>, HasWordWrapFactory<WidgetCreatorContext>, 
+       			  HasTextFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>, 
+       			  HasDoubleClickHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
+                  HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>
 {
 }

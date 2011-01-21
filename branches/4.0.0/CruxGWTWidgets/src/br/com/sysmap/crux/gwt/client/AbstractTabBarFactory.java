@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -22,12 +24,14 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
@@ -45,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 class TabBarContext extends WidgetCreatorContext
 {
-	public CruxMetaDataElement tabElement;
+	public JSONObject tabElement;
 }
 
 
@@ -53,39 +57,33 @@ class TabBarContext extends WidgetCreatorContext
  * Factory for TabBar widgets
  * @author Thiago da Rosa de Bustamante
  */
-public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeFactory<T, TabBarContext> 
-       implements HasBeforeSelectionHandlersFactory<T, TabBarContext>, HasSelectionHandlersFactory<T, TabBarContext>
+public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarContext> 
+       implements HasBeforeSelectionHandlersFactory<TabBarContext>, HasSelectionHandlersFactory<TabBarContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
-	public void processAttributes(TabBarContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeProcessor<TabBarContext>
+	public static class VisibleTabAttributeParser extends AttributeProcessor<TabBarContext>
 	{
-		public void processAttribute(TabBarContext context, final String propertyValue)
+		@Override
+        public void processAttribute(SourcePrinter out, TabBarContext context, String attributeValue)
         {
-			final TabBar widget = context.getWidget();
-			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent event)
-				{
-					widget.selectTab(Integer.parseInt(propertyValue));
-				}
-			});
+			printlnPostProcessing(context.getWidget()+".selectTab("+Integer.parseInt(attributeValue)+");");
         }
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
-	public abstract static class AbstractTabProcessor<T extends TabBar> extends WidgetChildProcessor<T, TabBarContext> 
+	public abstract static class AbstractTabProcessor extends WidgetChildProcessor<TabBarContext> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -98,50 +96,47 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 			@TagEventDeclaration("onKeyDown"),
 			@TagEventDeclaration("onKeyPress")
 		})
-		public void processChildren(TabBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
 		{
 			context.tabElement =context.getChildElement();
 		}
 	}
 	
 	@TagChildAttributes(tagName="text", type=String.class)
-	public abstract static class AbstractTextTabProcessor<T extends TabBar> extends WidgetChildProcessor<T, TabBarContext>
+	public abstract static class AbstractTextTabProcessor extends WidgetChildProcessor<TabBarContext>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(TabBarContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException 
 		{
-			String title = ensureTextChild(context.getChildElement(), true);
-			T widget = (T)context.getWidget();
-			widget.addTab(title);
+			String title = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			out.println(context.getWidget()+".addTab("+EscapeUtils.quote(title)+");");
 			updateTabState(context);
 		}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public abstract static class AbstractHTMLTabProcessor<T extends TabBar> extends WidgetChildProcessor<T, TabBarContext>
+	public abstract static class AbstractHTMLTabProcessor extends WidgetChildProcessor<TabBarContext>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(TabBarContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException 
 		{
 			String title = ensureHtmlChild(context.getChildElement(), true);
-			T widget = (T)context.getWidget();
-			widget.addTab(title, true);
+			out.println(context.getWidget()+".addTab("+EscapeUtils.quote(title)+", true);");
 			updateTabState(context);
 		}
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	public abstract static class AbstractWidgetProcessor<T extends TabBar> extends WidgetChildProcessor<T, TabBarContext> 
+	public abstract static class AbstractWidgetProcessor extends WidgetChildProcessor<TabBarContext> 
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(TabBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
 		{
-			Widget titleWidget = createChildWidget(context.getChildElement());
-			T widget = (T)context.getWidget();
-			widget.addTab(titleWidget);
+			String titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			out.println(context.getWidget()+".addTab("+titleWidget+");");
 			updateTabState(context);
 		}
 	}
@@ -149,7 +144,7 @@ public abstract class AbstractTabBarFactory<T extends TabBar> extends CompositeF
 	@SuppressWarnings("unchecked")
 	private static <T extends TabBar> void updateTabState(TabBarContext context)
 	{
-		String enabled = context.tabElement.getProperty("enabled");
+		String enabled = context.tabElement.optString("enabled");
 		T widget = (T)context.getWidget();
 		int tabCount = widget.getTabCount();
 		if (enabled != null && enabled.length() >0)

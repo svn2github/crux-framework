@@ -55,10 +55,10 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		String vartName = ViewFactoryCreator.createVariableName("textArea");
+		String varName = ViewFactoryCreator.createVariableName("textArea");
 		String className = TextArea.class.getCanonicalName();
-		out.println(className + " " + vartName+" = new "+className+"();");
-		return vartName;
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 	
 	@Override
