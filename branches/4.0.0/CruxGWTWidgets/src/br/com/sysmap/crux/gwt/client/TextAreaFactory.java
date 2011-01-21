@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -22,8 +24,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
 
 import com.google.gwt.user.client.ui.TextArea;
@@ -49,19 +53,22 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 	}
 
 	@Override
-	public TextArea instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new TextArea();
+		String vartName = ViewFactoryCreator.createVariableName("textArea");
+		String className = TextArea.class.getCanonicalName();
+		out.println(className + " " + vartName+" = new "+className+"();");
+		return vartName;
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(InnerTextProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", widgetProperty="value")
-	public static class InnerTextProcessor extends TextChildProcessor<TextArea, WidgetCreatorContext> {}	
+	public static class InnerTextProcessor extends TextChildProcessor<WidgetCreatorContext> {}	
 }
