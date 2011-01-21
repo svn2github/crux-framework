@@ -30,6 +30,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface TagChild
 {
-	Class<? extends WidgetChildProcessor<?,?>> value();
+	Class<? extends WidgetChildProcessor<?>> value();
 	boolean autoProcess() default true;
 }

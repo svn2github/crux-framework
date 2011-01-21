@@ -111,7 +111,7 @@ class ChildrenAnnotationScanner
 	 */
 	private ChildProcessor createChildProcessor(final boolean acceptNoChildren, final boolean isAgregator, 
 																	  final boolean isAnyWidget, final String widgetProperty, 
-																	  final WidgetLazyChecker lazyChecker, final WidgetChildProcessor<?, ?> processor, 
+																	  final WidgetLazyChecker lazyChecker, final WidgetChildProcessor<?> processor, 
 																	  final Method processorMethod)
     {
 	    return new ChildProcessor()
@@ -176,7 +176,7 @@ class ChildrenAnnotationScanner
 	 */
 	private void createChildProcessorForMultipleChildrenProcessor(boolean acceptNoChildren, ChildrenProcessor childrenProcessor, 
 																  JClassType childProcessorClass, boolean isAgregator,
-																  WidgetChildProcessor<?, ?> processor, final Method processorMethod)
+																  WidgetChildProcessor<?> processor, final Method processorMethod)
     {
 	    TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 	    final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
@@ -266,7 +266,7 @@ class ChildrenAnnotationScanner
 					hasAgregator = true;
 				}
 
-				WidgetChildProcessor<?, ?> processor;
+				WidgetChildProcessor<?> processor;
 				processor = child.value().newInstance();
 				final Method processorMethod = getChildrenProcessorMethod(child.value());
 
@@ -299,7 +299,7 @@ class ChildrenAnnotationScanner
 				return createChildProcessorForText(child, acceptNoChildren);
 			}
 
-			WidgetChildProcessor<?, ?> processor;
+			WidgetChildProcessor<?> processor;
 			processor = child.value().newInstance();
 			final Method processorMethod = getChildrenProcessorMethod(child.value());
 
@@ -373,7 +373,7 @@ class ChildrenAnnotationScanner
 	 * @param childProcessorClass
 	 * @return
 	 */
-	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(final boolean acceptNoChildren, WidgetChildProcessor<?, ?> processor, 
+	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(final boolean acceptNoChildren, WidgetChildProcessor<?> processor, 
 																	  Method processorMethod, JClassType childProcessorClass)
     {
 		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);

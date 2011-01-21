@@ -19,13 +19,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @TagChildAttributes(type=AnyWidget.class)
-public class AnyWidgetChildProcessor<T extends Widget, C extends WidgetCreatorContext> extends WidgetChildProcessor<T, C>
+public class AnyWidgetChildProcessor<C extends WidgetCreatorContext> extends WidgetChildProcessor<C>
 {
 }

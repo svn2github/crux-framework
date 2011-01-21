@@ -190,7 +190,7 @@ class HTMLBuilder
 			String parentPath;
 			for (TagChild child : tagChildren.value())
 			{
-				Class<? extends WidgetChildProcessor<?,?>> processorClass = child.value();
+				Class<? extends WidgetChildProcessor<?>> processorClass = child.value();
 				if (!added.contains(processorClass.getCanonicalName()))
 				{
 					parentPath = parentWidget;
