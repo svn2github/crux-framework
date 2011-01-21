@@ -24,7 +24,15 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
  */
 public abstract class EvtProcessor extends AbstractProcessor
 {
-	
+	/**
+	 * @param out
+	 * @param context
+	 * @param eventValue
+	 */
 	public abstract void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue);
+
+	/**
+	 * @return
+	 */
 	public abstract String getEventName();
 }

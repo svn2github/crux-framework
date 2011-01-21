@@ -15,12 +15,9 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;

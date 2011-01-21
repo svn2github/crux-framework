@@ -19,7 +19,7 @@ package br.com.sysmap.crux.core.rebind.widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class AbstractProcessor 
+public abstract class AbstractProcessor 
 {
 	private WidgetCreator<?> widgetCreator;
 	
@@ -38,5 +38,4 @@ public class AbstractProcessor
 	{
 		widgetCreator.printlnPostProcessing(s);
 	}
-
 }

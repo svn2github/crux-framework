@@ -27,9 +27,6 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.event.bind.AttachEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.DettachEvtBind;
-import br.com.sysmap.crux.core.client.event.bind.LoadWidgetEvtProcessor;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
@@ -37,6 +34,9 @@ import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.creator.event.AttachEvtBind;
+import br.com.sysmap.crux.core.rebind.widget.creator.event.DettachEvtBind;
+import br.com.sysmap.crux.core.rebind.widget.creator.event.LoadWidgetEvtProcessor;
 
 /**
  * Generate code for gwt widgets creation. Generates code based on a JSON meta data array

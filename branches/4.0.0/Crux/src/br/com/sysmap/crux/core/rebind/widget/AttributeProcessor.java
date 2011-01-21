@@ -29,5 +29,10 @@ public abstract class AttributeProcessor<C extends WidgetCreatorContext> extends
 	{
 	}
 	
+	/**
+	 * @param out
+	 * @param context
+	 * @param attributeValue
+	 */
 	public abstract void processAttribute(SourcePrinter out, C context, String attributeValue);
 }

@@ -13,23 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.declarative;
+package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import br.com.sysmap.crux.core.client.declarative.TagEvent;
+import br.com.sysmap.crux.core.client.declarative.TagEvents;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.event.OpenEvtBind;
 
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import com.google.gwt.event.logical.shared.HasOpenHandlers;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface TagChild
+public interface HasOpenHandlersFactory<T extends HasOpenHandlers<?>, C extends WidgetCreatorContext>
 {
-	Class<? extends WidgetChildProcessor<?,?>> value();
-	boolean autoProcess() default true;
+	@TagEvents({
+		@TagEvent(OpenEvtBind.class)
+	})	
+	void processEvents(C context) throws InterfaceConfigException;
 }

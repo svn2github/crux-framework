@@ -13,23 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.declarative;
+package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import br.com.sysmap.crux.core.client.declarative.TagAttribute;
+import br.com.sysmap.crux.core.client.declarative.TagAttributes;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import com.google.gwt.user.client.ui.HasEnabled;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface TagChild
+public interface HasEnabledFactory<T extends HasEnabled, C extends WidgetCreatorContext>
 {
-	Class<? extends WidgetChildProcessor<?,?>> value();
-	boolean autoProcess() default true;
+	@TagAttributes({
+		@TagAttribute(value="enabled", type=Boolean.class)
+	})	
+	void processAttributes(C context) throws InterfaceConfigException;
 }
