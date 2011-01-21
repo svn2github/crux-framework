@@ -24,11 +24,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 import br.com.sysmap.crux.gwt.client.AbstractHTMLPanelFactory;
 
