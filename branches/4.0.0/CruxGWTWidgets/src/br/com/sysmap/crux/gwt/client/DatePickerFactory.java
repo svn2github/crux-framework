@@ -21,11 +21,11 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasHighlightHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasShowRangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasHighlightHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasShowRangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
 
 import com.google.gwt.user.datepicker.client.DatePicker;
 

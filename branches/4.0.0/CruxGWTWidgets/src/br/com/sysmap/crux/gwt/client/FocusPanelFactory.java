@@ -19,13 +19,13 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllFocusHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllMouseHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
 
 import com.google.gwt.user.client.ui.FocusPanel;
 

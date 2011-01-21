@@ -22,11 +22,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasVerticalAlignmentFactory;
-import br.com.sysmap.crux.core.client.screen.factory.align.HorizontalAlignment;
-import br.com.sysmap.crux.core.client.screen.factory.align.VerticalAlignment;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;

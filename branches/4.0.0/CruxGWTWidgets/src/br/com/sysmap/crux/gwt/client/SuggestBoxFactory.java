@@ -24,13 +24,13 @@ import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.factory.HasAllKeyHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasTextFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
 
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;

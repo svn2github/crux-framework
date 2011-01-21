@@ -22,9 +22,9 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 
 import com.google.gwt.user.client.ui.ListBox;
 
