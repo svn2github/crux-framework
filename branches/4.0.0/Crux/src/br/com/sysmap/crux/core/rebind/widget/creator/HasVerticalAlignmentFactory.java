@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignmentAttributeParser;
 
@@ -33,5 +34,5 @@ public interface HasVerticalAlignmentFactory<T extends HasVerticalAlignment, C e
 	@TagAttributes({
 		@TagAttribute(value="verticalAlignment", type=VerticalAlignment.class, processor=VerticalAlignmentAttributeParser.class)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }

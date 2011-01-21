@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.HasText;
 
@@ -31,5 +32,5 @@ public interface HasTextFactory<T extends HasText, C extends WidgetCreatorContex
 	@TagAttributes({
 		@TagAttribute(value="text", supportsI18N=true)
 	})	
-	void processAttributes(C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
 }
