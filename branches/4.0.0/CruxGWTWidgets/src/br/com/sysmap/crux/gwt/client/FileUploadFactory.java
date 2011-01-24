@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
@@ -32,23 +35,26 @@ import com.google.gwt.user.client.ui.FileUpload;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="fileUpload", library="gwt")
-public class FileUploadFactory extends WidgetCreator<FileUpload, WidgetCreatorContext> 
-	   implements HasChangeHandlersFactory<FileUpload, WidgetCreatorContext>, 
-	   			  HasNameFactory<FileUpload, WidgetCreatorContext>
+public class FileUploadFactory extends WidgetCreator<WidgetCreatorContext> 
+	   implements HasChangeHandlersFactory<WidgetCreatorContext>, 
+	   			  HasNameFactory<WidgetCreatorContext>
 {//TODO should implement HasEnabledFactory, but GWT FileUploadWidget does not implement HasEnabled. GWT Issue 5677
 
 	@Override
-	public FileUpload instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new FileUpload();
+		String varName = ViewFactoryCreator.createVariableName("fileUpload");
+		String className = FileUpload.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="enabled", type=Boolean.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

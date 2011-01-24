@@ -40,5 +40,4 @@ public class DecoratorPanelFactory extends PanelFactory<WidgetCreatorContext>
 		out.println(className + " " + varName+" = new "+className+"();");
 		return varName;
 	}	
-	
 }

@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
@@ -32,16 +35,19 @@ import com.google.gwt.user.client.ui.DialogBox;
  * @author Gesse S. F. Dafe <code>gessedafe@gmail.com</code>
  */
 @DeclarativeFactory(id="dialogBox", library="gwt", attachToDOM=false)
-public class DialogBoxFactory extends PanelFactory<DialogBox, WidgetCreatorContext>
-       implements HasAnimationFactory<DialogBox, WidgetCreatorContext>, 
-                  HasCloseHandlersFactory<DialogBox, WidgetCreatorContext>, 
-                  HasHTMLFactory<DialogBox, WidgetCreatorContext>
+public class DialogBoxFactory extends PanelFactory<WidgetCreatorContext>
+       implements HasAnimationFactory<WidgetCreatorContext>, 
+                  HasCloseHandlersFactory<WidgetCreatorContext>, 
+                  HasHTMLFactory<WidgetCreatorContext>
 {
 	@Override
-	public DialogBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new DialogBox();
-	}
+		String varName = ViewFactoryCreator.createVariableName("dialogBox");
+		String className = DialogBox.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}		
 	
 	@Override
 	@TagAttributes({
@@ -52,8 +58,8 @@ public class DialogBoxFactory extends PanelFactory<DialogBox, WidgetCreatorConte
 		@TagAttribute(value="modal", type=Boolean.class),
 		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

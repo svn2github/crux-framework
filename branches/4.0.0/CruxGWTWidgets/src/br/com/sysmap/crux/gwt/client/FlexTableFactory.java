@@ -15,14 +15,17 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 
 import com.google.gwt.core.client.GWT;
@@ -33,44 +36,45 @@ import com.google.gwt.user.client.ui.FlexTable;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="flexTable", library="gwt")
-public class FlexTableFactory extends HTMLTableFactory<FlexTable, HTMLTableFactoryContext>
+public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 {
-
 	@Override
-	public FlexTable instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new FlexTable();
-	}
+		String varName = ViewFactoryCreator.createVariableName("flexTable");
+		String className = FlexTable.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 	
 	/**
 	 * Populate the panel with declared items
 	 * @param element
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
 	@Override
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
-	public static class GridRowProcessor extends TableRowProcessor<FlexTable, HTMLTableFactoryContext>
+	public static class GridRowProcessor extends TableRowProcessor<HTMLTableFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException
 		{
-			FlexTable widget = context.getWidget();
-			int r = widget.getRowCount();
-			widget.insertRow(r);
-			super.processChildren(context);
+			String widget = context.getWidget();
+			out.println(widget+".insertRow("+widget+".getRowCount());");
+			super.processChildren(out, context);
 		}
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class GridCellProcessor extends TableCellProcessor<FlexTable, HTMLTableFactoryContext>
+	public static class GridCellProcessor extends TableCellProcessor<HTMLTableFactoryContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -80,29 +84,29 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable, HTMLTableFacto
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException
 		{
-			FlexTable widget = context.getWidget();
-			widget.addCell(context.rowIndex);
+			String widget = context.getWidget();
+			out.println(widget+".addCell("+context.rowIndex+");");
 			
-			super.processChildren(context);
+			super.processChildren(out, context);
 
 			String colspan = context.readChildProperty("colSpan");
 			if(colspan != null && colspan.length() > 0)
 			{
-				widget.getFlexCellFormatter().setColSpan(context.rowIndex, context.colIndex, Integer.parseInt(colspan));
+				out.println(widget+".getFlexCellFormatter().setColSpan("+context.rowIndex+", "+context.colIndex+", "+Integer.parseInt(colspan)+");");
 			}
 			
 			String rowSpan = context.readChildProperty("rowSpan");
 			if(rowSpan != null && rowSpan.length() > 0)
 			{
-				widget.getFlexCellFormatter().setRowSpan(context.rowIndex, context.colIndex, Integer.parseInt(rowSpan));
+				out.println(widget+".getFlexCellFormatter().setRowSpan("+context.rowIndex+", "+context.colIndex+", "+Integer.parseInt(rowSpan)+");");
 			}
 		}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class GridChildrenProcessor extends ChoiceChildProcessor<FlexTable, HTMLTableFactoryContext> 
+	public static class GridChildrenProcessor extends ChoiceChildProcessor<HTMLTableFactoryContext> 
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
 
@@ -112,20 +116,19 @@ public class FlexTableFactory extends HTMLTableFactory<FlexTable, HTMLTableFacto
 			@TagChild(FlexCellHTMLProcessor.class),
 			@TagChild(FlexCellWidgetProcessor.class)
 		})
-		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException	{}
+		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException	{}
 	}
 	
-	public static class FlexCellTextProcessor extends CellTextProcessor<FlexTable, HTMLTableFactoryContext>{}
-	public static class FlexCellHTMLProcessor extends CellHTMLProcessor<FlexTable, HTMLTableFactoryContext>{}
-	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<FlexTable, HTMLTableFactoryContext>
+	public static class FlexCellTextProcessor extends CellTextProcessor<HTMLTableFactoryContext>{}
+	public static class FlexCellHTMLProcessor extends CellHTMLProcessor<HTMLTableFactoryContext>{}
+	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<HTMLTableFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FlexWidgetProcessor.class)
 		})	
-		public void processChildren(HTMLTableFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException {}
 		
 	}
-	public static class FlexWidgetProcessor extends WidgetProcessor<FlexTable, HTMLTableFactoryContext>{} 
-		
+	public static class FlexWidgetProcessor extends WidgetProcessor<HTMLTableFactoryContext>{} 
 }

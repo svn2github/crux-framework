@@ -21,8 +21,9 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AlignmentAttributeParser;
@@ -33,17 +34,17 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.ui.HTMLTable.RowFormatter;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTableFactoryContext> extends PanelFactory<T, C>
-       implements HasClickHandlersFactory<T, C>, HasDoubleClickHandlersFactory<T, C>
+public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> extends PanelFactory<C>
+       implements HasClickHandlersFactory<C>, HasDoubleClickHandlersFactory<C>
 {	
 	@Override
 	@TagAttributes({
@@ -51,13 +52,13 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 		@TagAttribute(value="cellPadding",type=Integer.class),
 		@TagAttribute(value="cellSpacing",type=Integer.class)
 	})
-	public void processAttributes(C context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
-	public static class TableRowProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C>
+	public static class TableRowProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
@@ -66,7 +67,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 			@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(C context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			context.rowIndex++;
 			try
@@ -96,7 +97,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class TableCellProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C>
+	public static class TableCellProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -108,7 +109,7 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 		})
-		public void processChildren(C context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			HTMLTable widget = context.getWidget();
 
@@ -157,11 +158,11 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 	}
 	
 	@TagChildAttributes(tagName="text", type=String.class)
-	public static abstract class CellTextProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C>
+	public static abstract class CellTextProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(C context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			T rootWidget = (T)context.getWidget();
 			rootWidget.setText(context.rowIndex, context.colIndex, 
@@ -170,11 +171,11 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public static abstract class CellHTMLProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C>
+	public static abstract class CellHTMLProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(C context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			T rootWidget = (T)context.getWidget();
 			rootWidget.setHTML(context.rowIndex, context.colIndex, ensureHtmlChild(context.getChildElement(), true));
@@ -182,14 +183,14 @@ public abstract class HTMLTableFactory <T extends HTMLTable, C extends HTMLTable
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static abstract class CellWidgetProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C> {}
+	public static abstract class CellWidgetProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class WidgetProcessor<T extends HTMLTable, C extends HTMLTableFactoryContext> extends WidgetChildProcessor<T, C> 
+	public static class WidgetProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C> 
 	{
 		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(C context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			T rootWidget = (T)context.getWidget();
 			rootWidget.setWidget(context.rowIndex, context.colIndex, createChildWidget(context.getChildElement()));

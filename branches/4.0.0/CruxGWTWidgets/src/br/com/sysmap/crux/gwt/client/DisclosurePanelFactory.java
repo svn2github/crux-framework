@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -25,10 +27,12 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyPanel;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
@@ -46,45 +50,44 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="disclosurePanel", library="gwt")
-public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel, WidgetCreatorContext> 
-       implements HasAnimationFactory<DisclosurePanel, WidgetCreatorContext>, 
-                  HasOpenHandlersFactory<DisclosurePanel, WidgetCreatorContext>, 
-                  HasCloseHandlersFactory<DisclosurePanel, WidgetCreatorContext>
+public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContext> 
+       implements HasAnimationFactory<WidgetCreatorContext>, 
+                  HasOpenHandlersFactory<WidgetCreatorContext>, 
+                  HasCloseHandlersFactory<WidgetCreatorContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	
 	@Override
-	public DisclosurePanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		String headerText = element.getProperty("headerText");
-		final DisclosurePanel ret;
+		String headerText = metaElem.optString("headerText");
+		String varName = ViewFactoryCreator.createVariableName("dialogBox");
+		String className = DisclosurePanel.class.getCanonicalName();
 		if (!StringUtils.isEmpty(headerText))
 		{
-			ret = new DisclosurePanel(headerText);
+			out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(headerText)+");");
 		}
 		else
 		{
-			ret = new DisclosurePanel();
+			out.println(className + " " + varName+" = new "+className+"();");
 		}
 		
-		String open = element.getProperty("open");
+		String open = metaElem.optString("open");
 		if (open == null || !StringUtils.unsafeEquals(open, "true"))
 		{
-			ret.addOpenHandler(new OpenHandler<DisclosurePanel>() {
-				private boolean loaded = false;
-				public void onOpen(OpenEvent<DisclosurePanel> event) 
-				{
-					if (!loaded)
-					{
-						LazyPanel widget = (LazyPanel)ret.getContent();
-						widget.ensureWidget();
-						loaded = true;
-					}
-				}
-			});
+			out.println(varName+".addOpenHandler(new "+OpenHandler.class.getCanonicalName()+"<"+className+">() {");
+			out.println("private boolean loaded = false;");
+			out.println("public void onOpen("+OpenEvent.class.getCanonicalName()+"<"+className+"> event){"); 
+			out.println("if (!loaded){");
+			out.println(LazyPanel.class.getCanonicalName() +"widget = ("+LazyPanel.class.getCanonicalName()+")"+varName+".getContent();");
+			out.println("widget.ensureWidget();");
+			out.println("loaded = true;");
+			out.println("}");
+			out.println("}");
+			out.println("});");
 		}
-		return ret;
+		return varName;
 	}
 	
 	@Override
@@ -94,9 +97,9 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel, Wi
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("headerText")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
@@ -104,34 +107,34 @@ public class DisclosurePanelFactory extends CompositeFactory<DisclosurePanel, Wi
 		@TagChild(HeaderProcessor.class),
 		@TagChild(ContentProcessor.class)
 	})	
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 
 	@TagChildAttributes(minOccurs="0", tagName="widgetHeader")
-	public static class HeaderProcessor extends WidgetChildProcessor<DisclosurePanel, WidgetCreatorContext> 
+	public static class HeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetHeaderProcessor.class)
 		})	
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	}
 		
 	@TagChildAttributes(minOccurs="0", tagName="widgetContent")
-	public static class ContentProcessor extends WidgetChildProcessor<DisclosurePanel, WidgetCreatorContext> 
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(widgetProperty="content")
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="open", notEquals="true")
 	})
-	public static class WidgetProcessor extends AnyWidgetChildProcessor<DisclosurePanel, WidgetCreatorContext> {}
+	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(widgetProperty="header")
-	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<DisclosurePanel, WidgetCreatorContext> {}
+	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 }
