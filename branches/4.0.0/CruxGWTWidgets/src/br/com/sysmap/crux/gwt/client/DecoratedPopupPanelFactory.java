@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
@@ -31,14 +34,17 @@ import com.google.gwt.user.client.ui.DecoratedPopupPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="decoratedPopupPanel", library="gwt", attachToDOM=false)
-public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel, WidgetCreatorContext>
-             implements HasAnimationFactory<DecoratedPopupPanel, WidgetCreatorContext>, HasCloseHandlersFactory<DecoratedPopupPanel, WidgetCreatorContext>
+public class DecoratedPopupPanelFactory extends PanelFactory<WidgetCreatorContext>
+             implements HasAnimationFactory<WidgetCreatorContext>, HasCloseHandlersFactory<WidgetCreatorContext>
 {
 	@Override
-	public DecoratedPopupPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new DecoratedPopupPanel();
-	}
+		String varName = ViewFactoryCreator.createVariableName("decoratedPopupPanel");
+		String className = DecoratedPopupPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 	
 	@Override
 	@TagAttributes({
@@ -49,8 +55,8 @@ public class DecoratedPopupPanelFactory extends PanelFactory<DecoratedPopupPanel
 		@TagAttribute(value="modal", type=Boolean.class),
 		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

@@ -15,12 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 
@@ -31,58 +34,60 @@ import com.google.gwt.user.client.ui.DecoratedStackPanel;
  *
  */
 @DeclarativeFactory(id="decoratedStackPanel", library="gwt")
-public class DecoratedStackPanelFactory extends AbstractStackPanelFactory<DecoratedStackPanel>
+public class DecoratedStackPanelFactory extends AbstractStackPanelFactory
 {
-
 	@Override
-	public DecoratedStackPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new DecoratedStackPanel();
-	}
+		String varName = ViewFactoryCreator.createVariableName("decoratedStackPanel");
+		String className = DecoratedStackPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 	
 	@Override
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})	
-	public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="stackItem")
-	public static class StackItemProcessor extends WidgetChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext>
+	public static class StackItemProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleProcessor.class),
 			@TagChild(ContentProcessor.class)
 		})	
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TitleProcessor extends ChoiceChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext>
+	public static class TitleProcessor extends ChoiceChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleTextProcessor.class),
 			@TagChild(TitleHTMLProcessor.class)
 		})	
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
 	}
 
-	public static class TitleTextProcessor extends AbstractTitleTextProcessor<DecoratedStackPanel> {}
+	public static class TitleTextProcessor extends AbstractTitleTextProcessor {}
 	
-	public static class TitleHTMLProcessor extends AbstractTitleHTMLProcessor<DecoratedStackPanel> {}
+	public static class TitleHTMLProcessor extends AbstractTitleHTMLProcessor {}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<DecoratedStackPanel, AbstractStackPanelFactoryContext> 
+	public static class ContentProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(ContentWidgetProcessor.class)
 		})	
-		public void processChildren(AbstractStackPanelFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
 	}
 	
-	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor<DecoratedStackPanel> {}	
+	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor {}	
 }

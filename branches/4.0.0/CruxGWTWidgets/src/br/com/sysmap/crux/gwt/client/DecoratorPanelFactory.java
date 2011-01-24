@@ -15,8 +15,11 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -27,11 +30,15 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="decoratorPanel", library="gwt")
-public class DecoratorPanelFactory extends PanelFactory<DecoratorPanel, WidgetCreatorContext>
+public class DecoratorPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 	@Override
-	public DecoratorPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new DecoratorPanel();
+		String varName = ViewFactoryCreator.createVariableName("decoratorPanel");
+		String className = DecoratorPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}	
+	
 }

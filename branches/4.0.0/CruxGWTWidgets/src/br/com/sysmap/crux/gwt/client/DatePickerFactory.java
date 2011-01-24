@@ -15,13 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import java.util.Date;
+import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHighlightHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasShowRangeHandlersFactory;
@@ -34,10 +36,10 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="datePicker", library="gwt")
-public class DatePickerFactory extends CompositeFactory<DatePicker, WidgetCreatorContext> 
-       implements HasValueChangeHandlersFactory<DatePicker, WidgetCreatorContext>, 
-                  HasShowRangeHandlersFactory<DatePicker, WidgetCreatorContext>, 
-                  HasHighlightHandlersFactory<DatePicker, WidgetCreatorContext>
+public class DatePickerFactory extends CompositeFactory<WidgetCreatorContext> 
+       implements HasValueChangeHandlersFactory<WidgetCreatorContext>, 
+                  HasShowRangeHandlersFactory<WidgetCreatorContext>, 
+                  HasHighlightHandlersFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributesDeclaration({
@@ -45,11 +47,11 @@ public class DatePickerFactory extends CompositeFactory<DatePicker, WidgetCreato
 		@TagAttributeDeclaration(value="currentMonth", type=String.class),
 		@TagAttributeDeclaration(value="datePattern")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 		
-		DatePicker widget = context.getWidget();
+		String widget = context.getWidget();
 
 		String datePattern = context.readWidgetProperty("datePattern");
 		if (datePattern == null || datePattern.length() == 0)
@@ -60,21 +62,26 @@ public class DatePickerFactory extends CompositeFactory<DatePicker, WidgetCreato
 		String value = context.readWidgetProperty("value");
 		if (value != null && value.length() > 0)
 		{
-			Date date = DateFormatUtil.getDateTimeFormat(datePattern).parse(value);;
-			widget.setValue(date);
+			out.println(widget+".setValue("+
+					DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
+					EscapeUtils.quote(datePattern)+").parse("+EscapeUtils.quote(value)+"));");
 		}		
 
 		String currentMonth = context.readWidgetProperty("currentMonth");
 		if (currentMonth != null && currentMonth.length() > 0)
 		{
-			Date date = DateFormatUtil.getDateTimeFormat(datePattern).parse(currentMonth);;
-			widget.setCurrentMonth(date);
+			out.println(widget+".setCurrentMonth("+
+					DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
+					EscapeUtils.quote(datePattern)+").parse("+EscapeUtils.quote(currentMonth)+"));");
 		}		
 	}
 	
 	@Override
-	public DatePicker instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new DatePicker();
+		String varName = ViewFactoryCreator.createVariableName("datePicker");
+		String className = DatePicker.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
 }
