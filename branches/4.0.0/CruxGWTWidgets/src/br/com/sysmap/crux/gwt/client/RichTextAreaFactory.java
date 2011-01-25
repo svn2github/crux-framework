@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -22,10 +24,10 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasInitializeHandlersFactory;
@@ -50,14 +52,18 @@ class RichTextAreaContext extends WidgetCreatorContext
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="richTextArea", library="gwt")
-public class RichTextAreaFactory extends FocusWidgetFactory<RichTextArea, RichTextAreaContext> 
-implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandlersFactory<RichTextArea, RichTextAreaContext>
+public class RichTextAreaFactory extends FocusWidgetFactory<RichTextAreaContext> 
+implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<RichTextAreaContext>
 {
 	@Override
-	public RichTextArea instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new RichTextArea();
-	}
+		String varName = ViewFactoryCreator.createVariableName("richTextArea");
+		String className = RichTextArea.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
+	
 	
 	@Override
 	@TagAttributesDeclaration({
@@ -73,26 +79,20 @@ implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandl
 		@TagAttributeDeclaration(value="underline", type=Boolean.class),
 		@TagAttributeDeclaration(value="strikethrough", type=Boolean.class)
 	})
-	public void processAttributes(final RichTextAreaContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, final RichTextAreaContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 		context.declaredProperties = readDeclaredProperties(context);
 	}
 	
 	@Override
-	public void postProcess(final RichTextAreaContext context) throws InterfaceConfigException 
+	public void postProcess(SourcePrinter out, RichTextAreaContext context) throws CruxGeneratorException 
 	{
-		super.postProcess(context);
-		final RichTextArea widget = context.getWidget();
+		super.postProcess(out, context);
+		String widget = context.getWidget();
 		// We need to give UI thread time to render the textArea before try to focus it
-		addScreenLoadedHandler(new ScreenLoadHandler()
-		{
-			public void onLoad(ScreenLoadEvent event) 
-			{
-				widget.setFocus(true);// Necessary to work around a bug in mozzila
-				initFormatterOptions(widget, context.declaredProperties);
-			}
-		});
+		printlnPostProcessing(widget+".setFocus(true);");// Necessary to work around a bug in mozzila
+		printFormatterOptions(context);
 	}
 	
 	/**
@@ -164,97 +164,98 @@ implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandl
 	/**
 	 * Render basic formatter options
 	 */
-	protected void initFormatterOptions(RichTextArea widget, FastMap<String> declaredProperties)
+	protected void printFormatterOptions(RichTextAreaContext context)
 	{
-		final Formatter formatter = widget.getFormatter();
-		if (formatter != null)
-		{
-			if (declaredProperties.containsKey("backColor"))
+		String formatter = ViewFactoryCreator.createVariableName("formatter");
+		printlnPostProcessing(Formatter.class.getCanonicalName()+" "+formatter+" = "+context.getWidget()+".getFormatter();");
+		
+		printlnPostProcessing("if (formatter != null){");
+			if (context.declaredProperties.containsKey("backColor"))
 			{
-				formatter.setBackColor(declaredProperties.get("backColor"));
+				printlnPostProcessing(formatter+".setBackColor("+EscapeUtils.quote(context.declaredProperties.get("backColor"))+");");
 			}
 
-			if (declaredProperties.containsKey("fontName"))
+			if (context.declaredProperties.containsKey("fontName"))
 			{
-				formatter.setFontName(declaredProperties.get("fontName"));
+				printlnPostProcessing(formatter+".setFontName("+EscapeUtils.quote(context.declaredProperties.get("fontName"))+");");
 			}
 
-			if (declaredProperties.containsKey("fontSize"))
+			if (context.declaredProperties.containsKey("fontSize"))
 			{
-				switch (Integer.parseInt(declaredProperties.get("fontSize"))) 
+				switch (Integer.parseInt(context.declaredProperties.get("fontSize"))) 
 				{
 				case 1:
-					formatter.setFontSize(FontSize.XX_SMALL);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".XX_SMALL);");
 					break;
 				case 2:
-					formatter.setFontSize(FontSize.X_SMALL);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".X_SMALL);");
 					break;
 				case 3:
-					formatter.setFontSize(FontSize.SMALL);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".SMALL);");
 					break;
 				case 4:
-					formatter.setFontSize(FontSize.MEDIUM);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".MEDIUM);");
 					break;
 				case 5:
-					formatter.setFontSize(FontSize.LARGE);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".LARGE);");
 					break;
 				case 6:
-					formatter.setFontSize(FontSize.X_LARGE);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".X_LARGE);");
 					break;
 				case 7:
-					formatter.setFontSize(FontSize.XX_LARGE);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".XX_LARGE);");
 					break;
 
 				default:
-					formatter.setFontSize(FontSize.MEDIUM);
+					printlnPostProcessing(formatter+".setFontSize("+FontSize.class.getCanonicalName()+".MEDIUM);");
 				}
+			printlnPostProcessing("}");
+
+			if (context.declaredProperties.containsKey("foreColor"))
+			{
+				printlnPostProcessing(formatter+".setForeColor("+EscapeUtils.quote(context.declaredProperties.get("foreColor"))+");");
 			}
 
-			if (declaredProperties.containsKey("foreColor"))
+			if (context.declaredProperties.containsKey("justification"))
 			{
-				formatter.setForeColor(declaredProperties.get("foreColor"));
-			}
-
-			if (declaredProperties.containsKey("justification"))
-			{
-				String justification = declaredProperties.get("justification");
+				String justification = context.declaredProperties.get("justification");
 				if (justification.equalsIgnoreCase("center"))
 				{
-					formatter.setJustification(Justification.CENTER);
+					printlnPostProcessing(formatter+".setJustification("+Justification.class.getCanonicalName()+".CENTER);");
 				}
 				else if (justification.equalsIgnoreCase("left"))
 				{
-					formatter.setJustification(Justification.LEFT);
+					printlnPostProcessing(formatter+".setJustification("+Justification.class.getCanonicalName()+".LEFT);");
 				}
 				else if (justification.equalsIgnoreCase("right"))
 				{
-					formatter.setJustification(Justification.RIGHT);
+					printlnPostProcessing(formatter+".setJustification("+Justification.class.getCanonicalName()+".RIGHT);");
 				}
 			}
 
-			if (declaredProperties.containsKey("bold") && Boolean.parseBoolean(declaredProperties.get("bold")))
+			if (context.declaredProperties.containsKey("bold") && Boolean.parseBoolean(context.declaredProperties.get("bold")))
 			{
-				formatter.toggleBold();
+				printlnPostProcessing(formatter+".toggleBold();");
 			}
-			if (declaredProperties.containsKey("italic") && Boolean.parseBoolean(declaredProperties.get("italic")))
+			if (context.declaredProperties.containsKey("italic") && Boolean.parseBoolean(context.declaredProperties.get("italic")))
 			{
-				formatter.toggleItalic();
+				printlnPostProcessing(formatter+".toggleItalic();");
 			}
-			if (declaredProperties.containsKey("subscript") && Boolean.parseBoolean(declaredProperties.get("subscript")))
+			if (context.declaredProperties.containsKey("subscript") && Boolean.parseBoolean(context.declaredProperties.get("subscript")))
 			{
-				formatter.toggleSubscript();
+				printlnPostProcessing(formatter+".toggleSubscript();");
 			}
-			if (declaredProperties.containsKey("superscript") && Boolean.parseBoolean(declaredProperties.get("superscript")))
+			if (context.declaredProperties.containsKey("superscript") && Boolean.parseBoolean(context.declaredProperties.get("superscript")))
 			{
-				formatter.toggleSuperscript();
+				printlnPostProcessing(formatter+".toggleSuperscript();");
 			}
-			if (declaredProperties.containsKey("underline") && Boolean.parseBoolean(declaredProperties.get("underline")))
+			if (context.declaredProperties.containsKey("underline") && Boolean.parseBoolean(context.declaredProperties.get("underline")))
 			{
-				formatter.toggleUnderline();
+				printlnPostProcessing(formatter+".toggleUnderline();");
 			}
-			if (declaredProperties.containsKey("strikethrough") && Boolean.parseBoolean(declaredProperties.get("strikethrough")))
+			if (context.declaredProperties.containsKey("strikethrough") && Boolean.parseBoolean(context.declaredProperties.get("strikethrough")))
 			{
-				formatter.toggleStrikethrough();
+				printlnPostProcessing(formatter+".toggleStrikethrough();");
 			}
 		}
 	}
@@ -263,11 +264,11 @@ implements HasHTMLFactory<RichTextArea, RichTextAreaContext>, HasInitializeHandl
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(RichTextAreaContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, RichTextAreaContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<RichTextArea, RichTextAreaContext> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<RichTextAreaContext> {}	
 	
 }
