@@ -18,9 +18,8 @@ package br.com.sysmap.crux.core.rebind.widget;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -38,6 +37,8 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.AttachEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.DettachEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.LoadWidgetEvtProcessor;
 
+import com.google.gwt.core.ext.typeinfo.JClassType;
+
 /**
  * Generate code for gwt widgets creation. Generates code based on a JSON meta data array
  * containing the information declared on crux pages. 
@@ -49,26 +50,8 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	private static int currentId = 0;
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	
-	private ViewFactoryCreator factory = null;
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
-	
-	/**
-	 * @param factory
-	 */
-	void setViewFactory(ViewFactoryCreator factory)
-	{
-		this.factory = factory;
-		JClassType type = this.factory.getJClassType(getClass());
-		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(type, this);
-	}
-	
-	/**
-	 * @return
-	 */
-	ViewFactoryCreator getViewFactory()
-	{
-		return this.factory;
-	}
+	private ViewFactoryCreator factory = null;
 	
 	/**
 	 * Retrieve the widget child element name
@@ -78,6 +61,155 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public static String getChildName(JSONObject childElement)
 	{
 		return childElement.optString("_childTag");
+	}
+	
+	/**
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 * @throws CruxGeneratorException 
+	 */
+	protected static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException 
+	{
+		if (!acceptsNoChild && !metaElem.has("_children"))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+		}
+		
+		JSONArray children = metaElem.optJSONArray("_children");
+		if (acceptsNoChild && children == null)
+		{
+			return null;
+		}
+
+		if (!acceptsNoChild && (children == null || children.length() == 0 || children.opt(0)==null))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+		}
+		return children;
+	}
+	
+	/**
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 */
+	protected static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	{
+		if (!acceptsNoChild && !metaElem.has("_children"))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+		}
+		JSONArray children = metaElem.optJSONArray("_children");
+		if (acceptsNoChild && children == null)
+		{
+			return null;
+		}
+		if (!acceptsNoChild && (children == null || children.length() == 0))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+		}
+		JSONObject firstChild = children.optJSONObject(0);
+		if (!acceptsNoChild && firstChild == null)
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+		}
+		return firstChild;
+	}
+	
+	/**
+	 * 
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 * @throws CruxGeneratorException 
+	 */
+	protected static String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_html");
+		if (!acceptsNoChild && (result == null || result.length() == 0))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureHtmlChildEmpty());
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param metaElem
+	 * @param acceptsNoChild
+	 * @return
+	 * @throws CruxGeneratorException 
+	 */
+	protected static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_text");
+		if (!acceptsNoChild && (result == null || result.length() == 0))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureTextChildEmpty());
+		}
+		return result;
+	}
+	
+	/**
+	 * Creates a sequential id
+	 * @return
+	 */
+	protected static String generateNewId() 
+	{
+		return "_crux_" + (++currentId );//TODO precisa disso ainda?
+	}
+
+	/**
+	 * 
+	 * @param metaElem
+	 * @return
+	 */
+	protected static boolean hasHeight(JSONObject metaElem)
+	{
+		if (!metaElem.has("height"))
+		{
+			return false;
+		}
+		String width = metaElem.optString("height");
+		return width != null && (width.length() > 0);
+	}
+
+	/**
+	 * 
+	 * @param metaElem
+	 * @return
+	 */
+	protected static boolean hasWidth(JSONObject metaElem)
+	{
+		if (!metaElem.has("width"))
+		{
+			return false;
+		}
+		String width = metaElem.optString("width");
+		return width != null && (width.length() > 0);
+	}
+
+	/**
+	 * @param metaElem
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	protected static boolean isHtmlChild(JSONObject metaElem) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_html");
+		return (!StringUtils.isEmpty(result));
+	}	
+	
+	/**
+	 * @param metaElem
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	protected static boolean isTextChild(JSONObject metaElem) throws CruxGeneratorException
+	{
+		String result = metaElem.optString("_text");
+		return (!StringUtils.isEmpty(result));
 	}
 	
 	/**
@@ -111,167 +243,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
 	{
 		return factory.newWidget(out, metaElem, widgetId, widgetType);
-	}
-	
-	/**
-	 * @param metaElem
-	 * @param acceptsNoChild
-	 * @return
-	 * @throws CruxGeneratorException 
-	 */
-	protected static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException 
-	{
-		if (!acceptsNoChild && !metaElem.has("_children"))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
-		}
-		
-		JSONArray children = metaElem.optJSONArray("_children");
-		if (acceptsNoChild && children == null)
-		{
-			return null;
-		}
-
-		if (!acceptsNoChild && (children == null || children.length() == 0 || children.opt(0)==null))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
-		}
-		return children;
-	}
-
-	/**
-	 * @param metaElem
-	 * @param acceptsNoChild
-	 * @return
-	 */
-	protected static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
-	{
-		if (!acceptsNoChild && !metaElem.has("_children"))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
-		}
-		JSONArray children = metaElem.optJSONArray("_children");
-		if (acceptsNoChild && children == null)
-		{
-			return null;
-		}
-		if (!acceptsNoChild && (children == null || children.length() == 0))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
-		}
-		JSONObject firstChild = children.optJSONObject(0);
-		if (!acceptsNoChild && firstChild == null)
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
-		}
-		return firstChild;
-	}
-
-	/**
-	 * 
-	 * @param metaElem
-	 * @param acceptsNoChild
-	 * @return
-	 * @throws CruxGeneratorException 
-	 */
-	protected static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
-	{
-		String result = metaElem.optString("_text");
-		if (!acceptsNoChild && (result == null || result.length() == 0))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureTextChildEmpty());
-		}
-		return result;
-	}
-
-	/**
-	 * @param metaElem
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	protected static boolean isTextChild(JSONObject metaElem) throws CruxGeneratorException
-	{
-		String result = metaElem.optString("_text");
-		return (!StringUtils.isEmpty(result));
-	}	
-	
-	/**
-	 * 
-	 * @param metaElem
-	 * @param acceptsNoChild
-	 * @return
-	 * @throws CruxGeneratorException 
-	 */
-	protected static String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
-	{
-		String result = metaElem.optString("_html");
-		if (!acceptsNoChild && (result == null || result.length() == 0))
-		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureHtmlChildEmpty());
-		}
-		return result;
-	}
-
-	/**
-	 * @param metaElem
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	protected static boolean isHtmlChild(JSONObject metaElem) throws CruxGeneratorException
-	{
-		String result = metaElem.optString("_html");
-		return (!StringUtils.isEmpty(result));
 	}		
 	
 	/**
-	 * Creates a sequential id
+	 * @param varName
 	 * @return
 	 */
-	protected static String generateNewId() 
+	public String createVariableName(String varName)
 	{
-		return "_crux_" + (++currentId );//TODO precisa disso ainda?
+		return ViewFactoryCreator.createVariableName(varName);
 	}
 	
-	/**
-	 * 
-	 * @param metaElem
-	 * @return
-	 */
-	protected static boolean hasHeight(JSONObject metaElem)
-	{
-		if (!metaElem.has("height"))
-		{
-			return false;
-		}
-		String width = metaElem.optString("height");
-		return width != null && (width.length() > 0);
-	}
-
-	/**
-	 * 
-	 * @param metaElem
-	 * @return
-	 */
-	protected static boolean hasWidth(JSONObject metaElem)
-	{
-		if (!metaElem.has("width"))
-		{
-			return false;
-		}
-		String width = metaElem.optString("width");
-		return width != null && (width.length() > 0);
-	}
-	
-	/**
-	 * 
-	 * @param metaElem
-	 * @return
-	 */
-	protected boolean isWidget(JSONObject metaElem)
-	{
-		return factory.isValidWidget(metaElem);
-	}
-
 	/**
 	 * 
 	 * @param out
@@ -284,7 +266,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return createWidget(out, metaElem, widgetId, true);
 	}
-	
+
 	/**
 	 * Generates the code for the given widget creation. 
 	 * 
@@ -320,24 +302,35 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return factory.getDeclaredMessage(property);
 	}
-	
+
 	/**
 	 * @param metaElem
 	 * @param widgetId
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public abstract String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException;
-
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	{
+		String varName = createVariableName("widget");
+		String className = factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getParameterizedQualifiedSourceName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}
+	
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	protected C instantiateContext()
-	{   //TODO remover isso
-		return (C)new WidgetCreatorContext();
+	public String getWidgetFactoryDeclaration()
+	{
+		DeclarativeFactory declarativeFactory = getClass().getAnnotation(DeclarativeFactory.class);
+		if (declarativeFactory != null)
+		{
+			return declarativeFactory.library()+"_"+declarativeFactory.id();
+		}
+		return null;//TODO throw new CruxGeneratorException(); message
 	}
-
+	
+	
 	/**
 	 * Process element children
 	 * @param out 
@@ -370,45 +363,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 	
 	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
-	{
-		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
-		{
-			String[] styleAttributes = style.split(";");
-			if (styleAttributes.length > 0)
-			{
-				String element = ViewFactoryCreator.createVariableName("elem");
-				out.println("Element  = "+context.getWidget()+".getElement();");
-				for (int i=0; i<styleAttributes.length; i++)
-				{
-					String[] attr = styleAttributes[i].split(":");
-					if (attr != null && attr.length == 2)
-					{
-						out.println("StyleUtils.addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
-								", "+EscapeUtils.quote(attr[1])+");");
-					}
-				}
-			}
-		}
-		
-		private String getStylePropertyName(String property)
-		{
-			int index = -1;
-			while ((index = property.indexOf('-')) >0)
-			{
-				if (index < property.length()-1)
-				{
-					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
-				}
-			}
-			return property;
-		}
-	}
-	
-	/**
 	 * Process element children
 	 * @param out 
 	 * @param context
@@ -417,7 +371,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
-	
+
 	/**
 	 * Process widget events
 	 * @param out 
@@ -432,16 +386,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
-	
-	/**
-	 * Print code that will be executed after the viewFactory completes the widgets construction
-	 * @param s code string
-	 */
-	protected void printlnPostProcessing(String s)
-	{
-		factory.printlnPostProcessing(s);
-	}
-	
+
 	/**
 	 * @param srcWriter 
 	 * @param element
@@ -482,6 +427,91 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
 		return metaElem;
+	}
+	
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected C instantiateContext()
+	{   //TODO remover isso
+		return (C)new WidgetCreatorContext();
+	}
+	
+	/**
+	 * 
+	 * @param metaElem
+	 * @return
+	 */
+	protected boolean isWidget(JSONObject metaElem)
+	{
+		return factory.isValidWidget(metaElem);
+	}
+	
+	/**
+	 * Print code that will be executed after the viewFactory completes the widgets construction
+	 * @param s code string
+	 */
+	protected void printlnPostProcessing(String s)
+	{
+		factory.printlnPostProcessing(s);
+	}
+	
+	/**
+	 * @return
+	 */
+	ViewFactoryCreator getViewFactory()
+	{
+		return this.factory;
+	}
+	
+	/**
+	 * @param factory
+	 */
+	void setViewFactory(ViewFactoryCreator factory)
+	{
+		this.factory = factory;
+		JClassType type = this.factory.getJClassType(getClass());
+		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(type, this);
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
+		{
+			String[] styleAttributes = style.split(";");
+			if (styleAttributes.length > 0)
+			{
+				String element = ViewFactoryCreator.createVariableName("elem");
+				out.println("Element  = "+context.getWidget()+".getElement();");
+				for (int i=0; i<styleAttributes.length; i++)
+				{
+					String[] attr = styleAttributes[i].split(":");
+					if (attr != null && attr.length == 2)
+					{
+						out.println("StyleUtils.addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
+								", "+EscapeUtils.quote(attr[1])+");");
+					}
+				}
+			}
+		}
+		
+		private String getStylePropertyName(String property)
+		{
+			int index = -1;
+			while ((index = property.indexOf('-')) >0)
+			{
+				if (index < property.length()-1)
+				{
+					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
+				}
+			}
+			return property;
+		}
 	}
 	
 }

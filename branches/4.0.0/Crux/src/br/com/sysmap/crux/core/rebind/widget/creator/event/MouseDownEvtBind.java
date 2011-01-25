@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -42,12 +41,12 @@ public class MouseDownEvtBind extends EvtProcessor
 	}
 
 	@Override
-    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
     {
 		String event = ViewFactoryCreator.createVariableName("evt");
-
+		
 		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addMouseDownHandler(new "+MouseDownHandler.class.getCanonicalName()+"(){");
+		out.println(widget+".addMouseDownHandler(new "+MouseDownHandler.class.getCanonicalName()+"(){");
 		out.println("public void onMouseDown("+MouseDownEvent.class.getCanonicalName()+" event){");
 		out.println("Events.callEvent("+event+", event);");
 		out.println("}");

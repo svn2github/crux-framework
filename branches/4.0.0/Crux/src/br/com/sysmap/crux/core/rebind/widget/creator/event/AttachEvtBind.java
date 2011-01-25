@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
@@ -33,22 +32,23 @@ public class AttachEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onAttach";
 
-	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+	public String getEventName()
 	{
-		String event = ViewFactoryCreator.createVariableName("evt");
+		return EVENT_NAME;
+	}
 
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
 		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+		out.println(widget+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
 		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
 		out.println("if (event.isAttached()){");
 		out.println("Events.callEvent("+event+", event);");
 		out.println("}");
 		out.println("}");
 		out.println("});");
-	}
-
-	public String getEventName()
-	{
-		return EVENT_NAME;
-	}	
+    }	
 }

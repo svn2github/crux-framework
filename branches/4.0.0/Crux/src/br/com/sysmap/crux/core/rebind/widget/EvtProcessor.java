@@ -29,7 +29,17 @@ public abstract class EvtProcessor extends AbstractProcessor
 	 * @param context
 	 * @param eventValue
 	 */
-	public abstract void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue);
+    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    {
+		processEvent(out, eventValue, context.getWidget(), context.getWidgetId());
+    }	
+
+	/**
+	 * @param out
+	 * @param context
+	 * @param eventValue
+	 */
+	public abstract void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId);
 
 	/**
 	 * @return

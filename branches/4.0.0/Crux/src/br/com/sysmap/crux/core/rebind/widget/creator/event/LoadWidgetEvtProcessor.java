@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * Helper Class for widget load events binding
@@ -31,20 +30,18 @@ public class LoadWidgetEvtProcessor extends EvtProcessor
 	private static final String EVENT_NAME = "onLoadWidget";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#processEvent(br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
-	 */
-	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
-	{
-		String event = ViewFactoryCreator.createVariableName("evt");
-		printlnPostProcessing("Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+EscapeUtils.quote(eventValue)+");");
-		printlnPostProcessing("Events.callEvent("+event+", new WidgetLoadEvent("+context.getWidget()+","+EscapeUtils.quote(context.getWidgetId())+"));");
-	}
-
-	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{
 		return EVENT_NAME;
-	}	
+	}
+
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		printlnPostProcessing("Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+EscapeUtils.quote(eventValue)+");");
+		printlnPostProcessing("Events.callEvent("+event+", new WidgetLoadEvent("+widget+","+EscapeUtils.quote(widgetId)+"));");
+    }	
 }

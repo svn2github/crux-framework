@@ -761,7 +761,7 @@ public class ViewFactoryCreator
 	 * @param widgetType
 	 * @return the factory of the widgets of the given type.
 	 */
-	private WidgetCreator<?> getWidgetFactory(String widgetType)
+	protected WidgetCreator<?> getWidgetFactory(String widgetType)
 	{
 		try
         {
@@ -787,7 +787,7 @@ public class ViewFactoryCreator
 	 * @param widgetType
 	 * @return a helper object to create the code of the widgets of the given type. 
 	 */
-	private WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
+	protected WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
 	{
 		if (!factoryHelpers.containsKey(widgetType))
 		{

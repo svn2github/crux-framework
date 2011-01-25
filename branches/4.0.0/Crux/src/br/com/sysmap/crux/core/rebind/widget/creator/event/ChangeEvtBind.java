@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -42,15 +41,15 @@ public class ChangeEvtBind extends EvtProcessor
 	}
 
 	@Override
-    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
     {
 		String event = ViewFactoryCreator.createVariableName("evt");
-
+		
 		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addChangeHandler(new "+ChangeHandler.class.getCanonicalName()+"(){");
+		out.println(widget+".addChangeHandler(new "+ChangeHandler.class.getCanonicalName()+"(){");
 		out.println("public void onChange("+ChangeEvent.class.getCanonicalName()+" event){");
 		out.println("Events.callEvent("+event+", event);");
 		out.println("}");
 		out.println("});");
-	}
+    }
 }

@@ -18,7 +18,6 @@ package br.com.sysmap.crux.core.rebind.widget.creator.event;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -33,23 +32,24 @@ public class MouseOverEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onMouseOver";
 
-	public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
-	{
-		String event = ViewFactoryCreator.createVariableName("evt");
-		
-		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addMouseOverHandler(new "+ MouseOverHandler.class.getCanonicalName()+"(){");
-		out.println("public void onMouseOver("+MouseOverEvent.class.getCanonicalName()+" event){");
-		out.println("Events.callEvent("+event+", event);");
-		out.println("}");
-		out.println("});");
-	}
-	
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{
 		return EVENT_NAME;
-	}	
+	}
+
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(widget+".addMouseOverHandler(new "+ MouseOverHandler.class.getCanonicalName()+"(){");
+		out.println("public void onMouseOver("+MouseOverEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
+    }	
 }
