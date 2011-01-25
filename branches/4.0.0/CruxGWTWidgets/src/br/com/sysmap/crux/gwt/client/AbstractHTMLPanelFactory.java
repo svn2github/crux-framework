@@ -35,8 +35,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractHTMLPanelFactory<T extends HTMLPanel> extends ComplexPanelFactory<T, WidgetCreatorContext> 
-				implements HasWidgetsFactory<T, WidgetCreatorContext>
+public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<WidgetCreatorContext> 
+				implements HasWidgetsFactory<WidgetCreatorContext>
 {
 	/**
 	 * @author Thiago da Rosa de Bustamante

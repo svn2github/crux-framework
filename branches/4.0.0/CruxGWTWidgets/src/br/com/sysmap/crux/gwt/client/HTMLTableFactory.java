@@ -21,8 +21,9 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
@@ -33,7 +34,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
-import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.ui.HTMLTable.RowFormatter;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -60,7 +60,6 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	public static class TableRowProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("styleName"),
@@ -73,21 +72,23 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 			try
 			{
 				String styleName = context.readChildProperty("styleName");
-				T rootWidget = (T)context.getWidget();
-				RowFormatter rowFormatter = rootWidget.getRowFormatter();
+				String rootWidget = context.getWidget();
+				String rowFormatter = ViewFactoryCreator.createVariableName("rowFormatter");
+
+				out.println(RowFormatter.class.getCanonicalName() + " " + rowFormatter +" = "+rootWidget+".getRowFormatter();");
 				if (styleName != null && styleName.length() > 0)
 				{
-					rowFormatter.setStyleName(context.rowIndex, styleName);
+					out.println(rowFormatter+".setStyleName("+context.rowIndex+", "+EscapeUtils.quote(styleName)+");");
 				}
 				String visible = context.readChildProperty("visible");
 				if (visible != null && visible.length() > 0)
 				{
-					rowFormatter.setVisible(context.rowIndex, Boolean.parseBoolean(visible));
+					out.println(rowFormatter+".setVisible("+context.rowIndex+", "+Boolean.parseBoolean(visible)+");");
 				}
 
 				String verticalAlignment = context.readChildProperty("verticalAlignment");
-				rowFormatter.setVerticalAlign(context.rowIndex, 
-						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment));
+				out.println(rowFormatter+".setVerticalAlign("+context.rowIndex+", "+
+						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment)+");");
 			}
 			finally
 			{
@@ -111,47 +112,50 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		})
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
-			HTMLTable widget = context.getWidget();
+			String widget = context.getWidget();
 
 			context.colIndex++;
 			String styleName = context.readChildProperty("styleName");
-			CellFormatter cellFormatter = widget.getCellFormatter();
+			String cellFormatter = ViewFactoryCreator.createVariableName("cellFormatter");
+
+			out.println(CellFormatter.class.getCanonicalName() + " " + cellFormatter +" = "+widget+".getCellFormatter();");
+
 			if (styleName != null && styleName.length() > 0)
 			{
-				cellFormatter.setStyleName(context.rowIndex, context.colIndex, styleName);
+				out.println(cellFormatter+".setStyleName("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(styleName)+");");
 			}
 			String visible = context.readChildProperty("visible");
 			if (visible != null && visible.length() > 0)
 			{
-				cellFormatter.setVisible(context.rowIndex, context.colIndex, Boolean.parseBoolean(visible));
+				out.println(cellFormatter+".setVisible("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(visible)+");");
 			}
 			String height = context.readChildProperty("height");
 			if (height != null && height.length() > 0)
 			{
-				cellFormatter.setHeight(context.rowIndex, context.colIndex, height);
+				out.println(cellFormatter+".setHeight("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(height)+");");
 			}
 			String width = context.readChildProperty("width");
 			if (width != null && width.length() > 0)
 			{
-				cellFormatter.setWidth(context.rowIndex, context.colIndex, width);
+				out.println(cellFormatter+".setWidth("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(width)+");");
 			}
 			String wordWrap = context.readChildProperty("wordWrap");
 			if (wordWrap != null && wordWrap.length() > 0)
 			{
-				cellFormatter.setWordWrap(context.rowIndex, context.colIndex, Boolean.parseBoolean(wordWrap));
+				out.println(cellFormatter+".setWordWrap("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(wordWrap)+");");
 			}
 
 			String horizontalAlignment = context.readChildProperty("horizontalAlignment");
 			if (horizontalAlignment != null && horizontalAlignment.length() > 0)
 			{
-				cellFormatter.setHorizontalAlignment(context.rowIndex, context.colIndex, 
-						AlignmentAttributeParser.getHorizontalAlignment(horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+				out.println(cellFormatter+".setHorizontalAlignment("+context.rowIndex+", "+context.colIndex+", "+ 
+						AlignmentAttributeParser.getHorizontalAlignment(horizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
 			}
 			String verticalAlignment = context.readChildProperty("verticalAlignment");
 			if (verticalAlignment != null && verticalAlignment.length() > 0)
 			{
-				cellFormatter.setVerticalAlignment(context.rowIndex, context.colIndex, 
-						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment));
+				out.println(cellFormatter+".setVerticalAlignment("+context.rowIndex+", "+context.colIndex+", "+
+						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment)+");");
 
 			}
 		}
@@ -160,25 +164,23 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 	@TagChildAttributes(tagName="text", type=String.class)
 	public static abstract class CellTextProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setText(context.rowIndex, context.colIndex, 
-					ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true)));
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setText("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(
+					getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true)))+");");
 		}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class CellHTMLProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setHTML(context.rowIndex, context.colIndex, ensureHtmlChild(context.getChildElement(), true));
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setHTML("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(ensureHtmlChild(context.getChildElement(), true))+");");
 		}
 	}
 	
@@ -188,12 +190,12 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C> 
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setWidget(context.rowIndex, context.colIndex, createChildWidget(context.getChildElement()));
+			String rootWidget = context.getWidget();
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			EscapeUtils.quote(rootWidget+".setWidget("+context.rowIndex+", "+context.colIndex+", "+childWidget+");");
 		}
 	}
 }

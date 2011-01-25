@@ -15,30 +15,33 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Represents a List Box component
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="listBox", library="gwt")
-public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
+public class ListBoxFactory extends AbstractListBoxFactory
 {
 	@Override
 	@TagChildren({
 		@TagChild(ListBoxItemsProcessor.class)
 	})
-	public void processChildren(ListBoxContext context) throws InterfaceConfigException {}	
+	public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException {}	
 	
-	public static class ListBoxItemsProcessor extends ItemsProcessor<ListBox>
+	public static class ListBoxItemsProcessor extends ItemsProcessor
 	{		
 	}
 	
@@ -46,21 +49,26 @@ public class ListBoxFactory extends AbstractListBoxFactory<ListBox>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="multiple", type=Boolean.class)
 	})
-	public void processAttributes(ListBoxContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
-	public ListBox instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		String multiple = element.getProperty("multiple");
+		String varName = ViewFactoryCreator.createVariableName("label");
+		String className = Label.class.getCanonicalName();
+		String multiple = metaElem.optString("multiple");
 		if (multiple != null && multiple.trim().length() > 0)
 		{
-			return new ListBox(Boolean.parseBoolean(multiple));
+			out.println(className + " " + varName+" = new "+className+"("+Boolean.parseBoolean(multiple)+");");
 
 		}
-		
-		return new ListBox();
+		else
+		{
+			out.println(className + " " + varName+" = new "+className+"();");
+		}
+		return varName;
 	}
 }

@@ -15,23 +15,29 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.InlineLabel;
 
 
 /**
- * Represents an InlineLabelFactory DeclarativeFactory
+ * Factory for  InlineLabel widget
  * @author Thiago Bustamante
  *
  */
 @DeclarativeFactory(id="inlineLabel", library="gwt")
-public class InlineLabelFactory extends AbstractLabelFactory<InlineLabel>
+public class InlineLabelFactory extends AbstractLabelFactory
 {
 	@Override
-	public InlineLabel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new InlineLabel();
-	}
+		String varName = ViewFactoryCreator.createVariableName("inlineLabel");
+		String className = InlineLabel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 }

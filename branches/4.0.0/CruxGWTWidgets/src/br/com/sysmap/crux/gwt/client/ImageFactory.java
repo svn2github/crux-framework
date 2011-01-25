@@ -15,14 +15,17 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
@@ -38,10 +41,10 @@ import com.google.gwt.user.client.ui.Image;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="image", library="gwt")
-public class ImageFactory extends WidgetCreator<Image, WidgetCreatorContext> 
-	   implements HasClickHandlersFactory<Image, WidgetCreatorContext>, 
-	   			  HasAllMouseHandlersFactory<Image, WidgetCreatorContext>, 
-	   			  HasDoubleClickHandlersFactory<Image, WidgetCreatorContext>
+public class ImageFactory extends WidgetCreator<WidgetCreatorContext> 
+	   implements HasClickHandlersFactory<WidgetCreatorContext>, 
+	   			  HasAllMouseHandlersFactory<WidgetCreatorContext>, 
+	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
@@ -49,28 +52,29 @@ public class ImageFactory extends WidgetCreator<Image, WidgetCreatorContext>
 		@TagAttribute(value="altText"),
 		@TagAttribute(value="visibleRect", processor=VisibleRectAttributeParser.class)
 	})	
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleRectAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class VisibleRectAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
-		{
-			Image widget = context.getWidget();
-			String[] coord = propertyValue.split(",");
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
+			String widget = context.getWidget();
+			String[] coord = attributeValue.split(",");
 			
 			if (coord != null && coord.length == 4)
 			{
-				widget.setVisibleRect(Integer.parseInt(coord[0].trim()),Integer.parseInt(coord[1].trim()), 
-						Integer.parseInt(coord[2].trim()), Integer.parseInt(coord[3].trim()));
+				out.println(widget+".setVisibleRect("+Integer.parseInt(coord[0].trim())+", "+Integer.parseInt(coord[1].trim())+","+ 
+						Integer.parseInt(coord[2].trim())+", "+Integer.parseInt(coord[3].trim())+");");
 			}
-		}
+        }
 	}
 	
 	@Override
@@ -78,14 +82,17 @@ public class ImageFactory extends WidgetCreator<Image, WidgetCreatorContext>
 		@TagEvent(LoadEvtBind.class),
 		@TagEvent(LoadErrorEvtBind.class)
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 
 	@Override
-	public Image instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Image();
-	}
+		String varName = ViewFactoryCreator.createVariableName("image");
+		String className = Image.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 }

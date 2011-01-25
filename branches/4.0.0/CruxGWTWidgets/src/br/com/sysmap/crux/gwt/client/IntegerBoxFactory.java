@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.IntegerBox;
@@ -29,7 +32,7 @@ import com.google.gwt.user.client.ui.IntegerBox;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="integerBox", library="gwt")
-public class IntegerBoxFactory extends ValueBoxBaseFactory<Integer, IntegerBox> 
+public class IntegerBoxFactory extends ValueBoxBaseFactory 
 {	
 	@Override
 	@TagAttributes({
@@ -37,14 +40,17 @@ public class IntegerBoxFactory extends ValueBoxBaseFactory<Integer, IntegerBox>
 		@TagAttribute(value="maxLength", type=Integer.class),
 		@TagAttribute(value="visibleLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
-	public IntegerBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new IntegerBox();
-	}
+		String varName = ViewFactoryCreator.createVariableName("integerBox");
+		String className = IntegerBox.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 }

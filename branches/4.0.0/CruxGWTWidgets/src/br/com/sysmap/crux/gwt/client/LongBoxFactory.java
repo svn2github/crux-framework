@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.LongBox;
@@ -29,7 +32,7 @@ import com.google.gwt.user.client.ui.LongBox;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="longBox", library="gwt")
-public class LongBoxFactory extends ValueBoxBaseFactory<Long, LongBox> 
+public class LongBoxFactory extends ValueBoxBaseFactory 
 {	
 	@Override
 	@TagAttributes({
@@ -37,14 +40,17 @@ public class LongBoxFactory extends ValueBoxBaseFactory<Long, LongBox>
 		@TagAttribute(value="maxLength", type=Integer.class),
 		@TagAttribute(value="visibleLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
-	public LongBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new LongBox();
-	}
+		String varName = ViewFactoryCreator.createVariableName("longBox");
+		String className = LongBox.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
 }

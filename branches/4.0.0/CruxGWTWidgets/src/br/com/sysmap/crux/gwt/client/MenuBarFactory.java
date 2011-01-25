@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -23,11 +25,10 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -58,16 +59,19 @@ class MenuBarContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="menuBar", library="gwt")
-public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext> 
-       implements HasAnimationFactory<MenuBar, MenuBarContext>, HasCloseHandlersFactory<MenuBar, MenuBarContext>
+public class MenuBarFactory extends WidgetCreator<MenuBarContext> 
+       implements HasAnimationFactory<MenuBarContext>, HasCloseHandlersFactory<MenuBarContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public MenuBar instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new MenuBar(isMenuVertical(element));
-	}
+		String varName = ViewFactoryCreator.createVariableName("menuBar");
+		String className = MenuBar.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"("+isMenuVertical(metaElem)+");");
+		return varName;
+	}	
 
 	@Override
 	@TagAttributes({
@@ -77,20 +81,24 @@ public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="vertical", type=Boolean.class)
 	})
-	public void processAttributes(MenuBarContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);		
+		super.processAttributes(out, context);		
 	}
 
 	@Override
 	@TagChildren({
 		@TagChild(MenutItemsProcessor.class)
 	})
-	public void processChildren(MenuBarContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 
-	private boolean isMenuVertical(CruxMetaDataElement element)
+	/**
+	 * @param element
+	 * @return
+	 */
+	private boolean isMenuVertical(JSONObject element)
 	{
-		String verticalStr = element.getProperty("vertical");
+		String verticalStr = element.optString("vertical");
 		boolean vertical = false;
 		if (verticalStr != null && verticalStr.length() > 0)
 		{
@@ -100,56 +108,56 @@ public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class MenutItemsProcessor extends ChoiceChildProcessor<MenuBar, MenuBarContext>
+	public static class MenutItemsProcessor extends ChoiceChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(MenutItemProcessor.class),
 			@TagChild(MenutItemSeparatorProcessor.class)
 		})
-		public void processChildren(MenuBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="menuItem")
-	public static class MenutItemProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class MenutItemProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CaptionProcessor.class),
 			@TagChild(MenuChildrenProcessor.class)
 		})
-		public void processChildren(MenuBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="separator")
-	public static class MenutItemSeparatorProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class MenutItemSeparatorProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
-		public void processChildren(final MenuBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 		{
-			MenuBar widget = context.getWidget();
-			widget.addSeparator();
+			String widget = context.getWidget();
+			out.println(widget+".addSeparator();");
 		}
 	}
 	
-	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBar, MenuBarContext>
+	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TextCaptionProcessor.class),
 			@TagChild(HtmlCaptionProcessor.class)
 		})
-		public void processChildren(MenuBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(tagName="textCaption")
-	public static class TextCaptionProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class TextCaptionProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="text", required=true, supportsI18N=true)
 		})
-		public void processChildren(final MenuBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 		{
 			context.caption = context.readChildProperty("text");
 			context.isHtml = false;
@@ -157,77 +165,78 @@ public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext>
 	}
 	
 	@TagChildAttributes(tagName="htmlCaption", type=HTMLTag.class)
-	public static class HtmlCaptionProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class HtmlCaptionProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
-		public void processChildren(final MenuBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 		{
 			context.caption = ensureHtmlChild(context.getChildElement(), true);
 			context.isHtml = true;
 		}
 	}
 
-	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBar, MenuBarContext>
+	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CommandProcessor.class),
 			@TagChild(SubMenuProcessor.class)
 		})
-		public void processChildren(MenuBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="command")
-	public static class CommandProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class CommandProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="onExecute", required=true)
 		})
-		public void processChildren(final MenuBarContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out,  MenuBarContext context) throws CruxGeneratorException 
 		{
-			final Event evt = EvtBind.getWidgetEvent(context.getChildElement(), "onExecute");
-			if (evt != null)
+			String executeEvt = context.readChildProperty("onExecute");
+			if (executeEvt != null)
 			{
-				MenuItem item = createMenuItem(context);
-				Command cmd =  new Command()
-				{
-					public void execute() 
-					{
-						MenuBar widget= context.getWidget();
-						Events.callEvent(evt, new ExecuteEvent<MenuBar>(widget, context.getWidgetId()));
-					}
-				};
-				item.setCommand(cmd);
+				String event = ViewFactoryCreator.createVariableName("evt");
+				String item = createMenuItem(out, context);
+				
+				out.println(item+".setCommand(new "+Command.class.getCanonicalName()+"(){);");
+				out.println("public void execute(){");
+				out.println("final Event "+event+" = Events.getEvent(\"onExecute\", "+ EscapeUtils.quote(executeEvt)+");");
+				out.println("Events.callEvent("+event+", new "+ExecuteEvent.class.getCanonicalName()+"<"+MenuBar.class.getCanonicalName()+
+						                             ">("+context.getWidget()+", "+context.getWidgetId()+"));");
+				out.println("}");
+				out.println("});");
 			}
 			context.clearAttributes();
 		}
 	}
 
 	@TagChildAttributes(tagName="subMenu", type=MenuBarFactory.class)
-	public static class SubMenuProcessor extends WidgetChildProcessor<MenuBar, MenuBarContext>
+	public static class SubMenuProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
-		public void processChildren(MenuBarContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException 
 		{
-			MenuBar subMenu = getSubMenu(context);
-			MenuItem item = createMenuItem(context);
-			item.setSubMenu(subMenu);
+			String subMenu = getSubMenu(getWidgetCreator(), out, context);
+			String item = createMenuItem(out, context);
+			out.println(item+".setSubMenu("+subMenu+");");
 		}
 	}
 	
 	/**
 	 * Creates a subMenu, based on inner span tags
+	 * @param widgetCreator 
 	 * @param element
 	 * @return
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
-	protected static MenuBar getSubMenu(MenuBarContext context) throws InterfaceConfigException
+	protected static String getSubMenu(WidgetCreator<?> widgetCreator, SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 	{
-		MenuBar widget = context.getWidget();
-		MenuBar subMenu = (MenuBar) createChildWidget(context.getChildElement());	
-		subMenu.setAutoOpen(widget.getAutoOpen());
-		subMenu.setAnimationEnabled(widget.isAnimationEnabled());
+		String widget = context.getWidget();
+		String subMenu = widgetCreator.createChildWidget(out, context.getChildElement());	
+		out.println(subMenu+".setAutoOpen("+widget+".getAutoOpen());");
+		out.println(subMenu+".setAnimationEnabled("+widget+".isAnimationEnabled());");
 		return subMenu;
 	}
 	
@@ -235,9 +244,13 @@ public class MenuBarFactory extends WidgetCreator<MenuBar, MenuBarContext>
 	 * @param context
 	 * @return
 	 */
-	protected static  MenuItem createMenuItem(final MenuBarContext context)
+	protected static String createMenuItem(SourcePrinter out, MenuBarContext context)
 	{
-		MenuBar widget = context.getWidget();
-		return widget.addItem(new MenuItem(context.caption, context.isHtml, (Command)null));
+		String widget = context.getWidget();
+		String menuItemClass = MenuItem.class.getCanonicalName();
+		String menuItem = ViewFactoryCreator.createVariableName("menuItem");
+		out.println(menuItemClass +" "+ menuItem+"="+
+				widget+".addItem(new "+menuItemClass+"("+EscapeUtils.quote(context.caption)+", "+context.isHtml+", (Command)null));");
+		return menuItem;
 	}
 }

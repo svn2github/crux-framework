@@ -15,14 +15,17 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
@@ -37,33 +40,37 @@ import com.google.gwt.user.client.ui.Hyperlink;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="hyperlink", library="gwt")
-public class HyperlinkFactory extends WidgetCreator<Hyperlink, WidgetCreatorContext>
-	   implements HasHTMLFactory<Hyperlink, WidgetCreatorContext>, HasClickHandlersFactory<Hyperlink, WidgetCreatorContext>
+public class HyperlinkFactory extends WidgetCreator<WidgetCreatorContext>
+	   implements HasHTMLFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>
 {
 
 	@Override
 	@TagAttributes({
 		@TagAttribute("targetHistoryToken")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	@Override
-	public Hyperlink instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Hyperlink();
-	}
+		String varName = ViewFactoryCreator.createVariableName("hyperlink");
+		String className = Hyperlink.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
+	
 	
 	@Override
 	@TagChildren({
 		@TagChild(value=ContentProcessor.class, autoProcess=false)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<Hyperlink, WidgetCreatorContext> {}	
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}	
 }
