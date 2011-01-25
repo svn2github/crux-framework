@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 
@@ -31,22 +34,25 @@ import com.google.gwt.user.client.ui.SimpleRadioButton;
  *
  */
 @DeclarativeFactory(id="simpleRadioButton", library="gwt")
-public class SimpleRadioButtonFactory extends FocusWidgetFactory<SimpleRadioButton, WidgetCreatorContext> 
-		implements HasNameFactory<SimpleRadioButton, WidgetCreatorContext>
+public class SimpleRadioButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
+		implements HasNameFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="checked", type=Boolean.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
-	}
-	
-	@Override
-	public SimpleRadioButton instantiateWidget(CruxMetaDataElement element, String widgetId) 
-	{
-		return new SimpleRadioButton(element.getProperty("name"));
+		super.processAttributes(out, context);
 	}
 
+	@Override
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	{
+		String varName = ViewFactoryCreator.createVariableName("simpleRadioButton");
+		String className = SimpleRadioButton.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
+	
 }

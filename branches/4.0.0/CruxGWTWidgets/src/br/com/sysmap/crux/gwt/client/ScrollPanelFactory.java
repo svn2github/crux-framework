@@ -15,41 +15,43 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasScrollHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Represents a ScrollPanelFactory
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="scrollPanel", library="gwt")
-public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetCreatorContext> 
-       implements HasScrollHandlersFactory<ScrollPanel, WidgetCreatorContext>
+public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext> 
+       implements HasScrollHandlersFactory<WidgetCreatorContext>
 {
 	public static enum VerticalScrollPosition{top,bottom};
 	public static enum HorizontalScrollPosition{left,right};
 
 	@Override
-	public ScrollPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new ScrollPanel();
-	}
-	
+		String varName = ViewFactoryCreator.createVariableName("scrollPanel");
+		String className = ScrollPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
+
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="alwaysShowScrollBars", type=Boolean.class),
@@ -57,27 +59,27 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetCreatorC
 		@TagAttribute(value="horizontalScrollPosition", type=HorizontalScrollPosition.class, processor=HorizontalScrollPositionAttributeParser.class),
 		@TagAttribute(value="ensureVisible", processor=EnsureVisibleAttributeParser.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VerticalScrollPositionAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class VerticalScrollPositionAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue) 
 		{
-			ScrollPanel widget = context.getWidget();
+			String widget = context.getWidget();
 			if (StringUtils.unsafeEquals("top", propertyValue))
 			{
-				widget.scrollToTop();
+				out.println(widget+".scrollToTop();");
 			}
 			else 
 			{
-				widget.scrollToBottom();
+				out.println(widget+".scrollToBottom();");
 			}
 		}
 	}
@@ -86,18 +88,18 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetCreatorC
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class HorizontalScrollPositionAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class HorizontalScrollPositionAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue) 
 		{
-			ScrollPanel widget = context.getWidget();
+			String widget = context.getWidget();
 			if (StringUtils.unsafeEquals("left", propertyValue))
 			{
-				widget.scrollToLeft();
+				out.println(widget+".scrollToLeft();");
 			}
 			else
 			{
-				widget.scrollToRight();
+				out.println(widget+".scrollToRight();");
 			}
 		}
 	}
@@ -106,25 +108,21 @@ public class ScrollPanelFactory extends PanelFactory<ScrollPanel, WidgetCreatorC
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class EnsureVisibleAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class EnsureVisibleAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
-		public void processAttribute(final WidgetCreatorContext context, final String propertyValue) 
+		public void processAttribute(SourcePrinter out, final WidgetCreatorContext context, final String propertyValue) 
 		{
-			final ScrollPanel widget = context.getWidget();
-			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent event) 
-				{
-					Widget c = Screen.get(propertyValue);
-					if (c == null)
-					{
-						String widgetId = context.getWidgetId();
-						throw new NullPointerException(messages.scrollPanelWidgetNotFound(widgetId, propertyValue));
-					}
-					widget.ensureVisible(c);
-				}
-			});
+			String widget = context.getWidget();
+					
+			String targetWidget = ViewFactoryCreator.createVariableName("c");
+			
+			printlnPostProcessing("Widget "+targetWidget+" = Screen.get("+EscapeUtils.quote(propertyValue)+");");
+			printlnPostProcessing("if ("+targetWidget+" == null){");
+			String widgetId = context.getWidgetId();
+			printlnPostProcessing("throw new NullPointerException("+EscapeUtils.quote(messages.scrollPanelWidgetNotFound(widgetId, propertyValue))+");");
+			printlnPostProcessing("}");
+			printlnPostProcessing(widget+".ensureVisible("+targetWidget+");");
 		}
 	}	
 }
