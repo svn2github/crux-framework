@@ -17,6 +17,8 @@ package br.com.sysmap.crux.gwt.client;
 
 import java.util.LinkedList;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -27,12 +29,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
@@ -49,14 +49,13 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Tree.Resources;
+import com.google.gwt.user.client.ui.TreeItem;
 
 
 class TreeContext extends WidgetCreatorContext
 {
-	LinkedList<TreeItem> itemStack;
+	LinkedList<String> itemStack;
 }
 
 /**
@@ -64,35 +63,50 @@ class TreeContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tree", library="gwt")
-public class TreeFactory extends WidgetCreator<Tree, TreeContext> 
-       implements HasAnimationFactory<Tree, TreeContext>, HasAllFocusHandlersFactory<Tree, TreeContext>,
-                  HasOpenHandlersFactory<Tree, TreeContext>, HasCloseHandlersFactory<Tree, TreeContext>, 
-                  HasAllMouseHandlersFactory<Tree, TreeContext>, HasAllKeyHandlersFactory<Tree, TreeContext>,
-                  HasSelectionHandlersFactory<Tree, TreeContext>
+public class TreeFactory extends WidgetCreator<TreeContext> 
+       implements HasAnimationFactory<TreeContext>, HasAllFocusHandlersFactory<TreeContext>,
+                  HasOpenHandlersFactory<TreeContext>, HasCloseHandlersFactory<TreeContext>, 
+                  HasAllMouseHandlersFactory<TreeContext>, HasAllKeyHandlersFactory<TreeContext>,
+                  HasSelectionHandlersFactory<TreeContext>
 {
 	protected GWTMessages messages = GWT.create(GWTMessages.class);
 	
 	@Override
-	public Tree instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		Event eventLoadImage = EvtBind.getWidgetEvent(element, "onLoadImage");
+		String varName = createVariableName("widget");
+		String className = Tree.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		
+		String eventLoadImage = metaElem.optString("onLoadImage");
 		
 		if (eventLoadImage != null)
 		{
-			LoadImagesEvent<Tree> loadEvent = new LoadImagesEvent<Tree>(widgetId);
-			Resources treeImages = (Resources) Events.callEvent(eventLoadImage, loadEvent);
+			String loadEvent = createVariableName("evt");
+			String event = createVariableName("evt");
+			String treeImages = createVariableName("treeImages");
+			
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote("onLoadImage")+", "+ EscapeUtils.quote(eventLoadImage)+");");
+			out.println(LoadImagesEvent.class.getCanonicalName()+"<"+className+"> "+loadEvent+
+					" = new "+LoadImagesEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(widgetId)+");");
+			out.println(Resources.class.getCanonicalName()+" "+treeImages+
+					" = ("+Resources.class.getCanonicalName()+") Events.callEvent("+event+", "+loadEvent+");");
 
-			String useLeafImagesStr = element.getProperty("useLeafImages");
+			String useLeafImagesStr = metaElem.optString("useLeafImages");
 			boolean useLeafImages = true;
 			if (useLeafImagesStr != null && useLeafImagesStr.length() > 0)
 			{
 				useLeafImages = (Boolean.parseBoolean(useLeafImagesStr));
 			}
 			
-			return new Tree(treeImages, useLeafImages);
+			out.println(className + " " + varName+" = new "+className+"("+treeImages+", "+useLeafImages+");");
+		}
+		else
+		{
+			out.println(className + " " + varName+" = new "+className+"();");
 		}
 		
-		return new Tree();
+		return varName;
 	}
 	
 	@Override
@@ -105,22 +119,22 @@ public class TreeFactory extends WidgetCreator<Tree, TreeContext>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class)
 	})
-	public void processAttributes(TreeContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 */
-	public static class OpenSelectedItemAttributeParser implements AttributeProcessor<TreeContext>
+	public static class OpenSelectedItemAttributeParser extends AttributeProcessor<TreeContext>
 	{
-		public void processAttribute(TreeContext context, String propertyValue) 
+		public void processAttribute(SourcePrinter out, TreeContext context, String propertyValue) 
 		{
 			if(Boolean.parseBoolean(propertyValue))
 			{
-				Tree widget = context.getWidget();
-				widget.ensureSelectedItemVisible();
+				String widget = context.getWidget();
+				out.println(widget+".ensureSelectedItemVisible();");
 			}
 		}
 	}
@@ -129,19 +143,19 @@ public class TreeFactory extends WidgetCreator<Tree, TreeContext>
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadImage")
 	})
-	public void processEvents(TreeContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, TreeContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(TreeItemProcessor.class)
 	})
-	public void processChildren(TreeContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
-	public static class TreeItemProcessor extends WidgetChildProcessor<Tree, TreeContext> implements HasPostProcessor<Tree, TreeContext>
+	public static class TreeItemProcessor extends WidgetChildProcessor<TreeContext> implements HasPostProcessor<TreeContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -152,79 +166,81 @@ public class TreeFactory extends WidgetCreator<Tree, TreeContext>
 			@TagChild(TreeCaptionProcessor.class),
 			@TagChild(TreeItemProcessor.class)
 		})
-		public void processChildren(TreeContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
-			context.itemStack = new LinkedList<TreeItem>();
+			context.itemStack = new LinkedList<String>();
 		}
 		
-		public void postProcessChildren(TreeContext context) throws InterfaceConfigException 
+		public void postProcessChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
 			context.itemStack.removeFirst();
 		}
 	}
 	
-	public static class TreeCaptionProcessor extends ChoiceChildProcessor<Tree, TreeContext>
+	public static class TreeCaptionProcessor extends ChoiceChildProcessor<TreeContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TextCaptionProcessor.class),
 			@TagChild(WidgetCaptionProcessor.class)
 		})
-		public void processChildren(TreeContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="textTitle", type=String.class)
-	public static class TextCaptionProcessor extends WidgetChildProcessor<Tree, TreeContext>
+	public static class TextCaptionProcessor extends WidgetChildProcessor<TreeContext>
 	{
 		@Override
-		public void processChildren(TreeContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
 			String textCaption = ensureTextChild(context.getChildElement(), true);
 			
-			TreeItem parent = context.itemStack.peek();
-			TreeItem currentItem;
-			Tree rootWidget = context.getWidget();
+			String parent = context.itemStack.peek();
+			String rootWidget = context.getWidget();
+			String currentItem = getWidgetCreator().createVariableName("item");
+			out.println(TreeItem.class.getCanonicalName()+" "+currentItem+";");
+			
 			if (parent == null)
 			{
-				currentItem = rootWidget.addItem(textCaption);
+				out.println(currentItem+" = "+rootWidget+".addItem("+EscapeUtils.quote(textCaption)+");");
 			}
 			else
 			{
-				currentItem = parent.addItem(textCaption);
+				out.println(currentItem+" = "+parent+".addItem("+EscapeUtils.quote(textCaption)+");");
 			}
 			context.itemStack.addFirst(currentItem);
 		}
 	}	
 
 	@TagChildAttributes(tagName="widgetTitle")
-	public static class WidgetCaptionProcessor extends WidgetChildProcessor<Tree, TreeContext>
+	public static class WidgetCaptionProcessor extends WidgetChildProcessor<TreeContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetCaptionWidgetProcessor.class)
 		})
-		public void processChildren(TreeContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
 	}	
 
-
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<Tree, TreeContext>
+	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<TreeContext>
 	{
 		@Override
-		public void processChildren(TreeContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
-			Widget child = createChildWidget(context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 
-			TreeItem parent = context.itemStack.peek();
-			TreeItem currentItem;
+			String parent = context.itemStack.peek();
+			String currentItem = getWidgetCreator().createVariableName("item");
+			out.println(TreeItem.class.getCanonicalName()+" "+currentItem+";");
 			if (parent == null)
 			{
-				Tree rootWidget = context.getWidget();
-				currentItem = rootWidget.addItem(child);
+				String rootWidget = context.getWidget();
+				out.println(currentItem+" = "+rootWidget+".addItem("+child+");");
 			}
 			else
 			{
-				currentItem = parent.addItem(child);
+				out.println(currentItem+" = "+parent+".addItem("+child+");");
 			}
 			context.itemStack.addFirst(currentItem);
 		}

@@ -15,14 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-
-import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * 
@@ -32,12 +26,4 @@ import com.google.gwt.user.client.ui.FlowPanel;
 @DeclarativeFactory(id="flowPanel", library="gwt")
 public class FlowPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("flowPanel");
-		String className = FlowPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
 }

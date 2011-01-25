@@ -15,13 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
@@ -29,8 +26,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
-
-import com.google.gwt.user.client.ui.FocusPanel;
 
 /**
  * Represents a FocusPanelFactory
@@ -55,13 +50,4 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	{
 		super.processAttributes(out, context);
 	}
-	
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("focusPanel");
-		String className = FocusPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}		
 }

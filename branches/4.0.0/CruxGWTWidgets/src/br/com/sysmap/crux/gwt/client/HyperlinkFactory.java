@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -24,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -32,8 +29,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
-
-import com.google.gwt.user.client.ui.Hyperlink;
 
 /**
  * Represents a HyperlinkFactory component
@@ -52,16 +47,6 @@ public class HyperlinkFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		super.processAttributes(out, context);
 	}
-
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("hyperlink");
-		String className = Hyperlink.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-	
 	
 	@Override
 	@TagChildren({

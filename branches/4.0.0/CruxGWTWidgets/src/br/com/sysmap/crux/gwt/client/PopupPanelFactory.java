@@ -15,19 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
-
-import com.google.gwt.user.client.ui.PopupPanel;
 
 
 /**
@@ -39,16 +34,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class PopupPanelFactory extends PanelFactory<WidgetCreatorContext>
        implements HasAnimationFactory<WidgetCreatorContext>, HasCloseHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("popupPanel");
-		String className = PopupPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-	
-	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),

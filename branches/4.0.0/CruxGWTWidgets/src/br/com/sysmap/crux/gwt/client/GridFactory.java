@@ -16,19 +16,16 @@
 package br.com.sysmap.crux.gwt.client;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Grid;
 
 class GridFactoryContext extends HTMLTableFactoryContext
 {
@@ -42,17 +39,6 @@ class GridFactoryContext extends HTMLTableFactoryContext
 @DeclarativeFactory(id="grid", library="gwt")
 public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 {
-
-	
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("grid");
-		String className = Grid.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}
-	
 	/**
 	 * Populate the panel with declared items
 	 * @param element

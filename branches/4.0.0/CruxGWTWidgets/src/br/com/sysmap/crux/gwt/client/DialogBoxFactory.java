@@ -15,20 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
-
-import com.google.gwt.user.client.ui.DialogBox;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -40,15 +35,6 @@ public class DialogBoxFactory extends PanelFactory<WidgetCreatorContext>
                   HasCloseHandlersFactory<WidgetCreatorContext>, 
                   HasHTMLFactory<WidgetCreatorContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("dialogBox");
-		String className = DialogBox.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}		
-	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),

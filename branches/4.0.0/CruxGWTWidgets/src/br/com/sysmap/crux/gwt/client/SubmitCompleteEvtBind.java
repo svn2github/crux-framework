@@ -19,7 +19,6 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -39,14 +38,14 @@ public class SubmitCompleteEvtBind extends EvtProcessor
 	{
 		return EVENT_NAME;
 	}
-	
+
 	@Override
-    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
     {
 		String event = ViewFactoryCreator.createVariableName("evt");
-
+		
 		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(context.getWidget()+".addSubmitCompleteHandler(new "+SubmitCompleteHandler.class.getCanonicalName()+"(){");
+		out.println(widget+".addSubmitCompleteHandler(new "+SubmitCompleteHandler.class.getCanonicalName()+"(){");
 		out.println("public void onSubmitComplete("+SubmitCompleteEvent.class.getCanonicalName()+" event){");
 		out.println("Events.callEvent("+event+", event);");
 		out.println("}");

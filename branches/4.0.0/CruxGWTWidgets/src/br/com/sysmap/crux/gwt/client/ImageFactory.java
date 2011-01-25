@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -24,7 +22,6 @@ import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -33,8 +30,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.LoadErrorEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.LoadEvtBind;
-
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * A Factory for Image widgets
@@ -86,13 +81,4 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		super.processEvents(out, context);
 	}
-
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("image");
-		String className = Image.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
 }

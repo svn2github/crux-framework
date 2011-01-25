@@ -15,19 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
-
-import com.google.gwt.user.client.ui.Hidden;
 
 /**
  * Represents a HiddenFactory component
@@ -44,14 +39,5 @@ public class HiddenFactory extends WidgetCreator<WidgetCreatorContext> implement
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		super.processAttributes(out, context);
-	}
-
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("hidden");
-		String className = Hidden.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
 	}
 }

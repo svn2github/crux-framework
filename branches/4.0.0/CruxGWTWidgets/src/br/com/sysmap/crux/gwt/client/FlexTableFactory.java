@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -24,12 +22,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.FlexTable;
 
 /**
  * Factory for FlexTable widget
@@ -38,15 +34,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 @DeclarativeFactory(id="flexTable", library="gwt")
 public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("flexTable");
-		String className = FlexTable.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-	
 	/**
 	 * Populate the panel with declared items
 	 * @param element

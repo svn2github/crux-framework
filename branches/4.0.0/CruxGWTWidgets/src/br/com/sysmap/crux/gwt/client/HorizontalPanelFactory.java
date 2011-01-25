@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -24,14 +22,11 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
-
-import com.google.gwt.user.client.ui.HorizontalPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -42,16 +37,6 @@ public class HorizontalPanelFactory extends CellPanelFactory<CellPanelContext>
 	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
 	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
-
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("horizontalPanel");
-		String className = HorizontalPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-
 	@Override
 	@TagChildren({
 		@TagChild(HorizontalPanelProcessor.class)

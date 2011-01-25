@@ -21,53 +21,43 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
-
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="verticalPanel", library="gwt")
-public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel, CellPanelContext>
-	   implements HasHorizontalAlignmentFactory<VerticalPanel, CellPanelContext>, 
-	   			  HasVerticalAlignmentFactory<VerticalPanel, CellPanelContext>
+public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
+	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
+	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
-
-	@Override
-	public VerticalPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
-	{
-		return new VerticalPanel();
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(VerticalPanelProcessor.class)
 	})		
-	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<VerticalPanel, CellPanelContext> 
+	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(VerticalProcessor.class),
 			@TagChild(VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class VerticalProcessor extends AbstractCellProcessor<VerticalPanel, CellPanelContext>
+	public static class VerticalProcessor extends AbstractCellProcessor<CellPanelContext>
 	{
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("height"),
@@ -78,22 +68,24 @@ public class VerticalPanelFactory extends CellPanelFactory<VerticalPanel, CellPa
 		@TagChildren({
 			@TagChild(value=VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
+		@Override
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 		
-	public static class VerticalWidgetProcessor extends AbstractCellWidgetProcessor<VerticalPanel, CellPanelContext> 
+	public static class VerticalWidgetProcessor extends AbstractCellWidgetProcessor<CellPanelContext> 
 	{
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			Widget child = createChildWidget(context.getChildElement());
-			VerticalPanel rootWidget = context.getWidget();
-			rootWidget.add(child);
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+child+");");
 			context.child = child;
-			super.processChildren(context);
+			super.processChildren(out, context);
 			context.child = null;
 		}
-	}	}
+	}	
+}

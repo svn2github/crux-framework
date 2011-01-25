@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -25,13 +23,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
-
-import com.google.gwt.user.client.ui.AbsolutePanel;
 
 class AbsolutePanelContext extends WidgetCreatorContext
 {
@@ -46,15 +41,6 @@ class AbsolutePanelContext extends WidgetCreatorContext
 @DeclarativeFactory(id="absolutePanel", library="gwt")
 public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String vartName = ViewFactoryCreator.createVariableName("absolutePanel");
-		String className = AbsolutePanel.class.getCanonicalName();
-		out.println(className + " " + vartName+" = new "+className+"();");
-		return vartName;
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(AbsoluteChildrenProcessor.class)

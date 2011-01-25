@@ -15,21 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHighlightHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasShowRangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
-
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * Factory for TabPanel widgets
@@ -74,14 +69,5 @@ public class DatePickerFactory extends CompositeFactory<WidgetCreatorContext>
 					DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
 					EscapeUtils.quote(datePattern)+").parse("+EscapeUtils.quote(currentMonth)+"));");
 		}		
-	}
-	
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("datePicker");
-		String className = DatePicker.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
 	}
 }

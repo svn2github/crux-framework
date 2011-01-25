@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -34,7 +32,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasInitializeHandlersFactor
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.RichTextArea.FontSize;
 import com.google.gwt.user.client.ui.RichTextArea.Formatter;
 import com.google.gwt.user.client.ui.RichTextArea.Justification;
@@ -55,16 +52,6 @@ class RichTextAreaContext extends WidgetCreatorContext
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextAreaContext> 
 implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<RichTextAreaContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("richTextArea");
-		String className = RichTextArea.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-	
-	
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("backColor"),

@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -30,7 +28,6 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasScrollHandlersFactory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Represents a ScrollPanelFactory
@@ -42,15 +39,6 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 	public static enum VerticalScrollPosition{top,bottom};
 	public static enum HorizontalScrollPosition{left,right};
-
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("scrollPanel");
-		String className = ScrollPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
 
 	@Override
 	@TagAttributes({

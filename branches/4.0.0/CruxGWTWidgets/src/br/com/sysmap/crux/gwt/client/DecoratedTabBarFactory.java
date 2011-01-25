@@ -19,45 +19,37 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-
-import com.google.gwt.user.client.ui.DecoratedTabBar;
 
 /**
  * Factory for DecoratedTabBar widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="decoratedTabBar", library="gwt")
-public class DecoratedTabBarFactory extends AbstractTabBarFactory<DecoratedTabBar>
+public class DecoratedTabBarFactory extends AbstractTabBarFactory
 {
-	@Override
-	public DecoratedTabBar instantiateWidget(CruxMetaDataElement element, String widgetId) 
-	{
-		return new DecoratedTabBar();
-	}
-	
 	@Override
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})
-	public void processChildren(TabBarContext context) throws InterfaceConfigException {}		
+	public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException {}		
 
-	public static class TabProcessor extends AbstractTabProcessor<DecoratedTabBar> 
+	public static class TabProcessor extends AbstractTabProcessor 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TabItemProcessor.class)
 		})	
-		public void processChildren(TabBarContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class TabItemProcessor extends ChoiceChildProcessor<DecoratedTabBar, TabBarContext> 
+	public static class TabItemProcessor extends ChoiceChildProcessor<TabBarContext> 
 	{
 		@Override
 		@TagChildren({
@@ -65,22 +57,22 @@ public class DecoratedTabBarFactory extends AbstractTabBarFactory<DecoratedTabBa
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTabProcessor.class)
 		})		
-		public void processChildren(TabBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class WidgetTabProcessor extends WidgetChildProcessor<DecoratedTabBar, TabBarContext> 
+	public static class WidgetTabProcessor extends WidgetChildProcessor<TabBarContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetProcessor.class)
 		})	
-		public void processChildren(TabBarContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException {}
 	}
 	
-	public static class TextTabProcessor extends AbstractTextTabProcessor<DecoratedTabBar> {}
+	public static class TextTabProcessor extends AbstractTextTabProcessor {}
 	
-	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor<DecoratedTabBar> {}
+	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor {}
 	
-	public static class WidgetProcessor extends AbstractWidgetProcessor<DecoratedTabBar> {}
+	public static class WidgetProcessor extends AbstractWidgetProcessor {}
 }

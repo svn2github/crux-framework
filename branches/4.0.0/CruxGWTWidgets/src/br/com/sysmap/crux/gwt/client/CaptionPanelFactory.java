@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -25,7 +23,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -33,8 +30,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProc
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
-
-import com.google.gwt.user.client.ui.CaptionPanel;
 
 /**
  * Factory for CaptionPanel widgets
@@ -58,15 +53,6 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 		@TagChild(ContentProcessor.class)
 	})	
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("captionPanel");
-		String className = CaptionPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}
 	
 	@TagChildAttributes(minOccurs="0")
 	public static class CaptionProcessor extends ChoiceChildProcessor<WidgetCreatorContext>

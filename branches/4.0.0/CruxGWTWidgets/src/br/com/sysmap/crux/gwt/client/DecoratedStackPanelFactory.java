@@ -15,19 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-
-import com.google.gwt.user.client.ui.DecoratedStackPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,15 +31,6 @@ import com.google.gwt.user.client.ui.DecoratedStackPanel;
 @DeclarativeFactory(id="decoratedStackPanel", library="gwt")
 public class DecoratedStackPanelFactory extends AbstractStackPanelFactory
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("decoratedStackPanel");
-		String className = DecoratedStackPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-	
 	@Override
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)

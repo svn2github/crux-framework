@@ -15,20 +15,15 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
-
-import com.google.gwt.user.client.ui.FileUpload;
 
 /**
  * Represents a FileUploadFactory component.
@@ -40,15 +35,6 @@ public class FileUploadFactory extends WidgetCreator<WidgetCreatorContext>
 	   			  HasNameFactory<WidgetCreatorContext>
 {//TODO should implement HasEnabledFactory, but GWT FileUploadWidget does not implement HasEnabled. GWT Issue 5677
 
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("fileUpload");
-		String className = FileUpload.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}
-	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="enabled", type=Boolean.class)

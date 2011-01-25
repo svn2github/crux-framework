@@ -25,7 +25,6 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
@@ -53,15 +52,6 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
        implements HasHorizontalAlignmentFactory<DockPanelContext>, 
                   HasVerticalAlignmentFactory<DockPanelContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
-	{
-		String varName = ViewFactoryCreator.createVariableName("dockPanel");
-		String className = DockPanel.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
-	}	
-
 	@Override
 	@TagChildren({
 		@TagChild(DockPanelProcessor.class)

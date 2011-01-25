@@ -19,49 +19,41 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-
-import com.google.gwt.user.client.ui.DecoratedTabPanel;
 
 /**
  * Factory for DecoratedTabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="decoratedTabPanel", library="gwt")
-public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedTabPanel>
+public class DecoratedTabPanelFactory extends AbstractTabPanelFactory
 {
-	@Override
-	public DecoratedTabPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
-	{
-		return new DecoratedTabPanel();
-	}
-	
 	@Override
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(TabPanelContext context) throws InterfaceConfigException 
+	public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException 
 	{
 	}
 	
-	public static class TabProcessor extends AbstractTabProcessor<DecoratedTabPanel>
+	public static class TabProcessor extends AbstractTabProcessor
 	{
 		@TagChildren({
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(TabPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 		
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<DecoratedTabPanel, TabPanelContext> 
+	public static class TabTitleProcessor extends ChoiceChildProcessor<TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
@@ -69,35 +61,35 @@ public class DecoratedTabPanelFactory extends AbstractTabPanelFactory<DecoratedT
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException {}
 		
 	}
 	
-	public static class TextTabProcessor extends AbstractTextTabProcessor<DecoratedTabPanel> {}
+	public static class TextTabProcessor extends AbstractTextTabProcessor {}
 	
-	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor<DecoratedTabPanel> {}
+	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor {}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<DecoratedTabPanel, TabPanelContext> 
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException {}
 	}
 
-	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor<DecoratedTabPanel> {}
+	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor {}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<DecoratedTabPanel, TabPanelContext> 
+	public static class TabWidgetProcessor extends WidgetChildProcessor<TabPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(TabPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException {}
 	}
 
-	public static class WidgetContentProcessor extends AbstractWidgetContentProcessor<DecoratedTabPanel> {}	
+	public static class WidgetContentProcessor extends AbstractWidgetContentProcessor {}	
 }

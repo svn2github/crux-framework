@@ -15,16 +15,17 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -40,11 +41,11 @@ import com.google.gwt.user.client.ui.SuggestOracle;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="suggestBox", library="gwt")
-public class SuggestBoxFactory extends CompositeFactory<SuggestBox, WidgetCreatorContext> 
-       implements HasAnimationFactory<SuggestBox, WidgetCreatorContext>, HasTextFactory<SuggestBox, WidgetCreatorContext>, 
-                  HasValueChangeHandlersFactory<SuggestBox, WidgetCreatorContext>, 
-                  HasSelectionHandlersFactory<SuggestBox, WidgetCreatorContext>,
-                  HasAllKeyHandlersFactory<SuggestBox, WidgetCreatorContext>
+public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext> 
+       implements HasAnimationFactory<WidgetCreatorContext>, HasTextFactory<WidgetCreatorContext>, 
+                  HasValueChangeHandlersFactory<WidgetCreatorContext>, 
+                  HasSelectionHandlersFactory<WidgetCreatorContext>,
+                  HasAllKeyHandlersFactory<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
@@ -56,32 +57,41 @@ public class SuggestBoxFactory extends CompositeFactory<SuggestBox, WidgetCreato
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute("value")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
-	public SuggestBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		Event eventLoadOracle = EvtBind.getWidgetEvent(element, "onLoadOracle");
-		
+		String varName = ViewFactoryCreator.createVariableName("suggestBox");
+		String className = SuggestBox.class.getCanonicalName();
+
+		String event = ViewFactoryCreator.createVariableName("evt");
+		String oracle = ViewFactoryCreator.createVariableName("oracle");
+
+		String eventLoadOracle = metaElem.optString("onLoadOracle");
 		if (eventLoadOracle != null)
 		{
-			LoadOracleEvent<SuggestBox> loadOracleEvent = new LoadOracleEvent<SuggestBox>(widgetId);
-			SuggestOracle oracle = (SuggestOracle) Events.callEvent(eventLoadOracle, loadOracleEvent);
-			return new SuggestBox(oracle);
+			out.println("final Event "+event+" = Events.getEvent(\"onLoadOracle\", "+ EscapeUtils.quote(eventLoadOracle)+");");
+			out.println(SuggestOracle.class.getCanonicalName()+" "+oracle+" = Events.callEvent("+event+", new "+LoadOracleEvent.class.getCanonicalName()+
+					"<"+SuggestBox.class.getCanonicalName()+">("+EscapeUtils.quote(widgetId)+"));");
+			out.println(className + " " + varName+" = new "+className+"("+oracle+");");
 		}
-		
-		return new SuggestBox();
-	}
+		else
+		{
+			out.println(className + " " + varName+" = new "+className+"();");
+		}
+		return varName;
+	}	
 	
 	@Override
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onLoadOracle")
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);		
+		super.processEvents(out, context);		
 	}
 }
