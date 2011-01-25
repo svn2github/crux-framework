@@ -22,8 +22,10 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
@@ -31,17 +33,15 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 
-import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class CellPanelFactory <T extends CellPanel, C extends CellPanelContext> extends ComplexPanelFactory<T, C>
+public abstract class CellPanelFactory <C extends CellPanelContext> extends ComplexPanelFactory<C>
 {
 	private static final String DEFAULT_V_ALIGN = HasVerticalAlignment.ALIGN_MIDDLE.getVerticalAlignString();
 	private static final String DEFAULT_H_ALIGN = HasHorizontalAlignment.ALIGN_CENTER.getTextAlignString();
@@ -51,38 +51,38 @@ public abstract class CellPanelFactory <T extends CellPanel, C extends CellPanel
 		@TagAttribute(value="borderWidth",type=Integer.class),
 		@TagAttribute(value="spacing",type=Integer.class)
 	})
-	public void processAttributes(C context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(CellPanelProcessor.class)
 	})		
-	public void processChildren(C context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException {}
 	
-	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanel, CellPanelContext>{} 
+	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext>{} 
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static abstract class AbstractCellPanelProcessor<T extends CellPanel, C extends CellPanelContext> extends ChoiceChildProcessor<T, C> 
+	public static abstract class AbstractCellPanelProcessor<C extends CellPanelContext> extends ChoiceChildProcessor<C> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(CellProcessor.class),
 			@TagChild(CellWidgetProcessor.class)
 		})		
-		public void processChildren(C context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			context.horizontalAlignment = DEFAULT_H_ALIGN;
 			context.verticalAlignment = DEFAULT_V_ALIGN;
 		}
 	}
 	
-	public static class CellProcessor extends AbstractCellProcessor<CellPanel, CellPanelContext>{}
+	public static class CellProcessor extends AbstractCellProcessor<CellPanelContext>{}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static abstract class AbstractCellProcessor<T extends CellPanel, C extends CellPanelContext> extends WidgetChildProcessor<T, C> 
+	public static abstract class AbstractCellProcessor<C extends CellPanelContext> extends WidgetChildProcessor<C> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -94,7 +94,7 @@ public abstract class CellPanelFactory <T extends CellPanel, C extends CellPanel
 		@TagChildren({
 			@TagChild(value=CellWidgetProcessor.class)
 		})		
-		public void processChildren(C context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			context.height = context.readChildProperty("height");
 			context.width = context.readChildProperty("width");
@@ -103,42 +103,41 @@ public abstract class CellPanelFactory <T extends CellPanel, C extends CellPanel
 		}
 	}
 	
-	public static class CellWidgetProcessor extends AbstractCellWidgetProcessor<CellPanel, CellPanelContext> 
+	public static class CellWidgetProcessor extends AbstractCellWidgetProcessor<CellPanelContext> 
 	{
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			Widget child = createChildWidget(context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			context.child = child;
-			super.processChildren(context);
+			super.processChildren(out, context);
 			context.child = null;
 		}
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	static class AbstractCellWidgetProcessor<T extends CellPanel, C extends CellPanelContext> extends WidgetChildProcessor<T, C> 
+	static class AbstractCellWidgetProcessor<C extends CellPanelContext> extends WidgetChildProcessor<C> 
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(C context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
-			T parent = (T)context.getWidget();
+			String parent = context.getWidget();
 			if (!StringUtils.isEmpty(context.height))
 			{
-				parent.setCellHeight(context.child, context.height);
+				out.println(parent+".setCellHeight("+context.child+", "+EscapeUtils.quote(context.height)+");");
 			}
 			if (!StringUtils.isEmpty(context.horizontalAlignment))
 			{
-				parent.setCellHorizontalAlignment(context.child, 
-					  AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+				out.println(parent+".setCellHorizontalAlignment("+context.child+", "+
+					  AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
 			}
 			if (!StringUtils.isEmpty(context.verticalAlignment))
 			{
-				parent.setCellVerticalAlignment(context.child, AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment));
+				out.println(parent+".setCellVerticalAlignment("+context.child+", "+AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment)+");");
 			}
 			if (!StringUtils.isEmpty(context.width))
 			{
-				parent.setCellWidth(context.child, context.width);
+				out.println(parent+".setCellWidth("+context.child+", "+EscapeUtils.quote(context.width)+");");
 			}
 			
 			context.height = null;

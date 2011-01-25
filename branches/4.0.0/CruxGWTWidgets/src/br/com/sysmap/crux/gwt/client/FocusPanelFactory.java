@@ -15,11 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
@@ -34,12 +37,12 @@ import com.google.gwt.user.client.ui.FocusPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="focusPanel", library="gwt")
-public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetCreatorContext>
-	   implements HasAllMouseHandlersFactory<FocusPanel, WidgetCreatorContext>, 
-	   			  HasClickHandlersFactory<FocusPanel, WidgetCreatorContext>, 
-	   			  HasAllFocusHandlersFactory<FocusPanel, WidgetCreatorContext>, 
-	   			  HasDoubleClickHandlersFactory<FocusPanel, WidgetCreatorContext>,
-	   			  HasAllKeyHandlersFactory<FocusPanel, WidgetCreatorContext>
+public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
+	   implements HasAllMouseHandlersFactory<WidgetCreatorContext>, 
+	   			  HasClickHandlersFactory<WidgetCreatorContext>, 
+	   			  HasAllFocusHandlersFactory<WidgetCreatorContext>, 
+	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>,
+	   			  HasAllKeyHandlersFactory<WidgetCreatorContext>
 	   			
 {
 	@Override
@@ -48,14 +51,17 @@ public class FocusPanelFactory extends PanelFactory<FocusPanel, WidgetCreatorCon
 		@TagAttribute(value="accessKey", type=Character.class),
 		@TagAttribute(value="focus", type=Boolean.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException 
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
-	public FocusPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new FocusPanel();
-	}
+		String varName = ViewFactoryCreator.createVariableName("focusPanel");
+		String className = FocusPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}		
 }

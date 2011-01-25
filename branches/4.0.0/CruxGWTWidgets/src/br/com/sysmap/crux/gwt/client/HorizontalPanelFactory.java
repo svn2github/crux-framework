@@ -15,59 +15,64 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="horizontalPanel", library="gwt")
-public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel, CellPanelContext>
-	   implements HasHorizontalAlignmentFactory<HorizontalPanel, CellPanelContext>, 
-	   			  HasVerticalAlignmentFactory<HorizontalPanel, CellPanelContext>
+public class HorizontalPanelFactory extends CellPanelFactory<CellPanelContext>
+	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
+	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
 
 	@Override
-	public HorizontalPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new HorizontalPanel();
-	}
-	
+		String varName = ViewFactoryCreator.createVariableName("horizontalPanel");
+		String className = HorizontalPanel.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}	
+
 	@Override
 	@TagChildren({
 		@TagChild(HorizontalPanelProcessor.class)
 	})		
-	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  HorizontalPanelProcessor extends AbstractCellPanelProcessor<HorizontalPanel, CellPanelContext> 
+	public static class  HorizontalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(HorizontalProcessor.class),
 			@TagChild(HorizontalWidgetProcessor.class)
 		})		
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class HorizontalProcessor extends AbstractCellProcessor<HorizontalPanel, CellPanelContext>
+	public static class HorizontalProcessor extends AbstractCellProcessor<CellPanelContext>
 	{
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("height"),
@@ -78,22 +83,23 @@ public class HorizontalPanelFactory extends CellPanelFactory<HorizontalPanel, Ce
 		@TagChildren({
 			@TagChild(value=HorizontalWidgetProcessor.class)
 		})		
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException 
+		@Override
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 		
-	public static class HorizontalWidgetProcessor extends AbstractCellWidgetProcessor<HorizontalPanel, CellPanelContext> 
+	public static class HorizontalWidgetProcessor extends AbstractCellWidgetProcessor<CellPanelContext> 
 	{
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			Widget child = createChildWidget(context.getChildElement());
-			HorizontalPanel rootWidget = context.getWidget();
-			rootWidget.add(child);
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+child+");");
 			context.child = child;
-			super.processChildren(context);
+			super.processChildren(out, context);
 			context.child = null;
 		}
 	}	

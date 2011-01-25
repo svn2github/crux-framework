@@ -15,13 +15,12 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
@@ -29,28 +28,10 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
  * Helper class for binding of submit events
  * @author Gesse Dafe
  */
-public class SubmitEvtBind implements EvtProcessor<FormPanel>
+public class SubmitEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onSubmit";
 
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
-	 */
-	public void bindEvent(CruxMetaDataElement element, FormPanel widget)
-	{
-		final Event eventSubmit = EvtBind.getWidgetEvent(element, "onSubmit");
-		if (eventSubmit != null)
-		{
-			widget.addSubmitHandler(new SubmitHandler()
-			{
-				public void onSubmit(SubmitEvent event) 
-				{
-					Events.callEvent(eventSubmit, event);
-				}
-			});
-		}
-	}
-	
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 	 */
@@ -58,4 +39,17 @@ public class SubmitEvtBind implements EvtProcessor<FormPanel>
 	{
 		return EVENT_NAME;
 	}
+	
+	@Override
+    public void processEvent(SourcePrinter out, WidgetCreatorContext context, String eventValue)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(context.getWidget()+".addSubmitHandler(new "+SubmitHandler.class.getCanonicalName()+"(){");
+		out.println("public void onSubmit("+SubmitEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
+    }	
 }

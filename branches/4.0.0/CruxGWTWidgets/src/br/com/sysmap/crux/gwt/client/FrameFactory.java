@@ -15,13 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
@@ -32,33 +35,37 @@ import com.google.gwt.user.client.ui.Frame;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="frame", library="gwt")
-public class FrameFactory extends WidgetCreator<Frame, WidgetCreatorContext>
+public class FrameFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="url", processor=URLAttributeParser.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class URLAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class URLAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue) 
-		{
-			Frame widget = context.getWidget();
-			widget.setUrl(Screen.appendDebugParameters(propertyValue));
-		}
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
+			String widget = context.getWidget();
+			out.println(widget+".setUrl(Screen.appendDebugParameters("+EscapeUtils.quote(attributeValue)+"));");
+        }
 	}
 	
 	@Override
-	public Frame instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Frame();
-	}	
+		String varName = ViewFactoryCreator.createVariableName("frame");
+		String className = Frame.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
+	}
 }

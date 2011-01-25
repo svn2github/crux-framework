@@ -15,13 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.collection.Array;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 
 import com.google.gwt.core.client.GWT;
@@ -37,45 +40,49 @@ class GridFactoryContext extends HTMLTableFactoryContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="grid", library="gwt")
-public class GridFactory extends HTMLTableFactory<Grid, GridFactoryContext>
+public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 {
 
+	
 	@Override
-	public Grid instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
-		return new Grid();
+		String varName = ViewFactoryCreator.createVariableName("grid");
+		String className = Grid.class.getCanonicalName();
+		out.println(className + " " + varName+" = new "+className+"();");
+		return varName;
 	}
-
+	
 	/**
 	 * Populate the panel with declared items
 	 * @param element
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
 	@Override
 	@TagChildren({
 		@TagChild(GridRowProcessor.class)
 	})
-	public void processChildren(GridFactoryContext context) throws InterfaceConfigException	
+	public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException	
 	{
-		Array<CruxMetaDataElement> children = ensureChildren(context.getWidgetElement(), true);
+		JSONArray children = ensureChildren(context.getWidgetElement(), true);
 		
 		int count = getNonNullChildrenCount(children);
 		
-		Grid widget = context.getWidget();
-		widget.resizeRows(count);
+		String widget = context.getWidget();
+		out.println(widget+".resizeRows("+count+");");
 	}
 
 	/**
 	 * @param children
 	 * @return
 	 */
-	private static int getNonNullChildrenCount(Array<CruxMetaDataElement> children)
+	private static int getNonNullChildrenCount(JSONArray children)
     {
 	    int count = 0;
-		int size = children.size();
+		int size = children.length();
 		for (int i=0; i<size; i++)
 		{
-			if (children.get(i) != null)
+			if (children.opt(i) != null)
 			{
 				count++;
 			}
@@ -84,42 +91,42 @@ public class GridFactory extends HTMLTableFactory<Grid, GridFactoryContext>
     }
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
-	public static class GridRowProcessor extends TableRowProcessor<Grid, GridFactoryContext>
+	public static class GridRowProcessor extends TableRowProcessor<GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridCellProcessor.class)
 		})
-		public void processChildren(GridFactoryContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException
 		{
 			if (!context.cellsInitialized)
 			{
-				Array<CruxMetaDataElement> children = ensureChildren(context.getChildElement(), true);
-				Grid rootWidget = context.getWidget();
-				rootWidget.resizeColumns(getNonNullChildrenCount(children));
+				JSONArray children = ensureChildren(context.getChildElement(), true);
+				String rootWidget = context.getWidget();
+				out.println(rootWidget+".resizeColumns("+getNonNullChildrenCount(children)+");");
 				context.cellsInitialized = true;
 			}
 			
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class GridCellProcessor extends TableCellProcessor<Grid, GridFactoryContext>
+	public static class GridCellProcessor extends TableCellProcessor<GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridChildrenProcessor.class)
 		})
-		public void processChildren(GridFactoryContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException
 		{
 			
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class GridChildrenProcessor extends ChoiceChildProcessor<Grid, GridFactoryContext> 
+	public static class GridChildrenProcessor extends ChoiceChildProcessor<GridFactoryContext> 
 	{
 		protected GWTMessages messages = GWT.create(GWTMessages.class);
 		
@@ -129,20 +136,20 @@ public class GridFactory extends HTMLTableFactory<Grid, GridFactoryContext>
 			@TagChild(GridCellHTMLProcessor.class),
 			@TagChild(GridCellWidgetProcessor.class)
 		})
-		public void processChildren(GridFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException {}
 	}
 	
-	public static class GridCellTextProcessor extends CellTextProcessor<Grid, GridFactoryContext>{}
-	public static class GridCellHTMLProcessor extends CellHTMLProcessor<Grid, GridFactoryContext>{}
-	public static class GridCellWidgetProcessor extends CellWidgetProcessor<Grid, GridFactoryContext>
+	public static class GridCellTextProcessor extends CellTextProcessor<GridFactoryContext>{}
+	public static class GridCellHTMLProcessor extends CellHTMLProcessor<GridFactoryContext>{}
+	public static class GridCellWidgetProcessor extends CellWidgetProcessor<GridFactoryContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(GridWidgetProcessor.class)
 		})	
-		public void processChildren(GridFactoryContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException {}
 		
 	}
-	public static class GridWidgetProcessor extends WidgetProcessor<Grid, GridFactoryContext>{} 
+	public static class GridWidgetProcessor extends WidgetProcessor<GridFactoryContext>{} 
 	
 }
