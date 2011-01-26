@@ -15,19 +15,21 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
-import br.com.sysmap.crux.core.client.screen.HasWidgetsFactory;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -35,8 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<WidgetCreatorContext> 
-				implements HasWidgetsFactory<WidgetCreatorContext>
+public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
 	/**
 	 * @author Thiago da Rosa de Bustamante
@@ -48,11 +49,11 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 		 * Constructor
 		 * @param element
 		 */
-		public CruxHTMLPanel(CruxMetaDataElement element)
+		public CruxHTMLPanel(String wrapperElementId)
         {
 	        super("");
-	        assert(element.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-	        Element panelElement = WidgetCreator.getEnclosingPanelElement(element.getProperty("id"));
+	        assert(wrapperElementId != null):Crux.getMessages().screenFactoryWidgetIdRequired();
+	        Element panelElement = ViewFactoryUtils.getEnclosingPanelElement(wrapperElementId);
 	        assert Document.get().getBody().isOrHasChild(panelElement);
 	        panelElement.removeFromParent();
 	        getElement().appendChild(panelElement);
@@ -61,35 +62,33 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 		@Override
 		public void onAttach()
 		{
-		    super.onAttach();
+		    super.onAttach();//TODO verificar se precisa disso ainda
 		}
-	}
-	
-	/**
-	 * @see br.com.sysmap.crux.core.client.screen.HasWidgetsFactory#add(com.google.gwt.user.client.ui.Widget, java.lang.String, com.google.gwt.user.client.ui.Widget, java.lang.String)
-	 */
-	public void add(T parent, String parentId, Widget widget, String widgetId) 
-	{
-		String panelId = getEnclosingPanelPrefix()+widgetId;
-		parent.add(widget, panelId);
 	}
 		
 	/**
 	 * @param cruxHTMLPanel
-	 * @param element
-	 * @throws InterfaceConfigException
+	 * @param metaElem
+	 * @throws CruxGeneratorException
 	 */
-	protected void createChildren(String parentId, CruxMetaDataElement element) throws InterfaceConfigException
+	protected void createChildren(SourcePrinter out, String widget, JSONObject metaElem) throws CruxGeneratorException
     {
-		Array<CruxMetaDataElement> children = element.getChildren();
+		out.println(widget+"addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
+		
+		JSONArray children = metaElem.optJSONArray("_children");
 		if (children != null)
 		{
-			addToParserStack(getFactoryType(), parentId, children);
+			for(int i=0; i< children.length(); i++)
+			{
+				JSONObject child = children.optJSONObject(i);
+				String childWidget = createChildWidget(out, child);
+				String panelId = ViewFactoryUtils.getEnclosingPanelPrefix()+child.optString("id");
+				out.println(widget+".add("+childWidget+", "+panelId);
+			}
 		}
+
+		out.println("}");
+		out.println("});");
     }
-	
-	/**
-	 * @return
-	 */
-	protected abstract String getFactoryType();
 }

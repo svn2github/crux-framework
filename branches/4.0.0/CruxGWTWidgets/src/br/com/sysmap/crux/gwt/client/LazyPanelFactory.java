@@ -15,19 +15,18 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
-
-import com.google.gwt.user.client.ui.LazyPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A Panel which content is only rendered when it becomes visible for the first time.
@@ -35,39 +34,36 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="lazyPanel", library="gwt")
-public class LazyPanelFactory extends PanelFactory<LazyPanel, WidgetCreatorContext> 
+public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext> 
 {
 	@Override
-	public LazyPanel instantiateWidget(CruxMetaDataElement metaElem, String widgetId) throws InterfaceConfigException 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		return new LazyPanel()
-		{
-			@Override
-			protected Widget createWidget()
-			{
-				return null;
-			}
-			
-			@Override
-			public void setVisible(boolean visible)
-			{
-				 setVisible(getElement(), visible);
-			}
-		};
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		out.println(className + " " + varName+" = new "+className+"(){");
+		out.println("protected Widget createWidget(){");
+		out.println("return null;");
+		out.println("}");
+		out.println("public void setVisible(boolean visible){");
+		out.println("setVisible(getElement(), visible);");
+		out.println("}");
+		out.println("};");
+		return varName;
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 	{
-		super.processChildren(context);
+		super.processChildren(out, context);
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="visible", notEquals="true")
 	})	
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<LazyPanel, WidgetCreatorContext> {}	
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}	
 }
