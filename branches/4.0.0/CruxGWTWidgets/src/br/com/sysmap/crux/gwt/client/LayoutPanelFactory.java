@@ -21,21 +21,17 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.layout.client.Layout.Alignment;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 class LayoutPanelContext extends AbstractLayoutPanelContext
 {
-
 	public double left;
 	public double right;
 	public double top;
@@ -56,7 +52,6 @@ class LayoutPanelContext extends AbstractLayoutPanelContext
 	public Unit bottomUnit;
 	public Unit widthUnit;
 	public Unit heightUnit;
-	
 }
 
 /**
@@ -64,22 +59,16 @@ class LayoutPanelContext extends AbstractLayoutPanelContext
  *
  */
 @DeclarativeFactory(id="layoutPanel", library="gwt")
-public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, LayoutPanelContext>
+public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelContext>
 {
-	@Override
-	public LayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
-	{
-		return new LayoutPanel();
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(LayoutPanelProcessor.class)
 	})		
-	public void processChildren(LayoutPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="layer")
-	public static class LayoutPanelProcessor extends WidgetChildProcessor<LayoutPanel, LayoutPanelContext> 
+	public static class LayoutPanelProcessor extends WidgetChildProcessor<LayoutPanelContext> 
 	{
 		@Override
 		@TagAttributesDeclaration({
@@ -107,7 +96,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, 
 		@TagChildren({
 			@TagChild(LayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(LayoutPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException 
 		{
 			context.left = StringUtils.safeParseDouble(context.readChildProperty("left"));
 			context.right = StringUtils.safeParseDouble(context.readChildProperty("right"));
@@ -133,31 +122,31 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, 
 	}
 	
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class LayoutPanelWidgetProcessor extends WidgetChildProcessor<LayoutPanel, LayoutPanelContext> 
+	public static class LayoutPanelWidgetProcessor extends WidgetChildProcessor<LayoutPanelContext> 
 	{
 		@Override
-		public void processChildren(LayoutPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException 
 		{
-			Widget childWidget = createChildWidget(context.getChildElement());
-			LayoutPanel rootWidget = context.getWidget();
-			rootWidget.add(childWidget);
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+childWidget+");");
 
 			if (context.animationDuration > 0)
 			{
-				processAnimation(context, childWidget);
+				processAnimation(out, context, childWidget);
 			}
 			else
 			{
-				setConstraints(rootWidget, childWidget, context, false);
+				out.println(getConstraintsCommand(rootWidget, childWidget, context, false));
 			}
 			
 			if (!StringUtils.isEmpty(context.horizontalPosition))
 			{
-				rootWidget.setWidgetHorizontalPosition(childWidget, Alignment.valueOf(context.horizontalPosition));
+				out.println(rootWidget+".setWidgetHorizontalPosition("+childWidget+", "+Alignment.class.getCanonicalName()+"."+context.horizontalPosition+");");
 			}
 			if (!StringUtils.isEmpty(context.verticalPosition))
 			{
-				rootWidget.setWidgetVerticalPosition(childWidget, Alignment.valueOf(context.verticalPosition));
+				out.println(rootWidget+".setWidgetVerticalPosition("+childWidget+", "+Alignment.class.getCanonicalName()+"."+context.verticalPosition+");");
 			}
 		}
 
@@ -165,18 +154,13 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, 
 		 * @param context
 		 * @param childWidget
 		 */
-		private void processAnimation(final LayoutPanelContext context, final Widget childWidget)
+		private void processAnimation(SourcePrinter out, LayoutPanelContext context, String childWidget)
 		{
 			if (hasAnimation(context))
 			{
-				final LayoutPanel rootWidget = context.getWidget();
-				setConstraints(rootWidget, childWidget, context, true);
-				context.addChildWithAnimation(new Command(){
-					public void execute()
-					{
-						setConstraints(rootWidget, childWidget, context, false);
-					}
-				});			
+				String rootWidget = context.getWidget();
+				out.println(getConstraintsCommand(rootWidget, childWidget, context, true));
+				context.addChildWithAnimation(getConstraintsCommand(rootWidget, childWidget, context, false));
 			}
 		}
 
@@ -200,7 +184,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, 
 		 * @param context
 		 * @param startPosition
 		 */
-		private void setConstraints(LayoutPanel rootWidget, Widget childWidget, LayoutPanelContext context, boolean startPosition)
+		private String getConstraintsCommand(String rootWidget, String childWidget, LayoutPanelContext context, boolean startPosition)
 		{
 			double left = startPosition ? context.animationStartLeft : context.left;
 			double right = startPosition ? context.animationStartRight : context.right;
@@ -209,30 +193,45 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanel, 
 			double width = startPosition ? context.animationStartWidth : context.width;
 			double height = startPosition ? context.animationStartHeight : context.height;			
 			
+			String UnitClassName = Unit.class.getCanonicalName();
+			
+			String constraintsCommand;
+			
 			if (left != Double.MIN_VALUE && right != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetLeftRight(childWidget, left, context.leftUnit, right, context.rightUnit);
+				constraintsCommand = rootWidget+".setWidgetLeftRight("+childWidget+", "+left+", "+UnitClassName+"."+context.leftUnit+", "+
+									right+", "+UnitClassName+"."+context.rightUnit+");";
 			}
 			else if (left != Double.MIN_VALUE && width != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetLeftWidth(childWidget, left, context.leftUnit, width, context.widthUnit);
+				constraintsCommand = rootWidget+".setWidgetLeftWidth("+childWidget+", "+left+", "+UnitClassName+"."+context.leftUnit+", "+
+									width+", "+UnitClassName+"."+context.widthUnit+");";
 			}
 			else if (right != Double.MIN_VALUE && width != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetRightWidth(childWidget, right, context.rightUnit, width, context.widthUnit);
+				constraintsCommand = rootWidget+".setWidgetRightWidth("+childWidget+", "+right+", "+UnitClassName+"."+context.rightUnit+", "+
+									width+", "+UnitClassName+"."+context.widthUnit+");";
 			}
 			else if (top != Double.MIN_VALUE && bottom != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetTopBottom(childWidget, top, context.topUnit, bottom, context.bottomUnit);
+				constraintsCommand = rootWidget+".setWidgetTopBottom("+childWidget+", "+top+", "+UnitClassName+"."+context.topUnit+", "+
+									bottom+", "+UnitClassName+"."+context.bottomUnit+");";
 			}
 			else if (top != Double.MIN_VALUE && height != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetTopHeight(childWidget, top, context.topUnit, height, context.heightUnit);
+				constraintsCommand = rootWidget+".setWidgetTopHeight("+childWidget+", "+top+", "+UnitClassName+"."+context.topUnit+", "+
+									height+", "+UnitClassName+"."+context.heightUnit+");";
 			}
 			else if (bottom != Double.MIN_VALUE && height != Double.MIN_VALUE)
 			{
-				rootWidget.setWidgetBottomHeight(childWidget, bottom, context.bottomUnit, height, context.heightUnit);
+				constraintsCommand = rootWidget+".setWidgetBottomHeight("+childWidget+", "+bottom+", "+UnitClassName+"."+context.bottomUnit+", "+
+									height+", "+UnitClassName+"."+context.heightUnit+");";
 			}
+			else
+			{
+				constraintsCommand = "";
+			}
+			return constraintsCommand;
 		}
 	}
 }

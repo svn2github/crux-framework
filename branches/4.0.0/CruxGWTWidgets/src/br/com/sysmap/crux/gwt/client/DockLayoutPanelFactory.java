@@ -15,57 +15,60 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="dockLayoutPanel", library="gwt")
-public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanel, DockLayoutPanelContext>
+public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanelContext>
 {
-	@Override
-	public DockLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		Unit unit = getUnit(element.getProperty("unit"));
-		return new DockLayoutPanel(unit);
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		Unit unit = getUnit(metaElem.optString("unit"));
+		out.println(className + " " + varName+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
+		return varName;
 	}
-
+	
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class)
 	})
-	public void processAttributes(DockLayoutPanelContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(DockLayoutPanelProcessor.class)
 	})		
-	public void processChildren(DockLayoutPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException {}
 	
-	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanel, DockLayoutPanelContext>
+	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(DockLayoutPanelWidgetProcessor.class)
 		})		
-		public void processChildren(DockLayoutPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanel, DockLayoutPanelContext> {}
+	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanelContext> {}
 }

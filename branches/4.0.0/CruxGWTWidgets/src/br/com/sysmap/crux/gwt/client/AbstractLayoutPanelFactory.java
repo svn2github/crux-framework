@@ -15,15 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
+import java.util.ArrayList;
+
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
@@ -32,20 +30,17 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.layout.client.Layout.AnimationCallback;
-import com.google.gwt.layout.client.Layout.Layer;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.AnimatedLayout;
 
 class AbstractLayoutPanelContext extends WidgetCreatorContext
 {
 	int animationDuration = 0;
-	FastList<Command> childProcessingAnimations;
+	ArrayList<String> childProcessingAnimations;
 
 	/**
 	 * @param context
 	 * @param command
 	 */
-	protected void addChildWithAnimation(Command command)
+	protected void addChildWithAnimation(String command)
 	{
 		childProcessingAnimations.add(command);
 	}
@@ -77,7 +72,7 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
         public void processAttribute(SourcePrinter out, AbstractLayoutPanelContext context, String attributeValue)
         {
 			context.animationDuration = Integer.parseInt(attributeValue);
-			context.childProcessingAnimations = new FastList<Command>();			
+			context.childProcessingAnimations = new ArrayList<String>();			
         }
 	}
 	
@@ -91,51 +86,46 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 		super.processEvents(out, context);
 	}
 	
-    @SuppressWarnings("unchecked")
 	@Override
     public void postProcess(SourcePrinter out, C context) throws CruxGeneratorException
     {
-		final T widget = (T)context.getWidget();
+    	String widget = context.getWidget();
 		
 		if (context.animationDuration > 0)
 		{
-			final Event onAnimationComplete = Events.getEvent("onAnimationComplete", context.readWidgetProperty("onAnimationComplete"));
-			final Event onAnimationStep = Events.getEvent("onAnimationStep", context.readWidgetProperty("onAnimationStep"));
-			if (onAnimationComplete != null  || onAnimationStep != null)
+			String onAnimationComplete =context.readWidgetProperty("onAnimationComplete");
+			String onAnimationStep =context.readWidgetProperty("onAnimationStep");
+			
+			if (!StringUtils.isEmpty(onAnimationComplete) || !StringUtils.isEmpty(onAnimationStep))
 			{
-				final LayoutAnimationEvent<T> animationEvent = new LayoutAnimationEvent<T>(widget, context.getWidgetId());
-				addScreenLoadedHandler(new ScreenLoadHandler(){
-					public void onLoad(ScreenLoadEvent screenLoadEvent)
-					{
-						runChildProcessingAnimations(context.childProcessingAnimations);
-						((AnimatedLayout)widget).animate(context.animationDuration, new AnimationCallback(){
-							public void onAnimationComplete()
-							{
-								if (onAnimationComplete != null)
-								{
-									Events.callEvent(onAnimationComplete, animationEvent);
-								}
-							}
-							public void onLayout(Layer layer, double progress)
-							{
-								if (onAnimationStep != null)
-								{
-									Events.callEvent(onAnimationStep, animationEvent);
-								}
-							}
-						});
-					}
-				});
+				String onAnimationCompleteEvt = createVariableName("evt");
+				String onAnimationStepEvt = createVariableName("evt");
+				String layoutAnimationEvent = createVariableName("evt");
+				String eventClassName = LayoutAnimationEvent.class.getCanonicalName()+"<"+getWidgetClassName()+">";
+				printlnPostProcessing(eventClassName+" "+layoutAnimationEvent+" = new "+eventClassName+"("+widget+", "+context.getWidgetId()+");");
+
+				out.println("final Event "+onAnimationCompleteEvt+" = Events.getEvent("+EscapeUtils.quote("onAnimationComplete")+", "+ EscapeUtils.quote(onAnimationComplete)+");");
+				out.println("final Event "+onAnimationStepEvt+" = Events.getEvent("+EscapeUtils.quote("onAnimationStep")+", "+ EscapeUtils.quote(onAnimationStep)+");");
+
+				runChildProcessingAnimations(context.childProcessingAnimations);
+				
+				printlnPostProcessing(widget+".animate("+context.animationDuration+", new "+AnimationCallback.class.getCanonicalName()+"(){");
+				printlnPostProcessing("public void onAnimationComplete(){");
+				printlnPostProcessing("if (onAnimationComplete != null){");
+				printlnPostProcessing("Events.callEvent("+onAnimationCompleteEvt+", "+layoutAnimationEvent+");");
+				printlnPostProcessing("}");
+				printlnPostProcessing("}");
+				printlnPostProcessing("public void onLayout(Layer layer, double progress){");
+				printlnPostProcessing("if (onAnimationStep != null){");
+				printlnPostProcessing("Events.callEvent("+onAnimationStepEvt+", "+layoutAnimationEvent+");");
+				printlnPostProcessing("}");
+				printlnPostProcessing("}");
+				printlnPostProcessing("});");				
 			}
 			else
 			{
-				addScreenLoadedHandler(new ScreenLoadHandler(){
-					public void onLoad(ScreenLoadEvent screenLoadEvent)
-					{
-						runChildProcessingAnimations(context.childProcessingAnimations);
-						((AnimatedLayout)widget).animate(context.animationDuration);
-					}
-				});
+				runChildProcessingAnimations(context.childProcessingAnimations);
+				printlnPostProcessing(widget+".animate("+context.animationDuration+");");
 			}
 		}		
     }
@@ -144,12 +134,12 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 	 * 
 	 * @param childProcessingAnimations
 	 */
-	protected void runChildProcessingAnimations(FastList<Command> childProcessingAnimations)
+	protected void runChildProcessingAnimations(ArrayList<String> childProcessingAnimations)
 	{
 		for (int i=0; i<childProcessingAnimations.size(); i++)
 		{
-			Command command = childProcessingAnimations.get(i);
-			command.execute();
+			String command = childProcessingAnimations.get(i);
+			printlnPostProcessing(command);
 		}
 	}
 

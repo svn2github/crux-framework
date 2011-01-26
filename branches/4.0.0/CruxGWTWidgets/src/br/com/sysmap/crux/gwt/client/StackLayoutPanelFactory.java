@@ -15,15 +15,18 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasBeforeSelectionHandlersFactory;
@@ -34,14 +37,12 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.StackLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 class StackLayoutContext extends WidgetCreatorContext
 {
 	boolean selected = false;
 	double headerSize;
-	Widget headerWidget;
+	String headerWidget;
 	String title;
 	boolean isHtmlTitle;
 	
@@ -60,36 +61,39 @@ class StackLayoutContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="stackLayoutPanel", library="gwt")
-public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, StackLayoutContext> 
-	   implements HasBeforeSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>, 
-	   			  HasSelectionHandlersFactory<StackLayoutPanel, StackLayoutContext>
+public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext> 
+	   implements HasBeforeSelectionHandlersFactory<StackLayoutContext>, 
+	   			  HasSelectionHandlersFactory<StackLayoutContext>
 {
-	@Override
-	public StackLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId) 
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		return new StackLayoutPanel(AbstractLayoutPanelFactory.getUnit(element.getProperty("unit")));
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		Unit unit = AbstractLayoutPanelFactory.getUnit(metaElem.optString("unit"));
+		out.println(className + " " + varName+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
+		return varName;
 	}
 	
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="unit", type=Unit.class, defaultValue="PX")
 	})
-	public void processAttributes(StackLayoutContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(StackItemProcessor.class)
 	})
-	public void processChildren(StackLayoutContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 	{
-		super.processChildren(context);
+		super.processChildren(out, context);
 	}
 
 	@TagChildAttributes(tagName="item", maxOccurs="unbounded")
-	public static class StackItemProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackItemProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
@@ -99,7 +103,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, Sta
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="selected", type=Boolean.class, defaultValue="false")
 		})
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.clearAttributes();
 			String selected = context.readChildProperty("selected");
@@ -111,7 +115,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, Sta
 	}
 
 	@TagChildAttributes(tagName="header")
-	public static class StackHeaderProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
@@ -120,13 +124,13 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, Sta
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="size", type=Double.class, required=true)
 		})
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.headerSize = Double.parseDouble(context.readChildProperty("size"));
 		}
 	}
 
-	public static class StackHeader extends ChoiceChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeader extends ChoiceChildProcessor<StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
@@ -134,27 +138,27 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, Sta
 			@TagChild(StackHeaderTextProcessor.class),
 			@TagChild(StackHeaderHTMLProcessor.class)
 		})
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 		}
 	}
 	
 	@TagChildAttributes(tagName="text", type=String.class)
-	public static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
-			context.title = ensureTextChild(context.getChildElement(), true);
+			context.title = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.isHtmlTitle = false;
 		}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureHtmlChild(context.getChildElement(), true);
 			context.isHtmlTitle = true;
@@ -162,47 +166,47 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutPanel, Sta
 	}
 
 	@TagChildAttributes(tagName="widget", type=AnyWidget.class)
-	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 		{
-			Widget childWidget = createChildWidget(context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			context.headerWidget = childWidget;
 		}
 	}
 
 	@TagChildAttributes(tagName="content")
-	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(StackContentWidgetProcessor.class)
 		})
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutPanel, StackLayoutContext>
+	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		public void processChildren(StackLayoutContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 		{
-			Widget contentWidget = createChildWidget(context.getChildElement());
-			StackLayoutPanel rootWidget = context.getWidget();
+			String contentWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
 			
 			if (context.headerWidget != null)
 			{
-				rootWidget.add(contentWidget, context.headerWidget, context.headerSize);
+				out.println(rootWidget+".add("+contentWidget+", "+context.headerWidget+", "+context.headerSize+");");
 			}
 			else
 			{
-				rootWidget.add(contentWidget, context.title, context.isHtmlTitle, context.headerSize);
+				out.println(rootWidget+".add("+contentWidget+", "+EscapeUtils.quote(context.title)+", "+context.isHtmlTitle+", "+context.headerSize+");");
 			}
 
 			if (context.selected)
 			{
-				rootWidget.showWidget(contentWidget);
+				out.println(rootWidget+".showWidget("+contentWidget+");");
 			}
 		}
 	}

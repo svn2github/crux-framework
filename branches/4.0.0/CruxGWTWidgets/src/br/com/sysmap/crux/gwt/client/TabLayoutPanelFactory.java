@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.client;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
@@ -23,13 +25,11 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
@@ -39,15 +39,13 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 class TabLayoutPanelContext extends WidgetCreatorContext
 {
 
 	public String title;
 	public boolean isTitleHTML;
-	public Widget titleWidget;
+	public String titleWidget;
 }
 
 /**
@@ -55,22 +53,25 @@ class TabLayoutPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tabLayoutPanel", library="gwt")
-public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabLayoutPanelContext> 
-       implements HasBeforeSelectionHandlersFactory<TabLayoutPanel, TabLayoutPanelContext>, 
-                  HasSelectionHandlersFactory<TabLayoutPanel, TabLayoutPanelContext>
+public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContext> 
+       implements HasBeforeSelectionHandlersFactory<TabLayoutPanelContext>, 
+                  HasSelectionHandlersFactory<TabLayoutPanelContext>
 {
-	@Override
-	public TabLayoutPanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String height = element.getProperty("barHeight");
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		String height = metaElem.optString("barHeight");
 		if (StringUtils.isEmpty(height))
 		{
-			return new TabLayoutPanel(20, Unit.PX);
+			out.println(className + " " + varName+" = new "+className+"(20,"+Unit.class.getCanonicalName()+".PX);");
 		}
 		else
 		{
-			return new TabLayoutPanel(Double.parseDouble(height), AbstractLayoutPanelFactory.getUnit(element.getProperty("unit")));
+			Unit unit = AbstractLayoutPanelFactory.getUnit(metaElem.optString("unit"));
+			out.println(className + " " + varName+" = new "+className+"("+Double.parseDouble(height)+","+Unit.class.getCanonicalName()+"."+unit.toString()+");");
 		}
+		return varName;
 	}
 	
 	@Override
@@ -81,27 +82,21 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 	@TagAttributes({
 		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
 	})
-	public void processAttributes(TabLayoutPanelContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class VisibleTabAttributeParser implements AttributeProcessor<TabLayoutPanelContext>
+	public static class VisibleTabAttributeParser extends AttributeProcessor<TabLayoutPanelContext>
 	{
-		public void processAttribute(TabLayoutPanelContext context, final String propertyValue)
+		public void processAttribute(SourcePrinter out, TabLayoutPanelContext context, final String propertyValue)
         {
-			final TabLayoutPanel widget = context.getWidget();
-			ScreenFactory.getInstance().addLoadHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent event)
-				{
-					widget.selectTab(Integer.parseInt(propertyValue));
-				}
-			});
+			String widget = context.getWidget();
+			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(propertyValue)+");");
         }
 	}
 		
@@ -109,23 +104,23 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 	@TagChildren({
 		@TagChild(TabProcessor.class)
 	})	
-	public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException 
+	public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException 
 	{
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
-	public static class TabProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class TabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TabTitleProcessor.class), 
 			@TagChild(TabWidgetProcessor.class)
 		})	
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class TabTitleProcessor extends ChoiceChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
 		@TagChildren({
@@ -133,26 +128,26 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 			@TagChild(HTMLTabProcessor.class),
 			@TagChild(WidgetTitleTabProcessor.class)
 		})		
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
 		
 	}
 	
 	@TagChildAttributes(tagName="tabText", type=String.class)
-	public static class TextTabProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext>
+	public static class TextTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext>
 	{
 		@Override
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException 
 		{
-			context.title = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			context.title = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			context.isTitleHTML = false;
 		}
 	}
 	
 	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
-	public static class HTMLTabProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext>
+	public static class HTMLTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext>
 	{
 		@Override
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureHtmlChild(context.getChildElement(), true);
 			context.isTitleHTML = true;
@@ -160,52 +155,52 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanel, TabL
 	}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetTitleProcessor.class)
 		})	
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class WidgetTitleProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class WidgetTitleProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
-			context.titleWidget = createChildWidget(context.getChildElement());
+			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 		}
 	}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class TabWidgetProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})	
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class WidgetContentProcessor extends WidgetChildProcessor<TabLayoutPanel, TabLayoutPanelContext> 
+	public static class WidgetContentProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
 	{
 		@Override
-		public void processChildren(TabLayoutPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
-			Widget widget = createChildWidget(context.getChildElement());
+			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			
-			TabLayoutPanel rootWidget = context.getWidget();
+			String rootWidget = context.getWidget();
 			
 			if (context.titleWidget != null)
 			{
-				rootWidget.add(widget, context.titleWidget);
+				out.println(rootWidget+".add("+widget+", "+context.titleWidget+");");
 			}
 			else
 			{
-				rootWidget.add(widget, context.title, context.isTitleHTML);
+				out.println(rootWidget+".add("+widget+", "+EscapeUtils.quote(context.title)+", "+context.isTitleHTML+");");
 			}
 		}
 	}

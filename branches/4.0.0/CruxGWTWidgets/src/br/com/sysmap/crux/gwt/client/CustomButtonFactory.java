@@ -18,20 +18,20 @@ package br.com.sysmap.crux.gwt.client;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
-import com.google.gwt.user.client.ui.CustomButton;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.CustomButton.Face;
 
 class CustomButtonContext extends WidgetCreatorContext
 {
-	Face face;
+	String face;
 }
 
 /**
@@ -44,113 +44,102 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 	@TagChildAttributes(tagName="up")
 	abstract static class AbstractUpFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getUpFace();
+			context.face = "UpFace";
 		}
 	}
 	
 	@TagChildAttributes(tagName="upDisabled")
-	abstract static class AbstractUpDisabledFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractUpDisabledFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getUpDisabledFace();
+			context.face = "UpDisabledFace";
 		}
 	}
 
 	@TagChildAttributes(tagName="upHovering")
-	abstract static class AbstractUpHoveringFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractUpHoveringFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getUpHoveringFace();
+			context.face = "UpHoveringFace";
 		}
 	}
 
 	@TagChildAttributes(tagName="down")
-	abstract static class AbstractDownFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractDownFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getDownFace();
+			context.face = "DownFace";
 		}
 	}
 	
 	@TagChildAttributes(tagName="downDisabled")
-	abstract static class AbstractDownDisabledFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractDownDisabledFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getDownDisabledFace();
+			context.face = "DownDisabledFace";
 		}
 	}
 
 	@TagChildAttributes(tagName="downHovering")
-	abstract static class AbstractDownHoveringFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractDownHoveringFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			W widget = (W)context.getWidget();
-			context.face = widget.getDownHoveringFace();
+			context.face = "DownHoveringFace";
 		}
 	}
 	
 	@TagChildAttributes(tagName="textFace")
-	abstract static class AbstractTextFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractTextFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="value", required=true)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			context.face.setText(context.readChildProperty("value"));
+			out.println(context.getWidget()+"get"+context.face+"().setText("+EscapeUtils.quote(context.readChildProperty("value"))+");");
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlFace")
-	abstract static class AbstractHTMLFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	@TagChildAttributes(tagName="htmlFace", type=HTMLTag.class)
+	abstract static class AbstractHTMLFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			context.face.setText(ensureTextChild(context.getChildElement(), true));
+			out.println(context.getWidget()+"get"+context.face+"().setHTML("+EscapeUtils.quote(ensureHtmlChild(context.getChildElement(), true))+");");
 		}
 	}
 	
 	@TagChildAttributes(tagName="imageFace")
-	abstract static class AbstractImageFaceProcessor<W extends CustomButton> extends WidgetChildProcessor<W, CustomButtonContext>
+	abstract static class AbstractImageFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="url", required=true),
 			@TagAttributeDeclaration("visibleRect")
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
 			String visibleRect = context.readChildProperty("visibleRect");
 
 			if (StringUtils.isEmpty(visibleRect))
 			{
-				context.face.setImage(new Image(context.readChildProperty("url")));
+				out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
+						"("+EscapeUtils.quote(context.readChildProperty("url"))+"));");
 			}
 			else
 			{
@@ -158,9 +147,10 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 				
 				if (coord != null && coord.length == 4)
 				{
-					context.face.setImage(new Image(context.readChildProperty("url"),
-							Integer.parseInt(coord[0].trim()),Integer.parseInt(coord[1].trim()), 
-							Integer.parseInt(coord[2].trim()), Integer.parseInt(coord[3].trim())));
+					out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
+							"("+EscapeUtils.quote(context.readChildProperty("url"))+", "+
+							Integer.parseInt(coord[0].trim())+","+Integer.parseInt(coord[1].trim())+","+ 
+							Integer.parseInt(coord[2].trim())+","+Integer.parseInt(coord[3].trim())+"));");
 				}
 			}
 		}

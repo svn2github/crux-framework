@@ -21,50 +21,42 @@ import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
-
-import com.google.gwt.user.client.ui.ToggleButton;
 
 /**
  * Represents a Toggle ButtonFactory
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="toggleButton", library="gwt")
-public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton> 
+public class ToggleButtonFactory extends CustomButtonFactory 
 {
 	
 	/**
 	 * Render component attributes
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="down", type=Boolean.class)
 	})
-	public void processAttributes(CustomButtonContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 
-	@Override
-	public ToggleButton instantiateWidget(CruxMetaDataElement element, String widgetId) 
-	{
-		return new ToggleButton();
-	}
-	
 	@Override
 	@TagChildren({
 		@TagChild(FacesProcessor.class)
 	})
-	public void processChildren(CustomButtonContext context) throws InterfaceConfigException
+	public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException
 	{
-		super.processChildren(context);
+		super.processChildren(out, context);
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="6")
-	public static class FacesProcessor extends ChoiceChildProcessor<ToggleButton, CustomButtonContext> 
+	public static class FacesProcessor extends ChoiceChildProcessor<CustomButtonContext> 
 	{
 		@Override
 		@TagChildren({
@@ -75,10 +67,10 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(DownDisabledFaceProcessor.class),
 			@TagChild(DownHoveringFaceProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException {}
 	}
 	
-	public static class FaceChildrenProcessor extends ChoiceChildProcessor<ToggleButton, CustomButtonContext>
+	public static class FaceChildrenProcessor extends ChoiceChildProcessor<CustomButtonContext>
 	{
 		@Override
 		@TagChildren({
@@ -86,82 +78,82 @@ public class ToggleButtonFactory extends CustomButtonFactory<ToggleButton>
 			@TagChild(HTMLFaceProcessor.class),
 			@TagChild(ImageFaceProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException {}
 	}
 
-	public static class UpFaceProcessor extends AbstractUpFaceProcessor<ToggleButton>
+	public static class UpFaceProcessor extends AbstractUpFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class UpDisabledFaceProcessor extends AbstractUpDisabledFaceProcessor<ToggleButton>
+	public static class UpDisabledFaceProcessor extends AbstractUpDisabledFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 
-	public static class UpHoveringFaceProcessor extends AbstractUpHoveringFaceProcessor<ToggleButton>
+	public static class UpHoveringFaceProcessor extends AbstractUpHoveringFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 
-	public static class DownFaceProcessor extends AbstractDownFaceProcessor<ToggleButton>
+	public static class DownFaceProcessor extends AbstractDownFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 
-	public static class DownDisabledFaceProcessor extends AbstractDownDisabledFaceProcessor<ToggleButton>
+	public static class DownDisabledFaceProcessor extends AbstractDownDisabledFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 
-	public static class DownHoveringFaceProcessor extends AbstractDownHoveringFaceProcessor<ToggleButton>
+	public static class DownHoveringFaceProcessor extends AbstractDownHoveringFaceProcessor
 	{
 		@Override
 		@TagChildren({
 			@TagChild(FaceChildrenProcessor.class)
 		})
-		public void processChildren(CustomButtonContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
-			super.processChildren(context);
+			super.processChildren(out, context);
 		}
 	}
 	
-	public static class TextFaceProcessor extends AbstractTextFaceProcessor<ToggleButton> {}
-	public static class HTMLFaceProcessor extends AbstractHTMLFaceProcessor<ToggleButton> {}
-	public static class ImageFaceProcessor extends AbstractImageFaceProcessor<ToggleButton> {}	
+	public static class TextFaceProcessor extends AbstractTextFaceProcessor {}
+	public static class HTMLFaceProcessor extends AbstractHTMLFaceProcessor {}
+	public static class ImageFaceProcessor extends AbstractImageFaceProcessor {}	
 }
