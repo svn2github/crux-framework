@@ -59,7 +59,7 @@ class MenuBarContext extends WidgetCreatorContext
  * A Factory for MenuBar widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="menuBar", library="gwt")
+@DeclarativeFactory(id="menuBar", library="gwt", targetWidget=MenuBar.class)
 public class MenuBarFactory extends WidgetCreator<MenuBarContext> 
        implements HasAnimationFactory<MenuBarContext>, HasCloseHandlersFactory<MenuBarContext>
 {

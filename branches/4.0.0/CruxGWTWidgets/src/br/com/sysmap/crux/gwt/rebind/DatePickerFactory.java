@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.datepicker.client.DatePicker;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -31,7 +33,7 @@ import br.com.sysmap.crux.gwt.client.DateFormatUtil;
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="datePicker", library="gwt")
+@DeclarativeFactory(id="datePicker", library="gwt", targetWidget=DatePicker.class)
 public class DatePickerFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasValueChangeHandlersFactory<WidgetCreatorContext>, 
                   HasShowRangeHandlersFactory<WidgetCreatorContext>, 

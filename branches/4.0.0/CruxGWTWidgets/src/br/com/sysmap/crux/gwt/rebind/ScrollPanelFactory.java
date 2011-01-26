@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.ScrollPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -32,7 +34,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasScrollHandlersFactory;
  * Represents a ScrollPanelFactory
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="scrollPanel", library="gwt")
+@DeclarativeFactory(id="scrollPanel", library="gwt", targetWidget=ScrollPanel.class)
 public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext> 
        implements HasScrollHandlersFactory<WidgetCreatorContext>
 {

@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.SimplePanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
@@ -23,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="simplePanel", library="gwt")
+@DeclarativeFactory(id="simplePanel", library="gwt", targetWidget=SimplePanel.class)
 public class SimplePanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 }

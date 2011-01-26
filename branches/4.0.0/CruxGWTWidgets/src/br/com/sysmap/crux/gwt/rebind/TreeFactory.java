@@ -63,7 +63,7 @@ class TreeContext extends WidgetCreatorContext
  * A factory for Tree widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="tree", library="gwt")
+@DeclarativeFactory(id="tree", library="gwt", targetWidget=Tree.class)
 public class TreeFactory extends WidgetCreator<TreeContext> 
        implements HasAnimationFactory<TreeContext>, HasAllFocusHandlersFactory<TreeContext>,
                   HasOpenHandlersFactory<TreeContext>, HasCloseHandlersFactory<TreeContext>, 

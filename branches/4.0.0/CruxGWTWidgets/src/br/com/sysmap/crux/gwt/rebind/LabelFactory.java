@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Label;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 
 /**
@@ -22,7 +24,7 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="label", library="gwt")
+@DeclarativeFactory(id="label", library="gwt", targetWidget=Label.class)
 public class LabelFactory extends AbstractLabelFactory
 {	
 }

@@ -32,6 +32,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasInitializeHandlersFactor
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.RichTextArea.FontSize;
 import com.google.gwt.user.client.ui.RichTextArea.Formatter;
 import com.google.gwt.user.client.ui.RichTextArea.Justification;
@@ -48,7 +49,7 @@ class RichTextAreaContext extends WidgetCreatorContext
  * Represents a rich text area component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="richTextArea", library="gwt")
+@DeclarativeFactory(id="richTextArea", library="gwt", targetWidget=RichTextArea.class)
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextAreaContext> 
 implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<RichTextAreaContext>
 {

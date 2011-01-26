@@ -15,38 +15,38 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.i18n.client.Messages;
+import br.com.sysmap.crux.core.i18n.DefaultServerMessage;
 
 /**
  * Messages for basic widgets
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface GWTMessages extends Messages
+public interface GWTMessages
 {
-	@DefaultMessage("[gwt-widgets - 001] - The DisclosurePanel ''{0}'' must contains a required child element to describe the widget and an optional first element to describe the header.")
+	@DefaultServerMessage("[gwt-widgets - 001] - The DisclosurePanel ''{0}'' must contains a required child element to describe the widget and an optional first element to describe the header.")
 	String disclosurePanelInvalidChildrenElements(String widgetId);
-	@DefaultMessage("[gwt-widgets - 002] - The items of MenuBar ''{0}'' must contains the required attribute _itemType (with one of the values: ''text'', ''html'', ''separator'').")
+	@DefaultServerMessage("[gwt-widgets - 002] - The items of MenuBar ''{0}'' must contains the required attribute _itemType (with one of the values: ''text'', ''html'', ''separator'').")
 	String menuBarItemTypeEmpty(String widgetId);
-	@DefaultMessage("[gwt-widgets - 003] - The items of Tree ''{0}'' must contains the attribute _text or be a valid widget declaration.")
+	@DefaultServerMessage("[gwt-widgets - 003] - The items of Tree ''{0}'' must contains the attribute _text or be a valid widget declaration.")
 	String treeInvalidTreeItem(String id);
-	@DefaultMessage("[gwt-widgets - 004] - The items of HorizontalSplitPanel ''{0}'' must contains the attribute _position (with one of the vales: ''left'', ''right''.")
+	@DefaultServerMessage("[gwt-widgets - 004] - The items of HorizontalSplitPanel ''{0}'' must contains the attribute _position (with one of the vales: ''left'', ''right''.")
 	String horizontalSplitPanelInvalidPosition(String id);
-	@DefaultMessage("[gwt-widgets - 005] - The items of VerticalSplitPanel ''{0}'' must contains the attribute _position (with one of the vales: ''top'', ''bottom''.")
+	@DefaultServerMessage("[gwt-widgets - 005] - The items of VerticalSplitPanel ''{0}'' must contains the attribute _position (with one of the vales: ''top'', ''bottom''.")
 	String verticalSplitPanelInvalidPosition(String id);
-	@DefaultMessage("[gwt-widgets - 006] - Error preparing the cells for FlexTable ''{0}'': Row and Col indexes must be greater or equals 0.")
+	@DefaultServerMessage("[gwt-widgets - 006] - Error preparing the cells for FlexTable ''{0}'': Row and Col indexes must be greater or equals 0.")
 	String flexTableInvalidRowColIndexes(String widgetId);
-	@DefaultMessage("[gwt-widgets - 007] - Error preparing the cells for Grid ''{0}'': Row and Col indexes must be greater or equals 0.")
+	@DefaultServerMessage("[gwt-widgets - 007] - Error preparing the cells for Grid ''{0}'': Row and Col indexes must be greater or equals 0.")
 	String gridInvalidRowColIndexes(String widgetId);
-	@DefaultMessage("[gwt-widgets - 008] - Error in ScrollPanel ''{0}''.Error ensuring visibility for component ''{1}''.")
+	@DefaultServerMessage("[gwt-widgets - 008] - Error in ScrollPanel ''{0}''.Error ensuring visibility for component ''{1}''.")
 	String scrollPanelWidgetNotFound(String widgetId, String visibleWidget);
-	@DefaultMessage("[gwt-widgets - 009] - Error adding widget ''{0}'' on parent Stackpanel ''{1}''.")
+	@DefaultServerMessage("[gwt-widgets - 009] - Error adding widget ''{0}'' on parent Stackpanel ''{1}''.")
 	String stackPanelIvalidChild(String idChild, String idParent);
-	@DefaultMessage("[gwt-widgets - 009] - Error adding widget ''{0}'' on parent Dockpanel ''{1}''. Invalid direction.")
+	@DefaultServerMessage("[gwt-widgets - 009] - Error adding widget ''{0}'' on parent Dockpanel ''{1}''. Invalid direction.")
 	String dockPanelInvalidDirection(String id, String id2);
-	@DefaultMessage("[gwt-widgets - 010] - The menu item ''{0}'' has no child items and has no command. Ignoring item...")
+	@DefaultServerMessage("[gwt-widgets - 010] - The menu item ''{0}'' has no child items and has no command. Ignoring item...")
 	String menubarItemWithoutChildrenOrCommand(String itemCaption);
-	@DefaultMessage("[gwt-widgets - 011] - The attribute size is required for cells not centered in DockLayoutPanel wiht id: ''{0}''.")
+	@DefaultServerMessage("[gwt-widgets - 011] - The attribute size is required for cells not centered in DockLayoutPanel wiht id: ''{0}''.")
 	String dockLayoutPanelRequiredSize(String rootWidgetId);
 
 }

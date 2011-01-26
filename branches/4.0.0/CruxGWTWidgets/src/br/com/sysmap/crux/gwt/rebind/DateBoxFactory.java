@@ -44,7 +44,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="dateBox", library="gwt")
+@DeclarativeFactory(id="dateBox", library="gwt", targetWidget=DateBox.class)
 public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasValueChangeHandlersFactory<WidgetCreatorContext>
 {

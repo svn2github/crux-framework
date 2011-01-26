@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.ToggleButton;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -26,10 +28,10 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 
 /**
- * Represents a Toggle ButtonFactory
+ * A Factory for ToggleButton widgets
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="toggleButton", library="gwt")
+@DeclarativeFactory(id="toggleButton", library="gwt", targetWidget=ToggleButton.class)
 public class ToggleButtonFactory extends CustomButtonFactory 
 {
 	

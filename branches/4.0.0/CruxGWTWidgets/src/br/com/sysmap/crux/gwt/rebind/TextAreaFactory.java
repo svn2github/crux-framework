@@ -33,12 +33,12 @@ import com.google.gwt.user.client.ui.TextArea;
 
 
 /**
- * A TextAreaFactory DeclarativeFactory
+ * A Factory for TextArea widgets
  * 
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="textArea", library="gwt")
+@DeclarativeFactory(id="textArea", library="gwt", targetWidget=TextArea.class)
 public class TextAreaFactory extends TextBoxBaseFactory
 {	
 	@Override

@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.TextBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -26,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * A Factory for TextBox widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="textBox", library="gwt")
+@DeclarativeFactory(id="textBox", library="gwt", targetWidget=TextBox.class)
 public class TextBoxFactory extends TextBoxBaseFactory 
 {	
 	@Override

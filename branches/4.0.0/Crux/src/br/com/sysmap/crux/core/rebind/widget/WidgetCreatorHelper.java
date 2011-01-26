@@ -18,10 +18,10 @@ package br.com.sysmap.crux.core.rebind.widget;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -39,6 +39,7 @@ public class WidgetCreatorHelper
 	private final JClassType factoryClass;
 	private final JClassType widgetType;
 	private final JClassType contextType;
+	private final JClassType sourcePrinterType;
 
 	/**
 	 * @param factoryClass
@@ -48,6 +49,8 @@ public class WidgetCreatorHelper
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
 		this.contextType = getContextTypeFromClass();
+		this.sourcePrinterType = factoryClass.getOracle().findType(SourcePrinter.class.getCanonicalName());
+		
     }
 
 	/**
@@ -103,7 +106,7 @@ public class WidgetCreatorHelper
 	 */
 	public JMethod getChildProcessorMethod(JClassType childProcessor)
     {
-	    JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{contextType});
+		JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{sourcePrinterType, contextType});
 	    return processorMethod;
     }
 
@@ -142,15 +145,15 @@ public class WidgetCreatorHelper
 	 */
 	private JClassType getWidgetTypeFromClass()
 	{
-		JClassType cruxMetaDataType = factoryClass.getOracle().findType(CruxMetaDataElement.class.getCanonicalName());
-		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-		
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateWidget", new JType[]{cruxMetaDataType, stringType});
-		if (returnType == null)
+		DeclarativeFactory declarativeFactory = factoryClass.getAnnotation(DeclarativeFactory.class);
+		if (declarativeFactory != null)
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
+			return factoryClass.getOracle().findType(declarativeFactory.targetWidget().getCanonicalName());
 		}
-		return (JClassType) returnType;
+		else
+		{
+			return null;
+		}
 	}	
 
 	/**

@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.FormPanel;
  * Represents a FormPanelFactory.
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="formPanel", library="gwt")
+@DeclarativeFactory(id="formPanel", library="gwt", targetWidget=FormPanel.class)
 public class FormPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 	

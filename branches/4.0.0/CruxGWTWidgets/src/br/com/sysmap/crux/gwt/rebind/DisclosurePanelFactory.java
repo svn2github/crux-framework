@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
  * Factory for DisclosurePanel widgets
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="disclosurePanel", library="gwt")
+@DeclarativeFactory(id="disclosurePanel", library="gwt", targetWidget=DisclosurePanel.class)
 public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasAnimationFactory<WidgetCreatorContext>, 
                   HasOpenHandlersFactory<WidgetCreatorContext>, 

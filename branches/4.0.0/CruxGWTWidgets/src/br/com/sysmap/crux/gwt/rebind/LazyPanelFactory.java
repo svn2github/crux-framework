@@ -17,6 +17,8 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
+import com.google.gwt.user.client.ui.LazyPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -33,7 +35,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProc
  * 
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="lazyPanel", library="gwt")
+@DeclarativeFactory(id="lazyPanel", library="gwt", targetWidget=LazyPanel.class)
 public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext> 
 {
 	@Override

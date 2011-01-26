@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.DialogBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -29,7 +31,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
  * @author Thiago da Rosa de Bustamante
  * @author Gesse S. F. Dafe <code>gessedafe@gmail.com</code>
  */
-@DeclarativeFactory(id="dialogBox", library="gwt", attachToDOM=false)
+@DeclarativeFactory(id="dialogBox", library="gwt", attachToDOM=false, targetWidget= DialogBox.class)
 public class DialogBoxFactory extends PanelFactory<WidgetCreatorContext>
        implements HasAnimationFactory<WidgetCreatorContext>, 
                   HasCloseHandlersFactory<WidgetCreatorContext>, 

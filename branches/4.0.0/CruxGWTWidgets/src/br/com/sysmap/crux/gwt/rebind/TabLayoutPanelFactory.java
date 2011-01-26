@@ -39,6 +39,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 class TabLayoutPanelContext extends WidgetCreatorContext
 {
@@ -52,7 +53,7 @@ class TabLayoutPanelContext extends WidgetCreatorContext
  * Factory for TabLayoutPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="tabLayoutPanel", library="gwt")
+@DeclarativeFactory(id="tabLayoutPanel", library="gwt", targetWidget=TabLayoutPanel.class)
 public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContext> 
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanelContext>, 
                   HasSelectionHandlersFactory<TabLayoutPanelContext>

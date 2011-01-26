@@ -26,12 +26,13 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="dockLayoutPanel", library="gwt")
+@DeclarativeFactory(id="dockLayoutPanel", library="gwt", targetWidget=DockLayoutPanel.class)
 public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanelContext>
 {
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException

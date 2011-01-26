@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.FileUpload;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -29,7 +31,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
  * Represents a FileUploadFactory component.
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="fileUpload", library="gwt")
+@DeclarativeFactory(id="fileUpload", library="gwt", targetWidget=FileUpload.class)
 public class FileUploadFactory extends WidgetCreator<WidgetCreatorContext> 
 	   implements HasChangeHandlersFactory<WidgetCreatorContext>, 
 	   			  HasNameFactory<WidgetCreatorContext>

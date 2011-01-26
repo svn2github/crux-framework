@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.LongBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -26,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * A Factory for LongBox widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="longBox", library="gwt")
+@DeclarativeFactory(id="longBox", library="gwt", targetWidget=LongBox.class)
 public class LongBoxFactory extends ValueBoxBaseFactory 
 {	
 	@Override

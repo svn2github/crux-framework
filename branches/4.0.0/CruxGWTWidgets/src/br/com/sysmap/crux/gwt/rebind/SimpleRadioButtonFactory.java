@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.SimpleRadioButton;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="simpleRadioButton", library="gwt")
+@DeclarativeFactory(id="simpleRadioButton", library="gwt", targetWidget=SimpleRadioButton.class)
 public class SimpleRadioButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 		implements HasNameFactory<WidgetCreatorContext>
 {

@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.StackPanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="stackPanel", library="gwt")
+@DeclarativeFactory(id="stackPanel", library="gwt", targetWidget=StackPanel.class)
 public class StackPanelFactory extends AbstractStackPanelFactory
 {
 	@Override

@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Hidden;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -28,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
  * Represents a HiddenFactory component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="hidden", library="gwt")
+@DeclarativeFactory(id="hidden", library="gwt", targetWidget=Hidden.class)
 public class HiddenFactory extends WidgetCreator<WidgetCreatorContext> implements HasNameFactory<WidgetCreatorContext> 
 {
 	@Override

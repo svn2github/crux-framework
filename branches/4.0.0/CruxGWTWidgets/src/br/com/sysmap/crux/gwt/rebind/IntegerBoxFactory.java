@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.IntegerBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -26,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * A Factory for IntegerBox widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="integerBox", library="gwt")
+@DeclarativeFactory(id="integerBox", library="gwt", targetWidget=IntegerBox.class)
 public class IntegerBoxFactory extends ValueBoxBaseFactory 
 {	
 	@Override

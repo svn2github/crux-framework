@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.DecoratedPopupPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -28,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
  * Represents a DecoratedPopupPanelFactory
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="decoratedPopupPanel", library="gwt", attachToDOM=false)
+@DeclarativeFactory(id="decoratedPopupPanel", library="gwt", targetWidget=DecoratedPopupPanel.class ,attachToDOM=false)
 public class DecoratedPopupPanelFactory extends PanelFactory<WidgetCreatorContext>
              implements HasAnimationFactory<WidgetCreatorContext>, HasCloseHandlersFactory<WidgetCreatorContext>
 {

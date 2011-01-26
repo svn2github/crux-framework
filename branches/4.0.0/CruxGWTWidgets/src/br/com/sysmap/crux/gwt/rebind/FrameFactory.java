@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Frame;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -29,7 +31,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * Factory to create Frame Widgets
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="frame", library="gwt")
+@DeclarativeFactory(id="frame", library="gwt", targetWidget=Frame.class)
 public class FrameFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override

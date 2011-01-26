@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.DecoratedStackPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -28,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="decoratedStackPanel", library="gwt")
+@DeclarativeFactory(id="decoratedStackPanel", library="gwt", targetWidget= DecoratedStackPanel.class)
 public class DecoratedStackPanelFactory extends AbstractStackPanelFactory
 {
 	@Override

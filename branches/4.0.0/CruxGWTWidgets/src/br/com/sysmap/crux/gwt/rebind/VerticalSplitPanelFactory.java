@@ -31,11 +31,11 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
 
 /**
- * Represents a VerticalSplitPanelFactory
+ * A Factory for VerticalSplitPanel widgets
  * @author Thiago Bustamante
  */
 @SuppressWarnings("deprecation")
-@DeclarativeFactory(id="verticalSplitPanel", library="gwt")
+@DeclarativeFactory(id="verticalSplitPanel", library="gwt", targetWidget=VerticalSplitPanel.class)
 public class VerticalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 	@Override

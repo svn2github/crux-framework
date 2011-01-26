@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.PushButton;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -28,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcess
  * Represents a Push ButtonFactory
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="pushButton", library="gwt")
+@DeclarativeFactory(id="pushButton", library="gwt", targetWidget=PushButton.class)
 public class PushButtonFactory extends CustomButtonFactory 
 {
 	@Override

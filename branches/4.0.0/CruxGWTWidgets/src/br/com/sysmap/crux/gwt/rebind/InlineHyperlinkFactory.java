@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.InlineHyperlink;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -35,7 +37,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="inlineHyperlink", library="gwt")
+@DeclarativeFactory(id="inlineHyperlink", library="gwt", targetWidget=InlineHyperlink.class)
 public class InlineHyperlinkFactory extends WidgetCreator<WidgetCreatorContext>
        implements HasHTMLFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>
 {

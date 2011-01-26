@@ -37,6 +37,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.StackLayoutPanel;
 
 class StackLayoutContext extends WidgetCreatorContext
 {
@@ -60,7 +61,7 @@ class StackLayoutContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="stackLayoutPanel", library="gwt")
+@DeclarativeFactory(id="stackLayoutPanel", library="gwt", targetWidget=StackLayoutPanel.class)
 public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext> 
 	   implements HasBeforeSelectionHandlersFactory<StackLayoutContext>, 
 	   			  HasSelectionHandlersFactory<StackLayoutContext>

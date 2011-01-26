@@ -47,7 +47,7 @@ class DockPanelContext extends CellPanelContext
  *
  */
 @SuppressWarnings("deprecation")
-@DeclarativeFactory(id="dockPanel", library="gwt")
+@DeclarativeFactory(id="dockPanel", library="gwt", targetWidget=DockPanel.class)
 public class DockPanelFactory extends CellPanelFactory<DockPanelContext> 
        implements HasHorizontalAlignmentFactory<DockPanelContext>, 
                   HasVerticalAlignmentFactory<DockPanelContext>

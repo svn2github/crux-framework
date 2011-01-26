@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.CheckBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -30,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="checkBox", library="gwt")
+@DeclarativeFactory(id="checkBox", library="gwt", targetWidget=CheckBox.class)
 public class CheckBoxFactory extends AbstractCheckBoxFactory
 {
 	@Override

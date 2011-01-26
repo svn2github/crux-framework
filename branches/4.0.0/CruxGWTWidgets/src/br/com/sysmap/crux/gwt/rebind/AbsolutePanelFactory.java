@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.AbsolutePanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -38,7 +40,7 @@ class AbsolutePanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="absolutePanel", library="gwt")
+@DeclarativeFactory(id="absolutePanel", library="gwt", targetWidget=AbsolutePanel.class)
 public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelContext>
 {
 	@Override

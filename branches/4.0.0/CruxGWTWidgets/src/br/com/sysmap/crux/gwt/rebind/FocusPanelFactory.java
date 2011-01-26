@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.FocusPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -31,7 +33,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFacto
  * Represents a FocusPanelFactory
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="focusPanel", library="gwt")
+@DeclarativeFactory(id="focusPanel", library="gwt", targetWidget=FocusPanel.class)
 public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   implements HasAllMouseHandlersFactory<WidgetCreatorContext>, 
 	   			  HasClickHandlersFactory<WidgetCreatorContext>, 

@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.CaptionPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -35,7 +37,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * Factory for CaptionPanel widgets
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="captionPanel", library="gwt")
+@DeclarativeFactory(id="captionPanel", library="gwt", targetWidget=CaptionPanel.class)
 public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 {
 	@Override

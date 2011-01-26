@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.DecoratorPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
@@ -23,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * Represents a DecoratorPanelFactory
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="decoratorPanel", library="gwt")
+@DeclarativeFactory(id="decoratorPanel", library="gwt", targetWidget= DecoratorPanel.class)
 public class DecoratorPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 }

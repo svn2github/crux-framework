@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -32,7 +34,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="horizontalPanel", library="gwt")
+@DeclarativeFactory(id="horizontalPanel", library="gwt", targetWidget=HorizontalPanel.class)
 public class HorizontalPanelFactory extends CellPanelFactory<CellPanelContext>
 	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
 	   			  HasVerticalAlignmentFactory<CellPanelContext>

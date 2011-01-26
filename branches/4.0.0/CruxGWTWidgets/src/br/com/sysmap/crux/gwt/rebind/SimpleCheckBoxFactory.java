@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.SimpleCheckBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -28,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="simpleCheckBox", library="gwt")
+@DeclarativeFactory(id="simpleCheckBox", library="gwt", targetWidget=SimpleCheckBox.class)
 public class SimpleCheckBoxFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 		implements HasNameFactory<WidgetCreatorContext>
 {

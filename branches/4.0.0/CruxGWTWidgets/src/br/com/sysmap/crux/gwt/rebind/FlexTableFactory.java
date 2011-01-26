@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.FlexTable;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -30,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcess
  * Factory for FlexTable widget
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="flexTable", library="gwt")
+@DeclarativeFactory(id="flexTable", library="gwt", targetWidget=FlexTable.class)
 public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 {
 	/**

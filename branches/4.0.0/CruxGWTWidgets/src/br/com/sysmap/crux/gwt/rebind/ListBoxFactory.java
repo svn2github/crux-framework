@@ -27,12 +27,13 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * Represents a List Box component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="listBox", library="gwt")
+@DeclarativeFactory(id="listBox", library="gwt", targetWidget=ListBox.class)
 public class ListBoxFactory extends AbstractListBoxFactory
 {
 	@Override

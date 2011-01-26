@@ -27,6 +27,7 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 class SplitLayoutPanelContext extends DockLayoutPanelContext
 {
@@ -38,7 +39,7 @@ class SplitLayoutPanelContext extends DockLayoutPanelContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="splitLayoutPanel", library="gwt")
+@DeclarativeFactory(id="splitLayoutPanel", library="gwt", targetWidget=SplitLayoutPanel.class)
 public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanelContext>
 {
 	@Override

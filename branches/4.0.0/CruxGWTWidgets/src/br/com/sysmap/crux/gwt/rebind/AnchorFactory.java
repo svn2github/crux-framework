@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Anchor;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -31,7 +33,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
  * Represents an AnchorFactory component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="anchor", library="gwt")
+@DeclarativeFactory(id="anchor", library="gwt", targetWidget=Anchor.class)
 public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 	   implements HasHTMLFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
 	              HasWordWrapFactory<WidgetCreatorContext>, HasDirectionFactory<WidgetCreatorContext>, 

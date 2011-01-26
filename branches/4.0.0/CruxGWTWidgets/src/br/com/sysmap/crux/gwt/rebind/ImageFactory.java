@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Image;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -35,7 +37,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.LoadEvtBind;
  * A Factory for Image widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="image", library="gwt")
+@DeclarativeFactory(id="image", library="gwt", targetWidget=Image.class)
 public class ImageFactory extends WidgetCreator<WidgetCreatorContext> 
 	   implements HasClickHandlersFactory<WidgetCreatorContext>, 
 	   			  HasAllMouseHandlersFactory<WidgetCreatorContext>, 

@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.InlineHTML;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -32,7 +34,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="inlineHTML", library="gwt")
+@DeclarativeFactory(id="inlineHTML", library="gwt", targetWidget=InlineHTML.class)
 public class InlineHTMLFactory extends AbstractLabelFactory implements HasHTMLFactory<WidgetCreatorContext>
 {
 	@Override

@@ -25,11 +25,14 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 
+import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+
 /**
  * Represents a HorizontalSplitPanel
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="horizontalSplitPanel", library="gwt")
+@SuppressWarnings("deprecation")
+@DeclarativeFactory(id="horizontalSplitPanel", library="gwt", targetWidget=HorizontalSplitPanel.class)
 public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 

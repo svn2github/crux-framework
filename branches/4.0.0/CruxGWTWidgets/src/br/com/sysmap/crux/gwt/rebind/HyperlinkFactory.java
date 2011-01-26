@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.Hyperlink;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -34,7 +36,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * Represents a HyperlinkFactory component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="hyperlink", library="gwt")
+@DeclarativeFactory(id="hyperlink", library="gwt", targetWidget=Hyperlink.class)
 public class HyperlinkFactory extends WidgetCreator<WidgetCreatorContext>
 	   implements HasHTMLFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>
 {

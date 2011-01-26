@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.SubmitButton;
 /**
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="submitButton", library="gwt")
+@DeclarativeFactory(id="submitButton", library="gwt", targetWidget=SubmitButton.class)
 public class SubmitButtonFactory extends ButtonBaseFactory
 {
 	@Override

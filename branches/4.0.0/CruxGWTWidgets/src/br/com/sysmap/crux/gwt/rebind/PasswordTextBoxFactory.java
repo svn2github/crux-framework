@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.PasswordTextBox;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
@@ -27,7 +29,7 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="passwordTextBox", library="gwt")
+@DeclarativeFactory(id="passwordTextBox", library="gwt", targetWidget=PasswordTextBox.class)
 public class PasswordTextBoxFactory extends TextBoxBaseFactory  
 {
 	@Override

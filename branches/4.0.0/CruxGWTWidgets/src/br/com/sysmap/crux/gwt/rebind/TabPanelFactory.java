@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import com.google.gwt.user.client.ui.TabPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -28,7 +30,8 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="tabPanel", library="gwt")
+@SuppressWarnings("deprecation")
+@DeclarativeFactory(id="tabPanel", library="gwt", targetWidget=TabPanel.class)
 public class TabPanelFactory extends AbstractTabPanelFactory 
 {
 	@Override

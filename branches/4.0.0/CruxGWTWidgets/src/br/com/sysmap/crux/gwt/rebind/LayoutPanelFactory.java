@@ -29,6 +29,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.layout.client.Layout.Alignment;
+import com.google.gwt.user.client.ui.LayoutPanel;
 
 class LayoutPanelContext extends AbstractLayoutPanelContext
 {
@@ -58,7 +59,7 @@ class LayoutPanelContext extends AbstractLayoutPanelContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="layoutPanel", library="gwt")
+@DeclarativeFactory(id="layoutPanel", library="gwt", targetWidget=LayoutPanel.class)
 public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelContext>
 {
 	@Override

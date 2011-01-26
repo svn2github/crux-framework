@@ -17,6 +17,8 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONArray;
 
+import com.google.gwt.user.client.ui.Grid;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -35,7 +37,7 @@ class GridFactoryContext extends HTMLTableFactoryContext
  * Factory for Grid widget
  * @author Thiago da Rosa de Bustamante
  */
-@DeclarativeFactory(id="grid", library="gwt")
+@DeclarativeFactory(id="grid", library="gwt", targetWidget=Grid.class)
 public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 {
 	/**

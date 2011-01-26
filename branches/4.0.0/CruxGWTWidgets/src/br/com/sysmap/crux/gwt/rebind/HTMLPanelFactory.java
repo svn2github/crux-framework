@@ -17,6 +17,8 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
+import com.google.gwt.user.client.ui.HTMLPanel;
+
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
@@ -36,7 +38,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="HTMLPanel", library="gwt", htmlContainer=true)
+@DeclarativeFactory(id="HTMLPanel", library="gwt", targetWidget=HTMLPanel.class, htmlContainer=true)
 public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
