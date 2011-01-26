@@ -16,22 +16,15 @@
 package br.com.sysmap.crux.widgets.client.decoratedbutton;
 
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-import br.com.sysmap.crux.gwt.client.FocusWidgetFactory;
+import br.com.sysmap.crux.gwt.rebind.FocusWidgetFactory;
 
 /**
  * Factory for Decorated Button widget
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="decoratedButton", library="widgets")
-public class DecoratedButtonFactory extends FocusWidgetFactory<DecoratedButton, WidgetCreatorContext> implements HasTextFactory<DecoratedButton, WidgetCreatorContext>
+public class DecoratedButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> implements HasTextFactory<WidgetCreatorContext>
 {
-	@Override
-	public DecoratedButton instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new DecoratedButton();
-	}
 }

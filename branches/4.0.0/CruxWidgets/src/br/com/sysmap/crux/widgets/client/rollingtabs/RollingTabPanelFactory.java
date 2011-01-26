@@ -42,7 +42,7 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.ClickEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyDownEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyPressEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyUpEvtBind;
-import br.com.sysmap.crux.gwt.client.CompositeFactory;
+import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
 import com.google.gwt.user.client.ui.Widget;

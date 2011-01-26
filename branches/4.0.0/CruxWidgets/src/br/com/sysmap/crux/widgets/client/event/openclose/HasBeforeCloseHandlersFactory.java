@@ -17,17 +17,18 @@ package br.com.sysmap.crux.widgets.client.event.openclose;
 
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasBeforeCloseHandlersFactory<T extends HasBeforeCloseHandlers, C extends WidgetCreatorContext>
+public interface HasBeforeCloseHandlersFactory<C extends WidgetCreatorContext>
 {
 	@TagEvents({
 		@TagEvent(BeforeCloseEvtBind.class)
 	})	
-	void processEvents(C context) throws InterfaceConfigException;
+	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

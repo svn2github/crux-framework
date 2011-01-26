@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
-import br.com.sysmap.crux.gwt.client.TextBoxBaseFactory;
+import br.com.sysmap.crux.gwt.rebind.TextBoxBaseFactory;
 
 /**
  * Factory for TextArea widget

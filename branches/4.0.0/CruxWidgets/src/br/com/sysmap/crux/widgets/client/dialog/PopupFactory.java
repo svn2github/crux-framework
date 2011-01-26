@@ -18,8 +18,8 @@ package br.com.sysmap.crux.widgets.client.dialog;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -30,23 +30,17 @@ import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlersF
  *
  */
 @DeclarativeFactory(id="popup", library="widgets", attachToDOM=false)
-public class PopupFactory extends WidgetCreator<Popup, WidgetCreatorContext> 
-       implements HasAnimationFactory<Popup, WidgetCreatorContext>, HasBeforeCloseHandlersFactory<Popup, WidgetCreatorContext>
+public class PopupFactory extends WidgetCreator<WidgetCreatorContext> 
+       implements HasAnimationFactory<WidgetCreatorContext>, HasBeforeCloseHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	public Popup instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new Popup();
-	}
-
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="title", supportsI18N=true),
 		@TagAttribute("url"),
 		@TagAttribute(value="closeable", type=Boolean.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 }

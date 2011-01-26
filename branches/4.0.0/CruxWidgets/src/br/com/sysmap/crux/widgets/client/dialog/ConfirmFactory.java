@@ -20,8 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagEvent;
 import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -33,14 +33,8 @@ import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
  *
  */
 @DeclarativeFactory(id="confirm", library="widgets")
-public class ConfirmFactory extends WidgetCreator<Confirm, WidgetCreatorContext> implements HasAnimationFactory<Confirm, WidgetCreatorContext>
+public class ConfirmFactory extends WidgetCreator<WidgetCreatorContext> implements HasAnimationFactory<WidgetCreatorContext>
 {
-	@Override
-	public Confirm instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new Confirm();
-	}
-
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="title", supportsI18N=true),
@@ -48,9 +42,9 @@ public class ConfirmFactory extends WidgetCreator<Confirm, WidgetCreatorContext>
 		@TagAttribute(value="okButtonText", supportsI18N=true),
 		@TagAttribute(value="cancelButtonText", supportsI18N=true)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
@@ -58,8 +52,8 @@ public class ConfirmFactory extends WidgetCreator<Confirm, WidgetCreatorContext>
 		@TagEvent(CancelEvtBind.class),
 		@TagEvent(OkEvtBind.class)
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 }

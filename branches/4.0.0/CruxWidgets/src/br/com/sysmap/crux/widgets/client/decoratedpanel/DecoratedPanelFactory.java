@@ -19,34 +19,29 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.gwt.client.CellPanelContext;
+import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
 
 /**
  * Factory for Decorated Panel widget
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="decoratedPanel", library="widgets")
-public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<DecoratedPanel>
+public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 {
-	@Override
-	public DecoratedPanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new DecoratedPanel();
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(ChildrenProcessor.class)
 	})
-	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	
-	public static class ChildrenProcessor extends ChoiceChildProcessor<DecoratedPanel, CellPanelContext>
+	public static class ChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
@@ -54,42 +49,42 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory<Decorat
 			@TagChild(TextChildProcessor.class),
 			@TagChild(WidgetProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public static class HTMLChildProcessor extends WidgetChildProcessor<DecoratedPanel, CellPanelContext>
+	public static class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			DecoratedPanel rootWidget = context.getWidget();
-			rootWidget.setContentHtml(ensureHtmlChild(context.getChildElement(), true));
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(ensureHtmlChild(context.getChildElement(), true))+");");
 		}
 	}
 
 	@TagChildAttributes(tagName="text", type=String.class)
-	public static class TextChildProcessor extends WidgetChildProcessor<DecoratedPanel, CellPanelContext>
+	public static class TextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			DecoratedPanel rootWidget = context.getWidget();
-			rootWidget.setContentText(ensureTextChild(context.getChildElement(), true));
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setContentText("+EscapeUtils.quote(ensureTextChild(context.getChildElement(), true))+");");
 		}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class WidgetProcessor extends WidgetChildProcessor<DecoratedPanel, CellPanelContext>
+	public static class WidgetProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(WidgetContentProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(widgetProperty="contentWidget")
-	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<DecoratedPanel, CellPanelContext> {}
+	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 
 }

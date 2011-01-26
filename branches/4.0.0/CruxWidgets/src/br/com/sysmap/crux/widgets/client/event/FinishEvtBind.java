@@ -15,33 +15,27 @@
  */
 package br.com.sysmap.crux.widgets.client.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-public class FinishEvtBind implements EvtProcessor<HasFinishHandlers>
+public class FinishEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onFinish";
 
-	/**
-	 * @param element
-	 * @param widget
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasFinishHandlers widget)
-	{
-		final Event finishEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (finishEvent != null)
-		{
-			widget.addFinishHandler(new FinishHandler()
-			{
-				public void onFinish(FinishEvent event)
-				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(finishEvent, event);
-				}
-			});
-		}
-	}
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(widget+".addFinishHandler(new "+FinishHandler.class.getCanonicalName()+"(){");
+		out.println("public void onFinish("+FinishEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
+    }	
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()

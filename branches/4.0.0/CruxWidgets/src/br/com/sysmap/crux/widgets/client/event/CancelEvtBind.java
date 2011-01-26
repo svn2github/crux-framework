@@ -15,33 +15,14 @@
  */
 package br.com.sysmap.crux.widgets.client.event;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-public class CancelEvtBind implements EvtProcessor<HasCancelHandlers>
+public class CancelEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onCancel";
-
-	/**
-	 * @param element
-	 * @param widget
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasCancelHandlers widget)
-	{
-		final Event cancelEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (cancelEvent != null)
-		{
-			widget.addCancelHandler(new CancelHandler()
-			{
-				public void onCancel(CancelEvent event)
-				{
-					br.com.sysmap.crux.core.client.event.Events.callEvent(cancelEvent, event);
-				}
-			});
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -50,4 +31,17 @@ public class CancelEvtBind implements EvtProcessor<HasCancelHandlers>
 	{
 		return EVENT_NAME;
 	}
+	
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(widget+".addCancelHandler(new "+CancelHandler.class.getCanonicalName()+"(){");
+		out.println("public void onCancel("+CancelEvent.class.getCanonicalName()+" event){");
+		out.println("Events.callEvent("+event+", event);");
+		out.println("}");
+		out.println("});");
+    }	
 }

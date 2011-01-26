@@ -18,39 +18,40 @@ package br.com.sysmap.crux.widgets.client.titlepanel;
 import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.gwt.client.CellPanelContext;
+import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
 import br.com.sysmap.crux.widgets.client.decoratedpanel.AbstractDecoratedPanelFactory;
 
 /**
  * Factory for Title Panel widget
  * @author Gesse S. F. Dafe
  */
-public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends AbstractDecoratedPanelFactory<T>
+public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFactory
 {
 	@Override
 	@TagChildren({
 		@TagChild(TitleProcessor.class),
 		@TagChild(BodyProcessor.class)
 	})
-	public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="title", minOccurs="0")
-	public static class TitleProcessor extends WidgetChildProcessor<TitlePanel, CellPanelContext>
+	public static class TitleProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleChildrenProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException	{}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException	{}
 	}
 
-	public static class TitleChildrenProcessor extends ChoiceChildProcessor<TitlePanel, CellPanelContext>
+	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
@@ -58,61 +59,59 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 			@TagChild(TitlePanelTextChildProcessor.class),
 			@TagChild(TitlePanelWidgetChildProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public static abstract class HTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T, CellPanelContext>
+	public static abstract class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String innerHtml = ensureHtmlChild(context.getChildElement(),true);
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setTitleHtml(innerHtml);
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setTitleHtml("+EscapeUtils.quote(innerHtml)+");");
 		}
 	}
 
 	@TagChildAttributes(tagName="text", type=String.class)
-	public static abstract class TextChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T, CellPanelContext>
+	public static abstract class TextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String innerText = ensureTextChild(context.getChildElement(),true);
-			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setTitleText(i18nText);
+			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setTitleText("+EscapeUtils.quote(i18nText)+");");
 		}
 	}
 		
 	@TagChildAttributes(tagName="widget")
-	public static class TitlePanelWidgetChildProcessor extends WidgetChildProcessor<TitlePanel, CellPanelContext>
+	public static class TitlePanelWidgetChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(TitleWidgetTitleProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 
 	@TagChildAttributes(widgetProperty="titleWidget")
-	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<TitlePanel, CellPanelContext> {}
+	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 	
 	
 	@TagChildAttributes(tagName="body", minOccurs="0")
-	public static class BodyProcessor extends WidgetChildProcessor<TitlePanel, CellPanelContext>
+	public static class BodyProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(BodyChildrenProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 
-	public static class BodyChildrenProcessor extends ChoiceChildProcessor<TitlePanel, CellPanelContext>
+	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
@@ -120,52 +119,50 @@ public abstract class AbstractTitlePanelFactory<T extends TitlePanel> extends Ab
 			@TagChild(TitlePanelBodyTextChildProcessor.class),
 			@TagChild(TitlePanelBodyWidgetProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}	
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
-	public static abstract class BodyHTMLChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T, CellPanelContext>
+	public static abstract class BodyHTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String innerHtml = ensureHtmlChild(context.getChildElement(), true);
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setContentHtml(innerHtml);
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(innerHtml)+");");
 		}
 	}
 
 	@TagChildAttributes(tagName="text", type=String.class)
-	public static abstract class BodyTextChildProcessor<T extends TitlePanel> extends WidgetChildProcessor<T, CellPanelContext>
+	public static abstract class BodyTextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String innerText = ensureTextChild(context.getChildElement(), true);
-			String i18nText = ScreenFactory.getInstance().getDeclaredMessage(innerText);
-			T rootWidget = (T)context.getWidget();
-			rootWidget.setContentText(i18nText);
+			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".setContentText("+EscapeUtils.quote(i18nText)+");");
 		}
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class TitlePanelBodyWidgetProcessor extends WidgetChildProcessor<TitlePanel, CellPanelContext>
+	public static class TitlePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
 		@TagChildren({
 			@TagChild(BodyWidgetContentProcessor.class)
 		})
-		public void processChildren(CellPanelContext context) throws InterfaceConfigException {}
+		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
 	}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")
-	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<TitlePanel, CellPanelContext> {}
+	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 
-	public static class TitlePanelHTMLChildProcessor extends HTMLChildProcessor<TitlePanel>{}
-	public static class TitlePanelTextChildProcessor extends TextChildProcessor<TitlePanel>{}	
-	public static class TitlePanelBodyHTMLChildProcessor extends BodyHTMLChildProcessor<TitlePanel>{}
-	public static class TitlePanelBodyTextChildProcessor extends BodyTextChildProcessor<TitlePanel> {}
+	public static class TitlePanelHTMLChildProcessor extends HTMLChildProcessor{}
+	public static class TitlePanelTextChildProcessor extends TextChildProcessor{}	
+	public static class TitlePanelBodyHTMLChildProcessor extends BodyHTMLChildProcessor{}
+	public static class TitlePanelBodyTextChildProcessor extends BodyTextChildProcessor {}
 	
 }

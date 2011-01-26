@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
@@ -24,9 +23,10 @@ import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
@@ -39,22 +39,16 @@ import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="dynaTabs", library="widgets")
-public class DynaTabsFactory extends WidgetCreator<DynaTabs, WidgetCreatorContext>
+public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	@Override
-	public DynaTabs instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new DynaTabs();
-	}
-
 	@Override
 	@TagChildren({
 		@TagChild(DynaTabProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
-	public static class DynaTabProcessor extends WidgetChildProcessor<DynaTabs, WidgetCreatorContext>
+	public static class DynaTabProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		protected BeforeFocusEvtBind beforeFocusEvtBind = new BeforeFocusEvtBind();
 		protected BeforeBlurEvtBind beforeBlurEvtBind = new BeforeBlurEvtBind();
@@ -72,13 +66,11 @@ public class DynaTabsFactory extends WidgetCreator<DynaTabs, WidgetCreatorContex
 			@TagEventDeclaration("onBeforeBlur"),
 			@TagEventDeclaration("onBeforeClose")
 		})
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
-			CruxMetaDataElement childElement = context.getChildElement();
-			assert(childElement.containsKey("id")):Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = childElement.getProperty("id");
+			String id = context.readChildProperty("id");
 			String label = context.readChildProperty("label");
-			label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
+			label = (label != null && label.length() > 0) ? getWidgetCreator().getDeclaredMessage(label) : "";
 			String url = context.readChildProperty("url");
 						
 			boolean closeable = true;
@@ -88,12 +80,26 @@ public class DynaTabsFactory extends WidgetCreator<DynaTabs, WidgetCreatorContex
 				closeable = Boolean.parseBoolean(strCloseable);
 			}
 			
-			DynaTabs rootWidget = context.getWidget();
-			Tab tab = rootWidget.openTab(id, label, url, closeable, false);
+			String rootWidget = context.getWidget();
+			String tab = getWidgetCreator().createVariableName("tab");
+			out.println(Tab.class.getCanonicalName()+" "+tab+" = "+rootWidget+".openTab("+EscapeUtils.quote(id)+", "+
+					EscapeUtils.quote(label)+", "+EscapeUtils.quote(url)+", "+closeable+", false);");
 			
-			beforeFocusEvtBind.bindEvent(childElement, tab);			
-			beforeBlurEvtBind.bindEvent(childElement, tab);			
-			beforeCloseEvtBind.bindEvent(childElement, tab);			
+			String beforeFocusEvt = context.readChildProperty(beforeFocusEvtBind.getEventName());
+			if (!StringUtils.isEmpty(beforeFocusEvt))
+			{
+				beforeFocusEvtBind.processEvent(out, beforeFocusEvt, tab, null);
+			}
+			String beforeBlurEvt = context.readChildProperty(beforeBlurEvtBind.getEventName());
+			if (!StringUtils.isEmpty(beforeBlurEvt))
+			{
+				beforeBlurEvtBind.processEvent(out, beforeBlurEvt, tab, null);
+			}
+			String beforeCloseEvt = context.readChildProperty(beforeCloseEvtBind.getEventName());
+			if (!StringUtils.isEmpty(beforeCloseEvt))
+			{
+				beforeCloseEvtBind.processEvent(out, beforeCloseEvt, tab, null);
+			}
 		}
 	}
 }

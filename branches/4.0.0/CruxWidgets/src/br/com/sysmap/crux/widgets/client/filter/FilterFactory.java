@@ -19,40 +19,29 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttribute;
 import br.com.sysmap.crux.core.client.declarative.TagAttributes;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.gwt.client.CompositeFactory;
+import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Factory for Filter widget
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="filter", library="widgets")
-public class FilterFactory extends CompositeFactory<Filter, WidgetCreatorContext> 
-	   implements HasAnimationFactory<Filter, WidgetCreatorContext>, HasTextFactory<Filter, WidgetCreatorContext>, 
-	              HasValueChangeHandlersFactory<Filter, WidgetCreatorContext>, HasSelectionHandlersFactory<Filter, WidgetCreatorContext>,
-	              HasAllKeyHandlersFactory<Filter, WidgetCreatorContext>
+public class FilterFactory extends CompositeFactory<WidgetCreatorContext> 
+	   implements HasAnimationFactory<WidgetCreatorContext>, HasTextFactory<WidgetCreatorContext>, 
+	              HasValueChangeHandlersFactory<WidgetCreatorContext>, HasSelectionHandlersFactory<WidgetCreatorContext>,
+	              HasAllKeyHandlersFactory<WidgetCreatorContext>
 {
-
-	@Override
-	public Filter instantiateWidget(final CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new Filter();	
-	}
-	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="accessKey", type=Character.class),
@@ -62,48 +51,38 @@ public class FilterFactory extends CompositeFactory<Filter, WidgetCreatorContext
 		@TagAttribute("popupStyleName"),
 		@TagAttribute(value="tabIndex", type=Integer.class),
 		@TagAttribute("value"),
-		@TagAttribute(value="filterable", processor=FilterableAttributeParser.class)
+		@TagAttribute(value="filterable", processor=FilterableAttributeParser.class, required=true)
 	})
 	@TagAttributesDeclaration({
 	})
-	public void processAttributes(final WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Gesse Dafe
 	 */
-	public class FilterableAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public class FilterableAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.rebind.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
 		 */
-		public void processAttribute(WidgetCreatorContext context, String propertyValue)
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{
-			final Filter widget = context.getWidget();
-			final String filterableId =context.readWidgetProperty("filterable");
+			String widget = context.getWidget();
+			String filterableId =context.readWidgetProperty("filterable");
+			String filterableWidget = createVariableName("filterable");
 			
-			addScreenLoadedHandler(new ScreenLoadHandler()
-			{
-				public void onLoad(ScreenLoadEvent screenLoadEvent)
-				{					
-					Widget filterableWidget = null;
-					if(filterableId != null)
-					{
-						filterableWidget = Screen.get(filterableId);
-					}
-					
-					if(filterableWidget != null)
-					{
-						widget.setFilterable((Filterable<?>) filterableWidget);
-					}
-					else
-					{
-						throw new RuntimeException(WidgetMsgFactory.getMessages().filterableNotFoundWhenInstantiantingFilter(filterableId));
-					}							
-				}				
-			});			
+			printlnPostProcessing("Widget "+filterableWidget+" = null;");
+			printlnPostProcessing(filterableWidget+" = Screen.get("+EscapeUtils.quote(filterableId)+");");
+			printlnPostProcessing("if("+filterableWidget+" != null){");
+			printlnPostProcessing(widget+".setFilterable(("+Filterable.class.getCanonicalName()+"<?>) "+filterableWidget+");");
+			printlnPostProcessing("}");
+			printlnPostProcessing("else{");
+			printlnPostProcessing("throw new RuntimeException("+WidgetMsgFactory.class.getCanonicalName()+".getMessages().filterableNotFoundWhenInstantiantingFilter("+
+					EscapeUtils.quote(filterableId)+"));");
+			printlnPostProcessing("}");							
 		}		
 	}
 }

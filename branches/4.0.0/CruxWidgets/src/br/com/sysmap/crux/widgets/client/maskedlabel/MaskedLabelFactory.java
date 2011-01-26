@@ -40,12 +40,12 @@ import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
  *
  */
 @DeclarativeFactory(id="maskedLabel", library="widgets")
-public class MaskedLabelFactory extends WidgetCreator<MaskedLabel, WidgetCreatorContext> 
-				implements HasDirectionFactory<MaskedLabel, WidgetCreatorContext>, HasClickHandlersFactory<MaskedLabel, WidgetCreatorContext>, 
-						   HasAllMouseHandlersFactory<MaskedLabel, WidgetCreatorContext>, 
-				           HasWordWrapFactory<MaskedLabel, WidgetCreatorContext>, 
-				           HasAutoHorizontalAlignmentFactory<MaskedLabel, WidgetCreatorContext>, 
-				           HasHorizontalAlignmentFactory<MaskedLabel, WidgetCreatorContext>
+public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext> 
+				implements HasDirectionFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>, 
+						   HasAllMouseHandlersFactory<WidgetCreatorContext>, 
+				           HasWordWrapFactory<WidgetCreatorContext>, 
+				           HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, 
+				           HasHorizontalAlignmentFactory<WidgetCreatorContext>
 {
 	@Override
 	public MaskedLabel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException

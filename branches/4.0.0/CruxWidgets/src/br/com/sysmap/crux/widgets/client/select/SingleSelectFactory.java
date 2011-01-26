@@ -20,8 +20,8 @@ import br.com.sysmap.crux.core.client.declarative.TagChild;
 import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.gwt.client.AbstractListBoxFactory;
-import br.com.sysmap.crux.gwt.client.ListBoxContext;
+import br.com.sysmap.crux.gwt.rebind.AbstractListBoxFactory;
+import br.com.sysmap.crux.gwt.rebind.ListBoxContext;
 
 /**
  * Represents a List Box component

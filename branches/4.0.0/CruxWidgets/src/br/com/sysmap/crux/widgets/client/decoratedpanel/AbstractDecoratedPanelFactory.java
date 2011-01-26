@@ -17,14 +17,14 @@ package br.com.sysmap.crux.widgets.client.decoratedpanel;
 
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
-import br.com.sysmap.crux.gwt.client.CellPanelContext;
-import br.com.sysmap.crux.gwt.client.CellPanelFactory;
+import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
+import br.com.sysmap.crux.gwt.rebind.CellPanelFactory;
 
 /**
  * Base factory for Decorated Panels
  * @author Gesse S. F. Dafe
  */
-public abstract class AbstractDecoratedPanelFactory<T extends DecoratedPanel> extends CellPanelFactory<T, CellPanelContext>
-		implements HasHorizontalAlignmentFactory<T, CellPanelContext>, HasVerticalAlignmentFactory<T, CellPanelContext>
+public abstract class AbstractDecoratedPanelFactory extends CellPanelFactory<CellPanelContext>
+		implements HasHorizontalAlignmentFactory<CellPanelContext>, HasVerticalAlignmentFactory<CellPanelContext>
 {
 }

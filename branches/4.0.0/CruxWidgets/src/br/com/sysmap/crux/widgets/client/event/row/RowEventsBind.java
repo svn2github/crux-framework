@@ -15,11 +15,10 @@
  */
 package br.com.sysmap.crux.widgets.client.event.row;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * All event binders for grid row events
@@ -30,29 +29,22 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowClickEvtBind implements EvtProcessor<HasRowClickHandlers>
+	public static class RowClickEvtBind extends EvtProcessor
 	{
 		private static final String EVENT_NAME = "onrowclick";
 
-		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
-		 */
-		public void bindEvent(CruxMetaDataElement element, HasRowClickHandlers widget)
-		{
-			final Event eventRowClick = EvtBind.getWidgetEvent(element, EVENT_NAME);
-			if (eventRowClick != null)
-			{
-				RowClickHandler handler = new RowClickHandler()
-				{
-					public void onRowClick(RowClickEvent event)
-					{
-						Events.callEvent(eventRowClick, event);						
-					}
-				};
-				
-				widget.addRowClickHandler(handler);
-			}
-		}
+		@Override
+	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+	    {
+			String event = ViewFactoryCreator.createVariableName("evt");
+			
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+			out.println(widget+".addRowClickHandler(new "+RowClickHandler.class.getCanonicalName()+"(){");
+			out.println("public void onRowClick("+RowClickEvent.class.getCanonicalName()+" event){");
+			out.println("Events.callEvent("+event+", event);");
+			out.println("}");
+			out.println("});");
+	    }		
 
 		/**
 		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -66,30 +58,23 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowDoubleClickEvtBind implements EvtProcessor<HasRowDoubleClickHandlers>
+	public static class RowDoubleClickEvtBind extends EvtProcessor
 	{
 		private static final String EVENT_NAME = "onrowdoubleclick";
 
-		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
-		 */
-		public void bindEvent(CruxMetaDataElement element, HasRowDoubleClickHandlers widget)
-		{
-			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-			if (rowEvent != null)
-			{
-				RowDoubleClickHandler handler = new RowDoubleClickHandler()
-				{
-					public void onRowDoubleClick(RowDoubleClickEvent event)
-					{
-						Events.callEvent(rowEvent, event);						
-					}
-				};
-				
-				widget.addRowDoubleClickHandler(handler);
-			}
-		}
-
+		@Override
+	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+	    {
+			String event = ViewFactoryCreator.createVariableName("evt");
+			
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+			out.println(widget+".addRowDoubleClickHandler(new "+RowDoubleClickHandler.class.getCanonicalName()+"(){");
+			out.println("public void onRowDoubleClick("+RowDoubleClickEvent.class.getCanonicalName()+" event){");
+			out.println("Events.callEvent("+event+", event);");
+			out.println("}");
+			out.println("});");
+	    }		
+		
 		/**
 		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
 		 */
@@ -102,29 +87,22 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class RowRenderEvtBind implements EvtProcessor<HasRowRenderHandlers>
+	public static class RowRenderEvtBind extends EvtProcessor
 	{
 		private static final String EVENT_NAME = "onrowrender";
 
-		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
-		 */
-		public void bindEvent(CruxMetaDataElement element, HasRowRenderHandlers widget)
-		{
-			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-			if (rowEvent != null)
-			{
-				RowRenderHandler handler = new RowRenderHandler()
-				{
-					public void onRowRender(RowRenderEvent event)
-					{
-						Events.callEvent(rowEvent, event);						
-					}
-				};
-				
-				widget.addRowRenderHandler(handler);
-			}
-		}
+		@Override
+	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+	    {
+			String event = ViewFactoryCreator.createVariableName("evt");
+			
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+			out.println(widget+".addRowRenderHandler(new "+RowRenderHandler.class.getCanonicalName()+"(){");
+			out.println("public void onRowRender("+RowRenderEvent.class.getCanonicalName()+" event){");
+			out.println("Events.callEvent("+event+", event);");
+			out.println("}");
+			out.println("});");
+	    }		
 
 		/**
 		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -138,29 +116,22 @@ public class RowEventsBind
 	/**
 	 * @author Gesse S. F. Dafe
 	 */
-	public static class BeforeRowSelectEvtBind implements EvtProcessor<HasBeforeRowSelectHandlers>
+	public static class BeforeRowSelectEvtBind extends EvtProcessor
 	{
 		private static final String EVENT_NAME = "onbeforerowselect";
 
-		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#bindEvent(br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement, java.lang.Object)
-		 */
-		public void bindEvent(CruxMetaDataElement element, HasBeforeRowSelectHandlers widget)
-		{
-			final Event rowEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-			if (rowEvent != null)
-			{
-				BeforeRowSelectHandler handler = new BeforeRowSelectHandler()
-				{
-					public void onBeforeRowSelect(BeforeRowSelectEvent event)
-					{
-						Events.callEvent(rowEvent, event);
-					}
-				};
-				
-				widget.addBeforeRowSelectHandler(handler);
-			}
-		}
+		@Override
+	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+	    {
+			String event = ViewFactoryCreator.createVariableName("evt");
+			
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+			out.println(widget+".addBeforeRowSelectHandler(new "+BeforeRowSelectHandler.class.getCanonicalName()+"(){");
+			out.println("public void onBeforeRowSelect("+BeforeRowSelectEvent.class.getCanonicalName()+" event){");
+			out.println("Events.callEvent("+event+", event);");
+			out.println("}");
+			out.println("});");
+	    }		
 
 		/**
 		 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
