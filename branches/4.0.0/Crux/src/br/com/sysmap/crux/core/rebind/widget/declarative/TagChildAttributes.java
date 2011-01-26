@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.declarative;
+package br.com.sysmap.crux.core.rebind.widget.declarative;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,8 +25,13 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface TagEventDeclaration
+@Target(ElementType.TYPE)
+public @interface TagChildAttributes
 {
-	String value();
+	String minOccurs() default "1";
+	String maxOccurs() default "1";
+	String tagName() default "";
+	Class<?> type() default Void.class;
+	String widgetProperty() default "";
+	boolean inheritsParentAttributes() default false;
 }

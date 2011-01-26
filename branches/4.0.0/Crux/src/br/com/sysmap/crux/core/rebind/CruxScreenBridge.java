@@ -49,10 +49,12 @@ public class CruxScreenBridge
 	private String scanIgnoredPackages = null;
 	private File scanIgnoredPackagesFile;
 	private String screenRequested = null;
+	private String outputCharset = null;
 	
 	//How GWT generators and the application server run in different JVMs, 
 	//the only way to obtain these informations is using a bridge.
 	private File screenRequestedFile;
+	private File outputCharsetFile;
 	private boolean singleVM = false;
 	private String webinfClasses = null;
 	private File webinfClassesFile;
@@ -101,6 +103,33 @@ public class CruxScreenBridge
 			return null;
 		}
 	}
+
+	/**
+	 * Return the last page requested by client.
+	 * @return
+	 */
+	public String getOutputCharset() 
+	{
+		try 
+		{
+			if (singleVM)
+			{
+				return outputCharset;
+			}
+			else
+			{
+				checkOutputCharsetFile();
+				BufferedReader reader = new BufferedReader(new FileReader(outputCharsetFile));
+				return reader.readLine();
+			}
+		} 
+		catch (Exception e) 
+		{
+			logger.error(messages.screenBridgeErrorReadingOutputCharset(e.getLocalizedMessage()), e);
+			return null;
+		}
+	}
+
 	/**
 	 * Return the last page requested by client.
 	 * @return
@@ -212,6 +241,30 @@ public class CruxScreenBridge
 	{
 		return singleVM;
 	}
+	
+	
+	public void registerPageOutputCharset(String charset)
+    {
+		PrintWriter writer;
+		try 
+		{
+			if (singleVM)
+			{
+				outputCharset = charset;
+			}
+			else
+			{
+				checkOutputCharsetFile();
+				writer = new PrintWriter(outputCharsetFile);
+				writer.println(charset);
+				writer.close();
+			}
+		} 
+		catch (FileNotFoundException e) 
+		{
+			logger.error(messages.screenBridgeErrorRegisteringOutputCharset(e.getLocalizedMessage()), e);
+		}
+    }	
 	
 	/** 
 	 * Inform the name of the last page the client requested. This is used
@@ -369,7 +422,18 @@ public class CruxScreenBridge
 	    	initializeScanIgnoredPackagesFile();
 	    }
     }
-
+	
+	/**
+	 * 
+	 */
+	private void checkOutputCharsetFile()
+    {
+	    if (outputCharsetFile == null)
+	    {
+	    	initializeOutputCharsetFile();
+	    }
+    }
+	
 	/**
 	 * 
 	 */
@@ -430,6 +494,18 @@ public class CruxScreenBridge
 	/**
 	 * 
 	 */
+	private synchronized void initializeOutputCharsetFile()
+    {
+		if (outputCharsetFile == null)
+		{
+			String tmpDir = FileUtils.getTempDir();
+			outputCharsetFile = new File(tmpDir+"outputCharsetBridgeFile");
+		}
+    }
+	
+	/**
+	 * 
+	 */
 	private synchronized void initializeScreenRequestedFile()
     {
 		if (screenRequestedFile == null)
@@ -461,5 +537,5 @@ public class CruxScreenBridge
 			String tmpDir = FileUtils.getTempDir();
 			webinfLibFile = new File(tmpDir+"webinfLibFile");
 		}
-    }	
+    }
 }

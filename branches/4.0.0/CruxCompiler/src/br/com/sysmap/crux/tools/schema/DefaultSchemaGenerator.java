@@ -31,18 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
 import br.com.sysmap.crux.core.declarativeui.template.TemplateParser;
@@ -63,6 +51,18 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.ClassUtils;
@@ -83,7 +83,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	protected DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	protected Map<String, File> namespacesForCatalog;
 	protected File projectBaseDir;
-	protected Stack<Class<? extends WidgetChildProcessor<?,?>>> subTagTypes;
+	protected Stack<Class<? extends WidgetChildProcessor<?>>> subTagTypes;
 	protected TemplateParser templateParser;
 		
 	/**
@@ -97,7 +97,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		this.destDir.mkdirs();
 		this.enumTypes = new HashMap<String, Class<?>>();
 		this.namespacesForCatalog = new HashMap<String, File>();
-		this.subTagTypes = new Stack<Class<? extends WidgetChildProcessor<?,?>>>();
+		this.subTagTypes = new Stack<Class<? extends WidgetChildProcessor<?>>>();
 		this.templateParser = new TemplateParser();
 		
 		initializeSchemaGenerator(projectBaseDir, webDir);
@@ -426,7 +426,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateChild(PrintStream out, TagChild tagChild, boolean parentIsAnAgregator, String library) throws SecurityException, NoSuchMethodException
 	{
-		Class<? extends WidgetChildProcessor<?,?>> processorClass = tagChild.value();
+		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
 		TagChildAttributes attributes = ClassUtils.getChildtrenAttributesAnnotation(processorClass);
 		Method processorMethod = ClassUtils.getProcessChildrenMethod(processorClass);
 		TagChildren children = processorMethod.getAnnotation(TagChildren.class);
@@ -518,7 +518,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param widgetFactory
 	 * @param library
 	 */
-	private void generateChildrenForProcessor(PrintStream out, Class<? extends WidgetChildProcessor<?,?>> processorClass, String library)
+	private void generateChildrenForProcessor(PrintStream out, Class<? extends WidgetChildProcessor<?>> processorClass, String library)
 	{
 		try
 		{
@@ -820,7 +820,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param processorClass
 	 * @param attributes
 	 */
-	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?,?>> processorClass, TagChildAttributes attributes)
+	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?>> processorClass, TagChildAttributes attributes)
 	{
 		Class<?> type = attributes.type();
 		String tagName = attributes.tagName();
@@ -1184,7 +1184,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		Set<String> added = new HashSet<String>();
 		while (subTagTypes.size() > 0)
 		{
-			Class<? extends WidgetChildProcessor<?,?>> type = subTagTypes.pop();
+			Class<? extends WidgetChildProcessor<?>> type = subTagTypes.pop();
 			String elementName = type.getCanonicalName().replace('.', '_');
 			if (!added.contains(elementName))
 			{
@@ -1325,7 +1325,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		else if (WidgetChildProcessor.class.isAssignableFrom(type))
 		{
 			String typeName = type.getCanonicalName().replace('.', '_');
-			this.subTagTypes.add((Class<? extends WidgetChildProcessor<?,?>>) type);
+			this.subTagTypes.add((Class<? extends WidgetChildProcessor<?>>) type);
 			return typeName;
 		}
 		else if (AnyTag.class.isAssignableFrom(type))
@@ -1357,7 +1357,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private boolean isChildAnAgregator(TagChild tagChild)
 	{
-		Class<? extends WidgetChildProcessor<?,?>> processorClass = tagChild.value();
+		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
 		return processorClass != null && (ChoiceChildProcessor.class.isAssignableFrom(processorClass) || 
 										  SequenceChildProcessor.class.isAssignableFrom(processorClass) ||
 										  AllChildProcessor.class.isAssignableFrom(processorClass));
@@ -1368,7 +1368,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param type
 	 * @return
 	 */
-	private boolean processorSupportsInnerText(Class<? extends WidgetChildProcessor<?,?>> processorClass)
+	private boolean processorSupportsInnerText(Class<? extends WidgetChildProcessor<?>> processorClass)
 	{
 		try
 		{

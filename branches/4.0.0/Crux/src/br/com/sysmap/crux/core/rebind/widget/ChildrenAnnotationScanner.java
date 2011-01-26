@@ -20,10 +20,7 @@ import java.lang.reflect.Method;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
+import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -32,7 +29,6 @@ import br.com.sysmap.crux.core.declarativeui.LazyWidgets.WidgetLazyChecker;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorAnnotationsProcessor.ChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorAnnotationsProcessor.ChildrenProcessor;
@@ -42,6 +38,10 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcess
 import br.com.sysmap.crux.core.rebind.widget.creator.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;

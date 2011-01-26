@@ -16,7 +16,6 @@
 package br.com.sysmap.crux.core.client.screen;
 
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.widget.LazyPanelFactory.LazyPanelWrappingType;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;

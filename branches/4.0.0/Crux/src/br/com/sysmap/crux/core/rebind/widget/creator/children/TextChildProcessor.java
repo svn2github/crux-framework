@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.children;
 
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 
 /**
  * 

@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.scanner.screen.config;
  
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -80,7 +78,7 @@ public class WidgetConfig
 		widgets = new HashMap<String, String>();
 		widgetContainers = new HashSet<String>();
 		registeredLibraries = new HashMap<String, Set<String>>();
-		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
+		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory.class);
 		if (factoriesNames != null)
 		{
 			for (String name : factoriesNames) 
@@ -88,8 +86,8 @@ public class WidgetConfig
 				try 
 				{
 					Class<? extends WidgetCreator<?>> factoryClass = (Class<? extends WidgetCreator<?>>)Class.forName(name);
-					br.com.sysmap.crux.core.client.declarative.DeclarativeFactory annot = 
-						factoryClass.getAnnotation(br.com.sysmap.crux.core.client.declarative.DeclarativeFactory.class);
+					br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory annot = 
+						factoryClass.getAnnotation(br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory.class);
 					if (!registeredLibraries.containsKey(annot.library()))
 					{
 						registeredLibraries.put(annot.library(), new HashSet<String>());
@@ -98,25 +96,13 @@ public class WidgetConfig
 					String widgetType = annot.library() + "_" + annot.id();
 					
 					config.put(widgetType, factoryClass.getCanonicalName());
+					widgets.put(annot.targetWidget().getCanonicalName(), widgetType);
 					
 					if (WidgetContainer.class.isAssignableFrom(factoryClass))
 					{
 						widgetContainers.add(widgetType);
 					}
 					
-					Type type = ((ParameterizedType)factoryClass.getGenericSuperclass()).getActualTypeArguments()[0];
-					if (type instanceof ParameterizedType)
-					{
-						Type rawType = ((ParameterizedType) type).getRawType();
-						if (rawType instanceof Class)
-						{
-							widgets.put(((Class<?>)rawType).getCanonicalName(), widgetType);
-						}
-					}
-					if (type instanceof Class)
-					{
-						widgets.put(((Class<?>)type).getCanonicalName(), widgetType);
-					}
 				} 
 				catch (ClassNotFoundException e) 
 				{

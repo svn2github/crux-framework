@@ -19,16 +19,16 @@ import org.json.JSONObject;
 
 import com.google.gwt.user.client.ui.LazyPanel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildLazyCondition;
-import br.com.sysmap.crux.core.client.declarative.TagChildLazyConditions;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 /**
  * A Panel which content is only rendered when it becomes visible for the first time.

@@ -19,9 +19,10 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -301,10 +302,11 @@ public class ClassUtils
 		{
 			for (Method method : methods)
             {
-	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
+	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 2)
 	            {
-	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetCreatorContext.class.isAssignableFrom(paramClass))
+	            	Class<?> firstParamClass = method.getParameterTypes()[0];
+	            	Class<?> secondParamClass = method.getParameterTypes()[1];
+	            	if (SourcePrinter.class.isAssignableFrom(firstParamClass) && WidgetCreatorContext.class.isAssignableFrom(secondParamClass))
 	            	{
 	            		return method;
 	            	}

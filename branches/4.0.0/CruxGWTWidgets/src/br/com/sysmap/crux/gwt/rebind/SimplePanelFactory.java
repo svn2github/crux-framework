@@ -17,8 +17,8 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 /**
  * 

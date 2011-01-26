@@ -118,6 +118,12 @@ public interface ServerMessages
 	@DefaultServerMessage("[screenBridge 010] - Error reading webinfLib: {0}.")
 	String screenBridgeErrorReadingWebinfLib(String localizedMessage);
 
+	@DefaultServerMessage("[screenBridge 011] - Error reading outputCharset: {0}.")
+	String screenBridgeErrorReadingOutputCharset(String localizedMessage);
+	
+	@DefaultServerMessage("[screenBridge 012] - Error registering outputCharset: {0}.")
+	String screenBridgeErrorRegisteringOutputCharset(String localizedMessage);
+
 	@DefaultServerMessage("[messages 001] - Error initializing messagesClasses: {0}.")
 	String messagesClassesInitializeError(String localizedMessage);
 

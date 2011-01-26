@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.declarative;
+package br.com.sysmap.crux.core.rebind.widget.declarative;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,9 +25,10 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface TagChildLazyConditions
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface TagChildLazyCondition
 {
-	TagChildLazyCondition[] all() default {};
-	TagChildLazyCondition[] any() default {};
+	String property();
+	String equals() default"";
+	String notEquals() default"";
 }

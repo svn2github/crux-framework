@@ -37,6 +37,7 @@ import org.w3c.dom.Document;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.declarativeui.template.TemplatesPreProcessor;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 
@@ -77,7 +78,7 @@ public class CruxToHtmlTransformer
 			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, mustIndent());
 			htmlBuilder.build(screenId, source, buff);
 			String result = buff.toString();
-			StreamUtils.write(new ByteArrayInputStream(result.getBytes(outputCharset)), out, false);
+			StreamUtils.write(new ByteArrayInputStream(result.getBytes(getOutputCharset())), out, false);
 		}
 		catch (Exception e)
 		{
@@ -120,8 +121,18 @@ public class CruxToHtmlTransformer
 	public static void setOutputCharset(String charset)
 	{
 		outputCharset = charset;
+		CruxScreenBridge.getInstance().registerPageOutputCharset(charset);
 	}	
 
+	public static String getOutputCharset()
+	{
+		if (outputCharset == null)
+		{
+			outputCharset = CruxScreenBridge.getInstance().getOutputCharset();
+		}
+		return outputCharset;
+	}
+	
 	/**
 	 * Initializes the static resources
 	 */

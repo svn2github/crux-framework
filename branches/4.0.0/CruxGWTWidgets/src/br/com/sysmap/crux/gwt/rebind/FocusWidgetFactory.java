@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
@@ -36,6 +32,10 @@ import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOutEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOverEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseUpEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseWheelEvtBind;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 
 /**
  * This is the base factory class for widgets that can receive focus. 

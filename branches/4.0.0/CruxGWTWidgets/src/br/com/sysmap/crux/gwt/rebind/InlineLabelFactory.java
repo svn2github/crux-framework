@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import com.google.gwt.user.client.ui.InlineLabel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 
 /**

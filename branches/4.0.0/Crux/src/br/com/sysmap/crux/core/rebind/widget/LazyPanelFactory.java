@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.screen.LazyPanel;
+import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
@@ -145,14 +146,4 @@ public class LazyPanelFactory
 		
 	    return imports.toArray(new String[imports.size()]);
     }
-
-	/**
-	 * Contains the available lazyPanel wrapping models. {@code wrapChildren} is used 
-	 * by widgets that needs to create some of its children lazily. {@code wrapWholeWidget}
-	 * is used when the whole widget must be rendered lazily, like when {@code ScreenFactory}
-	 * is parsing the CruxMetaData and find an invisible panel.
-	 * 
-	 * @author Thiago da Rosa de Bustamante
-	 */
-	public static enum LazyPanelWrappingType{wrapChildren, wrapWholeWidget}
 }

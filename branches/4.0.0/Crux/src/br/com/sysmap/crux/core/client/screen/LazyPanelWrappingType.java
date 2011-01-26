@@ -15,24 +15,15 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-
-import com.google.gwt.user.client.ui.Widget;
-
 /**
- * A Class that implements this interface does not create its children. It delegates the children 
- * creation to the {@code ScreenFactory} parser.  
+ * Contains the available lazyPanel wrapping models. {@code wrapChildren} is used 
+ * by widgets that needs to create some of its children lazily. {@code wrapWholeWidget}
+ * is used when the whole widget must be rendered lazily, like when {@code ScreenFactory}
+ * is parsing the CruxMetaData and find an invisible panel.
+ * 
  * @author Thiago da Rosa de Bustamante
- *
  */
-public interface HasWidgetsFactory <T extends Widget, C extends WidgetCreatorContext>
+public enum LazyPanelWrappingType
 {
-	/**
-	 * @param parent
-	 * @param parentId
-	 * @param widget
-	 * @param widgetId
-	 */
-	void add(T parent, String parentId, Widget widget, String widgetId);
-
+	wrapChildren, wrapWholeWidget
 }

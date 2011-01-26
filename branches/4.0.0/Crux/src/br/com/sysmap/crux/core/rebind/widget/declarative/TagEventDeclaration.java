@@ -13,14 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.declarative;
+package br.com.sysmap.crux.core.rebind.widget.declarative;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -28,7 +26,7 @@ import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
-public @interface TagEvent
+public @interface TagEventDeclaration
 {
-	Class<? extends EvtProcessor> value();	
+	String value();
 }
