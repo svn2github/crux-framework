@@ -312,10 +312,18 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
-		String className = factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getParameterizedQualifiedSourceName();
+		String className = getWidgetClassName();
 		out.println(className + " " + varName+" = new "+className+"();");
 		return varName;
 	}
+
+	/**
+	 * @return
+	 */
+	public String getWidgetClassName()
+    {
+	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getParameterizedQualifiedSourceName();
+    }
 	
 	/**
 	 * @return
