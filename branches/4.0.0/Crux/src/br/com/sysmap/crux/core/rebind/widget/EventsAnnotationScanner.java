@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +30,6 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorAnnotationsProcessor.E
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JType;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -45,7 +43,7 @@ class EventsAnnotationScanner
 
 	private final WidgetCreator<?> widgetCreator;
 
-	EventsAnnotationScanner(WidgetCreator<?> widgetCreator, JClassType type)
+	EventsAnnotationScanner(WidgetCreator<?> widgetCreator, Class<?> type)
     {
 		this.widgetCreator = widgetCreator;
 		this.factoryHelper = new WidgetCreatorHelper(type);
@@ -68,11 +66,19 @@ class EventsAnnotationScanner
 	 * @param added
 	 * @throws CruxGeneratorException
 	 */
-	private void scanEvents(JClassType factoryClass, List<EventCreator> events, Set<String> added) throws CruxGeneratorException
+	private void scanEvents(Class<?> factoryClass, List<EventCreator> events, Set<String> added) throws CruxGeneratorException
 	{
 		try
         {
-	        JMethod method = factoryClass.findMethod("processEvents", new JType[]{factoryHelper.getContextType()});
+	        Method method;
+            try
+            {
+	            method = factoryClass.getMethod("processEvents", new Class<?>[]{factoryHelper.getContextType()});
+            }
+            catch (Exception e)
+            {
+            	method = null;
+            }
 	        if (method != null)
 	        {
 	        	TagEvents tagEvents = method.getAnnotation(TagEvents.class);
@@ -89,13 +95,13 @@ class EventsAnnotationScanner
 	        		}
 	        	}
 	        }
-	        JClassType superclass = factoryClass.getSuperclass();
-	        if (superclass!= null && !superclass.equals(superclass.getOracle().getJavaLangObject()))
+	        Class<?> superclass = factoryClass.getSuperclass();
+	        if (superclass!= null && !superclass.equals(Object.class))
 	        {
 	        	scanEvents(superclass, events, added);
 	        }
-	        JClassType[] interfaces = factoryClass.getImplementedInterfaces();
-	        for (JClassType interfaceClass : interfaces)
+	        Class<?>[] interfaces = factoryClass.getInterfaces();
+	        for (Class<?> interfaceClass : interfaces)
 	        {
 	        	scanEvents(interfaceClass, events, added);
 	        }

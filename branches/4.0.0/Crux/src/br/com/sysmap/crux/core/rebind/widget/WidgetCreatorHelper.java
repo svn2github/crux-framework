@@ -15,6 +15,9 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
@@ -22,11 +25,6 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.utils.ClassUtils;
-
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JType;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,27 +34,24 @@ public class WidgetCreatorHelper
 {
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
-	private final JClassType factoryClass;
-	private final JClassType widgetType;
-	private final JClassType contextType;
-	private final JClassType sourcePrinterType;
+	private final Class<?> factoryClass;
+	private final Class<?> widgetType;
+	private final Class<?> contextType;
 
 	/**
 	 * @param factoryClass
 	 */
-	public WidgetCreatorHelper(JClassType factoryClass)
+	public WidgetCreatorHelper(Class<?> factoryClass)
     {
 		this.factoryClass = factoryClass;
 		this.widgetType = getWidgetTypeFromClass();
 		this.contextType = getContextTypeFromClass();
-		this.sourcePrinterType = factoryClass.getOracle().findType(SourcePrinter.class.getCanonicalName());
-		
     }
 
 	/**
 	 * @return
 	 */
-	public JClassType getFactoryClass()
+	public Class<?> getFactoryClass()
     {
     	return factoryClass;
     }
@@ -77,7 +72,7 @@ public class WidgetCreatorHelper
 	/**
 	 * @return
 	 */
-	public JClassType getWidgetType()
+	public Class<?> getWidgetType()
     {
     	return widgetType;
     }
@@ -85,7 +80,7 @@ public class WidgetCreatorHelper
 	/**
 	 * @return
 	 */
-	public JClassType getContextType()
+	public Class<?> getContextType()
     {
     	return contextType;
     }
@@ -94,9 +89,9 @@ public class WidgetCreatorHelper
 	 * @param childProcessor
 	 * @return
 	 */
-	public TagChildren getChildrenAnnotationFromProcessor(JClassType childProcessor)
+	public TagChildren getChildrenAnnotationFromProcessor(Class<?> childProcessor)
 	{
-		JMethod processorMethod = getChildProcessorMethod(childProcessor);
+		Method processorMethod = getChildProcessorMethod(childProcessor);
 		return processorMethod.getAnnotation(TagChildren.class);
 	}
 
@@ -104,18 +99,26 @@ public class WidgetCreatorHelper
 	 * @param childProcessor
 	 * @return
 	 */
-	public JMethod getChildProcessorMethod(JClassType childProcessor)
+	public Method getChildProcessorMethod(Class<?> childProcessor)
     {
-		JMethod processorMethod = ClassUtils.getMethod(childProcessor, "processChildren", new JType[]{sourcePrinterType, contextType});
+		Method processorMethod;
+        try
+        {
+	        processorMethod = childProcessor.getMethod("processChildren", new Class<?>[]{SourcePrinter.class, contextType});
+        }
+        catch (Exception e)
+        {
+        	processorMethod = null;
+        }
 	    return processorMethod;
     }
 
 	/**
 	 * @return
 	 */
-	public JMethod getProcessChildrenMethod()
+	public Method getProcessChildrenMethod()
     {
-		JMethod processorMethod = getChildProcessorMethod(getFactoryClass());
+		Method processorMethod = getChildProcessorMethod(getFactoryClass());
 	    return processorMethod;
     }
 	
@@ -124,12 +127,12 @@ public class WidgetCreatorHelper
 	 * @param processorClass
 	 * @return
 	 */
-	public TagChildAttributes getChildtrenAttributesAnnotation(JClassType processorClass)
+	public TagChildAttributes getChildtrenAttributesAnnotation(Class<?> processorClass)
 	{
 		TagChildAttributes attributes = processorClass.getAnnotation(TagChildAttributes.class);
 		if (attributes == null)
 		{
-			JClassType superClass = processorClass.getSuperclass();
+			Class<?> superClass = processorClass.getSuperclass();
 			if (superClass != null && superClass.getSuperclass() != null)
 			{
 				attributes = getChildtrenAttributesAnnotation(superClass);
@@ -143,12 +146,12 @@ public class WidgetCreatorHelper
 	 * 
 	 * @return
 	 */
-	private JClassType getWidgetTypeFromClass()
+	private Class<?> getWidgetTypeFromClass()
 	{
 		DeclarativeFactory declarativeFactory = factoryClass.getAnnotation(DeclarativeFactory.class);
 		if (declarativeFactory != null)
 		{
-			return factoryClass.getOracle().findType(declarativeFactory.targetWidget().getCanonicalName());
+			return declarativeFactory.targetWidget();
 		}
 		else
 		{
@@ -160,13 +163,21 @@ public class WidgetCreatorHelper
 	 * 
 	 * @return
 	 */
-	private JClassType getContextTypeFromClass()
+	private Class<?> getContextTypeFromClass()
 	{
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "instantiateContext", new JType[]{});
-		if (returnType == null)
+		Field field;
+        try
+        {
+	        field = factoryClass.getField("__contextInstance");
+        }
+        catch (Exception e)
+        {
+			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
+        }
+		if (field == null)
 		{
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
 		}
-		return (JClassType) returnType;
+		return field.getType();
 	}	
 }

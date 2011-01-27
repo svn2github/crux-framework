@@ -108,72 +108,127 @@ public class ClassUtils
 	 * @param setterMethod
 	 * @return
 	 */
-	public static boolean hasValidSetter(JClassType widgetType, String setterMethod, JType attrType)
+	public static boolean hasValidSetter(Class<?> widgetType, String setterMethod, Class<?> attrType)
 	{
-		if (widgetType.findMethod(setterMethod, new JType[]{attrType}) != null)
+		try
 		{
-			return true;
-		}
-		if (attrType.isPrimitive() != null)
-		{
-			JClassType wrapperType = widgetType.getOracle().findType(attrType.isPrimitive().getQualifiedBoxedSourceName());
-			if (widgetType.findMethod(setterMethod, new JType[]{wrapperType}) != null)
+			if (widgetType.getMethod(setterMethod, new Class<?>[]{attrType}) != null)
 			{
 				return true;
 			}
 		}
-		else
+		catch (Exception e) 
 		{
-			JPrimitiveType primitiveType = getPrimitiveFromWrapper(attrType);
-			if (primitiveType != null && widgetType.findMethod(setterMethod, new JType[]{primitiveType}) != null)
+			try
 			{
-				return true;
+				if (attrType.isPrimitive())
+				{
+					Class<?> wrapperType = getBoxedClassForPrimitive(attrType);
+					if (widgetType.getMethod(setterMethod, new Class<?>[]{wrapperType}) != null)
+					{
+						return true;
+					}
+				}
+				else
+				{
+					Class<?> primitiveType = getPrimitiveFromWrapper(attrType);
+					if (primitiveType != null && widgetType.getMethod(setterMethod, new Class<?>[]{primitiveType}) != null)
+					{
+						return true;
+					}
+				}
 			}
-		}
-		if (widgetType.getSuperclass() != null)
-		{
-			return hasValidSetter(widgetType.getSuperclass(), setterMethod, attrType);
+			catch (Exception e1) 
+			{
+				// Do nothing... try superclass
+			}
+			if (widgetType.getSuperclass() != null)
+			{
+				return hasValidSetter(widgetType.getSuperclass(), setterMethod, attrType);
+			}
 		}
 		return false;
 	}
 
 	/**
+	 * @param primitiveType
+	 * @return
+	 */
+	public static Class<?> getBoxedClassForPrimitive(Class<?> primitiveType)
+	{
+		if (primitiveType.equals(Integer.TYPE))
+		{
+			return Integer.class;
+		}
+		else if (primitiveType.equals(Short.TYPE))
+		{
+			return Short.class;
+		}
+		else if (primitiveType.equals(Byte.TYPE))
+		{
+			return Byte.class;
+		}
+		else if (primitiveType.equals(Long.TYPE))
+		{
+			return Long.class;
+		}
+		else if (primitiveType.equals(Float.TYPE))
+		{
+			return Float.class;
+		}
+		else if (primitiveType.equals(Double.TYPE))
+		{
+			return Double.class;
+		}
+		else if (primitiveType.equals(Boolean.TYPE))
+		{
+			return Boolean.class;
+		}
+		else if (primitiveType.equals(Character.TYPE))
+		{
+			return Character.class;
+		}
+		return null;
+	}
+	
+	
+	/**
 	 * @param attrType
 	 * @return
 	 */
-	private static JPrimitiveType getPrimitiveFromWrapper(JType attrType)
+	private static Class<?> getPrimitiveFromWrapper(Class<?> attrType)
     {
-		if (attrType.getQualifiedSourceName().equals(JPrimitiveType.INT.getQualifiedBoxedSourceName()))
+		if (attrType.equals(Integer.class))
 		{
-			return JPrimitiveType.INT;
+			return Integer.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.SHORT.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Short.class))
 		{
-			return JPrimitiveType.SHORT;
+			return Short.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.LONG.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Long.class))
 		{
-			return JPrimitiveType.LONG;
+			return Long.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.BYTE.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Byte.class))
 		{
-			return JPrimitiveType.BYTE;
+			return Byte.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.FLOAT.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Float.class))
 		{
-			return JPrimitiveType.FLOAT;
+			return Float.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.DOUBLE.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Double.class))
 		{
-			return JPrimitiveType.DOUBLE;
+			return Double.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.BOOLEAN.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Boolean.class))
 		{
-			return JPrimitiveType.BOOLEAN;
+			return Boolean.TYPE;
 		}
-		else if (attrType.getQualifiedSourceName().equals(JPrimitiveType.CHAR.getQualifiedBoxedSourceName()))
+		else if (attrType.equals(Character.class))
 		{
-			return JPrimitiveType.CHAR;
+			return Character.TYPE;
 		}
 	    return null;
     }

@@ -24,8 +24,6 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -42,7 +40,7 @@ class WidgetCreatorAnnotationsProcessor
 	 * @param type
 	 * @param widgetCreator
 	 */
-	WidgetCreatorAnnotationsProcessor(JClassType type, WidgetCreator<?> widgetCreator)
+	WidgetCreatorAnnotationsProcessor(Class<?> type, WidgetCreator<?> widgetCreator)
     {
 		this.attributes = new AttributesAnnotationScanner(widgetCreator, type).scanAttributes();
 		this.events = new EventsAnnotationScanner(widgetCreator, type).scanEvents();

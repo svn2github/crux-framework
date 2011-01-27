@@ -37,8 +37,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaratio
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-
 /**
  * Generate code for gwt widgets creation. Generates code based on a JSON meta data array
  * containing the information declared on crux pages. 
@@ -52,6 +50,9 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
+	
+	//XXX: java does not keep generic information on runtime.
+	public C __contextInstance;
 	
 	/**
 	 * Retrieve the widget child element name
@@ -322,7 +323,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String getWidgetClassName()
     {
-	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getParameterizedQualifiedSourceName();
+	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getCanonicalName();
     }
 	
 	/**
@@ -441,11 +442,24 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected C instantiateContext()
-	{   //TODO remover isso
-		return (C)new WidgetCreatorContext();
+    protected C instantiateContext()
+	{   
+		try
+        {
+	        return (C) __contextInstance.getClass().newInstance();
+        }
+        catch (Exception e)
+        {
+        	throw new CruxGeneratorException(e);//TODO message
+        }
 	}
 	
+	//XXX: We can not assign to contextInstance field if We does not know the type previously.
+	protected void set__ContextInstance(C contextInstance)
+    {
+    	this.__contextInstance = contextInstance;
+    }
+
 	/**
 	 * 
 	 * @param metaElem
@@ -479,8 +493,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	void setViewFactory(ViewFactoryCreator factory)
 	{
 		this.factory = factory;
-		JClassType type = this.factory.getJClassType(getClass());
-		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(type, this);
+		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(getClass(), this);
 	}
 	
 	/**

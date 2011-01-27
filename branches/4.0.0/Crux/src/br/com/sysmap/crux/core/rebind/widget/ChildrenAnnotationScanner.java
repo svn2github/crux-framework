@@ -44,11 +44,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.client.ui.HasText;
 
 /**
@@ -60,35 +55,19 @@ class ChildrenAnnotationScanner
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final int UNBOUNDED = -1;
 
-	private JClassType allChildProcessorType;
-	
-	private JClassType anyWidgetChildProcessorType;
-	private JClassType choiceChildProcessorType;
 	private WidgetCreatorHelper factoryHelper;
-	private JClassType hasTextType;
 	private LazyPanelFactory lazyFactory;
-	private TypeOracle oracle;
-	private JClassType sequenceChildProcessorType;
-	private JClassType textChildProcessorType;
 	private final WidgetCreator<?> widgetCreator;
 	
 	/**
 	 * @param widgetCreator
 	 * @param type
 	 */
-	ChildrenAnnotationScanner(WidgetCreator<?> widgetCreator, JClassType type)
+	ChildrenAnnotationScanner(WidgetCreator<?> widgetCreator, Class<?> type)
     {
 		this.factoryHelper = new WidgetCreatorHelper(type);
 		this.widgetCreator = widgetCreator;
 		this.lazyFactory = new LazyPanelFactory(widgetCreator.getViewFactory());
-
-		oracle = type.getOracle();
-		textChildProcessorType = oracle.findType(TextChildProcessor.class.getCanonicalName());
-		choiceChildProcessorType = oracle.findType(ChoiceChildProcessor.class.getCanonicalName());
-		sequenceChildProcessorType = oracle.findType(SequenceChildProcessor.class.getCanonicalName());
-		allChildProcessorType = oracle.findType(AllChildProcessor.class.getCanonicalName());
-		anyWidgetChildProcessorType = oracle.findType(AnyWidgetChildProcessor.class.getCanonicalName());
-		hasTextType = oracle.findType(HasText.class.getCanonicalName());
     }
 
 	/**
@@ -175,14 +154,14 @@ class ChildrenAnnotationScanner
 	 * @param processorMethod
 	 */
 	private void createChildProcessorForMultipleChildrenProcessor(boolean acceptNoChildren, ChildrenProcessor childrenProcessor, 
-																  JClassType childProcessorClass, boolean isAgregator,
+																  Class<?> childProcessorClass, boolean isAgregator,
 																  WidgetChildProcessor<?> processor, final Method processorMethod)
     {
 	    TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 	    final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
 	    String tagName = (processorAttributes!=null?processorAttributes.tagName():"");
 
-	    final boolean isAnyWidget = (anyWidgetChildProcessorType.isAssignableFrom(childProcessorClass));
+	    final boolean isAnyWidget = (AnyWidgetChildProcessor.class.isAssignableFrom(childProcessorClass));
 
 	    TagChildLazyConditions lazyConditions = childProcessorClass.getAnnotation(TagChildLazyConditions.class);
 	    final WidgetLazyChecker lazyChecker = (lazyConditions== null?null:LazyWidgets.initializeLazyChecker(lazyConditions));
@@ -206,10 +185,10 @@ class ChildrenAnnotationScanner
 	 */
 	private ChildrenProcessor createChildProcessorForText(TagChild child, final boolean acceptNoChildren)
     {
-		JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
+		Class<?> childProcessor = child.value();
 		TagChildAttributes processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessor);
 		final String widgetProperty = processorAttributes.widgetProperty();
-		final boolean isHasText = hasTextType.isAssignableFrom(factoryHelper.getWidgetType());
+		final boolean isHasText = HasText.class.isAssignableFrom(factoryHelper.getWidgetType());
 		
 	    return new ChildrenProcessor()
 		{
@@ -250,8 +229,8 @@ class ChildrenAnnotationScanner
 			boolean hasAgregator = false;
 			for (TagChild child : children.value())
             {
-				JClassType childProcessorClass = oracle.findType(child.value().getCanonicalName());
-				final boolean isTextProcessor = textChildProcessorType.isAssignableFrom(childProcessorClass);
+				Class<?> childProcessorClass = child.value();
+				final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessorClass);
 				if (isTextProcessor)
 				{
 					throw new CruxGeneratorException();//TODO message para nao permitir textprocessor com irmaos
@@ -294,8 +273,8 @@ class ChildrenAnnotationScanner
     {
 		try
 		{
-			JClassType childProcessor = oracle.findType(child.value().getCanonicalName());
-			final boolean isTextProcessor = textChildProcessorType.isAssignableFrom(childProcessor);
+			Class<?> childProcessor = child.value();
+			final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessor);
 			if (isTextProcessor)
 			{
 				return createChildProcessorForText(child, acceptNoChildren);
@@ -378,14 +357,14 @@ class ChildrenAnnotationScanner
 	 * @return
 	 */
 	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(final boolean acceptNoChildren, WidgetChildProcessor<?> processor, 
-																	  Method processorMethod, JClassType childProcessorClass)
+																	  Method processorMethod, Class<?> childProcessorClass)
     {
 		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 		final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
 		String tagName = (processorAttributes!=null?processorAttributes.tagName():"");
 
 		final boolean isAgregator = isAgregatorProcessor(childProcessorClass);
-		final boolean isAnyWidget = (anyWidgetChildProcessorType.isAssignableFrom(childProcessorClass));
+		final boolean isAnyWidget = (AnyWidgetChildProcessor.class.isAssignableFrom(childProcessorClass));
 
 		TagChildLazyConditions lazyConditions = childProcessorClass.getAnnotation(TagChildLazyConditions.class);
 		final WidgetLazyChecker lazyChecker = (lazyConditions== null?null:LazyWidgets.initializeLazyChecker(lazyConditions));
@@ -455,7 +434,7 @@ class ChildrenAnnotationScanner
 		AllowedOccurences allowed = new AllowedOccurences();
 		try
 		{
-			JClassType childProcessorType = factoryHelper.getFactoryClass().getOracle().getType(child.value().getCanonicalName());
+			Class<?> childProcessorType = child.value();
 			TagChildAttributes processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessorType);
 
 			if (processorAttributes != null)
@@ -482,8 +461,7 @@ class ChildrenAnnotationScanner
 			}
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
-
-				JMethod processorMethod = childProcessorType.getMethod("processChildren", new JType[]{factoryHelper.getContextType()});
+				Method processorMethod = childProcessorType.getMethod("processChildren", new Class<?>[]{factoryHelper.getContextType()});
 				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{
@@ -498,7 +476,7 @@ class ChildrenAnnotationScanner
 			}
 			return allowed;
 		}
-		catch (NotFoundException e)
+		catch (Exception e)
 		{
 			throw new CruxGeneratorException(e.getMessage(), e);
 		}
@@ -520,8 +498,6 @@ class ChildrenAnnotationScanner
         }
 		return null;
     }
-
-	
 	
 	/**
 	 * @param tagName
@@ -555,11 +531,11 @@ class ChildrenAnnotationScanner
 	 * @param childProcessorClass
 	 * @return
 	 */
-	private boolean isAgregatorProcessor(JClassType childProcessorClass)
+	private boolean isAgregatorProcessor(Class<?> childProcessorClass)
     {
-	    return (choiceChildProcessorType.isAssignableFrom(childProcessorClass) ||
-				sequenceChildProcessorType.isAssignableFrom(childProcessorClass) ||
-				allChildProcessorType.isAssignableFrom(childProcessorClass));
+	    return (ChoiceChildProcessor.class.isAssignableFrom(childProcessorClass) ||
+				SequenceChildProcessor.class.isAssignableFrom(childProcessorClass) ||
+				AllChildProcessor.class.isAssignableFrom(childProcessorClass));
     }	
 	
 	/**
@@ -591,7 +567,7 @@ class ChildrenAnnotationScanner
 	 * @param processChildrenMethod
 	 * @return
 	 */
-	private ChildrenProcessor scanChildren(JMethod processChildrenMethod, boolean isAgregatorChild)
+	private ChildrenProcessor scanChildren(Method processChildrenMethod, boolean isAgregatorChild)
 	{
 		TagChildren children = processChildrenMethod.getAnnotation(TagChildren.class);
 

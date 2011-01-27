@@ -33,10 +33,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JType;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -50,7 +46,7 @@ class AttributesAnnotationScanner
 	private WidgetCreatorHelper factoryHelper;
 
 	
-	AttributesAnnotationScanner(WidgetCreator<?> widgetCreator, JClassType type)
+	AttributesAnnotationScanner(WidgetCreator<?> widgetCreator, Class<?> type)
     {
 		this.factoryHelper = new WidgetCreatorHelper(type);
 		this.widgetCreator = widgetCreator;
@@ -73,11 +69,19 @@ class AttributesAnnotationScanner
 	 * @param added
 	 * @throws CruxGeneratorException
 	 */
-	private void scanAttributes(JClassType factoryClass, List<AttributeCreator> attributes, Set<String> added) throws CruxGeneratorException
+	private void scanAttributes(Class<?> factoryClass, List<AttributeCreator> attributes, Set<String> added) throws CruxGeneratorException
 	{
 		try
         {
-	        JMethod method = factoryClass.findMethod("processAttributes", new JType[]{factoryHelper.getContextType()});
+	        Method method;
+            try
+            {
+	            method = factoryClass.getMethod("processAttributes", new Class<?>[]{factoryHelper.getContextType()});
+            }
+            catch (Exception e)
+            {
+            	method = null;
+            }
 	        if (method != null)
 	        {
 	        	TagAttributes attrs = method.getAnnotation(TagAttributes.class);
@@ -108,13 +112,13 @@ class AttributesAnnotationScanner
 	        		}
 	        	}
 	        }
-	        JClassType superclass = factoryClass.getSuperclass();
-	        if (superclass!= null && !superclass.equals(superclass.getOracle().getJavaLangObject()))
+	        Class<?> superclass = factoryClass.getSuperclass();
+	        if (superclass!= null && !superclass.equals(Object.class))
 	        {
 	        	scanAttributes(superclass, attributes, added);
 	        }
-	        JClassType[] interfaces = factoryClass.getImplementedInterfaces();
-	        for (JClassType interfaceClass : interfaces)
+	        Class<?>[] interfaces = factoryClass.getInterfaces();
+	        for (Class<?> interfaceClass : interfaces)
 	        {
 	        	scanAttributes(interfaceClass, attributes, added);
 	        }
@@ -205,7 +209,7 @@ class AttributesAnnotationScanner
 	 * @param attr
 	 * @return
 	 */
-	private AttributeCreator createAutomaticAttributeProcessor(JClassType factoryClass, TagAttribute attr)
+	private AttributeCreator createAutomaticAttributeProcessor(Class<?> factoryClass, TagAttribute attr)
     {
 		final String attrName = attr.value();
 		final String setterMethod;
@@ -217,20 +221,18 @@ class AttributesAnnotationScanner
 		{
 			setterMethod = ClassUtils.getSetterMethod(attrName);
 		}
-		final String typeName = attr.type().getCanonicalName();
-		JClassType type = factoryClass.getOracle().findType(typeName);
+		Class<?> type = attr.type();
 		if (type == null || !ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
 		{
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
 		}
-		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
-		final boolean isStringExpression = type.equals(stringType);
+		final boolean isStringExpression = String.class.isAssignableFrom(type);
 		final boolean supportsI18N = isStringExpression && attr.supportsI18N();
-		final boolean isEnumExpression = type.isEnum() != null;
-		final boolean isPrimitiveExpression = type.isPrimitive() != null;
+		final boolean isEnumExpression = type.isEnum();
+		final boolean isPrimitiveExpression = type.isPrimitive();
 		final String attributeDefaultValue = attr.defaultValue();
 			
-		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, typeName, isStringExpression, supportsI18N, isEnumExpression, isPrimitiveExpression, attributeDefaultValue);
+		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, type.getCanonicalName(), isStringExpression, supportsI18N, isEnumExpression, isPrimitiveExpression, attributeDefaultValue);
     }
 
 	/**

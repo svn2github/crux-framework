@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.widget;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -42,9 +43,10 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
@@ -72,9 +74,7 @@ public class ViewFactoryCreator
 	private final LazyPanelFactory lazyFactory;
 	private final Set<String> lazyPanels = new HashSet<String>();	
     private final TreeLogger logger;
-	private final JClassType panelType;	
 	private final LinkedList<PostProcessingPrinter> postProcessingCode = new LinkedList<PostProcessingPrinter>();
-	private final JClassType requiresResizeType;
 	private final Screen screen;
 	private String screenVariable;
 	
@@ -90,8 +90,6 @@ public class ViewFactoryCreator
 		this.logger = logger;
 		this.context = context;
 		this.screen = screen;
-		this.requiresResizeType = context.getTypeOracle().findType(RequiresResize.class.getCanonicalName());
-		this.panelType = context.getTypeOracle().findType(Panel.class.getCanonicalName());
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 
@@ -283,7 +281,8 @@ public class ViewFactoryCreator
 	{
 		PostProcessingPrinter postProcessingPrinter = this.postProcessingCode.removeLast();
 		
-		printer.println("Scheduler.get().scheduleDeferred(new ScheduledCommand(){");
+		printer.println(Scheduler.class.getCanonicalName()+".get().scheduleDeferred(new "+
+				ScheduledCommand.class.getCanonicalName()+"(){");
 		printer.println("public void execute(){");
 		printer.print(postProcessingPrinter.toString());
 		printer.println("}");
@@ -343,7 +342,7 @@ public class ViewFactoryCreator
     {
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
-    		Screen.class.getCanonicalName(),
+    		br.com.sysmap.crux.core.client.screen.Screen.class.getCanonicalName(),
     		StringUtils.class.getCanonicalName(), 
     		Window.class.getCanonicalName(),
     		ViewFactoryUtils.class.getCanonicalName(),
@@ -352,7 +351,8 @@ public class ViewFactoryCreator
     		Element.class.getCanonicalName(),
     		br.com.sysmap.crux.core.client.event.Event.class.getCanonicalName(),
     		Events.class.getCanonicalName(),
-    		ScreenLoadEvent.class.getCanonicalName()
+    		ScreenLoadEvent.class.getCanonicalName(), 
+    		Panel.class.getCanonicalName()
 		};
 	    return imports;
 	}
@@ -362,12 +362,15 @@ public class ViewFactoryCreator
 	 * 
 	 * @param clazz
 	 * @return
-	 */
+	 *
 	JClassType getJClassType(Class<?> clazz)
 	{
 		return context.getTypeOracle().findType(clazz.getCanonicalName());
 	}
-	
+	//TODO: remover isso
+	*/
+    
+    
 	/**
 	 * Retrieves the screen variable name
 	 * @return
@@ -670,10 +673,10 @@ public class ViewFactoryCreator
 		
 		printer.println("Element "+panelElement+" = ViewFactoryUtils.getEnclosingPanelElement("+EscapeUtils.quote(widgetId)+");");
 
-		JClassType widgetClassType = getWidgetFactoryHelper(widgetType).getWidgetType();
+		Class<?> widgetClassType = getWidgetFactoryHelper(widgetType).getWidgetType();
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
 		printer.println("Panel "+panel+";");
-		if (widgetClassType.isAssignableTo(requiresResizeType))
+		if (RequiresResize.class.isAssignableFrom(widgetClassType))
 		{
 			boolean hasSize = (WidgetCreator.hasWidth(metaElem) && WidgetCreator.hasHeight(metaElem));
 			if (!hasSize)
@@ -772,7 +775,11 @@ public class ViewFactoryCreator
 	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetFactory.newInstance();
 	        	factory.setViewFactory(this);
 	        	factories.put(widgetType, factory);
-	        	factoryHelpers.put(widgetType, new WidgetCreatorHelper(context.getTypeOracle().findType(factoryClassName)));
+	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetFactory);
+				factoryHelpers.put(widgetType, creatorHelper);
+				Method setContextInstanceMethod = getSetContextInstanceMethod(widgetFactory);
+				//XXX: We can not assign to contextInstance field if We does not know the type previously.
+				setContextInstanceMethod.invoke(factory, new Object[]{creatorHelper.getContextType().newInstance()});
 	        }
         }
         catch (Exception e)
@@ -781,6 +788,27 @@ public class ViewFactoryCreator
         }
 		return factories.get(widgetType);
 	}
+	
+	//XXX: We can not assign to contextInstance field if We does not know the type previously.
+	private Method getSetContextInstanceMethod(Class<?> widgetFactory)
+	{
+		Method[] declaredMethods = widgetFactory.getDeclaredMethods();
+		
+		for (Method method : declaredMethods)
+        {
+	        if (method.getName().equals("set__ContextInstance"))
+	        {
+	        	return method;
+	        }
+        }
+		Class<?> superclass = widgetFactory.getSuperclass();
+		if (!superclass.equals(Object.class))
+		{
+			return getSetContextInstanceMethod(superclass);
+		}
+		return null;
+	}
+	
 	
     /**
      * Returns a helper object to create the code of the widgets of the given type. 
@@ -848,7 +876,7 @@ public class ViewFactoryCreator
 	 */
 	private boolean mustRenderLazily(String widgetType, JSONObject metaElem, String widgetId)
 	{
-		if (getWidgetFactoryHelper(widgetType).getWidgetType().isAssignableTo(panelType))
+		if (Panel.class.isAssignableFrom(getWidgetFactoryHelper(widgetType).getWidgetType()))
 		{
 			if (!metaElem.optBoolean("visible", true))
 			{

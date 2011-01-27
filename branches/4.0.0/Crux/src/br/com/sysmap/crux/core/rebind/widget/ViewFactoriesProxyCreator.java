@@ -74,7 +74,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			}
 			first = false;
 			
-			sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getId())+")){");
+			sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
 			sourceWriter.indent();
 			
 			generateViewCreator(sourceWriter, screen);
