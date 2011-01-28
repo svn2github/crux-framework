@@ -32,6 +32,6 @@ public class AutoHorizontalAlignmentAttributeParser<C extends WidgetCreatorConte
     public void processAttribute(SourcePrinter out, C context, String attributeValue)
     {
 		out.println(context.getWidget()+".setAutoHorizontalAlignment("+
-				AlignmentAttributeParser.getAutoHorizontalAlignment(attributeValue, HasAutoHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT"));
+				AlignmentAttributeParser.getAutoHorizontalAlignment(attributeValue, HasAutoHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
     }
 }

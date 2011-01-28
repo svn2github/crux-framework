@@ -76,7 +76,7 @@ class AttributesAnnotationScanner
 	        Method method;
             try
             {
-	            method = factoryClass.getMethod("processAttributes", new Class<?>[]{factoryHelper.getContextType()});
+	            method = factoryClass.getMethod("processAttributes", new Class<?>[]{SourcePrinter.class, factoryHelper.getContextType()});
             }
             catch (Exception e)
             {

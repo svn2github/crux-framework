@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.FocusPanel;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -25,9 +23,15 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+
+import com.google.gwt.user.client.ui.FocusPanel;
 
 /**
  * Represents a FocusPanelFactory
@@ -52,4 +56,15 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	{
 		super.processAttributes(out, context);
 	}
+	
+    @Override
+    @TagChildren({
+            @TagChild(WidgetContentProcessor.class)
+    })
+    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+    {
+    }
+    
+    @TagChildAttributes(minOccurs="0", maxOccurs="1")
+    public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
 }

@@ -21,5 +21,5 @@ package br.com.sysmap.crux.core.rebind.widget.creator.direction;
  */
 public enum DirectionEstimator
 {
-	anyRtl, firstStrong, wordCount
+	anyRtl, firstStrong, wordCount, defaultAlign
 }

@@ -17,8 +17,6 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import com.google.gwt.user.client.ui.HTMLPanel;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -32,6 +30,9 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.gwt.client.CruxHTMLPanel;
+
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
         {
         	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
         }
-		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(id)+");");
+		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(id)+");");
 		createChildren(out, varName, metaElem);
 		return varName;
 	}

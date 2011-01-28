@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.children;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -28,7 +28,7 @@ public class WidgetChildProcessor<C extends WidgetCreatorContext>
 {
 	private WidgetCreator<?> widgetCreator;
 
-	public void processChildren(SourcePrinter out, C context) throws InterfaceConfigException{}
+	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException{}
 	
 	public static class AnyWidget{}
 	public static class AnyTag{}

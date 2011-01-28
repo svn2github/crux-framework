@@ -142,9 +142,9 @@ public class ClassUtils
 			{
 				// Do nothing... try superclass
 			}
-			if (widgetType.getSuperclass() != null)
+			if (attrType.getSuperclass() != null)
 			{
-				return hasValidSetter(widgetType.getSuperclass(), setterMethod, attrType);
+				return hasValidSetter(widgetType, setterMethod, attrType.getSuperclass());
 			}
 		}
 		return false;

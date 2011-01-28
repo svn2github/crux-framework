@@ -73,7 +73,7 @@ class EventsAnnotationScanner
 	        Method method;
             try
             {
-	            method = factoryClass.getMethod("processEvents", new Class<?>[]{factoryHelper.getContextType()});
+	            method = factoryClass.getMethod("processEvents", new Class<?>[]{SourcePrinter.class, factoryHelper.getContextType()});
             }
             catch (Exception e)
             {

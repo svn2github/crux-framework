@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 public interface HasDirectionEstimatorFactory<C extends WidgetCreatorContext>
 {
 	@TagAttributes({
-		@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="default", 
+		@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="defaultAlign", 
 			      processor=DirectionEstimatorAttributeParser.class)
 	})	
 	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;

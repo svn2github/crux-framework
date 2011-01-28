@@ -30,6 +30,6 @@ public class VerticalAlignmentAttributeParser<C extends WidgetCreatorContext> ex
     public void processAttribute(SourcePrinter out, C context, String attributeValue)
     {
 		out.println(context.getWidget()+".setVerticalAlignment("+
-				AlignmentAttributeParser.getVerticalAlignment(attributeValue));
+				AlignmentAttributeParser.getVerticalAlignment(attributeValue)+");");
     }
 }

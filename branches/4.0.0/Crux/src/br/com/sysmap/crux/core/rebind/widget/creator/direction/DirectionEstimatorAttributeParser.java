@@ -38,17 +38,17 @@ public class DirectionEstimatorAttributeParser<C extends WidgetCreatorContext> e
 		switch (estimator) 
 		{
 			case anyRtl:
-				out.println(context.getWidget()+".setDirectionEstimator("+AnyRtlDirectionEstimator.class.getCanonicalName()+".get())");
+				out.println(context.getWidget()+".setDirectionEstimator("+AnyRtlDirectionEstimator.class.getCanonicalName()+".get());");
 				break;
 			case firstStrong: 
-				out.println(context.getWidget()+".setDirectionEstimator("+FirstStrongDirectionEstimator.class.getCanonicalName()+".get())");
+				out.println(context.getWidget()+".setDirectionEstimator("+FirstStrongDirectionEstimator.class.getCanonicalName()+".get());");
 				break;
 			case wordCount: 
-				out.println(context.getWidget()+".setDirectionEstimator("+WordCountDirectionEstimator.class.getCanonicalName()+".get())");
+				out.println(context.getWidget()+".setDirectionEstimator("+WordCountDirectionEstimator.class.getCanonicalName()+".get());");
 				break;
 				
 			default:
-				out.println(context.getWidget()+".setDirectionEstimator(true)");
+				out.println(context.getWidget()+".setDirectionEstimator(true);");
 		}
     }
 }

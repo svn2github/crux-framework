@@ -18,17 +18,14 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.user.client.ui.HTMLPanel;
 
 
 /**
@@ -39,39 +36,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
 	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	protected static class CruxHTMLPanel extends HTMLPanel implements HTMLContainer
-	{
-		/**
-		 * Constructor
-		 * @param element
-		 */
-		public CruxHTMLPanel(String wrapperElementId)
-        {
-	        super("");
-	        Element panelElement = ViewFactoryUtils.getEnclosingPanelElement(wrapperElementId);
-	        assert Document.get().getBody().isOrHasChild(panelElement);
-	        panelElement.removeFromParent();
-	        getElement().appendChild(panelElement);
-        }
-		
-		@Override
-		public void onAttach()
-		{
-		    super.onAttach();//TODO verificar se precisa disso ainda
-		}
-	}
-		
-	/**
 	 * @param cruxHTMLPanel
 	 * @param metaElem
 	 * @throws CruxGeneratorException
 	 */
 	protected void createChildren(SourcePrinter out, String widget, JSONObject metaElem) throws CruxGeneratorException
     {
-		out.println(widget+"addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+		out.println(widget+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
 		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
 		
 		JSONArray children = metaElem.optJSONArray("_children");
@@ -82,7 +53,7 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 				JSONObject child = children.optJSONObject(i);
 				String childWidget = createChildWidget(out, child);
 				String panelId = ViewFactoryUtils.getEnclosingPanelPrefix()+child.optString("id");
-				out.println(widget+".add("+childWidget+", "+panelId);
+				out.println(widget+".add("+childWidget+", "+EscapeUtils.quote(panelId)+");");
 			}
 		}
 

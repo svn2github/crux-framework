@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.ScrollPanel;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -26,9 +24,15 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasScrollHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Represents a ScrollPanelFactory
@@ -52,6 +56,18 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 	{
 		super.processAttributes(out, context);
 	}
+	
+    @Override
+    @TagChildren({
+            @TagChild(WidgetContentProcessor.class)
+    })
+    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+    {
+    }
+    
+    @TagChildAttributes(minOccurs="0", maxOccurs="1")
+    public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
+	
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

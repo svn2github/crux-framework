@@ -229,38 +229,40 @@ class ChildrenAnnotationScanner
 			boolean hasAgregator = false;
 			for (TagChild child : children.value())
             {
-				Class<?> childProcessorClass = child.value();
-				final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessorClass);
-				if (isTextProcessor)
+				if (child.autoProcess())
 				{
-					throw new CruxGeneratorException();//TODO message para nao permitir textprocessor com irmaos
-				}
-				boolean isAgregator = isAgregatorProcessor(childProcessorClass);
-				if (isAgregator)
-				{
-					if (hasAgregator)
+					Class<?> childProcessorClass = child.value();
+					final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessorClass);
+					if (isTextProcessor)
 					{
-						throw new CruxGeneratorException();//TODO reportar que nao pode dois agregators alinhados
+						throw new CruxGeneratorException();//TODO message para nao permitir textprocessor com irmaos
 					}
-					hasAgregator = true;
+					boolean isAgregator = isAgregatorProcessor(childProcessorClass);
+					if (isAgregator)
+					{
+						if (hasAgregator)
+						{
+							throw new CruxGeneratorException();//TODO reportar que nao pode dois agregators alinhados
+						}
+						hasAgregator = true;
+					}
+
+					WidgetChildProcessor<?> processor;
+					processor = child.value().newInstance();
+					processor.setWidgetCreator(widgetCreator);
+
+					final Method processorMethod = getChildrenProcessorMethod(child.value());
+
+					createChildProcessorForMultipleChildrenProcessor(acceptNoChildren, childrenProcessor, 
+							childProcessorClass, isAgregator, 
+							processor, processorMethod);
 				}
-
-				WidgetChildProcessor<?> processor;
-				processor = child.value().newInstance();
-				processor.setWidgetCreator(widgetCreator);
-				
-				final Method processorMethod = getChildrenProcessorMethod(child.value());
-
-				createChildProcessorForMultipleChildrenProcessor(acceptNoChildren, childrenProcessor, 
-																childProcessorClass, isAgregator, 
-																processor, processorMethod);
-
             }
 			return childrenProcessor;
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException();//TODO message
+			throw new CruxGeneratorException(e);//TODO message
 		}
     }
 	
@@ -273,6 +275,10 @@ class ChildrenAnnotationScanner
     {
 		try
 		{
+			if (!child.autoProcess())
+			{
+				return null;
+			}
 			Class<?> childProcessor = child.value();
 			final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessor);
 			if (isTextProcessor)
@@ -293,7 +299,7 @@ class ChildrenAnnotationScanner
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException();//TODO message
+			throw new CruxGeneratorException(e);//TODO message
 		}
     }
 
@@ -461,7 +467,7 @@ class ChildrenAnnotationScanner
 			}
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
-				Method processorMethod = childProcessorType.getMethod("processChildren", new Class<?>[]{factoryHelper.getContextType()});
+				Method processorMethod = getChildrenProcessorMethod(childProcessorType);
 				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{
@@ -488,15 +494,16 @@ class ChildrenAnnotationScanner
 	 */
 	private Method getChildrenProcessorMethod(Class<?> processorClass)
     {
-	    Method[] methods = processorClass.getMethods();
-		for (Method met : methods)
+		Method processorMethod;
+        try
         {
-	        if (met.getName().equals("processChildren") && met.getParameterTypes().length == 2)//TODO validar tipo dos parametros
-	        {
-	        	return met;
-	        }
+	        processorMethod = processorClass.getMethod("processChildren", new Class<?>[]{SourcePrinter.class, factoryHelper.getContextType()});
         }
-		return null;
+        catch (Exception e)
+        {
+        	processorMethod = null;
+        }
+		return processorMethod;
     }
 	
 	/**
@@ -570,8 +577,8 @@ class ChildrenAnnotationScanner
 	private ChildrenProcessor scanChildren(Method processChildrenMethod, boolean isAgregatorChild)
 	{
 		TagChildren children = processChildrenMethod.getAnnotation(TagChildren.class);
-
-		if (children != null)
+		
+		if (children != null && mustGenerateChildrenProcessMethod(children))
 		{
 			AllowedOccurences allowedChildren = getAllowedChildrenNumber(children);
 			boolean acceptNoChildren = (allowedChildren.minOccurs == 0);
@@ -587,6 +594,25 @@ class ChildrenAnnotationScanner
 		}
 		return null;
 	}
+	
+	/**
+	 * @param children
+	 * @return
+	 */
+	private boolean mustGenerateChildrenProcessMethod(TagChildren children)
+	{
+		if (children != null)
+		{
+			for (TagChild child : children.value())
+			{
+				if (child.autoProcess())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}	
 	
 	/**
 	 * 
