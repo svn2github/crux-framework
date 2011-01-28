@@ -92,7 +92,7 @@ public class ModuleUtils
 		String result = null;
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		CruxToHtmlTransformer.generateHTML(pageFile.toString(), pageFile.openStream(), out, true);
+		CruxToHtmlTransformer.generateHTML(pageFile.toString(), pageFile.openStream(), out, true, false);
 		ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
 		Document source = null;
 

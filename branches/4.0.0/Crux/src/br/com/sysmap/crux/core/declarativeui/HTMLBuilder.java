@@ -98,6 +98,7 @@ class HTMLBuilder
 	private String cruxTagName;
 	private final boolean escapeXML;
 	private final boolean indentOutput;
+	private final boolean generateWidgetsMetadata;
 
 	private int jsIndentationLvl;
 	
@@ -107,9 +108,10 @@ class HTMLBuilder
 	 * @throws HTMLBuilderException 
 	 * 
 	 */
-	public HTMLBuilder(boolean escapeXML, boolean indentOutput) throws HTMLBuilderException
+	public HTMLBuilder(boolean escapeXML, boolean generateWidgetsMetadata, boolean indentOutput) throws HTMLBuilderException
     {
 		this.escapeXML = escapeXML;
+		this.generateWidgetsMetadata = generateWidgetsMetadata;
 		this.indentOutput = indentOutput;
     }
 	
@@ -451,18 +453,21 @@ class HTMLBuilder
 			cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
 			htmlElement.appendChild(cruxMetaData);
 
-			Text textNode = htmlDocument.createTextNode("function __CruxMetaData_(){return {\"elements\":");
-			cruxMetaData.appendChild(textNode);
-
 			StringBuilder cruxArrayMetaData = new StringBuilder();
 			cruxArrayMetaData.append("[");
 			generateCruxMetaData(cruxPageBodyElement, cruxArrayMetaData, htmlDocument);
 			cruxArrayMetaData.append("]");
-			
-			textNode = htmlDocument.createTextNode(cruxArrayMetaData.toString());
+
+			Text textNode = htmlDocument.createTextNode("function __CruxMetaData_(){return {");
 			cruxMetaData.appendChild(textNode);
 
-			textNode = htmlDocument.createTextNode(",\"id\":\""+screenModule+"/"+HTMLUtils.escapeJavascriptString(screenId, escapeXML)+"\"");
+			if (generateWidgetsMetadata)
+			{
+				textNode = htmlDocument.createTextNode("\"elements\":"+cruxArrayMetaData.toString()+",");
+				cruxMetaData.appendChild(textNode);
+			}
+
+			textNode = htmlDocument.createTextNode("\"id\":\""+screenModule+"/"+HTMLUtils.escapeJavascriptString(screenId, escapeXML)+"\"");
 			cruxMetaData.appendChild(textNode);
 
 			textNode = htmlDocument.createTextNode(",\"lazyDeps\":"+ new LazyWidgets(escapeXML).generateScreenLazyDeps(cruxArrayMetaData.toString()));

@@ -136,7 +136,6 @@ class AttributesAnnotationScanner
 	private AttributeCreator createAttributeProcessorWithParser(TagAttribute attr)
     {
 		final String attrName = attr.value();
-		final String attrDefaultValue = attr.defaultValue();
 		Class<?> processorClass = attr.processor();
 		final Method method = getAtributeProcessorMethod(processorClass);
 		final AttributeProcessor<?> processor;
@@ -150,28 +149,22 @@ class AttributesAnnotationScanner
 	        throw new CruxGeneratorException(e);//TODO message
         }
 		
-		return doCreateAttributeProcessorWithParser(attrName, attrDefaultValue, method, processor);
+		return doCreateAttributeProcessorWithParser(attrName, method, processor);
     }
 
 	/**
 	 * @param attrName
-	 * @param attrDefaultValue
 	 * @param method
 	 * @param processor
 	 * @return
 	 */
-	private AttributeCreator doCreateAttributeProcessorWithParser(final String attrName, final String attrDefaultValue, 
-																  final Method method, final AttributeProcessor<?> processor)
+	private AttributeCreator doCreateAttributeProcessorWithParser(final String attrName, final Method method, final AttributeProcessor<?> processor)
     {
 	    return new AttributeCreator()
 		{
 			public void createAttribute(SourcePrinter out, WidgetCreatorContext context)
 			{
 				String attrValue = context.readWidgetProperty(attrName);
-				if (StringUtils.isEmpty(attrValue))
-				{
-					attrValue = attrDefaultValue;
-				}
 				if (!StringUtils.isEmpty(attrValue))
 				{
 					try
@@ -230,9 +223,10 @@ class AttributesAnnotationScanner
 		final boolean supportsI18N = isStringExpression && attr.supportsI18N();
 		final boolean isEnumExpression = type.isEnum();
 		final boolean isPrimitiveExpression = type.isPrimitive();
-		final String attributeDefaultValue = attr.defaultValue();
 			
-		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, type.getCanonicalName(), isStringExpression, supportsI18N, isEnumExpression, isPrimitiveExpression, attributeDefaultValue);
+		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, type.getCanonicalName(), 
+												   isStringExpression, supportsI18N, isEnumExpression, 
+												   isPrimitiveExpression);
     }
 
 	/**
@@ -243,20 +237,19 @@ class AttributesAnnotationScanner
 	 * @param supportsI18N
 	 * @param isEnumExpression
 	 * @param isPrimitiveExpression
-	 * @param attributeDefaultValue
 	 * @return
 	 */
 	private AttributeCreator doCreateAutomaticAttributeProcessor(final String attrName, final String setterMethod, 
 																 final String typeName, final boolean isStringExpression, 
 																 final boolean supportsI18N, final boolean isEnumExpression, 
-																 final boolean isPrimitiveExpression, final String attributeDefaultValue)
+																 final boolean isPrimitiveExpression)
     {
 	    return new AttributeCreator()
 		{
 			public void createAttribute(SourcePrinter out, WidgetCreatorContext context)
 			{
 					String attrValue = context.readWidgetProperty(attrName);
-					String expression = getExpression(typeName, isStringExpression, isEnumExpression, isPrimitiveExpression, attrValue, attributeDefaultValue);
+					String expression = getExpression(typeName, isStringExpression, isEnumExpression, isPrimitiveExpression, attrValue);
 					if (expression != null)
 					{
 						out.println(context.getWidget()+"."+setterMethod+"("+expression+");");
@@ -266,11 +259,10 @@ class AttributesAnnotationScanner
 			private String getExpression(String typeName, 
 										 boolean isStringExpression, 
 										 boolean isEnumExpression, boolean isPrimitiveExpression, 
-										 String attrValue, String attributeDefaultValue)
+										 String attrValue)
             {
 				String expression;
 
-				attrValue = (StringUtils.isEmpty(attrValue)?attributeDefaultValue:attrValue);
 				if (StringUtils.isEmpty(attrValue))
 				{
 					expression = null;

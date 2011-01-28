@@ -280,13 +280,16 @@ public class ViewFactoryCreator
 	void commitPostProcessing(SourcePrinter printer)
 	{
 		PostProcessingPrinter postProcessingPrinter = this.postProcessingCode.removeLast();
-		
-		printer.println(Scheduler.class.getCanonicalName()+".get().scheduleDeferred(new "+
-				ScheduledCommand.class.getCanonicalName()+"(){");
-		printer.println("public void execute(){");
-		printer.print(postProcessingPrinter.toString());
-		printer.println("}");
-		printer.println("});");
+		String postProcessingCode = postProcessingPrinter.toString();
+		if (!StringUtils.isEmpty(postProcessingCode))
+		{
+			printer.println(Scheduler.class.getCanonicalName()+".get().scheduleDeferred(new "+
+					ScheduledCommand.class.getCanonicalName()+"(){");
+			printer.println("public void execute(){");
+			printer.print(postProcessingCode);
+			printer.println("}");
+			printer.println("});");
+		}
 	}
 	
     /**

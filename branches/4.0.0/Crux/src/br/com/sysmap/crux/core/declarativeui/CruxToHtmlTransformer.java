@@ -18,7 +18,6 @@ package br.com.sysmap.crux.core.declarativeui;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -62,12 +61,13 @@ public class CruxToHtmlTransformer
 	/**
 	 * Executes the transformation
 	 * 
-	 * @param in
+	 * @param screenId
+	 * @param file
 	 * @param out
-	 * @throws IOException
-	 * @throws InterfaceConfigException 
+	 * @param escapeXML
+	 * @param generateWidgetsMetadata
 	 */
-	public static void generateHTML(String screenId, InputStream file, OutputStream out, boolean escapeXML)
+	public static void generateHTML(String screenId, InputStream file, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
 	{
 		init();
 		
@@ -75,7 +75,7 @@ public class CruxToHtmlTransformer
 		{
 			StringWriter buff = new StringWriter();
 			Document source = loadCruxPage(file);
-			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, mustIndent());
+			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
 			htmlBuilder.build(screenId, source, buff);
 			String result = buff.toString();
 			StreamUtils.write(new ByteArrayInputStream(result.getBytes(getOutputCharset())), out, false);
@@ -88,16 +88,17 @@ public class CruxToHtmlTransformer
 	}
 
 	/**
-	 * 
+	 * @param screenId
 	 * @param filePath
 	 * @param out
-	 * @throws InterfaceConfigException
+	 * @param escapeXML
+	 * @param generateWidgetsMetadata
 	 */
-	public static void generateHTML(String screenId, String filePath, OutputStream out, boolean escapeXML)
+	public static void generateHTML(String screenId, String filePath, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
 	{
 		try
 		{
-			generateHTML(screenId, new FileInputStream(filePath), out, escapeXML);
+			generateHTML(screenId, new FileInputStream(filePath), out, escapeXML, generateWidgetsMetadata);
 		}
 		catch (FileNotFoundException e)
 		{
