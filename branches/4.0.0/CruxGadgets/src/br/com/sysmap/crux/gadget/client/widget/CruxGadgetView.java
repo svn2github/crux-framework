@@ -17,7 +17,6 @@ package br.com.sysmap.crux.gadget.client.widget;
 
 import br.com.sysmap.crux.core.client.screen.HTMLContainer;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -32,10 +31,10 @@ public class CruxGadgetView extends GadgetView implements HTMLContainer
 	 * Constructor
 	 * @param element
 	 */
-	public CruxGadgetView(CruxMetaDataElement element)
+	public CruxGadgetView(String wrapperElementId)
     {
         super("");
-        Element panelElement = ViewFactoryUtils.getEnclosingPanelElement(element.getProperty("id"));
+        Element panelElement = ViewFactoryUtils.getEnclosingPanelElement(wrapperElementId);
         assert Document.get().getBody().isOrHasChild(panelElement);
         panelElement.removeFromParent();
         getElement().appendChild(panelElement);

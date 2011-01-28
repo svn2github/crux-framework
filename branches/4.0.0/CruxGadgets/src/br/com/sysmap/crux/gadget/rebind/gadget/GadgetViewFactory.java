@@ -35,7 +35,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gadget.client.widget.CruxGadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
-import br.com.sysmap.crux.gwt.client.CruxHTMLPanel;
 import br.com.sysmap.crux.gwt.rebind.AbstractHTMLPanelFactory;
 
 /**
@@ -51,7 +50,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
-		String className = CruxHTMLPanel.class.getCanonicalName();
+		String className = CruxGadgetView.class.getCanonicalName();
 		String id = metaElem.optString("id");
         if(StringUtils.isEmpty(id))
         {
