@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.scanner.module.Module;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
@@ -202,7 +203,8 @@ public abstract class AbstractCruxCompiler
 
 	public void setOutputCharset(String outputCharset)
     {
-    	this.outputCharset = outputCharset;
+    	CruxToHtmlTransformer.setOutputCharset(outputCharset);
+		this.outputCharset = outputCharset;
     }
 
 	/**
@@ -669,7 +671,7 @@ public abstract class AbstractCruxCompiler
 	        }
 	        else if (parameter.getName().equals("outputCharset"))
 	        {
-	        	this.outputCharset = parameter.getValue();
+	        	setOutputCharset(parameter.getValue());
 	        }
 	        else if (parameter.getName().equals("-doNotPreCompileJavaSource"))
 	        {
