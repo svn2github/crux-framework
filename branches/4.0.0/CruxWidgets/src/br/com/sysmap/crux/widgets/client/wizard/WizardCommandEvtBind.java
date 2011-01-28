@@ -15,31 +15,18 @@
  */
 package br.com.sysmap.crux.widgets.client.wizard;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public class WizardCommandEvtBind implements EvtProcessor<HasWizardCommandHandlers<?>>
+public class WizardCommandEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onCommand";
-
-	/**
-	 * @param element
-	 * @param widget
-	 */
-	public void bindEvent(CruxMetaDataElement element, HasWizardCommandHandlers<?> widget)
-	{
-		final Event commandEvent = EvtBind.getWidgetEvent(element, EVENT_NAME);
-		if (commandEvent != null)
-		{
-			widget.addWizardCommandEvent(commandEvent);
-		}
-	}
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
@@ -48,4 +35,13 @@ public class WizardCommandEvtBind implements EvtProcessor<HasWizardCommandHandle
 	{
 		return EVENT_NAME;
 	}
+
+	@Override
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		String event = ViewFactoryCreator.createVariableName("evt");
+		
+		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+		out.println(widget+".addWizardCommandEvent("+event+");");
+    }	
 }

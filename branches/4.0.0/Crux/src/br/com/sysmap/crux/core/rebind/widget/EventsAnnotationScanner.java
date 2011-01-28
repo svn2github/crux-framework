@@ -126,7 +126,7 @@ class EventsAnnotationScanner
         }
         catch (Exception e)
         {
-        	throw new CruxGeneratorException();//TODO message;
+        	throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingEvtBinder());
         }
 		
 		return new EventCreator()

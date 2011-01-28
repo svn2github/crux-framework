@@ -15,16 +15,16 @@
  */
 package br.com.sysmap.crux.widgets.client.decoratedbutton;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.gwt.rebind.FocusWidgetFactory;
 
 /**
  * Factory for Decorated Button widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="decoratedButton", library="widgets")
+@DeclarativeFactory(id="decoratedButton", library="widgets", targetWidget=DecoratedButton.class)
 public class DecoratedButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> implements HasTextFactory<WidgetCreatorContext>
 {
 }

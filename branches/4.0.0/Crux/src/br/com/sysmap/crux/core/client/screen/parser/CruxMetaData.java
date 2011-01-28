@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.core.client.screen.parser;
 
-import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.Map;
 
 import com.google.gwt.core.client.JavaScriptException;
@@ -64,13 +63,6 @@ public class CruxMetaData extends JavaScriptObject
 	/**
 	 * @return
 	 */
-	public final native Array<CruxMetaDataElement> getElementsMetaData()/*-{
-		return this['elements'];
-	}-*/;
-	
-	/**
-	 * @return
-	 */
 	public final native String getScreenId()/*-{
 		return this['id'];
 	}-*/;
@@ -81,5 +73,4 @@ public class CruxMetaData extends JavaScriptObject
 	public final native Map<String> getLazyDependencies()/*-{
 		return this['lazyDeps'];
 	}-*/;
-	
 }

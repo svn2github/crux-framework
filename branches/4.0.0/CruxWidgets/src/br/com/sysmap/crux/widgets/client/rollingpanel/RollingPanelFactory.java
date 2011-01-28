@@ -15,17 +15,12 @@
  */
 package br.com.sysmap.crux.widgets.client.rollingpanel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import org.json.JSONObject;
+
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
@@ -36,9 +31,16 @@ import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Widget;
 
 class RollingPanelContext extends WidgetCreatorContext
 {
@@ -54,22 +56,24 @@ class RollingPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="rollingPanel", library="widgets")
-public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPanelContext>
-       implements HasHorizontalAlignmentFactory<RollingPanel, RollingPanelContext>, 
-                  HasVerticalAlignmentFactory<RollingPanel, RollingPanelContext>
+@DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=RollingPanel.class)
+public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
+       implements HasHorizontalAlignmentFactory<RollingPanelContext>, 
+                  HasVerticalAlignmentFactory<RollingPanelContext>
 {
-
 	@Override
-	public RollingPanel instantiateWidget(CruxMetaDataElement element, String widgetId)
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String verticalAttr = element.getProperty("vertical");
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		String verticalAttr = metaElem.optString("vertical");
 		boolean vertical = false;
 		if (!StringUtils.isEmpty(verticalAttr))
 		{
 			vertical = Boolean.parseBoolean(verticalAttr);
 		}
-		return new RollingPanel(vertical);
+		out.println(className + " " + varName+" = new "+className+"("+vertical+");");
+		return varName;
 	}
 
 	@Override
@@ -84,9 +88,9 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPane
 		@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
 		@TagAttribute(value="spacing", type=Integer.class)
 	})
-	public void processAttributes(RollingPanelContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 
 	}
 	
@@ -94,21 +98,21 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPane
 	@TagChildren({
 		@TagChild(RollingPanelProcessor.class)
 	})		
-	public void processChildren(RollingPanelContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanel, RollingPanelContext> 
+	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanelContext> 
 	{
 		@Override
 		@TagChildren({
 			@TagChild(RollingCellProcessor.class),
 			@TagChild(VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(RollingPanelContext context) throws InterfaceConfigException  {}
+		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException  {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
-	public static class RollingCellProcessor extends WidgetChildProcessor<RollingPanel, RollingPanelContext>
+	public static class RollingCellProcessor extends WidgetChildProcessor<RollingPanelContext>
 	{
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("height"),
@@ -119,7 +123,7 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPane
 		@TagChildren({
 			@TagChild(value=VerticalWidgetProcessor.class)
 		})		
-		public void processChildren(RollingPanelContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException 
 		{
 			context.height = context.readChildProperty("height");
 			context.width = context.readChildProperty("width");
@@ -129,31 +133,32 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanel, RollingPane
 	}
 		
 	@TagChildAttributes(type=AnyWidget.class)
-	public static class VerticalWidgetProcessor extends WidgetChildProcessor<RollingPanel, RollingPanelContext> 
+	public static class VerticalWidgetProcessor extends WidgetChildProcessor<RollingPanelContext> 
 	{
 		@Override
-		public void processChildren(RollingPanelContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
 		{
-			Widget child = createChildWidget(context.getChildElement());
-			RollingPanel rootWidget = context.getWidget();
-			rootWidget.add(child);
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+child+");");
 
 			if (!StringUtils.isEmpty(context.height))
 			{
-				rootWidget.setCellHeight(child, context.height);
+				out.println(rootWidget+".setCellHeight("+child+", "+EscapeUtils.quote(context.height)+");");
 			}
 			if (!StringUtils.isEmpty(context.horizontalAlignment))
 			{
-				rootWidget.setCellHorizontalAlignment(child, 
-					  AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.ALIGN_DEFAULT));
+				out.println(rootWidget+".setCellHorizontalAlignment("+child+", "+ 
+						AlignmentAttributeParser.getHorizontalAlignment(context.horizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
 			}
 			if (!StringUtils.isEmpty(context.verticalAlignment))
 			{
-				rootWidget.setCellVerticalAlignment(child, AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment));
+				out.println(rootWidget+".setCellVerticalAlignment("+child+", "+ 
+						AlignmentAttributeParser.getVerticalAlignment(context.verticalAlignment)+");");
 			}
 			if (!StringUtils.isEmpty(context.width))
 			{
-				rootWidget.setCellWidth(child, context.width);
+				out.println(rootWidget+".setCellWidth("+child+", "+EscapeUtils.quote(context.width)+");");
 			}
 			
 			context.height = null;

@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.rebind.widget;
 import java.util.List;
 
 import br.com.sysmap.crux.core.client.collection.FastMap;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ViewFactory;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -59,7 +60,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
-		sourceWriter.println("public void createView(String screenId){ ");
+		sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
 		sourceWriter.indent();
 
 		List<Screen> screens = getScreens();
@@ -110,7 +111,8 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				ViewFactory.class.getCanonicalName(),
 				StringUtils.class.getCanonicalName(),
 				com.google.gwt.user.client.ui.Widget.class.getCanonicalName(), 
-				WidgetCreatorContext.class.getCanonicalName()
+				WidgetCreatorContext.class.getCanonicalName(), 
+				InterfaceConfigException.class.getCanonicalName()
 		};
 		return imports;
 	}

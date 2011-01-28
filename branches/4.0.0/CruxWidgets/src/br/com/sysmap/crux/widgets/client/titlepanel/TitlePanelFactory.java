@@ -15,20 +15,13 @@
  */
 package br.com.sysmap.crux.widgets.client.titlepanel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 /**
  * Factory for Title Panel widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="titlePanel", library="widgets")
-public class TitlePanelFactory extends AbstractTitlePanelFactory<TitlePanel>
+@DeclarativeFactory(id="titlePanel", library="widgets", targetWidget=TitlePanel.class)
+public class TitlePanelFactory extends AbstractTitlePanelFactory
 {
-	@Override
-	public TitlePanel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new TitlePanel();
-	}	
 }

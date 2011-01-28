@@ -13,6 +13,5 @@ public class Events
 	public static final String ROW_RENDER = "onrowrender";
 	public static final String BEFORE_ROW_SELECT = "onbeforerowselect";
 	
-	public static final String PAGE = "onpage";
 	//TODO - Gesse - Remover esta classe inteira
 }

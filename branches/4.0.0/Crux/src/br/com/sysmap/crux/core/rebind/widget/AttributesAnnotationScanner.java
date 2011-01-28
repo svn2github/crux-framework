@@ -146,7 +146,7 @@ class AttributesAnnotationScanner
         }
         catch (Exception e)
         {
-	        throw new CruxGeneratorException(e);//TODO message
+	        throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingAttributeProcessor(), e);
         }
 		
 		return doCreateAttributeProcessorWithParser(attrName, method, processor);
@@ -173,7 +173,7 @@ class AttributesAnnotationScanner
                     }
                     catch (Exception e)
                     {
-            	        throw new CruxGeneratorException(e);//TODO message
+            	        throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName), e);
                     }
 				}
 			}

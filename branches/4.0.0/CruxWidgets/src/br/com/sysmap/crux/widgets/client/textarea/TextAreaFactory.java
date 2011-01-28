@@ -15,24 +15,24 @@
  */
 package br.com.sysmap.crux.widgets.client.textarea;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.TextBoxBaseFactory;
 
 /**
  * Factory for TextArea widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="textArea", library="widgets")
-public class TextAreaFactory extends TextBoxBaseFactory<TextArea> 
+@DeclarativeFactory(id="textArea", library="widgets", targetWidget=TextArea.class)
+public class TextAreaFactory extends TextBoxBaseFactory
 {	
 	@Override
 	@TagAttributes({
@@ -40,23 +40,17 @@ public class TextAreaFactory extends TextBoxBaseFactory<TextArea>
 		@TagAttribute(value="visibleLines", type=Integer.class),
 		@TagAttribute(value="maxLength", type=Integer.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
-	}
-
-	@Override
-	public TextArea instantiateWidget(CruxMetaDataElement element, String widgetId) 
-	{
-		return new TextArea();
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(InnerTextProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", widgetProperty="value")
-	public static class InnerTextProcessor extends TextChildProcessor<TextArea, WidgetCreatorContext> {}	
+	public static class InnerTextProcessor extends TextChildProcessor<WidgetCreatorContext> {}	
 }

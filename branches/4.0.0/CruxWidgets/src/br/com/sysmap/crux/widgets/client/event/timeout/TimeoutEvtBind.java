@@ -15,51 +15,43 @@
  */
 package br.com.sysmap.crux.widgets.client.event.timeout;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.bind.EvtBind;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-import br.com.sysmap.crux.widgets.client.event.Events;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * TODO - Gesse - Comment this
  * @author Gesse S. F. Dafe
  */
-public class TimeoutEvtBind extends EvtBind
+public class TimeoutEvtBind
 {
-	/**
-	 * @param childElement
-	 * @param widget
-	 */
-	public static void bindEventForChildTag(CruxMetaDataElement childElement, HasTimeoutHandlers widget)
-	{
-		final String time = childElement.getProperty("time");
-		String execute = childElement.getProperty("execute");
-		
-		if(time != null && execute != null)
-		{
-			final Event timeoutEvent = br.com.sysmap.crux.core.client.event.Events.getEvent(Events.TIMEOUT, execute);
-			
-			if(timeoutEvent != null)
-			{
-				widget.addTimeoutHandler(new TimeoutHandler()
-				{
-					/**
-					 * @see br.com.sysmap.crux.widgets.client.event.timeout.TimeoutHandler#onTimeout(br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvent)
-					 */
-					public void onTimeout(TimeoutEvent event)
-					{
-						br.com.sysmap.crux.core.client.event.Events.callEvent(timeoutEvent, event);					
-					}
+	private static final String EVENT_NAME = "onTimeout";
 
-					/**
-					 * @see br.com.sysmap.crux.widgets.client.event.timeout.TimeoutHandler#getScheduledTime()
-					 */
-					public long getScheduledTime()
-					{
-						return Long.parseLong(time);
-					}
-				});
-			}
-		}
+	/**
+	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 */
+	public static String getEventName()
+	{
+		return EVENT_NAME;
 	}
+
+
+    public static void processEvent(SourcePrinter out, String eventValue, String time, String widget, String widgetId)
+    {
+		if(time != null && eventValue != null)
+		{
+			String event = ViewFactoryCreator.createVariableName("evt");
+
+			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
+			out.println(widget+".addTimeoutHandler(new "+TimeoutHandler.class.getCanonicalName()+"(){");
+			out.println("public void onTimeout("+TimeoutEvent.class.getCanonicalName()+" event){");
+			out.println("Events.callEvent("+event+", event);");
+			out.println("}");
+			out.println("public long getScheduledTime(){");
+			out.println("return "+Long.parseLong(time)+";");
+			out.println("}");
+
+			out.println("});");
+		}
+    }	
 }

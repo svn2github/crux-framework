@@ -18,7 +18,7 @@ package br.com.sysmap.crux.core.rebind.scanner.screen;
 import java.io.InputStream;
 import java.util.Set;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -30,17 +30,17 @@ public interface ScreenResourceResolver
 	 * Gets the resource for a given screenId
 	 * @param id
 	 * @return
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
-	InputStream getScreenResource(String screenId) throws InterfaceConfigException;
+	InputStream getScreenResource(String screenId) throws CruxGeneratorException;
 	
 	/**
 	 * Gets the resource for a given screenId, the result must be a valid XML (escaped correctly)
 	 * @param id
 	 * @return
-	 * @throws InterfaceConfigException 
+	 * @throws CruxGeneratorException 
 	 */
-	InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException;
+	InputStream getScreenXMLResource(String screenId) throws CruxGeneratorException;
 
 	/**
 	 * List all Crux screen IDs

@@ -15,9 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.titlepanel;
 
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
@@ -25,6 +22,9 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProc
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
 import br.com.sysmap.crux.widgets.client.decoratedpanel.AbstractDecoratedPanelFactory;
 

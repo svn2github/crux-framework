@@ -16,14 +16,6 @@
 package br.com.sysmap.crux.widgets.client.wizard;
 
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
@@ -33,6 +25,14 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 
 import com.google.gwt.core.client.GWT;
 

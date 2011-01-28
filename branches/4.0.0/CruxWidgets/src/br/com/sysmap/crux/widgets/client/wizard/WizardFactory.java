@@ -16,16 +16,6 @@
 package br.com.sysmap.crux.widgets.client.wizard;
 
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.event.Event;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.event.bind.EvtBind;
@@ -39,6 +29,16 @@ import br.com.sysmap.crux.core.rebind.widget.creator.children.AllChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.FinishEvtBind;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
@@ -63,7 +63,7 @@ class WizardContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante -
  *
  */
-@DeclarativeFactory(id="wizard", library="widgets")
+@DeclarativeFactory(id="wizard", library="widgets", targetWidget=Wizard.class)
 public class WizardFactory extends WidgetCreator<Wizard<?>, WizardContext>
 {
 	private WizardInstantiator instantiator = GWT.create(WizardInstantiator.class);

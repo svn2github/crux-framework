@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.filter;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
@@ -29,6 +25,10 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
@@ -36,7 +36,7 @@ import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
  * Factory for Filter widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="filter", library="widgets")
+@DeclarativeFactory(id="filter", library="widgets", targetWidget=Filter.class)
 public class FilterFactory extends CompositeFactory<WidgetCreatorContext> 
 	   implements HasAnimationFactory<WidgetCreatorContext>, HasTextFactory<WidgetCreatorContext>, 
 	              HasValueChangeHandlersFactory<WidgetCreatorContext>, HasSelectionHandlersFactory<WidgetCreatorContext>,

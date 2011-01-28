@@ -28,5 +28,5 @@ public interface ViewFactory
 	 * Create the view for the informed screenId
 	 * @param screenId - the page 
 	 */
-	void createView(String screenId);
+	void createView(String screenId) throws InterfaceConfigException;
 }

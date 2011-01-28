@@ -15,16 +15,16 @@
  */ 
 package br.com.sysmap.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 import br.com.sysmap.crux.widgets.client.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
 
@@ -32,7 +32,7 @@ import br.com.sysmap.crux.widgets.client.event.OkEvtBind;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="confirm", library="widgets")
+@DeclarativeFactory(id="confirm", library="widgets", targetWidget=Confirm.class)
 public class ConfirmFactory extends WidgetCreator<WidgetCreatorContext> implements HasAnimationFactory<WidgetCreatorContext>
 {
 	@Override

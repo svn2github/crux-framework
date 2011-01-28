@@ -15,11 +15,11 @@
  */
 package br.com.sysmap.crux.widgets.client.select;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.AbstractListBoxFactory;
 import br.com.sysmap.crux.gwt.rebind.ListBoxContext;
 
@@ -27,22 +27,16 @@ import br.com.sysmap.crux.gwt.rebind.ListBoxContext;
  * Represents a List Box component
  * @author Thiago Bustamante
  */
-@DeclarativeFactory(id="singleSelect", library="widgets")
-public class SingleSelectFactory extends AbstractListBoxFactory<SingleSelect>
+@DeclarativeFactory(id="singleSelect", library="widgets", targetWidget=SingleSelect.class)
+public class SingleSelectFactory extends AbstractListBoxFactory
 {
 	@Override
 	@TagChildren({
 		@TagChild(SelectItemsProcessor.class)
 	})
-	public void processChildren(ListBoxContext context) throws InterfaceConfigException {}	
+	public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException {}	
 	
-	@Override
-	public SingleSelect instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new SingleSelect();
-	}
-	
-	public static class SelectItemsProcessor extends ItemsProcessor<SingleSelect>
+	public static class SelectItemsProcessor extends ItemsProcessor
 	{		
 	}
 }

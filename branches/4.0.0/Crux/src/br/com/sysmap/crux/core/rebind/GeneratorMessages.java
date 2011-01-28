@@ -247,12 +247,30 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[viewFactory 004] - Error retrieveing widgetFactory for type {0}.")
 	String viewFactoryErrorRetrievingWidgetFactory(String widgetType);
 
-	@DefaultServerMessage("[viewFactory 005] - The element must contain at least one child.")
+	@DefaultServerMessage("[widgetCreator 001] - The element must contain at least one child.")
 	String widgetCreatorEnsureChildrenEmpty();
 
-	@DefaultServerMessage("[viewFactory 006] - The element must contain a text node child.")
+	@DefaultServerMessage("[widgetCreator 002] - The element must contain a text node child.")
 	String widgetCreatorEnsureTextChildEmpty();
 
-	@DefaultServerMessage("[viewFactory 007] - The element must contain an inner HTML.")
+	@DefaultServerMessage("[widgetCreator 003] - The element must contain an inner HTML.")
 	String widgetCreatorEnsureHtmlChildEmpty();
+
+	@DefaultServerMessage("[widgetCreator 004] - Error reading factory declaration.")
+	String widgetCreatorErrorReadingFactoryDeclaration();
+
+	@DefaultServerMessage("[widgetCreator 005] - Error creating factory context.")
+	String widgetCreatorErrorCreatingContext();
+
+	@DefaultServerMessage("[widgetCreator 006] - Can not find ChildProcessor for :{0}.")
+	String widgetCreatorCanNotFindProcessor(String childName);
+
+	@DefaultServerMessage("[widgetCreator 007] - Error creating AttibuteProcessor.")
+	String widgetCreatorErrorCreatingAttributeProcessor();
+
+	@DefaultServerMessage("[widgetCreator 008] - Error running attribute processor for attribute :{0}.")
+	String widgetCreatorRunningAttributeProcessor(String attrName);
+
+	@DefaultServerMessage("[widgetCreator 008] - Error creating evtBinder.")
+	String widgetCreatorErrorCreatingEvtBinder();
 }

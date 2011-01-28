@@ -56,6 +56,9 @@ public interface ClientMessages extends Messages
 	// screen
 	@DefaultMessage("[screen 001] - The id attribute is required for CRUX Screens.")
 	String screenFactoryScreenIdRequired();
+	
+	@DefaultMessage("[screen 002] - Error creating view: ")
+	String screenFactoryErrorCreatingView();
 
 	//  widget
 	@DefaultMessage("[widget 002] - The widget ''{0}'' does not implement HasWidgets and can not contains any other widget.")
@@ -94,5 +97,4 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("[crux 001] - Crux Engine is already initialized.")
 	String cruxAlreadyInitializedError();
-
 }

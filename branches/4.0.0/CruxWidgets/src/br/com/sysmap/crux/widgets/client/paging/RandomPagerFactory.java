@@ -15,17 +15,12 @@
  */
 package br.com.sysmap.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 /**
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="randomPager", library="widgets")
-public class RandomPagerFactory extends AbstractPagerFactory<RandomPager>
+@DeclarativeFactory(id="randomPager", library="widgets", targetWidget=RandomPager.class)
+public class RandomPagerFactory extends AbstractPagerFactory
 {
-	@Override
-	protected RandomPager createPagerInstance()
-	{
-		return new RandomPager();
-	}	
 }

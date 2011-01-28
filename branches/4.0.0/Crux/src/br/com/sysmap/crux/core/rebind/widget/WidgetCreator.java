@@ -336,7 +336,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		{
 			return declarativeFactory.library()+"_"+declarativeFactory.id();
 		}
-		return null;//TODO throw new CruxGeneratorException(); message
+		throw new CruxGeneratorException(messages.widgetCreatorErrorReadingFactoryDeclaration()); 
 	}
 	
 	
@@ -446,11 +446,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{   
 		try
         {
+			//XXX: java does not keep generic information on runtime.
 	        return (C) __contextInstance.getClass().newInstance();
         }
         catch (Exception e)
         {
-        	throw new CruxGeneratorException(e);//TODO message
+        	throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingContext(), e);
         }
 	}
 	

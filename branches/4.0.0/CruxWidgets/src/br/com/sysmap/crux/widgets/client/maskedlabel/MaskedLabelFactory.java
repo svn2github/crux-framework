@@ -15,16 +15,13 @@
  */
 package br.com.sysmap.crux.widgets.client.maskedlabel;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
@@ -33,13 +30,18 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="maskedLabel", library="widgets")
+@DeclarativeFactory(id="maskedLabel", library="widgets", targetWidget=MaskedLabel.class)
 public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext> 
 				implements HasDirectionFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>, 
 						   HasAllMouseHandlersFactory<WidgetCreatorContext>, 
@@ -47,22 +49,36 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 				           HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, 
 				           HasHorizontalAlignmentFactory<WidgetCreatorContext>
 {
-	@Override
-	public MaskedLabel instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	/**
+	 * @param metaElem
+	 * @param widgetId
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String formatter = element.getProperty("formatter");
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+
+		String formatter = metaElem.optString("formatter");
 		if (formatter != null && formatter.length() > 0)
 		{
-			Formatter fmt = Screen.getFormatter(formatter);
-			if (fmt == null)
-			{
-				throw new InterfaceConfigException(WidgetMsgFactory.getMessages().maskedLabelFormatterNotFound(formatter));
-			}
-			return new MaskedLabel(fmt);
-		}
-		throw new InterfaceConfigException(WidgetMsgFactory.getMessages().maskedLabelFormatterRequired());	
-	}
+			String fmt = createVariableName("fmt");
 
+			//TODO: could be smarter and does not use a registereFormatters.... 
+			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = Screen.getFormatter("+EscapeUtils.quote(formatter)+");");
+			out.println("if (fmt == null){");
+			out.println("throw new InterfaceConfigException("+EscapeUtils.quote(WidgetMsgFactory.getMessages().maskedLabelFormatterNotFound(formatter))+");");
+			out.println("}");
+			out.println(className + " " + varName+" = new "+className+"("+fmt+");");
+		}	
+		else
+		{
+			throw new CruxGeneratorException(WidgetMsgFactory.getMessages().maskedLabelFormatterRequired());	
+		}
+		return varName;
+	}	
+	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="text", processor=TextAttributeParser.class)
@@ -70,21 +86,21 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="formatter", required=true)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class TextAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class TextAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue)
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
         {
-			MaskedLabel widget = context.getWidget();
-			widget.setUnformattedValue(widget.getFormatter().unformat(propertyValue));
+			String widget = context.getWidget();
+			out.println(widget+".setUnformattedValue("+widget+".getFormatter().unformat("+EscapeUtils.quote(propertyValue)+"));");
         }
 	}
 }

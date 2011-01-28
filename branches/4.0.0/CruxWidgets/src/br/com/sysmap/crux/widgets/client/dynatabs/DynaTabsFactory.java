@@ -15,14 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -30,6 +22,14 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvtBind;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvtBind;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
@@ -38,7 +38,7 @@ import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvtBind;
  * Factory for Decorated Button widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="dynaTabs", library="widgets")
+@DeclarativeFactory(id="dynaTabs", library="widgets", targetWidget=DynaTabs.class)
 public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override

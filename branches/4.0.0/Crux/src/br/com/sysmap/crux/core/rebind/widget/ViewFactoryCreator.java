@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ViewFactory;
@@ -177,7 +178,7 @@ public class ViewFactoryCreator
     protected void generateProxyMethods(SourcePrinter printer) throws CruxGeneratorException
     {
     	createPostProcessingScope();
-    	printer.println("public void create(){");
+    	printer.println("public void create() throws InterfaceConfigException{");
 		
 		JSONArray metaData = this.screen.getMetaData();
 		createScreen(printer);
@@ -355,25 +356,12 @@ public class ViewFactoryCreator
     		br.com.sysmap.crux.core.client.event.Event.class.getCanonicalName(),
     		Events.class.getCanonicalName(),
     		ScreenLoadEvent.class.getCanonicalName(), 
-    		Panel.class.getCanonicalName()
+    		Panel.class.getCanonicalName(), 
+    		InterfaceConfigException.class.getCanonicalName()
 		};
 	    return imports;
 	}
 	
-	/**
-	 * Retrieves the JClassType object related to the given class.
-	 * 
-	 * @param clazz
-	 * @return
-	 *
-	JClassType getJClassType(Class<?> clazz)
-	{
-		return context.getTypeOracle().findType(clazz.getCanonicalName());
-	}
-	//TODO: remover isso
-	*/
-    
-    
 	/**
 	 * Retrieves the screen variable name
 	 * @return

@@ -15,90 +15,96 @@
  */
 package br.com.sysmap.crux.widgets.client.timer;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import org.json.JSONObject;
+
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvtBind;
 
 /**
  * Factory for Timer widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="timer", library="widgets")
-public class TimerFactory extends WidgetCreator<Timer, WidgetCreatorContext>
+@DeclarativeFactory(id="timer", library="widgets", targetWidget=Timer.class)
+public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
-	public Timer instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	@Override
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+
 		long initial = 0;
 		boolean regressive = false;
 		boolean start = false;
 		
-		String strInitial = element.getProperty("initial");  
+		String strInitial = metaElem.optString("initial");  
 		if(strInitial != null && strInitial.trim().length() > 0)
 		{
 			initial = Long.parseLong(strInitial);
 		}
 		
-		String strRegressive = element.getProperty("regressive");  
+		String strRegressive = metaElem.optString("regressive");  
 		if(strRegressive != null && strRegressive.trim().length() > 0)
 		{
 			regressive = Boolean.parseBoolean(strRegressive);
 		}
 		
-		String strStart = element.getProperty("start");  
+		String strStart = metaElem.optString("start");  
 		if(strStart != null && strStart.trim().length() > 0)
 		{
 			start = Boolean.parseBoolean(strStart);
 		}
+
+		String pattern = metaElem.optString("pattern");  
 		
-		return new Timer(initial, regressive, element.getProperty("pattern"), start);
+		out.println(className + " " + varName+" = new "+className+"("+initial+", "+regressive+", "+EscapeUtils.quote(pattern)+", "+start+");");
+		return varName;
 	}
 	
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="start", type=Boolean.class, defaultValue="false"),
 		@TagAttributeDeclaration(value="initial", type=Integer.class, defaultValue="0"),
-		@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false")
+		@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false"),
+		@TagAttributeDeclaration(value="pattern", required=true)
 	})
-	@TagAttributes({
-		@TagAttribute(value="pattern")
-	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(TimerChildrenProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
-	public static class TimerChildrenProcessor extends WidgetChildProcessor<Timer, WidgetCreatorContext>
+	public static class TimerChildrenProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
 			@TagAttributeDeclaration(value="execute", required=true)
 		})
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
-			Timer rootWidget = context.getWidget();
-			TimeoutEvtBind.bindEventForChildTag(context.getChildElement(), rootWidget);
+			String rootWidget = context.getWidget();
+			TimeoutEvtBind.processEvent(out, context.readChildProperty("execute"), context.readChildProperty("time"), rootWidget, context.getWidgetId());
 		}
 	}
 }

@@ -15,13 +15,13 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -32,7 +32,7 @@ public interface HasHTMLFactory<C extends WidgetCreatorContext> extends HasTextF
 	@TagAttributes({
 		@TagAttribute(value="_html", supportsI18N=true, xsdIgnore=true, processor=HTMLParser.class)
 	})	
-	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

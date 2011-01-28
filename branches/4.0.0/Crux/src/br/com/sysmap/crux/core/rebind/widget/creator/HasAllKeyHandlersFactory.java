@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyDownEvtBind;
@@ -35,5 +35,5 @@ public interface HasAllKeyHandlersFactory<C extends WidgetCreatorContext>
 		@TagEvent(KeyPressEvtBind.class),
 		@TagEvent(KeyDownEvtBind.class)
 	})	
-	void processEvents(SourcePrinter out, C context) throws InterfaceConfigException;
+	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

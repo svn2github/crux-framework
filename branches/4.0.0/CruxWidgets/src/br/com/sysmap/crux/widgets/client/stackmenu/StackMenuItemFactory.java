@@ -15,37 +15,40 @@
  */
 package br.com.sysmap.crux.widgets.client.stackmenu;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import org.json.JSONObject;
+
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 /**
  * Factory for Stack Menu
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="stackMenuItem", library="widgets")
-public class StackMenuItemFactory extends WidgetCreator<StackMenuItem, WidgetCreatorContext>
-       implements HasClickHandlersFactory<StackMenuItem, WidgetCreatorContext>
+@DeclarativeFactory(id="stackMenuItem", library="widgets", targetWidget=StackMenuItem.class)
+public class StackMenuItemFactory extends WidgetCreator<WidgetCreatorContext>
+       implements HasClickHandlersFactory<WidgetCreatorContext>
 {
 	@Override
-	public StackMenuItem instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String label = element.getProperty("label"); 
-		StackMenuItem stackMenuItem = new StackMenuItem(ScreenFactory.getInstance().getDeclaredMessage(label));
-		stackMenuItem.getElement().setId(widgetId);
-		return stackMenuItem;
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		String label = metaElem.optString("label"); 
+		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(getDeclaredMessage(label))+");");
+		return varName;
 	}
 	
 	@Override
@@ -55,26 +58,26 @@ public class StackMenuItemFactory extends WidgetCreator<StackMenuItem, WidgetCre
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="label", supportsI18N=true, required=true)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(StackMenuItemProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
-	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuItem, WidgetCreatorContext>
+	public static class StackMenuItemProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
-			StackMenuItem rootWidget = context.getWidget();
-			rootWidget.add(childWidget);
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+childWidget+");");
 		}
 	}
 }

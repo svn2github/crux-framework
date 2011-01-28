@@ -15,61 +15,69 @@
  */
 package br.com.sysmap.crux.widgets.client.scrollbanner;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import org.json.JSONObject;
+
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 /**
  * Factory for Scroll Banner widget
  * @author Gesse S. F. Dafe
  */
-@br.com.sysmap.crux.core.client.declarative.DeclarativeFactory(id="scrollBanner", library="widgets")
-public class ScrollBannerFactory extends WidgetCreator<ScrollBanner, WidgetCreatorContext>
+@br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory(id="scrollBanner", library="widgets", targetWidget=ScrollBanner.class)
+public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
-	public ScrollBanner instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String period = element.getProperty("messageScrollingPeriod");
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+
+		String period = metaElem.optString("messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)
 		{
-			return new ScrollBanner(Integer.parseInt(period));
+			out.println(className + " " + varName+" = new "+className+"("+Integer.parseInt(period)+");");
 		}
-		
-		return new ScrollBanner();
+		else
+		{
+			out.println(className + " " + varName+" = new "+className+"();");
+		}
+		return varName;
 	}
-	
+
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("messageScrollingPeriod")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	@Override
 	@TagChildren({
 		@TagChild(MessageProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
-	public static class MessageProcessor extends WidgetChildProcessor<ScrollBanner, WidgetCreatorContext>
+	public static class MessageProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
-			String message = ScreenFactory.getInstance().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
-			ScrollBanner rootWidget = context.getWidget();
-			rootWidget.addMessage(message);
+			String message = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".addMessage("+EscapeUtils.quote(message)+");");
 		}
 	}
 }

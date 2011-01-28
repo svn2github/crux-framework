@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator.children;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
@@ -25,5 +25,5 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  */
 public interface HasPostProcessor<C extends WidgetCreatorContext>
 {
-	void postProcessChildren(SourcePrinter out, C context) throws InterfaceConfigException;
+	void postProcessChildren(SourcePrinter out, C context) throws CruxGeneratorException;
 }

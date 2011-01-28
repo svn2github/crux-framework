@@ -15,17 +15,12 @@
  */
 package br.com.sysmap.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 
 /**
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="sequentialPager", library="widgets")
-public class SequentialPagerFactory extends AbstractPagerFactory<SequentialPager>
+@DeclarativeFactory(id="sequentialPager", library="widgets", targetWidget=SequentialPager.class)
+public class SequentialPagerFactory extends AbstractPagerFactory
 {
-	@Override
-	protected SequentialPager createPagerInstance()
-	{
-		return new SequentialPager();
-	}
 }

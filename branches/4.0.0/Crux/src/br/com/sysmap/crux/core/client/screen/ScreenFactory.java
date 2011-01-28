@@ -127,6 +127,13 @@ public class ScreenFactory
 		{
 			logger.info(Crux.getMessages().screenFactoryCreatingView(screen.getIdentifier()));
 		}
-		this.viewFactory.createView(screen.getIdentifier());
+		try
+        {
+	        this.viewFactory.createView(screen.getIdentifier());
+        }
+        catch (InterfaceConfigException e)
+        {
+        	Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryErrorCreatingView(), e);
+        }
 	}
 }

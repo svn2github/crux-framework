@@ -21,8 +21,8 @@ import java.util.Set;
 
 import br.com.sysmap.crux.classpath.URLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
@@ -36,7 +36,7 @@ public class ScreenResourceResolverImpl implements ScreenResourceResolver
 {
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
-	public InputStream getScreenResource(String screenId) throws InterfaceConfigException
+	public InputStream getScreenResource(String screenId) throws CruxGeneratorException
 	{
 		try
 		{
@@ -85,7 +85,7 @@ public class ScreenResourceResolverImpl implements ScreenResourceResolver
 		}
 		catch (Exception e)
 		{
-			throw new InterfaceConfigException(messages.screenResourceResolverFindResourceError(screenId, e.getMessage()), e);
+			throw new CruxGeneratorException(messages.screenResourceResolverFindResourceError(screenId, e.getMessage()), e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class ScreenResourceResolverImpl implements ScreenResourceResolver
 		return new ScreenResourcesScannerImpl().getPages(module);
 	}
 
-	public InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException
+	public InputStream getScreenXMLResource(String screenId) throws CruxGeneratorException
     {
 	    return getScreenResource(screenId);
     }

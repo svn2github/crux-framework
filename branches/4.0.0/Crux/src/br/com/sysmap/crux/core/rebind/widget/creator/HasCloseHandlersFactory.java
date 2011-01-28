@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.CloseEvtBind;
@@ -31,5 +31,5 @@ public interface HasCloseHandlersFactory<C extends WidgetCreatorContext>
 	@TagEvents({
 		@TagEvent(CloseEvtBind.class)
 	})	
-	void processEvents(SourcePrinter out, C context) throws InterfaceConfigException;
+	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

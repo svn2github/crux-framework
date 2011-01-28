@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignment;
@@ -34,5 +34,5 @@ extends HasHorizontalAlignmentFactory<C>
 		@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 
 			      processor=AutoHorizontalAlignmentAttributeParser.class)
 	})	
-	void processAttributes(SourcePrinter out, C context) throws InterfaceConfigException;
+	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

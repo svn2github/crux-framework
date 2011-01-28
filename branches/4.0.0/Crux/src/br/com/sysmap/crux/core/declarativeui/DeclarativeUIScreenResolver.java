@@ -24,8 +24,8 @@ import java.util.Set;
 
 import br.com.sysmap.crux.classpath.URLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolver;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
@@ -51,7 +51,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	/**
 	 * 
 	 */
-	public InputStream getScreenResource(String screenId, boolean escapeXML, boolean generateWidgetsMetadata) throws InterfaceConfigException
+	public InputStream getScreenResource(String screenId, boolean escapeXML, boolean generateWidgetsMetadata) throws CruxGeneratorException
 	{
 		try
 		{
@@ -101,7 +101,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 		}
 		catch (Exception e)
 		{
-			throw new InterfaceConfigException(messages.declarativeUIScreenResolverError(screenId, e.getMessage()), e);
+			throw new CruxGeneratorException(messages.declarativeUIScreenResolverError(screenId, e.getMessage()), e);
 		}
 	}
 
@@ -121,12 +121,12 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	public InputStream getScreenXMLResource(String screenId) throws InterfaceConfigException
+	public InputStream getScreenXMLResource(String screenId) throws CruxGeneratorException
     {
 	    return getScreenResource(screenId, true, true);
     }
 
-	public InputStream getScreenResource(String screenId) throws InterfaceConfigException
+	public InputStream getScreenResource(String screenId) throws CruxGeneratorException
     {
 	    return getScreenResource(screenId, false, false);
     }

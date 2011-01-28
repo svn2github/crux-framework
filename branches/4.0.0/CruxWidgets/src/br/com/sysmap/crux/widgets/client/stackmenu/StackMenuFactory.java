@@ -15,43 +15,37 @@
  */
 package br.com.sysmap.crux.widgets.client.stackmenu;
 
-import br.com.sysmap.crux.core.client.declarative.TagChild;
-import br.com.sysmap.crux.core.client.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagChildren;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 /**
  * Factory for Stack Menu
  * @author Gesse S. F. Dafe
  */
-@br.com.sysmap.crux.core.client.declarative.DeclarativeFactory(id="stackMenu", library="widgets")
-public class StackMenuFactory extends WidgetCreator<StackMenu, WidgetCreatorContext>
+@br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory(id="stackMenu", library="widgets", targetWidget=StackMenu.class)
+public class StackMenuFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	@Override
-	public StackMenu instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new StackMenu();
-	}
-	
 	@Override
 	@TagChildren({
 		@TagChild(StackMenuItemProcessor.class)
 	})
-	public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException {}
+	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
-	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenu, WidgetCreatorContext>
+	public static class StackMenuItemProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		public void processChildren(WidgetCreatorContext context) throws InterfaceConfigException 
+		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			StackMenuItem childWidget = (StackMenuItem)createChildWidget(context.getChildElement());
-			StackMenu rootWidget = context.getWidget();
-			rootWidget.add(childWidget);
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String rootWidget = context.getWidget();
+			out.println(rootWidget+".add("+childWidget+");");
 		}
 	}
 }

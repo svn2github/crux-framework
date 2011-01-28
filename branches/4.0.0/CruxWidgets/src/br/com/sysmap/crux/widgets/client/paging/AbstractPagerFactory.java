@@ -15,94 +15,57 @@
  */
 package br.com.sysmap.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
-import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.paging.PageEvtBind;
-
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Gesse S. F. Dafe
  */
-public abstract class AbstractPagerFactory<T extends AbstractPager> extends WidgetCreator<T, WidgetCreatorContext>
+public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
-	 */
-	public T instantiateWidget(CruxMetaDataElement elem, String widgetId) throws InterfaceConfigException
-	{
-		return createPagerInstance();
-	}
-
-	/**
-	 * Creates a new instance of the Pager
-	 * @return
-	 */
-	protected abstract T createPagerInstance();
-
-	@SuppressWarnings("unchecked")
 	@Override
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("pageable"),
+		@TagAttributeDeclaration(value="pageable", required=true),
 		@TagAttributeDeclaration(value="enabled", type=Boolean.class)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	
-		final T widget = (T)context.getWidget();
-		final String pageableId = context.readWidgetProperty("pageable");
-		final String strEnabled = context.readWidgetProperty("enabled");
-		
-		addScreenLoadedHandler(
-				
-			new ScreenLoadHandler()
+		String widget = context.getWidget();
+		String pageableId = context.readWidgetProperty("pageable");
+		String strEnabled = context.readWidgetProperty("enabled");
+
+		if(pageableId != null && Screen.contains(pageableId))
+		{
+			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") Screen.get("+EscapeUtils.quote(pageableId)+"));");
+			if(strEnabled != null && strEnabled.length() > 0)
 			{
-				public void onLoad(ScreenLoadEvent screenLoadEvent)
-				{					
-					Widget pageable = null;
-					if(pageableId != null)
-					{
-						pageable = Screen.get(pageableId);
-					}
-					
-					if(pageable != null)
-					{
-						widget.setPageable((Pageable) pageable);
-						if(strEnabled != null && strEnabled.length() > 0)
-						{
-							widget.setEnabled(Boolean.parseBoolean(strEnabled));
-						}
-					}
-					else
-					{
-						throw new RuntimeException(WidgetMsgFactory.getMessages().pagerNoPageableSet()); 
-					}							
-				}				
-			}		
-		);
+				printlnPostProcessing(widget+".setEnabled("+Boolean.parseBoolean(strEnabled)+");");
+			}
+		}
+		else
+		{
+			throw new CruxGeneratorException(WidgetMsgFactory.getMessages().pagerNoPageableSet()); 
+		}							
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onPage")
+	@TagEvents({
+		@TagEvent(PageEvtBind.class)
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		CruxMetaDataElement element = context.getWidgetElement();
-		T widget = (T)context.getWidget();
-		PageEvtBind.bindEvent(element, widget);
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 }

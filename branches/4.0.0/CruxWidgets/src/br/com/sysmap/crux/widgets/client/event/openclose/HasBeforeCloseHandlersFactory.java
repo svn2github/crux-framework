@@ -15,10 +15,10 @@
  */
 package br.com.sysmap.crux.widgets.client.event.openclose;
 
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 /**

@@ -33,7 +33,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.declarativeui.template.TemplatesPreProcessor;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
@@ -187,9 +186,9 @@ public class CruxToHtmlTransformer
 	 * Loads Crux page
 	 * @param fileName
 	 * @return
-	 * @throws InterfaceConfigException
+	 * @throws HTMLBuilderException
 	 */
-	private static Document loadCruxPage(InputStream file) throws InterfaceConfigException
+	private static Document loadCruxPage(InputStream file) throws HTMLBuilderException
 	{
 		try
 		{
@@ -198,7 +197,7 @@ public class CruxToHtmlTransformer
 		}
 		catch (Exception e)
 		{
-			throw new InterfaceConfigException(e.getMessage(), e);
+			throw new HTMLBuilderException(e.getMessage(), e);
 		}
 	}
 	

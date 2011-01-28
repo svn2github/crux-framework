@@ -15,16 +15,13 @@
  */
 package br.com.sysmap.crux.widgets.client.maskedtextbox;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
@@ -36,36 +33,55 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="maskedTextBox", library="widgets")
-public class MaskedTextBoxFactory extends WidgetCreator<MaskedTextBox, WidgetCreatorContext> 
-       implements HasDirectionFactory<MaskedTextBox, WidgetCreatorContext>, HasNameFactory<MaskedTextBox, WidgetCreatorContext>, 
-                  HasChangeHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasValueChangeHandlersFactory<MaskedTextBox, WidgetCreatorContext>,
-                  HasClickHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasAllFocusHandlersFactory<MaskedTextBox, WidgetCreatorContext>,
-                  HasAllKeyHandlersFactory<MaskedTextBox, WidgetCreatorContext>, HasAllMouseHandlersFactory<MaskedTextBox, WidgetCreatorContext>, 
-                  HasDoubleClickHandlersFactory<MaskedTextBox, WidgetCreatorContext>
+@DeclarativeFactory(id="maskedTextBox", library="widgets", targetWidget=MaskedTextBox.class)
+public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext> 
+       implements HasDirectionFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
+                  HasChangeHandlersFactory<WidgetCreatorContext>, HasValueChangeHandlersFactory<WidgetCreatorContext>,
+                  HasClickHandlersFactory<WidgetCreatorContext>, HasAllFocusHandlersFactory<WidgetCreatorContext>,
+                  HasAllKeyHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
+                  HasDoubleClickHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	public MaskedTextBox instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
+	/**
+	 * @param metaElem
+	 * @param widgetId
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
-		String formatter = element.getProperty("formatter");
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+
+		String formatter = metaElem.optString("formatter");
 		if (formatter != null && formatter.length() > 0)
 		{
-			Formatter fmt = Screen.getFormatter(formatter);
-			if (fmt == null)
-			{
-				throw new InterfaceConfigException(WidgetMsgFactory.getMessages().maskedTextBoxFormatterNotFound(formatter));
-			}
-			return new MaskedTextBox(fmt);
-		}
-		throw new InterfaceConfigException(WidgetMsgFactory.getMessages().maskedTextBoxFormatterRequired());
-	}
+			String fmt = createVariableName("fmt");
 
+			//TODO: could be smarter and does not use a registereFormatters.... 
+			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = Screen.getFormatter("+EscapeUtils.quote(formatter)+");");
+			out.println("if (fmt == null){");
+			out.println("throw new CruxGeneratorException("+EscapeUtils.quote(WidgetMsgFactory.getMessages().maskedLabelFormatterNotFound(formatter))+");");
+			out.println("}");
+			out.println(className + " " + varName+" = new "+className+"("+fmt+");");
+		}	
+		else
+		{
+			throw new CruxGeneratorException(WidgetMsgFactory.getMessages().maskedTextBoxFormatterRequired());	
+		}
+		return varName;
+	}	
+	
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="readOnly", type=Boolean.class),
@@ -78,21 +94,21 @@ public class MaskedTextBoxFactory extends WidgetCreator<MaskedTextBox, WidgetCre
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="formatter", required=true)
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class ValueAttributeParser implements AttributeProcessor<WidgetCreatorContext>
+	public static class ValueAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public void processAttribute(WidgetCreatorContext context, String propertyValue)
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
         {
-			MaskedTextBox widget = context.getWidget();
-			widget.setUnformattedValue(widget.getFormatter().unformat(propertyValue));
+			String widget = context.getWidget();
+			out.println(widget+".setUnformattedValue("+widget+".getFormatter().unformat("+EscapeUtils.quote(propertyValue)+"));");
         }
 	}
 }

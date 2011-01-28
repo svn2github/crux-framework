@@ -15,14 +15,14 @@
  */
 package br.com.sysmap.crux.widgets.client.transferlist;
 
-import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.client.declarative.TagAttribute;
-import br.com.sysmap.crux.core.client.declarative.TagAttributes;
-import br.com.sysmap.crux.core.client.declarative.TagEvent;
-import br.com.sysmap.crux.core.client.declarative.TagEvents;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
 
@@ -30,15 +30,9 @@ import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvtBind;
  * Factory for Transfer List widget
  * @author Gesse S. F. Dafe
  */
-@DeclarativeFactory(id="transferList", library="widgets")
-public class TransferListFactory extends CompositeFactory<TransferList, WidgetCreatorContext>
+@DeclarativeFactory(id="transferList", library="widgets", targetWidget=TransferList.class)
+public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 {
-	@Override
-	public TransferList instantiateWidget(CruxMetaDataElement element, String widgetId) throws InterfaceConfigException
-	{
-		return new TransferList();
-	}
-
 	@Override
 	@TagAttributes({
 		@TagAttribute(value="leftToRightButtonText", supportsI18N=true),
@@ -49,18 +43,17 @@ public class TransferListFactory extends CompositeFactory<TransferList, WidgetCr
 		@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
 		@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
 	})
-	public void processAttributes(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processAttributes(context);
+		super.processAttributes(out, context);
 	}
-	
 	
 	@Override
 	@TagEvents({
 		@TagEvent(BeforeMoveItemsEvtBind.class)
 	})
-	public void processEvents(WidgetCreatorContext context) throws InterfaceConfigException
+	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		super.processEvents(context);
+		super.processEvents(out, context);
 	}
 }
