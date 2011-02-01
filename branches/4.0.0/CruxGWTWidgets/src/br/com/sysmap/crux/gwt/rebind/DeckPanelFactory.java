@@ -71,5 +71,10 @@ public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
-		
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

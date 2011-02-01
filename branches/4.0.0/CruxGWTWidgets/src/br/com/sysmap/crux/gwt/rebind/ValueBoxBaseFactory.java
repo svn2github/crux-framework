@@ -72,5 +72,11 @@ public abstract class ValueBoxBaseFactory extends FocusWidgetFactory<WidgetCreat
 				break;
 			}
 		}
-	}	
+	}
+	
+	@Override
+	public WidgetCreatorContext instantiateContext()
+	{
+	    return new WidgetCreatorContext();
+	}
 }

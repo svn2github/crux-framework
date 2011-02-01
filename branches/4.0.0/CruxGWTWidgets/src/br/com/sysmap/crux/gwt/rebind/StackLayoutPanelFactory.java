@@ -211,4 +211,10 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 			}
 		}
 	}
+	
+	@Override
+	public StackLayoutContext instantiateContext()
+	{
+	    return new StackLayoutContext();
+	}
 }

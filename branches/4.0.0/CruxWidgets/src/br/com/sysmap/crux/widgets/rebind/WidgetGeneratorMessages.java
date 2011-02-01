@@ -31,4 +31,24 @@ public interface WidgetGeneratorMessages
 
 	@DefaultServerMessage("[wizardDataGenerator 002] - Error generating wizardData object: {0}. Error: {1}")
 	String errorGeneratingRegisteredWizardData(String wizardData, String localizedMessage);
+
+	@DefaultServerMessage("[tabInvoker 001] - Error for generating invoker wrapper: Invalid Method signature: {0}. A valid signature must have the form [methodName][OnTab][tabId]")
+	String tabsControllerInvalidSignature(String signature);
+
+	@DefaultServerMessage("[grid 001] - Grid {0} has no column.")
+	String gridDoesNotHaveColumns(String gridId);
+	
+	@DefaultServerMessage("[maskedLabel 001] - The attribute formatter is required for MaskedLabel.")
+	String maskedLabelFormatterRequired();	
+
+	@DefaultServerMessage("[maskedLabel 002] - The formatter {0} was not found on this screen.")
+	String maskedLabelFormatterNotFound(String formatter);
+
+	@DefaultServerMessage("[maskedTextBox] - The attribute formatter is required for MaskedTextBox.")
+	String maskedTextBoxFormatterRequired();
+
+	@DefaultServerMessage("[pager 001] - No pageable widget set for this pager.")
+	String pagerNoPageableSet();
 }
+
+

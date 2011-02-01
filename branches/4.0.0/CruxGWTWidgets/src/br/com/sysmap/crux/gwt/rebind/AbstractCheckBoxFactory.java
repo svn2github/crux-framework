@@ -47,4 +47,11 @@ public abstract class AbstractCheckBoxFactory extends FocusWidgetFactory<WidgetC
 	{
 		super.processAttributes(out, context);
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
+	
 }

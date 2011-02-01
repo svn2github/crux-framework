@@ -31,4 +31,10 @@ public abstract class ButtonBaseFactory extends FocusWidgetFactory<WidgetCreator
 	{
 		super.processAttributes(out, context);
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

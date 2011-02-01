@@ -37,4 +37,9 @@ public abstract class AbstractLabelFactory extends WidgetCreator<WidgetCreatorCo
        			  HasDoubleClickHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
                   HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>
 {
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

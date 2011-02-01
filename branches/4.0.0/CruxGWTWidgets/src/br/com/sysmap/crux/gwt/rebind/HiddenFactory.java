@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.Hidden;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
@@ -25,6 +23,8 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+
+import com.google.gwt.user.client.ui.Hidden;
 
 /**
  * Represents a HiddenFactory component
@@ -42,4 +42,10 @@ public class HiddenFactory extends WidgetCreator<WidgetCreatorContext> implement
 	{
 		super.processAttributes(out, context);
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

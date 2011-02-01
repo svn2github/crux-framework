@@ -45,14 +45,12 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  */
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
+	//TODO remover esse currentId e usar o Id do GWT
 	private static int currentId = 0;
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
-	
-	//XXX: java does not keep generic information on runtime.
-	public C __contextInstance;
 	
 	/**
 	 * Retrieve the widget child element name
@@ -326,6 +324,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getCanonicalName();
     }
 	
+	public boolean containsWidget(String widgetId)
+	{
+		return factory.containsWidget(widgetId);
+	}
+	
 	/**
 	 * @return
 	 */
@@ -441,25 +444,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-    protected C instantiateContext()
-	{   
-		try
-        {
-			//XXX: java does not keep generic information on runtime.
-	        return (C) __contextInstance.getClass().newInstance();
-        }
-        catch (Exception e)
-        {
-        	throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingContext(), e);
-        }
-	}
-	
-	//XXX: We can not assign to contextInstance field if We does not know the type previously.
-	protected void set__ContextInstance(C contextInstance)
-    {
-    	this.__contextInstance = contextInstance;
-    }
+    public abstract C instantiateContext();
 
 	/**
 	 * 

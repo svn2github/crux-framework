@@ -16,7 +16,6 @@
 package br.com.sysmap.crux.core.rebind.widget;
 
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -254,12 +253,13 @@ public class ViewFactoryCreator
 		}
 		
 		String widget;
-		if (mustRenderLazily(widgetType, metaElem, widgetId))
+		//TODO nao colocar na lista de lazyDeps qdo addToScreen for false
+		if (addToScreen && mustRenderLazily(widgetType, metaElem, widgetId))
 		{
-			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
-			printer.println(screenVariable+".addWidget("+EscapeUtils.quote(lazyPanelId)+", "+widget+");");
 			lazyPanels.add(lazyPanelId);
+			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
+			printer.println(screenVariable+".addWidget("+EscapeUtils.quote(lazyPanelId)+", "+widget+");");
 		}
 		else
 		{
@@ -432,6 +432,15 @@ public class ViewFactoryCreator
 		}
 		return false;
 	}	
+	
+	/**
+	 * @param widgetId
+	 * @return
+	 */
+	boolean containsWidget(String widgetId)
+	{
+		return screen.getWidget(widgetId) != null;
+	}
 	
 	/**
 	 * Print code that will be executed after the viewFactory completes the widgets construction.
@@ -768,9 +777,6 @@ public class ViewFactoryCreator
 	        	factories.put(widgetType, factory);
 	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetFactory);
 				factoryHelpers.put(widgetType, creatorHelper);
-				Method setContextInstanceMethod = getSetContextInstanceMethod(widgetFactory);
-				//XXX: We can not assign to contextInstance field if We does not know the type previously.
-				setContextInstanceMethod.invoke(factory, new Object[]{creatorHelper.getContextType().newInstance()});
 	        }
         }
         catch (Exception e)
@@ -779,27 +785,6 @@ public class ViewFactoryCreator
         }
 		return factories.get(widgetType);
 	}
-	
-	//XXX: We can not assign to contextInstance field if We does not know the type previously.
-	private Method getSetContextInstanceMethod(Class<?> widgetFactory)
-	{
-		Method[] declaredMethods = widgetFactory.getDeclaredMethods();
-		
-		for (Method method : declaredMethods)
-        {
-	        if (method.getName().equals("set__ContextInstance"))
-	        {
-	        	return method;
-	        }
-        }
-		Class<?> superclass = widgetFactory.getSuperclass();
-		if (!superclass.equals(Object.class))
-		{
-			return getSetContextInstanceMethod(superclass);
-		}
-		return null;
-	}
-	
 	
     /**
      * Returns a helper object to create the code of the widgets of the given type. 
@@ -872,7 +857,7 @@ public class ViewFactoryCreator
 			if (!metaElem.optBoolean("visible", true))
 			{
 				String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
-				return !lazyPanels .contains(lazyPanelId);
+				return !lazyPanels.contains(lazyPanelId);
 			}
 		}
 		return false;

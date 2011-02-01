@@ -25,9 +25,6 @@ public interface WidgetMessages extends Messages
 	@DefaultMessage("[crux-widgets 002] - formattable widget must use setUnformattedValue value instead of setValue.")
 	String formattableWidgetMustUseSetUnformattedValue();
 
-	@DefaultMessage("[crux-widgets 003] - The attribute formatter is required for MaskedTextBox.")
-	String maskedTextBoxFormatterRequired();
-
 	@DefaultMessage("[crux-widgets 004] - The formatter {0} was not found on this screen.")
 	String maskedTextBoxFormatterNotFound(String formatter);
 	
@@ -46,20 +43,8 @@ public interface WidgetMessages extends Messages
 	@DefaultMessage("[crux-widgets 012] - It is not possible remove a grid row.")
 	String gridDoesNotAllowRemoveRow();
 
-	@DefaultMessage("[crux-widgets 013] - The formatter {0} was not found on this screen.")
-	String maskedLabelFormatterNotFound(String formatter);
-
-	@DefaultMessage("[crux-widgets 014] - The attribute formatter is required for MaskedLabel.")
-	String maskedLabelFormatterRequired();	
-	
 	@DefaultMessage("[crux-widgets 015] - Random paging is only supported in Grids whose DataSources are instances of MeasurablePagedDataSource.")
 	String gridRandomPagingNotSupported();
-	
-	@DefaultMessage("[crux-widgets 016] - No pageable widget set for this pager.")
-	String pagerNoPageableSet();
-
-	@DefaultMessage("[crux-widgets 017] - Grid {0} has no column.")
-	String gridDoesNotHaveColumns(String gridId);
 
 	@DefaultMessage("< Back")
 	String wizardBackCommand();	
@@ -106,9 +91,6 @@ public interface WidgetMessages extends Messages
 	@DefaultMessage("[crux-widgets 028] - Error runnig the wizard command {0}. Message: {1}.")
 	String wizardCommandError(String commandId, String message);
 
-	@DefaultMessage("[crux-widgets 029] - Error for generating invoker wrapper: Invalid Method signature: {0}. A valid signature must have the form [methodName][OnTab][tabId]")
-	String tabsControllerInvalidSignature(String signature);
-
 	@DefaultMessage("[crux-widgets 030] - It is not possible to remove a row from a Grid.")
 	String errorItsNotPossibleToRemoveARowmFromAGrid();
 
@@ -117,6 +99,9 @@ public interface WidgetMessages extends Messages
 
 	@DefaultMessage("[crux-widgets 032] - Wizard does not have any WizardData assigned.")
 	String wizardNoSerializerAssigned();
+
+	@DefaultMessage("[crux-widgets 033] - No pageable widget set for this pager.")
+	String pagerNoPageableSet();
 
 	
 }

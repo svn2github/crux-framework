@@ -101,4 +101,10 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 			out.println(context.getWidget()+".setCaptionHTML("+EscapeUtils.quote(title)+");");
 		}
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

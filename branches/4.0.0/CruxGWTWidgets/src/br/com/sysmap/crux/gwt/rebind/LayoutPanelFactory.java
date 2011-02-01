@@ -235,4 +235,10 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelCo
 			return constraintsCommand;
 		}
 	}
+
+	@Override
+    public LayoutPanelContext instantiateContext()
+    {
+	    return new LayoutPanelContext();
+    }
 }

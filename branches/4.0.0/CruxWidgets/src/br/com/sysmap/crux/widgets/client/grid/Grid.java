@@ -16,12 +16,9 @@
 package br.com.sysmap.crux.widgets.client.grid;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.Array;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
 import br.com.sysmap.crux.core.client.datasource.HasDataSource;
@@ -36,8 +33,6 @@ import br.com.sysmap.crux.core.client.datasource.RemoteDataSourceCallback;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.screen.ScreenFactory;
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
@@ -76,7 +71,6 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	private boolean ascendingSort;
 	private Pager pager; 
 	private RowSelectionModel rowSelectionModel;
-	private long generatedWidgetId = 0;
 	private String emptyDataFilling;
 	private String defaultSortingColumn;
 	private SortingType defaultSortingType;
@@ -166,7 +160,6 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void loadData()
 	{
 		if(!this.loaded)
@@ -307,7 +300,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 				{
 					wrapLine = false;
 					truncate = true;
-					widget = createWidget((WidgetColumnDefinition) column, row);
+					widget = createWidget((WidgetColumnDefinition) column);
 				}
 				
 				row.setCell(createCell(widget, wrapLine, truncate), key);
@@ -326,75 +319,21 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	/**
 	 * Creates a widget
 	 * @param column
-	 * @param row
 	 * @return
 	 * @throws InterfaceConfigException 
 	 */
-	private Widget createWidget(WidgetColumnDefinition column, DataRow row)
+	private Widget createWidget(WidgetColumnDefinition column)
 	{
 		try
 		{
-			CruxMetaDataElement template = column.getWidgetTemplate();
-			assert(template.containsKey("id")): Crux.getMessages().screenFactoryWidgetIdRequired();
-			String id = template.getProperty("id"); 
-			setRandomId(template);
-			ScreenFactory factory = ScreenFactory.getInstance();
-			Widget newWidget = factory.newWidget(template, template.getProperty("id"), factory.getMetaElementType(template), false);
-			template.setProperty("id", id);
-			return newWidget;
+			return column.getWidgetColumnCreator().createWidgetForColumn();
 		}
-		catch (InterfaceConfigException e)
+		catch (Exception e)
 		{
+			//TODO: trocar todos os GWT.log por uso de loggers do GWT 2.1
 			GWT.log(e.getMessage(), e);
 			throw new RuntimeException(WidgetMsgFactory.getMessages().errorCreatingWidgetForColumn(column.getKey()));
 		}
-	}
-
-	/**
-	 * Generates and sets a random ID on the given element and its children.
-	 * @param template
-	 */
-	private void setRandomId(CruxMetaDataElement template)
-	{
-		String templateId;
-		if (template.containsKey("id"))
-		{
-			templateId = template.getProperty("id");
-		}
-		else
-		{
-			templateId = "";
-		}
-		
-		template.setProperty("id", templateId + "_" + generateWidgetIdSufix());
-		
-		Array<CruxMetaDataElement> children = template.getChildren();
-		if(children != null)
-		{
-			int length = children.size();
-			for(int i = 0; i < length; i++)
-			{
-				CruxMetaDataElement child = children.get(i);
-				if(child != null)
-				{
-					setRandomId(child);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private long generateWidgetIdSufix()
-	{
-		if(generatedWidgetId == 0)
-		{
-			generatedWidgetId = new Date().getTime();
-		}
-		
-		return ++generatedWidgetId;
 	}
 
 	private Widget createDataLabel(DataColumnDefinition dataColumn, String key)

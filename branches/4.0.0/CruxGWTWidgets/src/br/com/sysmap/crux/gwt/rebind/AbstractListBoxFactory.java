@@ -76,4 +76,10 @@ public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxC
 			context.index += 1;
 		}
 	}
+	
+	@Override
+	public ListBoxContext instantiateContext()
+	{
+	    return new ListBoxContext();
+	}
 }

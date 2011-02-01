@@ -943,5 +943,11 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 
 	public static enum ControlPosition{east, north, south, west}	
 	
-	public static enum ControlVerticalAlign{bottom, middle, top}	
+	public static enum ControlVerticalAlign{bottom, middle, top}
+	
+	public static class NoData implements Serializable
+	{
+        private static final long serialVersionUID = -5573450207151298732L;
+	}
+	
 }

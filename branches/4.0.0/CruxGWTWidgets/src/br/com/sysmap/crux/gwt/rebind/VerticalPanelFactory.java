@@ -89,5 +89,11 @@ public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
 			super.processChildren(out, context);
 			context.child = null;
 		}
-	}	
+	}
+
+	@Override
+    public CellPanelContext instantiateContext()
+    {
+	    return new CellPanelContext();
+    }	
 }

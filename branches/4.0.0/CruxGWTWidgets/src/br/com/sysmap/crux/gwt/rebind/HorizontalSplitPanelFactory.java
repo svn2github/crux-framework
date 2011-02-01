@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 @DeclarativeFactory(id="horizontalSplitPanel", library="gwt", targetWidget=HorizontalSplitPanel.class)
 public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
-
 	@Override
 	@TagChildren({
 		@TagChild(LeftProcessor.class),
@@ -68,4 +67,11 @@ public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorConte
 	
 	@TagChildAttributes(widgetProperty="rightWidget")
 	public static class RightWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
+	
 }

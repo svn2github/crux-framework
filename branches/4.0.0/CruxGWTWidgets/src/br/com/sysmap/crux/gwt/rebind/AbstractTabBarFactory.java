@@ -181,4 +181,10 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		private KeyPressEvtBind keyPressEvtBind = new KeyPressEvtBind();
 		private KeyDownEvtBind keyDownEvtBind = new KeyDownEvtBind();
 	}
+	
+	@Override
+	public TabBarContext instantiateContext()
+	{
+	    return new TabBarContext();
+	}
 }

@@ -144,4 +144,10 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 			context.child = null;
 		}
 	}
+
+	@Override
+    public DockPanelContext instantiateContext()
+    {
+	    return new DockPanelContext();
+    }
 }

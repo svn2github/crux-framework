@@ -56,4 +56,10 @@ public class FrameFactory extends WidgetCreator<WidgetCreatorContext>
 			out.println(widget+".setUrl(Screen.appendDebugParameters("+EscapeUtils.quote(attributeValue)+"));");
         }
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

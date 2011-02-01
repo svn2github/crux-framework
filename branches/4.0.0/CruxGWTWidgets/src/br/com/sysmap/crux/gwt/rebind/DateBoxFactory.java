@@ -166,4 +166,10 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 		
 		return format;
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

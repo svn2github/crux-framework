@@ -42,4 +42,10 @@ public class SimpleCheckBoxFactory extends FocusWidgetFactory<WidgetCreatorConte
 	{
 		super.processAttributes(out, context);
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

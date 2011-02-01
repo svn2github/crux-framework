@@ -155,4 +155,10 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 			}
 		}
 	}
+	
+	@Override
+	public CustomButtonContext instantiateContext()
+	{
+	    return new CustomButtonContext();
+	}
 }

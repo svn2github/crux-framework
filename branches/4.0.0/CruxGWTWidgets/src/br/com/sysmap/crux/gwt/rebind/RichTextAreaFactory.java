@@ -257,6 +257,11 @@ implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<Ric
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
-	public static class ContentProcessor extends WidgetChildProcessor<RichTextAreaContext> {}	
-	
+	public static class ContentProcessor extends WidgetChildProcessor<RichTextAreaContext> {}
+
+	@Override
+    public RichTextAreaContext instantiateContext()
+    {
+	    return new RichTextAreaContext();
+    }	
 }

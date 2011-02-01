@@ -246,4 +246,10 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 			context.itemStack.addFirst(currentItem);
 		}
 	}
+
+	@Override
+    public TreeContext instantiateContext()
+    {
+	    return new TreeContext();
+    }
 }

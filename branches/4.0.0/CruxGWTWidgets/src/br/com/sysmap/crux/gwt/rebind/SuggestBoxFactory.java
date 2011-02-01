@@ -95,4 +95,10 @@ public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext>
 	{
 		super.processEvents(out, context);		
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

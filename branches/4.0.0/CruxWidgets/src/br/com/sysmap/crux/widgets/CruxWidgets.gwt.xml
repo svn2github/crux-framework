@@ -58,9 +58,6 @@
     <generate-with class="br.com.sysmap.crux.widgets.rebind.wizard.WizardDataSerializerGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.widgets.client.wizard.WizardDataSerializer" />
 	</generate-with>
-    <generate-with class="br.com.sysmap.crux.widgets.rebind.wizard.WizardInstantiatorGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.widgets.client.wizard.WizardInstantiator" />
-	</generate-with>
 	<replace-with
     	class="br.com.sysmap.crux.widgets.client.util.FrameUtils.FrameAccessorIE">
     	<when-type-is class="br.com.sysmap.crux.widgets.client.util.FrameUtils.FrameAccessorImpl" />

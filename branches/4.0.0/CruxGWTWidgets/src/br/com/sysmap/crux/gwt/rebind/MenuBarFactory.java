@@ -254,4 +254,10 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 				widget+".addItem(new "+menuItemClass+"("+EscapeUtils.quote(context.caption)+", "+context.isHtml+", (Command)null));");
 		return menuItem;
 	}
+
+	@Override
+    public MenuBarContext instantiateContext()
+    {
+	    return new MenuBarContext();
+    }
 }

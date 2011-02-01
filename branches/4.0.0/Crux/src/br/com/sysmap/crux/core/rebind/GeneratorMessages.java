@@ -259,16 +259,13 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[widgetCreator 004] - Error reading factory declaration.")
 	String widgetCreatorErrorReadingFactoryDeclaration();
 
-	@DefaultServerMessage("[widgetCreator 005] - Error creating factory context.")
-	String widgetCreatorErrorCreatingContext();
-
-	@DefaultServerMessage("[widgetCreator 006] - Can not find ChildProcessor for :{0}.")
+	@DefaultServerMessage("[widgetCreator 005] - Can not find ChildProcessor for :{0}.")
 	String widgetCreatorCanNotFindProcessor(String childName);
 
-	@DefaultServerMessage("[widgetCreator 007] - Error creating AttibuteProcessor.")
+	@DefaultServerMessage("[widgetCreator 006] - Error creating AttibuteProcessor.")
 	String widgetCreatorErrorCreatingAttributeProcessor();
 
-	@DefaultServerMessage("[widgetCreator 008] - Error running attribute processor for attribute :{0}.")
+	@DefaultServerMessage("[widgetCreator 007] - Error running attribute processor for attribute :{0}.")
 	String widgetCreatorRunningAttributeProcessor(String attrName);
 
 	@DefaultServerMessage("[widgetCreator 008] - Error creating evtBinder.")

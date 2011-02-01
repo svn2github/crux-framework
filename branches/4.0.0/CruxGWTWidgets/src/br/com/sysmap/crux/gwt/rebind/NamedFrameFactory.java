@@ -77,4 +77,9 @@ public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
         }
 	}
 	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

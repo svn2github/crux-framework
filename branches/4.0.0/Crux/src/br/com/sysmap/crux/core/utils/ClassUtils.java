@@ -370,7 +370,7 @@ public class ClassUtils
 		}
 		return null;
 	}
-
+//TODO remover essa classe quase toda... os metodos estao errados e duplicados
 	/**
 	 * @param factoryType
 	 * @return

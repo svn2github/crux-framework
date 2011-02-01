@@ -15,10 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.FlowPanel;
-
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * 
@@ -28,4 +28,9 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 @DeclarativeFactory(id="flowPanel", library="gwt", targetWidget=FlowPanel.class)
 public class FlowPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

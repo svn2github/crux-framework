@@ -130,4 +130,10 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 			printlnPostProcessing(widget+".ensureVisible("+targetWidget+");");
 		}
 	}	
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

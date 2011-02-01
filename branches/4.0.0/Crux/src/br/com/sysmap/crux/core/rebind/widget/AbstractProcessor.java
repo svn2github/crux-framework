@@ -21,7 +21,7 @@ package br.com.sysmap.crux.core.rebind.widget;
  */
 public abstract class AbstractProcessor 
 {
-	private WidgetCreator<?> widgetCreator;
+	protected WidgetCreator<?> widgetCreator;
 	
 	/**
 	 * @param widgetCreator
@@ -37,5 +37,13 @@ public abstract class AbstractProcessor
 	protected void printlnPostProcessing(String s)
 	{
 		widgetCreator.printlnPostProcessing(s);
+	}
+	
+	/**
+	 * @return
+	 */
+	protected WidgetCreator<?> getWidgetCreator()
+	{
+		return widgetCreator;
 	}
 }

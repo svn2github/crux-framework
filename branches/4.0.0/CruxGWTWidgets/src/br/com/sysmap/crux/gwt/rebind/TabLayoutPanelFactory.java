@@ -205,4 +205,10 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 			}
 		}
 	}
+
+	@Override
+    public TabLayoutPanelContext instantiateContext()
+    {
+	    return new TabLayoutPanelContext();
+    }
 }

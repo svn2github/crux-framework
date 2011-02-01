@@ -15,10 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.client.grid;
 
-import br.com.sysmap.crux.core.client.screen.parser.CruxMetaDataElement;
-
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * TODO - Gesse - Comment this
@@ -26,16 +25,28 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
  */
 public class WidgetColumnDefinition extends ColumnDefinition
 {
-	CruxMetaDataElement widgetTemplate;
+	private WidgetColumnCreator creator;
+	
 
-	public WidgetColumnDefinition(String label, String width, CruxMetaDataElement widgetTemplate, boolean visible, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public WidgetColumnDefinition(String label, String width, WidgetColumnCreator creator, 
+								 boolean visible, HorizontalAlignmentConstant horizontalAlign, 
+								 VerticalAlignmentConstant verticalAlign)
 	{
 		super(label, width, visible, horizontalAlign, verticalAlign);
-		this.widgetTemplate = widgetTemplate;
+		this.creator = creator;
 	}
+	
+	public WidgetColumnCreator getWidgetColumnCreator()
+    {
+    	return creator;
+    }
 
-	public CruxMetaDataElement getWidgetTemplate()
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static interface WidgetColumnCreator
 	{
-		return widgetTemplate;
+		Widget createWidgetForColumn();
 	}
 }

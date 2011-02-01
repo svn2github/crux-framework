@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -101,16 +100,59 @@ public class WidgetCreatorHelper
 	 */
 	public Method getChildProcessorMethod(Class<?> childProcessor)
     {
-		Method processorMethod;
-        try
-        {
-	        processorMethod = childProcessor.getMethod("processChildren", new Class<?>[]{SourcePrinter.class, contextType});
-        }
-        catch (Exception e)
-        {
-        	processorMethod = null;
-        }
-	    return processorMethod;
+		for (Method method : childProcessor.getMethods())
+		{
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if (method.getName().equals("processChildren") && parameterTypes.length == 2)
+			{
+				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
+				{
+					return method;
+				}
+			}
+		}
+		return null;
+    }
+
+	/**
+	 * @param childProcessor
+	 * @return
+	 */
+	public Method getAttributesProcessorMethod(Class<?> childProcessor)
+    {
+		for (Method method : childProcessor.getMethods())
+		{
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if (method.getName().equals("processAttributes") && parameterTypes.length == 2)
+			{
+				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
+				{
+					return method;
+				}
+			}
+		}
+		return null;
+    }
+
+
+	/**
+	 * @param childProcessor
+	 * @return
+	 */
+	public Method getEventsProcessorMethod(Class<?> childProcessor)
+    {
+		for (Method method : childProcessor.getMethods())
+		{
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if (method.getName().equals("processEvents") && parameterTypes.length == 2)
+			{
+				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
+				{
+					return method;
+				}
+			}
+		}
+		return null;
     }
 
 	/**
@@ -122,6 +164,24 @@ public class WidgetCreatorHelper
 	    return processorMethod;
     }
 	
+	/**
+	 * @return
+	 */
+	public Method getProcessAttributesMethod()
+    {
+		Method processorMethod = getAttributesProcessorMethod(getFactoryClass());
+	    return processorMethod;
+    }
+
+	/**
+	 * @return
+	 */
+	public Method getProcessEventsMethod()
+    {
+		Method processorMethod = getEventsProcessorMethod(getFactoryClass());
+	    return processorMethod;
+    }
+
 	/**
 	 * 
 	 * @param processorClass
@@ -165,19 +225,14 @@ public class WidgetCreatorHelper
 	 */
 	private Class<?> getContextTypeFromClass()
 	{
-		Field field;
         try
         {
-	        field = factoryClass.getField("__contextInstance");
+	        Method method = factoryClass.getMethod("instantiateContext", new Class<?>[]{});
+	        return method.getReturnType();
         }
         catch (Exception e)
         {
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
         }
-		if (field == null)
-		{
-			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
-		}
-		return field.getType();
 	}	
 }

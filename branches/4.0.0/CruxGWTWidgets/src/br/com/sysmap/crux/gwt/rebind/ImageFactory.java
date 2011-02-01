@@ -83,4 +83,10 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		super.processEvents(out, context);
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

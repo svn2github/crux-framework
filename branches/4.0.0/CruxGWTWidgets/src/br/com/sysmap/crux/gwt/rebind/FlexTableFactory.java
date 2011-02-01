@@ -118,5 +118,10 @@ public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException {}
 		
 	}
-	public static class FlexWidgetProcessor extends WidgetProcessor<HTMLTableFactoryContext>{} 
+	public static class FlexWidgetProcessor extends WidgetProcessor<HTMLTableFactoryContext>{}
+	@Override
+    public HTMLTableFactoryContext instantiateContext()
+    {
+	    return new HTMLTableFactoryContext();
+    } 
 }

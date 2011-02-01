@@ -79,4 +79,10 @@ public class VerticalSplitPanelFactory extends PanelFactory<WidgetCreatorContext
 	
 	@TagChildAttributes(widgetProperty="bottomWidget")
 	public static class BottomWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
+
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

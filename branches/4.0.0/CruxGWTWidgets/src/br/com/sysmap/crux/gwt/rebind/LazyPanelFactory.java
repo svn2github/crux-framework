@@ -17,8 +17,6 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import com.google.gwt.user.client.ui.LazyPanel;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
@@ -29,6 +27,8 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+
+import com.google.gwt.user.client.ui.LazyPanel;
 
 /**
  * A Panel which content is only rendered when it becomes visible for the first time.
@@ -68,4 +68,10 @@ public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext>
 		@TagChildLazyCondition(property="visible", notEquals="true")
 	})	
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}	
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

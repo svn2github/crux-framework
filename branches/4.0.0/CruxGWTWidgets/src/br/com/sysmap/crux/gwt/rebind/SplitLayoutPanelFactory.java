@@ -110,4 +110,10 @@ public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<Spli
 			return result.toString();
 		}
 	}
+
+	@Override
+    public SplitLayoutPanelContext instantiateContext()
+    {
+	    return new SplitLayoutPanelContext();
+    }
 }

@@ -73,4 +73,10 @@ public class DatePickerFactory extends CompositeFactory<WidgetCreatorContext>
 					EscapeUtils.quote(datePattern)+").parse("+EscapeUtils.quote(currentMonth)+"));");
 		}		
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

@@ -137,4 +137,10 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 	
 	@TagChildAttributes(widgetProperty="header")
 	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
+	
+    @Override
+    public WidgetCreatorContext instantiateContext()
+    {
+        return new WidgetCreatorContext();
+    }
 }

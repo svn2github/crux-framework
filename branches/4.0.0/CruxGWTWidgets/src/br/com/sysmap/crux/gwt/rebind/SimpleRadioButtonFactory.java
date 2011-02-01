@@ -55,4 +55,9 @@ public class SimpleRadioButtonFactory extends FocusWidgetFactory<WidgetCreatorCo
 		return varName;
 	}	
 	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

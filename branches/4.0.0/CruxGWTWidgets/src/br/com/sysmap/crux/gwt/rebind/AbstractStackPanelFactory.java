@@ -100,6 +100,13 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 			context.isHtmlTitle = false;
 		}	
 	}
+	
+	@Override
+    public AbstractStackPanelFactoryContext instantiateContext()
+    {
+	    return new AbstractStackPanelFactoryContext();
+    }
+	
 }
 
 

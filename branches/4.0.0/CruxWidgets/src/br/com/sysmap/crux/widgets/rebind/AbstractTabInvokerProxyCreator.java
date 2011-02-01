@@ -18,10 +18,10 @@ package br.com.sysmap.crux.widgets.rebind;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.AbstractWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.invoker.InvokerProxyCreator;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -41,6 +41,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 @Deprecated
 public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProxyCreator
 {
+	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
 	private static final String ON_TAB_SUFIX = "OnTab";
 
 	/**
@@ -97,7 +98,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 			
 			if (tabId.length() <= ON_TAB_SUFIX.length())
 			{
-				throw new CruxGeneratorException(WidgetMsgFactory.getMessages().tabsControllerInvalidSignature(method.getReadableDeclaration())); 
+				throw new CruxGeneratorException(widgetMessages.tabsControllerInvalidSignature(method.getReadableDeclaration())); 
 			}
 			
 			tabId = toJavaName(tabId);

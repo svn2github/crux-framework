@@ -42,6 +42,12 @@ public class DecoratorPanelFactory extends PanelFactory<WidgetCreatorContext>
     {
     }
     
+    @Override
+    public WidgetCreatorContext instantiateContext()
+    {
+        return new WidgetCreatorContext();
+    }
+    
     @TagChildAttributes(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
 }

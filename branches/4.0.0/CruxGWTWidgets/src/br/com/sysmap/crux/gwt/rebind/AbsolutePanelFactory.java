@@ -89,5 +89,11 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 			context.left = null;
 			context.top = null;
 		}
-	}	
+	}
+
+	@Override
+    public AbsolutePanelContext instantiateContext()
+    {
+	    return new AbsolutePanelContext();
+    }	
 }

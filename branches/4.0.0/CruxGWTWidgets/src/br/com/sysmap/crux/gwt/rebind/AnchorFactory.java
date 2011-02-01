@@ -48,4 +48,10 @@ public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext>
 	{
 		super.processAttributes(out, context);
 	}
+
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }

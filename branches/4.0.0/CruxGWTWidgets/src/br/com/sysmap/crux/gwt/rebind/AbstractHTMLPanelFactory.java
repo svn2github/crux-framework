@@ -60,4 +60,10 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 		out.println("}");
 		out.println("});");
     }
+	
+	@Override
+	public WidgetCreatorContext instantiateContext()
+	{
+	    return new WidgetCreatorContext();
+	}
 }

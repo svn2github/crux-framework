@@ -210,4 +210,10 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		private static KeyPressEvtBind keyPressEvtBind = new KeyPressEvtBind();
 		private static KeyDownEvtBind keyDownEvtBind = new KeyDownEvtBind();
 	}
+	
+	@Override
+	public TabPanelContext instantiateContext()
+	{
+	    return new TabPanelContext();
+	}
 }

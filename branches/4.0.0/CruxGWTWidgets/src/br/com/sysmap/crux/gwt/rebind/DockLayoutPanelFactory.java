@@ -72,4 +72,10 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 	}
 	
 	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanelContext> {}
+	
+    @Override
+    public DockLayoutPanelContext instantiateContext()
+    {
+        return new DockLayoutPanelContext();
+    }
 }
