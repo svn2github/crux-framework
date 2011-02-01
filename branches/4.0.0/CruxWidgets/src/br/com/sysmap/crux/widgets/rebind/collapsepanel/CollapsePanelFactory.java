@@ -54,7 +54,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 	{
 		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		out.println(className + " " + varName+" = new "+className+"();");
+		out.println("final "+className + " " + varName+" = new "+className+"();");
 
 		String collapsible = metaElem.optString("collapsible");
 		String collapsed = metaElem.optString("collapsed");
@@ -65,7 +65,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 			out.println("private boolean loaded = false;");
 			out.println("public void onBeforeExpand("+BeforeExpandEvent.class.getCanonicalName()+" event){");
 			out.println("if (!loaded){");
-			out.println(LazyPanel.class.getCanonicalName()+"widget = ("+LazyPanel.class.getCanonicalName()+")ret.getContentWidget();");
+			out.println(LazyPanel.class.getCanonicalName()+" widget = ("+LazyPanel.class.getCanonicalName()+")"+varName+".getContentWidget();");
 			out.println("widget.ensureWidget();");
 			out.println("loaded = true;");
 			out.println("}");

@@ -114,12 +114,12 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 					}
 				}
 			}			
-			out.println(className+" "+varName+" new "+className+"("+picker+", null, "+getFormat(metaElem, widgetId)+");");
+			out.println(className+" "+varName+" = new "+className+"("+picker+", null, "+getFormat(metaElem, widgetId)+");");
 			return varName;
 		}
 		else
 		{
-			out.println(className+" "+varName+" new "+className+"();");
+			out.println(className+" "+varName+" = new "+className+"();");
 			out.println(varName+".setFormat("+getFormat(metaElem, widgetId)+");");
 			return varName;
 		}		

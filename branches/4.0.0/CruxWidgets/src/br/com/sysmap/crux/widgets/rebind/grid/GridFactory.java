@@ -15,10 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.rebind.grid;
 
-import java.util.Date;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.datasource.PagedDataSource;
@@ -97,7 +94,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			SortingType sort = SortingType.valueOf(sortingType);
 			return SortingType.class.getCanonicalName()+"."+sort.toString();
 		}
-		return "null";
+		return null;
 	}
 
 	/**
@@ -106,7 +103,12 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	 */
 	private String getSortingColumn(JSONObject gridElem)
 	{
-		return gridElem.optString("defaultSortingColumn");
+		String sort = gridElem.optString("defaultSortingColumn");
+		if (!StringUtils.isEmpty(sort))
+		{
+			return EscapeUtils.quote(sort);
+		}
+		return null;
 	}
 
 	/**
@@ -219,7 +221,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 				String className = PagedDataSource.class.getCanonicalName()+"<?>";
 				String dataSource = getWidgetCreator().createVariableName("dataSource");
 				
-				out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+dataSourceName+");");
+				out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(dataSourceName)+");");
 				String widget = context.getWidget();			
 				out.println(widget+".setDataSource("+dataSource+");");
 			}
@@ -339,8 +341,8 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 						String widgetCreator = getWidgetColumnCreator(out, colElem);
 						
 						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+WidgetColumnDefinition.class.getCanonicalName()+"("+
-								label+", "+
-								width+", "+
+								EscapeUtils.quote(label)+", "+
+								EscapeUtils.quote(width)+", "+
 								widgetCreator+", "+
 								visible+", "+
 								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_CENTER")+", "+
@@ -376,18 +378,8 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    out.println(className+" "+colDef+" = new "+className+"(){");
 	    out.println("public Widget createWidgetForColumn(){");
 	    
-	    String id = colElem.optString("id");
 	    JSONObject child = ensureFirstChild(colElem, false);
-	    setRandomId(child);
-		String childWidget = createChildWidget(out, child);
-		try
-        {
-	        child.put("id", id);
-        }
-        catch (JSONException e)
-        {
-        	throw new CruxGeneratorException(e);//TODO message
-        }
+		String childWidget = createChildWidget(out, child, false);//TODO: o parametro addoToScreen deve ser propagado para os filhos da widget criado
         out.println("return "+childWidget+";");
 	    
 	    out.println("};");
@@ -396,56 +388,6 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    return colDef;
     }
 
-	/**
-	 * @param metaElem
-	 */
-	private void setRandomId(JSONObject metaElem)
-	{
-		String templateId;
-		if (metaElem.has("id"))
-		{
-			templateId = metaElem.optString("id");
-		}
-		else
-		{
-			templateId = "";
-		}
-		
-		try
-        {
-	        metaElem.put("id", templateId + "_" + generateWidgetIdSufix());
-        }
-        catch (JSONException e)
-        {
-        	throw new CruxGeneratorException(e);//TODO message
-        }
-		
-		JSONArray children = metaElem.optJSONArray("_children");
-		if(children != null)
-		{
-			int length = children.length();
-			for(int i = 0; i < length; i++)
-			{
-				JSONObject child = children.optJSONObject(i);
-				if(child != null)
-				{
-					setRandomId(child);
-				}
-			}
-		}
-	}	
-	
-	private long generatedWidgetId = 0;	
-	private long generateWidgetIdSufix()
-	{
-		if(generatedWidgetId == 0)
-		{
-			generatedWidgetId = new Date().getTime();
-		}
-		
-		return ++generatedWidgetId;
-	}
-	
 	@Override
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="pageSize", type=Integer.class, defaultValue="8"),

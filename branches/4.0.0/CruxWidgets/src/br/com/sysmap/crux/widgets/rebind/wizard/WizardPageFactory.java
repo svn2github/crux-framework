@@ -52,7 +52,7 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 		String varName = createVariableName("widget");
 	    String wizardContextObject = metaElem.optString("wizardContextObject");
 		String className = getGenericSignature(wizardContextObject);
-		out.println(className + " " + varName+" = new "+className+"();");
+		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(wizardContextObject)+");");
 		return varName;
 	}
 

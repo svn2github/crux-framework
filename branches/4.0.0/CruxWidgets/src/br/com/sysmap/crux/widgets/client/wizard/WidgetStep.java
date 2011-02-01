@@ -96,7 +96,7 @@ public class WidgetStep<T extends Serializable> extends AbstractWidgetStep<T> im
 		return false;
 	}
 	
-	boolean addCommand(String id, String label, final Event commandEvent, int order)
+	public boolean addCommand(String id, String label, final Event commandEvent, int order)
     {
 		if (!commands.containsKey(id))
 		{

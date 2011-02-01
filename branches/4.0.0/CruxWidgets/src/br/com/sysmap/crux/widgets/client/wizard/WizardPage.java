@@ -153,7 +153,7 @@ public class WizardPage<T extends Serializable> extends AbstractWidgetStep<T>
 	 * @param commandEvent
 	 * @param order
 	 */
-	void addCommand(String id, String label, final Event commandEvent, int order)
+	public void addCommand(String id, String label, final Event commandEvent, int order)
 	{
 		WizardCommandHandler<T> handler = new WizardCommandHandler<T>()
 		{

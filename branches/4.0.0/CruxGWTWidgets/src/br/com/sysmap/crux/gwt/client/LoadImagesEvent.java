@@ -25,8 +25,7 @@ import br.com.sysmap.crux.core.client.event.CruxEvent;
  */
 public class LoadImagesEvent<T extends Widget> extends CruxEvent<T>
 {
-
-	protected LoadImagesEvent(String senderId)
+	public LoadImagesEvent(String senderId)
 	{
 		super(null, senderId);
 	}

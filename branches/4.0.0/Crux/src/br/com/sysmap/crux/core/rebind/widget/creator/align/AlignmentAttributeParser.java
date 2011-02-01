@@ -104,15 +104,15 @@ public class AlignmentAttributeParser
 
 			if (alignment.equals(VerticalAlignment.bottom))
 			{
-				return HasVerticalAlignment.class.getCanonicalName()+"ALIGN_BOTTOM";
+				return HasVerticalAlignment.class.getCanonicalName()+".ALIGN_BOTTOM";
 			}
 			else if (alignment.equals(VerticalAlignment.middle))
 			{
-				return HasVerticalAlignment.class.getCanonicalName()+"ALIGN_MIDDLE";
+				return HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE";
 			}
 			else if (alignment.equals(VerticalAlignment.top))
 			{
-				return HasVerticalAlignment.class.getCanonicalName()+"ALIGN_TOP";
+				return HasVerticalAlignment.class.getCanonicalName()+".ALIGN_TOP";
 			}
 			else
 			{
@@ -132,6 +132,6 @@ public class AlignmentAttributeParser
 	 */
 	public static String getVerticalAlignment(String align)
 	{
-		return getVerticalAlignment(align, HasVerticalAlignment.class.getCanonicalName()+"ALIGN_MIDDLE");
+		return getVerticalAlignment(align, HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE");
 	}
 }

@@ -46,11 +46,11 @@ public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		String period = metaElem.optString("messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)
 		{
-			out.println(className + " " + varName+" = new "+className+"("+Integer.parseInt(period)+");");
+			out.println("final "+className + " " + varName+" = new "+className+"("+Integer.parseInt(period)+");");
 		}
 		else
 		{
-			out.println(className + " " + varName+" = new "+className+"();");
+			out.println("final "+className + " " + varName+" = new "+className+"();");
 		}
 		return varName;
 	}

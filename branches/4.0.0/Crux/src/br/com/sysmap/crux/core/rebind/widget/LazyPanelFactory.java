@@ -17,6 +17,7 @@ package br.com.sysmap.crux.core.rebind.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.JSONObject;
@@ -95,7 +96,7 @@ public class LazyPanelFactory
 	private void generateConstructor(SourcePrinter printer, String className, String widgetId)
     {
 		printer.println("public "+className+"(){");
-		printer.println("super("+EscapeUtils.quote(widgetId)+")");
+		printer.println("super("+EscapeUtils.quote(widgetId)+");");
 		printer.println("}");
     }
 
@@ -112,9 +113,10 @@ public class LazyPanelFactory
 		printer.println("if (LogConfiguration.loggingIsEnabled()){");
 		printer.println("logger.log(Level.FINE, \"Creating ["+lazyId+"] wrapped widget...\");");
 		printer.println("}");
+		printer.println("final Screen "+factory.getScreenVariable()+" = Screen.get();");
     	
 		factory.createPostProcessingScope();
-
+		
 		String newWidget = factory.newWidget(printer, element, targetPanelId, factory.getMetaElementType(element));
 
 		factory.commitPostProcessing(printer);
@@ -123,7 +125,7 @@ public class LazyPanelFactory
 		printer.println("logger.log(Level.FINE, \"["+lazyId+"]  wrapped widget created.\");");
 		printer.println("}");
 
-		printer.println("return " + newWidget);    
+		printer.println("return " + newWidget+";");    
 		printer.println("}");    
 	}
 
@@ -143,6 +145,7 @@ public class LazyPanelFactory
 		
 		imports.add(LogConfiguration.class.getCanonicalName());
 		imports.add(Logger.class.getCanonicalName());
+		imports.add(Level.class.getCanonicalName());
 		
 	    return imports.toArray(new String[imports.size()]);
     }

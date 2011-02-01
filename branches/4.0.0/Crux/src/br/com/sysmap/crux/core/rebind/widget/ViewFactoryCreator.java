@@ -49,11 +49,13 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -353,11 +355,13 @@ public class ViewFactoryCreator
     		RootPanel.class.getCanonicalName(),
     		RootLayoutPanel.class.getCanonicalName(),
     		Element.class.getCanonicalName(),
+    		Node.class.getCanonicalName(),
     		br.com.sysmap.crux.core.client.event.Event.class.getCanonicalName(),
     		Events.class.getCanonicalName(),
     		ScreenLoadEvent.class.getCanonicalName(), 
     		Panel.class.getCanonicalName(), 
-    		InterfaceConfigException.class.getCanonicalName()
+    		InterfaceConfigException.class.getCanonicalName(), 
+    		Widget.class.getCanonicalName()
 		};
 	    return imports;
 	}
@@ -534,9 +538,9 @@ public class ViewFactoryCreator
 		String parentElement =createVariableName("parentElement");
 		String previousSibling = createVariableName("previousSibling");
 
-		printer.println("Element "+panelElement+" = ScreenFactory.getInstance().getEnclosingPanelElement("+EscapeUtils.quote(widgetId)+");");
+		printer.println("Element "+panelElement+" = ViewFactoryUtils.getEnclosingPanelElement("+EscapeUtils.quote(widgetId)+");");
 		printer.println("Element "+parentElement+" = "+panelElement+".getParentElement();");
-		printer.println("Element "+previousSibling+" = "+panelElement+".getPreviousSibling();");
+		printer.println("Node "+previousSibling+" = "+panelElement+".getPreviousSibling();");
 
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
 

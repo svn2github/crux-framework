@@ -71,7 +71,7 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 
 			//TODO: could be smarter and does not use a registereFormatters.... 
 			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = Screen.getFormatter("+EscapeUtils.quote(formatter)+");");
-			out.println("if (fmt == null){");
+			out.println("if ("+fmt+" == null){");
 			out.println("throw new InterfaceConfigException("+EscapeUtils.quote(widgetMessages.maskedLabelFormatterNotFound(formatter))+");");
 			out.println("}");
 			out.println(className + " " + varName+" = new "+className+"("+fmt+");");

@@ -46,7 +46,7 @@ public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		String varName = ViewFactoryCreator.createVariableName("namedFrame");
 		String className = NamedFrame.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"("+metaElem.optString("name")+");");
+		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(metaElem.optString("name"))+");");
 		return varName;
 	}	
 	

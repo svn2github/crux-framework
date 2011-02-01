@@ -77,7 +77,6 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	{
 		String varName = createVariableName("widget");
 		String className = Tree.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
 		
 		String eventLoadImage = metaElem.optString("onLoadImage");
 		

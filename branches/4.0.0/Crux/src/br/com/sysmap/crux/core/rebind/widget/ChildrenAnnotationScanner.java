@@ -208,11 +208,11 @@ class ChildrenAnnotationScanner
 				{
 					if (!StringUtils.isEmpty(widgetProperty))
 					{
-						out.println(context.getWidget()+"."+ClassUtils.getSetterMethod(widgetProperty)+"("+EscapeUtils.quote(child)+")");
+						out.println(context.getWidget()+"."+ClassUtils.getSetterMethod(widgetProperty)+"("+EscapeUtils.quote(child)+");");
 					}
 					else if (isHasText)
 					{
-						out.println(context.getWidget()+".setText("+EscapeUtils.quote(child)+")");
+						out.println(context.getWidget()+".setText("+EscapeUtils.quote(child)+");");
 					}
 					else 
 					{

@@ -26,7 +26,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaratio
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
@@ -59,7 +58,7 @@ public class ListBoxFactory extends AbstractListBoxFactory
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
 		String varName = ViewFactoryCreator.createVariableName("label");
-		String className = Label.class.getCanonicalName();
+		String className = getWidgetClassName();
 		String multiple = metaElem.optString("multiple");
 		if (multiple != null && multiple.trim().length() > 0)
 		{

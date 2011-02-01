@@ -75,7 +75,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 		String varName = createVariableName("widget");
 	    String wizardContextObject = metaElem.optString("wizardContextObject");
 		String className = getGenericSignature(wizardContextObject);
-		out.println(className + " " + varName+" = new "+className+"();");
+		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(wizardContextObject)+");");
 		return varName;
 	}
 
@@ -188,7 +188,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 					horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
 				}
 				out.println(widget+".setNavigationBar("+vertical+", "+showAllSteps+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
-						ControlVerticalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
+						ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
 			}
 			
 			processNavigationBarAttributes(out, context);
@@ -456,7 +456,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 				{
 					horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
 				}
-				out.println(widget+".setControlBar("+vertical+", "+position+", "+
+				out.println(widget+".setControlBar("+vertical+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
 						ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
 			}
 			

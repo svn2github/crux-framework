@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.client.utils.StyleUtils;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -245,6 +246,25 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}		
 	
 	/**
+	 * Used by widgets that need to create new widgets as children. 
+	 * 
+	 * @param out
+	 * @param metaElem
+	 * @param addToScreen
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, boolean addToScreen) throws CruxGeneratorException
+	{
+		if (!metaElem.has("id"))
+		{
+			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+		}
+		String widgetId = metaElem.optString("id");
+		return factory.newWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen);
+	}
+
+	/**
 	 * @param varName
 	 * @return
 	 */
@@ -312,7 +332,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		out.println(className + " " + varName+" = new "+className+"();");
+		out.println("final "+className + " " + varName+" = new "+className+"();");
 		return varName;
 	}
 
@@ -415,11 +435,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			if(addToScreen)
 			{
 				out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+widget+");");
+				//TODO: criar um outro parametro para adicionar IDs no DOM?
+				if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
+				{
+					out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+widget+");");
+				}
 			}			
-			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
-			{
-				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+widget+");");
-			}
 			C context = instantiateContext();
 			context.setWidget(widget);
 			context.setWidgetElement(metaElem);
@@ -494,13 +515,13 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			if (styleAttributes.length > 0)
 			{
 				String element = ViewFactoryCreator.createVariableName("elem");
-				out.println("Element  = "+context.getWidget()+".getElement();");
+				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
 				for (int i=0; i<styleAttributes.length; i++)
 				{
 					String[] attr = styleAttributes[i].split(":");
 					if (attr != null && attr.length == 2)
 					{
-						out.println("StyleUtils.addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
+						out.println(StyleUtils.class.getCanonicalName()+".addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
 								", "+EscapeUtils.quote(attr[1])+");");
 					}
 				}

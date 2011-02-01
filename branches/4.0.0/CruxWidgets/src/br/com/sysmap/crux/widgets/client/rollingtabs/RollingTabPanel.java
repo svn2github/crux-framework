@@ -159,7 +159,8 @@ public class RollingTabPanel extends Composite implements HasAnimation, HasBefor
 		return deck.getWidgetIndex(widget);
 	}
 
-	RollingTabBar getTabBar() {
+	public RollingTabBar getTabBar() 
+	{
 		return tabBar;
 	}	
 	

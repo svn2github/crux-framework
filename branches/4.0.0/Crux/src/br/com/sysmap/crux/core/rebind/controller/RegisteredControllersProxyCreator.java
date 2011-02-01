@@ -85,7 +85,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 			{
 				Global globalAnnot = controllerClass.getAnnotation(Global.class);
 				WidgetController widgetAnnot = controllerClass.getAnnotation(WidgetController.class);
-				if (globalAnnot == null && widgetAnnot == null) //TODO melhorar isso para so criar se a screen corrente contiver a widget da anota��o
+				if (globalAnnot == null && widgetAnnot == null) //TODO melhorar isso para so criar se a screen corrente contiver a widget da anotação
 				{
 					sourceWriter.println("if (__validateController(\""+controller+"\")){");
 					sourceWriter.indent();
@@ -501,11 +501,15 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		sourceWriter.println("public boolean __validateController(String controllerId){");
 		sourceWriter.indent();
 		sourceWriter.println("String[] controllers = Screen.getControllers();");
+		sourceWriter.indent();
+		sourceWriter.println("if (controllers != null){");
 		sourceWriter.println("for (String c: controllers){");
 		sourceWriter.indent();
 		sourceWriter.println("if (c.equals(controllerId)){");
 		sourceWriter.indent();
 		sourceWriter.println("return true;");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 		sourceWriter.outdent();
