@@ -25,4 +25,6 @@ public class HTMLTableFactoryContext extends WidgetCreatorContext
 {
 	int rowIndex = -1;
 	int colIndex = -1;
+	String cellFormatter = null;
+	String rowFormatter = null;
 }

@@ -73,21 +73,24 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 			{
 				String styleName = context.readChildProperty("styleName");
 				String rootWidget = context.getWidget();
-				String rowFormatter = ViewFactoryCreator.createVariableName("rowFormatter");
+				if (context.rowFormatter == null)
+				{
+					context.rowFormatter = ViewFactoryCreator.createVariableName("rowFormatter");
+					out.println(RowFormatter.class.getCanonicalName() + " " + context.rowFormatter +" = "+rootWidget+".getRowFormatter();");
+				}
 
-				out.println(RowFormatter.class.getCanonicalName() + " " + rowFormatter +" = "+rootWidget+".getRowFormatter();");
 				if (styleName != null && styleName.length() > 0)
 				{
-					out.println(rowFormatter+".setStyleName("+context.rowIndex+", "+EscapeUtils.quote(styleName)+");");
+					out.println(context.rowFormatter+".setStyleName("+context.rowIndex+", "+EscapeUtils.quote(styleName)+");");
 				}
 				String visible = context.readChildProperty("visible");
 				if (visible != null && visible.length() > 0)
 				{
-					out.println(rowFormatter+".setVisible("+context.rowIndex+", "+Boolean.parseBoolean(visible)+");");
+					out.println(context.rowFormatter+".setVisible("+context.rowIndex+", "+Boolean.parseBoolean(visible)+");");
 				}
 
 				String verticalAlignment = context.readChildProperty("verticalAlignment");
-				out.println(rowFormatter+".setVerticalAlign("+context.rowIndex+", "+
+				out.println(context.rowFormatter+".setVerticalAlign("+context.rowIndex+", "+
 						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment)+");");
 			}
 			finally
@@ -116,47 +119,50 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 
 			context.colIndex++;
 			String styleName = context.readChildProperty("styleName");
-			String cellFormatter = ViewFactoryCreator.createVariableName("cellFormatter");
+			
+			if (context.cellFormatter == null)
+			{
+				context.cellFormatter = ViewFactoryCreator.createVariableName("cellFormatter");
+				out.println(CellFormatter.class.getCanonicalName() + " " + context.cellFormatter +" = "+widget+".getCellFormatter();");
+			}
 
-			out.println(CellFormatter.class.getCanonicalName() + " " + cellFormatter +" = "+widget+".getCellFormatter();");
 
 			if (styleName != null && styleName.length() > 0)
 			{
-				out.println(cellFormatter+".setStyleName("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(styleName)+");");
+				out.println(context.cellFormatter+".setStyleName("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(styleName)+");");
 			}
 			String visible = context.readChildProperty("visible");
 			if (visible != null && visible.length() > 0)
 			{
-				out.println(cellFormatter+".setVisible("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(visible)+");");
+				out.println(context.cellFormatter+".setVisible("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(visible)+");");
 			}
 			String height = context.readChildProperty("height");
 			if (height != null && height.length() > 0)
 			{
-				out.println(cellFormatter+".setHeight("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(height)+");");
+				out.println(context.cellFormatter+".setHeight("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(height)+");");
 			}
 			String width = context.readChildProperty("width");
 			if (width != null && width.length() > 0)
 			{
-				out.println(cellFormatter+".setWidth("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(width)+");");
+				out.println(context.cellFormatter+".setWidth("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(width)+");");
 			}
 			String wordWrap = context.readChildProperty("wordWrap");
 			if (wordWrap != null && wordWrap.length() > 0)
 			{
-				out.println(cellFormatter+".setWordWrap("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(wordWrap)+");");
+				out.println(context.cellFormatter+".setWordWrap("+context.rowIndex+", "+context.colIndex+", "+Boolean.parseBoolean(wordWrap)+");");
 			}
 
 			String horizontalAlignment = context.readChildProperty("horizontalAlignment");
 			if (horizontalAlignment != null && horizontalAlignment.length() > 0)
 			{
-				out.println(cellFormatter+".setHorizontalAlignment("+context.rowIndex+", "+context.colIndex+", "+ 
+				out.println(context.cellFormatter+".setHorizontalAlignment("+context.rowIndex+", "+context.colIndex+", "+ 
 						AlignmentAttributeParser.getHorizontalAlignment(horizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
 			}
 			String verticalAlignment = context.readChildProperty("verticalAlignment");
 			if (verticalAlignment != null && verticalAlignment.length() > 0)
 			{
-				out.println(cellFormatter+".setVerticalAlignment("+context.rowIndex+", "+context.colIndex+", "+
+				out.println(context.cellFormatter+".setVerticalAlignment("+context.rowIndex+", "+context.colIndex+", "+
 						AlignmentAttributeParser.getVerticalAlignment(verticalAlignment)+");");
-
 			}
 		}
 	}
@@ -195,7 +201,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		{
 			String rootWidget = context.getWidget();
 			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
-			EscapeUtils.quote(rootWidget+".setWidget("+context.rowIndex+", "+context.colIndex+", "+childWidget+");");
+			out.println(rootWidget+".setWidget("+context.rowIndex+", "+context.colIndex+", "+childWidget+");");
 		}
 	}
 }

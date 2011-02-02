@@ -301,12 +301,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		C context = createContext(out, metaElem, widgetId, addToScreen);
 		if (context != null)
 		{
-			annotationProcessor.processAttributes(out, context);
 			processAttributes(out, context);
-			annotationProcessor.processEvents(out, context);
+			annotationProcessor.processAttributes(out, context);
 			processEvents(out, context);
-			annotationProcessor.processChildren(out, context);
+			annotationProcessor.processEvents(out, context);
 			processChildren(out, context);
+			annotationProcessor.processChildren(out, context);
 			postProcess(out, context);
 			return context.getWidget();
 		}
