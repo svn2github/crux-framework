@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyDownEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyPressEvtBind;
@@ -28,12 +26,11 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagEvents({
+	@TagEvent(KeyUpEvtBind.class),
+	@TagEvent(KeyPressEvtBind.class),
+	@TagEvent(KeyDownEvtBind.class)
+})	
 public interface HasAllKeyHandlersFactory<C extends WidgetCreatorContext>
 {
-	@TagEvents({
-		@TagEvent(KeyUpEvtBind.class),
-		@TagEvent(KeyPressEvtBind.class),
-		@TagEvent(KeyDownEvtBind.class)
-	})	
-	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

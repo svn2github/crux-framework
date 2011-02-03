@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -272,23 +270,6 @@ public class ClassUtils
     }
 	
 	/**
-	 * @param classType
-	 * @return
-	 */
-	public static String getSourceName(JClassType classType)
-	{
-		String packageName = classType.getPackage().getName();
-		if (packageName == null)
-		{
-			packageName = "";
-		}
-		String className = classType.getQualifiedBinaryName().substring(packageName.length()+1);
-		className = className.replace('$', '_');
-		
-		return className;
-	}
-	
-	/**
 	 * 
 	 * @param valueVariable
 	 * @param expectedType
@@ -343,55 +324,6 @@ public class ClassUtils
 			
 		}
 
-		return null;
-	}
-
-	/**
-	 * @param factoryType
-	 * @return
-	 */
-	public static Method getProcessChildrenMethod(Class<?> factoryType)
-	{
-		Method[] methods = factoryType.getMethods();
-		if (methods != null)
-		{
-			for (Method method : methods)
-            {
-	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 2)
-	            {
-	            	Class<?> firstParamClass = method.getParameterTypes()[0];
-	            	Class<?> secondParamClass = method.getParameterTypes()[1];
-	            	if (SourcePrinter.class.isAssignableFrom(firstParamClass) && WidgetCreatorContext.class.isAssignableFrom(secondParamClass))
-	            	{
-	            		return method;
-	            	}
-	            }
-            }
-		}
-		return null;
-	}
-//TODO remover essa classe quase toda... os metodos estao errados e duplicados
-	/**
-	 * @param factoryType
-	 * @return
-	 */
-	public static Method getDeclaredProcessChildrenMethod(Class<?> factoryType)
-	{
-		Method[] methods = factoryType.getDeclaredMethods();
-		if (methods != null)
-		{
-			for (Method method : methods)
-            {
-	            if (method.getName().equals("processChildren") && method.getParameterTypes().length == 1)
-	            {
-	            	Class<?> paramClass = method.getParameterTypes()[0];
-	            	if (WidgetCreatorContext.class.isAssignableFrom(paramClass))
-	            	{
-	            		return method;
-	            	}
-	            }
-            }
-		}
 		return null;
 	}
 

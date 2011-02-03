@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.ValueChangeEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
@@ -26,10 +24,9 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagEvents({
+	@TagEvent(ValueChangeEvtBind.class)
+})	
 public interface HasValueChangeHandlersFactory<C extends WidgetCreatorContext>
 {
-	@TagEvents({
-		@TagEvent(ValueChangeEvtBind.class)
-	})	
-	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

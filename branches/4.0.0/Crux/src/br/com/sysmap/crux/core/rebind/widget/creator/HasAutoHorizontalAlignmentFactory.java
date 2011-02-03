@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.AutoHorizontalAlignmentAttributeParser;
@@ -27,12 +25,11 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 
+			processor=AutoHorizontalAlignmentAttributeParser.class)
+})	
 public interface HasAutoHorizontalAlignmentFactory<C extends WidgetCreatorContext> 
-extends HasHorizontalAlignmentFactory<C>
+		extends HasHorizontalAlignmentFactory<C>
 {
-	@TagAttributes({
-		@TagAttribute(value="autoHorizontalAlignment", type=AutoHorizontalAlignment.class, defaultValue="defaultAlign", 
-			      processor=AutoHorizontalAlignmentAttributeParser.class)
-	})	
-	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

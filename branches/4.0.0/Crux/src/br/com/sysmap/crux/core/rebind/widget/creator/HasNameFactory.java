@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
@@ -25,10 +23,9 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute("name")
+})	
 public interface HasNameFactory<C extends WidgetCreatorContext>
 {
-	@TagAttributes({
-		@TagAttribute("name")
-	})	
-	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

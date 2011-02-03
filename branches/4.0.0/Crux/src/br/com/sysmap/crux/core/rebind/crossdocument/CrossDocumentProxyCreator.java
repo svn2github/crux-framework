@@ -32,7 +32,6 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.Shared;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.impl.Impl;
@@ -329,7 +328,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 */
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(baseProxyType) + CROSS_DOC_SUFFIX;
+		return baseProxyType.getSimpleSourceName() + CROSS_DOC_SUFFIX;
 	}
 	
 	/**

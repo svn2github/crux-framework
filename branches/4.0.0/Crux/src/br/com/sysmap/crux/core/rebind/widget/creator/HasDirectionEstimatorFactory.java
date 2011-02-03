@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.direction.DirectionEstimator;
 import br.com.sysmap.crux.core.rebind.widget.creator.direction.DirectionEstimatorAttributeParser;
@@ -27,11 +25,10 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="defaultAlign", 
+			processor=DirectionEstimatorAttributeParser.class)
+})	
 public interface HasDirectionEstimatorFactory<C extends WidgetCreatorContext>
 {
-	@TagAttributes({
-		@TagAttribute(value="directionEstimator", type=DirectionEstimator.class, defaultValue="defaultAlign", 
-			      processor=DirectionEstimatorAttributeParser.class)
-	})	
-	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

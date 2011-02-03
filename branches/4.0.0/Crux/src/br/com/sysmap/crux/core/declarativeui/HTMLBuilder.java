@@ -18,7 +18,6 @@ package br.com.sysmap.crux.core.declarativeui;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -165,8 +164,7 @@ class HTMLBuilder
 				try
 				{
 					Class<?> clientClass = Class.forName(WidgetConfig.getClientClass(library, widget));
-					Method method = ClassUtils.getProcessChildrenMethod(clientClass); 
-					generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
+					generateReferenceWidgetsListFromTagChildren(clientClass.getAnnotation(TagChildren.class), 
 																		library, widget, new HashSet<String>());
 				}
 				catch (Exception e)
@@ -225,8 +223,7 @@ class HTMLBuilder
 					
 					try
 					{
-						Method method = ClassUtils.getProcessChildrenMethod(processorClass);
-						generateReferenceWidgetsListFromTagChildren(method.getAnnotation(TagChildren.class), 
+						generateReferenceWidgetsListFromTagChildren(processorClass.getAnnotation(TagChildren.class), 
 																	parentLibrary, parentPath, added);
 					}
 					catch (Exception e)

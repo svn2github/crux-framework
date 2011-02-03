@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
@@ -27,10 +25,9 @@ import com.google.gwt.i18n.client.HasDirection.Direction;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="direction", type=Direction.class)
+})	
 public interface HasDirectionFactory<C extends WidgetCreatorContext>
 {
-	@TagAttributes({
-		@TagAttribute(value="direction", type=Direction.class)
-	})	
-	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

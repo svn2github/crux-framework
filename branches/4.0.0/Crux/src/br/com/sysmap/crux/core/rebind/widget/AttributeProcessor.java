@@ -15,6 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 
 
@@ -35,4 +36,20 @@ public abstract class AttributeProcessor<C extends WidgetCreatorContext> extends
 	 * @param attributeValue
 	 */
 	public abstract void processAttribute(SourcePrinter out, C context, String attributeValue);
+	
+	/**
+	 * Do not call this method.
+	 * Work around to invoke processAttribute with reflection, once it declares a generic parameter and java
+	 * fails in some cases (generic information is not completely available in runtime).
+	 * 
+	 * @param out
+	 * @param context
+	 * @param attributeValue
+	 * @throws CruxGeneratorException
+	 */
+	@SuppressWarnings("unchecked")
+	public final void processAttributeInternal(SourcePrinter out, WidgetCreatorContext context, String attributeValue) throws CruxGeneratorException
+	{
+		processAttribute(out, (C) context, attributeValue);
+	}	
 }

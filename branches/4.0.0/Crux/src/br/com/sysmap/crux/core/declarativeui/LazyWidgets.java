@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.core.declarativeui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +34,6 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -75,13 +73,13 @@ public class LazyWidgets
 	 * @param declaredCheckers
 	 * @throws NotFoundException
 	 */
-	private static void initializeLazyChecker(Method childrenMethod, Class<?> factoryType, List<WidgetLazyChecker> declaredCheckers, Set<String> added) 
+	private static void initializeLazyChecker(Class<?> factoryType, List<WidgetLazyChecker> declaredCheckers, Set<String> added) 
     {
-		String methodStr = childrenMethod.toGenericString();
-		if (!added.contains(methodStr))
+		String className = factoryType.getCanonicalName();
+		if (!added.contains(className))
 		{
-			added.add(methodStr);
-			TagChildren tagChildren = childrenMethod.getAnnotation(TagChildren.class);
+			added.add(className);
+			TagChildren tagChildren = factoryType.getAnnotation(TagChildren.class);
 			if (tagChildren != null)
 			{
 				for (TagChild child : tagChildren.value())
@@ -96,8 +94,7 @@ public class LazyWidgets
 							declaredCheckers.add(lazyChecker);
 						}
 					}
-					Method childProcessorMethod = ClassUtils.getProcessChildrenMethod(childProcessor);
-					initializeLazyChecker(childProcessorMethod, childProcessor, declaredCheckers, added);
+					initializeLazyChecker(childProcessor, declaredCheckers, added);
 				}
 			}
 		}
@@ -113,10 +110,8 @@ public class LazyWidgets
 		String widgetFactoryClass = WidgetConfig.getClientClass(type);
 		Class<?> factoryType = Class.forName(widgetFactoryClass);
 		
-		Method childrenMethod = ClassUtils.getProcessChildrenMethod(factoryType);
-		
 		final List<WidgetLazyChecker> declaredCheckers = new ArrayList<WidgetLazyChecker>();
-		initializeLazyChecker(childrenMethod, factoryType, declaredCheckers, new HashSet<String>());
+		initializeLazyChecker(factoryType, declaredCheckers, new HashSet<String>());
 		if (declaredCheckers.size() == 0)
 		{
 			lazyWidgetCheckers.put(type, null);

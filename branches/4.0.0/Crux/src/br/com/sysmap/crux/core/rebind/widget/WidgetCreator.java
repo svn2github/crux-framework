@@ -44,6 +44,22 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  * 
  * @author Thiago da Rosa de Bustamante
  */
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="id", required=true)
+})
+@TagAttributes({
+	@TagAttribute("width"),
+	@TagAttribute("height"),
+	@TagAttribute("styleName"),
+	@TagAttribute(value="visible", type=Boolean.class),
+	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
+	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
+})
+@TagEvents({
+	@TagEvent(LoadWidgetEvtProcessor.class),
+	@TagEvent(AttachEvtBind.class),
+	@TagEvent(DettachEvtBind.class)
+})
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
 	//TODO remover esse currentId e usar o Id do GWT
@@ -52,6 +68,41 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
+	
+	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
+		{
+			String[] styleAttributes = style.split(";");
+			if (styleAttributes.length > 0)
+			{
+				String element = ViewFactoryCreator.createVariableName("elem");
+				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
+				for (int i=0; i<styleAttributes.length; i++)
+				{
+					String[] attr = styleAttributes[i].split(":");
+					if (attr != null && attr.length == 2)
+					{
+						out.println(StyleUtils.class.getCanonicalName()+".addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
+								", "+EscapeUtils.quote(attr[1])+");");
+					}
+				}
+			}
+		}
+		
+		private String getStylePropertyName(String property)
+		{
+			int index = -1;
+			while ((index = property.indexOf('-')) >0)
+			{
+				if (index < property.length()-1)
+				{
+					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
+				}
+			}
+			return property;
+		}
+	}	
 	
 	/**
 	 * Retrieve the widget child element name
@@ -124,7 +175,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	protected static String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public static String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_html");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
@@ -141,7 +192,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	protected static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_text");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
@@ -379,17 +430,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param element page DOM element representing the widget (Its &lt;span&gt; tag)
 	 * @throws CruxGeneratorException 
 	 */
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="id", required=true)
-	})
-	@TagAttributes({
-		@TagAttribute("width"),
-		@TagAttribute("height"),
-		@TagAttribute("styleName"),
-		@TagAttribute(value="visible", type=Boolean.class),
-		@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
-		@TagAttribute(value="style", processor=StyleProcessor.class)
-	})
 	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
@@ -403,6 +443,35 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
+	
+	/**
+	 * Do not call this method.
+	 * Work around to invoke processChildren with reflection, once it declares a generic parameter and java
+	 * fails in some cases (generic information is not completely available in runtime).
+	 * 
+	 * @param out
+	 * @param context
+	 * @throws CruxGeneratorException
+	 */
+	@SuppressWarnings("unchecked")
+	public final void processChildrenInternal(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+	{
+		processChildren(out, (C) context);
+	}
+
+	/**
+	 * Work around to invoke processEvents with reflection, once it declares a generic parameter and java
+	 * fails in some cases (generic information is not completely available in runtime).
+	 * 
+	 * @param out
+	 * @param context
+	 * @throws CruxGeneratorException
+	 *
+	@SuppressWarnings("unchecked")
+	public final void processEventsInternal(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+	{
+		processEvents(out, (C) context);
+	}
 
 	/**
 	 * Process widget events
@@ -410,11 +479,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param context 
 	 * @throws CruxGeneratorException
 	 */
-	@TagEvents({
-		@TagEvent(LoadWidgetEvtProcessor.class),
-		@TagEvent(AttachEvtBind.class),
-		@TagEvent(DettachEvtBind.class)
-	})
 	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
@@ -502,44 +566,4 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		this.factory = factory;
 		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(getClass(), this);
 	}
-	
-	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
-	{
-		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
-		{
-			String[] styleAttributes = style.split(";");
-			if (styleAttributes.length > 0)
-			{
-				String element = ViewFactoryCreator.createVariableName("elem");
-				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
-				for (int i=0; i<styleAttributes.length; i++)
-				{
-					String[] attr = styleAttributes[i].split(":");
-					if (attr != null && attr.length == 2)
-					{
-						out.println(StyleUtils.class.getCanonicalName()+".addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
-								", "+EscapeUtils.quote(attr[1])+");");
-					}
-				}
-			}
-		}
-		
-		private String getStylePropertyName(String property)
-		{
-			int index = -1;
-			while ((index = property.indexOf('-')) >0)
-			{
-				if (index < property.length()-1)
-				{
-					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
-				}
-			}
-			return property;
-		}
-	}
-	
 }

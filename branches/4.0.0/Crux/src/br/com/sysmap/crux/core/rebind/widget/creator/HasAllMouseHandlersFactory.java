@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseDownEvtBind;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseMoveEvtBind;
@@ -31,15 +29,14 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagEvents({
+	@TagEvent(MouseDownEvtBind.class),
+	@TagEvent(MouseUpEvtBind.class),
+	@TagEvent(MouseOverEvtBind.class),
+	@TagEvent(MouseOutEvtBind.class),
+	@TagEvent(MouseMoveEvtBind.class),
+	@TagEvent(MouseWheelEvtBind.class)
+})	
 public interface HasAllMouseHandlersFactory<C extends WidgetCreatorContext>
 {
-	@TagEvents({
-		@TagEvent(MouseDownEvtBind.class),
-		@TagEvent(MouseUpEvtBind.class),
-		@TagEvent(MouseOverEvtBind.class),
-		@TagEvent(MouseOutEvtBind.class),
-		@TagEvent(MouseMoveEvtBind.class),
-		@TagEvent(MouseWheelEvtBind.class)
-	})	
-	void processEvents(SourcePrinter out, C context) throws CruxGeneratorException;
 }

@@ -24,7 +24,6 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -70,7 +69,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	@Override
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(baseIntf) + PROXY_SUFFIX;
+		return baseIntf.getSimpleSourceName() + PROXY_SUFFIX;
 	}
 	
 	/**

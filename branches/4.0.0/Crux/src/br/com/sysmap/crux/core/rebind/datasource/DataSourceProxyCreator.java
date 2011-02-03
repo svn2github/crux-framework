@@ -441,7 +441,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 */
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(dataSourceClass) + DATASOURCE_PROXY_SUFFIX;
+		return dataSourceClass.getSimpleSourceName() + DATASOURCE_PROXY_SUFFIX;
 	}
 	
 	

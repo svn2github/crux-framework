@@ -23,7 +23,6 @@ import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -88,98 +87,16 @@ public class WidgetCreatorHelper
 	 * @param childProcessor
 	 * @return
 	 */
-	public TagChildren getChildrenAnnotationFromProcessor(Class<?> childProcessor)
-	{
-		Method processorMethod = getChildProcessorMethod(childProcessor);
-		return processorMethod.getAnnotation(TagChildren.class);
-	}
-
-	/**
-	 * @param childProcessor
-	 * @return
-	 */
 	public Method getChildProcessorMethod(Class<?> childProcessor)
     {
-		for (Method method : childProcessor.getMethods())
+		try 
 		{
-			Class<?>[] parameterTypes = method.getParameterTypes();
-			if (method.getName().equals("processChildren") && parameterTypes.length == 2)
-			{
-				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
-				{
-					return method;
-				}
-			}
-		}
-		return null;
-    }
-
-	/**
-	 * @param childProcessor
-	 * @return
-	 */
-	public Method getAttributesProcessorMethod(Class<?> childProcessor)
-    {
-		for (Method method : childProcessor.getMethods())
+			return childProcessor.getMethod("processChildrenInternal", new Class<?>[]{SourcePrinter.class, WidgetCreatorContext.class});
+		} 
+		catch (Exception e) 
 		{
-			Class<?>[] parameterTypes = method.getParameterTypes();
-			if (method.getName().equals("processAttributes") && parameterTypes.length == 2)
-			{
-				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
-				{
-					return method;
-				}
-			}
+			return null;
 		}
-		return null;
-    }
-
-
-	/**
-	 * @param childProcessor
-	 * @return
-	 */
-	public Method getEventsProcessorMethod(Class<?> childProcessor)
-    {
-		for (Method method : childProcessor.getMethods())
-		{
-			Class<?>[] parameterTypes = method.getParameterTypes();
-			if (method.getName().equals("processEvents") && parameterTypes.length == 2)
-			{
-				if (SourcePrinter.class.equals(parameterTypes[0]) && WidgetCreatorContext.class.isAssignableFrom(parameterTypes[1]))
-				{
-					return method;
-				}
-			}
-		}
-		return null;
-    }
-
-	/**
-	 * @return
-	 */
-	public Method getProcessChildrenMethod()
-    {
-		Method processorMethod = getChildProcessorMethod(getFactoryClass());
-	    return processorMethod;
-    }
-	
-	/**
-	 * @return
-	 */
-	public Method getProcessAttributesMethod()
-    {
-		Method processorMethod = getAttributesProcessorMethod(getFactoryClass());
-	    return processorMethod;
-    }
-
-	/**
-	 * @return
-	 */
-	public Method getProcessEventsMethod()
-    {
-		Method processorMethod = getEventsProcessorMethod(getFactoryClass());
-	    return processorMethod;
     }
 
 	/**

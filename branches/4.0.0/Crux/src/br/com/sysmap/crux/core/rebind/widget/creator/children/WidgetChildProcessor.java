@@ -30,6 +30,21 @@ public class WidgetChildProcessor<C extends WidgetCreatorContext>
 
 	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException{}
 	
+	/**
+	 * Do not call this method.
+	 * Work around to invoke processChildren with reflection, once it declares a generic parameter and java
+	 * fails in some cases (generic information is not completely available in runtime).
+	 * 
+	 * @param out
+	 * @param context
+	 * @throws CruxGeneratorException
+	 */
+	@SuppressWarnings("unchecked")
+	public final void processChildrenInternal(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+	{
+		processChildren(out, (C) context);
+	}	
+	
 	public static class AnyWidget{}
 	public static class AnyTag{}
 	public static class HTMLTag{}

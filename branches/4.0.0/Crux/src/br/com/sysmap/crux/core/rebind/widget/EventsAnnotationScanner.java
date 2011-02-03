@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,31 +69,19 @@ class EventsAnnotationScanner
 	{
 		try
         {
-	        Method method;
-            try
-            {
-	            method = factoryHelper.getEventsProcessorMethod(factoryClass);
-            }
-            catch (Exception e)
-            {
-            	method = null;
-            }
-	        if (method != null)
-	        {
-	        	TagEvents tagEvents = method.getAnnotation(TagEvents.class);
-	        	if (tagEvents != null)
-	        	{
-	        		for (TagEvent evt : tagEvents.value())
-	        		{
-	        			String evtBinderClassName = evt.value().getCanonicalName();
-	        			if (!added.contains(evtBinderClassName))
-	        			{
-	        				added.add(evtBinderClassName);
-	        				events.add(createEventProcessor(evt));
-	        			}
-	        		}
-	        	}
-	        }
+			TagEvents tagEvents = factoryClass.getAnnotation(TagEvents.class);
+			if (tagEvents != null)
+			{
+				for (TagEvent evt : tagEvents.value())
+				{
+					String evtBinderClassName = evt.value().getCanonicalName();
+					if (!added.contains(evtBinderClassName))
+					{
+						added.add(evtBinderClassName);
+						events.add(createEventProcessor(evt));
+					}
+				}
+			}
 	        Class<?> superclass = factoryClass.getSuperclass();
 	        if (superclass!= null && !superclass.equals(Object.class))
 	        {

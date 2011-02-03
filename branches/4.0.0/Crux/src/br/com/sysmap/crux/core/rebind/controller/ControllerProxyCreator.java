@@ -37,7 +37,6 @@ import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.Shared;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -243,7 +242,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 */
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(controllerClass) + CONTROLLER_PROXY_SUFFIX;
+		return controllerClass.getSimpleSourceName() + CONTROLLER_PROXY_SUFFIX;
 	}
 	
 	/**

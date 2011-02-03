@@ -73,45 +73,33 @@ class AttributesAnnotationScanner
 	{
 		try
         {
-	        Method method;
-            try
-            {
-	            method = factoryHelper.getAttributesProcessorMethod(factoryClass);
-            }
-            catch (Exception e)
-            {
-            	method = null;
-            }
-	        if (method != null)
-	        {
-	        	TagAttributes attrs = method.getAnnotation(TagAttributes.class);
-	        	if (attrs != null)
-	        	{
-	        		for (TagAttribute attr : attrs.value())
-	        		{
-	        			String attrName = attr.value();
-	        			if (!added.contains(attrName))
-	        			{
-	        				added.add(attrName);
-	        				if (isValidName(attrName))
-	        				{
-	        					if (AttributeProcessor.NoParser.class.isAssignableFrom(attr.processor()))
-	        					{
-	        						attributes.add(createAutomaticAttributeProcessor(factoryClass, attr));
-	        					}
-	        					else
-	        					{
-	        						attributes.add(createAttributeProcessorWithParser(attr));
-	        					}
-	        				}
-	        				else
-	        				{
-	        					throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidAttrName(attrName));
-	        				}
-	        			}
-	        		}
-	        	}
-	        }
+			TagAttributes attrs = factoryClass.getAnnotation(TagAttributes.class);
+			if (attrs != null)
+			{
+				for (TagAttribute attr : attrs.value())
+				{
+					String attrName = attr.value();
+					if (!added.contains(attrName))
+					{
+						added.add(attrName);
+						if (isValidName(attrName))
+						{
+							if (AttributeProcessor.NoParser.class.isAssignableFrom(attr.processor()))
+							{
+								attributes.add(createAutomaticAttributeProcessor(factoryClass, attr));
+							}
+							else
+							{
+								attributes.add(createAttributeProcessorWithParser(attr));
+							}
+						}
+						else
+						{
+							throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidAttrName(attrName));
+						}
+					}
+				}
+			}
 	        Class<?> superclass = factoryClass.getSuperclass();
 	        if (superclass!= null && !superclass.equals(Object.class))
 	        {
@@ -186,15 +174,14 @@ class AttributesAnnotationScanner
 	 */
 	private Method getAtributeProcessorMethod(Class<?> processorClass)
     {
-	    Method[] methods = processorClass.getMethods();
-		for (Method met : methods)
-        {
-	        if (met.getName().equals("processAttribute") && met.getParameterTypes().length == 3)//TODO validar tipos dos parametros
-	        {
-	        	return met;
-	        }
-        }
-		return null;
+	    try 
+	    {
+			return processorClass.getMethod("processAttributeInternal", new Class<?>[]{SourcePrinter.class, WidgetCreatorContext.class, String.class});
+		}
+	    catch (Exception e) 
+		{
+			return null;
+		}
     }
 
 	/**

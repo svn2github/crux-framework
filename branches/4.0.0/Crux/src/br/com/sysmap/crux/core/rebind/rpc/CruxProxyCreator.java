@@ -551,7 +551,7 @@ public class CruxProxyCreator extends ProxyCreator
 	 */
 	private String getProxyWrapperSimpleName()
 	{
-		return ClassUtils.getSourceName(serviceIntf)+WRAPPER_SUFFIX;
+		return serviceIntf.getSimpleSourceName()+WRAPPER_SUFFIX;
 	}
 	
 	/**

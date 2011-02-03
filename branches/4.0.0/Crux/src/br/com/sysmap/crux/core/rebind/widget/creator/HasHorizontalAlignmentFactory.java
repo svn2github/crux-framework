@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.widget.creator;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignmentAttributeParser;
@@ -27,11 +25,10 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", 
+			processor=HorizontalAlignmentAttributeParser.class)
+})	
 public interface HasHorizontalAlignmentFactory<C extends WidgetCreatorContext>
 {
-	@TagAttributes({
-		@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign", 
-			      processor=HorizontalAlignmentAttributeParser.class)
-	})	
-	void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException;
 }

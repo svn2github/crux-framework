@@ -326,7 +326,8 @@ class ChildrenAnnotationScanner
 	 * @param childProcessorClass
 	 * @return
 	 */
-	private ChildrenProcessor doCreateChildrenProcessorForMultipleChildren(Class<?> processorClass, final boolean acceptNoChildren, final boolean isAgregatorChild)
+	private ChildrenProcessor doCreateChildrenProcessorForMultipleChildren(Class<?> processorClass, final boolean acceptNoChildren, 
+																			final boolean isAgregatorChild)
     {
 		ChildrenProcessor childrenProcessor = new ChildrenProcessor()
 		{
@@ -494,8 +495,7 @@ class ChildrenAnnotationScanner
 			}
 			else if (AllChildProcessor.class.isAssignableFrom(child.value()) || SequenceChildProcessor.class.isAssignableFrom(child.value()))
 			{
-				Method processorMethod = factoryHelper.getChildProcessorMethod(childProcessorType);
-				TagChildren tagChildren = processorMethod.getAnnotation(TagChildren.class);
+				TagChildren tagChildren = childProcessorType.getAnnotation(TagChildren.class);
 				if (tagChildren != null)
 				{
 					AllowedOccurences allowedChildren = getAllowedChildrenNumber(tagChildren);
@@ -612,8 +612,7 @@ class ChildrenAnnotationScanner
 		}
 		ChildrenProcessor result = null;
 		
-		Method processChildrenMethod = factoryHelper.getChildProcessorMethod(processorClass);
-		TagChildren children = processChildrenMethod.getAnnotation(TagChildren.class);
+		TagChildren children = processorClass.getAnnotation(TagChildren.class);
 		
 		if (children != null && mustGenerateChildrenProcessMethod(children))
 		{
