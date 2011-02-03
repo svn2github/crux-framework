@@ -60,6 +60,16 @@ class MenuBarContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="menuBar", library="gwt", targetWidget=MenuBar.class)
+@TagAttributes({
+	@TagAttribute(value="autoOpen", type=Boolean.class), 
+	@TagAttribute(value="focusOnHoverEnabled", type=Boolean.class) 
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="vertical", type=Boolean.class)
+})
+@TagChildren({
+	@TagChild(MenuBarFactory.MenutItemsProcessor.class)
+})
 public class MenuBarFactory extends WidgetCreator<MenuBarContext> 
        implements HasAnimationFactory<MenuBarContext>, HasCloseHandlersFactory<MenuBarContext>
 {
@@ -73,25 +83,6 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		out.println(className + " " + varName+" = new "+className+"("+isMenuVertical(metaElem)+");");
 		return varName;
 	}	
-
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="autoOpen", type=Boolean.class), 
-		@TagAttribute(value="focusOnHoverEnabled", type=Boolean.class) 
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="vertical", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);		
-	}
-
-	@Override
-	@TagChildren({
-		@TagChild(MenutItemsProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
 
 	/**
 	 * @param element
@@ -109,26 +100,18 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class MenutItemsProcessor extends ChoiceChildProcessor<MenuBarContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(MenutItemProcessor.class),
-			@TagChild(MenutItemSeparatorProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(MenutItemProcessor.class),
+		@TagChild(MenutItemSeparatorProcessor.class)
+	})
+	public static class MenutItemsProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 	
 	@TagChildAttributes(tagName="menuItem")
-	public static class MenutItemProcessor extends WidgetChildProcessor<MenuBarContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(CaptionProcessor.class),
-			@TagChild(MenuChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(CaptionProcessor.class),
+		@TagChild(MenuChildrenProcessor.class)
+	})
+	public static class MenutItemProcessor extends WidgetChildProcessor<MenuBarContext> {}
 	
 	@TagChildAttributes(tagName="separator")
 	public static class MenutItemSeparatorProcessor extends WidgetChildProcessor<MenuBarContext>
@@ -141,23 +124,19 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 	
-	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBarContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TextCaptionProcessor.class),
-			@TagChild(HtmlCaptionProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TextCaptionProcessor.class),
+		@TagChild(HtmlCaptionProcessor.class)
+	})
+	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 
 	@TagChildAttributes(tagName="textCaption")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="text", required=true, supportsI18N=true)
+	})
 	public static class TextCaptionProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="text", required=true, supportsI18N=true)
-		})
 		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 		{
 			context.caption = context.readChildProperty("text");
@@ -176,23 +155,19 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 
-	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(CommandProcessor.class),
-			@TagChild(SubMenuProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(CommandProcessor.class),
+		@TagChild(SubMenuProcessor.class)
+	})
+	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 	
 	@TagChildAttributes(tagName="command")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="onExecute", required=true)
+	})
 	public static class CommandProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="onExecute", required=true)
-		})
 		public void processChildren(SourcePrinter out,  MenuBarContext context) throws CruxGeneratorException 
 		{
 			String executeEvt = context.readChildProperty("onExecute");

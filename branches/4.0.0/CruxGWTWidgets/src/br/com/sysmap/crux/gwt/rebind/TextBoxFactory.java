@@ -15,29 +15,21 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.TextBox;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * A Factory for TextBox widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="textBox", library="gwt", targetWidget=TextBox.class)
+@TagAttributes({
+	@TagAttribute(value="maxLength", type=Integer.class),
+	@TagAttribute(value="visibleLength", type=Integer.class)
+})
 public class TextBoxFactory extends TextBoxBaseFactory 
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="maxLength", type=Integer.class),
-		@TagAttribute(value="visibleLength", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 }

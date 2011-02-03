@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
@@ -34,10 +32,18 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import com.google.gwt.user.client.ui.FocusPanel;
 
 /**
- * Represents a FocusPanelFactory
+ * A Factory for FocusPanel widgets
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="focusPanel", library="gwt", targetWidget=FocusPanel.class)
+@TagAttributes({
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="focus", type=Boolean.class)
+})
+@TagChildren({
+	@TagChild(FocusPanelFactory.WidgetContentProcessor.class)
+})
 public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   implements HasAllMouseHandlersFactory<WidgetCreatorContext>, 
 	   			  HasClickHandlersFactory<WidgetCreatorContext>, 
@@ -46,24 +52,6 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   			  HasAllKeyHandlersFactory<WidgetCreatorContext>
 	   			
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="focus", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processAttributes(out, context);
-	}
-	
-    @Override
-    @TagChildren({
-            @TagChild(WidgetContentProcessor.class)
-    })
-    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-    {
-    }
     
     @TagChildAttributes(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		

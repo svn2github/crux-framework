@@ -15,34 +15,27 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.Frame;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+import com.google.gwt.user.client.ui.Frame;
 
 /**
  * Factory to create Frame Widgets
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="frame", library="gwt", targetWidget=Frame.class)
+@TagAttributes({
+	@TagAttribute(value="url", processor=FrameFactory.URLAttributeParser.class)
+})
 public class FrameFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="url", processor=URLAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *

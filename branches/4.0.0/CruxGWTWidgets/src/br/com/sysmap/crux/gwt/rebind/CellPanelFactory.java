@@ -41,37 +41,28 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="borderWidth",type=Integer.class),
+	@TagAttribute(value="spacing",type=Integer.class)
+})
+@TagChildren({
+	@TagChild(CellPanelFactory.CellPanelProcessor.class)
+})		
 public abstract class CellPanelFactory <C extends CellPanelContext> extends ComplexPanelFactory<C>
 {
 	private static final String DEFAULT_V_ALIGN = HasVerticalAlignment.ALIGN_MIDDLE.getVerticalAlignString();
 	private static final String DEFAULT_H_ALIGN = HasHorizontalAlignment.ALIGN_CENTER.getTextAlignString();
 	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="borderWidth",type=Integer.class),
-		@TagAttribute(value="spacing",type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(CellPanelProcessor.class)
-	})		
-	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException {}
-	
 	public static class CellPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext>{} 
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(CellProcessor.class),
+		@TagChild(CellWidgetProcessor.class)
+	})		
 	public static abstract class AbstractCellPanelProcessor<C extends CellPanelContext> extends ChoiceChildProcessor<C> 
 	{
 		@Override
-		@TagChildren({
-			@TagChild(CellProcessor.class),
-			@TagChild(CellWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			context.horizontalAlignment = DEFAULT_H_ALIGN;
@@ -82,18 +73,18 @@ public abstract class CellPanelFactory <C extends CellPanelContext> extends Comp
 	public static class CellProcessor extends AbstractCellProcessor<CellPanelContext>{}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(value=CellWidgetProcessor.class)
+	})		
 	public static abstract class AbstractCellProcessor<C extends CellPanelContext> extends WidgetChildProcessor<C> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		@TagChildren({
-			@TagChild(value=CellWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			context.height = context.readChildProperty("height");

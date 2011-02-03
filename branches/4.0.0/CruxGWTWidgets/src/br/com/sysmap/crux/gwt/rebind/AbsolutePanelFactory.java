@@ -41,34 +41,36 @@ class AbsolutePanelContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="absolutePanel", library="gwt", targetWidget=AbsolutePanel.class)
+@TagChildren({
+	@TagChild(AbsolutePanelFactory.AbsoluteChildrenProcessor.class)
+})	
 public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelContext>
 {
+
 	@Override
-	@TagChildren({
-		@TagChild(AbsoluteChildrenProcessor.class)
-	})	
-	public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
-	{
-	}	
+    public AbsolutePanelContext instantiateContext()
+    {
+	    return new AbsolutePanelContext();
+    }	
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="widget" )
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("left"),
+		@TagAttributeDeclaration("top")
+	})
+	@TagChildren({
+		@TagChild(AbsoluteWidgetProcessor.class)
+	})	
 	public static class AbsoluteChildrenProcessor extends WidgetChildProcessor<AbsolutePanelContext> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("left"),
-			@TagAttributeDeclaration("top")
-		})
-		@TagChildren({
-			@TagChild(AbsoluteWidgetProcessor.class)
-		})	
 		public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
 		{
 			context.left = context.readChildProperty("left");
 			context.top = context.readChildProperty("top");
 		}
 	}
-
+	
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanelContext> 
 	{
@@ -90,10 +92,4 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 			context.top = null;
 		}
 	}
-
-	@Override
-    public AbsolutePanelContext instantiateContext()
-    {
-	    return new AbsolutePanelContext();
-    }	
 }

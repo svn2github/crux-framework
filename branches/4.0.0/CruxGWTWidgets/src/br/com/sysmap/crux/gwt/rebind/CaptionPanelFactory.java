@@ -38,44 +38,30 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="captionPanel", library="gwt", targetWidget=CaptionPanel.class)
+@TagAttributes({
+	@TagAttribute("captionText")
+})
+@TagChildren({
+	@TagChild(CaptionPanelFactory.CaptionProcessor.class),
+	@TagChild(CaptionPanelFactory.ContentProcessor.class)
+})	
 public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 {
 	@Override
-	@TagAttributes({
-		@TagAttribute("captionText")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(CaptionProcessor.class),
-		@TagChild(ContentProcessor.class)
-	})	
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class CaptionProcessor extends ChoiceChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(CaptionTextProcessor.class),
-			@TagChild(CaptionHTMLProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(CaptionTextProcessor.class),
+		@TagChild(CaptionHTMLProcessor.class)
+	})	
+	public static class CaptionProcessor extends ChoiceChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetProcessor.class)
+	})	
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
 	@TagChildAttributes(minOccurs="0", widgetProperty="contentWidget")
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}

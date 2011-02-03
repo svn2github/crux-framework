@@ -33,27 +33,19 @@ import com.google.gwt.user.client.ui.ListBox;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="listBox", library="gwt", targetWidget=ListBox.class)
+@TagChildren({
+	@TagChild(ListBoxFactory.ListBoxItemsProcessor.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="multiple", type=Boolean.class)
+})
 public class ListBoxFactory extends AbstractListBoxFactory
 {
 	@Override
-	@TagChildren({
-		@TagChild(ListBoxItemsProcessor.class)
-	})
 	public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException {}	
 	
-	public static class ListBoxItemsProcessor extends ItemsProcessor
-	{		
-	}
+	public static class ListBoxItemsProcessor extends ItemsProcessor {}
 	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="multiple", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{

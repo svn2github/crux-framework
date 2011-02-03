@@ -15,13 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.Image;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
@@ -33,27 +30,27 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 
+import com.google.gwt.user.client.ui.Image;
+
 /**
  * A Factory for Image widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="image", library="gwt", targetWidget=Image.class)
+@TagAttributes({
+	@TagAttribute(value="url", required=true),
+	@TagAttribute(value="altText"),
+	@TagAttribute(value="visibleRect", processor=ImageFactory.VisibleRectAttributeParser.class)
+})	
+@TagEvents({
+	@TagEvent(LoadEvtBind.class),
+	@TagEvent(LoadErrorEvtBind.class)
+})
 public class ImageFactory extends WidgetCreator<WidgetCreatorContext> 
 	   implements HasClickHandlersFactory<WidgetCreatorContext>, 
 	   			  HasAllMouseHandlersFactory<WidgetCreatorContext>, 
 	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="url", required=true),
-		@TagAttribute(value="altText"),
-		@TagAttribute(value="visibleRect", processor=VisibleRectAttributeParser.class)
-	})	
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -72,16 +69,6 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 						Integer.parseInt(coord[2].trim())+", "+Integer.parseInt(coord[3].trim())+");");
 			}
         }
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(LoadEvtBind.class),
-		@TagEvent(LoadErrorEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
 	}
 	
 	@Override

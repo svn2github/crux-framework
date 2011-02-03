@@ -15,30 +15,22 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.LongBox;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+import com.google.gwt.user.client.ui.LongBox;
 
 /**
  * A Factory for LongBox widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="longBox", library="gwt", targetWidget=LongBox.class)
+@TagAttributes({
+	@TagAttribute(value="value", type=Long.class),
+	@TagAttribute(value="maxLength", type=Integer.class),
+	@TagAttribute(value="visibleLength", type=Integer.class)
+})
 public class LongBoxFactory extends ValueBoxBaseFactory 
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="value", type=Long.class),
-		@TagAttribute(value="maxLength", type=Integer.class),
-		@TagAttribute(value="visibleLength", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 }

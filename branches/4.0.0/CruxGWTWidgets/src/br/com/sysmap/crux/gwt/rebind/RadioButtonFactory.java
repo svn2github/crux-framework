@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -38,6 +37,12 @@ import com.google.gwt.user.client.ui.RadioButton;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="radioButton", library="gwt", targetWidget=RadioButton.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="name", required=true)
+})
+@TagChildren({
+	@TagChild(value=RadioButtonFactory.ContentProcessor.class, autoProcess=false)
+})
 public class RadioButtonFactory extends AbstractCheckBoxFactory
 {
 	@Override
@@ -49,25 +54,6 @@ public class RadioButtonFactory extends AbstractCheckBoxFactory
 		return varName;
 	}	
 
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="name", required=true)
-	})
-	@Override
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	    super.processAttributes(out, context);
-	}
-	
-	
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
-	
 }

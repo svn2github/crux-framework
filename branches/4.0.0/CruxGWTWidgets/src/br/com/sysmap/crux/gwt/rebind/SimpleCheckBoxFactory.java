@@ -15,15 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.SimpleCheckBox;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+
+import com.google.gwt.user.client.ui.SimpleCheckBox;
 
 /**
  * Represents a SimpleCheckBoxFactory component
@@ -31,18 +29,12 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  *
  */
 @DeclarativeFactory(id="simpleCheckBox", library="gwt", targetWidget=SimpleCheckBox.class)
+@TagAttributes({
+	@TagAttribute(value="checked", type=Boolean.class)
+})
 public class SimpleCheckBoxFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 		implements HasNameFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="checked", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

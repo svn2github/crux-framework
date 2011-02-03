@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.FileUpload;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
@@ -27,25 +23,20 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 
+import com.google.gwt.user.client.ui.FileUpload;
+
 /**
  * Represents a FileUploadFactory component.
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="fileUpload", library="gwt", targetWidget=FileUpload.class)
+@TagAttributes({
+	@TagAttribute(value="enabled", type=Boolean.class)
+})
 public class FileUploadFactory extends WidgetCreator<WidgetCreatorContext> 
 	   implements HasChangeHandlersFactory<WidgetCreatorContext>, 
 	   			  HasNameFactory<WidgetCreatorContext>
 {//TODO should implement HasEnabledFactory, but GWT FileUploadWidget does not implement HasEnabled. GWT Issue 5677
-
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="enabled", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

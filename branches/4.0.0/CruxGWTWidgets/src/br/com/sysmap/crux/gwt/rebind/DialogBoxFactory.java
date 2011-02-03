@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasCloseHandlersFactory;
@@ -36,33 +34,22 @@ import com.google.gwt.user.client.ui.DialogBox;
  * @author Gesse S. F. Dafe <code>gessedafe@gmail.com</code>
  */
 @DeclarativeFactory(id="dialogBox", library="gwt", attachToDOM=false, targetWidget= DialogBox.class)
+@TagAttributes({
+	@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),
+	@TagAttribute(value="autoHideOnHistoryEventsEnabled", type=Boolean.class),
+	@TagAttribute("glassStyleName"),
+	@TagAttribute(value="glassEnabled", type=Boolean.class),
+	@TagAttribute(value="modal", type=Boolean.class),
+	@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
+})
+@TagChildren({
+	@TagChild(DialogBoxFactory.WidgetContentProcessor.class)
+})
 public class DialogBoxFactory extends PanelFactory<WidgetCreatorContext>
        implements HasAnimationFactory<WidgetCreatorContext>, 
                   HasCloseHandlersFactory<WidgetCreatorContext>, 
                   HasHTMLFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),
-		@TagAttribute(value="autoHideOnHistoryEventsEnabled", type=Boolean.class),
-		@TagAttribute("glassStyleName"),
-		@TagAttribute(value="glassEnabled", type=Boolean.class),
-		@TagAttribute(value="modal", type=Boolean.class),
-		@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-    @Override
-    @TagChildren({
-            @TagChild(WidgetContentProcessor.class)
-    })
-    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-    {
-    }
-    
     @Override
     public WidgetCreatorContext instantiateContext()
     {

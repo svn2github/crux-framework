@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.CheckBox;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
@@ -27,22 +23,19 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
+import com.google.gwt.user.client.ui.CheckBox;
+
 /**
  * CheckBoxFactory DeclarativeFactory.
  * @author Thiago Bustamante
  *
  */
 @DeclarativeFactory(id="checkBox", library="gwt", targetWidget=CheckBox.class)
+@TagChildren({
+	@TagChild(value=CheckBoxFactory.ContentProcessor.class, autoProcess=false)
+})
 public class CheckBoxFactory extends AbstractCheckBoxFactory
 {
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

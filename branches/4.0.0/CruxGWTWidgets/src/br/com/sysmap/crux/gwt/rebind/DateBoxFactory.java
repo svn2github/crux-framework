@@ -45,21 +45,28 @@ import com.google.gwt.user.datepicker.client.DateBox;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="dateBox", library="gwt", targetWidget=DateBox.class)
+@TagAttributes({
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute(value="enabled", type=Boolean.class),
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="focus", type=Boolean.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("value"),
+	@TagAttributeDeclaration("pattern"),
+	@TagAttributeDeclaration(value="reportFormatError", type=Boolean.class)
+})
+@TagEventsDeclaration({
+	@TagEventDeclaration("onLoadFormat")
+})
+@TagChildren({
+	@TagChild(value=DateBoxFactory.DateBoxProcessor.class, autoProcess=false)
+})
+
 public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasValueChangeHandlersFactory<WidgetCreatorContext>
 {
 	@Override
-	@TagAttributes({
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute(value="enabled", type=Boolean.class),
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="focus", type=Boolean.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("value"),
-		@TagAttributeDeclaration("pattern"),
-		@TagAttributeDeclaration(value="reportFormatError", type=Boolean.class)
-	})
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		super.processAttributes(out, context);
@@ -79,16 +86,6 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 			out.println(widget+".setValue("+widget+".getFormat().parse("+widget+", "+EscapeUtils.quote(value)+", "+reportError+"));");
 		}		
 	}
-	
-	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadFormat")
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
 	
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
@@ -124,12 +121,6 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 			return varName;
 		}		
 	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(value=DateBoxProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
 	public static class DateBoxProcessor extends WidgetChildProcessor<WidgetCreatorContext>{}

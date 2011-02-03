@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -31,17 +29,12 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  * Represents a DecoratorPanelFactory
  * @author Thiago Bustamante
  */
+@TagChildren({
+	@TagChild(DecoratorPanelFactory.WidgetContentProcessor.class)
+})
 @DeclarativeFactory(id="decoratorPanel", library="gwt", targetWidget= DecoratorPanel.class)
 public class DecoratorPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
-    @Override
-    @TagChildren({
-            @TagChild(WidgetContentProcessor.class)
-    })
-    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-    {
-    }
-    
     @Override
     public WidgetCreatorContext instantiateContext()
     {

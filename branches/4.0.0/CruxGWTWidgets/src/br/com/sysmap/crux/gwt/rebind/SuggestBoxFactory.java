@@ -18,10 +18,9 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
@@ -42,27 +41,24 @@ import com.google.gwt.user.client.ui.SuggestOracle;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="suggestBox", library="gwt", targetWidget=SuggestBox.class)
+@TagAttributes({
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="autoSelectEnabled", type=Boolean.class),
+	@TagAttribute(value="focus", type=Boolean.class),
+	@TagAttribute(value="limit", type=Integer.class),
+	@TagAttribute("popupStyleName"),
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute("value")
+})
+@TagEventsDeclaration({
+	@TagEventDeclaration("onLoadOracle")
+})
 public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasAnimationFactory<WidgetCreatorContext>, HasTextFactory<WidgetCreatorContext>, 
                   HasValueChangeHandlersFactory<WidgetCreatorContext>, 
                   HasSelectionHandlersFactory<WidgetCreatorContext>,
                   HasAllKeyHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="autoSelectEnabled", type=Boolean.class),
-		@TagAttribute(value="focus", type=Boolean.class),
-		@TagAttribute(value="limit", type=Integer.class),
-		@TagAttribute("popupStyleName"),
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute("value")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
@@ -86,15 +82,6 @@ public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext>
 		}
 		return varName;
 	}	
-	
-	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadOracle")
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);		
-	}
 	
 	@Override
     public WidgetCreatorContext instantiateContext()

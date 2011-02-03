@@ -17,7 +17,6 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
@@ -36,6 +35,10 @@ import com.google.gwt.user.client.ui.VerticalSplitPanel;
  */
 @SuppressWarnings("deprecation")
 @DeclarativeFactory(id="verticalSplitPanel", library="gwt", targetWidget=VerticalSplitPanel.class)
+@TagChildren({
+	@TagChild(VerticalSplitPanelFactory.TopProcessor.class),
+	@TagChild(VerticalSplitPanelFactory.BottomProcessor.class)
+})
 public class VerticalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
 	@Override
@@ -47,32 +50,17 @@ public class VerticalSplitPanelFactory extends PanelFactory<WidgetCreatorContext
 		return varName;
 	}
 	
-	@Override
-	@TagChildren({
-		@TagChild(TopProcessor.class),
-		@TagChild(BottomProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="top", minOccurs="0")
-	public static class TopProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TopWidgeProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TopWidgeProcessor.class)
+	})
+	public static class TopProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(tagName="bottom", minOccurs="0")
-	public static class BottomProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(BottomWidgeProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(BottomWidgeProcessor.class)
+	})
+	public static class BottomProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
 	@TagChildAttributes(widgetProperty="topWidget")
 	public static class TopWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}

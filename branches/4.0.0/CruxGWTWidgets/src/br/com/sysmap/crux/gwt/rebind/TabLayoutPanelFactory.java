@@ -54,6 +54,16 @@ class TabLayoutPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tabLayoutPanel", library="gwt", targetWidget=TabLayoutPanel.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="barHeight", type=Integer.class, defaultValue="20"),
+	@TagAttributeDeclaration(value="unit", type=Unit.class)
+})
+@TagAttributes({
+	@TagAttribute(value="visibleTab", type=Integer.class, processor=TabLayoutPanelFactory.VisibleTabAttributeParser.class)
+})
+@TagChildren({
+	@TagChild(TabLayoutPanelFactory.TabProcessor.class)
+})	
 public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContext> 
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanelContext>, 
                   HasSelectionHandlersFactory<TabLayoutPanelContext>
@@ -75,19 +85,6 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		return varName;
 	}
 	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="barHeight", type=Integer.class, defaultValue="20"),
-		@TagAttributeDeclaration(value="unit", type=Unit.class)
-	})
-	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -100,38 +97,21 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(propertyValue)+");");
         }
 	}
-		
-	@Override
-	@TagChildren({
-		@TagChild(TabProcessor.class)
-	})	
-	public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException 
-	{
-	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
-	public static class TabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TabTitleProcessor.class), 
-			@TagChild(TabWidgetProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TabTitleProcessor.class), 
+		@TagChild(TabWidgetProcessor.class)
+	})	
+	public static class TabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> {}
 
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<TabLayoutPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TextTabProcessor.class),
-			@TagChild(HTMLTabProcessor.class),
-			@TagChild(WidgetTitleTabProcessor.class)
-		})		
-		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
-		
-	}
+	@TagChildren({
+		@TagChild(TextTabProcessor.class),
+		@TagChild(HTMLTabProcessor.class),
+		@TagChild(WidgetTitleTabProcessor.class)
+	})		
+	public static class TabTitleProcessor extends ChoiceChildProcessor<TabLayoutPanelContext> {}
 	
 	@TagChildAttributes(tagName="tabText", type=String.class)
 	public static class TextTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext>
@@ -156,14 +136,10 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 	}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetTitleProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetTitleProcessor.class)
+	})	
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<TabLayoutPanelContext> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetTitleProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
@@ -176,14 +152,10 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 	}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetContentProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})	
+	public static class TabWidgetProcessor extends WidgetChildProcessor<TabLayoutPanelContext> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetContentProcessor extends WidgetChildProcessor<TabLayoutPanelContext> 

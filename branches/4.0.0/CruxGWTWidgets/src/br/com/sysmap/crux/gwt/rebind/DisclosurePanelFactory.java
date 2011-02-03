@@ -50,13 +50,23 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="disclosurePanel", library="gwt", targetWidget=DisclosurePanel.class)
+@TagAttributes({
+	@TagAttribute(value="open", type=Boolean.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("headerText")
+})
+@TagChildren({
+	@TagChild(DisclosurePanelFactory.HeaderProcessor.class),
+	@TagChild(DisclosurePanelFactory.ContentProcessor.class)
+})	
+
 public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasAnimationFactory<WidgetCreatorContext>, 
                   HasOpenHandlersFactory<WidgetCreatorContext>, 
                   HasCloseHandlersFactory<WidgetCreatorContext>
 {
 	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-	
 	
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
@@ -91,43 +101,25 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 	}
 	
 	@Override
-	@TagAttributes({
-		@TagAttribute(value="open", type=Boolean.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("headerText")
-	})
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		super.processAttributes(out, context);
 	}
 
 	@Override
-	@TagChildren({
-		@TagChild(HeaderProcessor.class),
-		@TagChild(ContentProcessor.class)
-	})	
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 
 	@TagChildAttributes(minOccurs="0", tagName="widgetHeader")
-	public static class HeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetHeaderProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetHeaderProcessor.class)
+	})	
+	public static class HeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 		
 	@TagChildAttributes(minOccurs="0", tagName="widgetContent")
-	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetProcessor.class)
+	})	
+	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
 	@TagChildAttributes(widgetProperty="content")
 	@TagChildLazyConditions(all={

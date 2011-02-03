@@ -15,11 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 
 /**
@@ -27,15 +24,10 @@ import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
  * @author Thiago Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute("value"),
+	@TagAttribute(value="textAlignment", type=TextBoxBaseFactory.TextAlign.class, processor=TextBoxBaseFactory.TextAlignmentProcessor.class)
+})
 public abstract class TextBoxBaseFactory extends ValueBoxBaseFactory
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute("value"),
-		@TagAttribute(value="textAlignment", type=TextAlign.class, processor=TextAlignmentProcessor.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 }

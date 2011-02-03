@@ -15,9 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.FlexTable;
-
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
@@ -28,31 +25,25 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
+import com.google.gwt.user.client.ui.FlexTable;
+
 /**
  * Factory for FlexTable widget
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="flexTable", library="gwt", targetWidget=FlexTable.class)
+@TagChildren({
+	@TagChild(FlexTableFactory.GridRowProcessor.class)
+})
 public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 {
-	/**
-	 * Populate the panel with declared items
-	 * @param element
-	 * @throws CruxGeneratorException 
-	 */
-	@Override
-	@TagChildren({
-		@TagChild(GridRowProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(GridCellProcessor.class)
+	})
 	public static class GridRowProcessor extends TableRowProcessor<HTMLTableFactoryContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(GridCellProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException
 		{
 			String widget = context.getWidget();
@@ -62,16 +53,16 @@ public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="colSpan", type=Integer.class),
+		@TagAttributeDeclaration(value="rowSpan", type=Integer.class)
+	})
+	@TagChildren({
+		@TagChild(GridChildrenProcessor.class)
+	})
 	public static class GridCellProcessor extends TableCellProcessor<HTMLTableFactoryContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="colSpan", type=Integer.class),
-			@TagAttributeDeclaration(value="rowSpan", type=Integer.class)
-		})
-		@TagChildren({
-			@TagChild(GridChildrenProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException
 		{
 			String widget = context.getWidget();
@@ -94,31 +85,22 @@ public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class GridChildrenProcessor extends ChoiceChildProcessor<HTMLTableFactoryContext> 
-	{
-		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-
-		@Override
-		@TagChildren({
-			@TagChild(FlexCellTextProcessor.class),
-			@TagChild(FlexCellHTMLProcessor.class),
-			@TagChild(FlexCellWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException	{}
-	}
+	@TagChildren({
+		@TagChild(FlexCellTextProcessor.class),
+		@TagChild(FlexCellHTMLProcessor.class),
+		@TagChild(FlexCellWidgetProcessor.class)
+	})
+	public static class GridChildrenProcessor extends ChoiceChildProcessor<HTMLTableFactoryContext> {}
 	
 	public static class FlexCellTextProcessor extends CellTextProcessor<HTMLTableFactoryContext>{}
 	public static class FlexCellHTMLProcessor extends CellHTMLProcessor<HTMLTableFactoryContext>{}
-	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<HTMLTableFactoryContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FlexWidgetProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, HTMLTableFactoryContext context) throws CruxGeneratorException {}
-		
-	}
+
+	@TagChildren({
+		@TagChild(FlexWidgetProcessor.class)
+	})	
+	public static class FlexCellWidgetProcessor extends CellWidgetProcessor<HTMLTableFactoryContext> {}
 	public static class FlexWidgetProcessor extends WidgetProcessor<HTMLTableFactoryContext>{}
+	
 	@Override
     public HTMLTableFactoryContext instantiateContext()
     {

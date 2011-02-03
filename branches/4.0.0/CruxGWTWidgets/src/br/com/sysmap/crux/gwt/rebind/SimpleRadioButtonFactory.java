@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
@@ -34,18 +33,12 @@ import com.google.gwt.user.client.ui.SimpleRadioButton;
  *
  */
 @DeclarativeFactory(id="simpleRadioButton", library="gwt", targetWidget=SimpleRadioButton.class)
+@TagAttributes({
+	@TagAttribute(value="checked", type=Boolean.class)
+})
 public class SimpleRadioButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 		implements HasNameFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="checked", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{

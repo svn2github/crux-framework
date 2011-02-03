@@ -33,6 +33,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
  *
  */
 @DeclarativeFactory(id="dockLayoutPanel", library="gwt", targetWidget=DockLayoutPanel.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="unit", type=Unit.class)
+})
+@TagChildren({
+	@TagChild(DockLayoutPanelFactory.DockLayoutPanelProcessor.class)
+})		
 public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanelContext>
 {
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
@@ -44,32 +50,10 @@ public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockL
 		return varName;
 	}
 	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="unit", type=Unit.class)
-	})
-	public void processAttributes(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
 	@TagChildren({
-		@TagChild(DockLayoutPanelProcessor.class)
+		@TagChild(DockLayoutPanelWidgetProcessor.class)
 	})		
-	public void processChildren(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException {}
-	
-	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(DockLayoutPanelWidgetProcessor.class)
-		})		
-		public void processChildren(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException
-		{
-			super.processChildren(out, context);
-		}
-	}
+	public static class DockLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<DockLayoutPanelContext> {}
 	
 	public static class DockLayoutPanelWidgetProcessor extends AbstractDockPanelWidgetProcessor<DockLayoutPanelContext> {}
 	

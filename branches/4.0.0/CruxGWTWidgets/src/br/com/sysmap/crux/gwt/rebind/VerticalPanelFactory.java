@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
@@ -30,52 +28,37 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="verticalPanel", library="gwt", targetWidget=VerticalPanel.class)
+@TagChildren({
+	@TagChild(VerticalPanelFactory.VerticalPanelProcessor.class)
+})		
 public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
 	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
 	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(VerticalPanelProcessor.class)
-	})		
-	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(VerticalProcessor.class),
-			@TagChild(VerticalWidgetProcessor.class)
-		})		
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(VerticalProcessor.class),
+		@TagChild(VerticalWidgetProcessor.class)
+	})		
+	public static class  VerticalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> {}
 	
-	public static class VerticalProcessor extends AbstractCellProcessor<CellPanelContext>
-	{
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		@TagChildren({
-			@TagChild(value=VerticalWidgetProcessor.class)
-		})		
-		@Override
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(value=VerticalWidgetProcessor.class)
+	})		
+	public static class VerticalProcessor extends AbstractCellProcessor<CellPanelContext> {}
 		
 	public static class VerticalWidgetProcessor extends AbstractCellWidgetProcessor<CellPanelContext> 
 	{

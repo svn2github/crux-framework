@@ -31,27 +31,21 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
  * Base class for implementing factories for many kinds of list boxes.
  * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
  */
+@TagAttributes({
+	@TagAttribute(value="visibleItemCount", type=Integer.class)
+})
 public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxContext> 
 				implements HasChangeHandlersFactory<ListBoxContext>, HasNameFactory<ListBoxContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleItemCount", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context); 
-	}
-
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("value"),
+		@TagAttributeDeclaration(value="label", supportsI18N=true),
+		@TagAttributeDeclaration(value="selected", type=Boolean.class)
+	})
 	public abstract static class ItemsProcessor extends WidgetChildProcessor<ListBoxContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("value"),
-			@TagAttributeDeclaration(value="label", supportsI18N=true),
-			@TagAttributeDeclaration(value="selected", type=Boolean.class)
-		})
 		public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException 
 		{
 			

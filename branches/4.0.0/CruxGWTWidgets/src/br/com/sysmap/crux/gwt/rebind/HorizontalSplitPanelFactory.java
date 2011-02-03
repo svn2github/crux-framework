@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
@@ -33,34 +31,23 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
  */
 @SuppressWarnings("deprecation")
 @DeclarativeFactory(id="horizontalSplitPanel", library="gwt", targetWidget=HorizontalSplitPanel.class)
+@TagChildren({
+	@TagChild(HorizontalSplitPanelFactory.LeftProcessor.class),
+	@TagChild(HorizontalSplitPanelFactory.RightProcessor.class)
+})
 public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(LeftProcessor.class),
-		@TagChild(RightProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="left", minOccurs="0")
-	public static class LeftProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(LeftWidgeProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(LeftWidgeProcessor.class)
+	})
+	public static class LeftProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(tagName="right", minOccurs="0")
-	public static class RightProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(RightWidgeProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(RightWidgeProcessor.class)
+	})
+	public static class RightProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
 	@TagChildAttributes(widgetProperty="leftWidget")
 	public static class LeftWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
@@ -73,5 +60,4 @@ public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorConte
     {
 	    return new WidgetCreatorContext();
     }
-	
 }

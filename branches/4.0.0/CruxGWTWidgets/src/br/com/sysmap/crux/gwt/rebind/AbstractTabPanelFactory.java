@@ -65,19 +65,13 @@ class TabPanelContext extends WidgetCreatorContext
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
+@TagAttributes({
+	@TagAttribute(value="visibleTab", type=Integer.class, processor=AbstractTabPanelFactory.VisibleTabAttributeParser.class)
+})
 public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelContext> 
        implements HasAnimationFactory<TabPanelContext>, 
                   HasBeforeSelectionHandlersFactory<TabPanelContext>, HasSelectionHandlersFactory<TabPanelContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -92,19 +86,19 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 	}	
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
+	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onClick"),
+		@TagEventDeclaration("onKeyUp"),
+		@TagEventDeclaration("onKeyDown"),
+		@TagEventDeclaration("onKeyPress")
+	})
 	public static abstract class AbstractTabProcessor extends WidgetChildProcessor<TabPanelContext> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
-		})
-		@TagEventsDeclaration({
-			@TagEventDeclaration("onClick"),
-			@TagEventDeclaration("onKeyUp"),
-			@TagEventDeclaration("onKeyDown"),
-			@TagEventDeclaration("onKeyPress")
-		})
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
 		{
 			context.tabElement = context.getChildElement();

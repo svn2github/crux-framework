@@ -22,8 +22,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -40,6 +40,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  *
  */
 @DeclarativeFactory(id="HTMLPanel", library="gwt", targetWidget=HTMLPanel.class, htmlContainer=true)
+@TagChildren({
+	@TagChild(value=HTMLPanelFactory.ContentProcessor.class, autoProcess=false)
+})
 public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
@@ -58,14 +61,6 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 		return varName;
 	}
 
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

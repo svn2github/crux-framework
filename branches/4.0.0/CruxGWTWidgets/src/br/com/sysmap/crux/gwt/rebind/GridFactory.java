@@ -38,6 +38,9 @@ class GridFactoryContext extends HTMLTableFactoryContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="grid", library="gwt", targetWidget=Grid.class)
+@TagChildren({
+	@TagChild(GridFactory.GridRowProcessor.class)
+})
 public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 {
 	/**
@@ -46,9 +49,6 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	 * @throws CruxGeneratorException 
 	 */
 	@Override
-	@TagChildren({
-		@TagChild(GridRowProcessor.class)
-	})
 	public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException	
 	{
 		JSONArray children = ensureChildren(context.getWidgetElement(), true);
@@ -78,12 +78,12 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
     }
 	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(GridCellProcessor.class)
+	})
 	public static class GridRowProcessor extends TableRowProcessor<GridFactoryContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(GridCellProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException
 		{
 			if (!context.cellsInitialized)
@@ -99,12 +99,12 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagChildren({
+		@TagChild(GridChildrenProcessor.class)
+	})
 	public static class GridCellProcessor extends TableCellProcessor<GridFactoryContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(GridChildrenProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException
 		{
 			
@@ -113,27 +113,28 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	}
 	
 	@TagChildAttributes(minOccurs="0")
+	@TagChildren({
+		@TagChild(GridCellTextProcessor.class),
+		@TagChild(GridCellHTMLProcessor.class),
+		@TagChild(GridCellWidgetProcessor.class)
+	})
 	public static class GridChildrenProcessor extends ChoiceChildProcessor<GridFactoryContext> 
 	{
 		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 		
 		@Override
-		@TagChildren({
-			@TagChild(GridCellTextProcessor.class),
-			@TagChild(GridCellHTMLProcessor.class),
-			@TagChild(GridCellWidgetProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException {}
 	}
 	
 	public static class GridCellTextProcessor extends CellTextProcessor<GridFactoryContext>{}
 	public static class GridCellHTMLProcessor extends CellHTMLProcessor<GridFactoryContext>{}
+
+	@TagChildren({
+		@TagChild(GridWidgetProcessor.class)
+	})	
 	public static class GridCellWidgetProcessor extends CellWidgetProcessor<GridFactoryContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(GridWidgetProcessor.class)
-		})	
 		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException {}
 		
 	}

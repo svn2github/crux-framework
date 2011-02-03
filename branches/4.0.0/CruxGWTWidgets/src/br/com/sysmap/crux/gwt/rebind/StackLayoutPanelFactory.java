@@ -62,6 +62,12 @@ class StackLayoutContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="stackLayoutPanel", library="gwt", targetWidget=StackLayoutPanel.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="unit", type=Unit.class, defaultValue="PX")
+})
+@TagChildren({
+	@TagChild(StackLayoutPanelFactory.StackItemProcessor.class)
+})
 public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext> 
 	   implements HasBeforeSelectionHandlersFactory<StackLayoutContext>, 
 	   			  HasSelectionHandlersFactory<StackLayoutContext>
@@ -74,36 +80,18 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		out.println(className + " " + varName+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
 		return varName;
 	}
-	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="unit", type=Unit.class, defaultValue="PX")
-	})
-	public void processAttributes(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(StackItemProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
-	{
-		super.processChildren(out, context);
-	}
 
 	@TagChildAttributes(tagName="item", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(StackHeaderProcessor.class),
+		@TagChild(StackContentProcessor.class)
+	})
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="selected", type=Boolean.class, defaultValue="false")
+	})
 	public static class StackItemProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(StackHeaderProcessor.class),
-			@TagChild(StackContentProcessor.class)
-		})
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="selected", type=Boolean.class, defaultValue="false")
-		})
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.clearAttributes();
@@ -116,33 +104,27 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 	}
 
 	@TagChildAttributes(tagName="header")
+	@TagChildren({
+		@TagChild(StackHeader.class)
+	})
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="size", type=Double.class, required=true)
+	})
 	public static class StackHeaderProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(StackHeader.class)
-		})
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="size", type=Double.class, required=true)
-		})
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.headerSize = Double.parseDouble(context.readChildProperty("size"));
 		}
 	}
 
-	public static class StackHeader extends ChoiceChildProcessor<StackLayoutContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(StackHeaderWidgetProcessor.class),
-			@TagChild(StackHeaderTextProcessor.class),
-			@TagChild(StackHeaderHTMLProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
-		{
-		}
-	}
+	@TagChildren({
+		@TagChild(StackHeaderWidgetProcessor.class),
+		@TagChild(StackHeaderTextProcessor.class),
+		@TagChild(StackHeaderHTMLProcessor.class)
+	})
+	public static class StackHeader extends ChoiceChildProcessor<StackLayoutContext> {}
 	
 	@TagChildAttributes(tagName="text", type=String.class)
 	public static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutContext>
@@ -178,14 +160,10 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 	}
 
 	@TagChildAttributes(tagName="content")
-	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(StackContentWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(StackContentWidgetProcessor.class)
+	})
+	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutContext> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutContext>

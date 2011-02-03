@@ -47,22 +47,21 @@ class AbstractLayoutPanelContext extends WidgetCreatorContext
 	}
 }
 
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="animationDuration", type=Integer.class, processor=AbstractLayoutPanelFactory.AnimationDurationAttributeParser.class)
+})
+@TagEventsDeclaration({
+	@TagEventDeclaration("onAnimationComplete"), 
+	@TagEventDeclaration("onAnimationStep") 
+})
 public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelContext> 
 			    extends ComplexPanelFactory<C>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="animationDuration", type=Integer.class, processor=AnimationDurationAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -70,21 +69,11 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 	public static class AnimationDurationAttributeParser extends AttributeProcessor<AbstractLayoutPanelContext>
 	{
 		@Override
-        public void processAttribute(SourcePrinter out, AbstractLayoutPanelContext context, String attributeValue)
-        {
+		public void processAttribute(SourcePrinter out, AbstractLayoutPanelContext context, String attributeValue)
+		{
 			context.animationDuration = Integer.parseInt(attributeValue);
 			context.childProcessingAnimations = new ArrayList<String>();			
-        }
-	}
-	
-	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onAnimationComplete"), 
-		@TagEventDeclaration("onAnimationStep") 
-	})
-	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
+		}
 	}
 	
 	@Override

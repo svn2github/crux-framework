@@ -18,10 +18,9 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
@@ -41,32 +40,23 @@ import com.google.gwt.user.client.ui.FormPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="formPanel", library="gwt", targetWidget=FormPanel.class)
+@TagAttributes({
+	@TagAttribute("method"),
+	@TagAttribute("encoding"),
+	@TagAttribute("action")
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("target")
+})
+@TagEvents({
+	@TagEvent(SubmitCompleteEvtBind.class),
+	@TagEvent(SubmitEvtBind.class)
+})
+@TagChildren({
+	@TagChild(FormPanelFactory.WidgetContentProcessor.class)
+})
 public class FormPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute("method"),
-		@TagAttribute("encoding"),
-		@TagAttribute("action")
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("target")
-	})
-    public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(SubmitCompleteEvtBind.class),
-		@TagEvent(SubmitEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processEvents(out, context);
-	}
 	
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
@@ -85,14 +75,6 @@ public class FormPanelFactory extends PanelFactory<WidgetCreatorContext>
 		return varName;
 	}
 	
-	@Override
-	@TagChildren({
-		@TagChild(WidgetContentProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
@@ -101,5 +83,4 @@ public class FormPanelFactory extends PanelFactory<WidgetCreatorContext>
     {
 	    return new WidgetCreatorContext();
     }
-	
 }

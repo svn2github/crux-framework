@@ -40,23 +40,20 @@ class SplitLayoutPanelContext extends DockLayoutPanelContext
  *
  */
 @DeclarativeFactory(id="splitLayoutPanel", library="gwt", targetWidget=SplitLayoutPanel.class)
+@TagChildren({
+	@TagChild(SplitLayoutPanelFactory.SplitLayoutPanelProcessor.class)
+})		
 public class SplitLayoutPanelFactory extends AbstractDockLayoutPanelFactory<SplitLayoutPanelContext>
 {
-	@Override
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="minSize", type=Integer.class)
+	})
 	@TagChildren({
-		@TagChild(SplitLayoutPanelProcessor.class)
+		@TagChild(SplitLayoutPanelWidgetProcessor.class)
 	})		
-	public void processChildren(SourcePrinter out, SplitLayoutPanelContext context) throws CruxGeneratorException {}
-	
 	public static class SplitLayoutPanelProcessor extends AbstractDockLayoutPanelProcessor<SplitLayoutPanelContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="minSize", type=Integer.class)
-		})
-		@TagChildren({
-			@TagChild(SplitLayoutPanelWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, SplitLayoutPanelContext context) throws CruxGeneratorException
 		{
 			context.minSize = context.readChildProperty("minSize");

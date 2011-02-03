@@ -52,18 +52,12 @@ class TabBarContext extends WidgetCreatorContext
  * Factory for TabBar widgets
  * @author Thiago da Rosa de Bustamante
  */
+@TagAttributes({
+	@TagAttribute(value="visibleTab", type=Integer.class, processor=AbstractTabBarFactory.VisibleTabAttributeParser.class)
+})
 public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarContext> 
        implements HasBeforeSelectionHandlersFactory<TabBarContext>, HasSelectionHandlersFactory<TabBarContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -71,26 +65,26 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 	public static class VisibleTabAttributeParser extends AttributeProcessor<TabBarContext>
 	{
 		@Override
-        public void processAttribute(SourcePrinter out, TabBarContext context, String attributeValue)
-        {
+		public void processAttribute(SourcePrinter out, TabBarContext context, String attributeValue)
+		{
 			printlnPostProcessing(context.getWidget()+".selectTab("+Integer.parseInt(attributeValue)+");");
-        }
+		}
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="wordWrap", type=Boolean.class, defaultValue="true")
+	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onClick"),
+		@TagEventDeclaration("onKeyUp"),
+		@TagEventDeclaration("onKeyDown"),
+		@TagEventDeclaration("onKeyPress")
+	})
 	public abstract static class AbstractTabProcessor extends WidgetChildProcessor<TabBarContext> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="wordWrap", type=Boolean.class, defaultValue="true")
-		})
-		@TagEventsDeclaration({
-			@TagEventDeclaration("onClick"),
-			@TagEventDeclaration("onKeyUp"),
-			@TagEventDeclaration("onKeyDown"),
-			@TagEventDeclaration("onKeyPress")
-		})
 		public void processChildren(SourcePrinter out, TabBarContext context) throws CruxGeneratorException
 		{
 			context.tabElement =context.getChildElement();

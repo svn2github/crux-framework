@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.event.BlurEvtBind;
@@ -43,42 +41,27 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
  * @author Thiago Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute(value="enabled", type=Boolean.class),
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="focus", type=Boolean.class)
+})
+@TagEvents({
+	@TagEvent(ClickEvtBind.class),
+	@TagEvent(DoubleClickEvtBind.class),
+	@TagEvent(FocusEvtBind.class),
+	@TagEvent(BlurEvtBind.class),
+	@TagEvent(KeyPressEvtBind.class),
+	@TagEvent(KeyUpEvtBind.class),
+	@TagEvent(KeyDownEvtBind.class),
+	@TagEvent(MouseDownEvtBind.class),
+	@TagEvent(MouseUpEvtBind.class),
+	@TagEvent(MouseOverEvtBind.class),
+	@TagEvent(MouseOutEvtBind.class),
+	@TagEvent(MouseMoveEvtBind.class),
+	@TagEvent(MouseWheelEvtBind.class)
+})
 public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> 
 {
-	/**
-	 * Process widget attributes
-	 * @throws CruxGeneratorException 
-	 */
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute(value="enabled", type=Boolean.class),
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="focus", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(ClickEvtBind.class),
-		@TagEvent(DoubleClickEvtBind.class),
-		@TagEvent(FocusEvtBind.class),
-		@TagEvent(BlurEvtBind.class),
-		@TagEvent(KeyPressEvtBind.class),
-		@TagEvent(KeyUpEvtBind.class),
-		@TagEvent(KeyDownEvtBind.class),
-		@TagEvent(MouseDownEvtBind.class),
-		@TagEvent(MouseUpEvtBind.class),
-		@TagEvent(MouseOverEvtBind.class),
-		@TagEvent(MouseOutEvtBind.class),
-		@TagEvent(MouseMoveEvtBind.class),
-		@TagEvent(MouseWheelEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
 }

@@ -15,30 +15,22 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.DoubleBox;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+
+import com.google.gwt.user.client.ui.DoubleBox;
 
 /**
  * A Factory for DoubleBox widgets
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="doubleBox", library="gwt", targetWidget=DoubleBox.class)
+@TagAttributes({
+	@TagAttribute(value="value", type=Double.class),
+	@TagAttribute(value="maxLength", type=Integer.class),
+	@TagAttribute(value="visibleLength", type=Integer.class)
+})
 public class DoubleBoxFactory extends ValueBoxBaseFactory 
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="value", type=Double.class),
-		@TagAttribute(value="maxLength", type=Integer.class),
-		@TagAttribute(value="visibleLength", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 }

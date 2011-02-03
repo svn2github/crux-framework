@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
@@ -39,18 +38,15 @@ import com.google.gwt.user.client.ui.TextArea;
  *
  */
 @DeclarativeFactory(id="textArea", library="gwt", targetWidget=TextArea.class)
+@TagAttributes({
+	@TagAttribute(value="characterWidth", type=Integer.class),
+	@TagAttribute(value="visibleLines", type=Integer.class)
+})
+@TagChildren({
+	@TagChild(TextAreaFactory.InnerTextProcessor.class)
+})
 public class TextAreaFactory extends TextBoxBaseFactory
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="characterWidth", type=Integer.class),
-		@TagAttribute(value="visibleLines", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
 	{
@@ -58,14 +54,6 @@ public class TextAreaFactory extends TextBoxBaseFactory
 		String className = TextArea.class.getCanonicalName();
 		out.println(className + " " + varName+" = new "+className+"();");
 		return varName;
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(InnerTextProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", widgetProperty="value")

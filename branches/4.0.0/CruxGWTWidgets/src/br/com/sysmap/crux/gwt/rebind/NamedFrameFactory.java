@@ -18,17 +18,16 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 
 import com.google.gwt.user.client.ui.NamedFrame;
 
@@ -39,6 +38,12 @@ import com.google.gwt.user.client.ui.NamedFrame;
  *
  */
 @DeclarativeFactory(id="namedFrame", library="gwt", targetWidget=NamedFrame.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="name", required=true)
+})	
+@TagAttributes({
+	@TagAttribute(value="url", processor=NamedFrameFactory.URLAttributeParser.class)
+})
 public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
@@ -49,18 +54,6 @@ public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
 		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(metaElem.optString("name"))+");");
 		return varName;
 	}	
-	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="name", required=true)
-	})	
-	@TagAttributes({
-		@TagAttribute(value="url", processor=URLAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

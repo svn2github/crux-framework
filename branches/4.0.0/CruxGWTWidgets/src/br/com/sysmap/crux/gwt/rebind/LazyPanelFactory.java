@@ -18,8 +18,8 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
@@ -36,6 +36,9 @@ import com.google.gwt.user.client.ui.LazyPanel;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="lazyPanel", library="gwt", targetWidget=LazyPanel.class)
+@TagChildren({
+	@TagChild(LazyPanelFactory.WidgetContentProcessor.class)
+})
 public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext> 
 {
 	@Override
@@ -52,15 +55,6 @@ public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext>
 		out.println("}");
 		out.println("};");
 		return varName;
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(WidgetContentProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processChildren(out, context);
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="1")

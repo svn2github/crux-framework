@@ -15,10 +15,9 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
@@ -33,22 +32,16 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="readOnly", type=Boolean.class),
+	@TagAttribute(value="alignment", type=ValueBoxBaseFactory.TextAlign.class, processor=ValueBoxBaseFactory.TextAlignmentProcessor.class)
+})
 public abstract class ValueBoxBaseFactory extends FocusWidgetFactory<WidgetCreatorContext>
                 implements HasChangeHandlersFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
                            HasTextFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>, 
                            HasDirectionFactory<WidgetCreatorContext>
 {	
 	public static enum TextAlign{center, justify, left, right}
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="readOnly", type=Boolean.class),
-		@TagAttribute(value="alignment", type=TextAlign.class, processor=TextAlignmentProcessor.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

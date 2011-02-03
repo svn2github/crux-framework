@@ -18,11 +18,10 @@ package br.com.sysmap.crux.gwt.rebind;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasScrollHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -39,32 +38,21 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="scrollPanel", library="gwt", targetWidget=ScrollPanel.class)
+@TagAttributes({
+	@TagAttribute(value="alwaysShowScrollBars", type=Boolean.class),
+	@TagAttribute(value="verticalScrollPosition", type=ScrollPanelFactory.VerticalScrollPosition.class, processor=ScrollPanelFactory.VerticalScrollPositionAttributeParser.class),
+	@TagAttribute(value="horizontalScrollPosition", type=ScrollPanelFactory.HorizontalScrollPosition.class, processor=ScrollPanelFactory.HorizontalScrollPositionAttributeParser.class),
+	@TagAttribute(value="ensureVisible", processor=ScrollPanelFactory.EnsureVisibleAttributeParser.class)
+})
+@TagChildren({
+	@TagChild(ScrollPanelFactory.WidgetContentProcessor.class)
+})
 public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext> 
        implements HasScrollHandlersFactory<WidgetCreatorContext>
 {
 	public static enum VerticalScrollPosition{top,bottom};
 	public static enum HorizontalScrollPosition{left,right};
 
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="alwaysShowScrollBars", type=Boolean.class),
-		@TagAttribute(value="verticalScrollPosition", type=VerticalScrollPosition.class, processor=VerticalScrollPositionAttributeParser.class),
-		@TagAttribute(value="horizontalScrollPosition", type=HorizontalScrollPosition.class, processor=HorizontalScrollPositionAttributeParser.class),
-		@TagAttribute(value="ensureVisible", processor=EnsureVisibleAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-    @Override
-    @TagChildren({
-            @TagChild(WidgetContentProcessor.class)
-    })
-    public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-    {
-    }
-    
     @TagChildAttributes(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
 	

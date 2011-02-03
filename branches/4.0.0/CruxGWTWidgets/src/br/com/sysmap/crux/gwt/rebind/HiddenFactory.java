@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
@@ -31,18 +29,12 @@ import com.google.gwt.user.client.ui.Hidden;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="hidden", library="gwt", targetWidget=Hidden.class)
+@TagAttributes({
+	@TagAttribute(value="value", supportsI18N=true),
+	@TagAttribute(value="defaultValue", supportsI18N=true)
+})
 public class HiddenFactory extends WidgetCreator<WidgetCreatorContext> implements HasNameFactory<WidgetCreatorContext> 
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="value", supportsI18N=true),
-		@TagAttribute(value="defaultValue", supportsI18N=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

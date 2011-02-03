@@ -48,24 +48,21 @@ class DockPanelContext extends CellPanelContext
  */
 @SuppressWarnings("deprecation")
 @DeclarativeFactory(id="dockPanel", library="gwt", targetWidget=DockPanel.class)
+@TagChildren({
+	@TagChild(DockPanelFactory.DockPanelProcessor.class)
+})		
 public class DockPanelFactory extends CellPanelFactory<DockPanelContext> 
        implements HasHorizontalAlignmentFactory<DockPanelContext>, 
                   HasVerticalAlignmentFactory<DockPanelContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(DockPanelProcessor.class)
-	})		
-	public void processChildren(SourcePrinter out, DockPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(DockCellProcessor.class),
+		@TagChild(DockWidgetProcessor.class)
+	})		
 	public static class DockPanelProcessor extends AbstractCellPanelProcessor<DockPanelContext> 
 	{
 		@Override
-		@TagChildren({
-			@TagChild(DockCellProcessor.class),
-			@TagChild(DockWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, DockPanelContext context) throws CruxGeneratorException 
 		{
 			super.processChildren(out, context);
@@ -74,17 +71,17 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 	}
 	
 	@TagChildAttributes(tagName="cell", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="direction", type=DockDirection.class, defaultValue="center")
+	})
+	@TagChildren({
+		@TagChild(value=DockWidgetProcessor.class)
+	})		
 	public static class DockCellProcessor extends AbstractCellProcessor<DockPanelContext> 
 	{
 		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 		
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="direction", type=DockDirection.class, defaultValue="center")
-		})
-		@TagChildren({
-			@TagChild(value=DockWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, DockPanelContext context) throws CruxGeneratorException 
 		{
 			super.processChildren(out, context);

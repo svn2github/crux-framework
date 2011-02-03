@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.Anchor;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
@@ -29,26 +25,22 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 
+import com.google.gwt.user.client.ui.Anchor;
+
 /**
  * Represents an AnchorFactory component
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="anchor", library="gwt", targetWidget=Anchor.class)
+@TagAttributes({
+	@TagAttribute("href"),
+	@TagAttribute("target")
+})
 public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 	   implements HasHTMLFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
 	              HasWordWrapFactory<WidgetCreatorContext>, HasDirectionFactory<WidgetCreatorContext>, 
 	              HasHorizontalAlignmentFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute("href"),
-		@TagAttribute("target")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

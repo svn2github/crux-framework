@@ -19,8 +19,8 @@ import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasInitializeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
@@ -50,23 +50,27 @@ class RichTextAreaContext extends WidgetCreatorContext
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="richTextArea", library="gwt", targetWidget=RichTextArea.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("backColor"),
+	@TagAttributeDeclaration("fontName"),
+	@TagAttributeDeclaration(value="fontSize", type=Integer.class),
+	@TagAttributeDeclaration("foreColor"),
+	@TagAttributeDeclaration("justification"),
+	@TagAttributeDeclaration(value="bold", type=Boolean.class),
+	@TagAttributeDeclaration(value="italic", type=Boolean.class),
+	@TagAttributeDeclaration(value="subscript", type=Boolean.class),
+	@TagAttributeDeclaration(value="superscript", type=Boolean.class),
+	@TagAttributeDeclaration(value="underline", type=Boolean.class),
+	@TagAttributeDeclaration(value="strikethrough", type=Boolean.class)
+})
+	@TagChildren({
+		@TagChild(value=RichTextAreaFactory.ContentProcessor.class, autoProcess=false)
+	})
+
 public class RichTextAreaFactory extends FocusWidgetFactory<RichTextAreaContext> 
 implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<RichTextAreaContext>
 {
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("backColor"),
-		@TagAttributeDeclaration("fontName"),
-		@TagAttributeDeclaration(value="fontSize", type=Integer.class),
-		@TagAttributeDeclaration("foreColor"),
-		@TagAttributeDeclaration("justification"),
-		@TagAttributeDeclaration(value="bold", type=Boolean.class),
-		@TagAttributeDeclaration(value="italic", type=Boolean.class),
-		@TagAttributeDeclaration(value="subscript", type=Boolean.class),
-		@TagAttributeDeclaration(value="superscript", type=Boolean.class),
-		@TagAttributeDeclaration(value="underline", type=Boolean.class),
-		@TagAttributeDeclaration(value="strikethrough", type=Boolean.class)
-	})
 	public void processAttributes(SourcePrinter out, final RichTextAreaContext context) throws CruxGeneratorException 
 	{
 		super.processAttributes(out, context);
@@ -246,14 +250,6 @@ implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<Ric
 				printlnPostProcessing(formatter+".toggleStrikethrough();");
 			}
 		}
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, RichTextAreaContext context) throws CruxGeneratorException
-	{
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)

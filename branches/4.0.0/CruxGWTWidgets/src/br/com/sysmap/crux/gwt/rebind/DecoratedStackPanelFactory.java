@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.DecoratedStackPanel;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -26,56 +22,42 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
+import com.google.gwt.user.client.ui.DecoratedStackPanel;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="decoratedStackPanel", library="gwt", targetWidget= DecoratedStackPanel.class)
+@TagChildren({
+	@TagChild(DecoratedStackPanelFactory.StackItemProcessor.class)
+})	
 public class DecoratedStackPanelFactory extends AbstractStackPanelFactory
 {
-	@Override
-	@TagChildren({
-		@TagChild(StackItemProcessor.class)
-	})	
-	public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException
-	{
-	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="stackItem")
-	public static class StackItemProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleProcessor.class),
-			@TagChild(ContentProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitleProcessor.class),
+		@TagChild(ContentProcessor.class)
+	})	
+	public static class StackItemProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> {}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TitleProcessor extends ChoiceChildProcessor<AbstractStackPanelFactoryContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleTextProcessor.class),
-			@TagChild(TitleHTMLProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitleTextProcessor.class),
+		@TagChild(TitleHTMLProcessor.class)
+	})	
+	public static class TitleProcessor extends ChoiceChildProcessor<AbstractStackPanelFactoryContext> {}
 
 	public static class TitleTextProcessor extends AbstractTitleTextProcessor {}
 	
 	public static class TitleHTMLProcessor extends AbstractTitleHTMLProcessor {}
 	
 	@TagChildAttributes(minOccurs="0", tagName="widget")
-	public static class ContentProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(ContentWidgetProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(ContentWidgetProcessor.class)
+	})	
+	public static class ContentProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> {}
 	
 	public static class ContentWidgetProcessor extends AbstractContentWidgetProcessor {}	
 }

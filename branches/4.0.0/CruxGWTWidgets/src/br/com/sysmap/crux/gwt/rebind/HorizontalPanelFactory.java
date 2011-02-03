@@ -35,47 +35,30 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
  *
  */
 @DeclarativeFactory(id="horizontalPanel", library="gwt", targetWidget=HorizontalPanel.class)
+@TagChildren({
+	@TagChild(HorizontalPanelFactory.HorizontalPanelProcessor.class)
+})		
 public class HorizontalPanelFactory extends CellPanelFactory<CellPanelContext>
 	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
 	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(HorizontalPanelProcessor.class)
-	})		
-	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
-	public static class  HorizontalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(HorizontalProcessor.class),
-			@TagChild(HorizontalWidgetProcessor.class)
-		})		
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(HorizontalProcessor.class),
+		@TagChild(HorizontalWidgetProcessor.class)
+	})		
+	public static class  HorizontalPanelProcessor extends AbstractCellPanelProcessor<CellPanelContext> {}
 	
-	public static class HorizontalProcessor extends AbstractCellProcessor<CellPanelContext>
-	{
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		@TagChildren({
-			@TagChild(value=HorizontalWidgetProcessor.class)
-		})		
-		@Override
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(value=HorizontalWidgetProcessor.class)
+	})		
+	public static class HorizontalProcessor extends AbstractCellProcessor<CellPanelContext> {}
 		
 	public static class HorizontalWidgetProcessor extends AbstractCellWidgetProcessor<CellPanelContext> 
 	{

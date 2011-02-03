@@ -44,14 +44,14 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 {
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="direction", type=Direction.class, defaultValue="CENTER"),
+		@TagAttributeDeclaration(value="size", type=Double.class)
+	})
 	public static abstract class AbstractDockLayoutPanelProcessor<C extends DockLayoutPanelContext> 
 	                       extends WidgetChildProcessor<C> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="direction", type=Direction.class, defaultValue="CENTER"),
-			@TagAttributeDeclaration(value="size", type=Double.class)
-		})
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			context.direction = getDirection(context.readChildProperty("direction"));

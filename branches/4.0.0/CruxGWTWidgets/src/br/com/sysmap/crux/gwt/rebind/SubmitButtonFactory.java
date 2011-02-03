@@ -17,10 +17,9 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -34,6 +33,9 @@ import com.google.gwt.user.client.ui.SubmitButton;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="submitButton", library="gwt", targetWidget=SubmitButton.class)
+@TagChildren({
+	@TagChild(value=SubmitButtonFactory.ContentProcessor.class, autoProcess=false)
+})
 public class SubmitButtonFactory extends ButtonBaseFactory
 {
 	@Override
@@ -44,14 +46,6 @@ public class SubmitButtonFactory extends ButtonBaseFactory
 		out.println(className + " " + varName+" = new "+className+"();");
 		return varName;
 	}	
-	
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}		

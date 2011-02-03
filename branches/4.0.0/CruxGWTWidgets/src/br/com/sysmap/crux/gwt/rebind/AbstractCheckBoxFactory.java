@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
@@ -26,28 +24,18 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 
 /**
- * CheckBoxFactory DeclarativeFactory.
+ * Factory for ChecBox widgets.
  * @author Thiago Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="checked", type=Boolean.class, property="value"),
+	@TagAttribute("formValue")	
+})
 public abstract class AbstractCheckBoxFactory extends FocusWidgetFactory<WidgetCreatorContext> 
        implements HasNameFactory<WidgetCreatorContext>, HasValueChangeHandlersFactory<WidgetCreatorContext>, 
        			  HasHTMLFactory<WidgetCreatorContext>, HasWordWrapFactory<WidgetCreatorContext>
 {
-	/**
-	 * process widget attributes
-	 * @throws CruxGeneratorException 
-	 */
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="checked", type=Boolean.class, property="value"),
-		@TagAttribute("formValue")	
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

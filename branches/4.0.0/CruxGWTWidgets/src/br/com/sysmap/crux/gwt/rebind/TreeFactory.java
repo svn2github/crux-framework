@@ -23,9 +23,9 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
@@ -50,8 +50,8 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.gwt.client.LoadImagesEvent;
 
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.Tree.Resources;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Tree.Resources;
 
 
 class TreeContext extends WidgetCreatorContext
@@ -64,6 +64,21 @@ class TreeContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="tree", library="gwt", targetWidget=Tree.class)
+@TagAttributes({
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="openSelectedItem", type=Boolean.class, processor=TreeFactory.OpenSelectedItemAttributeParser.class),
+	@TagAttribute(value="focus", type=Boolean.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class)
+})
+@TagEventsDeclaration({
+	@TagEventDeclaration("onLoadImage")
+})
+@TagChildren({
+	@TagChild(TreeFactory.TreeItemProcessor.class)
+})
 public class TreeFactory extends WidgetCreator<TreeContext> 
        implements HasAnimationFactory<TreeContext>, HasAllFocusHandlersFactory<TreeContext>,
                   HasOpenHandlersFactory<TreeContext>, HasCloseHandlersFactory<TreeContext>, 
@@ -110,15 +125,6 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	}
 	
 	@Override
-	@TagAttributes({
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="openSelectedItem", type=Boolean.class, processor=OpenSelectedItemAttributeParser.class),
-		@TagAttribute(value="focus", type=Boolean.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="useLeafImages", type=Boolean.class)
-	})
 	public void processAttributes(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 	{
 		super.processAttributes(out, context);
@@ -139,33 +145,18 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		}
 	}
 	
-	@Override
-	@TagEventsDeclaration({
-		@TagEventDeclaration("onLoadImage")
+	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="state", type=Boolean.class),
+		@TagAttributeDeclaration(value="selected", type=Boolean.class)
 	})
-	public void processEvents(SourcePrinter out, TreeContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
-	@Override
 	@TagChildren({
+		@TagChild(TreeCaptionProcessor.class),
 		@TagChild(TreeItemProcessor.class)
 	})
-	public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
-	
-	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	public static class TreeItemProcessor extends WidgetChildProcessor<TreeContext> implements HasPostProcessor<TreeContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="state", type=Boolean.class),
-			@TagAttributeDeclaration(value="selected", type=Boolean.class)
-		})
-		@TagChildren({
-			@TagChild(TreeCaptionProcessor.class),
-			@TagChild(TreeItemProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
 			context.itemStack = new LinkedList<String>();
@@ -177,15 +168,11 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		}
 	}
 	
-	public static class TreeCaptionProcessor extends ChoiceChildProcessor<TreeContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TextCaptionProcessor.class),
-			@TagChild(WidgetCaptionProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TextCaptionProcessor.class),
+		@TagChild(WidgetCaptionProcessor.class)
+	})
+	public static class TreeCaptionProcessor extends ChoiceChildProcessor<TreeContext> {}
 	
 	@TagChildAttributes(tagName="textTitle", type=String.class)
 	public static class TextCaptionProcessor extends WidgetChildProcessor<TreeContext>
@@ -213,14 +200,10 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	}	
 
 	@TagChildAttributes(tagName="widgetTitle")
-	public static class WidgetCaptionProcessor extends WidgetChildProcessor<TreeContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetCaptionWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException {}
-	}	
+	@TagChildren({
+		@TagChild(WidgetCaptionWidgetProcessor.class)
+	})
+	public static class WidgetCaptionProcessor extends WidgetChildProcessor<TreeContext> {}	
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<TreeContext>

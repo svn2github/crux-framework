@@ -35,17 +35,15 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
  *
  */
 @DeclarativeFactory(id="deckPanel", library="gwt", targetWidget= DeckPanel.class)
+@TagAttributes({
+	@TagAttribute(value="visibleWidget", type=Integer.class, processor=DeckPanelFactory.VisibleWidgetAttributeParser.class)
+})
+@TagChildren({
+	@TagChild(DeckPanelFactory.WidgetContentProcessor.class)
+})
 public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 					implements HasAnimationFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleWidget", type=Integer.class, processor=VisibleWidgetAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
-	{
-		super.processAttributes(out, context);
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante
@@ -62,9 +60,6 @@ public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 	}
 	
 	@Override
-	@TagChildren({
-		@TagChild(WidgetContentProcessor.class)
-	})
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}

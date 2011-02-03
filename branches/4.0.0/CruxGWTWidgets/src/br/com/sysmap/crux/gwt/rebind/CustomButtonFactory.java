@@ -102,12 +102,12 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 	}
 	
 	@TagChildAttributes(tagName="textFace")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="value", required=true)
+	})
 	abstract static class AbstractTextFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="value", required=true)
-		})
 		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
 			out.println(context.getWidget()+"get"+context.face+"().setText("+EscapeUtils.quote(context.readChildProperty("value"))+");");
@@ -125,13 +125,13 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 	}
 	
 	@TagChildAttributes(tagName="imageFace")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="url", required=true),
+		@TagAttributeDeclaration("visibleRect")
+	})
 	abstract static class AbstractImageFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="url", required=true),
-			@TagAttributeDeclaration("visibleRect")
-		})
 		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
 		{
 			String visibleRect = context.readChildProperty("visibleRect");

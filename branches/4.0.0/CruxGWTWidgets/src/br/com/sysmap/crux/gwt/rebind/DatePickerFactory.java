@@ -34,17 +34,17 @@ import br.com.sysmap.crux.gwt.client.DateFormatUtil;
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="datePicker", library="gwt", targetWidget=DatePicker.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="value", type=String.class),
+	@TagAttributeDeclaration(value="currentMonth", type=String.class),
+	@TagAttributeDeclaration(value="datePattern")
+})
 public class DatePickerFactory extends CompositeFactory<WidgetCreatorContext> 
        implements HasValueChangeHandlersFactory<WidgetCreatorContext>, 
                   HasShowRangeHandlersFactory<WidgetCreatorContext>, 
                   HasHighlightHandlersFactory<WidgetCreatorContext>
 {
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="value", type=String.class),
-		@TagAttributeDeclaration(value="currentMonth", type=String.class),
-		@TagAttributeDeclaration(value="datePattern")
-	})
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		super.processAttributes(out, context);

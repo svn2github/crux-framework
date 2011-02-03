@@ -60,43 +60,40 @@ class LayoutPanelContext extends AbstractLayoutPanelContext
  *
  */
 @DeclarativeFactory(id="layoutPanel", library="gwt", targetWidget=LayoutPanel.class)
+@TagChildren({
+	@TagChild(LayoutPanelFactory.LayoutPanelProcessor.class)
+})		
 public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(LayoutPanelProcessor.class)
-	})		
-	public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="layer")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="left", type=Double.class),
+		@TagAttributeDeclaration(value="right", type=Double.class),
+		@TagAttributeDeclaration(value="top", type=Double.class),
+		@TagAttributeDeclaration(value="bottom", type=Double.class),
+		@TagAttributeDeclaration(value="width", type=Double.class),
+		@TagAttributeDeclaration(value="height", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartLeft", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartRight", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartTop", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartBottom", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartWidth", type=Double.class),
+		@TagAttributeDeclaration(value="animationStartHeight", type=Double.class),
+		@TagAttributeDeclaration(value="horizontalPosition", type=Alignment.class),
+		@TagAttributeDeclaration(value="verticalPosition", type=Alignment.class),
+		@TagAttributeDeclaration(value="leftUnit", type=Unit.class, defaultValue="PX"),
+		@TagAttributeDeclaration(value="rightUnit", type=Unit.class, defaultValue="PX"),
+		@TagAttributeDeclaration(value="topUnit", type=Unit.class, defaultValue="PX"),
+		@TagAttributeDeclaration(value="bottomUnit", type=Unit.class, defaultValue="PX"),
+		@TagAttributeDeclaration(value="widthUnit", type=Unit.class, defaultValue="PX"),
+		@TagAttributeDeclaration(value="heightUnit", type=Unit.class, defaultValue="PX")
+	})
+	@TagChildren({
+		@TagChild(LayoutPanelWidgetProcessor.class)
+	})		
 	public static class LayoutPanelProcessor extends WidgetChildProcessor<LayoutPanelContext> 
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="left", type=Double.class),
-			@TagAttributeDeclaration(value="right", type=Double.class),
-			@TagAttributeDeclaration(value="top", type=Double.class),
-			@TagAttributeDeclaration(value="bottom", type=Double.class),
-			@TagAttributeDeclaration(value="width", type=Double.class),
-			@TagAttributeDeclaration(value="height", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartLeft", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartRight", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartTop", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartBottom", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartWidth", type=Double.class),
-			@TagAttributeDeclaration(value="animationStartHeight", type=Double.class),
-			@TagAttributeDeclaration(value="horizontalPosition", type=Alignment.class),
-			@TagAttributeDeclaration(value="verticalPosition", type=Alignment.class),
-			@TagAttributeDeclaration(value="leftUnit", type=Unit.class, defaultValue="PX"),
-			@TagAttributeDeclaration(value="rightUnit", type=Unit.class, defaultValue="PX"),
-			@TagAttributeDeclaration(value="topUnit", type=Unit.class, defaultValue="PX"),
-			@TagAttributeDeclaration(value="bottomUnit", type=Unit.class, defaultValue="PX"),
-			@TagAttributeDeclaration(value="widthUnit", type=Unit.class, defaultValue="PX"),
-			@TagAttributeDeclaration(value="heightUnit", type=Unit.class, defaultValue="PX")
-		})
-		@TagChildren({
-			@TagChild(LayoutPanelWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException 
 		{
 			context.left = StringUtils.safeParseDouble(context.readChildProperty("left"));

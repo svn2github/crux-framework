@@ -15,15 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.PushButton;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+
+import com.google.gwt.user.client.ui.PushButton;
 
 
 /**
@@ -31,114 +29,58 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="pushButton", library="gwt", targetWidget=PushButton.class)
+@TagChildren({
+	@TagChild(PushButtonFactory.FacesProcessor.class)
+})
 public class PushButtonFactory extends CustomButtonFactory 
 {
-	@Override
-	@TagChildren({
-		@TagChild(FacesProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException
-	{
-		super.processChildren(out, context);
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="6")
-	public static class FacesProcessor extends ChoiceChildProcessor<CustomButtonContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(UpFaceProcessor.class),
-			@TagChild(UpDisabledFaceProcessor.class),
-			@TagChild(UpHoveringFaceProcessor.class),
-			@TagChild(DownFaceProcessor.class),
-			@TagChild(DownDisabledFaceProcessor.class),
-			@TagChild(DownHoveringFaceProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(UpFaceProcessor.class),
+		@TagChild(UpDisabledFaceProcessor.class),
+		@TagChild(UpHoveringFaceProcessor.class),
+		@TagChild(DownFaceProcessor.class),
+		@TagChild(DownDisabledFaceProcessor.class),
+		@TagChild(DownHoveringFaceProcessor.class)
+	})
+	public static class FacesProcessor extends ChoiceChildProcessor<CustomButtonContext> {}
 	
-	public static class FaceChildrenProcessor extends ChoiceChildProcessor<CustomButtonContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TextFaceProcessor.class),
-			@TagChild(HTMLFaceProcessor.class),
-			@TagChild(ImageFaceProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TextFaceProcessor.class),
+		@TagChild(HTMLFaceProcessor.class),
+		@TagChild(ImageFaceProcessor.class)
+	})
+	public static class FaceChildrenProcessor extends ChoiceChildProcessor<CustomButtonContext> {}
 
-	public static class UpFaceProcessor extends AbstractUpFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class UpFaceProcessor extends AbstractUpFaceProcessor {}
 	
-	public static class UpDisabledFaceProcessor extends AbstractUpDisabledFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class UpDisabledFaceProcessor extends AbstractUpDisabledFaceProcessor {}
 
-	public static class UpHoveringFaceProcessor extends AbstractUpHoveringFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class UpHoveringFaceProcessor extends AbstractUpHoveringFaceProcessor {}
 
-	public static class DownFaceProcessor extends AbstractDownFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class DownFaceProcessor extends AbstractDownFaceProcessor {}
 
-	public static class DownDisabledFaceProcessor extends AbstractDownDisabledFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class DownDisabledFaceProcessor extends AbstractDownDisabledFaceProcessor {}
 
-	public static class DownHoveringFaceProcessor extends AbstractDownHoveringFaceProcessor
-	{
-		@Override
-		@TagChildren({
-			@TagChild(FaceChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CustomButtonContext context) throws CruxGeneratorException 
-		{
-			super.processChildren(out, context);
-		}
-	}
+	@TagChildren({
+		@TagChild(FaceChildrenProcessor.class)
+	})
+	public static class DownHoveringFaceProcessor extends AbstractDownHoveringFaceProcessor {}
 	
 	public static class TextFaceProcessor extends AbstractTextFaceProcessor {}
 	public static class HTMLFaceProcessor extends AbstractHTMLFaceProcessor {}

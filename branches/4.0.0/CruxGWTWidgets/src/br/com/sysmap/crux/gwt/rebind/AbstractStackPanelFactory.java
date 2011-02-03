@@ -28,35 +28,31 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 
+
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="visibleStack", type=Integer.class, processor=AbstractStackPanelFactory.VisibleStackAttributeParser.class)
+})
 public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<AbstractStackPanelFactoryContext>
 {
 	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleStack", type=Integer.class, processor=VisibleStackAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
-	{
-		super.processAttributes(out, context);
-	}
-	
+
 	/**
 	 * @author Gesse Dafe
 	 */
 	public static class VisibleStackAttributeParser extends AttributeProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
-        public void processAttribute(SourcePrinter out, AbstractStackPanelFactoryContext context, String attributeValue)
-        {
+		public void processAttribute(SourcePrinter out, AbstractStackPanelFactoryContext context, String attributeValue)
+		{
 			printlnPostProcessing(context.getWidget()+".showStack("+Integer.parseInt(attributeValue)+");");
-        }		
+		}		
 	}
-
+	
 	@TagChildAttributes(tagName="textTitle", type=String.class)
 	public abstract static class AbstractTitleTextProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
@@ -108,7 +104,6 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
     }
 	
 }
-
 
 class AbstractStackPanelFactoryContext extends WidgetCreatorContext
 {

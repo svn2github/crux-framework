@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 
@@ -26,12 +24,6 @@ import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 public abstract class ButtonBaseFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 										  implements HasHTMLFactory<WidgetCreatorContext>
 {
-	@Override
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

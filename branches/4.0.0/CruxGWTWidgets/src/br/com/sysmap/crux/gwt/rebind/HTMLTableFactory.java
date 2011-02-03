@@ -43,29 +43,23 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributes({
+	@TagAttribute(value="borderWidth",type=Integer.class),
+	@TagAttribute(value="cellPadding",type=Integer.class),
+	@TagAttribute(value="cellSpacing",type=Integer.class)
+})
 public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> extends PanelFactory<C>
        implements HasClickHandlersFactory<C>, HasDoubleClickHandlersFactory<C>
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="borderWidth",type=Integer.class),
-		@TagAttribute(value="cellPadding",type=Integer.class),
-		@TagAttribute(value="cellSpacing",type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
 	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("styleName"),
+		@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
 	public static class TableRowProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("styleName"),
-			@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			context.rowIndex++;
@@ -101,18 +95,18 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 	}
 
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("styleName"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="wordWrap", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
 	public static class TableCellProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("styleName"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="wordWrap", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			String widget = context.getWidget();

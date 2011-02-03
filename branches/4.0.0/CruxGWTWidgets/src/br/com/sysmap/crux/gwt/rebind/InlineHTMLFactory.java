@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import com.google.gwt.user.client.ui.InlineHTML;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasHTMLFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
@@ -28,6 +24,8 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 
+import com.google.gwt.user.client.ui.InlineHTML;
+
 
 /**
  * Represents an InlineHTMLFactory DeclarativeFactory
@@ -35,16 +33,11 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
  *
  */
 @DeclarativeFactory(id="inlineHTML", library="gwt", targetWidget=InlineHTML.class)
+@TagChildren({
+	@TagChild(value=InlineHTMLFactory.ContentProcessor.class, autoProcess=false)
+})
 public class InlineHTMLFactory extends AbstractLabelFactory implements HasHTMLFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
