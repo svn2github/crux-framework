@@ -64,6 +64,30 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="grid", library="widgets", targetWidget=Grid.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="pageSize", type=Integer.class, defaultValue="8"),
+	@TagAttributeDeclaration(value="rowSelection", type=RowSelectionModel.class, defaultValue="unselectable"),
+	@TagAttributeDeclaration(value="cellSpacing", type=Integer.class, defaultValue="1"),
+	@TagAttributeDeclaration(value="autoLoadData", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="stretchColumns", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="highlightRowOnMouseOver", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="fixedCellSize", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="emptyDataFilling", type=String.class, defaultValue=" "),
+	@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
+	@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
+})
+@TagAttributes({
+	@TagAttribute(value="dataSource", processor=GridFactory.DataSourceAttributeParser.class)
+})
+@TagEvents({
+	@TagEvent(RowClickEvtBind.class),
+	@TagEvent(RowDoubleClickEvtBind.class),
+	@TagEvent(RowRenderEvtBind.class),
+	@TagEvent(BeforeRowSelectEvtBind.class)
+})
+@TagChildren({
+	@TagChild(value=GridFactory.ColumnProcessor.class, autoProcess=false)
+})
 public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
@@ -387,94 +411,46 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 
 	    return colDef;
     }
-
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="pageSize", type=Integer.class, defaultValue="8"),
-		@TagAttributeDeclaration(value="rowSelection", type=RowSelectionModel.class, defaultValue="unselectable"),
-		@TagAttributeDeclaration(value="cellSpacing", type=Integer.class, defaultValue="1"),
-		@TagAttributeDeclaration(value="autoLoadData", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="stretchColumns", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="highlightRowOnMouseOver", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="fixedCellSize", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="emptyDataFilling", type=String.class, defaultValue=" "),
-		@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
-		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
-	})
-	@TagAttributes({
-		@TagAttribute(value="dataSource", processor=DataSourceAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(RowClickEvtBind.class),
-		@TagEvent(RowDoubleClickEvtBind.class),
-		@TagEvent(RowRenderEvtBind.class),
-		@TagEvent(BeforeRowSelectEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(value=ColumnProcessor.class, autoProcess=false)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	
 	@TagChildAttributes(maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(DataColumnProcessor.class),
+		@TagChild(WidgetColumnProcessor.class)
+	})
 	public static class ColumnProcessor extends ChoiceChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(DataColumnProcessor.class),
-			@TagChild(WidgetColumnProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	}
 
 	
 	@TagChildAttributes(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class DataColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="visible", type=Boolean.class),
-			@TagAttributeDeclaration(value="sortable", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
-			@TagAttributeDeclaration("label"),
-			@TagAttributeDeclaration(value="key", required=true),
-			@TagAttributeDeclaration("formatter"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="visible", type=Boolean.class),
+		@TagAttributeDeclaration(value="sortable", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
+		@TagAttributeDeclaration("label"),
+		@TagAttributeDeclaration(value="key", required=true),
+		@TagAttributeDeclaration("formatter"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	public static class DataColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
 	@TagChildAttributes(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
-	public static class WidgetColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="visible", type=Boolean.class),
-			@TagAttributeDeclaration("label"),
-			@TagAttributeDeclaration(value="key", required=true),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		@TagChildren({
-			@TagChild(WidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="visible", type=Boolean.class),
+		@TagAttributeDeclaration("label"),
+		@TagAttributeDeclaration(value="key", required=true),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(WidgetProcessor.class)
+	})
+	public static class WidgetColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext>{}
 	

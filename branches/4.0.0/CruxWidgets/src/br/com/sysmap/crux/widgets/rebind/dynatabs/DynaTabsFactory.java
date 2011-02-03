@@ -18,9 +18,9 @@ package br.com.sysmap.crux.widgets.rebind.dynatabs;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
@@ -41,15 +41,23 @@ import br.com.sysmap.crux.widgets.rebind.event.BeforeFocusEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="dynaTabs", library="widgets", targetWidget=DynaTabs.class)
+@TagChildren({
+	@TagChild(DynaTabsFactory.DynaTabProcessor.class)
+})
 public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	@Override
-	@TagChildren({
-		@TagChild(DynaTabProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="url", required=true),
+		@TagAttributeDeclaration("label"),
+		@TagAttributeDeclaration(value="closeable", type=Boolean.class)
+	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onBeforeFocus"),
+		@TagEventDeclaration("onBeforeBlur"),
+		@TagEventDeclaration("onBeforeClose")
+	})
 	public static class DynaTabProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		protected BeforeFocusEvtBind beforeFocusEvtBind = new BeforeFocusEvtBind();
@@ -57,17 +65,6 @@ public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 		protected BeforeCloseEvtBind beforeCloseEvtBind = new BeforeCloseEvtBind();
 
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="url", required=true),
-			@TagAttributeDeclaration("label"),
-			@TagAttributeDeclaration(value="closeable", type=Boolean.class)
-		})
-		@TagEventsDeclaration({
-			@TagEventDeclaration("onBeforeFocus"),
-			@TagEventDeclaration("onBeforeBlur"),
-			@TagEventDeclaration("onBeforeClose")
-		})
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
 			String id = context.readChildProperty("id");

@@ -21,8 +21,8 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
@@ -44,8 +44,8 @@ import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
-import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabPanel;
+import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabBar.Tab;
 
 class RollingTabPanelContext extends WidgetCreatorContext
 {
@@ -68,19 +68,16 @@ class RollingTabPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  */
 @DeclarativeFactory(id="rollingTabPanel", library="widgets", targetWidget=RollingTabPanel.class)
+@TagAttributes({
+	@TagAttribute(value="visibleTab", type=Integer.class, processor=RollingTabPanelFactory.VisibleTabAttributeParser.class)
+})
+@TagChildren({
+	@TagChild(RollingTabPanelFactory.TabProcessor.class)
+})	
 public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelContext> 
 									implements HasAnimationFactory<RollingTabPanelContext>, 
 									HasBeforeSelectionHandlersFactory<RollingTabPanelContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="visibleTab", type=Integer.class, processor=VisibleTabAttributeParser.class)
-	})
-	public void processAttributes(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -94,31 +91,23 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
         }
 	}	
 	
-	@Override
-	@TagChildren({
-		@TagChild(TabProcessor.class)
-	})	
-	public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException 
-	{
-	}
-	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
+	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onClick"),
+		@TagEventDeclaration("onKeyUp"),
+		@TagEventDeclaration("onKeyDown"),
+		@TagEventDeclaration("onKeyPress")
+	})
+	@TagChildren({
+		@TagChild(TabTitleProcessor.class), 
+		@TagChild(TabWidgetProcessor.class)
+	})	
 	public static class TabProcessor extends WidgetChildProcessor<RollingTabPanelContext>
 	{
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
-		})
-		@TagEventsDeclaration({
-			@TagEventDeclaration("onClick"),
-			@TagEventDeclaration("onKeyUp"),
-			@TagEventDeclaration("onKeyDown"),
-			@TagEventDeclaration("onKeyPress")
-		})
-		@TagChildren({
-			@TagChild(TabTitleProcessor.class), 
-			@TagChild(TabWidgetProcessor.class)
-		})	
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException
 		{
 			context.tabElement = context.getChildElement();
@@ -127,17 +116,12 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 	}
 	
 	@TagChildAttributes(minOccurs="0")
-	public static class TabTitleProcessor extends ChoiceChildProcessor<RollingTabPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TextTabProcessor.class),
-			@TagChild(HTMLTabProcessor.class),
-			@TagChild(WidgetTitleTabProcessor.class)
-		})		
-		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException {}
-		
-	}
+	@TagChildren({
+		@TagChild(TextTabProcessor.class),
+		@TagChild(HTMLTabProcessor.class),
+		@TagChild(WidgetTitleTabProcessor.class)
+	})		
+	public static class TabTitleProcessor extends ChoiceChildProcessor<RollingTabPanelContext> {}
 	
 	@TagChildAttributes(tagName="tabText", type=String.class)
 	public static class TextTabProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
@@ -162,14 +146,10 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 	}
 	
 	@TagChildAttributes(tagName="tabWidget")
-	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetTitleProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetTitleProcessor.class)
+	})	
+	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<RollingTabPanelContext> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetTitleProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
@@ -182,14 +162,10 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 	}
 	
 	@TagChildAttributes(tagName="panelContent")
-	public static class TabWidgetProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetContentProcessor.class)
-		})	
-		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})	
+	public static class TabWidgetProcessor extends WidgetChildProcessor<RollingTabPanelContext> {}
 
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetContentProcessor extends WidgetChildProcessor<RollingTabPanelContext> 

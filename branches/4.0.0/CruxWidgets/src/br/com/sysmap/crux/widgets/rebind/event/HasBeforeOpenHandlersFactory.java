@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
 import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeOpenHandlers;
@@ -25,10 +23,9 @@ import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeOpenHandlers;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagEvents({
+	@TagEvent(BeforeOpenEvtBind.class)
+})	
 public interface HasBeforeOpenHandlersFactory<T extends HasBeforeOpenHandlers>
 {
-	@TagEvents({
-		@TagEvent(BeforeOpenEvtBind.class)
-	})	
-	void processEvents(WidgetCreatorContext context) throws CruxGeneratorException;
 }

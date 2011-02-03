@@ -15,8 +15,6 @@
  */ 
 package br.com.sysmap.crux.widgets.rebind.dialog;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -31,20 +29,14 @@ import br.com.sysmap.crux.widgets.rebind.event.HasBeforeCloseHandlersFactory;
  *
  */
 @DeclarativeFactory(id="popup", library="widgets", targetWidget=Popup.class, attachToDOM=false)
+@TagAttributes({
+	@TagAttribute(value="title", supportsI18N=true),
+	@TagAttribute("url"),
+	@TagAttribute(value="closeable", type=Boolean.class)
+})
 public class PopupFactory extends WidgetCreator<WidgetCreatorContext> 
        implements HasAnimationFactory<WidgetCreatorContext>, HasBeforeCloseHandlersFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="title", supportsI18N=true),
-		@TagAttribute("url"),
-		@TagAttribute(value="closeable", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

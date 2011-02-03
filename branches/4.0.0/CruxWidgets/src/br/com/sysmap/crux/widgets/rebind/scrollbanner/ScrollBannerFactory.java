@@ -23,6 +23,7 @@ import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
@@ -34,7 +35,13 @@ import br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner;
  * Factory for Scroll Banner widget
  * @author Gesse S. F. Dafe
  */
-@br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory(id="scrollBanner", library="widgets", targetWidget=ScrollBanner.class)
+@DeclarativeFactory(id="scrollBanner", library="widgets", targetWidget=ScrollBanner.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("messageScrollingPeriod")
+})
+@TagChildren({
+	@TagChild(ScrollBannerFactory.MessageProcessor.class)
+})
 public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
@@ -55,21 +62,6 @@ public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		return varName;
 	}
 
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("messageScrollingPeriod")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(MessageProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
 	public static class MessageProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{

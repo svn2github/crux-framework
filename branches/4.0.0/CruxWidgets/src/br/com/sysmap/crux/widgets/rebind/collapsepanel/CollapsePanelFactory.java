@@ -47,6 +47,18 @@ import br.com.sysmap.crux.widgets.rebind.titlepanel.AbstractTitlePanelFactory;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="collapsePanel", library="widgets", targetWidget=CollapsePanel.class)
+@TagEvents({
+	@TagEvent(BeforeCollapseEvtBind.class),
+	@TagEvent(BeforeExpandEvtBind.class)
+})
+@TagAttributes({
+	@TagAttribute(value="collapsed", type=Boolean.class),
+	@TagAttribute(value="collapsible", type=Boolean.class)
+})
+@TagChildren({
+	@TagChild(CollapsePanelFactory.TitleProcessor.class),
+	@TagChild(CollapsePanelFactory.BodyProcessor.class)
+})
 public class CollapsePanelFactory extends AbstractTitlePanelFactory
 {
 	@Override
@@ -76,97 +88,46 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 		return varName;
 	}	
 	
-	@Override
-	@TagEvents({
-		@TagEvent(BeforeCollapseEvtBind.class),
-		@TagEvent(BeforeExpandEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="collapsed", type=Boolean.class),
-		@TagAttribute(value="collapsible", type=Boolean.class)
-	})
-	public void processAttributes(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(TitleProcessor.class),
-		@TagChild(BodyProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="title", minOccurs="0")
-	public static class TitleProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitleChildrenProcessor.class)
+	})
+	public static class TitleProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(CollapsePanelHTMLChildProcessor.class),
-			@TagChild(CollapsePanelTextChildProcessor.class),
-			@TagChild(CollapsePanelWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(CollapsePanelHTMLChildProcessor.class),
+		@TagChild(CollapsePanelTextChildProcessor.class),
+		@TagChild(CollapsePanelWidgetProcessor.class)
+	})
+	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class CollapsePanelWidgetProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleWidgetTitleProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitleWidgetTitleProcessor.class)
+	})
+	public static class CollapsePanelWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(widgetProperty="titleWidget")
 	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="body", minOccurs="0")
-	public static class BodyProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(BodyChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(BodyChildrenProcessor.class)
+	})
+	public static class BodyProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(CollapsePanelBodyHTMLChildProcessor.class),
-			@TagChild(CollapsePanelBodyTextChildProcessor.class),
-			@TagChild(CollapsePanelBodyWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(CollapsePanelBodyHTMLChildProcessor.class),
+		@TagChild(CollapsePanelBodyTextChildProcessor.class),
+		@TagChild(CollapsePanelBodyWidgetProcessor.class)
+	})
+	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class CollapsePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(BodyWidgetContentProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(BodyWidgetContentProcessor.class)
+	})
+	public static class CollapsePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")
 	@TagChildLazyConditions(all={

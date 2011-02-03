@@ -47,6 +47,17 @@ import br.com.sysmap.crux.widgets.rebind.WidgetGeneratorMessages;
  *
  */
 @DeclarativeFactory(id="maskedTextBox", library="widgets", targetWidget=MaskedTextBox.class)
+@TagAttributes({
+	@TagAttribute(value="readOnly", type=Boolean.class),
+	@TagAttribute(value="tabIndex", type=Integer.class),
+	@TagAttribute(value="maxLength", type=Integer.class),
+	@TagAttribute(value="accessKey", type=Character.class),
+	@TagAttribute(value="focus", type=Boolean.class),
+	@TagAttribute(value="value", processor=MaskedTextBoxFactory.ValueAttributeParser.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="formatter", required=true)
+})
 public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext> 
        implements HasDirectionFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
                   HasChangeHandlersFactory<WidgetCreatorContext>, HasValueChangeHandlersFactory<WidgetCreatorContext>,
@@ -85,23 +96,6 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
 		}
 		return varName;
 	}	
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="readOnly", type=Boolean.class),
-		@TagAttribute(value="tabIndex", type=Integer.class),
-		@TagAttribute(value="maxLength", type=Integer.class),
-		@TagAttribute(value="accessKey", type=Character.class),
-		@TagAttribute(value="focus", type=Boolean.class),
-		@TagAttribute(value="value", processor=ValueAttributeParser.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="formatter", required=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

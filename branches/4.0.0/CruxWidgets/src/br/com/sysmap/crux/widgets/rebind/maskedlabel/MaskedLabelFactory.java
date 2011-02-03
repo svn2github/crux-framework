@@ -44,6 +44,12 @@ import br.com.sysmap.crux.widgets.rebind.WidgetGeneratorMessages;
  *
  */
 @DeclarativeFactory(id="maskedLabel", library="widgets", targetWidget=MaskedLabel.class)
+@TagAttributes({
+	@TagAttribute(value="text", processor=MaskedLabelFactory.TextAttributeParser.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="formatter", required=true)
+})
 public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext> 
 				implements HasDirectionFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>, 
 						   HasAllMouseHandlersFactory<WidgetCreatorContext>, 
@@ -82,18 +88,6 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 		}
 		return varName;
 	}	
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="text", processor=TextAttributeParser.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="formatter", required=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante

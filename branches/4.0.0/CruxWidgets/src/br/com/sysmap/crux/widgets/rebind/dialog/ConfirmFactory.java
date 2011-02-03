@@ -15,8 +15,6 @@
  */ 
 package br.com.sysmap.crux.widgets.rebind.dialog;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
@@ -34,30 +32,18 @@ import br.com.sysmap.crux.widgets.rebind.event.OkEvtBind;
  *
  */
 @DeclarativeFactory(id="confirm", library="widgets", targetWidget=Confirm.class)
+@TagAttributes({
+	@TagAttribute(value="title", supportsI18N=true),
+	@TagAttribute(value="message", supportsI18N=true),
+	@TagAttribute(value="okButtonText", supportsI18N=true),
+	@TagAttribute(value="cancelButtonText", supportsI18N=true)
+})
+@TagEvents({
+	@TagEvent(CancelEvtBind.class),
+	@TagEvent(OkEvtBind.class)
+})
 public class ConfirmFactory extends WidgetCreator<WidgetCreatorContext> implements HasAnimationFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="title", supportsI18N=true),
-		@TagAttribute(value="message", supportsI18N=true),
-		@TagAttribute(value="okButtonText", supportsI18N=true),
-		@TagAttribute(value="cancelButtonText", supportsI18N=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(CancelEvtBind.class),
-		@TagEvent(OkEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

@@ -34,24 +34,17 @@ import br.com.sysmap.crux.widgets.client.decoratedpanel.DecoratedPanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="decoratedPanel", library="widgets", targetWidget=DecoratedPanel.class)
+@TagChildren({
+	@TagChild(DecoratedPanelFactory.ChildrenProcessor.class)
+})
 public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 {
-	@Override
 	@TagChildren({
-		@TagChild(ChildrenProcessor.class)
+		@TagChild(HTMLChildProcessor.class),
+		@TagChild(TextChildProcessor.class),
+		@TagChild(WidgetProcessor.class)
 	})
-	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	
-	public static class ChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(HTMLChildProcessor.class),
-			@TagChild(TextChildProcessor.class),
-			@TagChild(WidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	public static class ChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
@@ -76,16 +69,11 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class WidgetProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetContentProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetContentProcessor.class)
+	})
+	public static class WidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
 	@TagChildAttributes(widgetProperty="contentWidget")
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
-
 }

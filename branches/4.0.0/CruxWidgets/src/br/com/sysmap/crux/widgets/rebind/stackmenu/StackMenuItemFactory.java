@@ -39,6 +39,15 @@ import br.com.sysmap.crux.widgets.client.stackmenu.StackMenuItem;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="stackMenuItem", library="widgets", targetWidget=StackMenuItem.class)
+@TagAttributes({
+	@TagAttribute(value="open", type=Boolean.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="label", supportsI18N=true, required=true)
+})
+@TagChildren({
+	@TagChild(StackMenuItemFactory.StackMenuItemProcessor.class)
+})
 public class StackMenuItemFactory extends WidgetCreator<WidgetCreatorContext>
        implements HasClickHandlersFactory<WidgetCreatorContext>
 {
@@ -51,24 +60,6 @@ public class StackMenuItemFactory extends WidgetCreator<WidgetCreatorContext>
 		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(getDeclaredMessage(label))+");");
 		return varName;
 	}
-	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="open", type=Boolean.class)
-	})
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="label", supportsI18N=true, required=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(StackMenuItemProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded", type=StackMenuItemFactory.class)
 	public static class StackMenuItemProcessor extends WidgetChildProcessor<WidgetCreatorContext>

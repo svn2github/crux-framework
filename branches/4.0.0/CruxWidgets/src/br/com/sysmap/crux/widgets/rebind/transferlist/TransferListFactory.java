@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.transferlist;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
@@ -32,32 +30,20 @@ import br.com.sysmap.crux.widgets.rebind.event.BeforeMoveItemsEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="transferList", library="widgets", targetWidget=TransferList.class)
+@TagAttributes({
+	@TagAttribute(value="leftToRightButtonText", supportsI18N=true),
+	@TagAttribute(value="rightToLeftButtonText", supportsI18N=true),
+	@TagAttribute(value="leftListLabel", supportsI18N=true),
+	@TagAttribute(value="rightListLabel", supportsI18N=true),
+	@TagAttribute(value="visibleItemCount", type=Integer.class),
+	@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
+	@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
+})
+@TagEvents({
+	@TagEvent(BeforeMoveItemsEvtBind.class)
+})
 public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 {
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="leftToRightButtonText", supportsI18N=true),
-		@TagAttribute(value="rightToLeftButtonText", supportsI18N=true),
-		@TagAttribute(value="leftListLabel", supportsI18N=true),
-		@TagAttribute(value="rightListLabel", supportsI18N=true),
-		@TagAttribute(value="visibleItemCount", type=Integer.class),
-		@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
-		@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(BeforeMoveItemsEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
-	}
-	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

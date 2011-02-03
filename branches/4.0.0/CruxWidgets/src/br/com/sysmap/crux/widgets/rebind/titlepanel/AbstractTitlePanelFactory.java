@@ -32,35 +32,24 @@ import br.com.sysmap.crux.widgets.rebind.decoratedpanel.AbstractDecoratedPanelFa
  * Factory for Title Panel widget
  * @author Gesse S. F. Dafe
  */
+@TagChildren({
+	@TagChild(AbstractTitlePanelFactory.TitleProcessor.class),
+	@TagChild(AbstractTitlePanelFactory.BodyProcessor.class)
+})
 public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFactory
 {
-	@Override
-	@TagChildren({
-		@TagChild(TitleProcessor.class),
-		@TagChild(BodyProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="title", minOccurs="0")
-	public static class TitleProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException	{}
-	}
+	@TagChildren({
+		@TagChild(TitleChildrenProcessor.class)
+	})
+	public static class TitleProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitlePanelHTMLChildProcessor.class),
-			@TagChild(TitlePanelTextChildProcessor.class),
-			@TagChild(TitlePanelWidgetChildProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitlePanelHTMLChildProcessor.class),
+		@TagChild(TitlePanelTextChildProcessor.class),
+		@TagChild(TitlePanelWidgetChildProcessor.class)
+	})
+	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
@@ -88,39 +77,27 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 	}
 		
 	@TagChildAttributes(tagName="widget")
-	public static class TitlePanelWidgetChildProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitleWidgetTitleProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(TitleWidgetTitleProcessor.class)
+	})
+	public static class TitlePanelWidgetChildProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
 	@TagChildAttributes(widgetProperty="titleWidget")
 	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 	
 	
 	@TagChildAttributes(tagName="body", minOccurs="0")
-	public static class BodyProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(BodyChildrenProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(BodyChildrenProcessor.class)
+	})
+	public static class BodyProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(TitlePanelBodyHTMLChildProcessor.class),
-			@TagChild(TitlePanelBodyTextChildProcessor.class),
-			@TagChild(TitlePanelBodyWidgetProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}	
+	@TagChildren({
+		@TagChild(TitlePanelBodyHTMLChildProcessor.class),
+		@TagChild(TitlePanelBodyTextChildProcessor.class),
+		@TagChild(TitlePanelBodyWidgetProcessor.class)
+	})
+	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}	
 	
 	@TagChildAttributes(tagName="html", type=HTMLTag.class)
 	public static abstract class BodyHTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
@@ -148,14 +125,10 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 	}
 	
 	@TagChildAttributes(tagName="widget")
-	public static class TitlePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(BodyWidgetContentProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(BodyWidgetContentProcessor.class)
+	})
+	public static class TitlePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
 	@TagChildAttributes(widgetProperty="contentWidget")
 	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}

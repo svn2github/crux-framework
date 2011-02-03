@@ -37,6 +37,15 @@ import br.com.sysmap.crux.widgets.rebind.event.TimeoutEvtBind;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="timer", library="widgets", targetWidget=Timer.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="start", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="initial", type=Integer.class, defaultValue="0"),
+	@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="pattern", required=true)
+})
+@TagChildren({
+	@TagChild(TimerFactory.TimerChildrenProcessor.class)
+})
 public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	/**
@@ -76,32 +85,14 @@ public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 		return varName;
 	}
 	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="start", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="initial", type=Integer.class, defaultValue="0"),
-		@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false"),
-		@TagAttributeDeclaration(value="pattern", required=true)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(TimerChildrenProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
+		@TagAttributeDeclaration(value="execute", required=true)
+	})
 	public static class TimerChildrenProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
-			@TagAttributeDeclaration(value="execute", required=true)
-		})
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();

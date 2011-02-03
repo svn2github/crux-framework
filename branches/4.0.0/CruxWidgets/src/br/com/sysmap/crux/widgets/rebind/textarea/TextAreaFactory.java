@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.textarea;
 
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
@@ -33,25 +31,16 @@ import br.com.sysmap.crux.widgets.client.textarea.TextArea;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="textArea", library="widgets", targetWidget=TextArea.class)
+@TagAttributes({
+	@TagAttribute(value="characterWidth", type=Integer.class),
+	@TagAttribute(value="visibleLines", type=Integer.class),
+	@TagAttribute(value="maxLength", type=Integer.class)
+})
+@TagChildren({
+	@TagChild(TextAreaFactory.InnerTextProcessor.class)
+})
 public class TextAreaFactory extends TextBoxBaseFactory
 {	
-	@Override
-	@TagAttributes({
-		@TagAttribute(value="characterWidth", type=Integer.class),
-		@TagAttribute(value="visibleLines", type=Integer.class),
-		@TagAttribute(value="maxLength", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(InnerTextProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	
 	@TagChildAttributes(minOccurs="0", widgetProperty="value")
 	public static class InnerTextProcessor extends TextChildProcessor<WidgetCreatorContext> {}	
 }

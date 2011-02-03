@@ -22,7 +22,6 @@ import br.com.sysmap.crux.core.rebind.crossdocument.CrossDocumentProxyCreator;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.Shared;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -259,7 +258,7 @@ public class WizardDataSerializerProxyCreator extends CrossDocumentProxyCreator
 	 */
 	protected String getProxySimpleName()
 	{
-		return ClassUtils.getSourceName(baseProxyType) + WIZARD_DATA_SUFFIX;
+		return baseProxyType.getSimpleSourceName() + WIZARD_DATA_SUFFIX;
 	}
 	
 	/**

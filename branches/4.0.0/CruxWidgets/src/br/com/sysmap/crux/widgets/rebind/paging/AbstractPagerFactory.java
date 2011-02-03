@@ -32,15 +32,18 @@ import br.com.sysmap.crux.widgets.rebind.event.PageEvtBind;
 /**
  * @author Gesse S. F. Dafe
  */
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="pageable", required=true),
+	@TagAttributeDeclaration(value="enabled", type=Boolean.class)
+})
+@TagEvents({
+	@TagEvent(PageEvtBind.class)
+})
 public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
 
 	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="pageable", required=true),
-		@TagAttributeDeclaration(value="enabled", type=Boolean.class)
-	})
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		super.processAttributes(out, context);
@@ -61,15 +64,6 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		{
 			throw new CruxGeneratorException(widgetMessages.pagerNoPageableSet()); 
 		}							
-	}
-	
-	@Override
-	@TagEvents({
-		@TagEvent(PageEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processEvents(out, context);
 	}
 	
 	@Override

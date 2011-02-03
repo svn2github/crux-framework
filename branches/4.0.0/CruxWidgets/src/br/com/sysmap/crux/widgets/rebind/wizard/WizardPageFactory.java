@@ -42,6 +42,17 @@ import br.com.sysmap.crux.widgets.client.wizard.WizardPage;
  *
  */
 @DeclarativeFactory(id="wizardPage", library="widgets", targetWidget=WizardPage.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="wizardId", required=true),
+	@TagAttributeDeclaration("wizardContextObject")
+})
+@TagEvents({
+	@TagEvent(EnterEvtBind.class),
+	@TagEvent(LeaveEvtBind.class)
+})
+@TagChildren({
+	@TagChild(WizardPageFactory.CommandsProcessor.class)
+})
 public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
@@ -71,57 +82,25 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 		return className +"<"+wizardData+">";
 	}
 	
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="wizardId", required=true),
-		@TagAttributeDeclaration("wizardContextObject")
-	})
-	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-
-	@Override
-	@TagEvents({
-		@TagEvent(EnterEvtBind.class),
-		@TagEvent(LeaveEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	    super.processEvents(out, context);
-	}
-	
-	@Override
-	@TagChildren({
-		@TagChild(CommandsProcessor.class)
-	})
-	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-	}
-	
 	@TagChildAttributes(tagName="commands", minOccurs="0")
-	public static class CommandsProcessor extends WidgetChildProcessor<WidgetCreatorContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WizardCommandsProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WizardCommandsProcessor.class)
+	})
+	public static class CommandsProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
+		@TagAttributeDeclaration("styleName"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration(value="onCommand", required=true)
+	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-			@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
-			@TagAttributeDeclaration("styleName"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration(value="onCommand", required=true)
-		})
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
 			String id = context.readChildProperty("id");

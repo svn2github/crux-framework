@@ -58,6 +58,20 @@ class RollingPanelContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=RollingPanel.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false")
+})
+@TagAttributes({
+	@TagAttribute("horizontalNextButtonStyleName"),
+	@TagAttribute("horizontalPreviousButtonStyleName"),
+	@TagAttribute("verticalNextButtonStyleName"),
+	@TagAttribute("verticalPreviousButtonStyleName"),
+	@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
+	@TagAttribute(value="spacing", type=Integer.class)
+})
+@TagChildren({
+	@TagChild(RollingPanelFactory.RollingPanelProcessor.class)
+})		
 public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
        implements HasHorizontalAlignmentFactory<RollingPanelContext>, 
                   HasVerticalAlignmentFactory<RollingPanelContext>
@@ -76,54 +90,33 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
 		out.println(className + " " + varName+" = new "+className+"("+vertical+");");
 		return varName;
 	}
-
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false")
-	})
-	@TagAttributes({
-		@TagAttribute("horizontalNextButtonStyleName"),
-		@TagAttribute("horizontalPreviousButtonStyleName"),
-		@TagAttribute("verticalNextButtonStyleName"),
-		@TagAttribute("verticalPreviousButtonStyleName"),
-		@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
-		@TagAttribute(value="spacing", type=Integer.class)
-	})
-	public void processAttributes(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-
-	}
 	
 	@Override
-	@TagChildren({
-		@TagChild(RollingPanelProcessor.class)
-	})		
 	public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException {}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagChildren({
+		@TagChild(RollingCellProcessor.class),
+		@TagChild(VerticalWidgetProcessor.class)
+	})		
 	public static class  RollingPanelProcessor extends ChoiceChildProcessor<RollingPanelContext> 
 	{
 		@Override
-		@TagChildren({
-			@TagChild(RollingCellProcessor.class),
-			@TagChild(VerticalWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException  {}
 	}
 	
 	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(value=VerticalWidgetProcessor.class)
+	})		
 	public static class RollingCellProcessor extends WidgetChildProcessor<RollingPanelContext>
 	{
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-		})
-		@TagChildren({
-			@TagChild(value=VerticalWidgetProcessor.class)
-		})		
 		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException 
 		{
 			context.height = context.readChildProperty("height");

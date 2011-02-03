@@ -65,6 +65,16 @@ class WizardContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="wizard", library="widgets", targetWidget=Wizard.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration("wizardContextObject")
+})
+@TagEvents({
+	@TagEvent(FinishEvtBind.class),
+	@TagEvent(CancelEvtBind.class)
+})
+@TagChildren({
+	@TagChild(WizardFactory.WizardChildrenProcessor.class)
+})
 public class WizardFactory extends WidgetCreator<WizardContext>
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
@@ -95,62 +105,33 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 
 	@Override
-	@TagEvents({
-		@TagEvent(FinishEvtBind.class),
-		@TagEvent(CancelEvtBind.class)
-	})
-	public void processEvents(SourcePrinter out, WizardContext context) throws CruxGeneratorException
-	{
-	    super.processEvents(out, context);
-	}
-
-	@Override
-	@TagAttributesDeclaration({
-		@TagAttributeDeclaration("wizardContextObject")
-	})
-	public void processAttributes(SourcePrinter out, WizardContext context) throws CruxGeneratorException
-	{
-		super.processAttributes(out, context);
-	}
-	
-	@Override
 	public void postProcess(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 	{
 		String widget = context.getWidget();
 		out.println(widget+".first();");
 	}
 	
-	@Override
 	@TagChildren({
-		@TagChild(WizardChildrenProcessor.class)
+		@TagChild(NavigationBarProcessor.class),
+		@TagChild(StepsProcessor.class),
+		@TagChild(ControlBarProcessor.class)
 	})
-	public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	
-	public static class WizardChildrenProcessor extends AllChildProcessor<WizardContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(NavigationBarProcessor.class),
-			@TagChild(StepsProcessor.class),
-			@TagChild(ControlBarProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	}
+	public static class WizardChildrenProcessor extends AllChildProcessor<WizardContext> {}
 	
 	@TagChildAttributes(tagName="navigationBar", minOccurs="0")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="north"),
+		@TagAttributeDeclaration(value="showAllSteps", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="allowSelectStep", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=ControlVerticalAlign.class, defaultValue="top"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=ControlHorizontalAlign.class, defaultValue="left"),
+		@TagAttributeDeclaration("labelStyleName"),
+		@TagAttributeDeclaration("horizontalSeparatorStyleName"),
+		@TagAttributeDeclaration("verticalSeparatorStyleName")
+	})
 	public static class NavigationBarProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="north"),
-			@TagAttributeDeclaration(value="showAllSteps", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="allowSelectStep", type=Boolean.class, defaultValue="true"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=ControlVerticalAlign.class, defaultValue="top"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=ControlHorizontalAlign.class, defaultValue="left"),
-			@TagAttributeDeclaration("labelStyleName"),
-			@TagAttributeDeclaration("horizontalSeparatorStyleName"),
-			@TagAttributeDeclaration("verticalSeparatorStyleName")
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
 			String widget = context.getWidget();
@@ -221,43 +202,35 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 	
 	@TagChildAttributes(tagName="steps")
-	public static class StepsProcessor extends WidgetChildProcessor<WizardContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WizardStepsProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WizardStepsProcessor.class)
+	})
+	public static class StepsProcessor extends WidgetChildProcessor<WizardContext> {}
 
 	@TagChildAttributes(maxOccurs="unbounded")
-	public static class WizardStepsProcessor extends ChoiceChildProcessor<WizardContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WidgetStepProcessor.class),
-			@TagChild(PageStepProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WidgetStepProcessor.class),
+		@TagChild(PageStepProcessor.class)
+	})
+	public static class WizardStepsProcessor extends ChoiceChildProcessor<WizardContext> {}
 	
 	@TagChildAttributes(tagName="widget")
+	@TagChildren({
+		@TagChild(WidgetProcessor.class),
+		@TagChild(CommandsProcessor.class)
+	})
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true")
+	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onEnter"),
+		@TagEventDeclaration("onLeave")
+	})
 	public static class WidgetStepProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagChildren({
-			@TagChild(WidgetProcessor.class),
-			@TagChild(CommandsProcessor.class)
-		})
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-			@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true")
-		})
-		@TagEventsDeclaration({
-			@TagEventDeclaration("onEnter"),
-			@TagEventDeclaration("onLeave")
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
 			String id = context.readChildProperty("id");
@@ -275,28 +248,24 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 	
 	@TagChildAttributes(tagName="commands", minOccurs="0")
-	public static class CommandsProcessor extends WidgetChildProcessor<WizardContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(WizardCommandsProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(WizardCommandsProcessor.class)
+	})
+	public static class CommandsProcessor extends WidgetChildProcessor<WizardContext> {}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
+		@TagAttributeDeclaration("styleName"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration(value="onCommand", required=true)
+	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-			@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
-			@TagAttributeDeclaration("styleName"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration(value="onCommand", required=true)
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
 			String id = context.readChildProperty("id");
@@ -372,15 +341,15 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 
 	@TagChildAttributes(tagName="page")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="url", required=true),
+		@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true")
+	})
 	public static class PageStepProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-			@TagAttributeDeclaration(value="url", required=true),
-			@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true")
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 		{
 			String id = context.readChildProperty("id");
@@ -403,29 +372,29 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 	
 	@TagChildAttributes(tagName="controlBar", minOccurs="0")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="south"),
+		@TagAttributeDeclaration(value="verticalAlignment", type=ControlVerticalAlign.class, defaultValue="top"),
+		@TagAttributeDeclaration(value="horizontalAlignment", type=ControlHorizontalAlign.class, defaultValue="right"),
+		@TagAttributeDeclaration(value="spacing", type=Integer.class),
+		@TagAttributeDeclaration(value="buttonsWidth", type=String.class),
+		@TagAttributeDeclaration(value="buttonsHeight", type=String.class),
+		@TagAttributeDeclaration(value="buttonsStyle", type=String.class),
+		@TagAttributeDeclaration(value="backLabel", type=String.class, supportsI18N=true),
+		@TagAttributeDeclaration(value="nextLabel", type=String.class, supportsI18N=true),
+		@TagAttributeDeclaration(value="cancelLabel", type=String.class, supportsI18N=true),
+		@TagAttributeDeclaration(value="finishLabel", type=String.class, supportsI18N=true),
+		@TagAttributeDeclaration(value="backOrder", type=Integer.class, defaultValue="0"),
+		@TagAttributeDeclaration(value="nextOrder", type=Integer.class, defaultValue="1"),
+		@TagAttributeDeclaration(value="finishOrder", type=Integer.class, defaultValue="2"),
+		@TagAttributeDeclaration(value="cancelOrder", type=Integer.class, defaultValue="3")
+	})
+	@TagChildren({
+		@TagChild(ControlBarCommandsProcessor.class)
+	})
 	public static class ControlBarProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="south"),
-			@TagAttributeDeclaration(value="verticalAlignment", type=ControlVerticalAlign.class, defaultValue="top"),
-			@TagAttributeDeclaration(value="horizontalAlignment", type=ControlHorizontalAlign.class, defaultValue="right"),
-			@TagAttributeDeclaration(value="spacing", type=Integer.class),
-			@TagAttributeDeclaration(value="buttonsWidth", type=String.class),
-			@TagAttributeDeclaration(value="buttonsHeight", type=String.class),
-			@TagAttributeDeclaration(value="buttonsStyle", type=String.class),
-			@TagAttributeDeclaration(value="backLabel", type=String.class, supportsI18N=true),
-			@TagAttributeDeclaration(value="nextLabel", type=String.class, supportsI18N=true),
-			@TagAttributeDeclaration(value="cancelLabel", type=String.class, supportsI18N=true),
-			@TagAttributeDeclaration(value="finishLabel", type=String.class, supportsI18N=true),
-			@TagAttributeDeclaration(value="backOrder", type=Integer.class, defaultValue="0"),
-			@TagAttributeDeclaration(value="nextOrder", type=Integer.class, defaultValue="1"),
-			@TagAttributeDeclaration(value="finishOrder", type=Integer.class, defaultValue="2"),
-			@TagAttributeDeclaration(value="cancelOrder", type=Integer.class, defaultValue="3")
-		})
-		@TagChildren({
-			@TagChild(ControlBarCommandsProcessor.class)
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
 			String widget = context.getWidget();
@@ -544,28 +513,24 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	}
 	
 	@TagChildAttributes(tagName="commands", minOccurs="0")
-	public static class ControlBarCommandsProcessor extends WidgetChildProcessor<WizardContext>
-	{
-		@Override
-		@TagChildren({
-			@TagChild(ControlBarCommandProcessor.class)
-		})
-		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException {}
-	}
+	@TagChildren({
+		@TagChild(ControlBarCommandProcessor.class)
+	})
+	public static class ControlBarCommandsProcessor extends WidgetChildProcessor<WizardContext> {}
 	
 	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
+	@TagAttributesDeclaration({
+		@TagAttributeDeclaration(value="id", required=true),
+		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
+		@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
+		@TagAttributeDeclaration("styleName"),
+		@TagAttributeDeclaration("width"),
+		@TagAttributeDeclaration("height"),
+		@TagAttributeDeclaration(value="onCommand", required=true)
+	})
 	public static class ControlBarCommandProcessor extends WidgetChildProcessor<WizardContext>
 	{
 		@Override
-		@TagAttributesDeclaration({
-			@TagAttributeDeclaration(value="id", required=true),
-			@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-			@TagAttributeDeclaration(value="order", required=true, type=Integer.class),
-			@TagAttributeDeclaration("styleName"),
-			@TagAttributeDeclaration("width"),
-			@TagAttributeDeclaration("height"),
-			@TagAttributeDeclaration(value="onCommand", required=true)
-		})
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
 			String id = context.readChildProperty("id");
