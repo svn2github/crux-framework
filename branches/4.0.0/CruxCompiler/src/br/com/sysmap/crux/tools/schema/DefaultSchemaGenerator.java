@@ -18,7 +18,6 @@ package br.com.sysmap.crux.tools.schema;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +40,6 @@ import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AllChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.widget.creator.children.ChoiceChildProcessor;
@@ -257,8 +255,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetCreatorContext.class});
-			return hasTextChild(method);
+			return hasTextChild(widgetFactory);
 		}
 		catch (Exception e)
 		{
@@ -294,11 +291,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param out
 	 * @param library
 	 * @param added
-	 * @param method
+	 * @param processorClass
 	 */
-	private void generateAttributes(PrintStream out, String library, Set<String> added, Method method)
+	private void generateAttributes(PrintStream out, String library, Set<String> added, Class<?> processorClass)
 	{
-		TagAttributesDeclaration attrsDecl = method.getAnnotation(TagAttributesDeclaration.class);
+		TagAttributesDeclaration attrsDecl = processorClass.getAnnotation(TagAttributesDeclaration.class);
 		if (attrsDecl != null)
 		{
 			for (TagAttributeDeclaration attr : attrsDecl.value())
@@ -322,7 +319,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 				}
 			}
 		}
-		TagAttributes attrs = method.getAnnotation(TagAttributes.class);
+		TagAttributes attrs = processorClass.getAnnotation(TagAttributes.class);
 		if (attrs != null)
 		{
 			for (TagAttribute attr : attrs.value())
@@ -355,11 +352,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateAttributesForFactory(PrintStream out, Class<?> widgetFactory, String library, Set<String> added)
 	{
-		Method method = getMethod(widgetFactory, "processAttributes");
-		if (method != null)
-		{
-			generateAttributes(out, library, added, method);
-		}
+		generateAttributes(out, library, added, widgetFactory);
+
 		Class<?> superclass = widgetFactory.getSuperclass();
 		if (superclass!= null && !superclass.equals(Object.class))
 		{
@@ -383,11 +377,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = getProcessChildrenMethod(processorClass);
-			if (method != null)
-			{
-				generateAttributes(out, library, added, method);
-			}
+			generateAttributes(out, library, added, processorClass);
 			
 			Class<?> superclass = processorClass.getSuperclass();
 			if (superclass!= null && !superclass.equals(Object.class))
@@ -428,8 +418,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
 		TagChildAttributes attributes = ClassUtils.getChildtrenAttributesAnnotation(processorClass);
-		Method processorMethod = ClassUtils.getProcessChildrenMethod(processorClass);
-		TagChildren children = processorMethod.getAnnotation(TagChildren.class);
+		TagChildren children = processorClass.getAnnotation(TagChildren.class);
 		
 		if (ChoiceChildProcessor.class.isAssignableFrom(processorClass))
 		{
@@ -460,12 +449,12 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * 
 	 * @param out
 	 * @param library
-	 * @param method
+	 * @param processorClass
 	 * @throws NoSuchMethodException
 	 */
-	private void generateChildren(PrintStream out, String library, Method method) throws NoSuchMethodException
+	private void generateChildren(PrintStream out, String library, Class<?> processorClass) throws NoSuchMethodException
 	{
-		TagChildren annot = method.getAnnotation(TagChildren.class);
+		TagChildren annot = processorClass.getAnnotation(TagChildren.class);
 		if (annot != null)
 		{
 			if (annot.value().length > 1)
@@ -503,8 +492,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = widgetFactory.getMethod("processChildren", new Class[]{WidgetCreatorContext.class});
-			generateChildren(out, library, method);
+			generateChildren(out, library, widgetFactory);
 		}
 		catch (Exception e)
 		{
@@ -522,8 +510,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
-			generateChildren(out, library, method);
+			generateChildren(out, library, processorClass);
 		}
 		catch (Exception e)
 		{
@@ -728,11 +715,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * 
 	 * @param out
 	 * @param added
-	 * @param method
+	 * @param processorClass
 	 */
-	private void generateEvents(PrintStream out, Set<String> added, Method method)
+	private void generateEvents(PrintStream out, Set<String> added, Class<?> processorClass)
 	{
-		TagEvents evts = method.getAnnotation(TagEvents.class);
+		TagEvents evts = processorClass.getAnnotation(TagEvents.class);
 		if (evts != null)
 		{
 			for (TagEvent evt : evts.value())
@@ -753,7 +740,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 				}
 			}
 		}
-		TagEventsDeclaration evtsDecl = method.getAnnotation(TagEventsDeclaration.class);
+		TagEventsDeclaration evtsDecl = processorClass.getAnnotation(TagEventsDeclaration.class);
 		if (evtsDecl != null)
 		{
 			for (TagEventDeclaration evt : evtsDecl.value())
@@ -770,11 +757,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateEventsForFactory(PrintStream out, Class<?> widgetFactory, Set<String> added)
 	{
-		Method method = getMethod(widgetFactory, "processEvents");
-		if (method != null)
-		{
-			generateEvents(out, added, method);
-		}
+		generateEvents(out, added, widgetFactory);
 		Class<?> superclass = widgetFactory.getSuperclass();
 		if (superclass!= null && !superclass.equals(Object.class))
 		{
@@ -796,11 +779,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
-			if (method != null)
-			{
-				generateEvents(out, added, method);
-			}
+			generateEvents(out, added, processorClass);
 			Class<?> superclass = processorClass.getSuperclass();
 			if (superclass!= null && !superclass.equals(Object.class))
 			{
@@ -1214,42 +1193,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	}
 	
 	/**
-	 * 
-	 * @param factoryClass
-	 * @param methodName
-	 * @return
-	 */
-	private Method getMethod(Class<?> factoryClass, String methodName)
-	{
-		try
-		{
-			return factoryClass.getDeclaredMethod(methodName, new Class[]{WidgetCreatorContext.class});
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * 
-	 * @param factoryClass
-	 * @param methodName
-	 * @return
-	 */
-	private Method getProcessChildrenMethod(Class<?> factoryClass)
-	{
-		try
-		{
-			return ClassUtils.getDeclaredProcessChildrenMethod(factoryClass);
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-	}
-
-	/**
 	 * @param value
 	 * @return
 	 */
@@ -1341,12 +1284,12 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	
 	/**
 	 * 
-	 * @param method
+	 * @param processorClass
 	 * @return
 	 */
-	private boolean hasTextChild(Method method)
+	private boolean hasTextChild(Class<?> processorClass)
 	{
-		TagChildren tagChildren = method.getAnnotation(TagChildren.class);
+		TagChildren tagChildren = processorClass.getAnnotation(TagChildren.class);
 		return (tagChildren != null && tagChildren.value().length == 1 && TextChildProcessor.class.isAssignableFrom(tagChildren.value()[0].value()));
 	}
 
@@ -1372,8 +1315,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		try
 		{
-			Method method = ClassUtils.getProcessChildrenMethod(processorClass);
-			return hasTextChild(method);
+			return hasTextChild(processorClass);
 		}
 		catch (Exception e)
 		{
