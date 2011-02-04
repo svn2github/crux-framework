@@ -32,10 +32,6 @@ import br.com.sysmap.crux.widgets.rebind.decoratedpanel.AbstractDecoratedPanelFa
  * Factory for Title Panel widget
  * @author Gesse S. F. Dafe
  */
-@TagChildren({
-	@TagChild(AbstractTitlePanelFactory.TitleProcessor.class),
-	@TagChild(AbstractTitlePanelFactory.BodyProcessor.class)
-})
 public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFactory
 {
 	@TagChildAttributes(tagName="title", minOccurs="0")

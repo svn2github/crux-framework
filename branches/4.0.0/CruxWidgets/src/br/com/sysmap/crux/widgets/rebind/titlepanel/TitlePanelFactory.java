@@ -16,6 +16,8 @@
 package br.com.sysmap.crux.widgets.rebind.titlepanel;
 
 import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
 import br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel;
 
 /**
@@ -23,6 +25,10 @@ import br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="titlePanel", library="widgets", targetWidget=TitlePanel.class)
+@TagChildren({
+	@TagChild(TitlePanelFactory.TitleProcessor.class),
+	@TagChild(TitlePanelFactory.BodyProcessor.class)
+})
 public class TitlePanelFactory extends AbstractTitlePanelFactory
 {
 }
