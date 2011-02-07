@@ -25,6 +25,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -63,6 +65,41 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
 		sourceWriter.indent();
 
+		if (Environment.isProduction())
+		{
+			generateViewCreationForAllScreens(sourceWriter);
+		}
+		else
+		{
+			generateViewCreationForCurrentScreen(sourceWriter);
+		}
+		
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+    }
+
+	/**
+	 * @param sourceWriter
+	 */
+	private void generateViewCreationForCurrentScreen(SourceWriter sourceWriter) 
+	{
+		try 
+		{
+			Screen screen = getRequestedScreen();
+			generateViewCreator(sourceWriter, screen);
+		}
+		catch (ScreenConfigException e) 
+		{
+			throw new CruxGeneratorException(e.getMessage(), e);
+		}
+	}	
+	
+	/**
+	 * @param sourceWriter
+	 * @param screens
+	 */
+	private void generateViewCreationForAllScreens(SourceWriter sourceWriter) 
+	{
 		List<Screen> screens = getScreens();
 		//TODO: Carregar as telas sob necessidade...com um fragment
 		
@@ -83,10 +120,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			sourceWriter.outdent();
 			sourceWriter.println("}");
         }
-		
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-    }	
+	}	
 	
 	/**
 	 * @param sourceWriter
@@ -94,9 +128,43 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private void generateViewCreator(SourceWriter sourceWriter, Screen screen)
     {
-		sourceWriter.println("new "+ new ViewFactoryCreator(context, logger, screen).create()+"().create();");
+		ViewFactoryCreator factoryCreator = getViewFactoryCreator(screen);
+		try
+		{
+			sourceWriter.println("new "+ factoryCreator.create()+"().create();");
+		}
+		finally
+		{
+			factoryCreator.prepare(null, null);
+		}
     }
 
+	/**
+	 * @param screen
+	 * @return
+	 */
+	private ViewFactoryCreator getViewFactoryCreator(Screen screen)
+	{
+		if (Environment.isProduction())
+		{
+			return new ViewFactoryCreator(context, logger, screen);
+		}
+		else
+		{
+			ViewFactoryCreator factory = screen.getFactory();
+			if (factory == null)
+			{
+				factory = new ViewFactoryCreator(context, logger, screen);
+				screen.setFactory(factory);
+			}
+			else
+			{
+				factory.prepare(context, logger);
+			}
+			return factory;
+		}
+	}
+	
 	@Override
     protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
     {

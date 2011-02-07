@@ -67,14 +67,14 @@ public class ViewFactoryCreator
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static NameFactory nameFactory = new NameFactory();
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
-	private final GeneratorContext context;
+	private GeneratorContext context;
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
 	private Map<String, WidgetCreator<?>> factories = new HashMap<String, WidgetCreator<?>>();
 	private Map<String, WidgetCreatorHelper> factoryHelpers = new HashMap<String, WidgetCreatorHelper>();
 	private Map<String, Boolean> htmlContainersfactories = new HashMap<String, Boolean>();
 	private final LazyPanelFactory lazyFactory;
 	private final Set<String> lazyPanels = new HashSet<String>();	
-    private final TreeLogger logger;
+    private TreeLogger logger;
 	private final LinkedList<PostProcessingPrinter> postProcessingCode = new LinkedList<PostProcessingPrinter>();
 	private final Screen screen;
 	private String screenVariable;
@@ -95,6 +95,18 @@ public class ViewFactoryCreator
 		this.screenVariable = createVariableName("screen");
 
     }	
+	
+	/**
+	 * @param context
+	 * @param logger
+	 */
+	void prepare(GeneratorContext context, TreeLogger logger)
+	{
+		this.context = context;
+		this.logger = logger;
+		this.lazyPanels.clear();
+		this.declaredMessages.clear();
+	}
 	
 	/**
      * Creates a new unique name based off of{@code varName} and adds it to

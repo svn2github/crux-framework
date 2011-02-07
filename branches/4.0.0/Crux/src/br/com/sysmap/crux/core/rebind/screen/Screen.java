@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import com.google.gwt.dev.util.collect.HashSet;
 
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.server.Environment;
 
 /**
@@ -46,6 +47,7 @@ public class Screen
 	protected List<String> formatters = new ArrayList<String>();
 	protected List<String> dataSources = new ArrayList<String>();
 	protected String title;
+	private ViewFactoryCreator factory = null;
 	
 	protected String module;
 	private final JSONArray metaData;
@@ -295,4 +297,12 @@ public class Screen
     {
     	return metaData;
     }
+
+	public ViewFactoryCreator getFactory() {
+		return factory;
+	}
+
+	public void setFactory(ViewFactoryCreator factory) {
+		this.factory = factory;
+	}
 }
