@@ -40,7 +40,7 @@
 	</generate-with>
 
 	<!-- Specify the generator for screen wrappers.     -->
-	<generate-with class="br.com.sysmap.crux.core.rebind.screen.ScreenWrapperGenerator">
+	<generate-with class="br.com.sysmap.crux.core.rebind.screen.wrapper.ScreenWrapperGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ScreenWrapper" />
 	</generate-with>
 

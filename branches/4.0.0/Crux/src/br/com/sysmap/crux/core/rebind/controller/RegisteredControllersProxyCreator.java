@@ -35,7 +35,7 @@ import br.com.sysmap.crux.core.client.event.RegisteredControllers;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.module.Modules;
+import br.com.sysmap.crux.core.rebind.module.Modules;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 
 import com.google.gwt.core.client.GWT;

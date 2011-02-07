@@ -13,33 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.rebind.scanner.module;
+package br.com.sysmap.crux.core.rebind.screen.wrapper;
+
+import br.com.sysmap.crux.core.rebind.AbstractGenerator;
+import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
+
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ModuleException extends RuntimeException
+public class ScreenWrapperGenerator extends AbstractGenerator
 {
-	private static final long serialVersionUID = 5597336842780432001L;
-
-	public ModuleException()
-	{
-		super();
-	}
-
-	public ModuleException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	public ModuleException(String message)
-	{
-		super(message);
-	}
-
-	public ModuleException(Throwable cause)
-	{
-		super(cause);
-	}
+	@Override
+    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf) throws UnableToCompleteException
+    {
+	    return new ScreenWrapperProxyCreator(logger, ctx, baseIntf);
+    }
 }

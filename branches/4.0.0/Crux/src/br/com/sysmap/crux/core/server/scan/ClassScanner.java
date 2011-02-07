@@ -93,7 +93,7 @@ public class ClassScanner
 	 */
 	private static void initializeAllowedPackages()
 	{
-		scannerDB.addIgnoredPackage("br.com.sysmap.crux.core.rebind.screen");
+		scannerDB.addIgnoredPackage("br.com.sysmap.crux.core.rebind.screen.wrapper");
 		scannerDB.addRequiredPackage("br.com.sysmap.crux");
 		scannerDB.addRequiredPackage("com.google.gwt.i18n.client");
 		
