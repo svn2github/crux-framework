@@ -39,7 +39,6 @@ import br.com.sysmap.crux.core.client.serializer.StringSerializer;
 import br.com.sysmap.crux.core.client.serializer.TimestampSerializer;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.serializable.Serializers;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 
 import com.google.gwt.core.ext.GeneratorContext;

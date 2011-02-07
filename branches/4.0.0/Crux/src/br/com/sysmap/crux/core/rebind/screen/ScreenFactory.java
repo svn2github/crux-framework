@@ -648,7 +648,7 @@ public class ScreenFactory
 	    		serializer = serializer.trim();
 	    		if (!StringUtils.isEmpty(serializer))
 	    		{
-	    			if (br.com.sysmap.crux.core.rebind.scanner.screen.serializable.Serializers.getCruxSerializable(serializer) == null)
+	    			if (br.com.sysmap.crux.core.rebind.serializable.Serializers.getCruxSerializable(serializer) == null)
 	    			{
 	    				throw new ScreenConfigException(messages.screenFactoryInvalidSerializable(serializer, screen.getId()));
 	    			}

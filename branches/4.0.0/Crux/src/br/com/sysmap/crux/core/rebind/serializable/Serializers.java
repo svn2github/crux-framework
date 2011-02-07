@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.rebind.scanner.screen.serializable;
+package br.com.sysmap.crux.core.rebind.serializable;
 
 import java.util.HashMap;
 import java.util.Iterator;
