@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import br.com.sysmap.crux.core.rebind.scanner.module.Module;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.module.Module;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolver;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
