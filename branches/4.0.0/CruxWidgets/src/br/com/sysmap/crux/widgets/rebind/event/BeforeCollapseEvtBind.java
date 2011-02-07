@@ -16,9 +16,9 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
 import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
 
@@ -27,7 +27,7 @@ public class BeforeCollapseEvtBind extends EvtProcessor
 	private static final String EVENT_NAME = "onBeforeCollapse";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

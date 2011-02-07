@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.rebind.titlepanel;
 
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel;
 
 /**

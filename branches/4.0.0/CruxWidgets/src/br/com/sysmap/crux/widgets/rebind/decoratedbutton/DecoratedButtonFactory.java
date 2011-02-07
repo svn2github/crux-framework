@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.rebind.decoratedbutton;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.gwt.rebind.FocusWidgetFactory;
 import br.com.sysmap.crux.widgets.client.decoratedbutton.DecoratedButton;
 

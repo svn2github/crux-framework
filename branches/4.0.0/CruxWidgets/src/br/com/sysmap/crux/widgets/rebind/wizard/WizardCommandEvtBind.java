@@ -16,9 +16,9 @@
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -29,7 +29,7 @@ public class WizardCommandEvtBind extends EvtProcessor
 	private static final String EVENT_NAME = "onCommand";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvent;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutHandler;
 
@@ -30,7 +30,7 @@ public class TimeoutEvtBind
 	private static final String EVENT_NAME = "onTimeout";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public static String getEventName()
 	{

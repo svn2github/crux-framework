@@ -15,12 +15,12 @@
  */
 package br.com.sysmap.crux.widgets.rebind.transferlist;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.transferlist.TransferList;
 import br.com.sysmap.crux.widgets.rebind.event.BeforeMoveItemsEvtBind;

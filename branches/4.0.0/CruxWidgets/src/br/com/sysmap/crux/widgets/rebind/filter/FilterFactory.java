@@ -16,17 +16,17 @@
 package br.com.sysmap.crux.widgets.rebind.filter;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasAllKeyHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasAnimationFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasSelectionHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasSelectionHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.filter.Filter;
@@ -58,7 +58,7 @@ public class FilterFactory extends CompositeFactory<WidgetCreatorContext>
 	public static class FilterableAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext, java.lang.String)
+		 * @see br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext, java.lang.String)
 		 */
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{

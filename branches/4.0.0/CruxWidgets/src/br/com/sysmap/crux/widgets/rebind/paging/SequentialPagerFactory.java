@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.rebind.paging;
 
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.widgets.client.paging.SequentialPager;
 
 /**

@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
 /**
  * @author Thiago da Rosa de Bustamante
