@@ -79,7 +79,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 * @throws CruxGeneratorException
 	 * @throws ScreenConfigException
 	 */
-	protected Screen getRequestedScreen() throws CruxGeneratorException, ScreenConfigException
+	private Screen getRequestedScreen() throws CruxGeneratorException, ScreenConfigException
 	{
 		String screenID; 
 		try
@@ -95,6 +95,32 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		return screen;
 	}
 
+	/**
+	 * @return
+	 * @throws ScreenConfigException
+	 */
+	protected Screen getCurrentScreen()  
+	{
+		try 
+		{
+			Screen requestedScreen = getRequestedScreen();
+
+			for(Screen screen: getScreens())
+			{
+				if (screen.getModule().equals(requestedScreen.getModule()) && 
+						screen.getRelativeId().equals(requestedScreen.getRelativeId()))
+				{
+					return screen;
+				}
+			}
+		}
+		catch (ScreenConfigException e) 
+		{
+			throw new CruxGeneratorException(e.getMessage(), e);
+		}
+		throw new CruxGeneratorException("");//TODO message screen not found
+	}	
+	
 	/**
 	 * 
 	 * @param logger

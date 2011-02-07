@@ -25,7 +25,6 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
-import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
@@ -83,17 +82,10 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	private void generateViewCreationForCurrentScreen(SourceWriter sourceWriter) 
 	{
-		try 
-		{
-			Screen screen = getRequestedScreen();
+			Screen screen = getCurrentScreen();
 			generateViewCreator(sourceWriter, screen);
-		}
-		catch (ScreenConfigException e) 
-		{
-			throw new CruxGeneratorException(e.getMessage(), e);
-		}
-	}	
-	
+	}
+
 	/**
 	 * @param sourceWriter
 	 * @param screens
