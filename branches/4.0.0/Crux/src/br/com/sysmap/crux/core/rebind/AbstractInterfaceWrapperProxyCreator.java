@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
+import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;

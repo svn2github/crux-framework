@@ -19,8 +19,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;

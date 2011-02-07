@@ -35,8 +35,8 @@ import org.w3c.dom.NodeList;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 
 /**

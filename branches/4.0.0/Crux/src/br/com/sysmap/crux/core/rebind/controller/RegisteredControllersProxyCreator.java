@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.module.Modules;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -141,7 +141,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				module = screen.getModule();
 			}
 			generateControllersForScreen(srcWriter, screen);
-			Iterator<br.com.sysmap.crux.core.rebind.scanner.screen.Widget> screenWidgets = screen.iterateWidgets();
+			Iterator<br.com.sysmap.crux.core.rebind.screen.Widget> screenWidgets = screen.iterateWidgets();
 			while (screenWidgets.hasNext())
 			{
 				String widgetType = screenWidgets.next().getType();

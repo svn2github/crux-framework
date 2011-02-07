@@ -26,8 +26,7 @@ import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
-import br.com.sysmap.crux.core.rebind.scanner.screen.formatter.Formatters;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
 import com.google.gwt.core.ext.GeneratorContext;

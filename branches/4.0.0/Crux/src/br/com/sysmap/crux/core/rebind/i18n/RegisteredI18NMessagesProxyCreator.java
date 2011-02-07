@@ -27,8 +27,8 @@ import br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages;
 import br.com.sysmap.crux.core.i18n.MessageClasses;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.Widget;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;

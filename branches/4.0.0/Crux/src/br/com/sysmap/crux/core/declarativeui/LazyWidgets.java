@@ -28,12 +28,12 @@ import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
-import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyCondition;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildLazyConditions;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetConfig;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;

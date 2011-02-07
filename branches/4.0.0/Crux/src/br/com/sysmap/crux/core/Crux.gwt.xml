@@ -20,7 +20,7 @@
 	</generate-with>
 
 	<!-- Specify the generator for registered widgets.     -->
-	<generate-with class="br.com.sysmap.crux.core.rebind.widget.ViewFactoryGenerator">
+	<generate-with class="br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ViewFactory" />
 	</generate-with>
 	
