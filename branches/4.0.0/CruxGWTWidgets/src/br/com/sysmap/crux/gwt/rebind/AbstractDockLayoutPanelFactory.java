@@ -18,12 +18,12 @@ package br.com.sysmap.crux.gwt.rebind;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
 
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 

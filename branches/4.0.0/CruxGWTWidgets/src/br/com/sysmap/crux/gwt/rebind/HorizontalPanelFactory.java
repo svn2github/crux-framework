@@ -18,17 +18,17 @@ package br.com.sysmap.crux.gwt.rebind;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasVerticalAlignmentFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.align.HorizontalAlignment;
-import br.com.sysmap.crux.core.rebind.widget.creator.align.VerticalAlignment;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasVerticalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 /**
  * @author Thiago da Rosa de Bustamante

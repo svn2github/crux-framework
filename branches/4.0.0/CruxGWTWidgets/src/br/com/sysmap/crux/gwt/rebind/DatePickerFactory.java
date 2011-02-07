@@ -19,14 +19,14 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasHighlightHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasShowRangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributesDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasHighlightHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasShowRangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.gwt.client.DateFormatUtil;
 
 /**

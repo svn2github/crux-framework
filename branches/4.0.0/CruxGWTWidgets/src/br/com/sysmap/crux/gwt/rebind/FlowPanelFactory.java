@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 

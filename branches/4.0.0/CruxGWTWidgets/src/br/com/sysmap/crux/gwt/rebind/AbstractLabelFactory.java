@@ -15,16 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasAllMouseHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasAutoHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasClickHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionEstimatorFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasDoubleClickHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasWordWrapFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDirectionEstimatorFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
 
 /**
  * Represents a Label DeclarativeFactory

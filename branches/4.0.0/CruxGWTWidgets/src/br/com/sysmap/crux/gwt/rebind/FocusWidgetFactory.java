@@ -15,25 +15,25 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.BlurEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.ClickEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.DoubleClickEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.FocusEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyDownEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyPressEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.KeyUpEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseDownEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseMoveEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOutEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseOverEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseUpEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.creator.event.MouseWheelEvtBind;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.BlurEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.ClickEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.DoubleClickEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.FocusEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.KeyDownEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.KeyPressEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.KeyUpEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseDownEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseMoveEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseOutEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseOverEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseUpEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.MouseWheelEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
 /**
  * This is the base factory class for widgets that can receive focus. 

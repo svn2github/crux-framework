@@ -15,16 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasChangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionEstimatorFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasDirectionFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasNameFactory;
-import br.com.sysmap.crux.core.rebind.widget.creator.HasTextFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasChangeHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDirectionEstimatorFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasNameFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasTextFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 
 
 /**

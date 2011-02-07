@@ -15,8 +15,8 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 
 
 /**

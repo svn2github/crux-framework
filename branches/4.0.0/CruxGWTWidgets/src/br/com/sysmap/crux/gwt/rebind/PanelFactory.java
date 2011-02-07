@@ -16,8 +16,8 @@
 package br.com.sysmap.crux.gwt.rebind;
 
 import br.com.sysmap.crux.core.client.screen.WidgetContainer;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 
 /**
  * Base factory class for all panels

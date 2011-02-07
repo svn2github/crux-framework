@@ -16,9 +16,9 @@
 package br.com.sysmap.crux.gwt.rebind;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -32,7 +32,7 @@ public class SubmitCompleteEvtBind extends EvtProcessor
 	private static final String EVENT_NAME = "onSubmitComplete";
 	
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.widget.EvtProcessor#getEventName()
+	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

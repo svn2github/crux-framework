@@ -17,7 +17,7 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import com.google.gwt.user.client.ui.Label;
 
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 
 /**
  * Represents a LabelFactory DeclarativeFactory

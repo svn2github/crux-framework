@@ -17,16 +17,16 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.creator.children.TextChildProcessor;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.TextChildProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.TextArea;
 

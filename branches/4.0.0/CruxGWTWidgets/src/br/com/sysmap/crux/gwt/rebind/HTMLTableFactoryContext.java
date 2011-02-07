@@ -15,7 +15,7 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 
 /**
  * @author Administrator
