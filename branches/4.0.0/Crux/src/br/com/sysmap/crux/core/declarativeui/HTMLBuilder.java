@@ -648,7 +648,16 @@ class HTMLBuilder
 	{
 		Node parentNode = node.getParentNode();
 		String namespaceURI = parentNode.getNamespaceURI();
-		return (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode));
+		if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode))
+		{
+			return true;
+		}
+		if (parentNode instanceof Element && namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE) && parentNode.getLocalName().equals("screen"))
+		{
+			return isHTMLChild(parentNode);
+		}
+		
+		return false;
 	}
 	
 	/**
