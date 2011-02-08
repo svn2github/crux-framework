@@ -70,7 +70,7 @@ public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		{
 			String message = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".addMessage("+EscapeUtils.quote(message)+");");
+			out.println(rootWidget+".addMessage("+message+");");
 		}
 	}
 	

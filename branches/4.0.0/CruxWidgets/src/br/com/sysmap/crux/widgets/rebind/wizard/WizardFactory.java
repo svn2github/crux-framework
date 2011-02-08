@@ -285,7 +285,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
 			
 			out.println(WidgetStep.class.getCanonicalName()+"<?> "+widgetStep+" = "+widget+".getWidgetStep("+EscapeUtils.quote(context.stepId)+");");
-			out.println(widgetStep+".addCommand("+EscapeUtils.quote(id)+", "+EscapeUtils.quote(label)+", "+commandEvent+", "+order+");");
+			out.println(widgetStep+".addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))
@@ -318,7 +318,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
 			out.println(WidgetStep.class.getCanonicalName()+"<?> "+widgetStep+" = "+widget+".addWidgetStep("+
-					EscapeUtils.quote(context.stepId)+", "+EscapeUtils.quote(label)+", "+childWidget+");");
+					EscapeUtils.quote(context.stepId)+", "+label+", "+childWidget+");");
 			
 			if (!StringUtils.isEmpty(context.stepOnEnter))
 			{
@@ -361,7 +361,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String widget = context.getWidget();
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));
 			String url = context.readChildProperty("url");
-			out.println(widget+".addPageStep("+EscapeUtils.quote(id)+", "+EscapeUtils.quote(label)+", "+EscapeUtils.quote(url)+");");
+			out.println(widget+".addPageStep("+EscapeUtils.quote(id)+", "+label+", "+EscapeUtils.quote(url)+");");
 
 			String enabled = context.readChildProperty("enabled");
 			if (!StringUtils.isEmpty(enabled))
@@ -465,7 +465,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String backLabel = context.readChildProperty("backLabel");
 			if (!StringUtils.isEmpty(backLabel))
 			{
-				out.println(controlBar+".setBackLabel("+EscapeUtils.quote(getWidgetCreator().getDeclaredMessage(backLabel))+");");
+				out.println(controlBar+".setBackLabel("+getWidgetCreator().getDeclaredMessage(backLabel)+");");
 			}
 
 			String nextLabel = context.readChildProperty("nextLabel");
@@ -548,7 +548,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 
 			String widget = context.getWidget();
 			
-			out.println(widget+".getControlBar().addCommand("+EscapeUtils.quote(id)+", "+EscapeUtils.quote(label)+", "+commandEvent+", "+order+");");
+			out.println(widget+".getControlBar().addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))

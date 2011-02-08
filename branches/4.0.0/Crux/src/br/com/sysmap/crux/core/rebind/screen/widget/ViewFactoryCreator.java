@@ -152,11 +152,13 @@ public class ViewFactoryCreator
 	{
 		if (screen.getTitle() != null && screen.getTitle().length() >0)
 		{
-			printer.println("Window.setTitle("+EscapeUtils.quote(getDeclaredMessage(screen.getTitle()))+");" );
+			printer.println("Window.setTitle("+getDeclaredMessage(screen.getTitle())+");" );
 		}
 
 		printer.println("final Screen "+screenVariable+" = Screen.get();");
 		
+		//TODO: remover esses metodos da screen... no registered controllers, adicionar a criação dos controllers por tela... 
+		// com uma classe auxiliar criada por tela....
 		printer.println(screenVariable+".setDeclaredControllers("+extractReferencedResourceList(screen.iterateControllers())+");");
 		printer.println(screenVariable+".setDeclaredDataSources("+extractReferencedResourceList(screen.iterateDataSources())+");");
 		printer.println(screenVariable+".setDeclaredSerializables("+extractReferencedResourceList(screen.iterateSerializers())+");");
@@ -343,11 +345,11 @@ public class ViewFactoryCreator
 			{
 				messageVariable = declaredMessages.get(messageClassName);
 			}
-			return messageVariable+".get"+Character.toUpperCase(messageParts[1].charAt(0))+messageParts[1].substring(1)+"()";
+			return messageVariable+"."+messageParts[1]+"()";
 	    }
 	    else
 	    {
-	    	return property;
+	    	return property==null?null:EscapeUtils.quote(property);
 	    }
     }
 	

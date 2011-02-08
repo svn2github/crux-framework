@@ -57,7 +57,7 @@ public class StackMenuItemFactory extends WidgetCreator<WidgetCreatorContext>
 		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
 		String label = metaElem.optString("label"); 
-		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(getDeclaredMessage(label))+");");
+		out.println(className + " " + varName+" = new "+className+"("+getDeclaredMessage(label)+");");
 		return varName;
 	}
 	

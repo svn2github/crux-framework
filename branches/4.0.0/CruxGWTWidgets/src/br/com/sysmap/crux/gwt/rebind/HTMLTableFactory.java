@@ -168,8 +168,8 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setText("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(
-					getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true)))+");");
+			out.println(rootWidget+".setText("+context.rowIndex+", "+context.colIndex+", "+
+					getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true))+");");
 		}
 	}
 	

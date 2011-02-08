@@ -68,7 +68,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 			String innerText = ensureTextChild(context.getChildElement(),true);
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setTitleText("+EscapeUtils.quote(i18nText)+");");
+			out.println(rootWidget+".setTitleText("+i18nText+");");
 		}
 	}
 		
@@ -116,7 +116,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 			String innerText = ensureTextChild(context.getChildElement(), true);
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentText("+EscapeUtils.quote(i18nText)+");");
+			out.println(rootWidget+".setContentText("+i18nText+");");
 		}
 	}
 	

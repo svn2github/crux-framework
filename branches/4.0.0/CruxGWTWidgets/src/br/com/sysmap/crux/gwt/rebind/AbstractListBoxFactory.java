@@ -60,7 +60,11 @@ public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxC
 			{
 				value = label;
 			}
-			out.println(context.getWidget()+".insertItem("+EscapeUtils.quote(label)+", "+EscapeUtils.quote(value)+", "+context.index+");");
+			else
+			{
+				value = EscapeUtils.quote(value);
+			}
+			out.println(context.getWidget()+".insertItem("+label+", "+value+", "+context.index+");");
 
 			String selected = context.readChildProperty("selected");
 			if (selected != null && selected.length() > 0)

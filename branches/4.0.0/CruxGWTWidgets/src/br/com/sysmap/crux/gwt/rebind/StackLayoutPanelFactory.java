@@ -144,6 +144,10 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureHtmlChild(context.getChildElement(), true);
+			if (context.title != null)
+			{
+				context.title = EscapeUtils.quote(context.title);
+			}
 			context.isHtmlTitle = true;
 		}
 	}
@@ -180,7 +184,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 			}
 			else
 			{
-				out.println(rootWidget+".add("+contentWidget+", "+EscapeUtils.quote(context.title)+", "+context.isHtmlTitle+", "+context.headerSize+");");
+				out.println(rootWidget+".add("+contentWidget+", "+context.title+", "+context.isHtmlTitle+", "+context.headerSize+");");
 			}
 
 			if (context.selected)

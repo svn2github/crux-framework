@@ -256,7 +256,7 @@ class AttributesAnnotationScanner
 				}
 				else if (supportsI18N)
 				{
-					expression = EscapeUtils.quote(widgetCreator.getDeclaredMessage(attrValue));
+					expression = widgetCreator.getDeclaredMessage(attrValue);
 				}
 				else if (isStringExpression)
 				{

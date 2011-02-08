@@ -69,7 +69,7 @@ public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 		{
 			String id = context.readChildProperty("id");
 			String label = context.readChildProperty("label");
-			label = (label != null && label.length() > 0) ? getWidgetCreator().getDeclaredMessage(label) : "";
+			label = (label != null && label.length() > 0) ? getWidgetCreator().getDeclaredMessage(label) : EscapeUtils.quote("");
 			String url = context.readChildProperty("url");
 						
 			boolean closeable = true;
@@ -82,7 +82,7 @@ public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 			String rootWidget = context.getWidget();
 			String tab = getWidgetCreator().createVariableName("tab");
 			out.println(Tab.class.getCanonicalName()+" "+tab+" = "+rootWidget+".openTab("+EscapeUtils.quote(id)+", "+
-					EscapeUtils.quote(label)+", "+EscapeUtils.quote(url)+", "+closeable+", false);");
+					label+", "+EscapeUtils.quote(url)+", "+closeable+", false);");
 			
 			String beforeFocusEvt = context.readChildProperty(beforeFocusEvtBind.getEventName());
 			if (!StringUtils.isEmpty(beforeFocusEvt))

@@ -343,7 +343,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 					boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
 					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
 					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
-					label = (label != null && label.length() > 0) ? getDeclaredMessage(label) : "";
+					label = (label != null && label.length() > 0) ? getDeclaredMessage(label) : EscapeUtils.quote("");
 
 					String def = createVariableName("def");
 
@@ -351,7 +351,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 					if("dataColumn".equals(columnType))
 					{
 						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+DataColumnDefinition.class.getCanonicalName()+"("+
-								EscapeUtils.quote(label)+", "+
+								label+", "+
 								EscapeUtils.quote(width)+", "+
 								EscapeUtils.quote(formatter)+", "+ 
 								visible+", "+
@@ -365,7 +365,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 						String widgetCreator = getWidgetColumnCreator(out, colElem);
 						
 						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+WidgetColumnDefinition.class.getCanonicalName()+"("+
-								EscapeUtils.quote(label)+", "+
+								label+", "+
 								EscapeUtils.quote(width)+", "+
 								widgetCreator+", "+
 								visible+", "+

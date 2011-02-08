@@ -141,6 +141,10 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException 
 		{
 			context.title = ensureHtmlChild(context.getChildElement(), true);
+			if (context.title != null)
+			{
+				context.title = EscapeUtils.quote(context.title);
+			}
 			context.isHTMLTitle = true;
 		}
 	}
@@ -182,7 +186,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 			}
 			else
 			{
-				out.println(rootWidget+".add("+widget+", "+EscapeUtils.quote(context.title)+", "+context.isHTMLTitle+");");
+				out.println(rootWidget+".add("+widget+", "+context.title+", "+context.isHTMLTitle+");");
 			}
 			updateTabState(out, context);
 		}

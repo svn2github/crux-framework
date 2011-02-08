@@ -118,7 +118,7 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 			out.println("final Event "+commandEvent+" = Events.getEvent("+EscapeUtils.quote("onCommand")+", "+ EscapeUtils.quote(onCommand)+");");
 			
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".addCommand("+EscapeUtils.quote(id)+", "+EscapeUtils.quote(label)+", "+commandEvent+", "+order+");");
+			out.println(rootWidget+".addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))
