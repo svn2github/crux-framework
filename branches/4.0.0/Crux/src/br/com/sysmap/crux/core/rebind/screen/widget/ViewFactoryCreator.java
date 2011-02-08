@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.rebind.screen.widget;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -154,12 +155,12 @@ public class ViewFactoryCreator
 			printer.println("Window.setTitle("+EscapeUtils.quote(getDeclaredMessage(screen.getTitle()))+");" );
 		}
 
-		/*this.declaredControllers = extractReferencedResourceList(metaElem, "useController");
-		this.declaredDataSources = extractReferencedResourceList(metaElem, "useDataSource");
-		this.declaredSerializables = extractReferencedResourceList(metaElem, "useSerializable");
-		this.declaredFormatters = extractReferencedResourceList(metaElem, "useFormatter");
-		*///TODO: rever se precisa disso aki ainda
 		printer.println("final Screen "+screenVariable+" = Screen.get();");
+		
+		printer.println(screenVariable+".setDeclaredControllers("+extractReferencedResourceList(screen.iterateControllers())+");");
+		printer.println(screenVariable+".setDeclaredDataSources("+extractReferencedResourceList(screen.iterateDataSources())+");");
+		printer.println(screenVariable+".setDeclaredSerializables("+extractReferencedResourceList(screen.iterateSerializers())+");");
+		printer.println(screenVariable+".setDeclaredFormatters("+extractReferencedResourceList(screen.iterateFormatters())+");");
 
 		createHistoryChangedEvt(printer);
 		createClosingEvt(printer);
@@ -583,27 +584,27 @@ public class ViewFactoryCreator
 		}
     }
 
-	/*
-	 * @param element
-	 * @param attributeName
+	/**
+	 * @param attributes
 	 * @return
-	 * @throws JSONException 
-	 *
-	private String[] extractReferencedResourceList(JSONObject metaElem, String attributeName) throws JSONException
+	 */
+	private String extractReferencedResourceList(Iterator<String> attributes)
 	{
-		String attr = metaElem.getString(attributeName);
-		if (!StringUtils.isEmpty(attr))
+		StringBuilder result = new StringBuilder("new String[]{"); 
+
+		boolean first = true;
+		while (attributes.hasNext())
 		{
-			String[] result = attr.split(",");
-			for (int i = 0; i < result.length; i++)
+			if (!first)
 			{
-				result[i] = result[i].trim();
+				result.append(",");
 			}
-			return result;
+			first = false;
+			result.append(EscapeUtils.quote(attributes.next().trim()));
 		}
-		return new String[0];
+		result.append("}"); 
+		return result.toString();
 	}	
-	*/
 	
 	/**
 	 * Creates the resized event.

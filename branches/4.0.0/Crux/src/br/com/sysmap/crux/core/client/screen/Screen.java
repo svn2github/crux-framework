@@ -63,57 +63,6 @@ public class Screen
 {
 	private static Logger logger = Logger.getLogger(Screen.class.getName());
 
-	protected FastList<Element> blockingDivs = new FastList<Element>();
-	protected String[] declaredControllers;
-	protected String[] declaredDataSources;
-	protected String[] declaredFormatters;
-	@Deprecated
-	protected String[] declaredSerializables;
-	protected IFrameElement historyFrame = null;
-	protected String id;
-	
-	protected Map<String> lazyWidgets = null;
-	
-	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
-	
-	@Deprecated
-	protected ModuleComunicationSerializer serializer = null;
-	
-	protected FastMap<Widget> widgets = new FastMap<Widget>();
-
-	@SuppressWarnings("deprecation")
-    protected Screen(String id, Map<String> lazyWidgets) 
-	{
-		this.id = id;
-		this.lazyWidgets = lazyWidgets;
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			Array<String> keys = lazyWidgets.keys();
-			for(int i=0; i< keys.size(); i++)
-			{
-				logger.log(Level.FINE, "Adding lazy dependency. Widget["+keys.get(i)+"] depends on ["+lazyWidgets.get(keys.get(i))+"].");
-			}
-		}
-		this.serializer = new ModuleComunicationSerializer();
-		createControllerAccessor(this);
-		this.addWindowCloseHandler(new CloseHandler<Window>()
-		{
-			public void onClose(CloseEvent<Window> event)
-			{
-				removeControllerAccessor(Screen.this);
-			}
-		});
-
-		createCrossDocumentAccessor(this);
-		this.addWindowCloseHandler(new CloseHandler<Window>()
-		{
-			public void onClose(CloseEvent<Window> event)
-			{
-				removeCrossDocumentAccessor(Screen.this);
-			}
-		});
-	}
-	
 	/**
 	 * 
 	 * @param id
@@ -123,7 +72,6 @@ public class Screen
 	{
 		Screen.get().addWidget(id, widget);
 	}
-
 	/**
 	 * 
 	 * @param handler
@@ -133,7 +81,6 @@ public class Screen
 	{
 		return Screen.get().addWindowCloseHandler(handler);
 	}
-
 	/**
 	 * 
 	 * @param handler
@@ -143,7 +90,6 @@ public class Screen
 	{
 		return Screen.get().addWindowClosingHandler(handler);
 	}
-
 	/**
 	 * 
 	 * @param handler
@@ -153,7 +99,6 @@ public class Screen
 	{
 		return Screen.get().addWindowHistoryChangedHandler(handler);
 	}
-	
 	/**
 	 * 
 	 * @param handler
@@ -163,7 +108,6 @@ public class Screen
 	{
 		return Screen.get().addWindowResizeHandler(handler);
 	}
-
 	/**
 	 * 
 	 * @param token
@@ -172,8 +116,6 @@ public class Screen
 	{
 		Screen.get().addTokenToHistory(token);
 	}
-	
-	
 	/**
 	 * 
 	 * @param token
@@ -217,7 +159,7 @@ public class Screen
 		}
 		return url;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -225,7 +167,7 @@ public class Screen
 	{
 		Screen.get().showBlockDiv("crux-DefaultScreenBlocker");
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -235,13 +177,84 @@ public class Screen
 	}
 
 	/**
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callAbsoluteTopControllerAccessor(String call, String serializedData)/*-{
+		var who = $wnd.top;
+		var op = $wnd.opener;
+		while (op != null)
+		{
+			who = op.top;
+			op = op.opener;
+		}
+		return who._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+
+	/**
+	 * 
+	 * @param frame
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callFrameControllerAccessor(String frame, String call, String serializedData)/*-{
+		return $wnd.frames[frame]._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+	
+	/**
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callOpenerControllerAccessor(String call, String serializedData)/*-{
+		return $wnd.opener._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+	
+	/**
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callParentControllerAccessor(String call, String serializedData)/*-{
+		return $wnd.parent._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+	
+	/**
+	 * 
+	 * @param frame
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callSiblingFrameControllerAccessor(String frame, String call, String serializedData)/*-{
+		return $wnd.parent.frames[frame]._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+
+	/**
+	 * @param call
+	 * @param serializedData
+	 * @return
+	 */
+	@Deprecated
+	private static native String callTopControllerAccessor(String call, String serializedData)/*-{
+		return $wnd.top._cruxScreenControllerAccessor(call, serializedData);
+	}-*/;
+	
+	/**
      *
      */
 	public static void clearContext()
 	{
 		ContextManager.clearContext();
 	}
-	
+
 	/**
 	 * @param id
 	 * @return
@@ -250,7 +263,7 @@ public class Screen
 	{
 		return Screen.get().containsWidget(id);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -298,6 +311,27 @@ public class Screen
 	}
 
 	/**
+	 * Ensures that the given id is not being used in the current document. If this is not the case, returns an unique id.
+	 * @param id
+	 * @return
+	 */
+	private static String ensureUniqueId(String id)
+	{
+		Object exists = DOM.getElementById(id);
+		int i = 0;
+		while(exists != null)
+		{
+			exists = DOM.getElementById(id + "_" + (++i));
+		}
+		if(i > 0)
+		{
+			id = id + "_" + i;
+		}
+		return id;
+	}
+	
+	
+	/**
 	 * Gets the current screen
 	 * @return
 	 */
@@ -305,7 +339,7 @@ public class Screen
 	{
 		return ScreenFactory.getInstance().getScreen();
 	}
-
+	
 	/**
 	 * Gets a widget on the current screen
 	 * @param id
@@ -315,7 +349,7 @@ public class Screen
 	{
 		return Screen.get().getWidget(id);
 	}
-
+	
 	/**
 	 * 
 	 * @param <T>
@@ -326,7 +360,7 @@ public class Screen
 	public static <T extends Widget> T get(String id, Class<T> clazz)
 	{
 		return Screen.get().getWidget(id, clazz);
-	}	
+	}
 	
 	/**
 	 * @return a list containing all widgets from the current screen 
@@ -358,16 +392,17 @@ public class Screen
 			ids.add(keys.get(i));
 		}		
 		return ids;
-	}	
+	}
 	
 	/**
 	 * @return
 	 */
+	@Deprecated
 	public static String[] getControllers()
 	{
 		return Screen.get().getDeclaredControllers();
-	}	
-
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -397,10 +432,11 @@ public class Screen
 	{
 		return createDataSource(dataSource);
 	}
-	
+
 	/**
 	 * @return
 	 */
+	@Deprecated
 	public static String[] getDataSources()
 	{
 		return Screen.get().getDeclaredDataSources();
@@ -419,11 +455,12 @@ public class Screen
 	/**
 	 * @return
 	 */
+	@Deprecated
 	public static String[] getFormatters()
 	{
 		return Screen.get().getDeclaredFormatters();
-	}
-
+	}	
+	
 	/**
 	 * 
 	 * @return
@@ -432,7 +469,7 @@ public class Screen
 	{
 		return Screen.get().getIdentifier();
 	}
-	
+
 	/**
 	 * 
 	 * @return the locale specified or null
@@ -466,8 +503,8 @@ public class Screen
 		}
 		
 		return locale;
-	}
-
+	}	
+	
 	/**
 	 * @return
 	 */
@@ -475,7 +512,7 @@ public class Screen
 	public static String[] getSerializables()
 	{
 		return Screen.get().getDeclaredSerializables();
-	}
+	}	
 
 	/**
 	 * @param call
@@ -487,7 +524,7 @@ public class Screen
 	{
 		invokeControllerOnAbsoluteTop(call, param, Object.class);
 	}
-	
+
 	/**
 	 * @param call
 	 * @param param
@@ -499,7 +536,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callAbsoluteTopControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
-
+	
 	/**
 	 * @param call
 	 * @throws ModuleComunicationException
@@ -521,7 +558,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callFrameControllerAccessor(frame, call, Screen.get().serializer.serialize(param)));
 	}
-	
+
 	/**
 	 * 
 	 * @param call
@@ -567,7 +604,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callParentControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
-	
+
 	/**
 	 * @param call
 	 * @throws ModuleComunicationException
@@ -577,7 +614,7 @@ public class Screen
 	{
 		invokeControllerOnSelf(call, param, Object.class);
 	}
-	
+
 	/**
 	 * @param call
 	 * @param param
@@ -646,7 +683,7 @@ public class Screen
 	{
 		return (T) Screen.get().serializer.deserialize(callTopControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -674,7 +711,7 @@ public class Screen
 	{
 		return Screen.get().widgetsIdList();
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -701,7 +738,7 @@ public class Screen
 	{
 		Screen.get().removeWidget(id, removeFromDOM);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -709,7 +746,7 @@ public class Screen
 	{
 		Screen.get().hideBlockDiv();
 	}
-
+	
 	/**
 	 * Update fields mapped with ValueObject from widgets that have similar names.
 	 * 
@@ -730,95 +767,64 @@ public class Screen
 		Screen.get().updateScreenWidgets(eventHandler);
 	}
 	
-	/**
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
-	@Deprecated
-	private static native String callAbsoluteTopControllerAccessor(String call, String serializedData)/*-{
-		var who = $wnd.top;
-		var op = $wnd.opener;
-		while (op != null)
-		{
-			who = op.top;
-			op = op.opener;
-		}
-		return who._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
+	protected FastList<Element> blockingDivs = new FastList<Element>();
 
-	/**
-	 * 
-	 * @param frame
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
 	@Deprecated
-	private static native String callFrameControllerAccessor(String frame, String call, String serializedData)/*-{
-		return $wnd.frames[frame]._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
+	protected String[] declaredControllers;
 	
-	/**
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
 	@Deprecated
-	private static native String callOpenerControllerAccessor(String call, String serializedData)/*-{
-		return $wnd.opener._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
-	
-	/**
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
-	@Deprecated
-	private static native String callParentControllerAccessor(String call, String serializedData)/*-{
-		return $wnd.parent._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
+	protected String[] declaredDataSources;
 
-	/**
-	 * 
-	 * @param frame
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
 	@Deprecated
-	private static native String callSiblingFrameControllerAccessor(String frame, String call, String serializedData)/*-{
-		return $wnd.parent.frames[frame]._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
+	protected String[] declaredFormatters;
 	
-	/**
-	 * @param call
-	 * @param serializedData
-	 * @return
-	 */
 	@Deprecated
-	private static native String callTopControllerAccessor(String call, String serializedData)/*-{
-		return $wnd.top._cruxScreenControllerAccessor(call, serializedData);
-	}-*/;
+	protected String[] declaredSerializables;
+	
+	protected IFrameElement historyFrame = null;
+	
+	protected String id;
 
-	/**
-	 * Ensures that the given id is not being used in the current document. If this is not the case, returns an unique id.
-	 * @param id
-	 * @return
-	 */
-	private static String ensureUniqueId(String id)
+	protected Map<String> lazyWidgets = null;
+	
+	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
+	
+	@Deprecated
+	protected ModuleComunicationSerializer serializer = null;
+
+	protected FastMap<Widget> widgets = new FastMap<Widget>();
+	
+	@SuppressWarnings("deprecation")
+    protected Screen(String id, Map<String> lazyWidgets) 
 	{
-		Object exists = DOM.getElementById(id);
-		int i = 0;
-		while(exists != null)
+		this.id = id;
+		this.lazyWidgets = lazyWidgets;
+		if (LogConfiguration.loggingIsEnabled())
 		{
-			exists = DOM.getElementById(id + "_" + (++i));
+			Array<String> keys = lazyWidgets.keys();
+			for(int i=0; i< keys.size(); i++)
+			{
+				logger.log(Level.FINE, "Adding lazy dependency. Widget["+keys.get(i)+"] depends on ["+lazyWidgets.get(keys.get(i))+"].");
+			}
 		}
-		if(i > 0)
+		this.serializer = new ModuleComunicationSerializer();
+		createControllerAccessor(this);
+		this.addWindowCloseHandler(new CloseHandler<Window>()
 		{
-			id = id + "_" + i;
-		}
-		return id;
+			public void onClose(CloseEvent<Window> event)
+			{
+				removeControllerAccessor(Screen.this);
+			}
+		});
+
+		createCrossDocumentAccessor(this);
+		this.addWindowCloseHandler(new CloseHandler<Window>()
+		{
+			public void onClose(CloseEvent<Window> event)
+			{
+				removeCrossDocumentAccessor(Screen.this);
+			}
+		});
 	}
 	
 	/**
@@ -828,8 +834,8 @@ public class Screen
 	protected void addTokenToHistory(String token)
 	{
 		History.newItem(token);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param token
@@ -843,8 +849,8 @@ public class Screen
 	protected void addWidget(String id, Widget widget)
 	{
 		widgets.put(id, widget);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param handler
@@ -854,7 +860,7 @@ public class Screen
 	{
 		return Window.addCloseHandler(handler);
 	}
-
+	
 	/**
 	 * 
 	 * @param handler
@@ -863,7 +869,7 @@ public class Screen
 	protected HandlerRegistration addWindowClosingHandler(ClosingHandler handler) 
 	{
 		return Window.addWindowClosingHandler(handler);
-	}		
+	}	
 	
 	/**
 	 * 
@@ -877,7 +883,7 @@ public class Screen
 			prepareHistoryFrame();
 		}
 		return History.addValueChangeHandler(handler);
-	}		
+	}
 	
 	/**
 	 * 
@@ -887,8 +893,8 @@ public class Screen
 	protected HandlerRegistration addWindowResizeHandler(ResizeHandler handler) 
 	{
 		return Window.addResizeHandler(handler);
-	}
-
+	}	
+	
 	/**
 	 * @param widgetId
 	 */
@@ -908,7 +914,7 @@ public class Screen
 			logger.log(Level.FINE, "Lazy dependencies of lazyPanel ["+widgetId+"] removed.");
 		}
 	}
-	
+
 	/**
 	 * @param id
 	 * @return
@@ -916,8 +922,27 @@ public class Screen
 	protected boolean containsWidget(String id)
 	{
 		return widgets.containsKey(id);
-	}
+	}		
 	
+	@Deprecated
+	private native void createControllerAccessor(Screen handler)/*-{
+		$wnd._cruxScreenControllerAccessor = function(call, serializedData){
+			var a = handler.@br.com.sysmap.crux.core.client.screen.Screen::invokeController(Ljava/lang/String;Ljava/lang/String;)(call, serializedData);
+			return a?a:null;
+		};
+	}-*/;		
+	
+	/**
+	 * Create a hook javascript function, called outside of module.
+	 * @param handler
+	 */
+	private native void createCrossDocumentAccessor(Screen handler)/*-{
+		$wnd._cruxCrossDocumentAccessor = function(serializedData){
+			var a = handler.@br.com.sysmap.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
+			return a?a:null;
+		};
+	}-*/;
+
 	/**
 	 * 
 	 * @return
@@ -930,14 +955,16 @@ public class Screen
 	/**
 	 * @return
 	 */
+	@Deprecated
 	protected String[] getDeclaredControllers()
 	{
 		return declaredControllers;
 	}
-
+	
 	/**
 	 * @return
 	 */
+	@Deprecated
 	protected String[] getDeclaredDataSources()
 	{
 		return declaredDataSources;
@@ -946,11 +973,12 @@ public class Screen
 	/**
 	 * @return
 	 */
+	@Deprecated
 	protected String[] getDeclaredFormatters()
 	{
 		return declaredFormatters;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -959,72 +987,33 @@ public class Screen
 	{
 		return declaredSerializables;
 	}
-
+	
+	/**
+	 * @param widgetId
+	 * @return
+	 */
+	private FastList<String> getDependentWidgets(String widgetId)
+	{
+		FastList<String> dependentWidgets = new FastList<String>();
+		Array<String> keys = lazyWidgets.keys();
+		int size = keys.size();
+		for (int i=0; i<size; i++)
+		{
+			String key = keys.get(i);
+			if (lazyWidgets.get(key).equals(widgetId))
+			{
+				dependentWidgets.add(key);
+			}
+		}
+		return dependentWidgets;
+	}
+	
 	/**
 	 * @return
 	 */
 	protected String getIdentifier() 
 	{
 		return id;
-	}
-	
-	
-	/**
-	 * Retrieve a widget contained on this screen. 
-	 * 
-	 * @param id
-	 * @param checkLazyDependencies
-	 * @return
-	 */
-	protected Widget getWidget(String id, boolean checkLazyDependencies)
-	{
-		if (checkLazyDependencies)
-		{
-			return getWidget(id);
-		}
-		else
-		{
-			return widgets.get(id);
-		}
-	}
-	
-	/**
-	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if
-	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 
-	 * required panel (according with {@code lazyWidgets} map) and try again.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	protected Widget getWidget(String id)
-	{
-		Widget widget = widgets.get(id);
-		if (widget == null)
-		{
-			String lazyPanelId = lazyWidgets.get(id);
-			if (lazyPanelId != null)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.FINE, "Found a lazy dependency. Widget["+id+"] depends on ["+lazyPanelId+"].");
-				}
-				if (initializeLazyDependentWidget(lazyPanelId))
-				{
-					widget = widgets.get(id);
-					if (widget == null)
-					{
-						/*
-						 * If a lazyPanel contains as child a panel that is not visible, the enclosing
-						 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
-						 * method is called. It means that a new dependency was created during the initialization
-						 * of the first panel. We must check for this situation and add this new dependency here.
-						 */
-						widget = getRuntimeDependencyWidget(id, widget, lazyPanelId);
-					}
-				}
-			}
-		}
-		return widget;
 	}
 
 	/**
@@ -1066,6 +1055,65 @@ public class Screen
 	    return widget;
     }
 	
+	
+	/**
+	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if
+	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 
+	 * required panel (according with {@code lazyWidgets} map) and try again.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	protected Widget getWidget(String id)
+	{
+		Widget widget = widgets.get(id);
+		if (widget == null)
+		{
+			String lazyPanelId = lazyWidgets.get(id);
+			if (lazyPanelId != null)
+			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.FINE, "Found a lazy dependency. Widget["+id+"] depends on ["+lazyPanelId+"].");
+				}
+				if (initializeLazyDependentWidget(lazyPanelId))
+				{
+					widget = widgets.get(id);
+					if (widget == null)
+					{
+						/*
+						 * If a lazyPanel contains as child a panel that is not visible, the enclosing
+						 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
+						 * method is called. It means that a new dependency was created during the initialization
+						 * of the first panel. We must check for this situation and add this new dependency here.
+						 */
+						widget = getRuntimeDependencyWidget(id, widget, lazyPanelId);
+					}
+				}
+			}
+		}
+		return widget;
+	}
+	
+	/**
+	 * Retrieve a widget contained on this screen. 
+	 * 
+	 * @param id
+	 * @param checkLazyDependencies
+	 * @return
+	 */
+	protected Widget getWidget(String id, boolean checkLazyDependencies)
+	{
+		if (checkLazyDependencies)
+		{
+			return getWidget(id);
+		}
+		else
+		{
+			return widgets.get(id);
+		}
+	}
+
 	/**
 	 * Generic version of <code>getWidget</code> method
 	 * @param <T>
@@ -1145,7 +1193,51 @@ public class Screen
 		}
 		return ret;
 	}
+	
+	@Deprecated
+	@SuppressWarnings("unused") // called by native code
+	private String invokeController(String call, String serializedData)
+	{
+		Event event = Events.getEvent("_onInvokeController", call);
+		InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
+		
+		if (serializedData != null)
+		{
+			try
+			{
+				controllerEvent.setParameter(serializer.deserialize(serializedData));
+			}
+			catch (ModuleComunicationException e)
+			{
+				Crux.getErrorHandler().handleError(e.getLocalizedMessage(), e);
+				return null;
+			}
+		}
+		
+		Object result = Events.callEvent(event, controllerEvent, true);
+		try
+		{
+			return serializer.serialize(result); 
+		}
+		catch (ModuleComunicationException e)
+		{
+			Crux.getErrorHandler().handleError(e.getLocalizedMessage(),e);
+			return null;
+		}
+	}
 
+	/**
+	 * Make a call to a cross document object.
+	 * 
+	 * @param serializedData
+	 * @return
+	 */
+	@SuppressWarnings("unused") // called by native code
+	private String invokeCrossDocument(String serializedData)
+	{
+		return Events.getRegisteredControllers().invokeCrossDocument(serializedData);
+	}
+	
 	/**
 	 * @return
 	 * @deprecated Use widgetsList() instead
@@ -1162,7 +1254,7 @@ public class Screen
 		
 		return result.iterator();
 	}
-	
+
 	/**
 	 * @return
 	 * @deprecated Use widgetsIdList() instead
@@ -1199,12 +1291,25 @@ public class Screen
 		    History.fireCurrentHistoryState();
 		}
 	}
+	
+	@Deprecated
+	private native void removeControllerAccessor(Screen handler)/*-{
+		$wnd._cruxScreenControllerAccessor = null;
+	}-*/;
+
+	/**
+	 * Remove the cross document hook function
+	 * @param handler
+	 */
+	private native void removeCrossDocumentAccessor(Screen handler)/*-{
+		$wnd._cruxCrossDocumentAccessor = null;
+	}-*/;
 
 	protected void removeWidget(String id)
 	{
 		removeWidget(id, true);
 	}
-	
+
 	protected void removeWidget(String id, boolean removeFromDOM)
 	{
 		Widget widget = widgets.remove(id);
@@ -1213,7 +1318,39 @@ public class Screen
 			widget.removeFromParent();
 		}
 	}
+	
+	/**
+	 * @param declaredControllers
+	 */
+	@Deprecated
+	void setDeclaredControllers(String[] declaredControllers) {
+		this.declaredControllers = declaredControllers;
+	}
 
+	/**
+	 * @param declaredDataSources
+	 */
+	@Deprecated
+	void setDeclaredDataSources(String[] declaredDataSources) {
+		this.declaredDataSources = declaredDataSources;
+	}
+	
+	/**
+	 * @param declaredFormatters
+	 */
+	@Deprecated
+	void setDeclaredFormatters(String[] declaredFormatters) {
+		this.declaredFormatters = declaredFormatters;
+	}
+
+	/**
+	 * @param declaredSerializables
+	 */
+	@Deprecated
+	void setDeclaredSerializables(String[] declaredSerializables) {
+		this.declaredSerializables = declaredSerializables;
+	}
+	
 	/**
 	 * Creates and shows a DIV over the screen contents
 	 * @param blockingDivStyleName
@@ -1231,7 +1368,9 @@ public class Screen
 		blockingDivs.add(blockingDiv);
 		body.appendChild(blockingDiv);
 	}
-
+	
+	
+	
 	/**
 	 * Update fields mapped with ValueObject from widgets that have similar names.
 	 * @param caller
@@ -1248,7 +1387,7 @@ public class Screen
 
 		}
 	}
-
+	
 	/**
 	 * Update widgets on screen that have the same id of fields mapped with ValueObject
 	 * @param caller
@@ -1272,8 +1411,8 @@ public class Screen
 	protected FastList<String> widgetsIdList()
 	{
 		return widgets.keys();
-	}
-
+	}		
+	
 	/**
 	 * @return
 	 */
@@ -1287,103 +1426,5 @@ public class Screen
 		}
 		
 		return values;
-	}
-	
-	@Deprecated
-	private native void createControllerAccessor(Screen handler)/*-{
-		$wnd._cruxScreenControllerAccessor = function(call, serializedData){
-			var a = handler.@br.com.sysmap.crux.core.client.screen.Screen::invokeController(Ljava/lang/String;Ljava/lang/String;)(call, serializedData);
-			return a?a:null;
-		};
-	}-*/;
-
-	/**
-	 * Create a hook javascript function, called outside of module.
-	 * @param handler
-	 */
-	private native void createCrossDocumentAccessor(Screen handler)/*-{
-		$wnd._cruxCrossDocumentAccessor = function(serializedData){
-			var a = handler.@br.com.sysmap.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
-			return a?a:null;
-		};
-	}-*/;
-	
-	/**
-	 * @param widgetId
-	 * @return
-	 */
-	private FastList<String> getDependentWidgets(String widgetId)
-	{
-		FastList<String> dependentWidgets = new FastList<String>();
-		Array<String> keys = lazyWidgets.keys();
-		int size = keys.size();
-		for (int i=0; i<size; i++)
-		{
-			String key = keys.get(i);
-			if (lazyWidgets.get(key).equals(widgetId))
-			{
-				dependentWidgets.add(key);
-			}
-		}
-		return dependentWidgets;
-	}
-	
-	
-	
-	@Deprecated
-	@SuppressWarnings("unused") // called by native code
-	private String invokeController(String call, String serializedData)
-	{
-		Event event = Events.getEvent("_onInvokeController", call);
-		InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
-		
-		if (serializedData != null)
-		{
-			try
-			{
-				controllerEvent.setParameter(serializer.deserialize(serializedData));
-			}
-			catch (ModuleComunicationException e)
-			{
-				Crux.getErrorHandler().handleError(e.getLocalizedMessage(), e);
-				return null;
-			}
-		}
-		
-		Object result = Events.callEvent(event, controllerEvent, true);
-		try
-		{
-			return serializer.serialize(result); 
-		}
-		catch (ModuleComunicationException e)
-		{
-			Crux.getErrorHandler().handleError(e.getLocalizedMessage(),e);
-			return null;
-		}
-	}
-	
-	/**
-	 * Make a call to a cross document object.
-	 * 
-	 * @param serializedData
-	 * @return
-	 */
-	@SuppressWarnings("unused") // called by native code
-	private String invokeCrossDocument(String serializedData)
-	{
-		return Events.getRegisteredControllers().invokeCrossDocument(serializedData);
-	}
-	
-	@Deprecated
-	private native void removeControllerAccessor(Screen handler)/*-{
-		$wnd._cruxScreenControllerAccessor = null;
-	}-*/;		
-	
-	/**
-	 * Remove the cross document hook function
-	 * @param handler
-	 */
-	private native void removeCrossDocumentAccessor(Screen handler)/*-{
-		$wnd._cruxCrossDocumentAccessor = null;
-	}-*/;		
+	}		
 }
