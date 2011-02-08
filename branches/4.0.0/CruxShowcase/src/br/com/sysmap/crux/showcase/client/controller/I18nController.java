@@ -20,7 +20,7 @@ public class I18nController {
 		
 		ListBox locales = Screen.get("locales", ListBox.class);
 		String locale = locales.getValue(locales.getSelectedIndex());
-		Window.Location.replace("/i18n.html?locale="+locale);
+		Window.Location.replace(Screen.appendDebugParameters("/i18n.html?locale="+locale));
 	}
 	
 	@Expose
