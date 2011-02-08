@@ -91,7 +91,6 @@ public class ScreenFactory
 	{
 		try 
 		{
-			//TODO não funciona o last modified qdo o id da tela vem relativo (vindo do getRequestedScreen(), por exemplo)
 			long lastModified = getScreenLastModified(id);
 			Screen screen = screenCache.get(id);
 			if (screen != null)

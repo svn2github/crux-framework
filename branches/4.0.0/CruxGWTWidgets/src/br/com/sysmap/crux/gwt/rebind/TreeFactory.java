@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
@@ -95,7 +96,7 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		
 		String eventLoadImage = metaElem.optString("onLoadImage");
 		
-		if (eventLoadImage != null)
+		if (!StringUtils.isEmpty(eventLoadImage))
 		{
 			String loadEvent = createVariableName("evt");
 			String event = createVariableName("evt");

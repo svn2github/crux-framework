@@ -39,7 +39,7 @@ public class RowEventsBind
 	 */
 	public static class RowClickEvtBind extends EvtProcessor
 	{
-		private static final String EVENT_NAME = "onrowclick";
+		private static final String EVENT_NAME = "onRowClick";
 
 		@Override
 	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
@@ -68,7 +68,7 @@ public class RowEventsBind
 	 */
 	public static class RowDoubleClickEvtBind extends EvtProcessor
 	{
-		private static final String EVENT_NAME = "onrowdoubleclick";
+		private static final String EVENT_NAME = "onRowDoubleClick";
 
 		@Override
 	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
@@ -97,7 +97,7 @@ public class RowEventsBind
 	 */
 	public static class RowRenderEvtBind extends EvtProcessor
 	{
-		private static final String EVENT_NAME = "onrowrender";
+		private static final String EVENT_NAME = "onRowRender";
 
 		@Override
 	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
@@ -126,7 +126,7 @@ public class RowEventsBind
 	 */
 	public static class BeforeRowSelectEvtBind extends EvtProcessor
 	{
-		private static final String EVENT_NAME = "onbeforerowselect";
+		private static final String EVENT_NAME = "onBeforeRowSelect";
 
 		@Override
 	    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
