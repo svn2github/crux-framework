@@ -235,6 +235,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 053] - Error generating widgetFactory. LazyCondition must declare one of properties : equals or notEquals")
 	String errorGeneratingWidgetFactoryInvalidLazyCondition();
 
+	@DefaultServerMessage("[generator 054] - Error Generating registered element. Can not retrieve current screen.")
+	String errorGeneratingRegisteredElementCanNotFoundCurrentScreen();
+
 	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String viewFactoryMetaElementDoesNotContainsType();
 
@@ -270,4 +273,23 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[widgetCreator 008] - Error creating evtBinder.")
 	String widgetCreatorErrorCreatingEvtBinder();
+
+	@DefaultServerMessage("[widgetCreator 009] - Can not process the text property for widget {0}. The widget is not assignable to HasText and its factory does not define any property for text value.")
+	String widgetCreatorInvalidTextProperty(String widgetId);
+
+	@DefaultServerMessage("[widgetCreator 010] - Error invoking ChildProcessor method: {0}.")
+	String widgetCreatorErrorRunningChildProcessor(String message);
+
+	@DefaultServerMessage("[widgetCreator 011] - A TextProcessor child processor can not have any sibling processor defined.")
+	String widgetCreatorTextProcessorWithSiblingElements();
+
+	@DefaultServerMessage("[widgetCreator 012] - You can not define more than one agregator under the same parent processor.")
+	String widgetCreatorVariousAgregatorsOnProcessor();
+
+	@DefaultServerMessage("[widgetCreator 013] - Error creating ChildrenProcessor class: {0}.")
+	String widgetCreatorErrorCreatingChildrenProcessor(String message);
+
+	@DefaultServerMessage("[widgetCreator 014] - Invalid tagName for child processor.")
+	String widgetCreatorInvalidTagName();
+
 }

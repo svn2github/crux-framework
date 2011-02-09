@@ -118,7 +118,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		{
 			throw new CruxGeneratorException(e.getMessage(), e);
 		}
-		throw new CruxGeneratorException("");//TODO message screen not found
+		throw new CruxGeneratorException(messages.errorGeneratingRegisteredElementCanNotFoundCurrentScreen());
 	}	
 	
 	/**

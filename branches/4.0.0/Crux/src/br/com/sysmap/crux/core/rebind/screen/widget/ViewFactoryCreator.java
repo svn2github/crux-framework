@@ -652,13 +652,6 @@ public class ViewFactoryCreator
 		{
 			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
 		}
-		/*
-			Widget widget = screen.getWidget(widgetId, false);//Does not fire any lazy initialization here.
-			if (widget != null)
-			{
-				return widget;
-			}*/
-		//TODO: verificar se precisa disso ainda
 
 		if (!isAttachToDOM(widgetType))
 		{

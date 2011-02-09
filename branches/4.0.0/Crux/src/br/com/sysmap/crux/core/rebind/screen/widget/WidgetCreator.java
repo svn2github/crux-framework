@@ -62,57 +62,10 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 })
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
-	//TODO remover esse currentId e usar o Id do GWT
-	private static int currentId = 0;
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
-	
-	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
-	{
-		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
-		{
-			String[] styleAttributes = style.split(";");
-			if (styleAttributes.length > 0)
-			{
-				String element = ViewFactoryCreator.createVariableName("elem");
-				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
-				for (int i=0; i<styleAttributes.length; i++)
-				{
-					String[] attr = styleAttributes[i].split(":");
-					if (attr != null && attr.length == 2)
-					{
-						out.println(StyleUtils.class.getCanonicalName()+".addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
-								", "+EscapeUtils.quote(attr[1])+");");
-					}
-				}
-			}
-		}
-		
-		private String getStylePropertyName(String property)
-		{
-			int index = -1;
-			while ((index = property.indexOf('-')) >0)
-			{
-				if (index < property.length()-1)
-				{
-					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
-				}
-			}
-			return property;
-		}
-	}	
-	
-	/**
-	 * Retrieve the widget child element name
-	 * @param childElement element representing the child
-	 * @return child name
-	 */
-	public static String getChildName(JSONObject childElement)
-	{
-		return childElement.optString("_childTag");
-	}
 	
 	/**
 	 * @param metaElem
@@ -120,7 +73,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	protected static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException 
+	public static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException 
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
@@ -138,14 +91,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
 		}
 		return children;
-	}
+	}	
 	
 	/**
 	 * @param metaElem
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	protected static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
@@ -184,7 +137,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		return result;
 	}
-
+	
 	/**
 	 * 
 	 * @param metaElem
@@ -203,12 +156,13 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 	
 	/**
-	 * Creates a sequential id
-	 * @return
+	 * Retrieve the widget child element name
+	 * @param childElement element representing the child
+	 * @return child name
 	 */
-	protected static String generateNewId() 
+	public static String getChildName(JSONObject childElement)
 	{
-		return "_crux_" + (++currentId );//TODO precisa disso ainda?
+		return childElement.optString("_childTag");
 	}
 
 	/**
@@ -216,7 +170,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasHeight(JSONObject metaElem)
+	public static boolean hasHeight(JSONObject metaElem)
 	{
 		if (!metaElem.has("height"))
 		{
@@ -225,13 +179,13 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		String width = metaElem.optString("height");
 		return width != null && (width.length() > 0);
 	}
-
+	
 	/**
 	 * 
 	 * @param metaElem
 	 * @return
 	 */
-	protected static boolean hasWidth(JSONObject metaElem)
+	public static boolean hasWidth(JSONObject metaElem)
 	{
 		if (!metaElem.has("width"))
 		{
@@ -246,21 +200,26 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected static boolean isHtmlChild(JSONObject metaElem) throws CruxGeneratorException
+	public static boolean isHtmlChild(JSONObject metaElem) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_html");
 		return (!StringUtils.isEmpty(result));
-	}	
-	
+	}
+
 	/**
 	 * @param metaElem
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected static boolean isTextChild(JSONObject metaElem) throws CruxGeneratorException
+	public static boolean isTextChild(JSONObject metaElem) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_text");
 		return (!StringUtils.isEmpty(result));
+	}	
+	
+	public boolean containsWidget(String widgetId)
+	{
+		return factory.containsWidget(widgetId);
 	}
 	
 	/**
@@ -286,21 +245,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * 
 	 * @param out
 	 * @param metaElem
-	 * @param widgetId
-	 * @param widgetType
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
-	{
-		return factory.newWidget(out, metaElem, widgetId, widgetType);
-	}		
-	
-	/**
-	 * Used by widgets that need to create new widgets as children. 
-	 * 
-	 * @param out
-	 * @param metaElem
 	 * @param addToScreen
 	 * @return
 	 * @throws CruxGeneratorException
@@ -313,6 +257,21 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		String widgetId = metaElem.optString("id");
 		return factory.newWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen);
+	}		
+	
+	/**
+	 * Used by widgets that need to create new widgets as children. 
+	 * 
+	 * @param out
+	 * @param metaElem
+	 * @param widgetId
+	 * @param widgetType
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
+	{
+		return factory.newWidget(out, metaElem, widgetId, widgetType);
 	}
 
 	/**
@@ -365,6 +324,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 	
 	/**
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public JSONObject ensureWidget(JSONObject metaElem) 
+	{
+		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
+		return metaElem;
+	}
+
+	/**
 	 * @param property
 	 * @return
 	 */
@@ -374,31 +344,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 
 	/**
-	 * @param metaElem
-	 * @param widgetId
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
-	{
-		String varName = createVariableName("widget");
-		String className = getWidgetClassName();
-		out.println("final "+className + " " + varName+" = new "+className+"();");
-		return varName;
-	}
-
-	/**
 	 * @return
 	 */
 	public String getWidgetClassName()
     {
 	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getCanonicalName();
     }
-	
-	public boolean containsWidget(String widgetId)
-	{
-		return factory.containsWidget(widgetId);
-	}
 	
 	/**
 	 * @return
@@ -413,6 +364,35 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		throw new CruxGeneratorException(messages.widgetCreatorErrorReadingFactoryDeclaration()); 
 	}
 	
+	/**
+	 * @return
+	 */
+    public abstract C instantiateContext();
+	
+	
+	/**
+	 * @param metaElem
+	 * @param widgetId
+	 * @return
+	 * @throws CruxGeneratorException
+	 */
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	{
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		out.println("final "+className + " " + varName+" = new "+className+"();");
+		return varName;
+	}
+	
+	/**
+	 * 
+	 * @param metaElem
+	 * @return
+	 */
+    public boolean isWidget(JSONObject metaElem)
+	{
+		return factory.isValidWidget(metaElem);
+	}
 	
 	/**
 	 * Process element children
@@ -433,7 +413,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processAttributes(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
-	
+
 	/**
 	 * Process element children
 	 * @param out 
@@ -443,7 +423,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
-	
+
 	/**
 	 * Do not call this method.
 	 * Work around to invoke processChildren with reflection, once it declares a generic parameter and java
@@ -458,7 +438,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		processChildren(out, (C) context);
 	}
-
+	
 	/**
 	 * Work around to invoke processEvents with reflection, once it declares a generic parameter and java
 	 * fails in some cases (generic information is not completely available in runtime).
@@ -482,7 +462,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void processEvents(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 	}
-
+	
 	/**
 	 * @param srcWriter 
 	 * @param element
@@ -499,7 +479,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			if(addToScreen)
 			{
 				out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+widget+");");
-				//TODO: criar um outro parametro para adicionar IDs no DOM?
 				if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
 				{
 					out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+widget+");");
@@ -514,33 +493,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		return null;
 	}
-	
-	/**
-	 * 
-	 * @param element
-	 * @return
-	 */
-	protected JSONObject ensureWidget(JSONObject metaElem) 
-	{
-		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
-		return metaElem;
-	}
-	
-	/**
-	 * @return
-	 */
-    public abstract C instantiateContext();
 
-	/**
-	 * 
-	 * @param metaElem
-	 * @return
-	 */
-	protected boolean isWidget(JSONObject metaElem)
-	{
-		return factory.isValidWidget(metaElem);
-	}
-	
 	/**
 	 * Print code that will be executed after the viewFactory completes the widgets construction
 	 * @param s code string
@@ -565,5 +518,44 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		this.factory = factory;
 		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(getClass(), this);
+	}
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
+		{
+			String[] styleAttributes = style.split(";");
+			if (styleAttributes.length > 0)
+			{
+				String element = ViewFactoryCreator.createVariableName("elem");
+				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
+				for (int i=0; i<styleAttributes.length; i++)
+				{
+					String[] attr = styleAttributes[i].split(":");
+					if (attr != null && attr.length == 2)
+					{
+						out.println(StyleUtils.class.getCanonicalName()+".addStyleProperty("+element+", "+EscapeUtils.quote(getStylePropertyName(attr[0]))+
+								", "+EscapeUtils.quote(attr[1])+");");
+					}
+				}
+			}
+		}
+		
+		private String getStylePropertyName(String property)
+		{
+			int index = -1;
+			while ((index = property.indexOf('-')) >0)
+			{
+				if (index < property.length()-1)
+				{
+					property = property.substring(0, index) + Character.toUpperCase(property.charAt(index+1)) + property.substring(index+2);
+				}
+			}
+			return property;
+		}
 	}
 }

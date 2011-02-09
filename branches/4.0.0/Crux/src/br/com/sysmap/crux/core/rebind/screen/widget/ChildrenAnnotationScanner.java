@@ -85,8 +85,6 @@ class ChildrenAnnotationScanner
     }
 		
 	/**
-	 * @param acceptNoChildren
-	 * @param isAgregator
 	 * @param isAnyWidget
 	 * @param widgetProperty
 	 * @param lazyChecker
@@ -94,8 +92,7 @@ class ChildrenAnnotationScanner
 	 * @param processorMethod
 	 * @return
 	 */
-	private ChildProcessor createChildProcessor(final boolean acceptNoChildren, final boolean isAgregator, 
-																	  final boolean isAnyWidget, final String widgetProperty, 
+	private ChildProcessor createChildProcessor(final boolean isAnyWidget, final String widgetProperty, 
 																	  final WidgetLazyChecker lazyChecker, final WidgetChildProcessor<?> processor, 
 																	  final Method processorMethod)
     {
@@ -115,7 +112,7 @@ class ChildrenAnnotationScanner
 					}
 					catch (Exception e)
 					{
-						throw new CruxGeneratorException(e);//TODO message
+						throw new CruxGeneratorException(messages.widgetCreatorErrorRunningChildProcessor(e.getMessage()),e);
 					}
 					processChildren(out, context);
 				}
@@ -176,8 +173,7 @@ class ChildrenAnnotationScanner
 	    
 	    final String childName = getChildTagName(tagName, isAgregator, (isAnyWidget || isAnyWidgetType));
 
-	    ChildProcessor childProcessor = createChildProcessor(acceptNoChildren, isAgregator, isAnyWidget, 
-	    		widgetProperty, lazyChecker, processor, processorMethod);
+	    ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, processorMethod);
 	    if (!isAnyWidget && !isAnyWidgetType)
 	    {
 	    	childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));
@@ -216,7 +212,7 @@ class ChildrenAnnotationScanner
 					}
 					else 
 					{
-						throw new CruxGeneratorException();//TODO reportar o erro
+						throw new CruxGeneratorException(messages.widgetCreatorInvalidTextProperty(context.getWidgetId()));
 					}
 				}
 			}
@@ -248,14 +244,14 @@ class ChildrenAnnotationScanner
 					final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessorClass);
 					if (isTextProcessor)
 					{
-						throw new CruxGeneratorException();//TODO message para nao permitir textprocessor com irmaos
+						throw new CruxGeneratorException(messages.widgetCreatorTextProcessorWithSiblingElements());
 					}
 					boolean isAgregator = isAgregatorProcessor(childProcessorClass);
 					if (isAgregator)
 					{
 						if (hasAgregator)
 						{
-							throw new CruxGeneratorException();//TODO reportar que nao pode dois agregators alinhados
+							throw new CruxGeneratorException(messages.widgetCreatorVariousAgregatorsOnProcessor());
 						}
 						hasAgregator = true;
 					}
@@ -275,7 +271,7 @@ class ChildrenAnnotationScanner
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException(e);//TODO message
+			throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingChildrenProcessor(e.getMessage()), e);
 		}
     }
 
@@ -313,7 +309,7 @@ class ChildrenAnnotationScanner
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException(e);//TODO message
+			throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingChildrenProcessor(e.getMessage()),e);
 		}
     }	
 	
@@ -408,25 +404,17 @@ class ChildrenAnnotationScanner
 		{
 			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
 			{
-/*				if (isAgregator)
+				JSONObject child = WidgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren);
+				if (child != null)
 				{
+					context.setChildElement(child);
 					processChild(out, context, childName);
 				}
-				else
-				{*/
-					JSONObject child = WidgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren);
-					if (child != null)
-					{
-						context.setChildElement(child);
-						processChild(out, context, childName);
-					}
-//				}
 			}
 		};
 		scannedProcessors.put(processorClass.getCanonicalName(), childrenProcessor);
 		
-		ChildProcessor childProcessor = createChildProcessor(acceptNoChildren, isAgregator, isAnyWidget, //TODO remover variaveis nao usadas neste metodo
-																		  widgetProperty, lazyChecker, processor, processorMethod);
+		ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, processorMethod);
 		if (!isAnyWidget && !isAnyWidgetType)
 		{
 			childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));
@@ -538,7 +526,7 @@ class ChildrenAnnotationScanner
 	    }
 		if (StringUtils.isEmpty(childName))
 		{
-			throw new CruxGeneratorException();//TODO message.
+			throw new CruxGeneratorException(messages.widgetCreatorInvalidTagName());
 		}
 	    return childName;
     }	
