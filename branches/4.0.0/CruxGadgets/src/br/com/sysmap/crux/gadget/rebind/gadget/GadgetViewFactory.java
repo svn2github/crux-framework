@@ -22,16 +22,16 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.widget.creator.children.WidgetChildProcessor.AnyTag;
-import br.com.sysmap.crux.core.rebind.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildAttributes;
-import br.com.sysmap.crux.core.rebind.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyTag;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gadget.client.widget.CruxGadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
@@ -42,6 +42,12 @@ import br.com.sysmap.crux.gwt.rebind.AbstractHTMLPanelFactory;
  *
  */
 @DeclarativeFactory(id="gadgetView", library="gadget", targetWidget=GadgetView.class, htmlContainer=true)
+@TagAttributes({
+	@TagAttribute(value="view", type=View.class, required=true)
+})
+@TagChildren({
+	@TagChild(value=GadgetViewFactory.ContentProcessor.class, autoProcess=false)
+})
 public class GadgetViewFactory extends AbstractHTMLPanelFactory
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
@@ -62,9 +68,6 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 		return varName;
 	}
 	
-	@TagAttributes({
-		@TagAttribute(value="view", type=View.class, required=true)
-	})
 	@Override
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
@@ -72,9 +75,6 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	}
 
 	@Override
-	@TagChildren({
-		@TagChild(value=ContentProcessor.class, autoProcess=false)
-	})
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 	}

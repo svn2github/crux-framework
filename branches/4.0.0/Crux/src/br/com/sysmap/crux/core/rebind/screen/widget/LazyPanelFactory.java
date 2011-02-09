@@ -70,7 +70,7 @@ public class LazyPanelFactory
 		
 		generateFields(lazyPrinter, lazyPanel+"Class");
 		generateConstructor(lazyPrinter, lazyPanel+"Class", lazyId);
-		generateCreateWidgetMethod(lazyPrinter, element, targetPanelId, lazyId);
+		generateCreateWidgetMethod(lazyPrinter, element, lazyId);
 		
 		lazyPrinter.commit();
 		
@@ -103,9 +103,9 @@ public class LazyPanelFactory
 	/**
 	 * @param printer
 	 * @param element
-	 * @param targetPanelId
+	 * @param lazyId
 	 */
-	private void generateCreateWidgetMethod(SourcePrinter printer, JSONObject element, String targetPanelId, String lazyId)
+	private void generateCreateWidgetMethod(SourcePrinter printer, JSONObject element, String lazyId)
     {
 		printer.println("@Override");
 		printer.println("public Widget createWidget(){");
@@ -117,7 +117,7 @@ public class LazyPanelFactory
     	
 		factory.createPostProcessingScope();
 		
-		String newWidget = factory.newWidget(printer, element, targetPanelId, factory.getMetaElementType(element));
+		String newWidget = factory.newWidget(printer, element, element.optString("id"), factory.getMetaElementType(element));
 
 		factory.commitPostProcessing(printer);
 

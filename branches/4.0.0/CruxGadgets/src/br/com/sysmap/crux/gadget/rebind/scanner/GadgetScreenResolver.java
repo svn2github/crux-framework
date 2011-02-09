@@ -18,7 +18,7 @@ package br.com.sysmap.crux.gadget.rebind.scanner;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.declarativeui.DeclarativeUIScreenResolver;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 
 /**
  * Custom screen resolver to search only gadgets pages

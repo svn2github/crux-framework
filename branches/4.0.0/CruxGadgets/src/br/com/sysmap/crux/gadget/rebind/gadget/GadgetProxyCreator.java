@@ -42,19 +42,19 @@ import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
+import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import br.com.sysmap.crux.core.rebind.screen.Widget;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.HTMLUtils;
 import br.com.sysmap.crux.core.utils.XMLUtils;
 import br.com.sysmap.crux.gadget.client.Gadget;
-import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.Feature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsDynamicHeightFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 
@@ -184,7 +184,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
     {
     	try
         {
-	        Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(getRequestedScreen().getModule());
+	        Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(getCurrentScreen().getModule());
 	        for (String screenId : screenIDs)
             {
 				InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(screenId);

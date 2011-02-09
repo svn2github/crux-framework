@@ -18,7 +18,6 @@ package br.com.sysmap.crux.gadget.rebind.rpc;
 import java.io.PrintWriter;
 
 import br.com.sysmap.crux.core.rebind.rpc.CruxProxyCreator;
-import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -148,6 +147,6 @@ public class CruxGadgetProxyCreator extends CruxProxyCreator
 	 */
 	private String getGadgetProxySimpleName()
 	{
-		return ClassUtils.getSourceName(serviceIntf)+WRAPPER_SUFFIX;
+		return serviceIntf.getSimpleSourceName()+WRAPPER_SUFFIX;
 	}
 }

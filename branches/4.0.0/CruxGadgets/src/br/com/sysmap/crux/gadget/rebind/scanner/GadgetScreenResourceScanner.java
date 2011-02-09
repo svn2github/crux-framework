@@ -16,9 +16,9 @@
 package br.com.sysmap.crux.gadget.rebind.scanner;
 
 import br.com.sysmap.crux.core.declarativeui.DeclarativeUIScreenResourceScanner;
-import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenConfigException;
-import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
+import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
+import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
 
 
 /**
