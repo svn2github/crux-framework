@@ -44,6 +44,6 @@ public class CruxHTMLPanel extends HTMLPanel implements HTMLContainer
 	@Override
 	public void onAttach()
 	{
-		super.onAttach();//TODO verificar se precisa disso ainda
+		super.onAttach();
 	}
 }
