@@ -38,6 +38,9 @@ public interface WidgetGeneratorMessages
 	@DefaultServerMessage("[grid 001] - Grid {0} has no column.")
 	String gridDoesNotHaveColumns(String gridId);
 	
+	@DefaultServerMessage("[grid 002] - Grid {0} has an invalid column (unexpected column type).")
+	String gridErrorInvalidColumnType(String id);
+
 	@DefaultServerMessage("[maskedLabel 001] - The attribute formatter is required for MaskedLabel.")
 	String maskedLabelFormatterRequired();	
 
@@ -49,6 +52,7 @@ public interface WidgetGeneratorMessages
 
 	@DefaultServerMessage("[pager 001] - No pageable widget set for this pager.")
 	String pagerNoPageableSet();
+
 }
 
 

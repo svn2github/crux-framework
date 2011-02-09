@@ -374,7 +374,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 					}
 					else
 					{
-						throw new CruxGeneratorException();//TODO message
+						throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(gridElem.optString("id")));
 					}
 
 					out.print(defs+".add("+EscapeUtils.quote(key)+", "+def+");");
@@ -403,7 +403,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    out.println("public Widget createWidgetForColumn(){");
 	    
 	    JSONObject child = ensureFirstChild(colElem, false);
-		String childWidget = createChildWidget(out, child, false);//TODO: o parametro addoToScreen deve ser propagado para os filhos da widget criado
+		String childWidget = createChildWidget(out, child, false);//TODO: o parametro addoToScreen deve ser propagado para os filhos da widget criada
         out.println("return "+childWidget+";");
 	    
 	    out.println("};");
