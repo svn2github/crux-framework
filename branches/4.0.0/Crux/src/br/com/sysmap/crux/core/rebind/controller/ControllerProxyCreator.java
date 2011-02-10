@@ -30,6 +30,7 @@ import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
 import br.com.sysmap.crux.core.client.event.CruxEvent;
 import br.com.sysmap.crux.core.client.event.EventProcessor;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.AbstractInvocableProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -140,8 +141,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	@Override
 	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println("FastMap<Boolean> __runningMethods = new FastMap<Boolean>();");
-
 		if (isCrossDoc)
 		{
 			String typeSerializerName = SerializationUtils.getTypeDeserializerQualifiedName(baseProxyType);
@@ -154,6 +153,11 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	protected void generateProxyMethods(SourceWriter srcWriter)
 	{
 		generateInvokeMethod(srcWriter);
+		
+		//TODO: create a interface screenBinder, que possua os metodos de bind entre screen e controller.
+		// A screen deve definir um binder para si e eassociar ao controller... desta forma nao precisa de 
+		// codigos em runtime para verificar se existe a widget a ser amarrada, se ela eh um HasFormatter ou 
+		// um HasText, etc
 		generateScreenUpdateWidgetsFunction(controllerClass, srcWriter);
 		generateControllerUpdateObjectsFunction(controllerClass, srcWriter);
 		generateIsAutoBindEnabledMethod(srcWriter, isAutoBindEnabled);
@@ -462,22 +466,13 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    }
 	    else
 	    {
-	    	sourceWriter.println("if (\""+method.getName()+"\".equals(metodo) && !fromOutOfModule) {");
-			sourceWriter.indent();
-	    }
-	    
-	    boolean allowMultipleClicks = isAllowMultipleClicks(method);
-	    if (!allowMultipleClicks)
-	    {
-			sourceWriter.println("if (!__runningMethods.containsKey(metodo)){");
-			sourceWriter.indent();
-	    	sourceWriter.println("__runningMethods.put(metodo,true);");
-	    	sourceWriter.println("try{");
+	    	sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+method.getName()+"\",metodo) && !fromOutOfModule) {");
 			sourceWriter.indent();
 	    }
 	    
 	    Validate annot = method.getAnnotation(Validate.class);
-	    if (annot != null)
+	    boolean mustValidade = annot != null; 
+	    if (mustValidade)
 	    {
 	    	sourceWriter.println("try{");
 			sourceWriter.indent();
@@ -496,11 +491,9 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    	sourceWriter.println("eventProcessor.setValidationMessage(e.getMessage());");
 			sourceWriter.outdent();
 	    	sourceWriter.println("}");
+	    	sourceWriter.println("if (__runMethod){");
+	    	sourceWriter.indent();
 	    }
-	    sourceWriter.println("if (__runMethod){");
-		sourceWriter.indent();
-	    sourceWriter.println("try{");
-		sourceWriter.indent();
 	    
 	    boolean hasReturn = method.getReturnType().getErasedType() != JPrimitiveType.VOID;
 		if (hasReturn)
@@ -514,28 +507,13 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    	sourceWriter.println(");");
 	    }
 	    
-		sourceWriter.outdent();
-	    sourceWriter.println("}catch (Throwable e){");
-		sourceWriter.indent();
-	    sourceWriter.println("eventProcessor.setException(e);");
-		sourceWriter.outdent();
-	    sourceWriter.println("}");
-		sourceWriter.outdent();
-	    sourceWriter.println("}");
-
-	    if (!allowMultipleClicks)
+	    if (mustValidade)
 	    {
-			sourceWriter.outdent();
-	    	sourceWriter.println("}finally{");
-			sourceWriter.indent();
-	    	sourceWriter.println("__runningMethods.remove(metodo);");
-			sourceWriter.outdent();
-	    	sourceWriter.println("}");
-			sourceWriter.outdent();
-	    	sourceWriter.println("}");
+		    sourceWriter.outdent();
+		    sourceWriter.println("}");
 	    }
-	    
-		sourceWriter.outdent();
+
+	    sourceWriter.outdent();
 	    sourceWriter.println("}");
     }
 	
@@ -553,18 +531,19 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    sourceWriter.println("public void invoke(String metodo, Object sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception{ ");
 		sourceWriter.indent();
 		sourceWriter.println("boolean __runMethod = true;");
+		sourceWriter.println("boolean methodNotFound = false;");
 		
 		sourceWriter.println(getProxySimpleName()+" wrapper = "+(isSingleton?"this":"new "+getProxySimpleName()+"()")+";");
 		
 		if (isAutoBindEnabled)
 		{
-			sourceWriter.println("if (!__runningMethods.containsKey(metodo)){");
-			sourceWriter.indent();
 			sourceWriter.println("wrapper.updateControllerObjects();");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
 		}
 		
+
+		sourceWriter.println("try{");
+		sourceWriter.indent();
+
 		boolean first = true;
 		JMethod[] methods = controllerClass.getOverridableMethods(); 
 		for (JMethod method: methods) 
@@ -585,7 +564,20 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		{
 			sourceWriter.println(" else ");
 		}
+	    sourceWriter.println("methodNotFound = true;");
+		
+		sourceWriter.outdent();
+	    sourceWriter.println("}catch (Throwable e){");
+		sourceWriter.indent();
+	    sourceWriter.println("eventProcessor.setException(e);");
+		sourceWriter.outdent();
+	    sourceWriter.println("}");
+		
+	    sourceWriter.println("if (methodNotFound){");
+		sourceWriter.indent();
 		sourceWriter.println("throw new Exception(\""+messages.errorInvokingGeneratedMethod()+" \"+metodo);");
+		sourceWriter.outdent();
+	    sourceWriter.println("}");
 
 		if (!first && isAutoBindEnabled)
 		{
@@ -614,7 +606,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 		if (finalizeCommand)
 		{
-			sourceWriter.print(";");
+			sourceWriter.println(";");
 		}
 	}	
 	
@@ -670,27 +662,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredControllerInvalidValidateMethod(validateMethod), e);
 		}
 	}
-	
-	/**
-	 * @param method
-	 * @return
-	 */
-    @SuppressWarnings("deprecation")
-    private boolean isAllowMultipleClicks(JMethod method)
-    {
-	    Expose exposeAnnot = method.getAnnotation(Expose.class);
-	    if (exposeAnnot != null)
-	    {
-	    	return exposeAnnot.allowMultipleCalls();
-	    }
-		
-	    br.com.sysmap.crux.core.client.controller.ExposeOutOfModule exposeOutAnnot = method.getAnnotation(br.com.sysmap.crux.core.client.controller.ExposeOutOfModule.class);
-	    if (exposeOutAnnot != null)
-	    {
-	    	return exposeOutAnnot.allowMultipleCalls();
-	    }
-		return false;
-    }
 	
 	/**
 	 * Verify if a method must be included in the list of callable methods in the 

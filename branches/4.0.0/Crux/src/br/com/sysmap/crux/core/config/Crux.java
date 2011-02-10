@@ -43,7 +43,7 @@ public interface Crux
 	@DefaultServerMessage("true")
 	String enableHotDeploymentForWidgetFactories();
 	
-	@DefaultServerMessage("true")
+	@DefaultServerMessage("false")
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
