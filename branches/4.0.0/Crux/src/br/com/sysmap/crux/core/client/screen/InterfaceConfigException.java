@@ -20,7 +20,7 @@ package br.com.sysmap.crux.core.client.screen;
  * @author Thiago
  *
  */
-public class InterfaceConfigException extends Exception 
+public class InterfaceConfigException extends RuntimeException 
 {
 
 	private static final long serialVersionUID = 6965470165290418198L;

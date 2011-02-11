@@ -15,8 +15,13 @@
  */
 package br.com.sysmap.crux.core.rebind;
 
+import java.util.List;
+
+import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 
+import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.ConfigurationProperty;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -72,14 +77,14 @@ public abstract class AbstractProxyCreator
 	 * using the default address for the
 	 * {@link com.google.gwt.user.client.rpc.RemoteService RemoteService}.
 	 */
-	protected abstract void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException;	
-
+	protected abstract void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException;
+	
 	/**
 	 * Generate any fields required by the proxy.
 	 * @throws CruxGeneratorException 
 	 */
 	protected abstract void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException;	
-	
+
 	/**
 	 * @param srcWriter
 	 * @param serializableTypeOracle
@@ -92,7 +97,7 @@ public abstract class AbstractProxyCreator
 	 * @param srcWriter
 	 * @throws CruxGeneratorException 
 	 */
-	protected abstract void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException;
+	protected abstract void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException;	
 	
 	/**
 	 * @param method
@@ -111,11 +116,11 @@ public abstract class AbstractProxyCreator
 		return sb.toString();
 	}
 	
-	
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
 	protected abstract String getProxyQualifiedName();
+	
 	
 	/**
 	 * @return the simple name of the proxy object.
@@ -127,4 +132,29 @@ public abstract class AbstractProxyCreator
 	 */
 	protected abstract SourceWriter getSourceWriter();
 	
+	/**
+	 * @return
+	 */
+	protected boolean isCrux2OldInterfacesCompatibilityEnabled()
+    {
+		String value;
+		try
+        {
+	        ConfigurationProperty property = context.getPropertyOracle().getConfigurationProperty("enableCrux2OldInterfacesCompatibility");
+	        List<String> values = property.getValues();
+	        if (values != null && values.size() > 0)
+	        {
+	        	value = values.get(0);
+	        }
+	        else
+	        {
+	            value = ConfigurationFactory.getConfigurations().enableCrux2OldInterfacesCompatibility();
+	        }
+        }
+        catch (BadPropertyValueException e)
+        {
+            value = ConfigurationFactory.getConfigurations().enableCrux2OldInterfacesCompatibility();
+        }
+        return Boolean.parseBoolean(value);
+    }
 }

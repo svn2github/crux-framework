@@ -30,6 +30,7 @@ import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
 import br.com.sysmap.crux.core.client.event.CruxEvent;
 import br.com.sysmap.crux.core.client.event.EventProcessor;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.AbstractInvocableProxyCreator;
@@ -149,9 +150,13 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println();
 	}
 	
+
+	
+	
 	@Override
 	protected void generateProxyMethods(SourceWriter srcWriter)
 	{
+		
 		generateInvokeMethod(srcWriter);
 		
 		//TODO: create a interface screenBinder, que possua os metodos de bind entre screen e controller.
@@ -319,9 +324,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		JParameter[] params = method.getParameters();
 		JType returnType = method.getReturnType();
 
-		sourceWriter.println("if (methodCalled.equals(\""+getJsniSimpleSignature(method)+"\")){");
-    	sourceWriter.indent();
-    	sourceWriter.println("try{");
+		sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+getJsniSimpleSignature(method)+"\", methodCalled)){");
     	sourceWriter.indent();
 
     	if (returnType != JPrimitiveType.VOID)
@@ -346,17 +349,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			sourceWriter.print(")");
 		}
 		sourceWriter.println(";");
-		sourceWriter.println("isExecutionOK = true;");
 
-    	sourceWriter.outdent();
-    	sourceWriter.println("}catch(Throwable e){");
-    	sourceWriter.indent();
-
-    	sourceWriter.println("isExecutionOK = false;");
-		sourceWriter.println("streamWriter.writeObject(e);");
-
-		sourceWriter.outdent();
-    	sourceWriter.println("}");
     	sourceWriter.outdent();
     	sourceWriter.println("}");
 	}
@@ -461,7 +454,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     {
 	    if (method.getAnnotation(br.com.sysmap.crux.core.client.controller.ExposeOutOfModule.class) != null)
 	    {
-	    	sourceWriter.println("if (\""+method.getName()+"\".equals(metodo)) {");
+	    	sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+method.getName()+"\",metodo)) {");
 			sourceWriter.indent();
 	    }
 	    else
@@ -530,60 +523,67 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     {
 	    sourceWriter.println("public void invoke(String metodo, Object sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception{ ");
 		sourceWriter.indent();
-		sourceWriter.println("boolean __runMethod = true;");
-		sourceWriter.println("boolean methodNotFound = false;");
-		
-		sourceWriter.println(getProxySimpleName()+" wrapper = "+(isSingleton?"this":"new "+getProxySimpleName()+"()")+";");
-		
-		if (isAutoBindEnabled)
+
+		if (!isCrux2OldInterfacesCompatibilityEnabled())
 		{
-			sourceWriter.println("wrapper.updateControllerObjects();");
+			sourceWriter.println("throw new Exception("+EscapeUtils.quote(messages.crux2OldInterfacesCompatibilityDisabled())+");");
 		}
-		
-
-		sourceWriter.println("try{");
-		sourceWriter.indent();
-
-		boolean first = true;
-		JMethod[] methods = controllerClass.getOverridableMethods(); 
-		for (JMethod method: methods) 
+		else
 		{
-			if (isControllerMethodSignatureValid(method))
+			sourceWriter.println("boolean __runMethod = true;");
+			sourceWriter.println("boolean methodNotFound = false;");
+
+			sourceWriter.println(getProxySimpleName()+" wrapper = "+(isSingleton?"this":"new "+getProxySimpleName()+"()")+";");
+
+			if (isAutoBindEnabled)
 			{
-				if (!first)
-				{
-					sourceWriter.print("else ");
-				}
-				
-				generateInvokeBlockForMethod(sourceWriter, method);
-
-				first = false;
+				sourceWriter.println("wrapper.updateControllerObjects();");
 			}
-		}
-		if (!first)
-		{
-			sourceWriter.println(" else ");
-		}
-	    sourceWriter.println("methodNotFound = true;");
-		
-		sourceWriter.outdent();
-	    sourceWriter.println("}catch (Throwable e){");
-		sourceWriter.indent();
-	    sourceWriter.println("eventProcessor.setException(e);");
-		sourceWriter.outdent();
-	    sourceWriter.println("}");
-		
-	    sourceWriter.println("if (methodNotFound){");
-		sourceWriter.indent();
-		sourceWriter.println("throw new Exception(\""+messages.errorInvokingGeneratedMethod()+" \"+metodo);");
-		sourceWriter.outdent();
-	    sourceWriter.println("}");
 
-		if (!first && isAutoBindEnabled)
-		{
-			sourceWriter.println("wrapper.updateScreenWidgets();");
-		}		
-		
+
+			sourceWriter.println("try{");
+			sourceWriter.indent();
+
+			boolean first = true;
+			JMethod[] methods = controllerClass.getOverridableMethods(); 
+			for (JMethod method: methods) 
+			{
+				if (isControllerMethodSignatureValid(method))
+				{
+					if (!first)
+					{
+						sourceWriter.print("else ");
+					}
+
+					generateInvokeBlockForMethod(sourceWriter, method);
+
+					first = false;
+				}
+			}
+			if (!first)
+			{
+				sourceWriter.println(" else ");
+			}
+			sourceWriter.println("methodNotFound = true;");
+
+			sourceWriter.outdent();
+			sourceWriter.println("}catch (Throwable e){");
+			sourceWriter.indent();
+			sourceWriter.println("eventProcessor.setException(e);");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+
+			sourceWriter.println("if (methodNotFound){");
+			sourceWriter.indent();
+			sourceWriter.println("throw new Exception(\""+messages.errorInvokingGeneratedMethod()+" \"+metodo);");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+
+			if (!first && isAutoBindEnabled)
+			{
+				sourceWriter.println("wrapper.updateScreenWidgets();");
+			}		
+		}
 		sourceWriter.outdent();
 		sourceWriter.println("}");
     }

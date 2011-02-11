@@ -124,6 +124,7 @@ public class Crux implements EntryPoint
 		{
 			if (Crux.errorHandler != null)
 			{
+				//TODO fix error when login messages here... maybe with a scheduler
 				Crux.getErrorHandler().handleError(e);
 			}
 		}

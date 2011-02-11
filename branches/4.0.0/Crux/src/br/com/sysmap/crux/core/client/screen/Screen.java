@@ -410,6 +410,7 @@ public class Screen
 	@Deprecated
 	public static ModuleComunicationSerializer getCruxSerializer()
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return Screen.get().serializer;
 	}
 
@@ -534,6 +535,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T invokeControllerOnAbsoluteTop(String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callAbsoluteTopControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
 	
@@ -556,6 +558,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T  invokeControllerOnFrame(String frame, String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callFrameControllerAccessor(frame, call, Screen.get().serializer.serialize(param)));
 	}
 
@@ -580,6 +583,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T  invokeControllerOnOpener(String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callOpenerControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
 
@@ -602,6 +606,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T  invokeControllerOnParent(String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callParentControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
 
@@ -624,6 +629,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T invokeControllerOnSelf(String call, Object param, Class<T> resultType)
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		try
 		{
 			Event event = Events.getEvent("_onInvokeController", call);
@@ -658,6 +664,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T  invokeControllerOnSiblingFrame(String frame, String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callSiblingFrameControllerAccessor(frame, call, Screen.get().serializer.serialize(param)));
 	}
 	
@@ -681,6 +688,7 @@ public class Screen
 	@SuppressWarnings("unchecked")
 	public static <T> T invokeControllerOnTop(String call, Object param, Class<T> resultType) throws ModuleComunicationException
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		return (T) Screen.get().serializer.deserialize(callTopControllerAccessor(call, Screen.get().serializer.serialize(param)));
 	}
 
@@ -807,15 +815,18 @@ public class Screen
 				logger.log(Level.FINE, "Adding lazy dependency. Widget["+keys.get(i)+"] depends on ["+lazyWidgets.get(keys.get(i))+"].");
 			}
 		}
-		this.serializer = new ModuleComunicationSerializer();
-		createControllerAccessor(this);
-		this.addWindowCloseHandler(new CloseHandler<Window>()
+		if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
 		{
-			public void onClose(CloseEvent<Window> event)
+			this.serializer = new ModuleComunicationSerializer();
+			createControllerAccessor(this);
+			this.addWindowCloseHandler(new CloseHandler<Window>()
 			{
-				removeControllerAccessor(Screen.this);
-			}
-		});
+				public void onClose(CloseEvent<Window> event)
+				{
+					removeControllerAccessor(Screen.this);
+				}
+			});
+		}
 
 		createCrossDocumentAccessor(this);
 		this.addWindowCloseHandler(new CloseHandler<Window>()
@@ -1235,7 +1246,7 @@ public class Screen
 	@SuppressWarnings("unused") // called by native code
 	private String invokeCrossDocument(String serializedData)
 	{
-		return Events.getRegisteredControllers().invokeCrossDocument(serializedData);
+		return ScreenFactory.getInstance().getRegisteredControllers().invokeCrossDocument(serializedData);
 	}
 	
 	/**

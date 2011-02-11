@@ -32,10 +32,7 @@ public abstract class AsyncCallbackAdapter<T> implements AsyncCallback<T>
 	protected ScreenBindableObject caller;
 	public AsyncCallbackAdapter(Object eventHandler)
 	{
-		if (!(eventHandler instanceof ScreenBindableObject))
-		{
-			throw new ClassCastException(Crux.getMessages().asyncCallbackInvalidHandlerError());
-		}
+		assert ((eventHandler instanceof ScreenBindableObject)): Crux.getMessages().asyncCallbackInvalidHandlerError();
 		this.caller = (ScreenBindableObject) eventHandler;
 	}
 	

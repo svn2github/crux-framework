@@ -64,6 +64,7 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
 		generateEnableChildrenWindowsDebugMethod(sourceWriter);
+		generateEnableCrux2OldInterfacesCompatibility(sourceWriter);
     }
 
 	@Override
@@ -79,6 +80,18 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 		sourceWriter.println("public boolean enableDebugForURL(String url){");
 		sourceWriter.indent();
 		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().enableChildrenWindowsDebug() + ";");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+	}
+	
+	/**
+	 * @param sourceWriter
+	 */
+	protected void generateEnableCrux2OldInterfacesCompatibility(SourceWriter sourceWriter)
+	{
+		sourceWriter.println("public boolean enableCrux2OldInterfacesCompatibility(){");
+		sourceWriter.indent();
+		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().enableCrux2OldInterfacesCompatibility() + ";");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}

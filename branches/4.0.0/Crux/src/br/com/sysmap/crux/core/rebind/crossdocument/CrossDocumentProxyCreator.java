@@ -27,6 +27,7 @@ import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentProxy;
 import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentProxy.CrossDocumentReader;
 import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.AbstractSerializableProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializationUtils;
@@ -410,7 +411,8 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		w.println("if (this.target != null && this.target.equals("+Target.class.getCanonicalName()+".SELF)){");
 		w.indent();
 		String controllerClassName = controllerClass.getQualifiedSourceName();
-		w.println(controllerClassName + " controllerOnSelf = Events.getRegisteredControllers().getCrossDocument(CONTROLLER_NAME,"+controllerClassName+".class);");    
+		w.println(controllerClassName + " controllerOnSelf = "+ScreenFactory.class.getCanonicalName()+
+				".getInstance().getRegisteredControllers().getCrossDocument(CONTROLLER_NAME,"+controllerClassName+".class);");    
 		w.println("if (controllerOnSelf == null){");
 		w.indent();
 		w.println("throw new CrossDocumentException(Crux.getMessages().eventProcessorClientControllerNotFound(CONTROLLER_NAME));");
@@ -451,14 +453,8 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 */
 	private void generateDoInvokeCatchBlock(SourceWriter w, JMethod method, NameFactory nameFactory)
     {
-	    w.print("} catch (SerializationException ");
-	    String exceptionName = nameFactory.createName("ex");
-	    w.println(exceptionName + ") {");
-		w.indent();
-		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
-		w.outdent();
 	    w.print("} catch (Throwable ");
-	    exceptionName = nameFactory.createName("ex");
+	    String exceptionName = nameFactory.createName("ex");
 	    w.println(exceptionName + ") {");
 		w.indent();
 		generateRethrowForInvocationMethod(w, method, exceptionName);

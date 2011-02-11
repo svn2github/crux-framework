@@ -168,7 +168,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 			{
 				if(this.dataSource instanceof MeasurableDataSource)
 				{
-					((MeasurableRemoteDataSource) this.dataSource).load();
+					((MeasurableRemoteDataSource<?>) this.dataSource).load();
 				}
 				else
 				{

@@ -44,6 +44,9 @@ public interface Crux
 	String enableHotDeploymentForWidgetFactories();
 	
 	@DefaultServerMessage("false")
+	String enableCrux2OldInterfacesCompatibility();
+	
+	@DefaultServerMessage("false")
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
@@ -55,12 +58,10 @@ public interface Crux
 	void setEnableHotDeploymentForWidgetFactories(Boolean value);
 	void setRenderWidgetsWithIDs(Boolean value);
 	void setUseCompileTimeClassScanning(Boolean value);
+	void setEnableCrux2OldInterfacesCompatibility(Boolean value);
 	void setClassPathResolver(String value);
 	void setScreenResourceResolver(String value);
 	void setLocaleResolver(String value);
 	void setServiceFactory(String value);
 	//TODO atualizar wiki com as opções correntes
-
-
-
 }

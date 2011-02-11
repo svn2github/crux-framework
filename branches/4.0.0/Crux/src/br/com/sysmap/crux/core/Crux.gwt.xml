@@ -14,11 +14,6 @@
 	<!-- Servlet used to handle RPC event calls.              -->
 	<servlet path="/crux.rpc" class="br.com.sysmap.crux.core.server.dispatch.RemoteServiceServlet"/>
 
-	<!-- Specify the generator for registered client handlers.-->
-	<generate-with class="br.com.sysmap.crux.core.rebind.controller.RegisteredControllersGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.event.RegisteredControllers" />
-	</generate-with>
-
 	<!-- Specify the generator for registered widgets.     -->
 	<generate-with class="br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ViewFactory" />
@@ -42,11 +37,6 @@
 	<!-- Specify the generator for screen wrappers.     -->
 	<generate-with class="br.com.sysmap.crux.core.rebind.screen.wrapper.ScreenWrapperGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.ScreenWrapper" />
-	</generate-with>
-
-	<!-- Specify the generator for resolve declared i18n messages .-->
-	<generate-with class="br.com.sysmap.crux.core.rebind.i18n.RegisteredI18NMessagesGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.i18n.DeclaredI18NMessages" />
 	</generate-with>
 
 	<!-- Specify the generator for client configurations .-->

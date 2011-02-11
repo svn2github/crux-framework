@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -31,8 +31,8 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class Events 
 {
-	private static RegisteredControllers registeredControllers;
 	private static Logger logger = Logger.getLogger(Events.class.getName());
+	private static RegisteredControllers registeredControllers;
 	
 	
 	/**
@@ -177,11 +177,11 @@ public class Events
 		};
 	}
 
-	public static RegisteredControllers getRegisteredControllers()
+	private static RegisteredControllers getRegisteredControllers()
 	{
 		if (registeredControllers == null)
 		{
-			registeredControllers = (RegisteredControllers)GWT.create(RegisteredControllers.class);
+			registeredControllers = ScreenFactory.getInstance().getRegisteredControllers();
 		}
 		return registeredControllers;
 	}

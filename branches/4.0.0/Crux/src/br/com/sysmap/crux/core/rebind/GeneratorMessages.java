@@ -199,6 +199,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[screenFactory 013] - Controller {0}, declared on screen {1}, not found!")
 	String screenFactoryInvalidController(String handler, String id);
 
+	@DefaultServerMessage("[ScreenFactory 014] - To use this function you need to enable crux2 old interfaces compatibility.")
+	String crux2OldInterfacesCompatibilityDisabled();
+
 	@DefaultServerMessage("[Screen 001] - Error setting property {0} for screen {1}.")
 	String screenPropertyError(String property, String screenId);
 	
@@ -291,5 +294,4 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[widgetCreator 014] - Invalid tagName for child processor.")
 	String widgetCreatorInvalidTagName();
-
 }

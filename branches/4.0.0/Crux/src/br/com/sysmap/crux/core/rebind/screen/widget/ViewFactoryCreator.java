@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
+import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
 import br.com.sysmap.crux.core.client.screen.ViewFactory;
 import br.com.sysmap.crux.core.client.screen.ViewFactoryUtils;
@@ -38,6 +39,7 @@ import br.com.sysmap.crux.core.i18n.MessageClasses;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import br.com.sysmap.crux.core.rebind.screen.Event;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -159,6 +161,11 @@ public class ViewFactoryCreator
 		
 		//TODO: remover esses metodos da screen... no registered controllers, adicionar a criação dos controllers por tela... 
 		// com uma classe auxiliar criada por tela....
+		//TODO: alterar as chamadas de eventos, pois com o modo de compatibilidade desativado, nao vai usar mais o invoke 
+		// do controlle. armazenar uma instancia da controllerProxy na propria viewFactory criada e usar ela chamando os metodos
+		// diretamente, sem ser via invoke..... lembrar de tratar o bind com a tela e os erros de eventos....
+		//TODO: alterar os evtBinder para que criem uma unica subclasse de tratamento por tipo de evento... (tipo... um unico ClickHandler)
+		
 		printer.println(screenVariable+".setDeclaredControllers("+extractReferencedResourceList(screen.iterateControllers())+");");
 		printer.println(screenVariable+".setDeclaredDataSources("+extractReferencedResourceList(screen.iterateDataSources())+");");
 		printer.println(screenVariable+".setDeclaredSerializables("+extractReferencedResourceList(screen.iterateSerializers())+");");
@@ -188,13 +195,33 @@ public class ViewFactoryCreator
 	 * Generate the ViewFactory methods.
 	 * 
      * @param printer 
-     * @throws CruxGeneratorException
      */
-    protected void generateProxyMethods(SourcePrinter printer) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter printer) 
     {
-    	createPostProcessingScope();
+    	generateCreateRegisteredControllersMethod(printer);
+    	generateCreateMethod(printer);
+    }
+
+	/**
+	 * @param printer
+	 */
+	private void generateCreateRegisteredControllersMethod(SourcePrinter printer)
+    {
+    	printer.println("public void createRegisteredControllers() throws InterfaceConfigException{");
+    	String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, screen).create();
+		printer.println(ScreenFactory.class.getCanonicalName()+".getInstance().setRegisteredControllers(new "+regsiteredControllersClass+"());");
+    	printer.println("}");
+    }
+
+	/**
+	 * @param printer
+	 */
+	private void generateCreateMethod(SourcePrinter printer)
+    {
+	    createPostProcessingScope();
     	printer.println("public void create() throws InterfaceConfigException{");
-		
+		printer.println("createRegisteredControllers();");
+    	
 		JSONArray metaData = this.screen.getMetaData();
 		createScreen(printer);
 		for (int i = 0; i < metaData.length(); i++)

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
+import br.com.sysmap.crux.core.client.event.RegisteredControllers;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
 import br.com.sysmap.crux.core.client.screen.parser.CruxMetaData;
@@ -42,14 +43,13 @@ public class ScreenFactory
 	private RegisteredDataSources registeredDataSources = null;
 	private ViewFactory viewFactory = null;
 	private Screen screen = null;
-	
+	private RegisteredControllers registeredControllers = null;	
 	
 	/**
 	 * Constructor
 	 */
 	private ScreenFactory()
 	{
-		this.registeredDataSources = GWT.create(RegisteredDataSources.class);
 	}
 	
 	/**
@@ -72,6 +72,11 @@ public class ScreenFactory
 	 */
 	public DataSource<?> createDataSource(String dataSource)
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
+		if (registeredDataSources == null)
+		{
+			this.registeredDataSources = GWT.create(RegisteredDataSources.class);
+		}
 		return this.registeredDataSources.getDataSource(dataSource);
 	}
 
@@ -82,6 +87,7 @@ public class ScreenFactory
 	 */
 	public Formatter getClientFormatter(String formatter)
 	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		if (this.registeredClientFormatters == null)
 		{
 			this.registeredClientFormatters = (RegisteredClientFormatters) GWT.create(RegisteredClientFormatters.class);
@@ -114,6 +120,24 @@ public class ScreenFactory
 		return screen;
 	}
 	
+	/**
+	 * Called by ViewFactory to initialize the screen controllers 
+	 * @param registeredControllers
+	 */
+	void setRegisteredControllers(RegisteredControllers registeredControllers)
+	{
+		this.registeredControllers = registeredControllers;
+	}
+	
+	/**
+	 * Retrieve the list of controllers registered into this screen
+	 * @return
+	 */
+	public RegisteredControllers getRegisteredControllers()
+    {
+    	return registeredControllers;
+    }
+
 	/**
 	 * 
 	 */
