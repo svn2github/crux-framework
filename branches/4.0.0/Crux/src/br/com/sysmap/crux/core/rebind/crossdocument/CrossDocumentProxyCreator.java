@@ -24,9 +24,8 @@ import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamWriter;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentException;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentProxy;
-import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentProxy.CrossDocumentReader;
-import br.com.sysmap.crux.core.client.event.Events;
+import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.AbstractSerializableProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -216,27 +215,6 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	}
 
 	/**
-	 * Generates the signature for the proxy method
-	 * 
-	 * @param w
-	 * @param nameFactory
-	 * @param method
-	 */
-	protected void generateProxyMethodSignature(SourceWriter w, NameFactory nameFactory, JMethod method)
-	{
-		// Write the method signature
-		JType returnType = method.getReturnType().getErasedType();
-		w.print("public ");
-		w.print(returnType.getQualifiedSourceName());
-		w.print(" ");
-		w.print(method.getName() + "(");
-		generateMethodParameters(w, nameFactory, method);
-		w.print(")");
-		generateMethodTrhowsClause(w, method);
-		w.println();
-	}
-
-	/**
 	 * @param logger
 	 * @param context
 	 * @param typesSentFromBrowser
@@ -312,7 +290,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
     {
 	    String[] imports = new String[] { getProxySupertype().getCanonicalName(), getStreamWriterClass().getCanonicalName(), SerializationStreamWriter.class.getCanonicalName(), GWT.class.getCanonicalName(),
 		        SerializationException.class.getCanonicalName(), Impl.class.getCanonicalName(), CrossDocumentException.class.getCanonicalName(), 
-		        Events.class.getCanonicalName(), Crux.class.getCanonicalName()};
+		        Crux.class.getCanonicalName()};
 	    return imports;
     }
 
@@ -461,66 +439,6 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
 		w.outdent();
 		w.println("}");
-    }
-
-	/**
-	 * @param w
-	 * @param nameFactory
-	 * @param method
-	 */
-	private void generateMethodParameters(SourceWriter w, NameFactory nameFactory, JMethod method)
-	{
-		boolean needsComma = false;
-		JParameter[] params = method.getParameters();
-		for (int i = 0; i < params.length; ++i)
-		{
-			JParameter param = params[i];
-
-			if (needsComma)
-			{
-				w.print(", ");
-			}
-			else
-			{
-				needsComma = true;
-			}
-
-			JType paramType = param.getType();
-			paramType = paramType.getErasedType();
-
-			w.print(paramType.getQualifiedSourceName());
-			w.print(" ");
-
-			String paramName = param.getName();
-			nameFactory.addName(paramName);
-			w.print(paramName);
-		}
-	}
-
-	/**
-	 * @param w
-	 * @param methodThrows
-	 */
-	private void generateMethodTrhowsClause(SourceWriter w, JMethod method)
-    {
-	    boolean needsComma = false;
-	    JType[] methodThrows = method.getThrows();
-		
-		if (methodThrows != null)
-		for (JType methodThrow : methodThrows)
-        {
-			if (needsComma)
-			{
-				w.print(", ");
-			}
-			else
-			{
-				w.print(" throws ");
-				needsComma = true;
-			}
-			JType throwType = methodThrow.getErasedType();
-			w.print(throwType.getQualifiedSourceName());
-        }
     }
 
 	/**

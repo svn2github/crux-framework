@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author Thiago
  *
  */
+@Deprecated
 public abstract class EventProcessor 
 {
 	boolean _hasReturn = false;

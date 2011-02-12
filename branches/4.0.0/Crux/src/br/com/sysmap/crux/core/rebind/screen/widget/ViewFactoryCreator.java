@@ -18,7 +18,6 @@ package br.com.sysmap.crux.core.rebind.screen.widget;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -159,18 +158,11 @@ public class ViewFactoryCreator
 
 		printer.println("final Screen "+screenVariable+" = Screen.get();");
 		
-		//TODO: remover esses metodos da screen... no registered controllers, adicionar a criação dos controllers por tela... 
-		// com uma classe auxiliar criada por tela....
 		//TODO: alterar as chamadas de eventos, pois com o modo de compatibilidade desativado, nao vai usar mais o invoke 
 		// do controlle. armazenar uma instancia da controllerProxy na propria viewFactory criada e usar ela chamando os metodos
 		// diretamente, sem ser via invoke..... lembrar de tratar o bind com a tela e os erros de eventos....
 		//TODO: alterar os evtBinder para que criem uma unica subclasse de tratamento por tipo de evento... (tipo... um unico ClickHandler)
 		
-		printer.println(screenVariable+".setDeclaredControllers("+extractReferencedResourceList(screen.iterateControllers())+");");
-		printer.println(screenVariable+".setDeclaredDataSources("+extractReferencedResourceList(screen.iterateDataSources())+");");
-		printer.println(screenVariable+".setDeclaredSerializables("+extractReferencedResourceList(screen.iterateSerializers())+");");
-		printer.println(screenVariable+".setDeclaredFormatters("+extractReferencedResourceList(screen.iterateFormatters())+");");
-
 		createHistoryChangedEvt(printer);
 		createClosingEvt(printer);
 		createCloseEvt(printer);
@@ -612,28 +604,6 @@ public class ViewFactoryCreator
 			printlnPostProcessing("Events.callEvent("+eventLoad+", new ScreenLoadEvent());");
 		}
     }
-
-	/**
-	 * @param attributes
-	 * @return
-	 */
-	private String extractReferencedResourceList(Iterator<String> attributes)
-	{
-		StringBuilder result = new StringBuilder("new String[]{"); 
-
-		boolean first = true;
-		while (attributes.hasNext())
-		{
-			if (!first)
-			{
-				result.append(",");
-			}
-			first = false;
-			result.append(EscapeUtils.quote(attributes.next().trim()));
-		}
-		result.append("}"); 
-		return result.toString();
-	}	
 	
 	/**
 	 * Creates the resized event.

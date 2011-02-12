@@ -28,6 +28,7 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
@@ -115,7 +116,27 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 			throw new CruxGeneratorException();
 		}
 	}
-	
+
+	/**
+	 * Generates the signature for the proxy method
+	 * 
+	 * @param w
+	 * @param nameFactory
+	 * @param method
+	 */
+	protected void generateProxyMethodSignature(SourceWriter w, NameFactory nameFactory, JMethod method)
+	{
+		// Write the method signature
+		JType returnType = method.getReturnType().getErasedType();
+		w.print("public ");
+		w.print(returnType.getQualifiedSourceName());
+		w.print(" ");
+		w.print(method.getName() + "(");
+		generateMethodParameters(w, nameFactory, method);
+		w.print(")");
+		generateMethodTrhowsClause(w, method);
+		w.println();
+	}
 	
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
@@ -143,8 +164,8 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
             	throw new CruxGeneratorException(e.getMessage(), e);
             }
 		}
-    }
-
+    }	
+	
 	/**
 	 * Override this method to generate any nested serializable type required by the proxy
 	 * @param logger
@@ -155,5 +176,66 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 */
 	protected abstract void generateTypeSerializers(SerializableTypeOracle typesSentFromBrowser,
 			                            SerializableTypeOracle typesSentToBrowser) throws CruxGeneratorException;
+	
+	
+	/**
+	 * @param w
+	 * @param nameFactory
+	 * @param method
+	 */
+	private void generateMethodParameters(SourceWriter w, NameFactory nameFactory, JMethod method)
+	{
+		boolean needsComma = false;
+		JParameter[] params = method.getParameters();
+		for (int i = 0; i < params.length; ++i)
+		{
+			JParameter param = params[i];
+
+			if (needsComma)
+			{
+				w.print(", ");
+			}
+			else
+			{
+				needsComma = true;
+			}
+
+			JType paramType = param.getType();
+			paramType = paramType.getErasedType();
+
+			w.print(paramType.getQualifiedSourceName());
+			w.print(" ");
+
+			String paramName = param.getName();
+			nameFactory.addName(paramName);
+			w.print(paramName);
+		}
+	}
+
+	/**
+	 * @param w
+	 * @param methodThrows
+	 */
+	private void generateMethodTrhowsClause(SourceWriter w, JMethod method)
+    {
+	    boolean needsComma = false;
+	    JType[] methodThrows = method.getThrows();
+		
+		if (methodThrows != null)
+		for (JType methodThrow : methodThrows)
+        {
+			if (needsComma)
+			{
+				w.print(", ");
+			}
+			else
+			{
+				w.print(" throws ");
+				needsComma = true;
+			}
+			JType throwType = methodThrow.getErasedType();
+			w.print(throwType.getQualifiedSourceName());
+        }
+    }
 	
 }

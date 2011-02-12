@@ -395,15 +395,6 @@ public class Screen
 	}
 	
 	/**
-	 * @return
-	 */
-	@Deprecated
-	public static String[] getControllers()
-	{
-		return Screen.get().getDeclaredControllers();
-	}
-	
-	/**
 	 * 
 	 * @return
 	 */
@@ -435,15 +426,6 @@ public class Screen
 	}
 
 	/**
-	 * @return
-	 */
-	@Deprecated
-	public static String[] getDataSources()
-	{
-		return Screen.get().getDeclaredDataSources();
-	}
-
-	/**
 	 * 
 	 * @param formatter
 	 * @return
@@ -453,15 +435,6 @@ public class Screen
 		return ScreenFactory.getInstance().getClientFormatter(formatter);
 	}
 
-	/**
-	 * @return
-	 */
-	@Deprecated
-	public static String[] getFormatters()
-	{
-		return Screen.get().getDeclaredFormatters();
-	}	
-	
 	/**
 	 * 
 	 * @return
@@ -506,15 +479,6 @@ public class Screen
 		return locale;
 	}	
 	
-	/**
-	 * @return
-	 */
-	@Deprecated
-	public static String[] getSerializables()
-	{
-		return Screen.get().getDeclaredSerializables();
-	}	
-
 	/**
 	 * @param call
 	 * @param param
@@ -961,42 +925,6 @@ public class Screen
 	protected String getCurrentHistoryToken()
 	{
 		return History.getToken();
-	}
-	
-	/**
-	 * @return
-	 */
-	@Deprecated
-	protected String[] getDeclaredControllers()
-	{
-		return declaredControllers;
-	}
-	
-	/**
-	 * @return
-	 */
-	@Deprecated
-	protected String[] getDeclaredDataSources()
-	{
-		return declaredDataSources;
-	}
-	
-	/**
-	 * @return
-	 */
-	@Deprecated
-	protected String[] getDeclaredFormatters()
-	{
-		return declaredFormatters;
-	}
-
-	/**
-	 * @return
-	 */
-	@Deprecated
-	protected String[] getDeclaredSerializables()
-	{
-		return declaredSerializables;
 	}
 	
 	/**

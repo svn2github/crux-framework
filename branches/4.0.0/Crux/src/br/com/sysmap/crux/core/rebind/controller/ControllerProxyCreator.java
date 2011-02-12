@@ -28,7 +28,6 @@ import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
 import br.com.sysmap.crux.core.client.event.ControllerInvoker;
 import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
 import br.com.sysmap.crux.core.client.event.CruxEvent;
-import br.com.sysmap.crux.core.client.event.EventProcessor;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -52,6 +51,7 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
@@ -159,6 +159,11 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		
 		generateInvokeMethod(srcWriter);
 		
+		if (!isCrux2OldInterfacesCompatibilityEnabled())
+		{
+			generateControllerOverideExposedMethods(srcWriter);
+		}
+		
 		//TODO: create a interface screenBinder, que possua os metodos de bind entre screen e controller.
 		// A screen deve definir um binder para si e eassociar ao controller... desta forma nao precisa de 
 		// codigos em runtime para verificar se existe a widget a ser amarrada, se ela eh um HasFormatter ou 
@@ -216,7 +221,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return
 	 */
-	protected String[] getImports()
+	@SuppressWarnings("deprecation")
+    protected String[] getImports()
     {
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
@@ -229,7 +235,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     		HasFormatter.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
     		RunAsyncCallback.class.getCanonicalName(),
-    		EventProcessor.class.getCanonicalName(),
+    		br.com.sysmap.crux.core.client.event.EventProcessor.class.getCanonicalName(),
     		Crux.class.getCanonicalName(), 
     		SerializationException.class.getCanonicalName(), 
     		SerializationStreamReader.class.getCanonicalName(),
@@ -511,13 +517,149 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     }
 	
 	/**
-	 * @param logger
 	 * @param sourceWriter
-	 * @param controllerClass
-	 * @param className
-	 * @param methods
-	 * @param singleton
-	 * @param autoBindEnabled
+	 */
+	private void generateControllerOverideExposedMethods(SourceWriter sourceWriter)
+	{
+		JMethod[] methods = controllerClass.getOverridableMethods(); 
+		for (JMethod method: methods) 
+		{
+			if (isControllerMethodSignatureValid(method))
+			{
+				sourceWriter.println("@Override");
+				generateProxyMethodSignature(sourceWriter, new NameFactory(), method);
+				sourceWriter.println("{");
+				sourceWriter.indent();		
+				
+				if (isAutoBindEnabled)
+				{
+					sourceWriter.println("updateControllerObjects();");
+				}
+				
+				sourceWriter.println("try{");
+				sourceWriter.indent();
+
+				JType returnType = method.getReturnType().getErasedType();
+				boolean hasReturn = returnType != JPrimitiveType.VOID;
+			    Validate annot = method.getAnnotation(Validate.class);
+			    boolean mustValidade = annot != null; 
+			    if (mustValidade)
+			    {
+			    	sourceWriter.println("try{");
+					sourceWriter.indent();
+			    	String validateMethod = annot.value();
+			    	if (validateMethod == null || validateMethod.length() == 0)
+			    	{
+			    		String methodName = method.getName();
+			    		methodName = Character.toUpperCase(methodName.charAt(0)) + methodName.substring(1);
+			    		validateMethod = "validate"+ methodName;
+			    	}
+			    	generateMethodvalidationCall(sourceWriter, method, validateMethod);
+					sourceWriter.outdent();
+			    	sourceWriter.println("}catch (Throwable e1){");
+					sourceWriter.indent();
+			    	sourceWriter.println("Crux.getValidationErrorHandler().handleValidationError(e1.getLocalizedMessage());");
+			    	if (hasReturn)
+			    	{
+				    	sourceWriter.println("return null;");
+			    	}
+			    	else
+			    	{
+				    	sourceWriter.println("return;");
+			    	}
+					sourceWriter.outdent();
+			    	sourceWriter.println("}");
+			    }
+			    
+		    	if (hasReturn)
+		    	{
+					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = ");
+		    	}
+		    	
+		    	generateMethodSuperCall(sourceWriter, method);
+		    		
+				sourceWriter.outdent();
+				sourceWriter.println("}catch (Throwable e){");
+				sourceWriter.indent();
+
+				String call = controllerClass.getAnnotation(Controller.class).value()+"."+method.getName();
+				
+				sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientError("+EscapeUtils.quote(call)
+						              +", e.getLocalizedMessage()), e);");
+
+				sourceWriter.outdent();
+				sourceWriter.println("}");
+				
+				if (isAutoBindEnabled)
+				{
+					sourceWriter.println("updateScreenWidgets();");
+				}		
+				
+		    	if (hasReturn)
+		    	{
+					sourceWriter.println("return ret;");
+		    	}
+		    	
+				sourceWriter.outdent();
+				sourceWriter.println("}");
+			}
+		}
+    }
+
+    /**
+     * @param sourceWriter
+     * @param method
+     */
+    private void generateMethodSuperCall(SourceWriter sourceWriter, JMethod method)
+    {
+		sourceWriter.print("super."+method.getName()+"(");
+		
+		boolean needsComma = false;
+		JParameter[] params = method.getParameters();
+		for (int i = 0; i < params.length; ++i)
+		{
+			JParameter param = params[i];
+
+			if (needsComma)
+			{
+				sourceWriter.print(", ");
+			}
+			else
+			{
+				needsComma = true;
+			}
+
+			String paramName = param.getName();
+			sourceWriter.print(paramName);
+		}
+		
+		sourceWriter.println(");");
+    }
+
+    /**
+     * @param sourceWriter
+     * @param method
+     */
+    private void generateMethodvalidationCall(SourceWriter sourceWriter, JMethod method, String validationMethod)
+    {
+		sourceWriter.print(validationMethod+"(");
+		
+		JParameter[] params = method.getParameters();
+		if (params.length == 1)
+		{
+			JParameter param = params[0];
+			JMethod validate = controllerClass.findMethod(validationMethod, new JType[]{param.getType()});
+			if (validate != null)
+			{
+				sourceWriter.print(param.getName());
+			}
+		}
+		
+		sourceWriter.println(");");
+    }
+
+    /**
+	 * @param sourceWriter
 	 */
 	private void generateInvokeMethod(SourceWriter sourceWriter)
     {
@@ -631,8 +773,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 	/**
 	 * 
-	 * @param logger
-	 * @param controllerClass
 	 * @param method
 	 * @param validateMethod
 	 * @param sourceWriter

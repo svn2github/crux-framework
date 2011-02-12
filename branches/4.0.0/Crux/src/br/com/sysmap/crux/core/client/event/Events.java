@@ -29,6 +29,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  * 
  * @author Thiago da Rosa de Bustamante
  */
+@Deprecated
 public class Events 
 {
 	private static Logger logger = Logger.getLogger(Events.class.getName());
