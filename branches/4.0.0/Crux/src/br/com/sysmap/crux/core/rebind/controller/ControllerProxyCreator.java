@@ -75,7 +75,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	private final JClassType controllerClass;
 	private final boolean isAutoBindEnabled;
 	private final boolean isCrossDoc;
-	private final boolean isSingleton;
 
 	
 	/**
@@ -103,7 +102,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         	throw new CruxGeneratorException(messages.crossDocumentCanNotFindControllerCrossDocInterface(controllerClass.getQualifiedSourceName()));
         }
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
-		this.isSingleton = (controllerAnnot == null || controllerAnnot.stateful());
 		this.isAutoBindEnabled = (controllerAnnot == null || controllerAnnot.autoBind());
 	}
 	
@@ -338,7 +336,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         	sourceWriter.print("streamWriter."+Shared.getStreamWriteMethodNameFor(returnType)+"(");
     		
     	}
-    	sourceWriter.println("wrapper." + method.getName()+"(");
+    	sourceWriter.println(method.getName()+"(");
 
 		for (int i = 0; i < params.length ; ++i)
 		{
@@ -385,8 +383,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		sourceWriter.println("public String invoke(String serializedData){ ");
 		sourceWriter.indent();
 
-		sourceWriter.println(getProxySimpleName()+" wrapper = "+(isSingleton?"this":"new "+getProxySimpleName()+"()")+";");
-		
 		sourceWriter.println("boolean isExecutionOK = true;");
 
 		sourceWriter.println(SerializationStreamWriter.class.getSimpleName()+" streamWriter = createStreamWriter();");
@@ -404,7 +400,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		
 		if (isAutoBindEnabled)
 		{
-			sourceWriter.println("wrapper.updateControllerObjects();");
+			sourceWriter.println("updateControllerObjects();");
 		}
 
 		boolean first = true;
@@ -434,7 +430,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 		if (!first && isAutoBindEnabled)
 		{
-			sourceWriter.println("wrapper.updateScreenWidgets();");
+			sourceWriter.println("updateScreenWidgets();");
 		}
 		sourceWriter.outdent();
 		sourceWriter.println("}catch (Exception ex){");
@@ -675,11 +671,9 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			sourceWriter.println("boolean __runMethod = true;");
 			sourceWriter.println("boolean methodNotFound = false;");
 
-			sourceWriter.println(getProxySimpleName()+" wrapper = "+(isSingleton?"this":"new "+getProxySimpleName()+"()")+";");
-
 			if (isAutoBindEnabled)
 			{
-				sourceWriter.println("wrapper.updateControllerObjects();");
+				sourceWriter.println("updateControllerObjects();");
 			}
 
 
@@ -723,7 +717,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 			if (!first && isAutoBindEnabled)
 			{
-				sourceWriter.println("wrapper.updateScreenWidgets();");
+				sourceWriter.println("updateScreenWidgets();");
 			}		
 		}
 		sourceWriter.outdent();
@@ -740,11 +734,11 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		JParameter[] params = method.getParameters();
 		if (params != null && params.length == 1)
 		{
-			sourceWriter.print("wrapper."+method.getName()+"(("+params[0].getType().getParameterizedQualifiedSourceName()+")sourceEvent)");
+			sourceWriter.print(method.getName()+"(("+params[0].getType().getParameterizedQualifiedSourceName()+")sourceEvent)");
 		}
 		else 
 		{
-			sourceWriter.print("wrapper."+method.getName()+"()");
+			sourceWriter.print(method.getName()+"()");
 		}
 		if (finalizeCommand)
 		{

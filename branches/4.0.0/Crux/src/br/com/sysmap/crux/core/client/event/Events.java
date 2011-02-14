@@ -34,7 +34,7 @@ public class Events
 {
 	private static Logger logger = Logger.getLogger(Events.class.getName());
 	private static RegisteredControllers registeredControllers;
-	
+	//TODO ver quais metodos dessa classe podemos remover
 	
 	/**
 	 * Create an event object.

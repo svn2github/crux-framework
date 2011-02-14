@@ -20,10 +20,11 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
@@ -179,8 +180,10 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 				out.println(item+".setCommand(new "+Command.class.getCanonicalName()+"(){);");
 				out.println("public void execute(){");
 				out.println("final Event "+event+" = Events.getEvent(\"onExecute\", "+ EscapeUtils.quote(executeEvt)+");");
-				out.println("Events.callEvent("+event+", new "+ExecuteEvent.class.getCanonicalName()+"<"+MenuBar.class.getCanonicalName()+
-						                             ">("+context.getWidget()+", "+context.getWidgetId()+"));");
+
+				EvtProcessor.printEvtCall(out, executeEvt, "onExecute", ExecuteEvent.class, 
+										" new "+ExecuteEvent.class.getCanonicalName()+"<"+MenuBar.class.getCanonicalName()+
+						                ">("+context.getWidget()+", "+context.getWidgetId()+")");
 				out.println("}");
 				out.println("});");
 			}

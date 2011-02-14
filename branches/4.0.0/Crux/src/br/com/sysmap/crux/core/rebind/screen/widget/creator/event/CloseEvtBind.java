@@ -15,10 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -30,7 +27,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
  */
 public class CloseEvtBind extends EvtProcessor
 {
-	private static final String EVENT_NAME = "onClick";
+	private static final String EVENT_NAME = "onClose";
 	
 	public String getEventName()
 	{
@@ -38,15 +35,14 @@ public class CloseEvtBind extends EvtProcessor
 	}
 
 	@Override
-    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    public Class<?> getEventClass()
     {
-		String event = ViewFactoryCreator.createVariableName("evt");
-		
-		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(widget+".addCloseHandler(new "+CloseHandler.class.getCanonicalName()+"(){");
-		out.println("public void onClose("+CloseEvent.class.getCanonicalName()+" event){");
-		out.println("Events.callEvent("+event+", event);");
-		out.println("}");
-		out.println("});");	    
-    }		
+	    return CloseEvent.class;
+    }
+
+	@Override
+    public Class<?> getEventHandlerClass()
+    {
+	    return CloseHandler.class;
+    }
 }

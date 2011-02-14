@@ -15,9 +15,9 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
+import br.com.sysmap.crux.core.client.screen.WidgetLoadEvent;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
@@ -40,8 +40,18 @@ public class LoadWidgetEvtProcessor extends EvtProcessor
 	@Override
     public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
     {
-		String event = ViewFactoryCreator.createVariableName("evt");
-		printlnPostProcessing("Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+EscapeUtils.quote(eventValue)+");");
-		printlnPostProcessing("Events.callEvent("+event+", new WidgetLoadEvent("+widget+","+EscapeUtils.quote(widgetId)+"));");
+		printPostProcessingEvtCall(eventValue, "new WidgetLoadEvent("+widget+","+EscapeUtils.quote(widgetId)+")");
     }	
+	
+	@Override
+    public Class<?> getEventClass()
+    {
+	    return WidgetLoadEvent.class;
+    }
+
+	@Override
+    public Class<?> getEventHandlerClass()
+    {
+	    return null;
+    }		
 }

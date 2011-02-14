@@ -21,8 +21,6 @@ import java.util.Map;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
@@ -147,24 +145,6 @@ public class WizardPage<T extends Serializable> extends AbstractWidgetStep<T>
 	{
 	}
 	
-	/**
-	 * @param id
-	 * @param label
-	 * @param commandEvent
-	 * @param order
-	 */
-	public void addCommand(String id, String label, final Event commandEvent, int order)
-	{
-		WizardCommandHandler<T> handler = new WizardCommandHandler<T>()
-		{
-			public void onCommand(WizardCommandEvent<T> event)
-			{
-				Events.callEvent(commandEvent, event);
-			}
-		};
-		addCommand(id, label, handler, order);
-	}
-
 	/**
 	 * @param commandId
 	 * @param wizardCommandEvent

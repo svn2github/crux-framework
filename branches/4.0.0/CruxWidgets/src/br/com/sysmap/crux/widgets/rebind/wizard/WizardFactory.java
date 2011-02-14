@@ -41,6 +41,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.widgets.client.wizard.WidgetStep;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
@@ -57,6 +59,7 @@ class WizardContext extends WidgetCreatorContext
 	public String stepOnEnter;
 	public String stepOnLeave;
 	public String enabled;
+	public String wizardObject;
 }
 
 
@@ -104,6 +107,23 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 		return className +"<"+wizardData+">";
 	}
 
+	@Override
+	public void processAttributes(SourcePrinter out, WizardContext context) throws CruxGeneratorException
+	{
+	    super.processAttributes(out, context);
+	    
+	    String wizardContextObject = context.getChildElement().optString("wizardContextObject");
+	    String wizardData = WizardDataObjects.getWizardData(wizardContextObject);
+	    if (StringUtils.isEmpty(wizardData))
+	    {
+	    	context.wizardObject = NoData.class.getCanonicalName();
+	    }
+	    else
+	    {
+	    	context.wizardObject = wizardData;
+	    }
+	}
+	
 	@Override
 	public void postProcess(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 	{
@@ -265,6 +285,8 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardContext>
 	{
+		WizardCommandEvtBind commandEvtBind = new WizardCommandEvtBind();
+		
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
@@ -279,13 +301,18 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			
 			String onCommand = context.readChildProperty("onCommand");
-			String commandEvent = getWidgetCreator().createVariableName("evt");
-			out.println("final Event "+commandEvent+" = Events.getEvent("+EscapeUtils.quote("onCommand")+", "+ EscapeUtils.quote(onCommand)+");");
 			
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
 			
 			out.println(WidgetStep.class.getCanonicalName()+"<?> "+widgetStep+" = "+widget+".getWidgetStep("+EscapeUtils.quote(context.stepId)+");");
-			out.println(widgetStep+".addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
+			out.println(widgetStep+".addCommand("+EscapeUtils.quote(id)+", "+label+", new "+
+					WizardCommandHandler.class.getCanonicalName()+"<"+context.wizardObject+">(){");
+			out.println("public void onCommand("+WizardCommandEvent.class.getCanonicalName()+"<"+context.wizardObject+"> event){");
+			
+			commandEvtBind.printEvtCall(out, onCommand, "event");
+
+			out.println("}");
+			out.println("}, "+order+");");
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))
@@ -308,6 +335,9 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetProcessor extends WidgetChildProcessor<WizardContext> 
 	{
+		private EnterEvtBind enterEvtBind = new EnterEvtBind();
+		private LeaveEvtBind leaveEvtBind = new LeaveEvtBind();
+		
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 		{
@@ -322,16 +352,12 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			
 			if (!StringUtils.isEmpty(context.stepOnEnter))
 			{
-				String onEnterEvent = getWidgetCreator().createVariableName("evt");
-				out.println("final Event "+onEnterEvent+" = Events.getEvent("+EscapeUtils.quote("onEnter")+", "+ EscapeUtils.quote(context.stepOnEnter)+");");
-				out.println(widgetStep+".addEnterEvent("+onEnterEvent+");");
+				enterEvtBind.processEvent(out, context.stepOnEnter, widgetStep, context.stepId);
 			}
 			
 			if (!StringUtils.isEmpty(context.stepOnLeave))
 			{
-				String onLeaveEvent = getWidgetCreator().createVariableName("evt");
-				out.println("final Event "+onLeaveEvent+" = Events.getEvent("+EscapeUtils.quote("onLeave")+", "+ EscapeUtils.quote(context.stepOnLeave)+");");
-				out.println(widgetStep+".addLeaveEvent("+onLeaveEvent+");");
+				leaveEvtBind.processEvent(out, context.stepOnLeave, widgetStep, context.stepId);
 			}
 			if (!StringUtils.isEmpty(context.enabled))
 			{

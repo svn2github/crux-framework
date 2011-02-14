@@ -390,7 +390,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		w.indent();
 		String controllerClassName = controllerClass.getQualifiedSourceName();
 		w.println(controllerClassName + " controllerOnSelf = "+ScreenFactory.class.getCanonicalName()+
-				".getInstance().getRegisteredControllers().getCrossDocument(CONTROLLER_NAME,"+controllerClassName+".class);");    
+				".getInstance().getRegisteredControllers().getController(CONTROLLER_NAME);");    
 		w.println("if (controllerOnSelf == null){");
 		w.indent();
 		w.println("throw new CrossDocumentException(Crux.getMessages().eventProcessorClientControllerNotFound(CONTROLLER_NAME));");

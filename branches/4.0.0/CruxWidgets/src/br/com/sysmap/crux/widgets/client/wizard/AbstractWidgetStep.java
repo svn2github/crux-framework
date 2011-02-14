@@ -17,9 +17,6 @@ package br.com.sysmap.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 
@@ -66,28 +63,4 @@ public abstract class AbstractWidgetStep<T extends Serializable> extends Composi
 	 * @return
 	 */
 	public abstract boolean removeCommand(String id);
-	
-	/**
-	 * @param onEnterEvent
-	 */
-	public void addEnterEvent(final Event onEnterEvent)
-	{
-		addEnterHandler(new EnterHandler<T>(){
-			public void onEnter(EnterEvent<T> event)
-			{
-				Events.callEvent(onEnterEvent, event);
-			}
-		});
-	}
-	
-	public void addLeaveEvent(final Event onLeaveEvent)
-	{
-		addLeaveHandler(new LeaveHandler<T>()
-		{
-			public void onLeave(LeaveEvent<T> event)
-			{
-				Events.callEvent(onLeaveEvent, event);
-			}
-		});
-	}
 }

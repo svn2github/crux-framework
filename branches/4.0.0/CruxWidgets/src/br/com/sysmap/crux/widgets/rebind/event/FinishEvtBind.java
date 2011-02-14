@@ -15,29 +15,13 @@
  */
 package br.com.sysmap.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.widgets.client.event.FinishEvent;
 import br.com.sysmap.crux.widgets.client.event.FinishHandler;
 
 public class FinishEvtBind extends EvtProcessor
 {
 	private static final String EVENT_NAME = "onFinish";
-
-	@Override
-    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
-    {
-		String event = ViewFactoryCreator.createVariableName("evt");
-		
-		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(widget+".addFinishHandler(new "+FinishHandler.class.getCanonicalName()+"(){");
-		out.println("public void onFinish("+FinishEvent.class.getCanonicalName()+" event){");
-		out.println("Events.callEvent("+event+", event);");
-		out.println("}");
-		out.println("});");
-    }	
 
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
@@ -46,4 +30,16 @@ public class FinishEvtBind extends EvtProcessor
 	{
 		return EVENT_NAME;
 	}
+
+	@Override
+    public Class<?> getEventClass()
+    {
+	    return FinishEvent.class;
+    }
+
+	@Override
+    public Class<?> getEventHandlerClass()
+    {
+	    return FinishHandler.class;
+    }		
 }

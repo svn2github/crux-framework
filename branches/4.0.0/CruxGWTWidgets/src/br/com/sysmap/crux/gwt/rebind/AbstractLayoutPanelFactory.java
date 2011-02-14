@@ -17,12 +17,12 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import java.util.ArrayList;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
@@ -88,26 +88,21 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 			
 			if (!StringUtils.isEmpty(onAnimationComplete) || !StringUtils.isEmpty(onAnimationStep))
 			{
-				String onAnimationCompleteEvt = createVariableName("evt");
-				String onAnimationStepEvt = createVariableName("evt");
 				String layoutAnimationEvent = createVariableName("evt");
 				String eventClassName = LayoutAnimationEvent.class.getCanonicalName()+"<"+getWidgetClassName()+">";
 				printlnPostProcessing(eventClassName+" "+layoutAnimationEvent+" = new "+eventClassName+"("+widget+", "+context.getWidgetId()+");");
-
-				out.println("final Event "+onAnimationCompleteEvt+" = Events.getEvent("+EscapeUtils.quote("onAnimationComplete")+", "+ EscapeUtils.quote(onAnimationComplete)+");");
-				out.println("final Event "+onAnimationStepEvt+" = Events.getEvent("+EscapeUtils.quote("onAnimationStep")+", "+ EscapeUtils.quote(onAnimationStep)+");");
 
 				runChildProcessingAnimations(context.childProcessingAnimations);
 				
 				printlnPostProcessing(widget+".animate("+context.animationDuration+", new "+AnimationCallback.class.getCanonicalName()+"(){");
 				printlnPostProcessing("public void onAnimationComplete(){");
 				printlnPostProcessing("if (onAnimationComplete != null){");
-				printlnPostProcessing("Events.callEvent("+onAnimationCompleteEvt+", "+layoutAnimationEvent+");");
+				EvtProcessor.printPostProcessingEvtCall(onAnimationComplete, "onAnimationComplete", LayoutAnimationEvent.class, layoutAnimationEvent, this);
 				printlnPostProcessing("}");
 				printlnPostProcessing("}");
 				printlnPostProcessing("public void onLayout(Layer layer, double progress){");
 				printlnPostProcessing("if (onAnimationStep != null){");
-				printlnPostProcessing("Events.callEvent("+onAnimationStepEvt+", "+layoutAnimationEvent+");");
+				EvtProcessor.printPostProcessingEvtCall(onAnimationStep, "onAnimationStep", LayoutAnimationEvent.class, layoutAnimationEvent, this);
 				printlnPostProcessing("}");
 				printlnPostProcessing("}");
 				printlnPostProcessing("});");				

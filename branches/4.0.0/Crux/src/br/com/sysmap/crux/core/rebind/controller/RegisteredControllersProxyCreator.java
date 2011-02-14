@@ -27,7 +27,6 @@ import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
 import br.com.sysmap.crux.core.client.event.ControllerInvoker;
 import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
-import br.com.sysmap.crux.core.client.event.EventProcessor;
 import br.com.sysmap.crux.core.client.event.RegisteredControllers;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
@@ -41,7 +40,6 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -108,7 +106,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		generateControllerInvokeMethod(sourceWriter);
 		generateCrossDocInvokeMethod(sourceWriter);
 		generateRegisterControllerMethod(sourceWriter);
-		generateGetCrossDocumentMethod(sourceWriter);
+		generateGetControllertMethod(sourceWriter);
 		generateControllerCallForLazyFragmentedControllers(sourceWriter);
     }
 
@@ -140,14 +138,15 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	/**
 	 * @return
 	 */
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected String[] getImports()
     {
 	    String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
     		br.com.sysmap.crux.core.client.screen.Screen.class.getCanonicalName(),
     		RunAsyncCallback.class.getCanonicalName(),
-    		EventProcessor.class.getCanonicalName(),
+    		br.com.sysmap.crux.core.client.event.EventProcessor.class.getCanonicalName(),
     		Crux.class.getCanonicalName(), 
     		FastMap.class.getCanonicalName(),
     		ControllerInvoker.class.getCanonicalName(),
@@ -183,45 +182,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 			throw new CruxGeneratorException(messages.errorGeneratingRegisteredController(controller, e.getLocalizedMessage()), e);
 		}
 	}	
-	
-	/**
-	 * @param sourceWriter
-	 */
-	private void generateControllerCallForAlreadyLoaded(SourceWriter sourceWriter)
-    {
-	    sourceWriter.println("ControllerInvoker controller = controllers.get(controllerName);");
-		sourceWriter.println("if (controller != null){");
-		sourceWriter.indent();
-		sourceWriter.println("try{");
-		sourceWriter.indent();
-		sourceWriter.println("controller.invoke(method, sourceEvent, fromOutOfModule, eventProcessor);");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-		sourceWriter.println("catch (Exception e)"); 
-		sourceWriter.println("{");
-		sourceWriter.indent();
-		sourceWriter.println("eventProcessor.setException(e);");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-		sourceWriter.println("return;");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-    }
-
-	/**
-	 * @param sourceWriter
-	 * @param controllerClassNames
-	 * @param controller
-	 */
-	private void generateControllerCallForLazyController(SourceWriter sourceWriter, String controller)
-    {
-	    sourceWriter.println("if (!controllers.containsKey(\""+controller+"\")){");
-		sourceWriter.indent();
-	    sourceWriter.println("controllers.put(\""+controller+"\", new " + controllerClassNames.get(controller) + "());");
-		sourceWriter.outdent();
-	    sourceWriter.println("}");
-	    sourceWriter.println("invokeController(controllerName, method, fromOutOfModule, sourceEvent, eventProcessor);");
-    }
 	
 	/**
 	 * @param sourceWriter
@@ -282,17 +242,39 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 
 		if (isCrux2OldInterfacesCompatibilityEnabled())
 		{
-			generateControllerCallForAlreadyLoaded(sourceWriter);
-
-			for (String controller : controllerClassNames.keySet()) 
+		    sourceWriter.println("ControllerInvoker controller = getController(controllerName);");
+			sourceWriter.println("if (controller != null){");
+			sourceWriter.indent();
+			sourceWriter.println("try{");
+			sourceWriter.indent();
+			sourceWriter.println("controller.invoke(method, sourceEvent, fromOutOfModule, eventProcessor);");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			sourceWriter.println("catch (Exception e)"); 
+			sourceWriter.println("{");
+			sourceWriter.indent();
+			sourceWriter.println("eventProcessor.setException(e);");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			sourceWriter.println("return;");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			sourceWriter.println("else {");
+			sourceWriter.indent();
+			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientControllerNotFound(controllerName));");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			
+/*			for (String controller : controllerClassNames.keySet()) 
 			{
 				JClassType controllerClass = getControllerClass(controller);
-				Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
+				//Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 				if (isControllerLazy(controllerClass))
 				{
 					sourceWriter.println("else if (StringUtils.unsafeEquals(\""+controller+"\",controllerName)){");
 					sourceWriter.indent();
-					if (controllerAnnot != null && Fragments.getFragmentClass(controllerAnnot.fragment()) != null)
+					//TODO: como a registeredcontrollers eh por tela, remover o fragment da controller, deixar so o lazy
+/*					if (controllerAnnot != null && Fragments.getFragmentClass(controllerAnnot.fragment()) != null)
 					{
 						Set<String> fragments = fragmentControllerClassNames.get(controllerAnnot.fragment());
 						if (fragments == null)
@@ -307,29 +289,17 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 					else
 					{
 						generateControllerCallForLazyController(sourceWriter, controller);
-					}
+					//}
 					sourceWriter.outdent();
 					sourceWriter.println("}");
 				}
-			}
-			generateControllerNotFoundErrorHandling(sourceWriter);
+			}*/
+
 		}
 		else
 		{
 			sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote(messages.crux2OldInterfacesCompatibilityDisabled())+");");
 		}
-		sourceWriter.outdent();
-		sourceWriter.println("}");
-	}
-
-	/**
-	 * @param sourceWriter
-	 */
-	private void generateControllerNotFoundErrorHandling(SourceWriter sourceWriter)
-	{
-		sourceWriter.println("else {");
-		sourceWriter.indent();
-		sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientControllerNotFound(controllerName));");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
@@ -454,15 +424,56 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		sourceWriter.println("}");
 	}
 
-
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateGetCrossDocumentMethod(SourceWriter sourceWriter)
+	private void generateGetControllertMethod(SourceWriter sourceWriter)
 	{
-		sourceWriter.println("public <T> T getCrossDocument(String controller, Class<T> crossDocClass){");
+		sourceWriter.println("public <T> T getController(String controller){");
 		sourceWriter.indent();
-		sourceWriter.println("return (T)controllers.get(controller);");
+		sourceWriter.println("T ret = (T)controllers.get(controller);");
+		sourceWriter.println("if (ret == null){");
+		sourceWriter.indent();
+		
+		boolean first = true;
+		for (String controller : controllerClassNames.keySet())
+        {
+			JClassType controllerClass = getControllerClass(controller);
+			if (isControllerLazy(controllerClass))
+			{
+				if (!first)
+				{
+					sourceWriter.print("else ");
+				}
+				first = false;
+				sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(controller, "+EscapeUtils.quote(controller)+")){");
+				sourceWriter.indent();
+
+				if (isControllerStatefull(controllerClass))
+				{
+					sourceWriter.println("controllers.put("+EscapeUtils.quote(controller)+", new "+controllerClassNames.get(controller)+"());");
+				}
+				else
+				{
+					sourceWriter.println("ret = (T) new "+controllerClassNames.get(controller)+"();");
+				}
+
+				sourceWriter.outdent();
+				sourceWriter.println("}");
+			}
+        }
+
+		sourceWriter.println("if (ret == null){");
+		sourceWriter.indent();
+		sourceWriter.println("ret = (T)controllers.get(controller);");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+		
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+		
+		sourceWriter.println("return ret;");
+
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
@@ -503,18 +514,20 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	private boolean isControllerLazy(JClassType controllerClass) throws CruxGeneratorException
     {
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
-        try
-        {
-        	JClassType crossDocumentType = controllerClass.getOracle().getType(CrossDocument.class.getCanonicalName());
-	        return (controllerAnnot == null || controllerAnnot.lazy()) && !crossDocumentType.isAssignableFrom(controllerClass);
-        }
-        catch (NotFoundException e)
-        {
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElement(e.getMessage()),e);
-			throw new CruxGeneratorException();
-        }
+        return (controllerAnnot == null || controllerAnnot.lazy());
     }
 	
+	/**
+	 * @param controllerClass
+	 * @return true if this controller can be loaded in lazy mode
+	 * @throws CruxGeneratorException 
+	 */
+	private boolean isControllerStatefull(JClassType controllerClass) throws CruxGeneratorException
+    {
+		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
+        return (controllerAnnot == null || controllerAnnot.stateful());
+    }
+
 	@Override
 	protected String getProxySimpleName()
 	{

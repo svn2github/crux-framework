@@ -15,10 +15,9 @@
  */
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.widgets.client.wizard.EnterEvent;
+import br.com.sysmap.crux.widgets.client.wizard.EnterHandler;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -35,13 +34,16 @@ public class EnterEvtBind extends EvtProcessor
 	{
 		return EVENT_NAME;
 	}
+	
+	@Override
+    public Class<?> getEventClass()
+    {
+	    return EnterEvent.class;
+    }
 
 	@Override
-    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    public Class<?> getEventHandlerClass()
     {
-		String event = ViewFactoryCreator.createVariableName("evt");
-		
-		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(widget+".addEnterEvent("+event+");");
-    }	
+	    return EnterHandler.class;
+    }
 }

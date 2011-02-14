@@ -19,7 +19,6 @@ package br.com.sysmap.crux.core.client.event;
  * Crux event abstraction. 
  * @author Thiago
  */
-@Deprecated
 public class Event 
 {
 	private String id;

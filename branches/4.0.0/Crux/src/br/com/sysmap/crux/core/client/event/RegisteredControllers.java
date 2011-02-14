@@ -24,8 +24,9 @@ package br.com.sysmap.crux.core.client.event;
  */
 public interface RegisteredControllers 
 {
-	<T> T getCrossDocument(String controller, Class<T> crossDocClass); 
+	<T> T getController(String controller); 
 	String invokeCrossDocument(String serializedData); 
+	@Deprecated
 	void invokeController(String controller, String method, boolean fromOutOfModule, Object sourceEvent, EventProcessor eventProcessor);
 	void registerController(String controller, ControllerInvoker handlerInvoker);
 }

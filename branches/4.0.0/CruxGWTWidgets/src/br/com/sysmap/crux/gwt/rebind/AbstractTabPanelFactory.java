@@ -202,7 +202,9 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 			}
 
 			context.clearAttributes();
-		}	
+		}
+		
+		//TODO pegar a instancia pelo widgetCreator...desse jeito, a propriedade widgetCreator não terá sido inicializada
 		private static ClickEvtBind clickEvtBind = new ClickEvtBind();
 		private static KeyUpEvtBind keyUpEvtBind = new KeyUpEvtBind();
 		private static KeyPressEvtBind keyPressEvtBind = new KeyPressEvtBind();

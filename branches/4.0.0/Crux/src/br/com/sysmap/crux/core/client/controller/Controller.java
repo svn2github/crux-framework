@@ -26,6 +26,5 @@ public @interface Controller {
 	String value();
 	boolean stateful() default true;
 	boolean autoBind() default true;
-	String fragment() default "";
 	boolean lazy() default true;
 }

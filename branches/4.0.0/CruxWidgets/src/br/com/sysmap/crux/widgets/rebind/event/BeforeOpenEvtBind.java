@@ -15,10 +15,7 @@
  */
 package br.com.sysmap.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeOpenEvent;
 import br.com.sysmap.crux.widgets.client.event.openclose.BeforeOpenHandler;
 
@@ -34,17 +31,15 @@ public class BeforeOpenEvtBind extends EvtProcessor
 		return EVENT_NAME;
 	}
 	
-	
 	@Override
-    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    public Class<?> getEventClass()
     {
-		String event = ViewFactoryCreator.createVariableName("evt");
-		
-		out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote(getEventName())+", "+ EscapeUtils.quote(eventValue)+");");
-		out.println(widget+".addBeforeOpenHandler(new "+BeforeOpenHandler.class.getCanonicalName()+"(){");
-		out.println("public void onBeforeOpen("+BeforeOpenEvent.class.getCanonicalName()+" event){");
-		out.println("Events.callEvent("+event+", event);");
-		out.println("}");
-		out.println("});");
+	    return BeforeOpenEvent.class;
+    }
+
+	@Override
+    public Class<?> getEventHandlerClass()
+    {
+	    return BeforeOpenHandler.class;
     }		
 }

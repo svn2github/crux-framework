@@ -15,6 +15,11 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget;
 
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
+import br.com.sysmap.crux.core.rebind.screen.Event;
+import br.com.sysmap.crux.core.rebind.screen.EventFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 
@@ -34,13 +39,148 @@ public abstract class EvtProcessor extends AbstractProcessor
 		processEvent(out, eventValue, context.getWidget(), context.getWidgetId());
     }	
 
-	/**
-	 * @param out
-	 * @param context
-	 * @param eventValue
-	 */
-	public abstract void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId);
+    
+    /**
+     * @param out
+     * @param eventValue
+     * @param cruxEvent
+     */
+    public void printEvtCall(SourcePrinter out, String eventValue, String cruxEvent)
+    {
+    	printEvtCall(out, eventValue, getEventName(), getEventClass(), cruxEvent);
+    }
+    
+    /**
+     * @param out
+     * @param eventValue
+     * @param eventName
+     * @param eventClass
+     * @param cruxEvent
+     */
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent)
+    {
+    	Event event = EventFactory.getEvent(eventName, eventValue);
+    	
+    	String controller = ClientControllers.getController(event.getController());
+    	if (controller == null)
+    	{
+    		throw new CruxGeneratorException();//TODO message
+    	}
 
+    	boolean hasEventParameter = true;
+    	try
+        {
+	        Class<?> controllerClass = Class.forName(controller);
+	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{eventClass});
+        }
+        catch (Exception e)
+        {
+        	try
+            {
+    	        Class<?> controllerClass = Class.forName(controller);
+    	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{});
+    	        hasEventParameter = false;
+            }
+            catch (Exception e1)
+            {
+            	throw new CruxGeneratorException(); //TODO: message
+            }
+        }
+    	
+    	
+    	out.print("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
+    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+    	
+    	if (hasEventParameter)
+    	{
+    		out.print(cruxEvent);
+    	}
+    	out.println(");");
+    }
+
+    /**
+     * @param eventValue
+     * @param cruxEvent
+     */
+    public void printPostProcessingEvtCall(String eventValue, String cruxEvent)
+    {
+    	printPostProcessingEvtCall(eventValue, getEventName(), getEventClass(), cruxEvent, getWidgetCreator());
+    }
+
+    /**
+     * @param eventValue
+     * @param eventName
+     * @param eventClass
+     * @param cruxEvent
+     * @param creator
+     */
+    public static void printPostProcessingEvtCall(String eventValue, String eventName,Class<?> eventClass, String cruxEvent, WidgetCreator<?> creator)
+    {
+    	Event event = EventFactory.getEvent(eventName, eventValue);
+    	
+    	String controller = ClientControllers.getController(event.getController());
+    	if (controller == null)
+    	{
+    		throw new CruxGeneratorException();//TODO message
+    	}
+
+    	boolean hasEventParameter = true;
+    	try
+        {
+	        Class<?> controllerClass = Class.forName(controller);
+	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{eventClass});
+        }
+        catch (Exception e)
+        {
+        	try
+            {
+    	        Class<?> controllerClass = Class.forName(controller);
+    	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{});
+    	        hasEventParameter = false;
+            }
+            catch (Exception e1)
+            {
+            	throw new CruxGeneratorException(); //TODO: message
+            }
+        }
+    	
+    	
+        creator.printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
+    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+    	
+    	if (hasEventParameter)
+    	{
+    		creator.printlnPostProcessing(cruxEvent);
+    	}
+    	creator.printlnPostProcessing(");");
+    }
+    
+    
+    /**
+     * @param out
+     * @param eventValue
+     * @param widget
+     * @param widgetId
+     */
+    public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
+    {
+		out.println(widget+".add"+getEventHandlerClass().getSimpleName()+"(new "+getEventHandlerClass().getCanonicalName()+"(){");
+		out.println("public void "+getEventName()+"("+getEventClass().getCanonicalName()+" event){");
+		printEvtCall(out, eventValue, "event");
+		out.println("}");
+		out.println("});");
+    }
+	
+	/**
+	 * @return
+	 */
+	public abstract Class<?> getEventClass();
+	
+	/**
+	 * @return
+	 */
+	public abstract Class<?> getEventHandlerClass();
+	
 	/**
 	 * @return
 	 */

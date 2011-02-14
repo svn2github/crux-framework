@@ -108,7 +108,7 @@ public class ClientControllers
 						globalControllers.add(annot.value());
 					}
 					initWidgetControllers(controllerClass, annot);
-					Fragments.registerFragment(annot.fragment(), controllerClass);
+//					Fragments.registerFragment(annot.fragment(), controllerClass);
 				} 
 				catch (ClassNotFoundException e) 
 				{

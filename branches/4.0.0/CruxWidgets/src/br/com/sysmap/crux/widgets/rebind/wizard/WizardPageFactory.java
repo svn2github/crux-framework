@@ -22,9 +22,9 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -35,6 +35,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 import br.com.sysmap.crux.widgets.client.wizard.WizardPage;
 
 /**
@@ -68,6 +70,23 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 		return varName;
 	}
 
+	@Override
+	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
+	{
+	    super.processAttributes(out, context);
+
+	    String wizardContextObject = context.getChildElement().optString("wizardContextObject");
+	    String wizardData = WizardDataObjects.getWizardData(wizardContextObject);
+	    if (StringUtils.isEmpty(wizardData))
+	    {
+	    	context.wizardObject = NoData.class.getCanonicalName();
+	    }
+	    else
+	    {
+	    	context.wizardObject = wizardData;
+	    }
+	}
+	
 	/**
 	 * @param wizardContextObject
 	 * @return
@@ -101,6 +120,8 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
+		WizardCommandEvtBind commandEvtBind = new WizardCommandEvtBind();
+
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
@@ -114,11 +135,16 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			
 			String onCommand = context.readChildProperty("onCommand");
-			String commandEvent = getWidgetCreator().createVariableName("evt");
-			out.println("final Event "+commandEvent+" = Events.getEvent("+EscapeUtils.quote("onCommand")+", "+ EscapeUtils.quote(onCommand)+");");
 			
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
+			out.println(rootWidget+".addCommand("+EscapeUtils.quote(id)+", "+label+", new "+
+					WizardCommandHandler.class.getCanonicalName()+"<"+context.wizardObject+">(){");
+			out.println("public void onCommand("+WizardCommandEvent.class.getCanonicalName()+"<"+context.wizardObject+"> event){");
+			
+			commandEvtBind.printEvtCall(out, onCommand, "event");
+
+			out.println("}");
+			out.println("}, "+order+");");
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))
