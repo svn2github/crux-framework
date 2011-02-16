@@ -245,7 +245,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		Element content = d.createElement("Content");
 		content.setAttribute("type", "html");
 
-		String viewName = gadgetViewWidget.getProperty("view");
+		String viewName = gadgetViewWidget.getMetadata().optString("view");
 		if (!StringUtils.isEmpty(viewName) && !viewName.equals(View.noViews.toString())) 
 		{
 			content.setAttribute("view", viewName);
