@@ -213,18 +213,34 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 */
 	private String getIdentifierDeclaration(String parentVariable) 
 	{
-		//TODO: tratar propriedades alinhadas... 
 		String[] identifier = RegexpPatterns.REGEXP_COMMA.split(this.identifier);
 		StringBuilder result = new StringBuilder("\"\""); 
 
 		for (int i = 0; i < identifier.length; i++)
 		{
-			JField field = ((JClassType)dtoType).findField(identifier[i]);
-			if (field == null)
+			String[] fields = RegexpPatterns.REGEXP_DOT.split(identifier[i]);
+			if (fields != null)
 			{
-				throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceCanNotFindIdentifier(dataSourceClass.getName(), identifier[i]));
+				StringBuilder fieldExpression = new StringBuilder();
+				boolean first = true;
+				JType fieldType = dtoType;
+				for (String fieldName : fields)
+                {
+					JField field = ((JClassType)fieldType).findField(fieldName.trim());
+					if (field == null)
+					{
+						throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceCanNotFindIdentifier(dataSourceClass.getName(), identifier[i]));
+					}
+					if (first)
+					{
+						fieldExpression.append(parentVariable);
+					}
+					first = false;
+					fieldExpression.append(getFieldValueGet((JClassType)fieldType, field, "", false));
+					fieldType = field.getType();
+                }
+				result.append("+"+fieldExpression.toString());
 			}
-			result.append("+"+getFieldValueGet((JClassType)dtoType, field, parentVariable, false));
 		}
 		return result.toString();
 	}	

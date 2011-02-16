@@ -71,6 +71,14 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
     protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
     {
     }
+	
+	@Override
+	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+	    super.generateProxyMethods(srcWriter);
+	    generateScreenGetterMethod(srcWriter);
+	}
+
 
 	@Override
     protected String[] getImports()
@@ -96,13 +104,21 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 		
 		JClassType returnTypeClass = returnType.isClass();
 		String name = method.getName();
-		if (returnTypeClass != null && name.startsWith("get") && widgetType.isAssignableFrom(returnTypeClass) && method.getParameters().length == 0)
+		if (widgetType.isAssignableFrom(returnTypeClass) && method.getParameters().length == 0)
 		{
-			String widgetName = name.substring(3);
-			if (widgetName.length() > 0)
+			String widgetName;
+			if (returnTypeClass != null && name.startsWith("get"))
 			{
-				generateWrapperMethodCaseSensitive(sourceWriter, returnType, name, widgetName);
-				//TODO permitir que se trabalhe de forma insensitive
+				widgetName = name.substring(3);
+				if (widgetName.length() > 0)
+				{
+					generateWrapperMethodForGetter(sourceWriter, returnType, name, widgetName);
+				}
+			}
+			else
+			{
+				widgetName = name;
+				generateWrapperMethod(sourceWriter, returnType, name, widgetName);
 			}
 		}
 	}
@@ -113,21 +129,58 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	 * @param name
 	 * @param widgetName
 	 */
-	private void generateWrapperMethodCaseSensitive(SourceWriter sourceWriter, JType returnType,
+	private void generateWrapperMethod(SourceWriter sourceWriter, JType returnType, String name, String widgetName)
+    {
+		String classSourceName = returnType.getParameterizedQualifiedSourceName();
+		sourceWriter.println("public "+classSourceName+" " + name+"(){");
+		sourceWriter.indent();
+		sourceWriter.println("return ("+classSourceName+")Screen.get(\""+widgetName+"\");");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+    }
+
+	/**
+	 * @param sourceWriter
+	 * @param returnType
+	 * @param name
+	 * @param widgetName
+	 */
+	private void generateWrapperMethodForGetter(SourceWriter sourceWriter, JType returnType,
 			String name, String widgetName)
 	{
 		String widgetNameFirstLower = Character.toLowerCase(widgetName.charAt(0)) + widgetName.substring(1);
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
 		sourceWriter.indent();
-		sourceWriter.println(classSourceName + " ret = ("+classSourceName+")Screen.get(\""+widgetNameFirstLower+"\");");
-		sourceWriter.println("if (ret == null){");
-		sourceWriter.indent();
-		sourceWriter.println("ret = ("+classSourceName+")Screen.get(\""+widgetName+"\");");
+		sourceWriter.println("return ("+classSourceName+")_getFromScreen(\""+widgetNameFirstLower+"\");");
 		sourceWriter.outdent();
+
 		sourceWriter.println("}");
-		sourceWriter.println("return ret;");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
+	}
+
+	private void generateScreenGetterMethod(SourceWriter srcWriter)
+	{
+		srcWriter.println("public Object _getFromScreen(String widgetName){");
+		srcWriter.indent();
+		srcWriter.println("Object ret = Screen.get(widgetName);");
+		srcWriter.println("if (ret == null){");
+		srcWriter.indent();
+		srcWriter.println("String widgetNameFirstUpper;");
+		srcWriter.println("if (widgetName.length() > 1){"); 
+		srcWriter.indent();
+		srcWriter.println("widgetNameFirstUpper = Character.toUpperCase(widgetName.charAt(0)) + widgetName.substring(1);");
+		srcWriter.outdent();
+		srcWriter.println("}");
+		srcWriter.println("else{"); 
+		srcWriter.indent();
+		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
+		srcWriter.outdent();
+		srcWriter.println("}");
+		srcWriter.println("ret = Screen.get(widgetNameFirstUpper);");
+		srcWriter.outdent();
+		srcWriter.println("}");
+		srcWriter.println("return ret;");
+		srcWriter.outdent();
+		srcWriter.println("}");
 	}
 }

@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
-import br.com.sysmap.crux.core.client.datasource.DataSoureExcpetion;
+import br.com.sysmap.crux.core.client.datasource.DataSourceExcpetion;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
@@ -91,7 +91,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
     		HasValue.class.getCanonicalName(), 
     		HasText.class.getCanonicalName(),
     		HasFormatter.class.getCanonicalName(),
-    		DataSoureExcpetion.class.getCanonicalName(),
+    		DataSourceExcpetion.class.getCanonicalName(),
     		DataSourceRecord.class.getCanonicalName(),
     		StringUtils.class.getCanonicalName()
 		};
@@ -112,7 +112,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 		boolean first = true;
 		sourceWriter.println("if(id==null){");
 		sourceWriter.indent();
-		sourceWriter.println("throw new DataSoureExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
+		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 		for (String dataSource : dataSourcesClassNames.keySet()) 
@@ -131,7 +131,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
-		sourceWriter.println("throw new DataSoureExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
+		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}

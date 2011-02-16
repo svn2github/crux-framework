@@ -77,6 +77,8 @@ public interface ClientMessages extends Messages
 	String screenFactoryCreatingView(String identifier);
 	@DefaultMessage("[screen 003] - To use this feature you must enabled compatibility with Crux 2 old interfaces.")
 	String screenFactoryCrux2OldInterfacesCompatibilityDisabled();
+	@DefaultMessage("[screen 004] - Screen {0} created.")
+	String screenFactoryViewCreated(String identifier);
 
 	@DefaultMessage("[moduleComunication 001] - Type ''{0}'' can not be shared between modules. Only primitives (and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes implementing CruxSerializable can be used.")
 	String moduleComunicationInvalidParamType(String name);
@@ -99,4 +101,9 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("[crux 001] - Crux Engine is already initialized.")
 	String cruxAlreadyInitializedError();
+	
+	@DefaultMessage("[screenAccessor 001] - Calling a cross document method. Screen[{0}], Controller[{1}], Method[{2}], Target[{3}]")
+	String screenAccessorCallingCrossDocument(String screenId, String controller, String method, String target);
+	@DefaultMessage("[screenAccessor 001] - Cross document method executed. Screen[{0}], Controller[{1}], Method[{2}], Target[{3}]")
+	String screenAccessorCrossDocumentExecuted(String screenId, String controller, String method, String target);
 }

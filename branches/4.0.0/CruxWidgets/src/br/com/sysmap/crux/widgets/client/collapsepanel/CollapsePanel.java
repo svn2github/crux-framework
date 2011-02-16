@@ -127,7 +127,6 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 		if (widget != null && (widget instanceof LazyPanel))
 		{
 			((LazyPanel)widget).ensureWidget();
-			//TODO: checar se isso pode ser removido
 		}
 	}
 	

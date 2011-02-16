@@ -80,7 +80,7 @@ implements MeasurableRemoteDataSource<T>
 	{
 		if (!loaded)
 		{
-			throw new DataSoureExcpetion(messages.dataSourceNotLoaded());
+			throw new DataSourceExcpetion(messages.dataSourceNotLoaded());
 		}
 		return this.config.getRecordCount();
 	}	
@@ -281,7 +281,7 @@ implements MeasurableRemoteDataSource<T>
 		boolean loaded = isPageLoaded(getPageForRecord(recordNumber));
 		if (!loaded)
 		{
-			throw new DataSoureExcpetion(messages.dataSourceNotLoaded());
+			throw new DataSourceExcpetion(messages.dataSourceNotLoaded());
 		}
 	}
 	
@@ -345,7 +345,7 @@ implements MeasurableRemoteDataSource<T>
 	{
 		if (editableOperations.isDirty())
 		{
-			throw new DataSoureExcpetion(messages.remoteDataSourcePageDirty());
+			throw new DataSourceExcpetion(messages.remoteDataSourcePageDirty());
 		}
 	}
 	

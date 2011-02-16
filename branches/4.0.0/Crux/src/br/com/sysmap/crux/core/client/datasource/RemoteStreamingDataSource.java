@@ -93,7 +93,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	{
 		if (editableOperations.isDirty())
 		{
-			throw new DataSoureExcpetion(messages.remoteDataSourcePageDirty());
+			throw new DataSourceExcpetion(messages.remoteDataSourcePageDirty());
 		}
 	}
 	
@@ -329,7 +329,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 		boolean loaded = isCurrentPageLoaded();
 		if (!loaded)
 		{
-			throw new DataSoureExcpetion(messages.dataSourceNotLoaded());
+			throw new DataSourceExcpetion(messages.dataSourceNotLoaded());
 		}
 	}
 
@@ -513,7 +513,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
-			throw new DataSoureExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
+			throw new DataSourceExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
 		}
 		Arrays.sort(array, new Comparator<DataSourceRecord<T>>(){
 			public int compare(DataSourceRecord<T> o1, DataSourceRecord<T> o2)

@@ -135,7 +135,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 	 * @param controllerClass
 	 * @return
 	 */
-	private static JMethod getControllerMethodWithEvent(String methodName, JClassType eventClassType, JClassType controllerClass)
+	static JMethod getControllerMethodWithEvent(String methodName, JClassType eventClassType, JClassType controllerClass)
     {
 		JGenericType genericType = eventClassType.isGenericType();
 		if (genericType == null)
@@ -219,7 +219,6 @@ public abstract class EvtProcessor extends AbstractProcessor
     	}
     	creator.printlnPostProcessing(");");
     }
-    
     
     /**
      * @param out

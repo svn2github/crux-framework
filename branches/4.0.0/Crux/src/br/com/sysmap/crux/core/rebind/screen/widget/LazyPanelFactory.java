@@ -85,7 +85,7 @@ public class LazyPanelFactory
 	 */
 	private void generateFields(SourcePrinter printer, String className)
     {
-		printer.println("private static Logger logger = Logger.getLogger("+className+".class.getName());");
+		printer.println("private static Logger "+factory.getLoggerVariable()+" = Logger.getLogger("+className+".class.getName());");
     }
 
 	/**
@@ -111,7 +111,7 @@ public class LazyPanelFactory
 		printer.println("public Widget createWidget(){");
 
 		printer.println("if (LogConfiguration.loggingIsEnabled()){");
-		printer.println("logger.log(Level.FINE, \"Creating ["+lazyId+"] wrapped widget...\");");
+		printer.println(factory.getLoggerVariable()+".log(Level.FINE, \"Creating ["+lazyId+"] wrapped widget...\");");
 		printer.println("}");
 		printer.println("final Screen "+factory.getScreenVariable()+" = Screen.get();");
     	
@@ -122,7 +122,7 @@ public class LazyPanelFactory
 		factory.commitPostProcessing(printer);
 
 		printer.println("if (LogConfiguration.loggingIsEnabled()){");
-		printer.println("logger.log(Level.FINE, \"["+lazyId+"]  wrapped widget created.\");");
+		printer.println(factory.getLoggerVariable()+".log(Level.FINE, \"["+lazyId+"]  wrapped widget created.\");");
 		printer.println("}");
 
 		printer.println("return " + newWidget+";");    

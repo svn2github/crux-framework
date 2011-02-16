@@ -118,7 +118,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
-			throw new DataSoureExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
+			throw new DataSourceExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
 		}
 		Arrays.sort(array, new Comparator<DataSourceRecord<E>>(){
 			public int compare(DataSourceRecord<E> o1, DataSourceRecord<E> o2)
@@ -188,7 +188,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	{
 		if (!loaded)
 		{
-			throw new DataSoureExcpetion(messages.dataSourceNotLoaded());
+			throw new DataSourceExcpetion(messages.dataSourceNotLoaded());
 		}
 	}
 	

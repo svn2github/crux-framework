@@ -19,26 +19,26 @@ package br.com.sysmap.crux.core.client.datasource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DataSoureExcpetion extends RuntimeException
+public class DataSourceExcpetion extends RuntimeException
 {
 	private static final long serialVersionUID = 2211949587527545296L;
 
-	public DataSoureExcpetion()
+	public DataSourceExcpetion()
 	{
 		super();
 	}
 
-	public DataSoureExcpetion(String message, Throwable cause)
+	public DataSourceExcpetion(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-	public DataSoureExcpetion(String message)
+	public DataSourceExcpetion(String message)
 	{
 		super(message);
 	}
 
-	public DataSoureExcpetion(Throwable cause)
+	public DataSourceExcpetion(Throwable cause)
 	{
 		super(cause);
 	}

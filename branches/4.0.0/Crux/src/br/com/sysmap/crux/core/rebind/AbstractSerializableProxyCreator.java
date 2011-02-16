@@ -90,7 +90,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 			}
 		}
 	}
-
+	
 	/**
 	 * Add the implicit root types that are needed to make Cross Document
 	 * invoker work.
@@ -99,7 +99,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	{
 		stob.addRootType(logger, typeOracle.getType(String.class.getName()));
 	}	
-	
+
 	protected void addRoots(TypeOracle typeOracle, SerializableTypeOracleBuilder typesSentFromDocBuilder, 
 			SerializableTypeOracleBuilder typesSentToDocBuilder) throws CruxGeneratorException
 	{
@@ -117,6 +117,14 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 		}
 	}
 
+	/**
+	 * @param srcWriter
+	 */
+	protected void generateLoggerField(SourceWriter srcWriter)
+    {
+	    srcWriter.println("private static Logger _logger_ = Logger.getLogger("+getProxySimpleName()+".class.getName());");
+    }	
+	
 	/**
 	 * Generates the signature for the proxy method
 	 * 
@@ -137,7 +145,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 		generateMethodTrhowsClause(w, method);
 		w.println();
 	}
-	
+
 	/**
 	 * @see br.com.sysmap.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
 	 */
@@ -164,7 +172,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
             	throw new CruxGeneratorException(e.getMessage(), e);
             }
 		}
-    }	
+    }
 	
 	/**
 	 * Override this method to generate any nested serializable type required by the proxy
@@ -175,7 +183,20 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @throws CruxGeneratorException
 	 */
 	protected abstract void generateTypeSerializers(SerializableTypeOracle typesSentFromBrowser,
-			                            SerializableTypeOracle typesSentToBrowser) throws CruxGeneratorException;
+			                            SerializableTypeOracle typesSentToBrowser) throws CruxGeneratorException;	
+	
+	/**
+	 * @param sourceWriter
+	 * @param message
+	 */
+	protected void logDebugMessage(SourceWriter sourceWriter, String message)
+    {
+	    sourceWriter.println("if (LogConfiguration.loggingIsEnabled()){");
+		sourceWriter.indent();
+		sourceWriter.println("_logger_.log(Level.FINE, "+message+");");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+    }
 	
 	
 	/**

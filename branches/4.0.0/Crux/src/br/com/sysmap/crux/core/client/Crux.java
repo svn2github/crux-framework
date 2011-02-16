@@ -35,7 +35,7 @@ import com.google.gwt.user.client.Timer;
 
 
 /**
- * CRUX Client Engine. It starts a ScreenFactory to search HTML page for span tags declaring widgets. 
+ * CRUX Client Engine. It starts a ScreenFactory to build the client view. 
  * @author Thiago da Rosa de Bustamante
  */
 public class Crux implements EntryPoint 

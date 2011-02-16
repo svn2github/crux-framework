@@ -16,6 +16,8 @@
 package br.com.sysmap.crux.core.rebind.controller;
 
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastMap;
@@ -53,6 +55,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
@@ -75,6 +78,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	private final JClassType controllerClass;
 	private final boolean isAutoBindEnabled;
 	private final boolean isCrossDoc;
+	private String controllerName;
 
 	
 	/**
@@ -103,6 +107,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         }
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 		this.isAutoBindEnabled = (controllerAnnot == null || controllerAnnot.autoBind());
+		this.controllerName = controllerAnnot.value();
 	}
 	
 	/**
@@ -145,11 +150,10 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			String typeSerializerName = SerializationUtils.getTypeDeserializerQualifiedName(baseProxyType);
 			srcWriter.println("private static final " + typeSerializerName + " SERIALIZER = new " + typeSerializerName + "();");
 		}
+		generateLoggerField(srcWriter);
+		
 		srcWriter.println();
 	}
-	
-
-	
 	
 	@Override
 	protected void generateProxyMethods(SourceWriter srcWriter)
@@ -237,7 +241,10 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     		Crux.class.getCanonicalName(), 
     		SerializationException.class.getCanonicalName(), 
     		SerializationStreamReader.class.getCanonicalName(),
-    		SerializationStreamWriter.class.getCanonicalName()
+    		SerializationStreamWriter.class.getCanonicalName(), 
+    		Logger.class.getCanonicalName(),
+    		LogConfiguration.class.getCanonicalName(), 
+    		Level.class.getCanonicalName()
 		};
 	    return imports;
     }
@@ -398,6 +405,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 		
+		logDebugMessage(sourceWriter, "\"Calling cross document method: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]\"");
+		
 		if (isAutoBindEnabled)
 		{
 			sourceWriter.println("updateControllerObjects();");
@@ -419,8 +428,10 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		if (!first)
 		{
 			sourceWriter.println(" else {");
+			sourceWriter.indent();
 		}
 		
+		logDebugMessage(sourceWriter, "\"Error calling cross document method: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]. NotFound\"");
 		sourceWriter.println("return Crux.getMessages().crossDocumentMethodNotFound();"); 
 		
     	if (!first)
@@ -432,6 +443,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		{
 			sourceWriter.println("updateScreenWidgets();");
 		}
+		logDebugMessage(sourceWriter, "\"Cross document method executed: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]\"");
+
 		sourceWriter.outdent();
 		sourceWriter.println("}catch (Exception ex){");
 		sourceWriter.indent();
@@ -439,12 +452,12 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 
+
 		sourceWriter.println("return (isExecutionOK?\"//OK\":\"//EX\")+streamWriter.toString();");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
-	}	
-	
-	
+	}
+
 	/**
 	 * @param logger
 	 * @param sourceWriter
@@ -527,6 +540,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				sourceWriter.println("{");
 				sourceWriter.indent();		
 				
+				logDebugMessage(sourceWriter, "\"Calling client event: Controller["+controllerName+"], Method["+method.getName()+"]\"");
+
 				if (isAutoBindEnabled)
 				{
 					sourceWriter.println("updateControllerObjects();");
@@ -555,6 +570,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    	sourceWriter.println("}catch (Throwable e1){");
 					sourceWriter.indent();
 			    	sourceWriter.println("Crux.getValidationErrorHandler().handleValidationError(e1.getLocalizedMessage());");
+					logDebugMessage(sourceWriter, "\"Client event not called due to a Validation error: Controller["+controllerName+"], Method["+method.getName()+"]\"");
 			    	if (hasReturn)
 			    	{
 				    	sourceWriter.println("return null;");
@@ -578,7 +594,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				sourceWriter.println("}catch (Throwable e){");
 				sourceWriter.indent();
 
-				String call = controllerClass.getAnnotation(Controller.class).value()+"."+method.getName();
+				String call = controllerName+"."+method.getName();
 				
 				sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientError("+EscapeUtils.quote(call)
 						              +", e.getLocalizedMessage()), e);");
@@ -591,6 +607,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 					sourceWriter.println("updateScreenWidgets();");
 				}		
 				
+				logDebugMessage(sourceWriter, "\"Client event executed: Controller["+controllerName+"], Method["+method.getName()+"]\"");
 		    	if (hasReturn)
 		    	{
 					sourceWriter.println("return ret;");

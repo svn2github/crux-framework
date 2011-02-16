@@ -21,10 +21,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.LazyPanelWrappingType;
 import br.com.sysmap.crux.core.client.screen.ScreenFactory;
@@ -43,18 +45,22 @@ import br.com.sysmap.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreat
 import br.com.sysmap.crux.core.rebind.screen.Event;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.Panel;
@@ -85,6 +91,7 @@ public class ViewFactoryCreator
 	private final LinkedList<PostProcessingPrinter> postProcessingCode = new LinkedList<PostProcessingPrinter>();
 	private final Screen screen;
 	private String screenVariable;
+	private String loggerVariable;
 	
 	/**
 	 * Constructor
@@ -100,6 +107,7 @@ public class ViewFactoryCreator
 		this.screen = screen;
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
+		this.loggerVariable = createVariableName("logger");
 
     }	
 	
@@ -151,9 +159,6 @@ public class ViewFactoryCreator
 
 		printer.println("final Screen "+screenVariable+" = Screen.get();");
 		
-		//TODO: alterar as chamadas de eventos, pois com o modo de compatibilidade desativado, nao vai usar mais o invoke 
-		// do controlle. armazenar uma instancia da controllerProxy na propria viewFactory criada e usar ela chamando os metodos
-		// diretamente, sem ser via invoke..... lembrar de tratar o bind com a tela e os erros de eventos....
 		//TODO: alterar os evtBinder para que criem uma unica subclasse de tratamento por tipo de evento... (tipo... um unico ClickHandler)
 		
 		createHistoryChangedEvt(printer);
@@ -174,6 +179,8 @@ public class ViewFactoryCreator
 	    {
 	    	printer.println("private "+messageClass+" "+declaredMessages.get(messageClass) + " = GWT.create("+messageClass+".class);");
 	    }
+	    printer.println("private static "+Logger.class.getCanonicalName()+" "+loggerVariable+" = "+
+	    		Logger.class.getCanonicalName()+".getLogger("+getSimpleName()+".class.getName());");
     }
 	
 	/**
@@ -400,7 +407,8 @@ public class ViewFactoryCreator
     		ScreenLoadEvent.class.getCanonicalName(), 
     		Panel.class.getCanonicalName(), 
     		InterfaceConfigException.class.getCanonicalName(), 
-    		Widget.class.getCanonicalName()
+    		Widget.class.getCanonicalName(), 
+    		Crux.class.getCanonicalName()
 		};
 	    return imports;
 	}
@@ -420,6 +428,15 @@ public class ViewFactoryCreator
 	String getScreenVariable()
 	{
 		return screenVariable;
+	}
+	
+	/**
+	 * Retrieves the logger variable name
+	 * @return
+	 */
+	String getLoggerVariable()
+	{
+		return loggerVariable;
 	}
 	
 	/**
@@ -617,46 +634,42 @@ public class ViewFactoryCreator
 	 * @param printer 
 	 */
 	private void createLoadEvt()
-    {
-	    Event onLoad = screen.getEvent("onLoad");
-		if (onLoad != null)
+	{
+		Event event =screen.getEvent("onLoad");
+		if (event != null)
 		{
-	    	String controller = ClientControllers.getController(onLoad.getController());
-	    	if (controller == null)
-	    	{
-	    		throw new CruxGeneratorException();//TODO message
-	    	}
+			JClassType eventClassType = context.getTypeOracle().findType(ScreenLoadEvent.class.getCanonicalName());
 
-	    	boolean hasEventParameter = true;
-	    	try
-	        {
-		        Class<?> controllerClass = Class.forName(controller);
-		        controllerClass.getMethod(onLoad.getMethod(), new Class<?>[]{ScreenLoadEvent.class});
-	        }
-	        catch (Exception e)
-	        {
-	        	try
-	            {
-	    	        Class<?> controllerClass = Class.forName(controller);
-	    	        controllerClass.getMethod(onLoad.getMethod(), new Class<?>[]{});
-	    	        hasEventParameter = false;
-	            }
-	            catch (Exception e1)
-	            {
-	            	throw new CruxGeneratorException(); //TODO: message
-	            }
-	        }
-	    	
-	    	
-	        printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
-	    			+EscapeUtils.quote(onLoad.getController())+"))."+onLoad.getMethod()+"(");
-	    	
-	    	if (hasEventParameter)
-	    	{
-	    		printlnPostProcessing("new ScreenLoadEvent()");
-	    	}
-	    	printlnPostProcessing(");");
-		}
+			String controller = ClientControllers.getController(event.getController());
+			if (controller == null)
+			{
+				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+			}
+
+			boolean hasEventParameter = true;
+			JClassType controllerClass = context.getTypeOracle().findType(controller);
+			if (controllerClass == null)
+			{
+				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+			}
+			if (EvtProcessor.getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
+			{
+				if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+				{
+					throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+				}
+				hasEventParameter = false;
+			}
+
+			printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
+					+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+
+			if (hasEventParameter)
+			{
+				printlnPostProcessing("new ScreenLoadEvent()");
+			}
+			printlnPostProcessing(");");
+    	}
     }
 
 	/**
@@ -798,6 +811,11 @@ public class ViewFactoryCreator
 		}
 
 		commitPostProcessing(printer);
+		
+		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
+		printer.println(loggerVariable+".info(Crux.getMessages().screenFactoryViewCreated("+screenVariable+".getIdentifier()));");
+		printer.println("}");
+		
 		printer.println("}");
     }	
 	

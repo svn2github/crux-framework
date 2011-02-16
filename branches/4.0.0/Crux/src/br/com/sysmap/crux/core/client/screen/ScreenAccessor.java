@@ -15,6 +15,11 @@
  */
 package br.com.sysmap.crux.core.client.screen;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.gwt.logging.client.LogConfiguration;
+
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocumentException;
 import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
@@ -28,6 +33,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
  */
 public abstract class ScreenAccessor
 {
+	private static Logger logger = Logger.getLogger(ScreenAccessor.class.getName());
+
 	/**
 	 * Make a call to a cross document method.
 	 * 
@@ -37,37 +44,116 @@ public abstract class ScreenAccessor
 	 */
 	protected String invokeCrossDocument(String serializedData, Target target, String frame, String siblingFrame, JSWindow jsWindow)
 	{
+		String result;
+		String crossDocTarget = null;
 		if (target != null)
 		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				crossDocTarget = target.toString();
+				logCrossDocCall(serializedData, crossDocTarget);
+			}
 			switch (target)
 	        {
-		        case TOP: return callTopControllerAccessor(serializedData);
-		        case ABSOLUTE_TOP: return callAbsoluteTopControllerAccessor(serializedData);
-		        case PARENT: return callParentControllerAccessor(serializedData);
-		        case OPENER: return callOpenerControllerAccessor(serializedData);
+		        case TOP: result = callTopControllerAccessor(serializedData); break;
+		        case ABSOLUTE_TOP: result = callAbsoluteTopControllerAccessor(serializedData); break;
+		        case PARENT: result = callParentControllerAccessor(serializedData); break;
+		        case OPENER: result = callOpenerControllerAccessor(serializedData); break;
 		        default: 
 		        	throw new CrossDocumentException(Crux.getMessages().crossDocumentInvalidTarget());
 	        }
-			
 		}
 		else if (!StringUtils.isEmpty(frame))
     	{
-    		return callFrameControllerAccessor(frame, serializedData);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				crossDocTarget = "Frame: "+frame;
+				logCrossDocCall(serializedData, crossDocTarget);
+			}
+			result = callFrameControllerAccessor(frame, serializedData);
     	}
     	else if (!StringUtils.isEmpty(siblingFrame))
     	{
-    		return callSiblingFrameControllerAccessor(siblingFrame, serializedData);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				crossDocTarget = "SiblingFrame: "+siblingFrame;
+				logCrossDocCall(serializedData, crossDocTarget);
+			}
+			result = callSiblingFrameControllerAccessor(siblingFrame, serializedData);
     	}
     	else if (jsWindow != null)
     	{
-    		return callWindowControllerAccessor(jsWindow, serializedData);
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				crossDocTarget = "Window: "+jsWindow;
+				logCrossDocCall(serializedData, crossDocTarget);
+			}
+			result = callWindowControllerAccessor(jsWindow, serializedData);
     	}
     	else
     	{
     		throw new CrossDocumentException(Crux.getMessages().crossDocumentInvalidTarget());
     	}
+		
+		if (LogConfiguration.loggingIsEnabled())
+		{
+			logCrossDocCalled(serializedData, crossDocTarget);
+		}
+		return result;
 	}
+
+	/**
+	 * @param serializedData
+	 * @param target
+	 */
+	private void logCrossDocCall(String serializedData, String target)
+    {
+	    String controller = null; 
+	    String method = null; 
+	    int pipeIndex = serializedData.indexOf('|');
+	    if (pipeIndex > 0)
+	    {
+	    	controller = serializedData.substring(0, pipeIndex);
+	    	method = serializedData.substring(pipeIndex+1);
+	    	pipeIndex = method.indexOf('|');
+	    	if (pipeIndex > 0)
+	    	{
+	    		method = method.substring(0, pipeIndex);
+	    	}
+	    	else
+	    	{
+	    		method = null;
+	    	}
+	    }
+	    logger.log(Level.FINE, Crux.getMessages().screenAccessorCallingCrossDocument(Screen.getId(), controller, method, target));
+    }
 	
+	/**
+	 * @param serializedData
+	 * @param target
+	 */
+	private void logCrossDocCalled(String serializedData, String target)
+    {
+	    String controller = null; 
+	    String method = null; 
+	    int pipeIndex = serializedData.indexOf('|');
+	    if (pipeIndex > 0)
+	    {
+	    	controller = serializedData.substring(0, pipeIndex);
+	    	method = serializedData.substring(pipeIndex+1);
+	    	pipeIndex = method.indexOf('|');
+	    	if (pipeIndex > 0)
+	    	{
+	    		method = method.substring(0, pipeIndex);
+	    	}
+	    	else
+	    	{
+	    		method = null;
+	    	}
+	    }
+	    logger.log(Level.FINE, Crux.getMessages().screenAccessorCrossDocumentExecuted(Screen.getId(), controller, method, target));
+    }
+
 	private native String callTopControllerAccessor(String serializedData)/*-{
 		return $wnd.top._cruxCrossDocumentAccessor(serializedData);
 	}-*/;
