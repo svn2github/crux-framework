@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,6 +28,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
  */
 public class ClickEvtBind extends EvtProcessor
 {
+	public ClickEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onClick";
 
 	/**

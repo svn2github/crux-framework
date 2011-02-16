@@ -18,9 +18,9 @@ package br.com.sysmap.crux.widgets.rebind.dynatabs;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -60,9 +60,9 @@ public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class DynaTabProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
-		protected BeforeFocusEvtBind beforeFocusEvtBind = new BeforeFocusEvtBind();
-		protected BeforeBlurEvtBind beforeBlurEvtBind = new BeforeBlurEvtBind();
-		protected BeforeCloseEvtBind beforeCloseEvtBind = new BeforeCloseEvtBind();
+		protected BeforeFocusEvtBind beforeFocusEvtBind;
+		protected BeforeBlurEvtBind beforeBlurEvtBind;
+		protected BeforeCloseEvtBind beforeCloseEvtBind;
 
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
@@ -84,6 +84,10 @@ public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 			out.println(Tab.class.getCanonicalName()+" "+tab+" = "+rootWidget+".openTab("+EscapeUtils.quote(id)+", "+
 					label+", "+EscapeUtils.quote(url)+", "+closeable+", false);");
 			
+			if (beforeFocusEvtBind == null) beforeFocusEvtBind = new BeforeFocusEvtBind(getWidgetCreator());
+			if (beforeBlurEvtBind == null) beforeBlurEvtBind = new BeforeBlurEvtBind(getWidgetCreator());
+			if (beforeCloseEvtBind == null) beforeCloseEvtBind = new BeforeCloseEvtBind(getWidgetCreator());
+
 			String beforeFocusEvt = context.readChildProperty(beforeFocusEvtBind.getEventName());
 			if (!StringUtils.isEmpty(beforeFocusEvt))
 			{

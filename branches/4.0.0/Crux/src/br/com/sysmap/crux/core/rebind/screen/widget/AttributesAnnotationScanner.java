@@ -129,8 +129,7 @@ class AttributesAnnotationScanner
 		final AttributeProcessor<?> processor;
         try
         {
-	        processor = (AttributeProcessor<?>) processorClass.newInstance();
-	        processor.setWidgetCreator(widgetCreator);
+        	processor = (AttributeProcessor<?>) processorClass.getConstructor(new Class<?>[]{WidgetCreator.class}).newInstance(widgetCreator);
         }
         catch (Exception e)
         {

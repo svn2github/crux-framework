@@ -62,6 +62,11 @@ public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
 	public static class URLAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
 
+		public URLAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {

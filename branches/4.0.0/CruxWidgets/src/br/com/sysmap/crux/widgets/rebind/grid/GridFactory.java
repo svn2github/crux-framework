@@ -237,10 +237,16 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	}
 
 	/**
-	 * @author Gesse Dafe
+	 * @author Thiago da Rosa de Bustamante
+	 *
 	 */
 	public static class DataSourceAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public DataSourceAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{
 			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
@@ -250,12 +256,12 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			String dataSource = getWidgetCreator().createVariableName("dataSource");
 			out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(propertyValue)+");");
 			String widget = context.getWidget();			
-			String dataSourceDefinitions = createDataSourceColumnDefinitions(out, context.getWidgetElement(), dtoType);
+			String dataSourceDefinitions = createDataSourceColumnDefinitions(out, context.getWidgetElement(), dtoType, context.getWidgetId());
 			out.println(dataSource+".setColumnDefinitions("+dataSourceDefinitions+");");
 			out.println(widget+".setDataSource("+dataSource+");");
 		}
 
-		private String createDataSourceColumnDefinitions(SourcePrinter out, JSONObject gridElem, JClassType dtoType)
+		private String createDataSourceColumnDefinitions(SourcePrinter out, JSONObject gridElem, JClassType dtoType, String gridId)
         {
 			String colDefs = getWidgetCreator().createVariableName("colDefs");
 			
@@ -276,7 +282,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 						if("dataColumn".equals(columnType))
 						{
 							StringBuilder getValueExpression = new StringBuilder();
-							JType propType = buildGetValueExpression(getValueExpression, dtoType, dtoClassName, colElem);
+							JType propType = buildGetValueExpression(getValueExpression, dtoType, dtoClassName, colElem, gridId);
 							
 							JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
 							
@@ -296,13 +302,17 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			return colDefs;
         }
 
-		private JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String dtoClassName, JSONObject colElem)
+		private JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String dtoClassName, JSONObject colElem, String gridId)
         {
 	        String colKey = colElem.optString("key");
+	        if (StringUtils.isEmpty(colKey))
+	        {
+    			throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumn(gridId, colKey));
+	        }
 	        String[] props;
 	        if (colKey.contains("."))
 	        {
-	        	props = colKey.split(".");
+	        	props = colKey.split("\\.");
 	        }
 	        else
 	        {
@@ -311,20 +321,44 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	        
 	        if (props != null && props.length > 0)
 	        {
-	        	out.append("recordObject");
+	        	StringBuilder getExpression = new StringBuilder();
+	        	StringBuilder checkNullExpression = new StringBuilder();
+	        	
+	        	getExpression.append("recordObject");
 	        	JClassType baseType = dtoType;
-	        	for (String prop : props)
+	        	for (int i=0; i < props.length; i++)
 	        	{
+	        		String prop = props[i];
+	        		if (i>0)
+	        		{
+	        			if (i>1)
+	        			{
+	        				checkNullExpression.append(" || ");
+	        			}
+	        			checkNullExpression.append(getExpression.toString()+"==null ");
+	        		}
+	        		
 	        		String getterMethod = ClassUtils.getGetterMethod(prop, baseType);
-	        		out.append("."+getterMethod+"()");
+	        		if (getterMethod == null)
+	        		{
+	        			throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumn(gridId, colKey));
+	        		}
+	        		getExpression.append("."+getterMethod+"()");
 	        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseType, getterMethod, new JType[]{});
 	        	}
-	        	out.append(";");
-	        	return baseType;//TODO tratar nullPOinters aki
+	        	getExpression.append(";");
+	        	
+	        	if (checkNullExpression.length() > 0)
+	        	{
+	        		out.append(checkNullExpression.toString()+"?null:");
+	        	}
+	        	out.append(getExpression.toString());
+	        	
+	        	return baseType;
 	        }
 	        else
 	        {
-	        	throw new CruxGeneratorException();//TODO message
+    			throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumn(gridId, colKey));
 	        }
         }		
 	}

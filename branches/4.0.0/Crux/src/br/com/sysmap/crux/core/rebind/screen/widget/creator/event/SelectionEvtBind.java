@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -27,6 +28,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  */
 public class SelectionEvtBind extends EvtProcessor
 {
+	public SelectionEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onSelection";
 
 	/**

@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.wizard.LeaveEvent;
 import br.com.sysmap.crux.widgets.client.wizard.LeaveHandler;
 
@@ -25,6 +26,11 @@ import br.com.sysmap.crux.widgets.client.wizard.LeaveHandler;
  */
 public class LeaveEvtBind extends EvtProcessor
 {
+	public LeaveEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onLeave";
 
 	/**

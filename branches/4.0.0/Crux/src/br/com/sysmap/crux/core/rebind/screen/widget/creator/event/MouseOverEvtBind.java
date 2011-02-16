@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
@@ -27,6 +28,11 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
  */
 public class MouseOverEvtBind extends EvtProcessor
 {
+	public MouseOverEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onMouseOver";
 
 	/**

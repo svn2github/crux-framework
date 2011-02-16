@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
@@ -51,6 +52,11 @@ public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 	 */
 	public static class VisibleWidgetAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public VisibleWidgetAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {

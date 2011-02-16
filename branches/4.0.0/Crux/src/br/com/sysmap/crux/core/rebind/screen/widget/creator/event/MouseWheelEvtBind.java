@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
@@ -27,6 +28,11 @@ import com.google.gwt.event.dom.client.MouseWheelHandler;
  */
 public class MouseWheelEvtBind extends EvtProcessor
 {
+	public MouseWheelEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onMouseWheel";
 
 	/**

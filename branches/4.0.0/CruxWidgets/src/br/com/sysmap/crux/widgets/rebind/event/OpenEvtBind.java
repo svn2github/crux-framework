@@ -16,11 +16,17 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.openclose.OpenEvent;
 import br.com.sysmap.crux.widgets.client.event.openclose.OpenHandler;
 
 public class OpenEvtBind extends EvtProcessor
 {
+	public OpenEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onOpen";
 
 	/**

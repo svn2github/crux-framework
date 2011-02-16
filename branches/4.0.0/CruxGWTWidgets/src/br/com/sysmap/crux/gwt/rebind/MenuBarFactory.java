@@ -183,7 +183,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 
 				EvtProcessor.printEvtCall(out, executeEvt, "onExecute", ExecuteEvent.class, 
 										" new "+ExecuteEvent.class.getCanonicalName()+"<"+MenuBar.class.getCanonicalName()+
-						                ">("+context.getWidget()+", "+context.getWidgetId()+")");
+						                ">("+context.getWidget()+", "+context.getWidgetId()+")", getWidgetCreator());
 				out.println("}");
 				out.println("});");
 			}

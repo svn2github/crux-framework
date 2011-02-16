@@ -101,6 +101,11 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
 	 */
 	public static class ValueAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public ValueAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
         {
 			String widget = context.getWidget();

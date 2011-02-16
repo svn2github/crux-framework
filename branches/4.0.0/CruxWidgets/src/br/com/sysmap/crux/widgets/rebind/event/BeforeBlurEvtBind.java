@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvent;
 import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler;
 
@@ -26,6 +27,11 @@ import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler;
  */
 public class BeforeBlurEvtBind extends EvtProcessor
 {
+	public BeforeBlurEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onBeforeBlur";
 	
 	public String getEventName()

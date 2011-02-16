@@ -529,7 +529,7 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowCloseHandler(new CloseHandler<Window>(){");
 			printer.println("public void onClose(CloseEvent<Window> event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event");
+			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event", context);
 			
 			printer.println("}");
 			printer.println("});");
@@ -549,7 +549,7 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowClosingHandler(new Window.ClosingHandler(){");
 			printer.println("public void onWindowClosing(ClosingEvent event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event");
+			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event", context);
 			
 			printer.println("}");
 			printer.println("});");
@@ -569,7 +569,8 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){");
 			printer.println("public void onValueChange(ValueChangeEvent<String> event){");
 
-			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), "onHistoryChanged", ValueChangeEvent.class, "event");
+			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
+					"onHistoryChanged", ValueChangeEvent.class, "event", context);
 			
 			printer.println("}");
 			printer.println("});");
@@ -672,7 +673,7 @@ public class ViewFactoryCreator
 			printer.println("screen.addWindowResizeHandler(new ResizeHandler(){");
 			printer.println("public void onResize(ResizeEvent event){"); 
 
-			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event");
+			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event", context);
 			
 			printer.println("}");
 			printer.println("});");

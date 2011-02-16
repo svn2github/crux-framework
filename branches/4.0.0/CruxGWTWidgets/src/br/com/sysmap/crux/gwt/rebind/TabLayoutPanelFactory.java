@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasBeforeSelectionHandlersFactory;
@@ -91,6 +92,11 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 	 */
 	public static class VisibleTabAttributeParser extends AttributeProcessor<TabLayoutPanelContext>
 	{
+		public VisibleTabAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, TabLayoutPanelContext context, final String propertyValue)
         {
 			String widget = context.getWidget();

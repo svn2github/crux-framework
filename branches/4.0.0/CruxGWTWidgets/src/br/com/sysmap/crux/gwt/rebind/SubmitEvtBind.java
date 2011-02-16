@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.gwt.rebind;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
@@ -26,6 +27,11 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
  */
 public class SubmitEvtBind extends EvtProcessor
 {
+	public SubmitEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onSubmit";
 
 	/**

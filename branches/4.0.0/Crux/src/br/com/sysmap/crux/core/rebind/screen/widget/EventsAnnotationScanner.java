@@ -108,8 +108,7 @@ class EventsAnnotationScanner
 		final EvtProcessor evtBinder;
 		try
         {
-	        evtBinder = evt.value().newInstance();
-	        evtBinder.setWidgetCreator(widgetCreator);
+	        evtBinder = evt.value().getConstructor(new Class<?>[]{WidgetCreator.class}).newInstance(widgetCreator);
         }
         catch (Exception e)
         {

@@ -26,8 +26,20 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
  */
 public abstract class AttributeProcessor<C extends WidgetCreatorContext> extends AbstractProcessor
 {
+	/**
+	 * @param widgetCreator
+	 */
+	public AttributeProcessor(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	public static abstract class NoParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public NoParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
 	}
 	
 	/**

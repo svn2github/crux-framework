@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetLoadEvent;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 /**
  * Helper Class for widget load events binding
@@ -27,6 +28,11 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
  */
 public class LoadWidgetEvtProcessor extends EvtProcessor
 {
+	public LoadWidgetEvtProcessor(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onLoadWidget";
 
 	/**

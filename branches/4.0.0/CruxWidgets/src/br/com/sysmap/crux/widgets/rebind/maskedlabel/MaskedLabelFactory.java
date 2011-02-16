@@ -93,6 +93,11 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 	 */
 	public static class TextAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public TextAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
         {
 			String widget = context.getWidget();

@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 
@@ -25,6 +26,11 @@ import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
  */
 public class WizardCommandEvtBind extends EvtProcessor
 {
+	public WizardCommandEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onCommand";
 
 	/**

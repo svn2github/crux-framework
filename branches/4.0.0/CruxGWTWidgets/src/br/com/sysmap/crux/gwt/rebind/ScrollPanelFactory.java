@@ -20,6 +20,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasScrollHandlersFactory;
@@ -63,6 +64,11 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 	 */
 	public static class VerticalScrollPositionAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public VerticalScrollPositionAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue) 
 		{
 			String widget = context.getWidget();
@@ -83,6 +89,11 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 	 */
 	public static class HorizontalScrollPositionAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public HorizontalScrollPositionAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue) 
 		{
 			String widget = context.getWidget();
@@ -103,6 +114,10 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 	 */
 	public static class EnsureVisibleAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public EnsureVisibleAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
 		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 		public void processAttribute(SourcePrinter out, final WidgetCreatorContext context, final String propertyValue) 
 		{

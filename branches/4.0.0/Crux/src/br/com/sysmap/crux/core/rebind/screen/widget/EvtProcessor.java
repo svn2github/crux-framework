@@ -15,12 +15,22 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget;
 
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JGenericType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JType;
+
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
 import br.com.sysmap.crux.core.rebind.screen.Event;
 import br.com.sysmap.crux.core.rebind.screen.EventFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.utils.ClassUtils;
 
 
 /**
@@ -29,6 +39,16 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
  */
 public abstract class EvtProcessor extends AbstractProcessor
 {
+	/**
+	 * @param widgetCreator
+	 */
+	public EvtProcessor(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
+	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
+
 	/**
 	 * @param out
 	 * @param context
@@ -47,7 +67,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      */
     public void printEvtCall(SourcePrinter out, String eventValue, String cruxEvent)
     {
-    	printEvtCall(out, eventValue, getEventName(), getEventClass(), cruxEvent);
+    	printEvtCall(out, eventValue, getEventName(), getEventClass(), cruxEvent, getWidgetCreator());
     }
     
     /**
@@ -56,37 +76,48 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param eventName
      * @param eventClass
      * @param cruxEvent
+     * @param creator
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, WidgetCreator<?> creator)
+    {
+    	printEvtCall(out, eventValue, eventName, eventClass, cruxEvent, creator.getContext());
+    }
+
+    /**
+     * @param out
+     * @param eventValue
+     * @param eventName
+     * @param eventClass
+     * @param cruxEvent
+     * @param context
+     */
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, GeneratorContext context)
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
+    	
+    	JClassType eventClassType = context.getTypeOracle().findType(eventClass.getCanonicalName());
     	
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException();//TODO message
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
     	}
 
     	boolean hasEventParameter = true;
-    	try
-        {
-	        Class<?> controllerClass = Class.forName(controller);//TODO para usar o class.forName, deveriamos parrar o binaryName e nao o sourceName...
-	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{eventClass});
-        }
-        catch (Exception e)
-        {
-        	try
-            {
-    	        Class<?> controllerClass = Class.forName(controller);
-    	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{});
-    	        hasEventParameter = false;
-            }
-            catch (Exception e1)
-            {
-            	throw new CruxGeneratorException(); //TODO: message
-            }
-        }
+    	JClassType controllerClass = context.getTypeOracle().findType(controller);
+    	if (controllerClass == null)
+    	{
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    	}
     	
+    	if (getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
+    	{
+    		if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+    		{
+        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+    		}
+    		hasEventParameter = false;
+    	}
     	
     	out.print("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
     			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
@@ -96,6 +127,44 @@ public abstract class EvtProcessor extends AbstractProcessor
     		out.print(cruxEvent);
     	}
     	out.println(");");
+    }
+
+	/**
+	 * @param methodName
+	 * @param eventClassType
+	 * @param controllerClass
+	 * @return
+	 */
+	private static JMethod getControllerMethodWithEvent(String methodName, JClassType eventClassType, JClassType controllerClass)
+    {
+		JGenericType genericType = eventClassType.isGenericType();
+		if (genericType == null)
+		{
+			return ClassUtils.getMethod(controllerClass, methodName, new JType[]{eventClassType});
+		}
+		else
+		{
+			eventClassType = genericType.getRawType();
+			JClassType superClass = controllerClass;
+			while (superClass.getSuperclass() != null)
+			{
+				JMethod[] methods = superClass.getMethods();
+				if (methods != null)
+				{
+					for (JMethod method : methods)
+					{
+						JParameter[] parameters = method.getParameters();
+						if (method.getName().equals(methodName) && parameters != null && parameters.length==1 && 
+								parameters[0].getType().isClass() != null && parameters[0].getType().isClass().isAssignableTo(eventClassType))
+						{
+							return method;
+						}
+					}
+				}
+				superClass = superClass.getSuperclass();
+			}
+			return null;
+		}
     }
 
     /**
@@ -114,36 +183,32 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param cruxEvent
      * @param creator
      */
-    public static void printPostProcessingEvtCall(String eventValue, String eventName,Class<?> eventClass, String cruxEvent, WidgetCreator<?> creator)
+    public static void printPostProcessingEvtCall(String eventValue, String eventName, Class<?> eventClass, String cruxEvent, WidgetCreator<?> creator)
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
     	
+    	JClassType eventClassType = creator.getContext().getTypeOracle().findType(eventClass.getCanonicalName());
+
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException();//TODO message
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
     	}
 
     	boolean hasEventParameter = true;
-    	try
-        {
-	        Class<?> controllerClass = Class.forName(controller);
-	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{eventClass});
-        }
-        catch (Exception e)
-        {
-        	try
-            {
-    	        Class<?> controllerClass = Class.forName(controller);
-    	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{});
-    	        hasEventParameter = false;
-            }
-            catch (Exception e1)
-            {
-            	throw new CruxGeneratorException(); //TODO: message
-            }
-        }
-    	
+    	JClassType controllerClass = creator.getContext().getTypeOracle().findType(controller);
+    	if (controllerClass == null)
+    	{
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    	}
+    	if (getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
+    	{
+    		if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+    		{
+        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+    		}
+    		hasEventParameter = false;
+    	}
     	
         creator.printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
     			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");

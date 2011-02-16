@@ -21,14 +21,14 @@ package br.com.sysmap.crux.core.rebind.screen.widget;
  */
 public abstract class AbstractProcessor 
 {
-	protected WidgetCreator<?> widgetCreator;
+	protected final WidgetCreator<?> widgetCreator;
 	
 	/**
 	 * @param widgetCreator
 	 */
-	void setWidgetCreator(WidgetCreator<?> widgetCreator)
+	public AbstractProcessor(WidgetCreator<?> widgetCreator)
     {
-    	this.widgetCreator = widgetCreator;
+		this.widgetCreator = widgetCreator;
     }
 	
 	/**

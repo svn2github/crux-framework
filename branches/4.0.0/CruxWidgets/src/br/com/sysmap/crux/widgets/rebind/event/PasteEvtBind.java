@@ -16,11 +16,17 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.paste.PasteEvent;
 import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
 
 public class PasteEvtBind extends EvtProcessor
 {
+	public PasteEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onPaste";
 
 	/**

@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.direction;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
@@ -30,6 +31,11 @@ import com.google.gwt.i18n.shared.WordCountDirectionEstimator;
  */
 public class DirectionEstimatorAttributeParser<C extends WidgetCreatorContext> extends AttributeProcessor<C>
 {
+	public DirectionEstimatorAttributeParser(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	@Override
     public void processAttribute(SourcePrinter out, C context, String attributeValue)
     {

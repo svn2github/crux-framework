@@ -136,6 +136,11 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	 */
 	public static class OpenSelectedItemAttributeParser extends AttributeProcessor<TreeContext>
 	{
+		public OpenSelectedItemAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, TreeContext context, String propertyValue) 
 		{
 			if(Boolean.parseBoolean(propertyValue))

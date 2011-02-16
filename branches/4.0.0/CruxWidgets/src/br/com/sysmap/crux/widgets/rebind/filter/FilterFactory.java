@@ -17,6 +17,7 @@ package br.com.sysmap.crux.widgets.rebind.filter;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
@@ -57,6 +58,11 @@ public class FilterFactory extends CompositeFactory<WidgetCreatorContext>
 	 */
 	public static class FilterableAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public FilterableAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		/**
 		 * @see br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor#processAttribute(br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter, br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext, java.lang.String)
 		 */

@@ -57,6 +57,11 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	 */
 	public static class VisibleRectAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public VisibleRectAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {

@@ -294,4 +294,10 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[widgetCreator 014] - Invalid tagName for child processor.")
 	String widgetCreatorInvalidTagName();
+
+	@DefaultServerMessage("[eventProcessor 001] - Controller {0} not found.")
+	String eventProcessorErrorControllerNotFound(String controller);
+
+	@DefaultServerMessage("[eventProcessor 001] - Method {1} not found on Controller {0}.")
+	String eventProcessorErrorControllerMethodNotFound(String controller, String method);
 }

@@ -16,11 +16,17 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.CancelEvent;
 import br.com.sysmap.crux.widgets.client.event.CancelHandler;
 
 public class CancelEvtBind extends EvtProcessor
 {
+	public CancelEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onCancel";
 
 	/**

@@ -120,7 +120,7 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
-		WizardCommandEvtBind commandEvtBind = new WizardCommandEvtBind();
+		WizardCommandEvtBind commandEvtBind;
 
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
@@ -141,6 +141,7 @@ public class WizardPageFactory extends WidgetCreator<WidgetCreatorContext>
 					WizardCommandHandler.class.getCanonicalName()+"<"+context.wizardObject+">(){");
 			out.println("public void onCommand("+WizardCommandEvent.class.getCanonicalName()+"<"+context.wizardObject+"> event){");
 			
+			if (commandEvtBind == null) commandEvtBind = new WizardCommandEvtBind(getWidgetCreator());
 			commandEvtBind.printEvtCall(out, onCommand, "event");
 
 			out.println("}");

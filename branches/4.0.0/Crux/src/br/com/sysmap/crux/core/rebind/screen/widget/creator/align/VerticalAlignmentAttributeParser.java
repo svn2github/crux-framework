@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.align;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
@@ -26,6 +27,11 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
  */
 public class VerticalAlignmentAttributeParser<C extends WidgetCreatorContext> extends AttributeProcessor<C>
 {
+	public VerticalAlignmentAttributeParser(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	@Override
     public void processAttribute(SourcePrinter out, C context, String attributeValue)
     {

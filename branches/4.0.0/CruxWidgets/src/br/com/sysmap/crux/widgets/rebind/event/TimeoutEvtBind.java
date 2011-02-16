@@ -17,6 +17,7 @@ package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvent;
 import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutHandler;
 
@@ -37,7 +38,7 @@ public class TimeoutEvtBind
 	}
 
 
-    public static void processEvent(SourcePrinter out, String eventValue, String time, String widget, String widgetId)
+    public static void processEvent(SourcePrinter out, String eventValue, String time, String widget, String widgetId, WidgetCreator<?> creator)
     {
 		if(time != null && eventValue != null)
 		{
@@ -45,7 +46,7 @@ public class TimeoutEvtBind
 			out.println(widget+".addTimeoutHandler(new "+TimeoutHandler.class.getCanonicalName()+"(){");
 			out.println("public void onTimeout("+TimeoutEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(out, eventValue, "onTimeout", TimeoutEvent.class, "event");
+			EvtProcessor.printEvtCall(out, eventValue, "onTimeout", TimeoutEvent.class, "event", creator);
 			
 			out.println("}");
 			out.println("public long getScheduledTime(){");

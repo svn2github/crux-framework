@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
@@ -84,6 +85,11 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 	 */
 	public static class VisibleTabAttributeParser extends AttributeProcessor<RollingTabPanelContext>
 	{
+		public VisibleTabAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, RollingTabPanelContext context, final String propertyValue)
         {
 			String widget = context.getWidget();
@@ -209,6 +215,10 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 				out.println(currentTab+".setWordWrap("+Boolean.parseBoolean(wordWrap)+");");
 			}
 
+			if (clickEvtBind == null) clickEvtBind = new ClickEvtBind(getWidgetCreator());
+			if (keyUpEvtBind == null) keyUpEvtBind = new KeyUpEvtBind(getWidgetCreator());
+			if (keyPressEvtBind == null) keyPressEvtBind = new KeyPressEvtBind(getWidgetCreator());
+			if (keyDownEvtBind == null) keyDownEvtBind = new KeyDownEvtBind(getWidgetCreator());
 
 			String clickEvt = context.tabElement.optString(clickEvtBind.getEventName());
 			if (!StringUtils.isEmpty(clickEvt))
@@ -233,10 +243,10 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 
 			context.clearAttributes();
 		}	
-		private static ClickEvtBind clickEvtBind = new ClickEvtBind();
-		private static KeyUpEvtBind keyUpEvtBind = new KeyUpEvtBind();
-		private static KeyPressEvtBind keyPressEvtBind = new KeyPressEvtBind();
-		private static KeyDownEvtBind keyDownEvtBind = new KeyDownEvtBind();
+		private static ClickEvtBind clickEvtBind;
+		private static KeyUpEvtBind keyUpEvtBind;
+		private static KeyPressEvtBind keyPressEvtBind;
+		private static KeyDownEvtBind keyDownEvtBind;
 	}
 	
 	@Override

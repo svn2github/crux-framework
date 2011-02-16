@@ -554,6 +554,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public static class StyleProcessor extends AttributeProcessor<WidgetCreatorContext>
 	{
+		public StyleProcessor(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String style)
 		{
 			String[] styleAttributes = style.split(";");

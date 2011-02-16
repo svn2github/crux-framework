@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.wizard.EnterEvent;
 import br.com.sysmap.crux.widgets.client.wizard.EnterHandler;
 
@@ -25,6 +26,11 @@ import br.com.sysmap.crux.widgets.client.wizard.EnterHandler;
  */
 public class EnterEvtBind extends EvtProcessor
 {
+	public EnterEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onEnter";
 
 	/**

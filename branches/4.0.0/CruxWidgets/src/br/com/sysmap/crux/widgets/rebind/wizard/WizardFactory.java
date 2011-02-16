@@ -22,9 +22,9 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -41,13 +41,13 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.widgets.client.wizard.WidgetStep;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard;
-import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
-import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
+import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
+import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
 import br.com.sysmap.crux.widgets.rebind.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.rebind.event.FinishEvtBind;
 
@@ -285,7 +285,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	})
 	public static class WizardCommandsProcessor extends WidgetChildProcessor<WizardContext>
 	{
-		WizardCommandEvtBind commandEvtBind = new WizardCommandEvtBind();
+		WizardCommandEvtBind commandEvtBind;
 		
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
@@ -309,6 +309,8 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 					WizardCommandHandler.class.getCanonicalName()+"<"+context.wizardObject+">(){");
 			out.println("public void onCommand("+WizardCommandEvent.class.getCanonicalName()+"<"+context.wizardObject+"> event){");
 			
+			if (commandEvtBind == null) commandEvtBind = new WizardCommandEvtBind(getWidgetCreator());
+
 			commandEvtBind.printEvtCall(out, onCommand, "event");
 
 			out.println("}");
@@ -335,8 +337,8 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 	@TagChildAttributes(type=AnyWidget.class)
 	public static class WidgetProcessor extends WidgetChildProcessor<WizardContext> 
 	{
-		private EnterEvtBind enterEvtBind = new EnterEvtBind();
-		private LeaveEvtBind leaveEvtBind = new LeaveEvtBind();
+		private EnterEvtBind enterEvtBind;
+		private LeaveEvtBind leaveEvtBind;
 		
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException
@@ -349,6 +351,9 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
 			out.println(WidgetStep.class.getCanonicalName()+"<"+context.wizardObject+"> "+widgetStep+" = "+widget+".addWidgetStep("+
 					EscapeUtils.quote(context.stepId)+", "+label+", "+childWidget+");");
+			
+			if (enterEvtBind == null) enterEvtBind = new EnterEvtBind(getWidgetCreator());
+			if (leaveEvtBind == null) leaveEvtBind = new LeaveEvtBind(getWidgetCreator());
 			
 			if (!StringUtils.isEmpty(context.stepOnEnter))
 			{

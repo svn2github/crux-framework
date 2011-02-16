@@ -17,6 +17,7 @@ package br.com.sysmap.crux.core.rebind.screen.widget.creator.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
@@ -28,6 +29,11 @@ import com.google.gwt.event.logical.shared.ShowRangeHandler;
  */
 public class ValueChangeEvtBind extends EvtProcessor
 {
+	public ValueChangeEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onChange";
 
 	/**

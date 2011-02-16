@@ -19,6 +19,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -46,6 +47,11 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 	 */
 	public static class VisibleStackAttributeParser extends AttributeProcessor<AbstractStackPanelFactoryContext>
 	{
+		public VisibleStackAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		@Override
 		public void processAttribute(SourcePrinter out, AbstractStackPanelFactoryContext context, String attributeValue)
 		{

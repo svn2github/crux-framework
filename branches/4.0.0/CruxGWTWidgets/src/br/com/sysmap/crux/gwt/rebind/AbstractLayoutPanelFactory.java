@@ -22,6 +22,7 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
@@ -68,6 +69,11 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 	 */
 	public static class AnimationDurationAttributeParser extends AttributeProcessor<AbstractLayoutPanelContext>
 	{
+		public AnimationDurationAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		@Override
 		public void processAttribute(SourcePrinter out, AbstractLayoutPanelContext context, String attributeValue)
 		{

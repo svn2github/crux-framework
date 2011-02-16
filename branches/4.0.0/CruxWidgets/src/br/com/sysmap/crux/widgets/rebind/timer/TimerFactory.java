@@ -96,7 +96,8 @@ public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			TimeoutEvtBind.processEvent(out, context.readChildProperty("execute"), context.readChildProperty("time"), rootWidget, context.getWidgetId());
+			TimeoutEvtBind.processEvent(out, context.readChildProperty("execute"), context.readChildProperty("time"), 
+								rootWidget, context.getWidgetId(), getWidgetCreator());
 		}
 	}
 

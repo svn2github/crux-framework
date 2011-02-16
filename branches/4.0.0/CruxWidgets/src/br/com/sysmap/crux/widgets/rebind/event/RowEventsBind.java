@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectHandler;
 import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
@@ -36,6 +37,11 @@ public class RowEventsBind
 	 */
 	public static class RowClickEvtBind extends EvtProcessor
 	{
+		public RowClickEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		private static final String EVENT_NAME = "onRowClick";
 
 		/**
@@ -64,6 +70,11 @@ public class RowEventsBind
 	 */
 	public static class RowDoubleClickEvtBind extends EvtProcessor
 	{
+		public RowDoubleClickEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		private static final String EVENT_NAME = "onRowDoubleClick";
 
 		/**
@@ -92,6 +103,11 @@ public class RowEventsBind
 	 */
 	public static class RowRenderEvtBind extends EvtProcessor
 	{
+		public RowRenderEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		private static final String EVENT_NAME = "onRowRender";
 
 		/**
@@ -120,6 +136,11 @@ public class RowEventsBind
 	 */
 	public static class BeforeRowSelectEvtBind extends EvtProcessor
 	{
+		public BeforeRowSelectEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
 		private static final String EVENT_NAME = "onBeforeRowSelect";
 
 		/**

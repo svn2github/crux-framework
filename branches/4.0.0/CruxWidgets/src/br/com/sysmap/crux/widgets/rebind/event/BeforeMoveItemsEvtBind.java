@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.widgets.rebind.event;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvent;
 import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler;
 
@@ -25,6 +26,11 @@ import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler;
  */
 public class BeforeMoveItemsEvtBind extends EvtProcessor
 {
+	public BeforeMoveItemsEvtBind(WidgetCreator<?> widgetCreator)
+    {
+	    super(widgetCreator);
+    }
+
 	private static final String EVENT_NAME = "onBeforeMoveItems";
 	
 	/**
