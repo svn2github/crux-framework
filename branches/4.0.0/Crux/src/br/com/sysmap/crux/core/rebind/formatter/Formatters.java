@@ -27,10 +27,13 @@ import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.annotation.FormatterName;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
+import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
 /**
  * 
@@ -89,7 +92,7 @@ public class Formatters
 					{
 						if (formatters.containsKey(annot.value()))
 						{
-							throw new CruxGeneratorException(messages.formattersDuplicatedDataSource(annot.value()));
+							throw new CruxGeneratorException(messages.formattersDuplicatedFormatter(annot.value()));
 						}
 						formatters.put(annot.value(), formatterClass.getCanonicalName());
 					}
@@ -106,7 +109,7 @@ public class Formatters
 						}
 						if (formatters.containsKey(simpleName))
 						{
-							throw new CruxGeneratorException(messages.formattersDuplicatedDataSource(simpleName));
+							throw new CruxGeneratorException(messages.formattersDuplicatedFormatter(simpleName));
 						}
 						formatters.put(simpleName, formatterClass.getCanonicalName());
 					}
@@ -157,4 +160,48 @@ public class Formatters
 		return formatters.keySet().iterator();
 	}
 	
+	/**
+	 * @param formatter
+	 * @return
+	 */
+	public static String getFormatterInstantionCommand(String formatter)
+	{
+		if (StringUtils.isEmpty(formatter))
+		{
+			return "null";
+		}
+		else
+		{
+			try
+			{
+				String formatterParams = null;
+				String formatterName = formatter;
+				StringBuilder parameters = new StringBuilder();
+				int index = formatter.indexOf("(");
+				if (index > 0)
+				{
+					formatterParams = formatter.substring(index+1,formatter.indexOf(")"));
+					formatterName = formatter.substring(0,index).trim();
+					String[] params = RegexpPatterns.REGEXP_COMMA.split(formatterParams);
+					parameters.append("new String[]{");
+					for (int i=0; i < params.length; i++) 
+					{
+						if (i>0)
+						{
+							parameters.append(",");
+						}
+						parameters.append(EscapeUtils.quote(params[i]).trim());
+					}
+					parameters.append("}");
+				}
+
+				String formatterClass = Formatters.getFormatter(formatterName);
+				return "new " + formatterClass + "("+parameters.toString()+")";
+			}
+			catch (Exception e)
+			{
+				throw new CruxGeneratorException(e.getMessage(), e);
+			}
+		}
+	}
 }

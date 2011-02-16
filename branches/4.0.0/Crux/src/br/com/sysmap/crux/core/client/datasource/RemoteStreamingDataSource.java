@@ -105,31 +105,11 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 		this.editableOperations.reset();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	protected List<DataSourceRecord<T>> data = new ArrayList<DataSourceRecord<T>>();
 	protected int currentRecord = -1;
 	protected int pageSize = 10;
 	protected int currentPage = 0;
-	protected Metadata metadata;
+	protected ColumnDefinitions<T> definitions = new ColumnDefinitions<T>();
 	protected RemoteDataSourceCallback fetchCallback = null;
 	protected ClientMessages messages = GWT.create(ClientMessages.class);
 	
@@ -234,13 +214,21 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.datasource.DataSource#getMetadata()
+	 * @see br.com.sysmap.crux.core.client.datasource.DataSource#getColumnDefinitions()
 	 */
-	public Metadata getMetadata()
+	public ColumnDefinitions<T> getColumnDefinitions()
 	{
-		return metadata;
+		return definitions;
 	}
 
+	/**
+	 * @param columnDefinitions
+	 */
+	public void setColumnDefinitions(ColumnDefinitions<T> columnDefinitions)
+	{
+		this.definitions = columnDefinitions;
+	}
+	
 	/**
 	 * @see br.com.sysmap.crux.core.client.datasource.DataSource#getRecord()
 	 */
@@ -523,7 +511,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	
 	protected void sortArray(DataSourceRecord<T>[] array, final String columnName, final boolean ascending)
 	{
-		if (!metadata.getColumn(columnName).isSortable())
+		if (!definitions.getColumn(columnName).isSortable())
 		{
 			throw new DataSoureExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
 		}
@@ -593,9 +581,17 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 			fetchCallback.execute(getPageStartRecord(), getPageEndRecord());
 		}
 	}
-	
+
+	/**
+	 * @see br.com.sysmap.crux.core.client.datasource.DataSource#getValue(java.lang.String, br.com.sysmap.crux.core.client.datasource.DataSourceRecord)
+	 */
 	public Object getValue(String columnName, DataSourceRecord<T> dataSourceRecord)
 	{
+		ColumnDefinition<?, T> column = definitions.getColumn(columnName);
+		if (column != null)
+		{
+			return column.getValue(dataSourceRecord.getRecordObject());
+		}
 		return null;
 	}
 

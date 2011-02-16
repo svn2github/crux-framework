@@ -24,11 +24,6 @@
 		<when-type-assignable class="br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters" />
 	</generate-with>
 	
-	<!-- Specify the generator for registered datasources.     -->
-	<generate-with class="br.com.sysmap.crux.core.rebind.datasource.RegisteredDataSourcesGenerator">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.datasource.RegisteredDataSources" />
-	</generate-with>
-
 	<!-- Specify the generator for registered module serializers .-->
 	<generate-with class="br.com.sysmap.crux.core.rebind.serializable.RegisteredCruxSerializablesGenerator">
 		<when-type-assignable class="br.com.sysmap.crux.core.client.screen.RegisteredCruxSerializables" />

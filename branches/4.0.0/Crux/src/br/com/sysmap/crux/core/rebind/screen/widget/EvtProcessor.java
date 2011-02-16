@@ -70,7 +70,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	boolean hasEventParameter = true;
     	try
         {
-	        Class<?> controllerClass = Class.forName(controller);
+	        Class<?> controllerClass = Class.forName(controller);//TODO para usar o class.forName, deveriamos parrar o binaryName e nao o sourceName...
 	        controllerClass.getMethod(event.getMethod(), new Class<?>[]{eventClass});
         }
         catch (Exception e)

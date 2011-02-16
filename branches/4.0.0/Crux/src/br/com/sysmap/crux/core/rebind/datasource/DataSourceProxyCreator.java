@@ -16,22 +16,16 @@
 package br.com.sysmap.crux.core.rebind.datasource;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.datasource.ColumnMetadata;
+import br.com.sysmap.crux.core.client.datasource.ColumnDefinition;
+import br.com.sysmap.crux.core.client.datasource.ColumnDefinitions;
 import br.com.sysmap.crux.core.client.datasource.LocalDataSource;
-import br.com.sysmap.crux.core.client.datasource.Metadata;
 import br.com.sysmap.crux.core.client.datasource.RemoteDataSource;
 import br.com.sysmap.crux.core.client.datasource.annotation.DataSource;
 import br.com.sysmap.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 import br.com.sysmap.crux.core.client.screen.ScreenBindableObject;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.AbstractInvocableProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -42,11 +36,9 @@ import br.com.sysmap.crux.core.utils.RegexpPatterns;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.ui.HasText;
@@ -65,15 +57,12 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final String DATASOURCE_PROXY_SUFFIX = "_DataSourceProxy";
 
-	// TODO - Gesse - recursive datasource fields cause stack overflow. Disabling field navigation until find a good solution.
-	private static final int MAX_DEPTH = 1;
-	
-	private final ColumnsData columnsData;
 	private final JClassType dataSourceClass;
 	private final JClassType dtoType;
 	private final JClassType recordType;
 
 	private final boolean isAutoBindEnabled;
+	private String identifier;
 
 	
 	/**
@@ -91,8 +80,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		this.recordType = getRecordTypeFromClass();
 		DataSource dsAnnot = dataSourceClass.getAnnotation(DataSource.class);
 		this.isAutoBindEnabled = (dsAnnot == null || dsAnnot.autoBind());
-		this.columnsData = new ColumnsData();
-		this.columnsData.identifier = getDataSourceIdentifier();
+		this.identifier = getDataSourceIdentifier();
 	}
 	
 	/**
@@ -104,8 +92,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
-		srcWriter.println("this.metadata = new Metadata();");
-		generateMetadataPopulationBlock(srcWriter);
 		generateAutoCreateFields(srcWriter, "this");
 		srcWriter.outdent();
 		srcWriter.println("}");
@@ -140,7 +126,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 
 	        generateUpdateFunction(srcWriter);
 	        generateGetBoundObjectFunction(srcWriter);
-	        generateGetValueFunction(srcWriter);
 
 	        generateScreenUpdateWidgetsFunction(dataSourceClass, srcWriter);
 	        generateControllerUpdateObjectsFunction(dataSourceClass, srcWriter);
@@ -151,87 +136,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
         	throw new CruxGeneratorException(e.getMessage(), e);
         }
 	}	
-	
-	/**
-	 * @param sourceWriter
-	 */
-	private void generateGetValueFunction(SourceWriter sourceWriter)
-	{
-		try
-		{
-			sourceWriter.println("public Object getValue(String columnName, "+recordType.getParameterizedQualifiedSourceName()+" dataSourceRecord){");
-			sourceWriter.indent();
-
-			sourceWriter.println(dtoType.getParameterizedQualifiedSourceName() + " recordObject = dataSourceRecord.getRecordObject();");
-			sourceWriter.println("Object ret = recordObject;");
-
-			sourceWriter.println("if (recordObject == null){");
-			sourceWriter.indent();
-			sourceWriter.println("return null;");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-
-			for (String columnName : columnsData.names)
-            {
-				sourceWriter.println("else if (columnName.equals(\""+columnName+"\")){");
-				sourceWriter.indent();
-				generateGetValueForColumn(dtoType, columnName, sourceWriter);
-				sourceWriter.outdent();
-				sourceWriter.println("}");
-            }
-			sourceWriter.println("else {");
-			sourceWriter.indent();
-			sourceWriter.println("ret = null;");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-			
-			sourceWriter.println("return ret;");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-		}
-		catch (Exception e)
-		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSource(dataSourceClass.getName(), e.getLocalizedMessage()), e);
-		}
-    }
-
-	/**
-	 * @param baseClass
-	 * @param columnName
-	 * @param sourceWriter
-	 */
-	private void generateGetValueForColumn(JClassType baseClass, String columnName, SourceWriter sourceWriter)
-    {
-	    if (columnName.indexOf('.') < 0)
-	    {
-	    	generateGetValueForProperty(baseClass, columnName, sourceWriter);
-	    }
-	    else
-	    {
-	    	String firstProperty = columnName.substring(0,columnName.indexOf('.'));
-	    	generateGetValueForProperty(baseClass, firstProperty, sourceWriter);
-		    sourceWriter.println("if (ret != null){");
-			sourceWriter.indent();
-			
-	    	columnName = columnName.substring(columnName.indexOf('.')+1);
-	    	try
-	    	{
-	    		JField field = ClassUtils.getDeclaredField(baseClass, firstProperty);
-	    		if (!(field.getType() instanceof JClassType))
-	    		{
-	    			throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceInvalidColumn(baseClass.getName(), columnName));
-	    		}
-	    		generateGetValueForColumn((JClassType)field.getType(), columnName, sourceWriter);
-	    	}
-	    	catch (NoSuchFieldException e) 
-	    	{
-	    		throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceInvalidColumn(baseClass.getName(), columnName));
-	    	}
-	    	
-	    	sourceWriter.outdent();
-	    	sourceWriter.println("}");
-	    }
-    }
 	
 	/**
 	 * 
@@ -310,7 +214,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	private String getIdentifierDeclaration(String parentVariable) 
 	{
 		//TODO: tratar propriedades alinhadas... 
-		String[] identifier = RegexpPatterns.REGEXP_COMMA.split(columnsData.identifier);
+		String[] identifier = RegexpPatterns.REGEXP_COMMA.split(this.identifier);
 		StringBuilder result = new StringBuilder("\"\""); 
 
 		for (int i = 0; i < identifier.length; i++)
@@ -324,34 +228,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 		return result.toString();
 	}	
-	
-	/**
-	 * @param baseClass
-	 * @param columnName
-	 * @param sourceWriter
-	 */
-	private void generateGetValueForProperty(JClassType baseClass, String columnName, SourceWriter sourceWriter) 
-    {
-		try
-        {
-	        String baseTypeDeclaration = baseClass.getParameterizedQualifiedSourceName();
-	        sourceWriter.print("ret = (("+baseTypeDeclaration+")ret).");
-	        JField field = ClassUtils.getDeclaredField(baseClass, columnName);
-	        if (field.isPublic())
-	        {
-	        	sourceWriter.print(columnName);
-	        }
-	        else
-	        {
-	        	sourceWriter.print(ClassUtils.getGetterMethod(columnName, baseClass)+"()");
-	        }
-	        sourceWriter.println(";");
-        }
-        catch (NoSuchFieldException e)
-        {
-        	throw new CruxGeneratorException(e.getMessage(), e);
-        }
-    }
 	
 	/**
 	 * 
@@ -422,8 +298,8 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
     		HasFormatter.class.getCanonicalName(),
     		Widget.class.getCanonicalName(),
     		Crux.class.getCanonicalName(), 
-    		ColumnMetadata.class.getCanonicalName(), 
-    		Metadata.class.getCanonicalName() 
+    		ColumnDefinition.class.getCanonicalName(), 
+    		ColumnDefinitions.class.getCanonicalName() 
 		};
 	    return imports;
     }
@@ -474,78 +350,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	}
 	
 	/**
-	 * @param dtoType
-	 * @param names
-	 * @param types
-	 */
-	private void findDataSourceColumns(JClassType dtoType, List<String> names, List<JType> types, String parentField, int depth)
-    {
-	    JField[] declaredFields = ClassUtils.getDeclaredFields(dtoType);
-		
-	    if(depth > 0)
-	    {
-			for (JField field : declaredFields)
-			{
-				if (isFullAccessibleField(field, dtoType))
-				{
-					String columnName;
-					if (StringUtils.isEmpty(parentField))
-					{
-						columnName = field.getName();
-					}
-					else
-					{
-						columnName = parentField+"."+field.getName();
-					}
-					names.add(columnName);
-					JType columnType = field.getType();
-					types.add(columnType);
-					if (columnType instanceof JClassType && isComplexCustomType((JClassType) columnType))
-					{
-						findDataSourceColumns((JClassType)columnType, names, types, columnName, depth-1);
-					}
-				}
-			}
-	    }
-	    else
-	    {
-	    	logger.log(Type.WARN, "Type ignored:"+dtoType.getParameterizedQualifiedSourceName());
-	    }
-    }
-
-	/**
-	 * @param sourceWriter
-	 */
-	private void generateMetadataPopulationBlock(SourceWriter sourceWriter)
-	{
-		List<String> names = new ArrayList<String>();
-		List<JType> types = new ArrayList<JType>();
-		
-		findDataSourceColumns(dtoType, names, types, null, MAX_DEPTH);
-		columnsData.names = names.toArray(new String[0]);
-		columnsData.types = types.toArray(new JType[0]);
-		
-		if (columnsData.names.length != columnsData.types.length)
-		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSourceInvalidMetaInformation(dataSourceClass.getQualifiedSourceName()), null);
-		}
-		
-		try
-		{
-			JClassType comparableType = dataSourceClass.getOracle().getType(Comparable.class.getCanonicalName());
-			for (int i=0; i<columnsData.names.length; i++)
-			{
-				boolean sortable = (columnsData.types[i] instanceof JPrimitiveType || comparableType.isAssignableFrom((JClassType)columnsData.types[i]));
-				sourceWriter.println("metadata.addColumn(new ColumnMetadata<"+getParameterDeclarationWithPrimitiveWrappers(columnsData.types[i])+">(\""+columnsData.names[i]+"\","+sortable+"));");
-			}
-		}
-		catch (NotFoundException e)
-		{
-			throw new CruxGeneratorException(e.getMessage(), e);
-		}
-	}
-
-	/**
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
@@ -595,60 +399,4 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	{
 		return getTypeFromMethodClass("getRecord");
 	}
-	
-	/**
-	 * @param parameterClass
-	 * @return
-	 */
-	private String getParameterDeclarationWithPrimitiveWrappers(JType parameterClass)
-	{
-		if (parameterClass.isPrimitive() != null)
-		{
-			return parameterClass.isPrimitive().getQualifiedBoxedSourceName();
-		}
-		
-		return parameterClass.getParameterizedQualifiedSourceName();
-	}
-	
-	/**
-	 * @param type
-	 * @return
-	 */
-	private boolean isComplexCustomType(JClassType type)
-    {
-		try
-        {
-	        JClassType charSequenceType = type.getOracle().getType(CharSequence.class.getCanonicalName());
-	        JClassType dateType = type.getOracle().getType(Date.class.getCanonicalName());
-	        JClassType collectionType = type.getOracle().getType(Collection.class.getCanonicalName());
-	        JClassType mapType = type.getOracle().getType(Map.class.getCanonicalName());
-	        JClassType numberType = type.getOracle().getType(Number.class.getCanonicalName());
-	        JClassType booleanType = type.getOracle().getType(Boolean.class.getCanonicalName());
-	        JClassType characterType = type.getOracle().getType(Character.class.getCanonicalName());
-	        return (type.isPrimitive() == null
-	        		&& type.isAnnotation() == null
-	        		&& type.isArray() == null 
-	        		&& type.isEnum() == null
-	        		&& !charSequenceType.isAssignableFrom(type)
-	        		&& !numberType.isAssignableFrom(type)
-	        		&& !booleanType.isAssignableFrom(type)
-	        		&& !characterType.isAssignableFrom(type)
-	        		&& !dateType.isAssignableFrom(type) && !collectionType.isAssignableFrom(type) && !mapType.isAssignableFrom(type));
-        }
-        catch (NotFoundException e)
-        {
-        	throw new CruxGeneratorException(e.getMessage(), e);
-        }
-    }
-	
-	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	private static class ColumnsData
-	{
-		private String identifier;
-		private String[] names;
-		private JType[] types;
-	}	
 }

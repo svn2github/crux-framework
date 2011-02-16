@@ -25,12 +25,12 @@ import br.com.sysmap.crux.core.client.collection.FastMap;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Metadata
+public class ColumnDefinitions<E>
 {
 	private List<String> columnNames = new ArrayList<String>();;
-	private FastMap<ColumnMetadata<?>> columns = new FastMap<ColumnMetadata<?>>();;
+	private FastMap<ColumnDefinition<?,E>> columns = new FastMap<ColumnDefinition<?,E>>();;
 	
-	public void addColumn(ColumnMetadata<?> columnMetadata)
+	public void addColumn(ColumnDefinition<?,E> columnMetadata)
 	{
 		if (!columnNames.contains(columnMetadata.getName()))
 		{
@@ -44,7 +44,7 @@ public class Metadata
 		return columnNames;
 	}
 	
-	public ColumnMetadata<?> getColumn(String columnName)
+	public ColumnDefinition<?,E> getColumn(String columnName)
 	{
 		return columns.get(columnName);
 	}
@@ -52,5 +52,11 @@ public class Metadata
 	public int getColumnPosition(String columnName)
 	{
 		return columnNames.indexOf(columnName);
+	}
+	
+	public void clear()
+	{
+		columnNames.clear();
+		columns.clear();
 	}
 }

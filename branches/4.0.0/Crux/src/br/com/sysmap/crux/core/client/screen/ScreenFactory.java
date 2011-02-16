@@ -35,15 +35,15 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class ScreenFactory 
 {
-	private static Logger logger = Logger.getLogger(ScreenFactory.class.getName());
-
 	private static ScreenFactory instance = null;
+
+	private static Logger logger = Logger.getLogger(ScreenFactory.class.getName());
 	 
 	private RegisteredClientFormatters registeredClientFormatters = null;
+	private RegisteredControllers registeredControllers = null;
 	private RegisteredDataSources registeredDataSources = null;
-	private ViewFactory viewFactory = null;
 	private Screen screen = null;
-	private RegisteredControllers registeredControllers = null;	
+	private ViewFactory viewFactory = null;	
 	
 	/**
 	 * Constructor
@@ -72,11 +72,6 @@ public class ScreenFactory
 	 */
 	public DataSource<?> createDataSource(String dataSource)
 	{
-		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
-		if (registeredDataSources == null)
-		{
-			this.registeredDataSources = GWT.create(RegisteredDataSources.class);
-		}
 		return this.registeredDataSources.getDataSource(dataSource);
 	}
 
@@ -106,6 +101,15 @@ public class ScreenFactory
 	{
 		return createDataSource(dataSource);
 	}
+	
+	/**
+	 * Retrieve the list of controllers registered into this screen
+	 * @return
+	 */
+	public RegisteredControllers getRegisteredControllers()
+    {
+    	return registeredControllers;
+    }
 
 	/**
 	 * Get the screen associated with current page. If not created yet, create it.
@@ -130,13 +134,13 @@ public class ScreenFactory
 	}
 	
 	/**
-	 * Retrieve the list of controllers registered into this screen
-	 * @return
+	 * Called by ViewFactory to initialize the screen dataSources 
+	 * @param registeredDataSources
 	 */
-	public RegisteredControllers getRegisteredControllers()
-    {
-    	return registeredControllers;
-    }
+	void setRegisteredDataSources(RegisteredDataSources registeredDataSources)
+	{
+		this.registeredDataSources = registeredDataSources;
+	}
 
 	/**
 	 * 

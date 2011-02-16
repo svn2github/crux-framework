@@ -24,11 +24,10 @@ import java.util.Set;
 
 import org.json.JSONArray;
 
-import com.google.gwt.dev.util.collect.HashSet;
-
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.server.Environment;
+
+import com.google.gwt.dev.util.collect.HashSet;
 
 /**
  * Represents a Crux Screen at the application's server side. Used for GWT Generators.
@@ -40,7 +39,7 @@ public class Screen
 	protected String id;
 	protected String relativeId;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
-	protected Map<String, Set<String>> widgetPropertiesMap = new HashMap<String, Set<String>>();
+	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
 	protected List<String> controllers = new ArrayList<String>();
 	protected List<String> serializers = new ArrayList<String>();
@@ -77,18 +76,7 @@ public class Screen
 	 */
 	public Set<String> getWidgetTypesIncluded()
 	{
-		return widgetPropertiesMap.keySet();
-	}
-	
-	/**
-	 * Return a Set containing all properties and events used on this screen by all widgets of type widgetType
-	 * @param widgetType
-	 * @return
-	 */
-	public Set<String> getWidgetProperties(String widgetType)
-	{
-		return widgetPropertiesMap.get(widgetType);
-		//TODO remover as sobras de codigo aki
+		return widgetTypes;
 	}
 	
 	/**
@@ -109,40 +97,13 @@ public class Screen
 		if (widget != null)
 		{
 			widgets.put(widget.getId(), widget);
-			if (!widgetPropertiesMap.containsKey(widget.getType()))
+			if (!widgetTypes.contains(widget.getType()))
 			{
-				widgetPropertiesMap.put(widget.getType(), new HashSet<String>());
+				widgetTypes.add(widget.getType());
 			}
-			
-			checkUsedProperties(widget);
 		}
 	}
 
-	/**
-	 * @param widget
-	 */
-	private void checkUsedProperties(Widget widget) 
-	{
-		if (Environment.isProduction())
-		{
-		/*For Development purposes does not waste time doing this. That information is only used on {@code WidgetFactory} generator 
-		 to improve performance of generated code. It only need to be called when compiling for production.
-		 */ 
-			Set<String> widgetProperties = widgetPropertiesMap.get(widget.getType());
-			Iterator<Event> events = widget.iterateEvents();
-			while (events.hasNext())
-			{
-				Event event = events.next();
-				widgetProperties.add(event.getId());
-			}
-			Iterator<String> properties = widget.iteratePropertyNames();
-			while (properties.hasNext())
-			{
-				widgetProperties.add(properties.next());
-			}
-		}
-	}
-	
 	/**
 	 * Return screen identifier
 	 * @return

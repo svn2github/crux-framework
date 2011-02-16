@@ -28,15 +28,20 @@ import com.google.gwt.core.client.GWT;
  */
 abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E>
 {
-	protected Metadata metadata;
+	protected ColumnDefinitions<E> definitions = new ColumnDefinitions<E>();
 	protected DataSourceRecord<E>[] data;
 	protected int currentRecord = -1;
 	protected boolean loaded = false;
 	protected ClientMessages messages = GWT.create(ClientMessages.class);
 
-	public Metadata getMetadata()
+	public ColumnDefinitions<E> getColumnDefinitions()
 	{
-		return metadata;
+		return definitions;
+	}
+	
+	public void setColumnDefinitions(ColumnDefinitions<E> columnDefinitions)
+	{
+		this.definitions = columnDefinitions;
 	}
 	
 	public Object getValue(String columnName)
@@ -111,7 +116,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 
 	protected void sortArray(DataSourceRecord<E>[] array, final String columnName, final boolean ascending)
 	{
-		if (!metadata.getColumn(columnName).isSortable())
+		if (!definitions.getColumn(columnName).isSortable())
 		{
 			throw new DataSoureExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
 		}
@@ -147,7 +152,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 			}
 
 			@SuppressWarnings("unchecked")
-			private int compareNonNullValuesByType(Object value1, Object value2,boolean ascending)
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending)
 			{
 				if (ascending)
 				{
@@ -187,8 +192,16 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 		}
 	}
 	
+	/**
+	 * @see br.com.sysmap.crux.core.client.datasource.DataSource#getValue(java.lang.String, br.com.sysmap.crux.core.client.datasource.DataSourceRecord)
+	 */
 	public Object getValue(String columnName, DataSourceRecord<E> dataSourceRecord)
 	{
+		ColumnDefinition<?, E> column = definitions.getColumn(columnName);
+		if (column != null)
+		{
+			return column.getValue(dataSourceRecord.getRecordObject());
+		}
 		return null;
 	}
 	

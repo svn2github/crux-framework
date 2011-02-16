@@ -371,11 +371,9 @@ public class ScreenFactory
 		try 
 		{
 			String type = elem.getString("_type");
-			WidgetParser parser = new WidgetParserImpl();
-			Widget widget = new Widget();
+			Widget widget = new Widget(elem);
 			widget.setId(widgetId);
 			widget.setType(type);
-			parser.parse(widget, elem);
 			return widget;
 		} 
 		catch (Throwable e) 

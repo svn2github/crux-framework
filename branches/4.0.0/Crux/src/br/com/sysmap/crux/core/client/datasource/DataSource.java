@@ -66,11 +66,18 @@ public interface DataSource<E>
 	void reset();
 
 	/**
-	 * Return the DataSource MetaData object.
-	 * @return MetaData object
+	 * Return the DataSource definitions object.
+	 * @return Definitions object
 	 */
-	Metadata getMetadata();
+	ColumnDefinitions<E> getColumnDefinitions();
 
+	
+	/**
+	 * Sets the DataSource definitions object.
+	 * @param columnDefinitions
+	 */
+	void setColumnDefinitions(ColumnDefinitions<E> columnDefinitions);
+	
 	/**
 	 * Return the column value
 	 * @param columnName name of the column

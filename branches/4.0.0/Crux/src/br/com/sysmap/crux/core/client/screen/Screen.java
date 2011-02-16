@@ -29,7 +29,6 @@ import br.com.sysmap.crux.core.client.collection.Map;
 import br.com.sysmap.crux.core.client.context.ContextManager;
 import br.com.sysmap.crux.core.client.datasource.DataSource;
 import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 
@@ -596,10 +595,10 @@ public class Screen
 		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 		try
 		{
-			Event event = Events.getEvent("_onInvokeController", call);
+			Event event = br.com.sysmap.crux.core.client.event.Events.getEvent("_onInvokeController", call);
 			InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
 			controllerEvent.setParameter(param);
-			Object result = Events.callEvent(event, controllerEvent, false);
+			Object result = br.com.sysmap.crux.core.client.event.Events.callEvent(event, controllerEvent, false);
 			return (T) result; 
 		}
 		catch (RuntimeException e)
@@ -1137,7 +1136,7 @@ public class Screen
 	@SuppressWarnings("unused") // called by native code
 	private String invokeController(String call, String serializedData)
 	{
-		Event event = Events.getEvent("_onInvokeController", call);
+		Event event = br.com.sysmap.crux.core.client.event.Events.getEvent("_onInvokeController", call);
 		InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
 		
 		if (serializedData != null)
@@ -1153,7 +1152,7 @@ public class Screen
 			}
 		}
 		
-		Object result = Events.callEvent(event, controllerEvent, true);
+		Object result = br.com.sysmap.crux.core.client.event.Events.callEvent(event, controllerEvent, true);
 		try
 		{
 			return serializer.serialize(result); 

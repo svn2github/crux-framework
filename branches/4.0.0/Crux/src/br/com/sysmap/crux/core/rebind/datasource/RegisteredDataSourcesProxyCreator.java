@@ -17,7 +17,6 @@ package br.com.sysmap.crux.core.rebind.datasource;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
@@ -49,10 +48,12 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private Map<String, String> dataSourcesClassNames = new HashMap<String, String>();
+	private final Screen screen;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContext context)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContext context, Screen screen)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()));
+		this.screen = screen;
     }
 
 	@Override
@@ -74,11 +75,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	@Override
     protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
     {
-		List<Screen> screens = getScreens();
-		for (Screen screen : screens)
-		{
-			generateDataSourcesForScreen(srcWriter, screen);
-		}
+		generateDataSourcesForScreen(srcWriter, screen);
     }
 	
 	/**
@@ -178,5 +175,13 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
             	throw new CruxGeneratorException(e.getMessage(), e);
             }
 		}
+	}
+	
+	@Override
+	protected String getProxySimpleName()
+	{
+		String className = screen.getModule()+"_"+screen.getRelativeId(); 
+		className = className.replaceAll("[\\W]", "_");
+		return "RegisteredDataSources_"+className;
 	}
 }

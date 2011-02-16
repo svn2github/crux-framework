@@ -39,6 +39,7 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
 import br.com.sysmap.crux.core.rebind.controller.RegisteredControllersProxyCreator;
+import br.com.sysmap.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import br.com.sysmap.crux.core.rebind.screen.Event;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -103,18 +104,6 @@ public class ViewFactoryCreator
     }	
 	
 	/**
-	 * @param context
-	 * @param logger
-	 */
-	void prepare(GeneratorContext context, TreeLogger logger)
-	{
-		this.context = context;
-		this.logger = logger;
-		this.lazyPanels.clear();
-		this.declaredMessages.clear();
-	}
-	
-	/**
      * Creates a new unique name based off of{@code varName} and adds it to
      * the list of known names.	  
 	 * 
@@ -146,7 +135,7 @@ public class ViewFactoryCreator
 
 		printer.commit();
 		return getQualifiedName();
-	}	
+	}
 	
 	/**
 	 * Generate the code for the Screen creation
@@ -172,8 +161,8 @@ public class ViewFactoryCreator
 		createCloseEvt(printer);
 		createResizedEvt(printer);		
 		createLoadEvt();
-	}
-
+	}	
+	
 	/**
 	 * Generate the ViewFactory fields
 	 * 
@@ -195,55 +184,8 @@ public class ViewFactoryCreator
     protected void generateProxyMethods(SourcePrinter printer) 
     {
     	generateCreateRegisteredControllersMethod(printer);
+    	generateCreateRegisteredDataSourcesMethod(printer);
     	generateCreateMethod(printer);
-    }
-
-	/**
-	 * @param printer
-	 */
-	private void generateCreateRegisteredControllersMethod(SourcePrinter printer)
-    {
-    	printer.println("public void createRegisteredControllers() throws InterfaceConfigException{");
-    	String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, screen).create();
-		printer.println(ScreenFactory.class.getCanonicalName()+".getInstance().setRegisteredControllers(new "+regsiteredControllersClass+"());");
-    	printer.println("}");
-    }
-
-	/**
-	 * @param printer
-	 */
-	private void generateCreateMethod(SourcePrinter printer)
-    {
-	    createPostProcessingScope();
-    	printer.println("public void create() throws InterfaceConfigException{");
-		printer.println("createRegisteredControllers();");
-    	
-		JSONArray metaData = this.screen.getMetaData();
-		createScreen(printer);
-		for (int i = 0; i < metaData.length(); i++)
-		{
-			JSONObject metaElement = metaData.optJSONObject(i);
-
-			if (!metaElement.has("_type"))
-			{
-				throw new CruxGeneratorException(messages.viewFactoryMetaElementDoesNotContainsType());
-			}
-			String type = getMetaElementType(metaElement);
-			if (!StringUtils.unsafeEquals("screen",type))
-			{
-				try 
-				{
-					createWidget(printer, metaElement, type);
-				}
-				catch (Throwable e) 
-				{
-					throw new CruxGeneratorException(messages.viewFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
-				}
-			}
-		}
-
-		commitPostProcessing(printer);
-		printer.println("}");
     }
 	
 	/**
@@ -257,7 +199,51 @@ public class ViewFactoryCreator
 	{
 		return cruxMetaElement.optString("_type");
 	}
+
+	/**
+	 * Returns the factory of the widgets of the given type.
+	 * @param widgetType
+	 * @return the factory of the widgets of the given type.
+	 */
+	protected WidgetCreator<?> getWidgetFactory(String widgetType)
+	{
+		try
+        {
+	        if (!factories.containsKey(widgetType))
+	        {
+	        	String factoryClassName = WidgetConfig.getClientClass(widgetType);
+	        	Class<?> widgetFactory = Class.forName(factoryClassName);
+	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetFactory.newInstance();
+	        	factory.setViewFactory(this);
+	        	factories.put(widgetType, factory);
+	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetFactory);
+				factoryHelpers.put(widgetType, creatorHelper);
+	        }
+        }
+        catch (Exception e)
+        {
+        	throw new CruxGeneratorException(messages.viewFactoryErrorRetrievingWidgetFactory(widgetType),e);
+        }
+		return factories.get(widgetType);
+	}
 	
+	/**
+     * Returns a helper object to create the code of the widgets of the given type. 
+	 * @param widgetType
+	 * @return a helper object to create the code of the widgets of the given type. 
+	 */
+	protected WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
+	{
+		if (!factoryHelpers.containsKey(widgetType))
+		{
+			if (getWidgetFactory(widgetType) == null)
+			{
+				return null;
+			}
+		}
+		return factoryHelpers.get(widgetType);
+	}
+
 	/**
 	 * Creates a new widget based on its meta-data element.
 	 * 
@@ -270,8 +256,8 @@ public class ViewFactoryCreator
 	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
 	{
 		return newWidget(printer, metaElem, widgetId, widgetType, true);
-	} 	
-	
+	}
+
 	/**
 	 * Creates a new widget based on its meta-data element.
 	 *  
@@ -311,7 +297,7 @@ public class ViewFactoryCreator
 		
 		return widget;
 	}
-	
+
 	/**
 	 * Close the current postProcessing scope and schedule the execution of all scope commands.
 	 * 
@@ -332,7 +318,16 @@ public class ViewFactoryCreator
 		}
 	}
 	
-    /**
+	/**
+	 * @param widgetId
+	 * @return
+	 */
+	boolean containsWidget(String widgetId)
+	{
+		return screen.getWidget(widgetId) != null;
+	}
+	
+	/**
 	 * Create a new scope for the post processing commands. All commands added by 
 	 * {@code printlnPostProcessing} method will be added to this same scope, what means 
 	 * that they will be fired together. When {@code commitPostProcessing} method is called, 
@@ -341,6 +336,14 @@ public class ViewFactoryCreator
 	void createPostProcessingScope()
 	{
 		this.postProcessingCode.add(new PostProcessingPrinter());
+	} 	
+	
+	/**
+	 * @return
+	 */
+	GeneratorContext getContext()
+	{
+		return context;
 	}
 	
 	/**
@@ -376,7 +379,7 @@ public class ViewFactoryCreator
 	    }
     }
 	
-	/**
+    /**
 	 * Gets the list of classes used by the ViewFactory.
 	 * 
      * @return
@@ -400,6 +403,14 @@ public class ViewFactoryCreator
     		Widget.class.getCanonicalName()
 		};
 	    return imports;
+	}
+	
+	/**
+	 * @return
+	 */
+	TreeLogger getLogger()
+	{
+		return this.logger;
 	}
 	
 	/**
@@ -471,15 +482,26 @@ public class ViewFactoryCreator
 			return true;
 		}
 		return false;
-	}	
+	}
 	
 	/**
-	 * @param widgetId
+	 * @param context
+	 * @param logger
+	 */
+	void prepare(GeneratorContext context, TreeLogger logger)
+	{
+		this.context = context;
+		this.logger = logger;
+		this.lazyPanels.clear();
+		this.declaredMessages.clear();
+	}
+	
+	/**
 	 * @return
 	 */
-	boolean containsWidget(String widgetId)
+	Screen getScreen()
 	{
-		return screen.getWidget(widgetId) != null;
+		return this.screen;
 	}
 	
 	/**
@@ -493,7 +515,7 @@ public class ViewFactoryCreator
 	{
 		this.postProcessingCode.getLast().println(s);
 	}
-
+	
 	/**
 	 * Creates the close event.
 	 * 
@@ -513,7 +535,7 @@ public class ViewFactoryCreator
 			printer.println("});");
 		}
     }
-	
+
 	/**
 	 * Creates the closing event.
 	 * 
@@ -534,7 +556,6 @@ public class ViewFactoryCreator
 		}
     }
 	
-	
 	/**
 	 * Creates the historyChanged event.
 	 * 
@@ -554,7 +575,8 @@ public class ViewFactoryCreator
 			printer.println("});");
 		}
     }
-
+	
+	
 	/**
 	 * Generate the code for an {@code HTMLContainer} widget creation and attach it to the page DOM.  
 	 * 
@@ -635,7 +657,7 @@ public class ViewFactoryCreator
 	    	printlnPostProcessing(");");
 		}
     }
-	
+
 	/**
 	 * Creates the resized event.
 	 * 
@@ -693,8 +715,8 @@ public class ViewFactoryCreator
 			widget = createWidgetAndAttach(printer, metaElem, widgetId, widgetType);
 		}
 		return widget;
-	}	
-
+	}
+	
 	/**
 	 * Generate the code for an widget creation and attach it to the page DOM.
 	 * 
@@ -739,6 +761,66 @@ public class ViewFactoryCreator
 		printer.println(panel+".add("+widget+");");
 		return widget;
 	}	
+
+	/**
+	 * @param printer
+	 */
+	private void generateCreateMethod(SourcePrinter printer)
+    {
+	    createPostProcessingScope();
+    	printer.println("public void create() throws InterfaceConfigException{");
+		printer.println("createRegisteredControllers();");
+		printer.println("createRegisteredDataSources();");
+    	
+		JSONArray metaData = this.screen.getMetaData();
+		createScreen(printer);
+		for (int i = 0; i < metaData.length(); i++)
+		{
+			JSONObject metaElement = metaData.optJSONObject(i);
+
+			if (!metaElement.has("_type"))
+			{
+				throw new CruxGeneratorException(messages.viewFactoryMetaElementDoesNotContainsType());
+			}
+			String type = getMetaElementType(metaElement);
+			if (!StringUtils.unsafeEquals("screen",type))
+			{
+				try 
+				{
+					createWidget(printer, metaElement, type);
+				}
+				catch (Throwable e) 
+				{
+					throw new CruxGeneratorException(messages.viewFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+				}
+			}
+		}
+
+		commitPostProcessing(printer);
+		printer.println("}");
+    }	
+	
+	/**
+	 * @param printer
+	 */
+	private void generateCreateRegisteredControllersMethod(SourcePrinter printer)
+    {
+    	printer.println("public void createRegisteredControllers() throws InterfaceConfigException{");
+    	String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, screen).create();
+		printer.println(ScreenFactory.class.getCanonicalName()+".getInstance().setRegisteredControllers(new "+regsiteredControllersClass+"());");
+    	printer.println("}");
+    }
+
+	/**
+	 * @param printer
+	 */
+	private void generateCreateRegisteredDataSourcesMethod(SourcePrinter printer)
+    {
+    	printer.println("public void createRegisteredDataSources() throws InterfaceConfigException{");
+    	String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, screen).create();
+		printer.println(ScreenFactory.class.getCanonicalName()+".getInstance().setRegisteredDataSources(new "+regsiteredDataSourcesClass+"());");
+    	printer.println("}");
+    }
 	
 	/**
 	 * Split the i18n message and separate the messageClass alias from the message method
@@ -771,8 +853,8 @@ public class ViewFactoryCreator
 		className = className.replaceAll("[\\W]", "_");
 		return className;
     }
-
-	/**
+	
+    /**
 	 * Creates and returns a new {@link SourceWriter}
      * @return a new {@link SourceWriter}
      */
@@ -795,50 +877,6 @@ public class ViewFactoryCreator
 		}
 
 		return composerFactory.createSourceWriter(context, printWriter);    
-	}
-	
-	/**
-	 * Returns the factory of the widgets of the given type.
-	 * @param widgetType
-	 * @return the factory of the widgets of the given type.
-	 */
-	protected WidgetCreator<?> getWidgetFactory(String widgetType)
-	{
-		try
-        {
-	        if (!factories.containsKey(widgetType))
-	        {
-	        	String factoryClassName = WidgetConfig.getClientClass(widgetType);
-	        	Class<?> widgetFactory = Class.forName(factoryClassName);
-	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetFactory.newInstance();
-	        	factory.setViewFactory(this);
-	        	factories.put(widgetType, factory);
-	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetFactory);
-				factoryHelpers.put(widgetType, creatorHelper);
-	        }
-        }
-        catch (Exception e)
-        {
-        	throw new CruxGeneratorException(messages.viewFactoryErrorRetrievingWidgetFactory(widgetType),e);
-        }
-		return factories.get(widgetType);
-	}
-	
-    /**
-     * Returns a helper object to create the code of the widgets of the given type. 
-	 * @param widgetType
-	 * @return a helper object to create the code of the widgets of the given type. 
-	 */
-	protected WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
-	{
-		if (!factoryHelpers.containsKey(widgetType))
-		{
-			if (getWidgetFactory(widgetType) == null)
-			{
-				return null;
-			}
-		}
-		return factoryHelpers.get(widgetType);
 	}
 
     /**

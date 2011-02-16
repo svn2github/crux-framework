@@ -23,16 +23,12 @@ import java.util.Map;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.formatter.RegisteredClientFormatters;
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
-import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -121,39 +117,10 @@ public class RegisteredClientFormattersProxyCreator extends AbstractInterfaceWra
 	
 	private void generateFormatterBlock(SourceWriter sourceWriter, String formatter)
 	{
-		try
-        {
-	        String formatterParams = null;
-	        String formatterName = formatter;
-	        StringBuilder parameters = new StringBuilder();
-	        int index = formatter.indexOf("(");
-	        if (index > 0)
-	        {
-	        	formatterParams = formatter.substring(index+1,formatter.indexOf(")"));
-	        	formatterName = formatter.substring(0,index).trim();
-	        	String[] params = RegexpPatterns.REGEXP_COMMA.split(formatterParams);
-	        	parameters.append("new String[]{");
-	        	for (int i=0; i < params.length; i++) 
-	        	{
-	        		if (i>0)
-	        		{
-	        			parameters.append(",");
-	        		}
-	        		parameters.append(EscapeUtils.quote(params[i]).trim());
-	        	}
-	        	parameters.append("}");
-	        }
-
-	        if (!formattersAdded.containsKey(formatter) && Formatters.getFormatter(formatterName)!= null)
-	        {
-	        	JClassType formatterClass = baseIntf.getOracle().getType(Formatters.getFormatter(formatterName));
-	        	sourceWriter.println("clientFormatters.put(\""+formatter+"\", new " + formatterClass.getParameterizedQualifiedSourceName() + "("+parameters.toString()+"));");
-	        	formattersAdded.put(formatter, true);
-	        }
-        }
-        catch (NotFoundException e)
-        {
-        	throw new CruxGeneratorException(e.getMessage(), e);
-        }
+		if (!formattersAdded.containsKey(formatter))
+		{
+			sourceWriter.println("clientFormatters.put(\""+formatter+"\", "+ Formatters.getFormatterInstantionCommand(formatter) +");");
+			formattersAdded.put(formatter, true);
+		}
 	}
 }

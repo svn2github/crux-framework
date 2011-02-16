@@ -26,6 +26,7 @@ import br.com.sysmap.crux.core.config.ConfigurationFactory;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.AttachEvtBind;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.DettachEvtBind;
@@ -37,6 +38,9 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
+
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
 
 /**
  * Generate code for gwt widgets creation. Generates code based on a JSON meta data array
@@ -273,7 +277,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return factory.newWidget(out, metaElem, widgetId, widgetType);
 	}
-
+	
 	/**
 	 * @param varName
 	 * @return
@@ -282,7 +286,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return ViewFactoryCreator.createVariableName(varName);
 	}
-	
+
 	/**
 	 * 
 	 * @param out
@@ -295,7 +299,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return createWidget(out, metaElem, widgetId, true);
 	}
-
+	
 	/**
 	 * Generates the code for the given widget creation. 
 	 * 
@@ -333,6 +337,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
 		return metaElem;
 	}
+	
+	/**
+	 * @return
+	 */
+	public GeneratorContext getContext()
+	{
+		return factory.getContext();
+	}
 
 	/**
 	 * @param property
@@ -341,6 +353,22 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public String getDeclaredMessage(String property)
 	{
 		return factory.getDeclaredMessage(property);
+	}
+	
+	/**
+	 * @return
+	 */
+	public TreeLogger getLogger()
+	{
+		return factory.getLogger();
+	}
+
+	/**
+	 * @return
+	 */
+	public Screen getScreen()
+	{
+		return factory.getScreen();
 	}
 
 	/**

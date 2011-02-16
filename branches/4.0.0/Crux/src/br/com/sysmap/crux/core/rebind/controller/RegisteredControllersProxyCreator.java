@@ -391,7 +391,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 
 			sourceWriter.println("controllerName = serializedData.substring(0,idx);");
 			sourceWriter.println("serializedData = serializedData.substring(idx+1);");
-			sourceWriter.println("CrossDocumentInvoker crossDoc = (CrossDocumentInvoker)controllers.get(controllerName);");
+			sourceWriter.println("CrossDocumentInvoker crossDoc = (CrossDocumentInvoker)getController(controllerName);");
 			sourceWriter.println("if (crossDoc==null){");
 			sourceWriter.indent();
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientControllerNotFound(controllerName));");

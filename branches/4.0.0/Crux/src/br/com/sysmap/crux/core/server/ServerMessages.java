@@ -74,7 +74,7 @@ public interface ServerMessages
 	String formattersFormatterInitializeError(String errMsg);
 
 	@DefaultServerMessage("[formatters 002] - Duplicated formatter: {0}.")
-	String formattersDuplicatedDataSource(String value);
+	String formattersDuplicatedFormatter(String value);
 	
 	@DefaultServerMessage("[localeResolver 001] - Error initializing LocaleResolver: {0}.")
 	String localeResolverInitialisationError(String errMsg);

@@ -15,9 +15,7 @@
  */
 package br.com.sysmap.crux.core.rebind.screen;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.json.JSONObject;
 
 /**
  * Represent a CRUX Widget at the application's server side. 
@@ -25,16 +23,15 @@ import java.util.Map;
  */
 public class Widget
 {
-	protected Map<String, Event> events = new HashMap<String, Event>();
 	protected String id;
 	protected Widget parent = null;
-
-	protected Map<String, String> properties = new HashMap<String, String>();
 	protected String type;
 	private int hashValue = 0;
+	private JSONObject metadata;
 	
-	public Widget() 
+	public Widget(JSONObject metadata) 
 	{
+		this.metadata = metadata;
 	}
 
 	public Widget(String id) 
@@ -51,11 +48,6 @@ public class Widget
     	String compId2 = ((Widget)obj).getId();
     	return (compId1 == null?compId2==null:compId1.equals(compId2));
     }
-	
-	public Event getEvent(String evtId)
-	{
-		return events.get(evtId);
-	}
 	
 	public String getId() 
 	{
@@ -85,37 +77,9 @@ public class Widget
         return this.hashValue;
     }
 	
-	public Iterator<Event> iterateEvents()
+	public JSONObject getMetadata()
 	{
-		return events.values().iterator();
-	}
-
-	public Iterator<String> iteratePropertyValues()
-	{
-		return properties.values().iterator();
-	}
-
-	public Iterator<String> iteratePropertyNames()
-	{
-		return properties.keySet().iterator();
-	}
-
-	protected void addEvent(Event event)
-	{
-		if (event != null)
-		{
-			events.put(event.getId(), event);
-		}
-	}
-
-	protected void addProperty(String name, String value)
-	{
-		properties.put(name, value);
-	}
-
-	public String getProperty(String name)
-	{
-		return properties.get(name);
+		return metadata;
 	}
 	
 	void setId(String id)

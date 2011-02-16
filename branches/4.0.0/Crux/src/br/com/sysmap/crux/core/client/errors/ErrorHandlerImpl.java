@@ -44,7 +44,7 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 	 */
 	public void handleError(Throwable t)
 	{
-		handleError(null, t);
+		handleError(t.getMessage(), t);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 		{
 			if (LogConfiguration.loggingIsEnabled())
 			{
-				logger.log(Level.SEVERE, errorMessage, t);
+				logger.log(Level.SEVERE, errorMessage==null?"":errorMessage, t);
 			}
 		}
 		if (errorMessage != null)

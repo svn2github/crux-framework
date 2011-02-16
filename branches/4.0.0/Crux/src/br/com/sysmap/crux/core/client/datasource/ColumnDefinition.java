@@ -20,28 +20,40 @@ package br.com.sysmap.crux.core.client.datasource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ColumnMetadata<T>
+public abstract class ColumnDefinition<V, R>
 {
 	private String name;
 	private boolean sortable;
 	
-	public ColumnMetadata(String name, boolean sortable)
+	/**
+	 * @param name
+	 * @param sortable
+	 */
+	public ColumnDefinition(String name, boolean sortable)
 	{
 		this.name = name;
 		this.sortable = sortable;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public T cast(Object value)
-	{
-		return (T)value;
-	}
+	/**
+	 * Extract the value associated with this column from the given 
+	 * dataSource record object.
+	 * @param recordObject
+	 * @return
+	 */
+	public abstract V getValue(R recordObject);
 	
+	/**
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isSortable()
 	{
 		return sortable;
