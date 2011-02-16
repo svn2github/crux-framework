@@ -304,7 +304,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
 			
-			out.println(WidgetStep.class.getCanonicalName()+"<?> "+widgetStep+" = "+widget+".getWidgetStep("+EscapeUtils.quote(context.stepId)+");");
+			out.println(WidgetStep.class.getCanonicalName()+"<"+context.wizardObject+"> "+widgetStep+" = "+widget+".getWidgetStep("+EscapeUtils.quote(context.stepId)+");");
 			out.println(widgetStep+".addCommand("+EscapeUtils.quote(id)+", "+label+", new "+
 					WizardCommandHandler.class.getCanonicalName()+"<"+context.wizardObject+">(){");
 			out.println("public void onCommand("+WizardCommandEvent.class.getCanonicalName()+"<"+context.wizardObject+"> event){");
@@ -347,7 +347,7 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String label = getWidgetCreator().getDeclaredMessage(context.stepLabel);
 			
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
-			out.println(WidgetStep.class.getCanonicalName()+"<?> "+widgetStep+" = "+widget+".addWidgetStep("+
+			out.println(WidgetStep.class.getCanonicalName()+"<"+context.wizardObject+"> "+widgetStep+" = "+widget+".addWidgetStep("+
 					EscapeUtils.quote(context.stepId)+", "+label+", "+childWidget+");");
 			
 			if (!StringUtils.isEmpty(context.stepOnEnter))

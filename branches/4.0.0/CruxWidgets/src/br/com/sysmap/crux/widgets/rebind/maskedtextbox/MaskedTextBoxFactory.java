@@ -21,6 +21,7 @@ import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.formatter.Formatters;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -83,11 +84,8 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
 		{
 			String fmt = createVariableName("fmt");
 
-			//TODO: could be smarter and does not use a registereFormatters.... 
-			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = Screen.getFormatter("+EscapeUtils.quote(formatter)+");");
-			out.println("if ("+fmt+" == null){");
-			out.println("throw new InterfaceConfigException("+EscapeUtils.quote(widgetMessages.maskedLabelFormatterNotFound(formatter))+");");
-			out.println("}");
+			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = "+Formatters.getFormatterInstantionCommand(formatter)+";");
+			out.println("assert ("+fmt+" != null):"+EscapeUtils.quote(widgetMessages.maskedLabelFormatterNotFound(formatter))+";");
 			out.println(className + " " + varName+" = new "+className+"("+fmt+");");
 		}	
 		else

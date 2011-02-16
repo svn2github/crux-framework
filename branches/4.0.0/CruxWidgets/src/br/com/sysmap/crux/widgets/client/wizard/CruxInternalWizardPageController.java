@@ -18,7 +18,6 @@ package br.com.sysmap.crux.widgets.client.wizard;
 import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.WidgetController;
 import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.ModuleComunicationException;
 import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabsControllerInvoker;
@@ -565,7 +564,6 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 	/**
 	 * @param pageId
 	 * @return
-	 * @throws ModuleComunicationException
 	 */
 	static boolean isInternalPageLoaded(String pageId) throws WizardException
 	{
@@ -579,7 +577,7 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 	}
 	
 	private static native boolean existsAccessorFunction(JSWindow tabWindow)/*-{
-		return typeof tabWindow['_cruxScreenControllerAccessor'] == 'function';
+		return typeof tabWindow['_cruxCrossDocumentAccessor'] == 'function';
 	}-*/;
 	
 	

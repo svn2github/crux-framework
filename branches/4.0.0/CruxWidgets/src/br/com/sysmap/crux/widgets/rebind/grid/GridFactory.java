@@ -23,10 +23,12 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.datasource.DataSources;
+import br.com.sysmap.crux.core.rebind.formatter.Formatters;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.AlignmentAttributeParser;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
@@ -43,6 +45,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttribut
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.widgets.client.grid.ColumnDefinition;
 import br.com.sysmap.crux.widgets.client.grid.ColumnDefinitions;
 import br.com.sysmap.crux.widgets.client.grid.DataColumnDefinition;
@@ -57,6 +60,8 @@ import br.com.sysmap.crux.widgets.rebind.event.RowEventsBind.RowClickEvtBind;
 import br.com.sysmap.crux.widgets.rebind.event.RowEventsBind.RowDoubleClickEvtBind;
 import br.com.sysmap.crux.widgets.rebind.event.RowEventsBind.RowRenderEvtBind;
 
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -238,18 +243,90 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{
-			String dataSourceName = context.readWidgetProperty("dataSource");
+			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
+			JClassType dtoType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{});
+
+			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoType.getParameterizedQualifiedSourceName()+">";
+			String dataSource = getWidgetCreator().createVariableName("dataSource");
+			out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(propertyValue)+");");
+			String widget = context.getWidget();			
+			String dataSourceDefinitions = createDataSourceColumnDefinitions(out, context.getWidgetElement(), dtoType);
+			out.println(dataSource+".setColumnDefinitions("+dataSourceDefinitions+");");
+			out.println(widget+".setDataSource("+dataSource+");");
+		}
+
+		private String createDataSourceColumnDefinitions(SourcePrinter out, JSONObject gridElem, JClassType dtoType)
+        {
+			String colDefs = getWidgetCreator().createVariableName("colDefs");
 			
-			if(!StringUtils.isEmpty(dataSourceName))
+			String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
+			String columnDefinitionsClassName = br.com.sysmap.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
+			out.println(columnDefinitionsClassName+" "+colDefs+" = new "+columnDefinitionsClassName+"();");
+
+			JSONArray colElems = ensureChildren(gridElem, false);
+			int colsSize = colElems.length();
+			if(colsSize > 0)
 			{
-				String className = PagedDataSource.class.getCanonicalName()+"<?>";
-				String dataSource = getWidgetCreator().createVariableName("dataSource");
-				
-				out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(dataSourceName)+");");
-				String widget = context.getWidget();			
-				out.println(widget+".setDataSource("+dataSource+");");
+				for (int i=0; i<colsSize; i++)
+				{
+					JSONObject colElem = colElems.optJSONObject(i);
+					if (colElem != null)
+					{
+						String columnType = getChildName(colElem);
+						if("dataColumn".equals(columnType))
+						{
+							StringBuilder getValueExpression = new StringBuilder();
+							JType propType = buildGetValueExpression(getValueExpression, dtoType, dtoClassName, colElem);
+							
+							JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
+							
+							boolean isSortable = (propType.isPrimitive() != null) || (comparableType.isAssignableFrom((JClassType) propType));
+							String propTypeName = propType.getParameterizedQualifiedSourceName();
+							out.println(colDefs+".addColumn(new "+br.com.sysmap.crux.core.client.datasource.ColumnDefinition.class.getCanonicalName()+
+									    "<"+propTypeName+","+dtoClassName+">("+EscapeUtils.quote(colElem.optString("key"))+","+isSortable+"){");
+							out.println("public "+propTypeName+" getValue("+dtoClassName+" recordObject){");
+							out.println("return "+getValueExpression.toString());
+							out.println("}");
+							out.println("});");
+						}
+					}
+				}
 			}
-		}		
+			
+			return colDefs;
+        }
+
+		private JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String dtoClassName, JSONObject colElem)
+        {
+	        String colKey = colElem.optString("key");
+	        String[] props;
+	        if (colKey.contains("."))
+	        {
+	        	props = colKey.split(".");
+	        }
+	        else
+	        {
+	        	props = new String[]{colKey};
+	        }
+	        
+	        if (props != null && props.length > 0)
+	        {
+	        	out.append("recordObject");
+	        	JClassType baseType = dtoType;
+	        	for (String prop : props)
+	        	{
+	        		String getterMethod = ClassUtils.getGetterMethod(prop, baseType);
+	        		out.append("."+getterMethod+"()");
+	        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseType, getterMethod, new JType[]{});
+	        	}
+	        	out.append(";");
+	        	return baseType;//TODO tratar nullPOinters aki
+	        }
+	        else
+	        {
+	        	throw new CruxGeneratorException();//TODO message
+	        }
+        }		
 	}
 
 	/**
@@ -318,7 +395,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	{
 		String defs = createVariableName("defs");
 		
-		out.print(ColumnDefinitions.class.getCanonicalName()+" "+defs+" = new "+ColumnDefinitions.class.getCanonicalName()+"();");
+		out.println(ColumnDefinitions.class.getCanonicalName()+" "+defs+" = new "+ColumnDefinitions.class.getCanonicalName()+"();");
 
 		JSONArray colElems = ensureChildren(gridElem, false);
 		int colsSize = colElems.length();
@@ -353,7 +430,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+DataColumnDefinition.class.getCanonicalName()+"("+
 								label+", "+
 								EscapeUtils.quote(width)+", "+
-								EscapeUtils.quote(formatter)+", "+ 
+								Formatters.getFormatterInstantionCommand(formatter)+", "+ 
 								visible+", "+
 								sortable+", "+
 								wrapLine+", "+

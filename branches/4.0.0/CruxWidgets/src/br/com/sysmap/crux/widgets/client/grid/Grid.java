@@ -32,7 +32,6 @@ import br.com.sysmap.crux.core.client.datasource.RemoteDataSource;
 import br.com.sysmap.crux.core.client.datasource.RemoteDataSourceCallback;
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.screen.Screen;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
@@ -338,16 +337,15 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 
 	private Widget createDataLabel(DataColumnDefinition dataColumn, String key)
 	{
-		String formatterName = dataColumn.getFormatter();
+		Formatter formatter = dataColumn.getFormatter();
 		Object value = dataSource.getValue(key);
 		String str = emptyDataFilling;
 		boolean useEmptyDataStyle = true;
 		
 		if(value != null)
 		{
-			if(formatterName != null && formatterName.length() > 0)
+			if(formatter != null )
 			{
-				Formatter formatter = Screen.getFormatter(formatterName);
 				str = formatter.format(value);
 				useEmptyDataStyle = false;
 			}
@@ -726,7 +724,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 			{
 				return grid.isDataLoaded() 
 				&& ((DataColumnDefinition) columnDefinition).isSortable()
-				&& this.grid.getDataSource().getMetadata().getColumn(columnDefinition.getKey()).isSortable();
+				&& this.grid.getDataSource().getColumnDefinitions().getColumn(columnDefinition.getKey()).isSortable();
 			}
 			return false;			
 		}

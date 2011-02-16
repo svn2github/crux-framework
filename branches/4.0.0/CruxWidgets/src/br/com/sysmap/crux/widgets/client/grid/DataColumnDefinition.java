@@ -15,16 +15,18 @@
  */
 package br.com.sysmap.crux.widgets.client.grid;
 
+import br.com.sysmap.crux.core.client.formatter.Formatter;
+
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 public class DataColumnDefinition extends ColumnDefinition
 {
-	private String formatter;
+	private Formatter formatter;
 	private boolean wrapLine;
 	private boolean sortable;
 
-	public DataColumnDefinition(String label, String width, String formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		super(label, width, visible, horizontalAlign, verticalAlign);
 		this.formatter = formatter;
@@ -35,7 +37,7 @@ public class DataColumnDefinition extends ColumnDefinition
 	/**
 	 * @return the formatter
 	 */
-	public String getFormatter()
+	public Formatter getFormatter()
 	{
 		return formatter;
 	}
