@@ -22,6 +22,7 @@ package br.com.sysmap.crux.core.client.event;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@SuppressWarnings("deprecation")
 public interface CrossDocumentInvoker extends ControllerInvoker
 {
 	/**

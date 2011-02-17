@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -53,7 +53,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 {
 	protected JClassType invocableClassType;
 	
-	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType, JClassType invocableClassType)
+	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType, JClassType invocableClassType)
     {
 	    super(logger, context, baseProxyType);
 	    this.invocableClassType = invocableClassType;
@@ -266,7 +266,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 */
 	private void generateDTOFieldPopulation(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter)
 	{
-		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, false, true);
+		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, false, true, new HashSet<String>());
 	}	
 	
 	/**
@@ -528,9 +528,13 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param resultVariable
 	 * @param voClass
 	 * @param sourceWriter
+	 * @param populateScreen
+	 * @param dtoLooping
 	 */
-	private void generateScreenOrDTOPopulation(String resultVariable, JClassType voClass, SourceWriter sourceWriter, boolean populateScreen)
+	private void generateScreenOrDTOPopulation(String resultVariable, JClassType voClass, SourceWriter sourceWriter, 
+			boolean populateScreen, Set<String> dtoLooping)
 	{
+		dtoLooping.add(voClass.getQualifiedSourceName());
 		for (JField field : voClass.getFields()) 
 		{
 			if ((populateScreen && isPropertyVisibleToRead(voClass, field)) || 
@@ -540,7 +544,13 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				ScreenBind screenBind = field.getAnnotation(ScreenBind.class); 
 				if (valueObject != null && valueObject.bindWidgetByFieldName() || screenBind != null)
 				{
-					generateScreenOrDTOPopulationField(resultVariable, voClass, field, sourceWriter, populateScreen, false);
+					if (dtoLooping.contains(field.getType().getQualifiedSourceName()))
+					{
+						throw new CruxGeneratorException(
+								messages.errorGeneratingValueBindingCodeCircularReference(voClass.getQualifiedSourceName(), 
+																						  field.getName()));
+					}
+					generateScreenOrDTOPopulationField(resultVariable, voClass, field, sourceWriter, populateScreen, false, dtoLooping);
 				}
 			}
 		}
@@ -557,7 +567,9 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param allowProtected
 	 */
 	private void generateScreenOrDTOPopulationField(String parentVariable, JClassType voClass, 
-			                                        JField field, SourceWriter sourceWriter, boolean populateScreen, boolean allowProtected)
+			                                        JField field, SourceWriter sourceWriter, 
+			                                        boolean populateScreen, boolean allowProtected, 
+			                                        Set<String> dtoLooping)
 	{
 		JType type = field.getType();
 		String name = null;
@@ -588,7 +600,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			parentVariable = getFieldValueGet(voClass, field, parentVariable, allowProtected);
 			if (parentVariable != null)
 			{
-				generateScreenOrDTOPopulation(parentVariable, (JClassType)type, sourceWriter, populateScreen);
+				generateScreenOrDTOPopulation(parentVariable, (JClassType)type, sourceWriter, populateScreen, dtoLooping);
 			}
 		}
 	}
@@ -630,7 +642,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 */
 	private void generateScreenWidgetPopulation(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter)
 	{
-		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, true, true);
+		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, true, true, new HashSet<String>());
 	}
 	
 	

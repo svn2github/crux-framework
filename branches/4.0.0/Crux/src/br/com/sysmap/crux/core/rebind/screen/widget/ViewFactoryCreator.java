@@ -51,6 +51,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -80,7 +81,7 @@ public class ViewFactoryCreator
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static NameFactory nameFactory = new NameFactory();
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
-	private GeneratorContext context;
+	private GeneratorContextExt context;
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
 	private Map<String, WidgetCreator<?>> factories = new HashMap<String, WidgetCreator<?>>();
 	private Map<String, WidgetCreatorHelper> factoryHelpers = new HashMap<String, WidgetCreatorHelper>();
@@ -100,7 +101,7 @@ public class ViewFactoryCreator
 	 * @param logger
 	 * @param screen
 	 */
-	public ViewFactoryCreator(GeneratorContext context, TreeLogger logger, Screen screen)
+	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen)
     {
 		this.logger = logger;
 		this.context = context;
@@ -505,7 +506,7 @@ public class ViewFactoryCreator
 	 * @param context
 	 * @param logger
 	 */
-	void prepare(GeneratorContext context, TreeLogger logger)
+	void prepare(GeneratorContextExt context, TreeLogger logger)
 	{
 		this.context = context;
 		this.logger = logger;

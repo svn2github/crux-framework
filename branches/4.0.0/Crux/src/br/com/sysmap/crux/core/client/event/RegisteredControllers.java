@@ -28,5 +28,6 @@ public interface RegisteredControllers
 	String invokeCrossDocument(String serializedData); 
 	@Deprecated
 	void invokeController(String controller, String method, boolean fromOutOfModule, Object sourceEvent, EventProcessor eventProcessor);
-	void registerController(String controller, ControllerInvoker handlerInvoker);
+	@SuppressWarnings("deprecation")
+    void registerController(String controller, ControllerInvoker handlerInvoker);
 }

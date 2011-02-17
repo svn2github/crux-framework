@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.invoker.InvokerProxyCreator;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -49,7 +49,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 	 * @param context
 	 * @param baseIntf
 	 */
-	public AbstractTabInvokerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public AbstractTabInvokerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }

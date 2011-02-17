@@ -241,6 +241,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 054] - Error Generating registered element. Can not retrieve current screen.")
 	String errorGeneratingRegisteredElementCanNotFoundCurrentScreen();
 
+	@DefaultServerMessage("[generator 055] - Error Generating value binding code for DTO [{0}], Field [{1}]. Circular Reference. ")
+	String errorGeneratingValueBindingCodeCircularReference(String className, String fieldName);
+	
 	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String viewFactoryMetaElementDoesNotContainsType();
 

@@ -23,6 +23,7 @@ import br.com.sysmap.crux.core.client.screen.ScreenBindableObject;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Deprecated
 public interface ControllerInvoker extends ScreenBindableObject
 {
 	/**

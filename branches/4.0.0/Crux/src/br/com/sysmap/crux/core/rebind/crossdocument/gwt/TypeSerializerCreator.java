@@ -28,10 +28,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GwtScriptOnly;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -39,7 +40,10 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.dev.javac.TypeOracleMediator;
+import com.google.gwt.dev.javac.rebind.CachedRebindResult;
+import com.google.gwt.dev.util.log.speedtracer.CompilerEventType;
+import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger;
+import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger.Event;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.SerializerBase;
@@ -68,7 +72,7 @@ public class TypeSerializerCreator {
    * property value.
    * 
    * Note that the inliner will likely reassemble the shards if it is used in
-   * web mode, but it isn't needed there anyway.
+   * Production Mode, but it isn't needed there anyway.
    * 
    * TODO: remove this (and related code) when it is no longer needed.
    */
@@ -99,7 +103,7 @@ public class TypeSerializerCreator {
     }
   }
 
-  private final GeneratorContext context;
+  private final GeneratorContextExt context;
 
   private final SerializableTypeOracle deserializationOracle;
 
@@ -121,7 +125,7 @@ public class TypeSerializerCreator {
 
   public TypeSerializerCreator(TreeLogger logger,
       SerializableTypeOracle serializationOracle,
-      SerializableTypeOracle deserializationOracle, GeneratorContext context,
+      SerializableTypeOracle deserializationOracle, GeneratorContextExt context,
       String typeSerializerClassName, String typeSerializerSimpleName)
       throws UnableToCompleteException {
     this.context = context;
@@ -202,42 +206,52 @@ public class TypeSerializerCreator {
 
     return typeSerializerClassName;
   }
-
+ 
   /*
    * Create a field serializer for a type if it does not have a custom
    * serializer.
    */
-  private void createFieldSerializer(TreeLogger logger, GeneratorContext ctx,
+  private void createFieldSerializer(TreeLogger logger, GeneratorContextExt ctx,
       JType type) {
-    assert (type != null);
-    assert (serializationOracle.isSerializable(type) || deserializationOracle.isSerializable(type));
-
-    JParameterizedType parameterizedType = type.isParameterized();
-    if (parameterizedType != null) {
-      createFieldSerializer(logger, ctx, parameterizedType.getRawType());
-      return;
+    Event event = SpeedTracerLogger.start(CompilerEventType.GENERATOR_RPC_FIELD_SERIALIZER);
+    try {
+      assert (type != null);
+      assert (serializationOracle.isSerializable(type) || deserializationOracle.isSerializable(type));
+  
+      JParameterizedType parameterizedType = type.isParameterized();
+      if (parameterizedType != null) {
+        createFieldSerializer(logger, ctx, parameterizedType.getRawType());
+        return;
+      }
+  
+      /*
+       * Only a JClassType can reach this point in the code. JPrimitives have been
+       * removed because their serialization is built in, interfaces have been
+       * removed because they are not an instantiable type and parameterized types
+       * have been broken down into their raw types.
+       */
+      assert (type.isClass() != null || type.isArray() != null);
+      
+      if (findCacheableFieldSerializerAndMarkForReuseIfAvailable(ctx, type)) {
+        // skip generation of field serializer
+        return;
+      }
+  
+      JClassType customFieldSerializer = SerializableTypeOracleBuilder.findCustomFieldSerializer(
+          typeOracle, type);
+      FieldSerializerCreator creator = new FieldSerializerCreator(typeOracle,
+          serializationOracle, deserializationOracle, (JClassType) type,
+          customFieldSerializer);
+      creator.realize(logger, ctx);
+    } finally {
+      event.end();
     }
-
-    /*
-     * Only a JClassType can reach this point in the code. JPrimitives have been
-     * removed because their serialization is built in, interfaces have been
-     * removed because they are not an instantiable type and parameterized types
-     * have been broken down into their raw types.
-     */
-    assert (type.isClass() != null || type.isArray() != null);
-
-    JClassType customFieldSerializer = SerializableTypeOracleBuilder.findCustomFieldSerializer(
-        typeOracle, type);
-    FieldSerializerCreator creator = new FieldSerializerCreator(typeOracle,
-        serializationOracle, deserializationOracle, (JClassType) type,
-        customFieldSerializer);
-    creator.realize(logger, ctx);
   }
 
   /*
    * Create all of the necessary field serializers.
    */
-  private void createFieldSerializers(TreeLogger logger, GeneratorContext ctx) {
+  private void createFieldSerializers(TreeLogger logger, GeneratorContextExt ctx) {
     JType[] types = getSerializableTypes();
     int typeCount = types.length;
     for (int typeIndex = 0; typeIndex < typeCount; ++typeIndex) {
@@ -247,7 +261,51 @@ public class TypeSerializerCreator {
       createFieldSerializer(logger, ctx, type);
     }
   }
-
+  
+  /*
+   * check whether we can use a previously generated version of a 
+   * FieldSerializer.  If so, mark it for reuse, and return true.
+   * Otherwise return false.
+   */
+  private boolean findCacheableFieldSerializerAndMarkForReuseIfAvailable(
+      GeneratorContextExt ctx, JType type) {
+    
+    CachedRebindResult lastResult = ctx.getCachedGeneratorResult();
+    if (lastResult == null || !ctx.isGeneratorResultCachingEnabled()) {
+      return false;
+    }
+    
+    String fieldSerializerName = 
+      SerializationUtils.getStandardSerializerName((JClassType) type);
+    
+    if (type instanceof JClassType) {
+      // check that it is available for reuse
+      if (!lastResult.isTypeCached(fieldSerializerName)) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+          
+    try {
+      /*
+       * TODO(jbrosenberg): Change this check to use getVersion() from 
+       * TypeOracle, once that is available.
+       */
+      long lastModified = ctx.getSourceLastModifiedTime((JClassType) type);
+      
+      if (lastModified != 0L &&
+          lastModified < lastResult.getTimeGenerated()) {
+        
+        // use cached version  
+        return ctx.reuseTypeFromCacheIfAvailable(fieldSerializerName);
+      }
+    } catch (RuntimeException ex) {
+      // could get an exception checking modified time
+    }
+      
+    return false;
+  }
   private String[] getPackageAndClassName(String fullClassName) {
     String className = fullClassName;
     String packageName = "";
@@ -263,7 +321,7 @@ public class TypeSerializerCreator {
     return serializableTypes;
   }
 
-  private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContext ctx) {
+  private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContextExt ctx) {
     String name[] = getPackageAndClassName(typeSerializerClassName);
     String packageName = name[0];
     String className = name[1];
@@ -280,6 +338,7 @@ public class TypeSerializerCreator {
     composerFactory.addImport(TypeHandler.class.getName());
     composerFactory.addImport(HashMap.class.getName());
     composerFactory.addImport(Map.class.getName());
+    composerFactory.addImport(GwtScriptOnly.class.getName());
 
     composerFactory.setSuperclass(SerializerBase.class.getName());
     return composerFactory.createSourceWriter(ctx, printWriter);
@@ -290,7 +349,7 @@ public class TypeSerializerCreator {
    * @return
    */
   private String getTypeString(JType type) {
-    String typeString = TypeOracleMediator.computeBinaryClassName(type) + "/"
+    String typeString = SerializationUtils.getRpcTypeName(type) + "/"
         + SerializationUtils.getSerializationSignature(typeOracle, type);
     return typeString;
   }
@@ -321,15 +380,15 @@ public class TypeSerializerCreator {
   }
 
   /**
-   * Writes a method to produce a map of type string -> {@link TypeHandler}
-   * for Java.
+   * Writes a method to produce a map of type string -> class name of 
+   * {@link TypeHandler} for Java.
    * 
    * <pre>
-   * private static Map&lt;String, TypeHandler&gt; loadMethodsJava() {
-   *   Map&lt;String, TypeHandler&gt; result = new HashMap&lt;String, TypeHandler&gt;();
+   * private static Map&lt;String, String&gt; loadMethodsJava() {
+   *   Map&lt;String, String&gt; result = new HashMap&lt;String, String&gt;();
    *   result.put(
    *       &quot;java.lang.String/2004016611&quot;,
-   *       new com.google.gwt.user.client.rpc.core.java.lang.String_FieldSerializer.Handler());
+   *       &quot;com.google.gwt.user.client.rpc.core.java.lang.String_FieldSerializer&quot;
    *   ...
    *   return result;
    * }
@@ -337,9 +396,9 @@ public class TypeSerializerCreator {
    */
   private void writeLoadMethodsJava() {
     srcWriter.println("@SuppressWarnings(\"deprecation\")");
-    srcWriter.println("private static Map<String, TypeHandler> loadMethodsJava() {");
+    srcWriter.println("private static Map<String, String> loadMethodsJava() {");
     srcWriter.indent();
-    srcWriter.println("Map<String, TypeHandler> result = new HashMap<String, TypeHandler>();");
+    srcWriter.println("Map<String, String> result = new HashMap<String, String>();");
 
     List<JType> filteredTypes = new ArrayList<JType>();
     JType[] types = getSerializableTypes();
@@ -356,9 +415,9 @@ public class TypeSerializerCreator {
       String typeString = typeStrings.get(type);
       assert typeString != null : "Missing type signature for "
           + type.getQualifiedSourceName();
-      srcWriter.println("result.put(\"" + typeString + "\", new "
+      srcWriter.println("result.put(\"" + typeString + "\", \""
           + SerializationUtils.getStandardSerializerName((JClassType) type)
-          + ".Handler());");
+          + "\");");
     }
 
     srcWriter.println("return result;");
@@ -385,6 +444,7 @@ public class TypeSerializerCreator {
    */
   private void writeLoadMethodsNative() {
     srcWriter.println("@SuppressWarnings(\"deprecation\")");
+    srcWriter.println("@GwtScriptOnly");
     srcWriter.println("private static native MethodMap loadMethodsNative() /*-{");
     srcWriter.indent();
     srcWriter.println("var result = {};");
@@ -437,11 +497,11 @@ public class TypeSerializerCreator {
   }
 
   /**
-   * Writes a method to produce a map of class to type string for Java.
+   * Writes a method to produce a map of class name to type string for Java.
    * 
    * <pre>
-   * private static Map&lt;Class&lt;?&gt;, String&gt; loadSignaturesJava() {
-   *   Map&lt;Class&lt;?&gt;, String&gt; result = new HashMap&lt;Class&lt;?&gt;, String&gt;();
+   * private static Map&lt;String&lt;?&gt;, String&gt; loadSignaturesJava() {
+   *   Map&lt;String&lt;?&gt;, String&gt; result = new HashMap&lt;String&lt;?&gt;, String&gt;();
    *   result.put(
    *       com.google.gwt.user.client.rpc.core.java.lang.String_FieldSerializer.concreteType(),
    *       &quot;java.lang.String/2004016611&quot;);
@@ -452,9 +512,9 @@ public class TypeSerializerCreator {
    */
   private void writeLoadSignaturesJava() {
     srcWriter.println("@SuppressWarnings(\"deprecation\")");
-    srcWriter.println("private static Map<Class<?>, String> loadSignaturesJava() {");
+    srcWriter.println("private static Map<String, String> loadSignaturesJava() {");
     srcWriter.indent();
-    srcWriter.println("Map<Class<?>, String> result = new HashMap<Class<?>, String>();");
+    srcWriter.println("Map<String, String> result = new HashMap<String, String>();");
 
     for (JType type : getSerializableTypes()) {
       String typeString = typeStrings.get(type);
@@ -470,16 +530,8 @@ public class TypeSerializerCreator {
       if (customSerializer != null
           && CustomFieldSerializerValidator.getConcreteTypeMethod(customSerializer) != null) {
         typeRef = customSerializer.getQualifiedSourceName() + ".concreteType()";
-      } else if (type instanceof JClassType) {
-        typeRef = SerializationUtils.getStandardSerializerName((JClassType) type)
-            + ".concreteType()";
       } else {
-        typeRef = type.getLeafType().getQualifiedSourceName();
-        while (type.isArray() != null) {
-          typeRef += "[]";
-          type = type.isArray().getComponentType();
-        }
-        typeRef += ".class";
+        typeRef = '"' + SerializationUtils.getRpcTypeName(type) + '"';
       }
 
       srcWriter.println("result.put(" + typeRef + ", \"" + typeString + "\");");
@@ -505,6 +557,7 @@ public class TypeSerializerCreator {
    */
   private void writeLoadSignaturesNative() {
     srcWriter.println("@SuppressWarnings(\"deprecation\")");
+    srcWriter.println("@GwtScriptOnly");  
     srcWriter.println("private static native JsArrayString loadSignaturesNative() /*-{");
     srcWriter.indent();
     srcWriter.println("var result = [];");
@@ -525,7 +578,7 @@ public class TypeSerializerCreator {
       }
 
       String jsniTypeRef;
-      jsniTypeRef = TypeOracleMediator.computeBinaryClassName(type.getLeafType());
+      jsniTypeRef = SerializationUtils.getRpcTypeName(type.getLeafType());
       while (type.isArray() != null) {
         jsniTypeRef += "[]";
         type = type.isArray().getComponentType();
@@ -554,16 +607,16 @@ public class TypeSerializerCreator {
    * Writes the class's static fields.
    * 
    * <pre>
-   * private static final Map&lt;String, TypeHandler&gt; methodMapJava;
+   * private static final Map&lt;String, String&gt; methodMapJava;
    * private static final MethodMap methodMapNative;
-   * private static final Map&lt;Class&lt;?&gt;, String&gt; signatureMapJava;
+   * private static final Map&lt;String&lt;?&gt;, String&gt; signatureMapJava;
    * private static final JsArrayString signatureMapNative;
    * </pre>
    */
   private void writeStaticFields() {
-    srcWriter.println("private static final Map<String, TypeHandler> methodMapJava;");
+    srcWriter.println("private static final Map<String, String> methodMapJava;");
     srcWriter.println("private static final MethodMap methodMapNative;");
-    srcWriter.println("private static final Map<Class<?>, String> signatureMapJava;");
+    srcWriter.println("private static final Map<String, String> signatureMapJava;");
     srcWriter.println("private static final JsArrayString signatureMapNative;");
     srcWriter.println();
   }

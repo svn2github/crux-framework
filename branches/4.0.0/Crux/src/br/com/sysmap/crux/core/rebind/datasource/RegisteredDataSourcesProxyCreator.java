@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
 import br.com.sysmap.crux.core.client.datasource.DataSourceExcpetion;
+import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
 import br.com.sysmap.crux.core.client.datasource.RegisteredDataSources;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -50,9 +50,9 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private Map<String, String> dataSourcesClassNames = new HashMap<String, String>();
 	private final Screen screen;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContext context, Screen screen)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, Screen screen)
     {
-	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()));
+	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()), false);
 		this.screen = screen;
     }
 
@@ -178,7 +178,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	}
 	
 	@Override
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		String className = screen.getModule()+"_"+screen.getRelativeId(); 
 		className = className.replaceAll("[\\W]", "_");

@@ -27,7 +27,6 @@ import br.com.sysmap.crux.core.client.controller.Validate;
 import br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader;
 import br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamWriter;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
-import br.com.sysmap.crux.core.client.event.ControllerInvoker;
 import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
 import br.com.sysmap.crux.core.client.event.CruxEvent;
 import br.com.sysmap.crux.core.client.formatter.HasFormatter;
@@ -44,6 +43,7 @@ import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -88,7 +88,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public ControllerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType controllerClass)
+	public ControllerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType controllerClass)
 	{
 		super(logger, context, getCrossDocumentInterface(logger, context, controllerClass), controllerClass);
 		this.controllerClass = controllerClass;
@@ -252,7 +252,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
-	protected String getProxyQualifiedName()
+	public String getProxyQualifiedName()
 	{
 		return controllerClass.getPackage().getName() + "." + getProxySimpleName();
 	}
@@ -260,7 +260,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return the simple name of the proxy object.
 	 */
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		return controllerClass.getSimpleSourceName() + CONTROLLER_PROXY_SUFFIX;
 	}
@@ -288,7 +288,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 
 		composerFactory.setSuperclass(controllerClass.getQualifiedSourceName());
-		String baseInterface = isCrossDoc?CrossDocumentInvoker.class.getCanonicalName():ControllerInvoker.class.getCanonicalName();
+		@SuppressWarnings("deprecation")
+        String baseInterface = isCrossDoc?CrossDocumentInvoker.class.getCanonicalName():br.com.sysmap.crux.core.client.event.ControllerInvoker.class.getCanonicalName();
 		composerFactory.addImplementedInterface(baseInterface);
 
 		return composerFactory.createSourceWriter(context, printWriter);

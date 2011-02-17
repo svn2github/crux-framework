@@ -41,7 +41,7 @@ import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -62,9 +62,9 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredCruxSerializablesProxyCreator(TreeLogger logger, GeneratorContext context)
+	public RegisteredCruxSerializablesProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
-	    super(logger, context, context.getTypeOracle().findType(RegisteredCruxSerializables.class.getCanonicalName()));
+	    super(logger, context, context.getTypeOracle().findType(RegisteredCruxSerializables.class.getCanonicalName()), false);
     }	
 	
 	/**

@@ -15,11 +15,11 @@
  */
 package br.com.sysmap.crux.widgets.rebind;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabs;
+
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-
-import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabs;
 
 /**
  * Generates a invoker for calling existing controllers/methods on a tab that belongs to a DynaTabs object rendered in the current document.
@@ -28,7 +28,7 @@ import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabs;
 @Deprecated
 public class TabInvokerProxyCreator extends AbstractTabInvokerProxyCreator
 {
-	public TabInvokerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public TabInvokerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }

@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Abstraction for the entire page. It encapsulate all the widgets, containers and 
+ * Abstraction for the entire page. It contains all widgets, containers and 
  * datasources.
  * @author Thiago da Rosa de Bustamante
  *

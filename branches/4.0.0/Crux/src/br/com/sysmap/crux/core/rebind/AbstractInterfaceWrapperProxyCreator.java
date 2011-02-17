@@ -25,16 +25,17 @@ import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
+import com.google.gwt.dev.javac.rebind.CachedRebindResult;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * 
- * Base class for all RegisteredXXX classes (RegisteredControllers, RegisteredDataSources, ...)
+ * Base class for all generators that create a smart stub for a base interface
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -42,13 +43,30 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 {
 	private static final String PROXY_SUFFIX = "_Impl";
 	protected JClassType baseIntf;
+	private boolean cacheable;
 
-	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)
     {
 	    super(logger, context);
 		this.baseIntf = baseIntf;
+		this.cacheable = cacheable;
     }
 
+	@Override
+	public String create() throws CruxGeneratorException
+	{
+	    if (this.cacheable)
+	    {
+	    	if (findCacheableImplementationAndMarkForReuseIfAvailable())
+	    	{
+	    		return getProxyQualifiedName();
+	    	}
+	    }
+		
+		return super.create();
+	}
+	
+	
 	/**
 	 * @return the list of imports required by proxy
 	 */
@@ -58,7 +76,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 * @return the full qualified name of the proxy object.
 	 */
 	@Override
-	protected String getProxyQualifiedName()
+	public String getProxyQualifiedName()
 	{
 		return baseIntf.getPackage().getName() + "." + getProxySimpleName();
 	}
@@ -67,7 +85,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 * @return the simple name of the proxy object.
 	 */
 	@Override
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		return baseIntf.getSimpleSourceName() + PROXY_SUFFIX;
 	}
@@ -188,5 +206,48 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		composerFactory.addImplementedInterface(baseIntf.getQualifiedSourceName());
 
 		return composerFactory.createSourceWriter(context, printWriter);
-	}	
+	}
+	
+	/**
+	 * @return
+	 */
+	protected boolean findCacheableImplementationAndMarkForReuseIfAvailable()
+	{
+		CachedRebindResult lastResult = context.getCachedGeneratorResult();
+		if (lastResult == null || !context.isGeneratorResultCachingEnabled())
+		{
+			return false;
+		}
+
+		String proxyName = getProxyQualifiedName();
+
+		// check that it is available for reuse
+		if (!lastResult.isTypeCached(proxyName))
+		{
+			return false;
+		}
+
+		try
+		{
+			long lastModified = context.getSourceLastModifiedTime(baseIntf);
+
+			if (lastModified != 0L && lastModified < lastResult.getTimeGenerated())
+			{
+				return context.reuseTypeFromCacheIfAvailable(proxyName);
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			// could get an exception checking modified time
+			return false;
+		}
+
+		return false;
+	}
+	
+	@Override
+	protected boolean isCacheable()
+	{
+		return cacheable;
+	}
 }

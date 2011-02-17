@@ -35,7 +35,7 @@ import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.impl.Impl;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -83,7 +83,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @param context
 	 * @param baseProxyType
 	 */
-	public CrossDocumentProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType)
+	public CrossDocumentProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType)
 	{
 		super(logger, context, baseProxyType);
 	}
@@ -297,7 +297,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
-	protected String getProxyQualifiedName()
+	public String getProxyQualifiedName()
 	{
 		return baseProxyType.getPackage().getName() + "." + getProxySimpleName();
 	}
@@ -305,7 +305,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	/**
 	 * @return the simple name of the proxy object.
 	 */
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		return baseProxyType.getSimpleSourceName() + CROSS_DOC_SUFFIX;
 	}

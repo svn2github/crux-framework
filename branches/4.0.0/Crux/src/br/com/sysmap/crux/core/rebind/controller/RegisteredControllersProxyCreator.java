@@ -25,7 +25,6 @@ import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
-import br.com.sysmap.crux.core.client.event.ControllerInvoker;
 import br.com.sysmap.crux.core.client.event.CrossDocumentInvoker;
 import br.com.sysmap.crux.core.client.event.RegisteredControllers;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
@@ -37,7 +36,7 @@ import br.com.sysmap.crux.core.rebind.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
@@ -62,9 +61,9 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContext context, Screen screen)
+	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, Screen screen)
     {
-	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()));
+	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()), false);
 		this.screen = screen;
     }
 
@@ -149,7 +148,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     		br.com.sysmap.crux.core.client.event.EventProcessor.class.getCanonicalName(),
     		Crux.class.getCanonicalName(), 
     		FastMap.class.getCanonicalName(),
-    		ControllerInvoker.class.getCanonicalName(),
+    		br.com.sysmap.crux.core.client.event.ControllerInvoker.class.getCanonicalName(),
     		CrossDocumentInvoker.class.getCanonicalName(), 
     		StringUtils.class.getCanonicalName()
 		};
@@ -273,7 +272,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				{
 					sourceWriter.println("else if (StringUtils.unsafeEquals(\""+controller+"\",controllerName)){");
 					sourceWriter.indent();
-					//TODO: como a registeredcontrollers eh por tela, remover o fragment da controller, deixar so o lazy
 /*					if (controllerAnnot != null && Fragments.getFragmentClass(controllerAnnot.fragment()) != null)
 					{
 						Set<String> fragments = fragmentControllerClassNames.get(controllerAnnot.fragment());
@@ -529,7 +527,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     }
 
 	@Override
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		String className = screen.getModule()+"_"+screen.getRelativeId(); 
 		className = className.replaceAll("[\\W]", "_");

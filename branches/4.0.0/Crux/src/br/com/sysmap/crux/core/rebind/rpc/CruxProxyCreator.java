@@ -32,6 +32,7 @@ import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -80,7 +81,7 @@ public class CruxProxyCreator extends ProxyCreator
 	 * @see com.google.gwt.user.rebind.rpc.ProxyCreator#create(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.GeneratorContext)
 	 */
 	@Override
-	public String create(TreeLogger logger, GeneratorContext context)
+	public String create(TreeLogger logger, GeneratorContextExt context)
 			throws UnableToCompleteException
 	{
 		this.logger = logger;

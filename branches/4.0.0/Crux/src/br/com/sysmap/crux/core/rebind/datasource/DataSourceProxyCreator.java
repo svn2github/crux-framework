@@ -34,7 +34,7 @@ import br.com.sysmap.crux.core.utils.ClassUtils;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -72,7 +72,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public DataSourceProxyCreator(TreeLogger logger, GeneratorContext context, JClassType dataSourceClass)
+	public DataSourceProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType dataSourceClass)
 	{
 		super(logger, context, null, dataSourceClass);
 		this.dataSourceClass = dataSourceClass;
@@ -323,7 +323,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
-	protected String getProxyQualifiedName()
+	public String getProxyQualifiedName()
 	{
 		return dataSourceClass.getPackage().getName() + "." + getProxySimpleName();
 	}
@@ -331,7 +331,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return the simple name of the proxy object.
 	 */
-	protected String getProxySimpleName()
+	public String getProxySimpleName()
 	{
 		return dataSourceClass.getSimpleSourceName() + DATASOURCE_PROXY_SUFFIX;
 	}
