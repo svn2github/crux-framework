@@ -79,6 +79,11 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 		{
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String absolutePanel = context.getWidget();
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			if (!StringUtils.isEmpty(context.left) && !StringUtils.isEmpty(context.top))
 			{
 				out.println(absolutePanel+".add("+child+", "+Integer.parseInt(context.left)+", "+Integer.parseInt(context.top)+");");
@@ -86,6 +91,10 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 			else
 			{
 				out.println(absolutePanel+".add("+child+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 			
 			context.left = null;

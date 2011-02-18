@@ -218,6 +218,11 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 
 			String parent = context.itemStack.peek();
 			String currentItem = getWidgetCreator().createVariableName("item");
@@ -232,6 +237,10 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 				out.println(currentItem+" = "+parent+".addItem("+child+");");
 			}
 			context.itemStack.addFirst(currentItem);
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 	}
 

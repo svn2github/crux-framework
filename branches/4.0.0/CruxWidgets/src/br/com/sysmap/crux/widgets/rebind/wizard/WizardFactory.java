@@ -349,6 +349,12 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			String label = getWidgetCreator().getDeclaredMessage(context.stepLabel);
 			
 			String widgetStep = getWidgetCreator().createVariableName("widgetStep");
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
+
 			out.println(WidgetStep.class.getCanonicalName()+"<"+context.wizardObject+"> "+widgetStep+" = "+widget+".addWidgetStep("+
 					EscapeUtils.quote(context.stepId)+", "+label+", "+childWidget+");");
 			
@@ -367,6 +373,10 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			if (!StringUtils.isEmpty(context.enabled))
 			{
 				out.println(widget+".setStepEnabled("+EscapeUtils.quote(context.stepId)+", "+Boolean.parseBoolean(context.enabled)+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 		}
 	}

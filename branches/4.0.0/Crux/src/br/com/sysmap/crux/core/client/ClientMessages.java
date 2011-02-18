@@ -79,7 +79,10 @@ public interface ClientMessages extends Messages
 	String screenFactoryCrux2OldInterfacesCompatibilityDisabled();
 	@DefaultMessage("[screen 004] - Screen {0} created.")
 	String screenFactoryViewCreated(String identifier);
-
+	@DefaultMessage("This application contains components that are not fully supported by your brownser.")
+	String screenFactoryUnsupportedWidget();
+	
+	
 	@DefaultMessage("[moduleComunication 001] - Type ''{0}'' can not be shared between modules. Only primitives (and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes implementing CruxSerializable can be used.")
 	String moduleComunicationInvalidParamType(String name);
 

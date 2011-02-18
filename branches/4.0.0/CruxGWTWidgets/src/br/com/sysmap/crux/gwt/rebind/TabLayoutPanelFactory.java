@@ -48,6 +48,8 @@ class TabLayoutPanelContext extends WidgetCreatorContext
 	public String title;
 	public boolean isTitleHTML;
 	public String titleWidget;
+	public boolean titleWidgetPartialSupport;
+	public String titleWidgetClassType;
 }
 
 /**
@@ -158,6 +160,11 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
 			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (context.titleWidgetPartialSupport)
+			{
+				context.titleWidgetClassType = getWidgetCreator().getChildWidgetClassName(context.getChildElement());
+			}
 		}
 	}
 	
@@ -174,16 +181,33 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
 			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			
 			String rootWidget = context.getWidget();
 			
 			if (context.titleWidget != null)
 			{
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("if ("+context.titleWidgetClassType+".isSupported()){");
+				}
 				out.println(rootWidget+".add("+widget+", "+context.titleWidget+");");
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("}");
+				}
 			}
 			else
 			{
 				out.println(rootWidget+".add("+widget+", "+context.title+", "+context.isTitleHTML+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 		}
 	}

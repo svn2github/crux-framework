@@ -100,9 +100,18 @@ public abstract class CellPanelFactory <C extends CellPanelContext> extends Comp
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			context.child = child;
 			super.processChildren(out, context);
 			context.child = null;
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 	}
 	

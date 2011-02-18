@@ -67,10 +67,19 @@ public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
 		{
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String rootWidget = context.getWidget();
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			out.println(rootWidget+".add("+child+");");
 			context.child = child;
 			super.processChildren(out, context);
 			context.child = null;
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 	}
 

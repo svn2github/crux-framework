@@ -46,6 +46,8 @@ class StackLayoutContext extends WidgetCreatorContext
 	String headerWidget;
 	String title;
 	boolean isHtmlTitle;
+	public boolean headerWidgetPartialSupport;
+	public String headerWidgetClassType;
 	
 	public void clearAttributes() 
 	{
@@ -160,6 +162,11 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		{
 			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			context.headerWidget = childWidget;
+			context.headerWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (context.headerWidgetPartialSupport)
+			{
+				context.headerWidgetClassType = getWidgetCreator().getChildWidgetClassName(context.getChildElement());
+			}
 		}
 	}
 
@@ -178,9 +185,22 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 			String contentWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String rootWidget = context.getWidget();
 			
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			if (context.headerWidget != null)
 			{
+				if (context.headerWidgetPartialSupport)
+				{
+					out.println("if ("+context.headerWidgetClassType+".isSupported()){");
+				}
 				out.println(rootWidget+".add("+contentWidget+", "+context.headerWidget+", "+context.headerSize+");");
+				if (context.headerWidgetPartialSupport)
+				{
+					out.println("}");
+				}
 			}
 			else
 			{
@@ -190,6 +210,10 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 			if (context.selected)
 			{
 				out.println(rootWidget+".showWidget("+contentWidget+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 		}
 	}

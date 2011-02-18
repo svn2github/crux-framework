@@ -116,6 +116,11 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 			String child = getWidgetCreator().createChildWidget(out, childElement);
 			String parent = context.getWidget();
 			
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			switch (context.direction) {
 				case center: out.println(parent+".add("+child+", "+DockPanel.class.getCanonicalName()+".CENTER);");
 				break;
@@ -139,6 +144,10 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 			context.child = child;
 			super.processChildren(out, context);
 			context.child = null;
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 	}
 

@@ -617,7 +617,13 @@ public class ViewFactoryCreator
 		printer.println("Node "+previousSibling+" = "+panelElement+".getPreviousSibling();");
 
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
-
+		WidgetCreator<?> widgetFactory = getWidgetFactory(widgetType);
+		boolean hasPartialSupport = widgetFactory.hasPartialSupport();
+		if (hasPartialSupport)
+		{
+			printer.println("if ("+widgetFactory.getWidgetClassName()+".isSupported()){");
+		}
+		
 		printer.println("if ("+previousSibling+" != null){");
 		printer.println(parentElement+".insertAfter("+widget+".getElement(), "+previousSibling+");");
 		printer.println("}");
@@ -626,6 +632,10 @@ public class ViewFactoryCreator
 		printer.println("}");
 		printer.println("((HTMLContainer)"+widget+").onAttach();");
 		printer.println("RootPanel.detachOnWindowClose("+widget+");");		
+		if (hasPartialSupport)
+		{
+			printer.println("}");
+		}
 		return widget;
 	}
 
@@ -750,6 +760,13 @@ public class ViewFactoryCreator
 
 		Class<?> widgetClassType = getWidgetFactoryHelper(widgetType).getWidgetType();
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
+		WidgetCreator<?> widgetFactory = getWidgetFactory(widgetType);
+		boolean hasPartialSupport = widgetFactory.hasPartialSupport();
+		if (hasPartialSupport)
+		{
+			printer.println("if ("+widgetFactory.getWidgetClassName()+".isSupported()){");
+		}
+		
 		printer.println("Panel "+panel+";");
 		if (RequiresResize.class.isAssignableFrom(widgetClassType))
 		{
@@ -774,6 +791,11 @@ public class ViewFactoryCreator
 			printer.println(panel+" = RootPanel.get("+panelElement+".getId());");
 		}
 		printer.println(panel+".add("+widget+");");
+		
+		if (hasPartialSupport)
+		{
+			printer.println("}");
+		}
 		return widget;
 	}	
 

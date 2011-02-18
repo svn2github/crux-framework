@@ -134,6 +134,11 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
 		{
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String rootWidget = context.getWidget();
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			out.println(rootWidget+".add("+child+");");
 
 			if (!StringUtils.isEmpty(context.height))
@@ -155,6 +160,10 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
 				out.println(rootWidget+".setCellWidth("+child+", "+EscapeUtils.quote(context.width)+");");
 			}
 			
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 			context.height = null;
 			context.width = null;
 			context.horizontalAlignment = null;

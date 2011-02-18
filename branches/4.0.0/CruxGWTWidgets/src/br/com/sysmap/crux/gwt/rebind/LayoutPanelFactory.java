@@ -127,6 +127,11 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelCo
 		{
 			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String rootWidget = context.getWidget();
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			out.println(rootWidget+".add("+childWidget+");");
 
 			if (context.animationDuration > 0)
@@ -145,6 +150,10 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelCo
 			if (!StringUtils.isEmpty(context.verticalPosition))
 			{
 				out.println(rootWidget+".setWidgetVerticalPosition("+childWidget+", "+Alignment.class.getCanonicalName()+"."+context.verticalPosition+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 		}
 

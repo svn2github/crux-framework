@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.Label;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 
 /**
- * Represents a LabelFactory DeclarativeFactory
- * @author Thiago Bustamante
+ * A Factory for Label widgets
+ * @author Thiago da Rosa de Bustamante
  *
  */
 @DeclarativeFactory(id="label", library="gwt", targetWidget=Label.class)

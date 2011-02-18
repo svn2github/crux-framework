@@ -195,7 +195,16 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		{
 			String rootWidget = context.getWidget();
 			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			out.println(rootWidget+".setWidget("+context.rowIndex+", "+context.colIndex+", "+childWidget+");");
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 	}
 }

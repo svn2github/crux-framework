@@ -136,6 +136,11 @@ class ChildrenAnnotationScanner
 				{
 					childWidget = widgetCreator.createChildWidget(out, context.getChildElement());
 				}
+				boolean childPartialSupport = widgetCreator.hasChildPartialSupport(context.getChildElement());
+				if (childPartialSupport)
+				{
+					out.println("if ("+widgetCreator.getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+				}
 				if (StringUtils.isEmpty(widgetProperty))
 				{
 					out.println(context.getWidget()+".add("+childWidget+");");
@@ -143,6 +148,10 @@ class ChildrenAnnotationScanner
 				else
 				{
 					out.println(context.getWidget()+"."+ClassUtils.getSetterMethod(widgetProperty)+"("+childWidget+");");
+				}
+				if (childPartialSupport)
+				{
+					out.println("}");
 				}
             }
 		};

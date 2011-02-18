@@ -52,8 +52,17 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 			{
 				JSONObject child = children.optJSONObject(i);
 				String childWidget = createChildWidget(out, child);
+				boolean childPartialSupport = hasChildPartialSupport(child);
+				if (childPartialSupport)
+				{
+					out.println("if ("+getChildWidgetClassName(child)+".isSupported()){");
+				}
 				String panelId = ViewFactoryUtils.getEnclosingPanelPrefix()+child.optString("id");
 				out.println(widget+".add("+childWidget+", "+EscapeUtils.quote(panelId)+");");
+				if (childPartialSupport)
+				{
+					out.println("}");
+				}
 			}
 		}
 

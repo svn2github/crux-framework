@@ -90,6 +90,11 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String widget = context.getWidget();
 			
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			if (context.title == null)
 			{
 				out.println(widget+".add("+child+");");
@@ -97,6 +102,10 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 			else
 			{
 				out.println(widget+".add("+child+", "+EscapeUtils.quote(context.title)+", "+context.isHtmlTitle+");");
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 			context.title = null;
 			context.isHtmlTitle = false;

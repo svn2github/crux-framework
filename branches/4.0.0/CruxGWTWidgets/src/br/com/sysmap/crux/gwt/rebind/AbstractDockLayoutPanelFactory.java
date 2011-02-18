@@ -97,6 +97,11 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 			{
 				throw new CruxGeneratorException(messages.dockLayoutPanelRequiredSize(context.getWidgetId()));
 			}
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			
 			if (context.animationDuration > 0)
 			{
@@ -105,6 +110,10 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 			else
 			{
 				processChild(context, childWidget, context.direction, context.size);
+			}
+			if (childPartialSupport)
+			{
+				out.println("}");
 			}
 		}
 

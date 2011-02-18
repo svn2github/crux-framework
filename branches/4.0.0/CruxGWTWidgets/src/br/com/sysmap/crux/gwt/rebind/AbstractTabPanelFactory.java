@@ -51,6 +51,8 @@ class TabPanelContext extends WidgetCreatorContext
 	public String title;
 	public boolean isHTMLTitle;
 	public String titleWidget;
+	public boolean titleWidgetPartialSupport;
+	public String titleWidgetClassType;
 	
 	public void clearAttributes()
     {
@@ -144,6 +146,8 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
 		{
 			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			context.titleWidgetClassType = getWidgetCreator().getChildWidgetClassName(context.getChildElement());
 		}
 	}
 	
@@ -156,15 +160,32 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String tabWidget = context.getWidget();
 			
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			if (context.titleWidget != null)
 			{
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("if ("+context.titleWidgetClassType+".isSupported()){");
+				}
 				out.println(tabWidget+".add("+widget+", "+context.titleWidget+");");
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("}");
+				}
 			}
 			else
 			{
 				out.println(tabWidget+".add("+widget+", "+context.title+", "+context.isHTMLTitle+");");
 			}
 			updateTabState(out, context);
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 		
 		private void updateTabState(SourcePrinter out, TabPanelContext context)

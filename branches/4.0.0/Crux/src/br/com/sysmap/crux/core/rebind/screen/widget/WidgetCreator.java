@@ -41,6 +41,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.dom.client.PartialSupport;
 
 /**
  * Generate code for gwt widgets creation. Generates code based on a JSON meta data array
@@ -312,7 +313,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
 	{
+		boolean partialSupport = hasPartialSupport();
 		C context = createContext(out, metaElem, widgetId, addToScreen);
+		if (partialSupport)
+		{
+			out.println("if ("+getWidgetClassName()+".isSupported()){");
+		}
 		if (context != null)
 		{
 			processAttributes(out, context);
@@ -322,11 +328,25 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			processChildren(out, context);
 			annotationProcessor.processChildren(out, context);
 			postProcess(out, context);
+			if (partialSupport)
+			{
+				out.println("}");
+			}
 			return context.getWidget();
 		}
-		return null;
+		else
+		{
+			if (partialSupport)
+			{
+				out.println("}");
+				out.println("else {");
+				out.println("Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryUnsupportedWidget());");
+				out.println("}");
+			}
+			return null;
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param element
@@ -336,6 +356,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
 		return metaElem;
+	}
+	
+	/**
+	 * @param metaElem
+	 * @return
+	 */
+	public String getChildWidgetClassName(JSONObject metaElem)
+	{
+		return factory.getWidgetFactory(factory.getMetaElementType(metaElem)).getWidgetClassName();
 	}
 	
 	/**
@@ -374,9 +403,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	/**
 	 * @return
 	 */
+	public Class<?> getWidgetClass()
+    {
+	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType();
+    }
+
+	/**
+	 * @return
+	 */
 	public String getWidgetClassName()
     {
-	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType().getCanonicalName();
+	    return getWidgetClass().getCanonicalName();
     }
 	
 	/**
@@ -391,6 +428,23 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		throw new CruxGeneratorException(messages.widgetCreatorErrorReadingFactoryDeclaration()); 
 	}
+	
+	/**
+	 * @param metaElem
+	 * @return
+	 */
+	public boolean hasChildPartialSupport(JSONObject metaElem)
+	{
+		return factory.getWidgetFactory(factory.getMetaElementType(metaElem)).hasPartialSupport();
+	}
+	
+	/**
+	 * @return
+	 */
+	public boolean hasPartialSupport()
+    {
+	    return getWidgetClass().getAnnotation(PartialSupport.class) != null;
+    }
 	
 	/**
 	 * @return

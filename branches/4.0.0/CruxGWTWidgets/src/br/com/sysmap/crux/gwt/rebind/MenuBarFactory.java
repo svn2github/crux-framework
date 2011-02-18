@@ -204,7 +204,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	}
 	
 	/**
-	 * Creates a subMenu, based on inner span tags
+	 * Creates a subMenu
 	 * @param widgetCreator 
 	 * @param element
 	 * @return

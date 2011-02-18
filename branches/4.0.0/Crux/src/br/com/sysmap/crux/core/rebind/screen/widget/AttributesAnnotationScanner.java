@@ -192,17 +192,33 @@ class AttributesAnnotationScanner
     {
 		final String attrName = attr.value();
 		final String setterMethod;
+		boolean nestedProperty = false;
 		if (!StringUtils.isEmpty(attr.property()))
 		{
-			setterMethod = ClassUtils.getSetterMethod(attr.property());
+			nestedProperty = attr.property().contains(".");
+			if (nestedProperty)
+			{
+				String[] properties = RegexpPatterns.REGEXP_DOT.split(attr.property());
+				StringBuilder expression = new StringBuilder();
+				for(int i=0; i< properties.length-1;i++)
+				{
+					expression.append(ClassUtils.getGetterMethod(properties[i])+"().");
+				}
+				expression.append(ClassUtils.getSetterMethod(properties[properties.length-1]));
+				setterMethod = expression.toString();
+			}
+			else
+			{
+				setterMethod = ClassUtils.getSetterMethod(attr.property());
+			}
 		}
 		else
 		{
 			setterMethod = ClassUtils.getSetterMethod(attrName);
 		}
 		Class<?> type = attr.type();
-		if (type == null || !ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type))
-		{
+		if (type == null ||  !(nestedProperty || ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type)))
+		{//TODO: implement method check for nested property.
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
 		}
 		final boolean isStringExpression = String.class.isAssignableFrom(type);

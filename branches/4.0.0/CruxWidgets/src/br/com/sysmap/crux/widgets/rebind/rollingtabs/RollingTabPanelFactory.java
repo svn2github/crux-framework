@@ -55,6 +55,8 @@ class RollingTabPanelContext extends WidgetCreatorContext
 	public boolean isHTMLTitle;
 	public String title;
 	public String titleWidget;
+	public boolean titleWidgetPartialSupport;
+	public String titleWidgetClassType;
 	public void clearAttributes()
     {
 	    isHTMLTitle = false;
@@ -168,6 +170,11 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException
 		{
 			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (context.titleWidgetPartialSupport)
+			{
+				context.titleWidgetClassType = getWidgetCreator().getChildWidgetClassName(context.getChildElement());
+			}
 		}
 	}
 	
@@ -186,15 +193,32 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
 			String rootWidget = context.getWidget();
 			
+			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
+			if (childPartialSupport)
+			{
+				out.println("if ("+getWidgetCreator().getChildWidgetClassName(context.getChildElement())+".isSupported()){");
+			}
 			if (context.titleWidget != null)
 			{
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("if ("+context.titleWidgetClassType+".isSupported()){");
+				}
 				out.println(rootWidget+".add("+widget+", "+EscapeUtils.quote(context.titleWidget)+");");
+				if (context.titleWidgetPartialSupport)
+				{
+					out.println("}");
+				}
 			}
 			else
 			{
 				out.println(rootWidget+".add("+widget+", "+context.title+", "+context.isHTMLTitle+");");
 			}
 			updateTabState(out, context);
+			if (childPartialSupport)
+			{
+				out.println("}");
+			}
 		}
 		
 		private void updateTabState(SourcePrinter out, RollingTabPanelContext context)
