@@ -153,7 +153,7 @@ public class Screen
 			}
 			catch(Throwable e)
 			{
-				GWT.log(e.getLocalizedMessage(), e);
+				logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
 			}
 		}
 		return url;

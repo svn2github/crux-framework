@@ -779,7 +779,7 @@ public class ViewFactoryCreator
 				printer.println("else{");
 				printer.println(panel+" = RootPanel.get("+panelElement+".getId());");
 				printer.println("}");
-				printer.println("GWT.log(Crux.getMessages().screenFactoryLayoutPanelWithoutSize("+EscapeUtils.quote(widgetId)+"), null);");
+				printer.println(loggerVariable+".warning(Crux.getMessages().screenFactoryLayoutPanelWithoutSize("+EscapeUtils.quote(widgetId)+"));");
 			}
 			else
 			{

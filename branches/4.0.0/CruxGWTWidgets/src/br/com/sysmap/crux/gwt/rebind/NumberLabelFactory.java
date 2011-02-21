@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.gwt.client.DateFormatUtil;
+import br.com.sysmap.crux.gwt.client.NumberFormatUtil;
 
 import com.google.gwt.user.client.ui.NumberLabel;
 
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.NumberLabel;
 @DeclarativeFactory(id="numberLabel", library="gwt", targetWidget=NumberLabel.class)
 @TagAttributesDeclaration({
 	@TagAttributeDeclaration(value="value", type=String.class),
-	@TagAttributeDeclaration(value="datePattern")
+	@TagAttributeDeclaration(value="numberPattern")
 })public class NumberLabelFactory extends WidgetCreator<WidgetCreatorContext> 
 		implements HasWordWrapFactory<WidgetCreatorContext>, 
 				   HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, 
@@ -49,22 +49,22 @@ import com.google.gwt.user.client.ui.NumberLabel;
 	@Override
 	public WidgetCreatorContext instantiateContext()
 	{
-		return new WidgetCreatorContext()
+		return new WidgetCreatorContext();
 	}
 	
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
-		String className = getWidgetClassName();
-		String datePattern = metaElem.optString("datePattern");
-		if (datePattern == null || datePattern.length() == 0)
+		String className = getWidgetClassName()+"<Double>";
+		String numberPattern = metaElem.optString("numberPattern");
+		if (numberPattern == null || numberPattern.length() == 0)
 		{
-			datePattern = DateFormatUtil.MEDIUM_DATE_PATTERN;
+			numberPattern = NumberFormatUtil.DECIMAL_PATTERN;
 		}
 		out.println("final "+className + " " + varName+" = new "+className+"("+
-						DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
-						EscapeUtils.quote(datePattern)+");");
+						NumberFormatUtil.class.getCanonicalName()+".getNumberFormat("+
+						EscapeUtils.quote(numberPattern)+");");
 		return varName;	
 	}
 	
@@ -75,18 +75,18 @@ import com.google.gwt.user.client.ui.NumberLabel;
 		
 		String widget = context.getWidget();
 
-		String datePattern = context.readWidgetProperty("datePattern");
-		if (datePattern == null || datePattern.length() == 0)
+		String numberPattern = context.readWidgetProperty("numberPattern");
+		if (numberPattern == null || numberPattern.length() == 0)
 		{
-			datePattern = DateFormatUtil.MEDIUM_DATE_PATTERN;
+			numberPattern = NumberFormatUtil.DECIMAL_PATTERN;
 		}
 		
 		String value = context.readWidgetProperty("value");
 		if (value != null && value.length() > 0)
 		{
 			out.println(widget+".setValue("+
-					DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
-					EscapeUtils.quote(datePattern)+").parse("+EscapeUtils.quote(value)+"));");
+					NumberFormatUtil.class.getCanonicalName()+".getNumberFormat("+
+					EscapeUtils.quote(numberPattern)+").parse("+EscapeUtils.quote(value)+"));");
 		}		
 	}
 	

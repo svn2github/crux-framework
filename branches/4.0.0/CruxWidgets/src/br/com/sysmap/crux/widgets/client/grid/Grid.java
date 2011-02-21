@@ -43,7 +43,6 @@ import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
 import br.com.sysmap.crux.widgets.client.paging.Pageable;
 import br.com.sysmap.crux.widgets.client.paging.Pager;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -329,9 +328,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		}
 		catch (Exception e)
 		{
-			//TODO: trocar todos os GWT.log por uso de loggers do GWT 2.1
-			GWT.log(e.getMessage(), e);
-			throw new RuntimeException(WidgetMsgFactory.getMessages().errorCreatingWidgetForColumn(column.getKey()));
+			throw new RuntimeException(WidgetMsgFactory.getMessages().errorCreatingWidgetForColumn(column.getKey()),e);
 		}
 	}
 
@@ -538,7 +535,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object[] getSelectedDataRows()
 	{
 		if(this.dataSource != null)
