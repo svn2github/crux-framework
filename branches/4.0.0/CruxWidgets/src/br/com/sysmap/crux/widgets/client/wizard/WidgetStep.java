@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -95,22 +93,4 @@ public class WidgetStep<T extends Serializable> extends AbstractWidgetStep<T> im
 		}
 		return false;
 	}
-	
-	public boolean addCommand(String id, String label, final Event commandEvent, int order)
-    {
-		if (!commands.containsKey(id))
-		{
-			WizardCommandHandler<T> handler = new WizardCommandHandler<T>()
-			{
-				public void onCommand(WizardCommandEvent<T> event)
-				{
-					Events.callEvent(commandEvent, event);
-				}
-			};
-			WizardCommand<T> command = new WizardCommand<T>(id, order, label, handler, new WidgetWizardProxy<T>(wizard));
-			commands.put(id, command);
-			return true;
-		}
-		return false;
-    }
 }

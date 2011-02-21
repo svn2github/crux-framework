@@ -77,7 +77,7 @@ public class LeaveEvent<T extends Serializable> extends StepEvent<LeaveHandler<T
 		handler.onLeave(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Type<LeaveHandler<T>> getAssociatedType()
 	{

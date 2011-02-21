@@ -76,7 +76,7 @@ public class EnterEvent<T extends Serializable> extends StepEvent<EnterHandler<T
 		handler.onEnter(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Type<EnterHandler<T>> getAssociatedType()
 	{

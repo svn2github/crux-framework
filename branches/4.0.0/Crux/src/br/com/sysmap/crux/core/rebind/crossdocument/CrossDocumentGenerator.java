@@ -40,7 +40,6 @@ public class CrossDocumentGenerator extends GeneratorExt
 	@Override
 	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContextExt context, String typeName) throws UnableToCompleteException
 	{
-	    // TODO Auto-generated method stub
 		TypeOracle typeOracle = context.getTypeOracle();
 		assert (typeOracle != null);
 		

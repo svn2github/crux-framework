@@ -23,8 +23,6 @@ import java.util.List;
 
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.event.Event;
-import br.com.sysmap.crux.core.client.event.Events;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.decoratedbutton.DecoratedButton;
@@ -93,24 +91,6 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 		addCommand(id, label, handler, order, true);
 	}
 	
-	/**
-	 * @param id
-	 * @param label
-	 * @param commandEvent
-	 * @param order
-	 */
-	void addCommand(String id, String label, final Event commandEvent, int order)
-	{
-		WizardCommandHandler<T> handler = new WizardCommandHandler<T>()
-		{
-			public void onCommand(WizardCommandEvent<T> event)
-			{
-				Events.callEvent(commandEvent, event);
-			}
-		};
-		addCommand(id, label, handler, order, true);
-	}
-
 	/**
 	 * @param id
 	 * @param handler
@@ -648,17 +628,5 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 				setStyleName(this.controlBar.buttonStyle);;
 			}
 		}
-
-		public void addWizardCommandEvent(final Event commandEvent)
-        {
-	        addWizardCommandHandler(new WizardCommandHandler<T>()
-			{
-				public void onCommand(WizardCommandEvent<T> event)
-                {
-					Events.callEvent(commandEvent, event);
-                }
-			});
-	        
-        }
 	}
 }

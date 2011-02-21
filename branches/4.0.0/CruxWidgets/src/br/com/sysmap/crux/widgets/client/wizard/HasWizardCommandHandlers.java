@@ -17,8 +17,6 @@ package br.com.sysmap.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
-import br.com.sysmap.crux.core.client.event.Event;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 
@@ -29,5 +27,4 @@ import com.google.gwt.event.shared.HasHandlers;
 public interface HasWizardCommandHandlers<T extends Serializable> extends HasHandlers 
 {
 	HandlerRegistration addWizardCommandHandler(WizardCommandHandler<T> handler);
-	void addWizardCommandEvent(final Event commandEvent);
 }
