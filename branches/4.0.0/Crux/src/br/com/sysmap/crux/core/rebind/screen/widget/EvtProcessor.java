@@ -95,7 +95,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
     	
-    	JClassType eventClassType = context.getTypeOracle().findType(eventClass.getCanonicalName());
+    	JClassType eventClassType = eventClass==null?null:context.getTypeOracle().findType(eventClass.getCanonicalName());
     	
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
@@ -137,6 +137,10 @@ public abstract class EvtProcessor extends AbstractProcessor
 	 */
 	static JMethod getControllerMethodWithEvent(String methodName, JClassType eventClassType, JClassType controllerClass)
     {
+		if (eventClassType == null)
+		{
+			return null;
+		}
 		JGenericType genericType = eventClassType.isGenericType();
 		if (genericType == null)
 		{

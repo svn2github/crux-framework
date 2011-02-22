@@ -39,7 +39,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDec
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.dom.client.PartialSupport;
 
@@ -364,17 +364,29 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String getChildWidgetClassName(JSONObject metaElem)
 	{
-		return factory.getWidgetFactory(factory.getMetaElementType(metaElem)).getWidgetClassName();
+		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).getWidgetClassName();
 	}
 	
 	/**
 	 * @return
 	 */
-	public GeneratorContext getContext()
+	public GeneratorContextExt getContext()
 	{
 		return factory.getContext();
 	}
 
+	/**
+	 * @param subType
+	 * @param superClass
+	 * @param interfaces
+	 * @param imports
+	 * @return
+	 */
+	public  SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
+	{
+		return factory.getSubTypeWriter(subType, superClass, interfaces, imports);
+	}
+	
 	/**
 	 * @param property
 	 * @return
@@ -405,7 +417,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public Class<?> getWidgetClass()
     {
-	    return factory.getWidgetFactoryHelper(getWidgetFactoryDeclaration()).getWidgetType();
+	    return factory.getWidgetCreatorHelper(getWidgetFactoryDeclaration()).getWidgetType();
     }
 
 	/**
@@ -435,7 +447,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public boolean hasChildPartialSupport(JSONObject metaElem)
 	{
-		return factory.getWidgetFactory(factory.getMetaElementType(metaElem)).hasPartialSupport();
+		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).hasPartialSupport();
 	}
 	
 	/**

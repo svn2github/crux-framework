@@ -50,7 +50,6 @@ import br.com.sysmap.crux.core.utils.ClassUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -83,8 +82,8 @@ public class ViewFactoryCreator
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private GeneratorContextExt context;
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
-	private Map<String, WidgetCreator<?>> factories = new HashMap<String, WidgetCreator<?>>();
-	private Map<String, WidgetCreatorHelper> factoryHelpers = new HashMap<String, WidgetCreatorHelper>();
+	private Map<String, WidgetCreator<?>> creators = new HashMap<String, WidgetCreator<?>>();
+	private Map<String, WidgetCreatorHelper> creatorHelpers = new HashMap<String, WidgetCreatorHelper>();
 	private Map<String, Boolean> htmlContainersfactories = new HashMap<String, Boolean>();
 	private final LazyPanelFactory lazyFactory;
 	private final Set<String> lazyPanels = new HashSet<String>();	
@@ -209,30 +208,30 @@ public class ViewFactoryCreator
 	}
 
 	/**
-	 * Returns the factory of the widgets of the given type.
+	 * Returns the creator of the widgets of the given type.
 	 * @param widgetType
-	 * @return the factory of the widgets of the given type.
+	 * @return the creator of the widgets of the given type.
 	 */
-	protected WidgetCreator<?> getWidgetFactory(String widgetType)
+	protected WidgetCreator<?> getWidgetCreator(String widgetType)
 	{
 		try
         {
-	        if (!factories.containsKey(widgetType))
+	        if (!creators.containsKey(widgetType))
 	        {
-	        	String factoryClassName = WidgetConfig.getClientClass(widgetType);
-	        	Class<?> widgetFactory = Class.forName(factoryClassName);
-	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetFactory.newInstance();
+	        	String creatorClassName = WidgetConfig.getClientClass(widgetType);
+	        	Class<?> widgetCreator = Class.forName(creatorClassName);
+	        	WidgetCreator<?> factory = (WidgetCreator<?>) widgetCreator.newInstance();
 	        	factory.setViewFactory(this);
-	        	factories.put(widgetType, factory);
-	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetFactory);
-				factoryHelpers.put(widgetType, creatorHelper);
+	        	creators.put(widgetType, factory);
+	        	WidgetCreatorHelper creatorHelper = new WidgetCreatorHelper(widgetCreator);
+				creatorHelpers.put(widgetType, creatorHelper);
 	        }
         }
         catch (Exception e)
         {
         	throw new CruxGeneratorException(messages.viewFactoryErrorRetrievingWidgetFactory(widgetType),e);
         }
-		return factories.get(widgetType);
+		return creators.get(widgetType);
 	}
 	
 	/**
@@ -240,16 +239,16 @@ public class ViewFactoryCreator
 	 * @param widgetType
 	 * @return a helper object to create the code of the widgets of the given type. 
 	 */
-	protected WidgetCreatorHelper getWidgetFactoryHelper(String widgetType)
+	protected WidgetCreatorHelper getWidgetCreatorHelper(String widgetType)
 	{
-		if (!factoryHelpers.containsKey(widgetType))
+		if (!creatorHelpers.containsKey(widgetType))
 		{
-			if (getWidgetFactory(widgetType) == null)
+			if (getWidgetCreator(widgetType) == null)
 			{
 				return null;
 			}
 		}
-		return factoryHelpers.get(widgetType);
+		return creatorHelpers.get(widgetType);
 	}
 
 	/**
@@ -279,7 +278,7 @@ public class ViewFactoryCreator
 	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) 
 				throws CruxGeneratorException
 	{
-		WidgetCreator<?> widgetFactory = getWidgetFactory(widgetType);
+		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
 		if (widgetFactory == null)
 		{
 			throw new CruxGeneratorException(messages.viewFactoryWidgetFactoryNotFound(widgetType));
@@ -349,7 +348,7 @@ public class ViewFactoryCreator
 	/**
 	 * @return
 	 */
-	GeneratorContext getContext()
+	GeneratorContextExt getContext()
 	{
 		return context;
 	}
@@ -512,6 +511,7 @@ public class ViewFactoryCreator
 		this.logger = logger;
 		this.lazyPanels.clear();
 		this.declaredMessages.clear();
+		this.postProcessingCode.clear();
 	}
 	
 	/**
@@ -617,7 +617,7 @@ public class ViewFactoryCreator
 		printer.println("Node "+previousSibling+" = "+panelElement+".getPreviousSibling();");
 
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
-		WidgetCreator<?> widgetFactory = getWidgetFactory(widgetType);
+		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
 		boolean hasPartialSupport = widgetFactory.hasPartialSupport();
 		if (hasPartialSupport)
 		{
@@ -758,9 +758,9 @@ public class ViewFactoryCreator
 		
 		printer.println("Element "+panelElement+" = ViewFactoryUtils.getEnclosingPanelElement("+EscapeUtils.quote(widgetId)+");");
 
-		Class<?> widgetClassType = getWidgetFactoryHelper(widgetType).getWidgetType();
+		Class<?> widgetClassType = getWidgetCreatorHelper(widgetType).getWidgetType();
 		String widget = newWidget(printer, metaElem, widgetId, widgetType);
-		WidgetCreator<?> widgetFactory = getWidgetFactory(widgetType);
+		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
 		boolean hasPartialSupport = widgetFactory.hasPartialSupport();
 		if (hasPartialSupport)
 		{
@@ -930,7 +930,7 @@ public class ViewFactoryCreator
 	{
 		if (!attachToDOMfactories.containsKey(widgetType))
 		{
-			DeclarativeFactory declarativeFactory = getWidgetFactory(widgetType).getClass().getAnnotation(DeclarativeFactory.class);
+			DeclarativeFactory declarativeFactory = getWidgetCreator(widgetType).getClass().getAnnotation(DeclarativeFactory.class);
 			attachToDOMfactories.put(widgetType, declarativeFactory.attachToDOM());
 		}
 		return attachToDOMfactories.get(widgetType);
@@ -945,7 +945,7 @@ public class ViewFactoryCreator
 	{
 		if (!htmlContainersfactories.containsKey(widgetType))
 		{
-			DeclarativeFactory declarativeFactory = getWidgetFactory(widgetType).getClass().getAnnotation(DeclarativeFactory.class);
+			DeclarativeFactory declarativeFactory = getWidgetCreator(widgetType).getClass().getAnnotation(DeclarativeFactory.class);
 			htmlContainersfactories.put(widgetType, declarativeFactory.htmlContainer());
 		}
 		return htmlContainersfactories.get(widgetType);
@@ -970,7 +970,7 @@ public class ViewFactoryCreator
 	 */
 	private boolean mustRenderLazily(String widgetType, JSONObject metaElem, String widgetId)
 	{
-		if (Panel.class.isAssignableFrom(getWidgetFactoryHelper(widgetType).getWidgetType()))
+		if (Panel.class.isAssignableFrom(getWidgetCreatorHelper(widgetType).getWidgetType()))
 		{
 			if (!metaElem.optBoolean("visible", true))
 			{

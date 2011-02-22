@@ -303,4 +303,13 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[eventProcessor 001] - Method {1} not found on Controller {0}.")
 	String eventProcessorErrorControllerMethodNotFound(String controller, String method);
+
+	@DefaultServerMessage("[dataObjects 001] - Duplicated DataObject found: {0}.")
+	String dataObjectsDuplicatedObject(String value);
+
+	@DefaultServerMessage("[dataObjects 002] - Error initializing DataObjects: {0}.")
+	String dataObjectsInitializeError(String localizedMessage);
+
+	@DefaultServerMessage("[dataObjects 003] - DataObject {0}, referenced by widget {1} not found.")
+	String dataObjectNotFound(String dataObject, String widgetId);
 }
