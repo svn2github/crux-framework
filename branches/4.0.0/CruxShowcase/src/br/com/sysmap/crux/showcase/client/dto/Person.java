@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 import br.com.sysmap.crux.core.client.controller.ValueObject;
-import br.com.sysmap.crux.widgets.client.wizard.WizardData;
+import br.com.sysmap.crux.core.client.dto.DataObject;
+import br.com.sysmap.crux.core.client.dto.DataObjectIdentifier;
 
 @ValueObject
-@WizardData("person")
+@DataObject("person")
 public class Person implements Serializable
 {
     private static final long serialVersionUID = -4139032953687869658L;
-	private String name;
+
+    @DataObjectIdentifier
+    private String name;
 	private String phone;
 	private Date dateOfBirth;
 	private Address address;
