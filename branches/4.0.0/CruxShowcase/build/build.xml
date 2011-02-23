@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="CruxShowcase" basedir="../">
+<project name="CruxShowcase" basedir="../">
 
 	<property name="final.name" value="CruxShowcase" />
 	<property name="src.dir" value="src" />
@@ -27,7 +27,7 @@
 			<path refid="build.classpath" />
 		</classpath>
 	</taskdef>
-	
+
 	<!-- 
 	========================================================================================================
 		Geração dos arquivos XSD
@@ -35,8 +35,8 @@
 	-->
 	<target name="generate-xsd">
 		<generateSchemas outputDir="${xsd.dir}">
-			<jvmarg value="-Xdebug" />
-			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+			<!--jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
 			<classpath>
 				<path refid="build.classpath" />
 				<pathelement path="${web.root}" />
@@ -94,11 +94,11 @@
 			<arg value="DEBUG"/>
 			-->
 		</cruxcompiler>
-		
+
 		<delete>
 			<fileset dir="${temp.dir}/webroot">
-				<include name="**/*.crux.xml"/>
-				<include name="**/*.template.xml"/>
+				<include name="**/*.crux.xml" />
+				<include name="**/*.template.xml" />
 			</fileset>
 		</delete>
 
@@ -121,7 +121,7 @@
 	</target>
 
 	<target name="compile-scripts">
-		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false">
+		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
 			<dirset dir="${web.root}" />
 			<classpath>
 				<path refid="build.classpath" />
@@ -133,10 +133,15 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
-			<arg value="-style"/>
-			<arg value="DETAILED"/>
-			<arg value="-gen"/>
-			<arg value="generated"/>
+			<!--arg value="-style" />
+			<arg value="DETAILED" /-->
+			<arg value="-gen" />
+			<arg value="generated" />
+			<arg value="-localWorkers" />
+			<arg value="2" />
+			<!--arg value="-extra" />
+			<arg value="compilerReports" />
+			<arg value="-compileReport" /-->
 
 			<!-- use these parameters if you want to modify GWT output settings
 			<jvmarg value="-Xdebug" />
@@ -146,7 +151,7 @@
 			-->
 		</cruxcompiler>
 	</target>
-	
+
 	<target name="draft-compile-scripts">
 		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false">
 			<dirset dir="${web.root}" />
@@ -172,10 +177,10 @@
 			-->
 		</cruxcompiler>
 	</target>
-	
+
 	<target name="delete-html-files">
 		<delete>
-			<fileset dir="${web.root}" includes="*.html"/>
+			<fileset dir="${web.root}" includes="*.html" />
 		</delete>
 	</target>
 
