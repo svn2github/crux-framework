@@ -18,6 +18,7 @@ package br.com.sysmap.crux.core.rebind.dto;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -83,6 +84,8 @@ public class DataObjects
 		dataObjects = new HashMap<String, String>();
 		dataObjectIdentifiers = new HashMap<String, String[]>();
 		
+		initializeDefaultDataObjects();
+		
 		Set<String> dataNames =  ClassScanner.searchClassesByAnnotation(DataObject.class);
 		if (dataNames != null)
 		{
@@ -108,6 +111,31 @@ public class DataObjects
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	private static void initializeDefaultDataObjects()
+    {
+		dataObjects.put(String.class.getSimpleName(), String.class.getCanonicalName());
+		dataObjects.put(Integer.class.getSimpleName(), Integer.class.getCanonicalName());
+		dataObjects.put(Short.class.getSimpleName(), Short.class.getCanonicalName());
+		dataObjects.put(Byte.class.getSimpleName(), Byte.class.getCanonicalName());
+		dataObjects.put(Long.class.getSimpleName(), Long.class.getCanonicalName());
+		dataObjects.put(Float.class.getSimpleName(), Float.class.getCanonicalName());
+		dataObjects.put(Double.class.getSimpleName(), Double.class.getCanonicalName());
+		dataObjects.put(Boolean.class.getSimpleName(), Boolean.class.getCanonicalName());
+		dataObjects.put(Date.class.getSimpleName(), Date.class.getCanonicalName());
+		dataObjects.put(Character.class.getSimpleName(), Character.class.getCanonicalName());
+		dataObjects.put("int","int");
+		dataObjects.put("long","long");
+		dataObjects.put("byte","byte");
+		dataObjects.put("short","short");
+		dataObjects.put("float","float");
+		dataObjects.put("double","double");
+		dataObjects.put("boolean","boolean");
+		dataObjects.put("char","char");
+    }
+
 	/**
 	 * @param dataClass
 	 * @return

@@ -727,7 +727,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 				Class<? extends EvtProcessor> evtBinder = evt.value();
 				try
 				{
-					String eventName = evtBinder.newInstance().getEventName();
+					String eventName = evtBinder.getConstructor(WidgetCreator.class).newInstance((WidgetCreator<?>)null).getEventName();
 					if (!added.contains(eventName))
 					{
 						out.println("<xs:attribute name=\""+eventName+"\" />");

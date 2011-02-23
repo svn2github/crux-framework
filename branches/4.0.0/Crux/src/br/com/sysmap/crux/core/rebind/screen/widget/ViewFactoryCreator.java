@@ -451,6 +451,22 @@ public class ViewFactoryCreator
      */
     SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
     {
+    	return getSubTypeWriter(subType, superClass, interfaces, imports, false);
+    }
+    
+    /**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}. 
+	 * 
+     * @param subType
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param makeInterface
+     * @return
+     */
+    SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
+    {
 		String packageName = ViewFactory.class.getPackage().getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, subType);
 
@@ -460,7 +476,11 @@ public class ViewFactoryCreator
 		}
 
 		ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, subType);
-
+		if (makeInterface)
+		{
+			composerFactory.makeInterface();
+		}
+		
 		if (imports != null)
 		{
 			for (String imp : imports)

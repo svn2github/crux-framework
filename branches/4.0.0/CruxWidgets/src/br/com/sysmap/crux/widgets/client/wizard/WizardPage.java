@@ -22,10 +22,8 @@ import java.util.Map;
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Label;
@@ -40,17 +38,17 @@ public class WizardPage<T extends Serializable> extends AbstractWidgetStep<T>
 {
 	static final String PAGE_UNIQUE_ID = "__WizardPage_";
 	
-	private static RegisteredWizardDataSerializer dataSerializer;
 	private FastMap<WizardCommandHandler<T>> commandHandlers = new FastMap<WizardCommandHandler<T>>();
 	private Map<String, WizardCommandData> commands = new LinkedHashMap<String, WizardCommandData>();
 
 	private String wizardId; 
 	private WizardDataSerializer<T> wizardDataSerializer;
 	
-	@SuppressWarnings("unchecked")
-    public WizardPage(String wizardId, String wizardDataId)
+    public WizardPage(String wizardId, WizardDataSerializer<T> wizardDataSerializer)
     {
-		super((T)getWizardResource(wizardId, wizardDataId));
+		super(wizardDataSerializer.getResource());
+		this.wizardId = wizardId;
+		this.wizardDataSerializer = wizardDataSerializer;
 		
 		Widget unique = Screen.get(PAGE_UNIQUE_ID);
 		if (unique != null)
@@ -62,47 +60,7 @@ public class WizardPage<T extends Serializable> extends AbstractWidgetStep<T>
 		RootPanel.getBodyElement().appendChild(span);
 		initWidget(Label.wrap(span));
 		super.setVisible(false);
-		initWizardDataSerializer(wizardId, wizardDataId);
     }
-
-	private static Serializable getWizardResource(String wizardId, String wizardDataId)
-    {
-	    if (!StringUtils.isEmpty(wizardDataId))
-		{
-			if (dataSerializer == null)
-			{
-				dataSerializer = GWT.create(RegisteredWizardDataSerializer.class);
-			}
-			WizardDataSerializer<?> wizardDataSerializer = (WizardDataSerializer<?>) dataSerializer.getWizardDataSerializer(wizardDataId);
-			return wizardDataSerializer.getResource();
-		}
-		else
-		{
-			return null;	
-		}
-    }	
-	
-	@SuppressWarnings("unchecked")
-	private void initWizardDataSerializer(String wizardId, String wizardDataId)
-    {
-	    this.wizardId = wizardId;
-		if (!StringUtils.isEmpty(wizardDataId))
-		{
-			if (dataSerializer == null)
-			{
-				dataSerializer = GWT.create(RegisteredWizardDataSerializer.class);
-			}
-			wizardDataSerializer = (WizardDataSerializer<T>) dataSerializer.getWizardDataSerializer(wizardDataId);
-			if (wizardDataSerializer != null)
-			{
-				wizardDataSerializer.setWizard(wizardId);
-			}
-		}
-		else
-		{
-			wizardDataSerializer = null;	
-		}
-    }	
 
 	@Override
 	public boolean addCommand(String id, String label, WizardCommandHandler<T> handler, int order)

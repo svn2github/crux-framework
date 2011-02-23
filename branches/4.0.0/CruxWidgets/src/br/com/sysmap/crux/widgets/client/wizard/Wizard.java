@@ -30,7 +30,6 @@ import br.com.sysmap.crux.widgets.client.event.FinishHandler;
 import br.com.sysmap.crux.widgets.client.event.HasCancelHandlers;
 import br.com.sysmap.crux.widgets.client.event.HasFinishHandlers;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -39,12 +38,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -53,7 +52,6 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-Wizard";
 	
-	private static RegisteredWizardDataSerializer dataSerializer;
 	private WizardControlBar<T> controlBar;
 	private int currentStep = -1;
 	private DockPanel dockPanel;
@@ -73,11 +71,11 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	 * Wizard Contructor
 	 * 
 	 * @param id widget identifier
-	 * @param wizardDataId the identifier associated with the WizardData class, 
-	 * annotated with <code>@WizardData</code> annotation
+	 * @param wizardDataSerializer serializer for Wizard Data class
 	 */
-    public Wizard(String id, String wizardDataId)
+    public Wizard(String id, WizardDataSerializer<T> wizardDataSerializer)
     {
+		this.wizardDataSerializer = wizardDataSerializer;
 		this.dockPanel = new DockPanel();
 		this.dockPanel.setStyleName(DEFAULT_STYLE_NAME);
 		
@@ -87,7 +85,6 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 		this.dockPanel.add(stepsPanel, DockPanel.CENTER);		
 		this.dockPanel.getElement().setId(id);
 		
-		initWizardDataSerializer(id, wizardDataId);
 		initWidget(dockPanel);
     }
 
@@ -809,27 +806,6 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 		return HasVerticalAlignment.ALIGN_TOP;
     }
 
-	@SuppressWarnings("unchecked")
-	private void initWizardDataSerializer(String wizardId, String wizardDataId)
-    {
-		if (!StringUtils.isEmpty(wizardDataId))
-		{
-			if (dataSerializer == null)
-			{
-				dataSerializer = GWT.create(RegisteredWizardDataSerializer.class);
-			}
-			this.wizardDataSerializer = (WizardDataSerializer<T>) dataSerializer.getWizardDataSerializer(wizardDataId);
-			if (this.wizardDataSerializer != null)
-			{
-				this.wizardDataSerializer.setWizard(wizardId);
-			}
-		}
-		else
-		{
-			wizardDataSerializer = null;	
-		}
-    }
-	
 	/**
 	 * @param step
 	 * @param beforeIndex

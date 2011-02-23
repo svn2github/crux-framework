@@ -22,9 +22,8 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
+import br.com.sysmap.crux.core.rebind.dto.DataObjects;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -44,33 +43,18 @@ import br.com.sysmap.crux.widgets.client.wizard.Wizard;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
-import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
+import br.com.sysmap.crux.widgets.client.wizard.WizardDataSerializer;
 import br.com.sysmap.crux.widgets.rebind.event.CancelEvtBind;
 import br.com.sysmap.crux.widgets.rebind.event.FinishEvtBind;
-
-class WizardContext extends WidgetCreatorContext
-{
-
-	public String stepId;
-	public String stepLabel;
-	public String stepOnEnter;
-	public String stepOnLeave;
-	public String enabled;
-	public String wizardObject;
-}
-
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
 @DeclarativeFactory(id="wizard", library="widgets", targetWidget=Wizard.class)
-@TagAttributesDeclaration({
-	@TagAttributeDeclaration("wizardContextObject")
-})
 @TagEvents({
 	@TagEvent(FinishEvtBind.class),
 	@TagEvent(CancelEvtBind.class)
@@ -78,7 +62,7 @@ class WizardContext extends WidgetCreatorContext
 @TagChildren({
 	@TagChild(WizardFactory.WizardChildrenProcessor.class)
 })
-public class WizardFactory extends WidgetCreator<WizardContext>
+public class WizardFactory extends AbstractWizardFactory
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
@@ -88,42 +72,14 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 		String varName = createVariableName("widget");
 	    String wizardContextObject = metaElem.optString("wizardContextObject");
 		String className = getGenericSignature(wizardContextObject);
-		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(widgetId)+", "+EscapeUtils.quote(wizardContextObject)+");");
+		String wizardData = DataObjects.getDataObject(wizardContextObject);
+	    String wizardDataSerializer = getWizardSerializerInterface(wizardContextObject);
+		
+		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(widgetId)+", ("+
+				             WizardDataSerializer.class.getCanonicalName()+"<"+wizardData+">)GWT.create("+wizardDataSerializer+".class));");
 		return varName;
 	}
 
-	/**
-	 * @param wizardContextObject
-	 * @return
-	 */
-	public String getGenericSignature(String wizardContextObject)
-	{
-	    String className = getWidgetClassName();
-	    String wizardData = WizardDataObjects.getWizardData(wizardContextObject);
-	    if (StringUtils.isEmpty(wizardData))
-	    {
-	    	return className+"<"+NoData.class.getCanonicalName()+">";
-	    }
-		return className +"<"+wizardData+">";
-	}
-
-	@Override
-	public void processAttributes(SourcePrinter out, WizardContext context) throws CruxGeneratorException
-	{
-	    super.processAttributes(out, context);
-	    
-	    String wizardContextObject = context.getChildElement().optString("wizardContextObject");
-	    String wizardData = WizardDataObjects.getWizardData(wizardContextObject);
-	    if (StringUtils.isEmpty(wizardData))
-	    {
-	    	context.wizardObject = NoData.class.getCanonicalName();
-	    }
-	    else
-	    {
-	    	context.wizardObject = wizardData;
-	    }
-	}
-	
 	@Override
 	public void postProcess(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 	{
@@ -608,10 +564,4 @@ public class WizardFactory extends WidgetCreator<WizardContext>
 			}
 		}
 	}
-
-	@Override
-    public WizardContext instantiateContext()
-    {
-	    return new WizardContext();
-    }
 }

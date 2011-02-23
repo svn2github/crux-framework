@@ -64,7 +64,7 @@ import com.google.gwt.user.client.ui.NumberLabel;
 		}
 		out.println("final "+className + " " + varName+" = new "+className+"("+
 						NumberFormatUtil.class.getCanonicalName()+".getNumberFormat("+
-						EscapeUtils.quote(numberPattern)+");");
+						EscapeUtils.quote(numberPattern)+"));");
 		return varName;	
 	}
 	

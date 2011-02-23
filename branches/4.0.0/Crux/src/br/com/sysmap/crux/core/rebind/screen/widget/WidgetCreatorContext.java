@@ -27,7 +27,6 @@ public class WidgetCreatorContext
 	private JSONObject widgetElement;
 	private String widget;
 	private String widgetId;
-	public String wizardObject;
 
 	public WidgetCreatorContext()
 	{

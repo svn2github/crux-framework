@@ -17,6 +17,7 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.FocusableFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.BlurEvtBind;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.ClickEvtBind;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.DoubleClickEvtBind;
@@ -42,10 +43,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
  *
  */
 @TagAttributes({
-	@TagAttribute(value="tabIndex", type=Integer.class),
 	@TagAttribute(value="enabled", type=Boolean.class),
-	@TagAttribute(value="accessKey", type=Character.class),
-	@TagAttribute(value="focus", type=Boolean.class)
 })
 @TagEvents({
 	@TagEvent(ClickEvtBind.class),
@@ -62,6 +60,6 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 	@TagEvent(MouseMoveEvtBind.class),
 	@TagEvent(MouseWheelEvtBind.class)
 })
-public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> 
+public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> implements FocusableFactory<C> 
 {
 }

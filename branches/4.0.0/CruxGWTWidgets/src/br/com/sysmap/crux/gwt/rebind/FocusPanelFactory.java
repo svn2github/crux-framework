@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.gwt.rebind;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.FocusableFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
@@ -23,8 +24,6 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasClickHandlersFact
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
@@ -36,11 +35,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="focusPanel", library="gwt", targetWidget=FocusPanel.class)
-@TagAttributes({
-	@TagAttribute(value="tabIndex", type=Integer.class),
-	@TagAttribute(value="accessKey", type=Character.class),
-	@TagAttribute(value="focus", type=Boolean.class)
-})
 @TagChildren({
 	@TagChild(FocusPanelFactory.WidgetContentProcessor.class)
 })
@@ -49,7 +43,8 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   			  HasClickHandlersFactory<WidgetCreatorContext>, 
 	   			  HasAllFocusHandlersFactory<WidgetCreatorContext>, 
 	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>,
-	   			  HasAllKeyHandlersFactory<WidgetCreatorContext>
+	   			  HasAllKeyHandlersFactory<WidgetCreatorContext>, 
+	   			  FocusableFactory<WidgetCreatorContext>
 	   			
 {
     
