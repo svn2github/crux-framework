@@ -43,7 +43,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
  *
  */
 @TagAttributes({
-	@TagAttribute(value="enabled", type=Boolean.class),
+	@TagAttribute(value="enabled", type=Boolean.class)
 })
 @TagEvents({
 	@TagEvent(ClickEvtBind.class),

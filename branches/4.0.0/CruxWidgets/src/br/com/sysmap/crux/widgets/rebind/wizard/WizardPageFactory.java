@@ -42,7 +42,7 @@ import br.com.sysmap.crux.widgets.client.wizard.WizardPage;
  */
 @DeclarativeFactory(id="wizardPage", library="widgets", targetWidget=WizardPage.class)
 @TagAttributesDeclaration({
-	@TagAttributeDeclaration(value="wizardId", required=true),
+	@TagAttributeDeclaration(value="wizardId", required=true)
 })
 @TagEvents({
 	@TagEvent(EnterEvtBind.class),
