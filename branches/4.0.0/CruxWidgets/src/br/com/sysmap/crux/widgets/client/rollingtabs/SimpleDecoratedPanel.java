@@ -24,7 +24,10 @@ public class SimpleDecoratedPanel extends CellPanel
 		
 		Element templateTd = createTemplateTd();
 		centerCell = createTd(templateTd, "flapCenter");
+		
 		rightCell = createTd(templateTd, "flapRight");
+		rightCell.setInnerHTML("&nbsp;");
+
 		leftCell = templateTd;
 		leftCell.setClassName("flapLeft");
 		leftCell.setInnerHTML("&nbsp;");

@@ -46,17 +46,17 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	/**
 	 * @return
 	 */
-	public String getHorizontalNextButtonStyleName()
+	public String getNextButtonStyleName()
     {
-    	return this.rollingPanel.getHorizontalNextButtonStyleName();
+    	return this.rollingPanel.getNextButtonStyleName();
     }
 
 	/**
 	 * @return
 	 */
-	public String getHorizontalPreviousButtonStyleName()
+	public String getPreviousButtonStyleName()
     {
-    	return this.rollingPanel.getHorizontalPreviousButtonStyleName();
+    	return this.rollingPanel.getPreviousButtonStyleName();
     }
 
 	/**
@@ -66,22 +66,6 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	{
 		return this.rollingPanel.getSpacing();
 	}
-
-	/**
-	 * @return
-	 */
-	public String getVerticalNextButtonStyleName()
-    {
-    	return this.rollingPanel.getVerticalNextButtonStyleName();
-    }
-
-	/**
-	 * @return
-	 */
-	public String getVerticalPreviousButtonStyleName()
-    {
-    	return this.rollingPanel.getVerticalPreviousButtonStyleName();
-    }
 
 	/**
 	 * @return
@@ -100,19 +84,19 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	}
 
 	/**
-	 * @param horizontalNextButtonStyleName
+	 * @param nextButtonStyleName
 	 */
-	public void setHorizontalNextButtonStyleName(String horizontalNextButtonStyleName)
+	public void setNextButtonStyleName(String nextButtonStyleName)
     {
-		this.rollingPanel.setHorizontalNextButtonStyleName(horizontalNextButtonStyleName);
+		this.rollingPanel.setNextButtonStyleName(nextButtonStyleName);
     }
 
 	/**
-	 * @param horizontalPreviousButtonStyleName
+	 * @param previousButtonStyleName
 	 */
-	public void setHorizontalPreviousButtonStyleName(String horizontalPreviousButtonStyleName)
+	public void setPreviousButtonStyleName(String previousButtonStyleName)
     {
-		this.rollingPanel.setHorizontalPreviousButtonStyleName(horizontalPreviousButtonStyleName);
+		this.rollingPanel.setPreviousButtonStyleName(previousButtonStyleName);
     }
 	
 	/**
@@ -122,22 +106,6 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	{
 		this.rollingPanel.setSpacing(spacing);
 	}
-
-	/**
-	 * @param verticalNextButtonStyleName
-	 */
-	public void setVerticalNextButtonStyleName(String verticalNextButtonStyleName)
-    {
-		this.rollingPanel.setVerticalNextButtonStyleName(verticalNextButtonStyleName);
-    }
-	
-	/**
-	 * @param verticalPreviousButtonStyleName
-	 */
-	public void setVerticalPreviousButtonStyleName(String verticalPreviousButtonStyleName)
-    {
-		this.rollingPanel.setVerticalPreviousButtonStyleName(verticalPreviousButtonStyleName);
-    }
 	
 	/**
 	 * 

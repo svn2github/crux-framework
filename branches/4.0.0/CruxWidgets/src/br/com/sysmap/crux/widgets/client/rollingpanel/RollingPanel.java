@@ -49,28 +49,32 @@ import com.google.gwt.user.client.ui.Widget;
 public class RollingPanel extends Composite implements InsertPanel, HasHorizontalAlignment, HasVerticalAlignment
 {
 	public static final String DEFAULT_NEXT_HORIZONTAL_STYLE_NAME = "crux-RollingPanelHNext";
-
 	public static final String DEFAULT_NEXT_VERTICAL_STYLE_NAME = "crux-RollingPanelVNext";
+
 	public static final String DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME = "crux-RollingPanelHPrevious";
 	public static final String DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME = "crux-RollingPanelVPrevious";
+	
+	public static final String DEFAULT_BODY_VERTICAL_STYLE_NAME = "crux-RollingPanelVBody";
+	public static final String DEFAULT_BODY_HORIZONTAL_STYLE_NAME = "crux-RollingPanelHBody";
+	
 	public static final String DEFAULT_STYLE_NAME = "crux-RollingPanel";
+
+	private String nextButtonStyleName;
+	private String previousButtonStyleName;
+	private String bodyStyleName;
 
 	protected CellPanel itemsPanel;
     protected DockPanel layoutPanel;
 	
-	private String horizontalNextButtonStyleName = DEFAULT_NEXT_HORIZONTAL_STYLE_NAME;
 	private Button horizontalNextButton = null;
-	private String horizontalPreviousButtonStyleName = DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME;
 	private Button horizontalPreviousButton = null;
+	private Button verticalNextButton = null;
+	private Button verticalPreviousButton = null;
 	
 	private SimplePanel itemsScrollPanel;
 	private boolean scrollToAddedWidgets = false;
 	private boolean vertical;
-	private String verticalNextButtonStyleName = DEFAULT_NEXT_VERTICAL_STYLE_NAME;
 
-	private Button verticalNextButton = null;
-	private String verticalPreviousButtonStyleName = DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME;
-	private Button verticalPreviousButton = null;
 
 	private HorizontalAlignmentConstant horizontalAlign;
 
@@ -93,6 +97,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{
 			this.layoutPanel.setHeight("100%");
 			this.itemsScrollPanel.setHeight("100%");
+			this.itemsScrollPanel.setStyleName(DEFAULT_BODY_VERTICAL_STYLE_NAME);
 			this.itemsPanel = new VerticalPanel();
 			createVerticalNavigationButtons();
 		}
@@ -100,6 +105,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{	
 			this.layoutPanel.setWidth("100%");
 			this.itemsScrollPanel.setWidth("100%");
+			this.itemsScrollPanel.setStyleName(DEFAULT_BODY_HORIZONTAL_STYLE_NAME);
 			this.itemsPanel = new HorizontalPanel();
 			createHorizontalNavigationButtons();
 		}
@@ -159,22 +165,6 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	/**
 	 * @return
 	 */
-	public String getHorizontalNextButtonStyleName()
-    {
-    	return horizontalNextButtonStyleName;
-    }
-	
-	/**
-	 * @return
-	 */
-	public String getHorizontalPreviousButtonStyleName()
-    {
-    	return horizontalPreviousButtonStyleName;
-    }
-	
-	/**
-	 * @return
-	 */
 	public int getHorizontalScrollPosition()
 	{
 		return itemsScrollPanel.getElement().getScrollLeft();
@@ -188,22 +178,6 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		return itemsPanel.getSpacing();
 	}
 
-	/**
-	 * @return
-	 */
-	public String getVerticalNextButtonStyleName()
-    {
-    	return verticalNextButtonStyleName;
-    }
-
-	/**
-	 * @return
-	 */
-	public String getVerticalPreviousButtonStyleName()
-    {
-    	return verticalPreviousButtonStyleName;
-    }
-	
 	/**
 	 * @return
 	 */
@@ -355,22 +329,6 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
     }
 	
 	/**
-	 * @param horizontalNextButtonStyleName
-	 */
-	public void setHorizontalNextButtonStyleName(String horizontalNextButtonStyleName)
-    {
-    	this.horizontalNextButtonStyleName = horizontalNextButtonStyleName;
-    }
-
-	/**
-	 * @param horizontalPreviousButtonStyleName
-	 */
-	public void setHorizontalPreviousButtonStyleName(String horizontalPreviousButtonStyleName)
-    {
-    	this.horizontalPreviousButtonStyleName = horizontalPreviousButtonStyleName;
-    }
-	
-	/**
 	 * @param position
 	 */
 	public void setHorizontalScrollPosition(int position)
@@ -412,22 +370,6 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
     }
 
 	/**
-	 * @param verticalNextButtonStyleName
-	 */
-	public void setVerticalNextButtonStyleName(String verticalNextButtonStyleName)
-    {
-    	this.verticalNextButtonStyleName = verticalNextButtonStyleName;
-    }
-	
-	/**
-	 * @param verticalPreviousButtonStyleName
-	 */
-	public void setVerticalPreviousButtonStyleName(String verticalPreviousButtonStyleName)
-    {
-    	this.verticalPreviousButtonStyleName = verticalPreviousButtonStyleName;
-    }
-
-	/**
 	 * @param position
 	 */
 	public void setVerticalScrollPosition(int position)
@@ -449,7 +391,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	protected void createHorizontalNavigationButtons()
 	{
 		horizontalPreviousButton = new Button(" ");
-		horizontalPreviousButton.setStyleName(horizontalPreviousButtonStyleName);
+		horizontalPreviousButton.setStyleName(DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME);
 		HorizontalNavButtonEvtHandler handler = new HorizontalNavButtonEvtHandler(-20, -5);
 		horizontalPreviousButton.addMouseDownHandler(handler);
 		horizontalPreviousButton.addMouseUpHandler(handler);
@@ -457,7 +399,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		this.layoutPanel.add(horizontalPreviousButton, DockPanel.WEST);
 		
 		horizontalNextButton = new Button(" ");
-		horizontalNextButton.setStyleName(horizontalNextButtonStyleName);
+		horizontalNextButton.setStyleName(DEFAULT_NEXT_HORIZONTAL_STYLE_NAME);
 		handler = new HorizontalNavButtonEvtHandler(20, 5);
 		horizontalNextButton.addMouseDownHandler(handler);
 		horizontalNextButton.addMouseUpHandler(handler);
@@ -468,8 +410,8 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{
 			public void execute()
 			{
-				getWrapperElement(horizontalPreviousButton).setClassName(horizontalPreviousButtonStyleName + "Wrapper");
-				getWrapperElement(horizontalNextButton).setClassName(horizontalNextButtonStyleName + "Wrapper");
+				getWrapperElement(horizontalPreviousButton).setClassName(DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME + "Wrapper");
+				getWrapperElement(horizontalNextButton).setClassName(DEFAULT_NEXT_HORIZONTAL_STYLE_NAME + "Wrapper");
 			}
 		});
 	}
@@ -488,7 +430,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	protected void createVerticalNavigationButtons()
 	{
 		verticalPreviousButton = new Button(" ");
-		verticalPreviousButton.setStyleName(verticalPreviousButtonStyleName);
+		verticalPreviousButton.setStyleName(DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME);
 		VerticalNavButtonEvtHandler handler = new VerticalNavButtonEvtHandler(-20, -5);
 		verticalPreviousButton.addMouseDownHandler(handler);
 		verticalPreviousButton.addMouseUpHandler(handler);
@@ -498,15 +440,15 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		handler = new VerticalNavButtonEvtHandler(20, 5);
 		verticalNextButton.addMouseDownHandler(handler);
 		verticalNextButton.addMouseUpHandler(handler);
-		verticalNextButton.setStyleName(verticalNextButtonStyleName);
+		verticalNextButton.setStyleName(DEFAULT_NEXT_VERTICAL_STYLE_NAME);
 		this.layoutPanel.add(verticalNextButton, DockPanel.SOUTH);
 
 		Scheduler.get().scheduleDeferred(new ScheduledCommand()
 		{
 			public void execute()
 			{
-				getWrapperElement(verticalPreviousButton).setClassName(verticalPreviousButtonStyleName + "Wrapper");
-				getWrapperElement(verticalNextButton).setClassName(verticalNextButtonStyleName + "Wrapper");
+				getWrapperElement(verticalPreviousButton).setClassName(DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME + "Wrapper");
+				getWrapperElement(verticalNextButton).setClassName(DEFAULT_NEXT_VERTICAL_STYLE_NAME + "Wrapper");
 			}
 		});
     }
@@ -734,4 +676,101 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
     {
 	    return this.horizontalAlign;
     }
+
+	/**
+	 * @param nextButtonStyleName
+	 */
+	public void setNextButtonStyleName(String nextButtonStyleName)
+    {
+    	this.nextButtonStyleName = nextButtonStyleName;
+    	
+    	if(this.isVertical())
+    	{
+    		this.verticalNextButton.setStyleName(this.nextButtonStyleName);
+    	}
+    	else
+    	{
+    		this.horizontalNextButton.setStyleName(this.nextButtonStyleName);
+    	}
+    	
+    	Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+    		public void execute()
+			{
+    			Button btn = horizontalNextButton;
+    			
+    			if(isVertical())
+    			{
+        			btn = verticalNextButton;
+    			}
+    			
+				getWrapperElement(btn).setClassName(RollingPanel.this.nextButtonStyleName + "Wrapper");
+			}
+		});
+    }
+
+	/**
+	 * @param previousButtonStyleName
+	 */
+	public void setPreviousButtonStyleName(String previousButtonStyleName)
+    {
+    	this.previousButtonStyleName = previousButtonStyleName;
+    	
+    	if(this.isVertical())
+    	{
+    		this.verticalPreviousButton.setStyleName(this.nextButtonStyleName);
+    	}
+    	else
+    	{
+    		this.horizontalPreviousButton.setStyleName(this.nextButtonStyleName);
+    	}
+    	
+    	Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+    		public void execute()
+			{
+    			Button btn = horizontalPreviousButton;
+    			
+    			if(isVertical())
+    			{
+        			btn = verticalPreviousButton;
+    			}
+    			
+				getWrapperElement(btn).setClassName(RollingPanel.this.previousButtonStyleName + "Wrapper");
+			}
+		});
+    }
+
+	/**
+	 * @param bodyStyleName the bodyStyleName to set
+	 */
+	public void setBodyStyleName(String bodyStyleName)
+	{
+		this.bodyStyleName = bodyStyleName;
+		this.itemsScrollPanel.setStyleName(this.bodyStyleName);
+	}
+
+	/**
+	 * @return the bodyStyleName
+	 */
+	public String getBodyStyleName()
+	{
+		return bodyStyleName;
+	}
+
+	/**
+	 * @return the nextButtonStyleName
+	 */
+	public String getNextButtonStyleName()
+	{
+		return nextButtonStyleName;
+	}
+
+	/**
+	 * @return the previousButtonStyleName
+	 */
+	public String getPreviousButtonStyleName()
+	{
+		return previousButtonStyleName;
+	}
 }

@@ -62,10 +62,9 @@ class RollingPanelContext extends WidgetCreatorContext
 	@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false")
 })
 @TagAttributes({
-	@TagAttribute("horizontalNextButtonStyleName"),
-	@TagAttribute("horizontalPreviousButtonStyleName"),
-	@TagAttribute("verticalNextButtonStyleName"),
-	@TagAttribute("verticalPreviousButtonStyleName"),
+	@TagAttribute("nextButtonStyleName"),
+	@TagAttribute("previousButtonStyleName"),
+	@TagAttribute("bodyStyleName"),
 	@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
 	@TagAttribute(value="spacing", type=Integer.class)
 })
