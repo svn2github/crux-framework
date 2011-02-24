@@ -55,7 +55,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
@@ -270,7 +270,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param children
 	 * @throws NoSuchMethodException
 	 */
-	private void generateAllChild(PrintStream out, TagChildAttributes attributes, TagChildren children, String library) throws NoSuchMethodException
+	private void generateAllChild(PrintStream out, TagConstraints attributes, TagChildren children, String library) throws NoSuchMethodException
 	{
 		out.print("<xs:all ");
 		if (attributes!= null)
@@ -417,7 +417,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	private void generateChild(PrintStream out, TagChild tagChild, boolean parentIsAnAgregator, String library) throws SecurityException, NoSuchMethodException
 	{
 		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
-		TagChildAttributes attributes = ClassUtils.getChildtrenAttributesAnnotation(processorClass);
+		TagConstraints attributes = ClassUtils.getChildTagConstraintsAnnotation(processorClass);
 		TagChildren children = processorClass.getAnnotation(TagChildren.class);
 		
 		if (ChoiceChildProcessor.class.isAssignableFrom(processorClass))
@@ -545,7 +545,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param children
 	 * @throws NoSuchMethodException
 	 */
-	private void generateChoiceChild(PrintStream out, TagChildAttributes attributes, TagChildren children, String library) throws NoSuchMethodException
+	private void generateChoiceChild(PrintStream out, TagConstraints attributes, TagChildren children, String library) throws NoSuchMethodException
 	{
 		out.print("<xs:choice ");
 		if (attributes!= null)
@@ -799,7 +799,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param processorClass
 	 * @param attributes
 	 */
-	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?>> processorClass, TagChildAttributes attributes)
+	private void generateGenericChildWithAttributes(PrintStream out, String library, Class<? extends WidgetChildProcessor<?>> processorClass, TagConstraints attributes)
 	{
 		Class<?> type = attributes.type();
 		String tagName = attributes.tagName();
@@ -980,7 +980,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param attributes
 	 * @param children
 	 */
-	private void generateSequenceChild(PrintStream out, TagChildAttributes attributes, TagChildren children, String library) 
+	private void generateSequenceChild(PrintStream out, TagConstraints attributes, TagChildren children, String library) 
 	{
 		try
         {
