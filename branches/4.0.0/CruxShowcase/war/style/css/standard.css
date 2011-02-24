@@ -8,6 +8,20 @@ TEXTAREA
 {
 	margin-bottom: 10px;
 }
+.MainHeader
+{
+	background-image: url(../img/main-header-bg.gif);
+	background-repeat: repeat-x;
+}
+.MainHeaderLink
+{
+	font-size: 11px;
+	color: #EEEEEE;
+	font-family: Verdana, Arial, Helvetica;
+	text-decoration: underline;
+	margin-top: 5px;
+	display: block;
+}
 .MainTitle
 {
 	color:#67A7E3;
