@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.client.CruxHTMLPanel;
 
@@ -61,6 +61,6 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 		return varName;
 	}
 
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

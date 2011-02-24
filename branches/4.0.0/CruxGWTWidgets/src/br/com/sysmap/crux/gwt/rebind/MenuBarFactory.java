@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.client.ExecuteEvent;
 
@@ -100,21 +100,21 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		return vertical;
 	}
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(MenutItemProcessor.class),
 		@TagChild(MenutItemSeparatorProcessor.class)
 	})
 	public static class MenutItemsProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 	
-	@TagChildAttributes(tagName="menuItem")
+	@TagConstraints(tagName="menuItem")
 	@TagChildren({
 		@TagChild(CaptionProcessor.class),
 		@TagChild(MenuChildrenProcessor.class)
 	})
 	public static class MenutItemProcessor extends WidgetChildProcessor<MenuBarContext> {}
 	
-	@TagChildAttributes(tagName="separator")
+	@TagConstraints(tagName="separator")
 	public static class MenutItemSeparatorProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
@@ -131,7 +131,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	})
 	public static class CaptionProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 
-	@TagChildAttributes(tagName="textCaption")
+	@TagConstraints(tagName="textCaption")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="text", required=true, supportsI18N=true)
 	})
@@ -145,7 +145,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlCaption", type=HTMLTag.class)
+	@TagConstraints(tagName="htmlCaption", type=HTMLTag.class)
 	public static class HtmlCaptionProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override
@@ -162,7 +162,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	})
 	public static class MenuChildrenProcessor extends ChoiceChildProcessor<MenuBarContext> {}
 	
-	@TagChildAttributes(tagName="command")
+	@TagConstraints(tagName="command")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="onExecute", required=true)
 	})
@@ -191,7 +191,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		}
 	}
 
-	@TagChildAttributes(tagName="subMenu", type=MenuBarFactory.class)
+	@TagConstraints(tagName="subMenu", type=MenuBarFactory.class)
 	public static class SubMenuProcessor extends WidgetChildProcessor<MenuBarContext>
 	{
 		@Override

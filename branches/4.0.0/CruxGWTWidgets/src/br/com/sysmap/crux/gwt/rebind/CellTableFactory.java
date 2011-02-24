@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.cellview.client.CellTable;
@@ -50,7 +50,7 @@ public class CellTableFactory extends AbstractHasDataFactory
 		return varName;
 	}
 	
-	@TagChildAttributes(tagName="column", minOccurs="1", maxOccurs="unbounded")
+	@TagConstraints(tagName="column", minOccurs="1", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(ColumnHeaderProcessor.class),
 		@TagChild(ColumnFooterProcessor.class),
@@ -61,7 +61,7 @@ public class CellTableFactory extends AbstractHasDataFactory
 		
 	}
 	
-	@TagChildAttributes(tagName="header", type=String.class)
+	@TagConstraints(tagName="header", type=String.class)
 	@TagChildren({
 		@TagChild(ColumnHeaderChoiceProcessor.class)
 	})
@@ -76,19 +76,19 @@ public class CellTableFactory extends AbstractHasDataFactory
 	})
 	public static class ColumnHeaderChoiceProcessor extends ChoiceChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static class TextColumnHeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		
 	}
 
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static class HTMLColumnHeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		
 	}
 
-	@TagChildAttributes(tagName="footer", minOccurs="0", maxOccurs="1")
+	@TagConstraints(tagName="footer", minOccurs="0", maxOccurs="1")
 	@TagChildren({
 		@TagChild(ColumnFooterChoiceProcessor.class)
 	})
@@ -103,19 +103,19 @@ public class CellTableFactory extends AbstractHasDataFactory
 		
 	}
 	
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static class TextColumnFooterProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		
 	}
 
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static class HTMLColumnFooterProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		
 	}
 
-	@TagChildAttributes(tagName="cell")
+	@TagConstraints(tagName="cell")
 	public static class ColumnCellProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		

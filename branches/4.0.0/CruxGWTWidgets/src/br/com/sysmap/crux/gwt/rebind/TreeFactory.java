@@ -44,7 +44,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
@@ -151,7 +151,7 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		}
 	}
 	
-	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="state", type=Boolean.class),
 		@TagAttributeDeclaration(value="selected", type=Boolean.class)
@@ -174,7 +174,7 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	})
 	public static class TreeCaptionProcessor extends ChoiceChildProcessor<TreeContext> {}
 	
-	@TagChildAttributes(tagName="textTitle", type=String.class)
+	@TagConstraints(tagName="textTitle", type=String.class)
 	public static class TextCaptionProcessor extends WidgetChildProcessor<TreeContext>
 	{
 		@Override
@@ -199,13 +199,13 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		}
 	}	
 
-	@TagChildAttributes(tagName="widgetTitle")
+	@TagConstraints(tagName="widgetTitle")
 	@TagChildren({
 		@TagChild(WidgetCaptionWidgetProcessor.class)
 	})
 	public static class WidgetCaptionProcessor extends WidgetChildProcessor<TreeContext> {}	
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class WidgetCaptionWidgetProcessor extends WidgetChildProcessor<TreeContext>
 	{
 		@Override

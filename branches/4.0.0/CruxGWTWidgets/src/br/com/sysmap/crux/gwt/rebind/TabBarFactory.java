@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.TabBar;
@@ -46,7 +46,7 @@ public class TabBarFactory extends AbstractTabBarFactory
 	})		
 	public static class TabItemProcessor extends ChoiceChildProcessor<TabBarContext> {}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(WidgetProcessor.class)
 	})	

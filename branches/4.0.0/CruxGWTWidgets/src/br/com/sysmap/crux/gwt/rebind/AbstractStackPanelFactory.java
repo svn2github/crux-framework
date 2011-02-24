@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 
 
@@ -59,7 +59,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		}		
 	}
 	
-	@TagChildAttributes(tagName="textTitle", type=String.class)
+	@TagConstraints(tagName="textTitle", type=String.class)
 	public abstract static class AbstractTitleTextProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
@@ -70,7 +70,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlTitle", type=HTMLTag.class)
+	@TagConstraints(tagName="htmlTitle", type=HTMLTag.class)
 	public abstract static class AbstractTitleHTMLProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext>
 	{
 		@Override
@@ -81,7 +81,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		}
 	}
 	
-	@TagChildAttributes(minOccurs="0", type=AnyWidget.class)
+	@TagConstraints(minOccurs="0", type=AnyWidget.class)
 	public abstract static class AbstractContentWidgetProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> 
 	{
 		@Override

@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
@@ -109,25 +109,25 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 	@Override
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 
-	@TagChildAttributes(minOccurs="0", tagName="widgetHeader")
+	@TagConstraints(minOccurs="0", tagName="widgetHeader")
 	@TagChildren({
 		@TagChild(WidgetHeaderProcessor.class)
 	})	
 	public static class HeaderProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 		
-	@TagChildAttributes(minOccurs="0", tagName="widgetContent")
+	@TagConstraints(minOccurs="0", tagName="widgetContent")
 	@TagChildren({
 		@TagChild(WidgetProcessor.class)
 	})	
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(widgetProperty="content")
+	@TagConstraints(widgetProperty="content")
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="open", notEquals="true")
 	})
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(widgetProperty="header")
+	@TagConstraints(widgetProperty="header")
 	public static class WidgetHeaderProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
     @Override

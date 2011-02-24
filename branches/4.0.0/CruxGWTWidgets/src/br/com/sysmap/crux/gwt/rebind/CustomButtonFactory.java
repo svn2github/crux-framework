@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -41,7 +41,7 @@ class CustomButtonContext extends WidgetCreatorContext
 public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButtonContext> 
 			implements HasHTMLFactory<CustomButtonContext>
 {
-	@TagChildAttributes(tagName="up")
+	@TagConstraints(tagName="up")
 	abstract static class AbstractUpFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -51,7 +51,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 	
-	@TagChildAttributes(tagName="upDisabled")
+	@TagConstraints(tagName="upDisabled")
 	abstract static class AbstractUpDisabledFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -61,7 +61,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 
-	@TagChildAttributes(tagName="upHovering")
+	@TagConstraints(tagName="upHovering")
 	abstract static class AbstractUpHoveringFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -71,7 +71,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 
-	@TagChildAttributes(tagName="down")
+	@TagConstraints(tagName="down")
 	abstract static class AbstractDownFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -81,7 +81,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 	
-	@TagChildAttributes(tagName="downDisabled")
+	@TagConstraints(tagName="downDisabled")
 	abstract static class AbstractDownDisabledFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -91,7 +91,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 
-	@TagChildAttributes(tagName="downHovering")
+	@TagConstraints(tagName="downHovering")
 	abstract static class AbstractDownHoveringFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -101,7 +101,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 	
-	@TagChildAttributes(tagName="textFace")
+	@TagConstraints(tagName="textFace")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="value", required=true)
 	})
@@ -114,7 +114,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 	
-	@TagChildAttributes(tagName="htmlFace", type=HTMLTag.class)
+	@TagConstraints(tagName="htmlFace", type=HTMLTag.class)
 	abstract static class AbstractHTMLFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
 	{
 		@Override
@@ -124,7 +124,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 		}
 	}
 	
-	@TagChildAttributes(tagName="imageFace")
+	@TagConstraints(tagName="imageFace")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="url", required=true),
 		@TagAttributeDeclaration("visibleRect")

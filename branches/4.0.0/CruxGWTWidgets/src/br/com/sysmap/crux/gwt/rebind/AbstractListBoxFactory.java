@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 /**
  * Base class for implementing factories for many kinds of list boxes.
@@ -37,7 +37,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttribut
 public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxContext> 
 				implements HasChangeHandlersFactory<ListBoxContext>, HasNameFactory<ListBoxContext>
 {
-	@TagChildAttributes(tagName="item", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("value"),
 		@TagAttributeDeclaration(value="label", supportsI18N=true),

@@ -19,7 +19,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.TabPanel;
@@ -41,7 +41,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory
 	})	
 	public static class TabProcessor extends AbstractTabProcessor {}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(TextTabProcessor.class),
 		@TagChild(HTMLTabProcessor.class),
@@ -53,7 +53,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory
 	
 	public static class HTMLTabProcessor extends AbstractHTMLTabProcessor {}
 	
-	@TagChildAttributes(tagName="tabWidget")
+	@TagConstraints(tagName="tabWidget")
 	@TagChildren({
 		@TagChild(WidgetTitleProcessor.class)
 	})	
@@ -61,7 +61,7 @@ public class TabPanelFactory extends AbstractTabPanelFactory
 
 	public static class WidgetTitleProcessor extends AbstractWidgetTitleProcessor {}
 	
-	@TagChildAttributes(tagName="panelContent")
+	@TagConstraints(tagName="panelContent")
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})	

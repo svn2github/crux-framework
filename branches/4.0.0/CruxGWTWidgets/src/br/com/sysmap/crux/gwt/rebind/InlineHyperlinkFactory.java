@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 public class InlineHyperlinkFactory extends WidgetCreator<WidgetCreatorContext>
        implements HasHTMLFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}	
 	
 	@Override

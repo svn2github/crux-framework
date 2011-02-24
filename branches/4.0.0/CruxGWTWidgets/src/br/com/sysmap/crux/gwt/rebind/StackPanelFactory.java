@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.StackPanel;
@@ -47,21 +47,21 @@ public class StackPanelFactory extends AbstractStackPanelFactory
 		return varName;
 	}	
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="stackItem")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="stackItem")
 	@TagChildren({
 		@TagChild(TitleProcessor.class),
 		@TagChild(ContentProcessor.class)
 	})	
 	public static class StackItemProcessor extends WidgetChildProcessor<AbstractStackPanelFactoryContext> {}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(TitleTextProcessor.class),
 		@TagChild(TitleHTMLProcessor.class)
 	})	
 	public static class TitleProcessor extends ChoiceChildProcessor<AbstractStackPanelFactoryContext> {}	
 	
-	@TagChildAttributes(minOccurs="0", tagName="widget")
+	@TagConstraints(minOccurs="0", tagName="widget")
 	@TagChildren({
 		@TagChild(ContentWidgetProcessor.class)
 	})	

@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.DockPanelContext.DockDirection;
 
@@ -55,7 +55,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
        implements HasHorizontalAlignmentFactory<DockPanelContext>, 
                   HasVerticalAlignmentFactory<DockPanelContext>
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(DockCellProcessor.class),
 		@TagChild(DockWidgetProcessor.class)
@@ -70,7 +70,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 		}
 	}
 	
-	@TagChildAttributes(tagName="cell", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="cell", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="direction", type=DockDirection.class, defaultValue="center")
 	})
@@ -106,7 +106,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 		}
 	}
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class DockWidgetProcessor extends AbstractCellWidgetProcessor<DockPanelContext> 
 	{
 		@Override

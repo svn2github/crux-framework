@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -42,7 +42,7 @@ public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
 	   implements HasHorizontalAlignmentFactory<CellPanelContext>, 
 	   			  HasVerticalAlignmentFactory<CellPanelContext>
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(VerticalProcessor.class),
 		@TagChild(VerticalWidgetProcessor.class)

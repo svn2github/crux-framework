@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class PopupPanelFactory extends PanelFactory<WidgetCreatorContext>
        implements HasAnimationFactory<WidgetCreatorContext>, HasCloseHandlersFactory<WidgetCreatorContext>
 {
-    @TagChildAttributes(minOccurs="0", maxOccurs="1")
+    @TagConstraints(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
 	
 	@Override

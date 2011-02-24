@@ -40,7 +40,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.client.DateFormatUtil;
 import br.com.sysmap.crux.gwt.client.NumberFormatUtil;
@@ -360,7 +360,7 @@ public class AbstractHasDataFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	@TagChildAttributes(minOccurs="1", maxOccurs="1")
+	@TagConstraints(minOccurs="1", maxOccurs="1")
 	@TagChildren({
 		@TagChild(CustomCellProcessor.class),
 		@TagChild(ButtonCellProcessor.class),
@@ -381,63 +381,63 @@ public class AbstractHasDataFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class CellListChildProcessor extends ChoiceChildProcessor<WidgetCreatorContext> {}	
 	
-	@TagChildAttributes(tagName="customCell")
+	@TagConstraints(tagName="customCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="cellFactoryMethod", required=true)
 	})
 	public static class CustomCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="buttonCell")
+	@TagConstraints(tagName="buttonCell")
 	public static class ButtonCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="textCell")
+	@TagConstraints(tagName="textCell")
 	public static class TextCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="clickableTextCell")
+	@TagConstraints(tagName="clickableTextCell")
 	public static class ClickableTextCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="selectionCell")
+	@TagConstraints(tagName="selectionCell")
 	@TagChildren({
 		@TagChild(ListOptionProcessor.class)
 	})
 	public static class SelectionCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="option", type=String.class, minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="option", type=String.class, minOccurs="0", maxOccurs="unbounded")
 	public static class ListOptionProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="textInputCell")
+	@TagConstraints(tagName="textInputCell")
 	public static class TextInputCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="checkboxCell")
+	@TagConstraints(tagName="checkboxCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="dependsOnSelection", type=Boolean.class),
 		@TagAttributeDeclaration(value="handlesSelection", type=Boolean.class)
 	})
 	public static class CheckboxCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="datePickerCell")
+	@TagConstraints(tagName="datePickerCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("datePattern")
 	})
 	public static class DatePickerCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="editTextCell")
+	@TagConstraints(tagName="editTextCell")
 	public static class EditTextCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="actionCell")
+	@TagConstraints(tagName="actionCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="text", required=true),
 		@TagAttributeDeclaration(value="delegateMethod", required=true)
 	})
 	public static class ActionCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="compositeCell")
+	@TagConstraints(tagName="compositeCell")
 	@TagChildren({
 		@TagChild(CompositeChildProcessor.class)
 	})
 	public static class CompositeCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="column")
+	@TagConstraints(tagName="column")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="horizontalAlignment", required=true),
 		@TagAttributeDeclaration(value="verticalAlignment", required=true)//TODO: e o fieldUpdater??? 
@@ -447,27 +447,27 @@ public class AbstractHasDataFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class CompositeChildProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="dateCell")
+	@TagConstraints(tagName="dateCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("datePattern")
 	})
 	public static class DateCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="imageCell")
+	@TagConstraints(tagName="imageCell")
 	public static class ImageCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="imageLoadingCell")
+	@TagConstraints(tagName="imageLoadingCell")
 	public static class ImageLoadingCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="imageResourceCell")
+	@TagConstraints(tagName="imageResourceCell")
 	public static class ImageResourceCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 		
-	@TagChildAttributes(tagName="numberCell")
+	@TagConstraints(tagName="numberCell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("numberPattern")
 	})
 	public static class NumberCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="safeHtmlCell")
+	@TagConstraints(tagName="safeHtmlCell")
 	public static class SafeHtmlCellProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

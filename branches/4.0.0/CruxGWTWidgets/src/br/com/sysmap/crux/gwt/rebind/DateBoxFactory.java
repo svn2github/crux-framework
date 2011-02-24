@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
@@ -122,7 +122,7 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 		}		
 	}
 	
-	@TagChildAttributes(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
+	@TagConstraints(tagName="datePicker", minOccurs="0", type=DatePickerFactory.class)
 	public static class DateBoxProcessor extends WidgetChildProcessor<WidgetCreatorContext>{}
 	
 	/**

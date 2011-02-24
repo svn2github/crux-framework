@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
 })
 public class ToggleButtonFactory extends CustomButtonFactory 
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="6")
+	@TagConstraints(minOccurs="0", maxOccurs="6")
 	@TagChildren({
 		@TagChild(UpFaceProcessor.class),
 		@TagChild(UpDisabledFaceProcessor.class),

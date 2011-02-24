@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.Grid;
@@ -77,7 +77,7 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	    return count;
     }
 	
-	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(GridCellProcessor.class)
 	})
@@ -98,7 +98,7 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 		}
 	}
 
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="cell")
 	@TagChildren({
 		@TagChild(GridChildrenProcessor.class)
 	})
@@ -112,7 +112,7 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 		}
 	}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(GridCellTextProcessor.class),
 		@TagChild(GridCellHTMLProcessor.class),

@@ -33,7 +33,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -83,7 +83,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		return varName;
 	}
 
-	@TagChildAttributes(tagName="item", maxOccurs="unbounded")
+	@TagConstraints(tagName="item", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(StackHeaderProcessor.class),
 		@TagChild(StackContentProcessor.class)
@@ -105,7 +105,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		}
 	}
 
-	@TagChildAttributes(tagName="header")
+	@TagConstraints(tagName="header")
 	@TagChildren({
 		@TagChild(StackHeader.class)
 	})
@@ -128,7 +128,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 	})
 	public static class StackHeader extends ChoiceChildProcessor<StackLayoutContext> {}
 	
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static class StackHeaderTextProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
@@ -139,7 +139,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		}
 	}
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static class StackHeaderHTMLProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
@@ -154,7 +154,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		}
 	}
 
-	@TagChildAttributes(tagName="widget", type=AnyWidget.class)
+	@TagConstraints(tagName="widget", type=AnyWidget.class)
 	public static class StackHeaderWidgetProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override
@@ -170,13 +170,13 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		}
 	}
 
-	@TagChildAttributes(tagName="content")
+	@TagConstraints(tagName="content")
 	@TagChildren({
 		@TagChild(StackContentWidgetProcessor.class)
 	})
 	public static class StackContentProcessor extends WidgetChildProcessor<StackLayoutContext> {}
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class StackContentWidgetProcessor extends WidgetChildProcessor<StackLayoutContext>
 	{
 		@Override

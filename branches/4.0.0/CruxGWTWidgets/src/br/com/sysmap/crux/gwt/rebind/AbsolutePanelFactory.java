@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 class AbsolutePanelContext extends WidgetCreatorContext
@@ -53,7 +53,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 	    return new AbsolutePanelContext();
     }	
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="widget" )
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="widget" )
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("left"),
 		@TagAttributeDeclaration("top")
@@ -71,7 +71,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class AbsoluteWidgetProcessor extends WidgetChildProcessor<AbsolutePanelContext> 
 	{
 		@Override

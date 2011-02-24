@@ -22,7 +22,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.FlexTable;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 })
 public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 {
-	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(GridCellProcessor.class)
 	})
@@ -52,7 +52,7 @@ public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 		}
 	}
 
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="cell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="colSpan", type=Integer.class),
 		@TagAttributeDeclaration(value="rowSpan", type=Integer.class)
@@ -84,7 +84,7 @@ public class FlexTableFactory extends HTMLTableFactory<HTMLTableFactoryContext>
 		}
 	}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(FlexCellTextProcessor.class),
 		@TagChild(FlexCellHTMLProcessor.class),

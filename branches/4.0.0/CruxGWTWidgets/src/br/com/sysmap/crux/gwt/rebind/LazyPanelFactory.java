@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePri
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
@@ -57,7 +57,7 @@ public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext>
 		return varName;
 	}
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="1")
+	@TagConstraints(minOccurs="0", maxOccurs="1")
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="visible", notEquals="true")
 	})	

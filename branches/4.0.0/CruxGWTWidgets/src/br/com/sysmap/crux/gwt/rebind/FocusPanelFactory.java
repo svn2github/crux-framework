@@ -25,7 +25,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDoubleClickHandle
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -48,7 +48,7 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   			
 {
     
-    @TagChildAttributes(minOccurs="0", maxOccurs="1")
+    @TagConstraints(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}		
     
 	@Override

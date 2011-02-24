@@ -20,7 +20,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetCh
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
@@ -37,22 +37,22 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 })
 public class HorizontalSplitPanelFactory extends PanelFactory<WidgetCreatorContext>
 {
-	@TagChildAttributes(tagName="left", minOccurs="0")
+	@TagConstraints(tagName="left", minOccurs="0")
 	@TagChildren({
 		@TagChild(LeftWidgeProcessor.class)
 	})
 	public static class LeftProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="right", minOccurs="0")
+	@TagConstraints(tagName="right", minOccurs="0")
 	@TagChildren({
 		@TagChild(RightWidgeProcessor.class)
 	})
 	public static class RightProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(widgetProperty="leftWidget")
+	@TagConstraints(widgetProperty="leftWidget")
 	public static class LeftWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(widgetProperty="rightWidget")
+	@TagConstraints(widgetProperty="rightWidget")
 	public static class RightWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@Override

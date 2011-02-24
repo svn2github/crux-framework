@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.ui.HTMLTable.RowFormatter;
@@ -51,7 +51,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> extends PanelFactory<C>
        implements HasClickHandlersFactory<C>, HasDoubleClickHandlersFactory<C>
 {	
-	@TagChildAttributes(tagName="row", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="row", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("styleName"),
 		@TagAttributeDeclaration(value="visible", type=Boolean.class, defaultValue="true"),
@@ -94,7 +94,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		}
 	}
 
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("styleName"),
 		@TagAttributeDeclaration("width"),
@@ -161,7 +161,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		}
 	}
 	
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static abstract class CellTextProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@Override
@@ -173,7 +173,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		}
 	}
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static abstract class CellHTMLProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C>
 	{
 		@Override
@@ -184,10 +184,10 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		}
 	}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	public static abstract class CellWidgetProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C> {}
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class WidgetProcessor<C extends HTMLTableFactoryContext> extends WidgetChildProcessor<C> 
 	{
 		@Override

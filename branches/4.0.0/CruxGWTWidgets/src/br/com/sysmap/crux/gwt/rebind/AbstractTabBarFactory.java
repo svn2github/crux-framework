@@ -37,7 +37,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 
@@ -77,7 +77,7 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		}
 	}
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="enabled", type=Boolean.class, defaultValue="true"),
 		@TagAttributeDeclaration(value="wordWrap", type=Boolean.class, defaultValue="true")
@@ -97,7 +97,7 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		}
 	}
 	
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public abstract static class AbstractTextTabProcessor extends AbstractTabTitleProcessor
 	{
 		@Override
@@ -109,7 +109,7 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		}
 	}
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public abstract static class AbstractHTMLTabProcessor extends AbstractTabTitleProcessor
 	{
 		@Override
@@ -121,7 +121,7 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public abstract static class AbstractWidgetProcessor extends AbstractTabTitleProcessor
 	{
 		@Override

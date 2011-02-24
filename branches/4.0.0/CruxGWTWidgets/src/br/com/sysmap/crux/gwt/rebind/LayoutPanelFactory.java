@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -65,7 +65,7 @@ class LayoutPanelContext extends AbstractLayoutPanelContext
 })		
 public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelContext>
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="layer")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="layer")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="left", type=Double.class),
 		@TagAttributeDeclaration(value="right", type=Double.class),
@@ -119,7 +119,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelCo
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class LayoutPanelWidgetProcessor extends WidgetChildProcessor<LayoutPanelContext> 
 	{
 		@Override

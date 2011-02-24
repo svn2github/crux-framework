@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 
@@ -43,7 +43,7 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 	  extends AbstractLayoutPanelFactory<C>
 {
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="cell")
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="cell")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="direction", type=Direction.class, defaultValue="CENTER"),
 		@TagAttributeDeclaration(value="size", type=Double.class)
@@ -82,7 +82,7 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 	}
 	
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class AbstractDockPanelWidgetProcessor<C extends DockLayoutPanelContext> extends WidgetChildProcessor<C> 
 	{
 		GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);

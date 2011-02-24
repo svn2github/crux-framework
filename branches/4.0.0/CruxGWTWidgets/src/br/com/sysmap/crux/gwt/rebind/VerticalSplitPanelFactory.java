@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetCh
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
@@ -50,22 +50,22 @@ public class VerticalSplitPanelFactory extends PanelFactory<WidgetCreatorContext
 		return varName;
 	}
 	
-	@TagChildAttributes(tagName="top", minOccurs="0")
+	@TagConstraints(tagName="top", minOccurs="0")
 	@TagChildren({
 		@TagChild(TopWidgeProcessor.class)
 	})
 	public static class TopProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="bottom", minOccurs="0")
+	@TagConstraints(tagName="bottom", minOccurs="0")
 	@TagChildren({
 		@TagChild(BottomWidgeProcessor.class)
 	})
 	public static class BottomProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(widgetProperty="topWidget")
+	@TagConstraints(widgetProperty="topWidget")
 	public static class TopWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(widgetProperty="bottomWidget")
+	@TagConstraints(widgetProperty="bottomWidget")
 	public static class BottomWidgeProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 
 	@Override

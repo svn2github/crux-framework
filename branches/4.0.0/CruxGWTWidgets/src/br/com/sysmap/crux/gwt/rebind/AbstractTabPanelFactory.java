@@ -38,7 +38,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 
@@ -93,7 +93,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
         }
 	}	
 
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
 		@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
@@ -113,7 +113,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		}
 	}
 
-	@TagChildAttributes(tagName="tabText", type=String.class)
+	@TagConstraints(tagName="tabText", type=String.class)
 	public static abstract class AbstractTextTabProcessor extends WidgetChildProcessor<TabPanelContext>
 	{
 		@Override
@@ -124,7 +124,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		}
 	}
 	
-	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
+	@TagConstraints(tagName="tabHtml", type=HTMLTag.class)
 	public static abstract class AbstractHTMLTabProcessor extends WidgetChildProcessor<TabPanelContext>
 	{
 		@Override
@@ -139,7 +139,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static abstract class AbstractWidgetTitleProcessor extends WidgetChildProcessor<TabPanelContext> 
 	{
 		@Override
@@ -151,7 +151,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static abstract class AbstractWidgetContentProcessor extends WidgetChildProcessor<TabPanelContext> 
 	{
 		@Override

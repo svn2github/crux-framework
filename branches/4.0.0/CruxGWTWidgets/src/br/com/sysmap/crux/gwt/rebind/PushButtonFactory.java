@@ -18,7 +18,7 @@ package br.com.sysmap.crux.gwt.rebind;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 import com.google.gwt.user.client.ui.PushButton;
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.PushButton;
 })
 public class PushButtonFactory extends CustomButtonFactory 
 {
-	@TagChildAttributes(minOccurs="0", maxOccurs="6")
+	@TagConstraints(minOccurs="0", maxOccurs="6")
 	@TagChildren({
 		@TagChild(UpFaceProcessor.class),
 		@TagChild(UpDisabledFaceProcessor.class),

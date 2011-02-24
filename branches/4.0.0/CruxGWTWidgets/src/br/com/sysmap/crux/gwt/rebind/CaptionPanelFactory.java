@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 
 /**
@@ -50,23 +50,23 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 	@Override
 	public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException {}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(CaptionTextProcessor.class),
 		@TagChild(CaptionHTMLProcessor.class)
 	})	
 	public static class CaptionProcessor extends ChoiceChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(minOccurs="0", tagName="widget")
+	@TagConstraints(minOccurs="0", tagName="widget")
 	@TagChildren({
 		@TagChild(WidgetProcessor.class)
 	})	
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(minOccurs="0", widgetProperty="contentWidget")
+	@TagConstraints(minOccurs="0", widgetProperty="contentWidget")
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
-	@TagChildAttributes(tagName="captionText", type=String.class)
+	@TagConstraints(tagName="captionText", type=String.class)
 	public static class CaptionTextProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
@@ -77,7 +77,7 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 		}
 	}
 	
-	@TagChildAttributes(tagName="captionHTML", type=HTMLTag.class)
+	@TagConstraints(tagName="captionHTML", type=HTMLTag.class)
 	public static class CaptionHTMLProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override
