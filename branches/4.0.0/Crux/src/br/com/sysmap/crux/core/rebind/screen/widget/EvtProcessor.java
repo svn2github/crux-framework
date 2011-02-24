@@ -27,6 +27,7 @@ import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
+import br.com.sysmap.crux.core.rebind.controller.ControllerProxyCreator;
 import br.com.sysmap.crux.core.rebind.screen.Event;
 import br.com.sysmap.crux.core.rebind.screen.EventFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
@@ -119,8 +120,9 @@ public abstract class EvtProcessor extends AbstractProcessor
     		hasEventParameter = false;
     	}
     	
-    	out.print("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
-    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+    	out.print("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
+    			")ScreenFactory.getInstance().getRegisteredControllers().getController("
+    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
     	
     	if (hasEventParameter)
     	{
@@ -214,8 +216,9 @@ public abstract class EvtProcessor extends AbstractProcessor
     		hasEventParameter = false;
     	}
     	
-        creator.printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
-    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+        creator.printlnPostProcessing("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
+        		")ScreenFactory.getInstance().getRegisteredControllers().getController("
+    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
     	
     	if (hasEventParameter)
     	{

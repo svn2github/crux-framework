@@ -19,8 +19,11 @@ import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.SelectionChangeEvtBind;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.NoSelectionModel;
@@ -31,7 +34,10 @@ import com.google.gwt.view.client.SingleSelectionModel;
  *
  */
 @TagAttributes({
-	@TagAttribute(value="selectionModel", processor=HasDataFactory.SelectionModelProcessor.class, type=HasDataFactory.SelectionModel.class)
+	@TagAttribute(value="selectionModel", processor=HasDataFactory.SelectionModelProcessor.class, type=HasDataFactory.SelectionModel.class, required=true)
+})
+@TagEvents({
+	@TagEvent(SelectionChangeEvtBind.class)
 })
 public interface HasDataFactory<C extends WidgetCreatorContext> extends HasRowsFactory<C>, HasCellPreviewHandlersFactory<C>
 {

@@ -204,7 +204,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param nameFactory
 	 * @param method
 	 */
-	private void generateMethodParameters(SourceWriter w, NameFactory nameFactory, JMethod method)
+	protected void generateMethodParameters(SourceWriter w, NameFactory nameFactory, JMethod method)
 	{
 		boolean needsComma = false;
 		JParameter[] params = method.getParameters();
@@ -237,7 +237,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param w
 	 * @param methodThrows
 	 */
-	private void generateMethodTrhowsClause(SourceWriter w, JMethod method)
+	protected void generateMethodTrhowsClause(SourceWriter w, JMethod method)
     {
 	    boolean needsComma = false;
 	    JType[] methodThrows = method.getThrows();

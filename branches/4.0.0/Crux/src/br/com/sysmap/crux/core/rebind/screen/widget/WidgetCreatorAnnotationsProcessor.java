@@ -153,6 +153,7 @@ class WidgetCreatorAnnotationsProcessor
 	{
 		private ChildrenProcessor childrenProcessor;
 		abstract void processChild(SourcePrinter out, WidgetCreatorContext context);
+		abstract void postProcessChild(SourcePrinter out, WidgetCreatorContext context);
 		
 		void processChildren(SourcePrinter out, WidgetCreatorContext context)
 		{
@@ -160,8 +161,9 @@ class WidgetCreatorAnnotationsProcessor
 			{
 				childrenProcessor.processChildren(out, context);
 			}
+			postProcessChild(out, context);
 		}
-		
+
 		void setChildrenProcessor(ChildrenProcessor childrenProcessor)
 		{
 			this.childrenProcessor = childrenProcessor;

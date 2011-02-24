@@ -53,7 +53,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 {
 	private Map<String, String> controllerClassNames = new HashMap<String, String>();
 	private Map<String, String> crossDocsClassNames = new HashMap<String, String>();
-	private Map<String, Set<String>> fragmentControllerClassNames = new HashMap<String, Set<String>>();
+//TODO removei isso	private Map<String, Set<String>> fragmentControllerClassNames = new HashMap<String, Set<String>>();
 	private final Screen screen;
 	
 	/**
@@ -106,7 +106,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		generateCrossDocInvokeMethod(sourceWriter);
 		generateRegisterControllerMethod(sourceWriter);
 		generateGetControllertMethod(sourceWriter);
-		generateControllerCallForLazyFragmentedControllers(sourceWriter);
+//		generateControllerCallForLazyFragmentedControllers(sourceWriter);
     }
 
 	/**
@@ -182,12 +182,12 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		}
 	}	
 	
-	/**
+	/*TODO remover isso aki
 	 * @param sourceWriter
 	 * @param controllerClassNames
 	 * @param controller
 	 * @param controllerAnnot
-	 */
+	 *
 	private void generateControllerCallForLazyFragmentedControllers(SourceWriter sourceWriter)
     {
 		for (String controllerFragment : fragmentControllerClassNames.keySet())

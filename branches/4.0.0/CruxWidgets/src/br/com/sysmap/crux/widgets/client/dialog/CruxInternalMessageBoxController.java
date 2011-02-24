@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.Label;
  * @author Gesse S. F. Dafe
  */
 @Global
-@Controller(value="__messageBox", lazy=false)
+@Controller(value="__messageBox")
 public class CruxInternalMessageBoxController implements CruxInternalMessageBoxControllerCrossDoc
 {
 	protected DialogMessages messages = GWT.create(DialogMessages.class);

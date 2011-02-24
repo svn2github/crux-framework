@@ -40,6 +40,7 @@ import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
+import br.com.sysmap.crux.core.rebind.controller.ControllerProxyCreator;
 import br.com.sysmap.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import br.com.sysmap.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import br.com.sysmap.crux.core.rebind.screen.Event;
@@ -692,8 +693,9 @@ public class ViewFactoryCreator
 				hasEventParameter = false;
 			}
 
-			printlnPostProcessing("(("+controller+")ScreenFactory.getInstance().getRegisteredControllers().getController("
-					+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+"(");
+			printlnPostProcessing("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
+					")ScreenFactory.getInstance().getRegisteredControllers().getController("
+					+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
 
 			if (hasEventParameter)
 			{

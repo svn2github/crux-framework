@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
 
@@ -81,22 +80,6 @@ public class WidgetCreatorHelper
 	public Class<?> getContextType()
     {
     	return contextType;
-    }
-
-	/**
-	 * @param childProcessor
-	 * @return
-	 */
-	public Method getChildProcessorMethod(Class<?> childProcessor)
-    {
-		try 
-		{
-			return childProcessor.getMethod("processChildrenInternal", new Class<?>[]{SourcePrinter.class, WidgetCreatorContext.class});
-		} 
-		catch (Exception e) 
-		{
-			return null;
-		}
     }
 
 	/**

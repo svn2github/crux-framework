@@ -57,7 +57,7 @@ import com.google.gwt.user.client.ui.Tree.Resources;
 
 class TreeContext extends WidgetCreatorContext
 {
-	LinkedList<String> itemStack;
+	LinkedList<String> itemStack = new LinkedList<String>();
 }
 
 /**
@@ -162,12 +162,6 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	})
 	public static class TreeItemProcessor extends WidgetChildProcessor<TreeContext> implements HasPostProcessor<TreeContext>
 	{
-		@Override
-		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
-		{
-			context.itemStack = new LinkedList<String>();
-		}
-		
 		public void postProcessChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
 			context.itemStack.removeFirst();

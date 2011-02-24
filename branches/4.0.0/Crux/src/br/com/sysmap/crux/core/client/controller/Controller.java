@@ -27,4 +27,6 @@ public @interface Controller {
 	boolean stateful() default true;
 	boolean autoBind() default true;
 	boolean lazy() default true;
+	@Deprecated
+	String fragment() default "";
 }

@@ -536,35 +536,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 
 	/**
-	 * Do not call this method.
-	 * Work around to invoke processChildren with reflection, once it declares a generic parameter and java
-	 * fails in some cases (generic information is not completely available in runtime).
-	 * 
-	 * @param out
-	 * @param context
-	 * @throws CruxGeneratorException
-	 */
-	@SuppressWarnings("unchecked")
-	public final void processChildrenInternal(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		processChildren(out, (C) context);
-	}
-	
-	/**
-	 * Work around to invoke processEvents with reflection, once it declares a generic parameter and java
-	 * fails in some cases (generic information is not completely available in runtime).
-	 * 
-	 * @param out
-	 * @param context
-	 * @throws CruxGeneratorException
-	 *
-	@SuppressWarnings("unchecked")
-	public final void processEventsInternal(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		processEvents(out, (C) context);
-	}
-
-	/**
 	 * Process widget events
 	 * @param out 
 	 * @param context 

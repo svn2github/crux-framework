@@ -73,7 +73,8 @@ import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 {
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	private static final String CONTROLLER_PROXY_SUFFIX = "_ControllerProxy";
+	public static final String CONTROLLER_PROXY_SUFFIX = "_ControllerProxy";
+	public static final String EXPOSED_METHOD_SUFFIX = "_Exposed_";
 	
 	private final JClassType controllerClass;
 	private final boolean isAutoBindEnabled;
@@ -344,7 +345,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         	sourceWriter.print("streamWriter."+Shared.getStreamWriteMethodNameFor(returnType)+"(");
     		
     	}
-    	sourceWriter.println(method.getName()+"(");
+    	sourceWriter.println(method.getName()+EXPOSED_METHOD_SUFFIX+"(");
 
 		for (int i = 0; i < params.length ; ++i)
 		{
@@ -527,6 +528,27 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     }
 	
 	/**
+	 * Generates the signature for the exposed method
+	 * 
+	 * @param w
+	 * @param nameFactory
+	 * @param method
+	 */
+	protected void generateProxyExposedMethodSignature(SourceWriter w, NameFactory nameFactory, JMethod method)
+	{
+		// Write the method signature
+		JType returnType = method.getReturnType().getErasedType();
+		w.print("public ");
+		w.print(returnType.getQualifiedSourceName());
+		w.print(" ");
+		w.print(method.getName()+EXPOSED_METHOD_SUFFIX + "(");
+		generateMethodParameters(w, nameFactory, method);
+		w.print(")");
+		generateMethodTrhowsClause(w, method);
+		w.println();
+	}    
+    
+	/**
 	 * @param sourceWriter
 	 */
 	private void generateControllerOverideExposedMethods(SourceWriter sourceWriter)
@@ -536,8 +558,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		{
 			if (isControllerMethodSignatureValid(method))
 			{
-				sourceWriter.println("@Override");
-				generateProxyMethodSignature(sourceWriter, new NameFactory(), method);
+				generateProxyExposedMethodSignature(sourceWriter, new NameFactory(), method);
 				sourceWriter.println("{");
 				sourceWriter.indent();		
 				
@@ -589,7 +610,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = ");
 		    	}
 		    	
-		    	generateMethodSuperCall(sourceWriter, method);
+		    	generateExposedMethodCall(sourceWriter, method);
 		    		
 				sourceWriter.outdent();
 				sourceWriter.println("}catch (Throwable e){");
@@ -624,9 +645,9 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
      * @param sourceWriter
      * @param method
      */
-    private void generateMethodSuperCall(SourceWriter sourceWriter, JMethod method)
+    private void generateExposedMethodCall(SourceWriter sourceWriter, JMethod method)
     {
-		sourceWriter.print("super."+method.getName()+"(");
+		sourceWriter.print(method.getName()+"(");
 		
 		boolean needsComma = false;
 		JParameter[] params = method.getParameters();

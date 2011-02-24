@@ -15,7 +15,6 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +36,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProc
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.HasPostProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.TextChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -89,16 +89,16 @@ class ChildrenAnnotationScanner
 	 * @param widgetProperty
 	 * @param lazyChecker
 	 * @param processor
-	 * @param processorMethod
 	 * @return
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private ChildProcessor createChildProcessor(final boolean isAnyWidget, final String widgetProperty, 
-																	  final WidgetLazyChecker lazyChecker, final WidgetChildProcessor<?> processor, 
-																	  final Method processorMethod)
+																	  final WidgetLazyChecker lazyChecker,  final WidgetChildProcessor processor)
     {
+        final boolean isHasPostProcessor = processor instanceof HasPostProcessor;
 	    return new ChildProcessor()
 		{
-			public void processChild(SourcePrinter out, WidgetCreatorContext context)
+            public void processChild(SourcePrinter out, WidgetCreatorContext context)
 			{
 				if (isAnyWidget)
 				{
@@ -108,7 +108,7 @@ class ChildrenAnnotationScanner
 				{
 					try
 					{
-						processorMethod.invoke(processor, out, context);
+						processor.processChildren(out, context);
 					}
 					catch (Exception e)
 					{
@@ -154,6 +154,15 @@ class ChildrenAnnotationScanner
 					out.println("}");
 				}
             }
+
+            @Override
+            void postProcessChild(SourcePrinter out, WidgetCreatorContext context)
+            {
+				if (isHasPostProcessor)
+	            {
+	            	((HasPostProcessor)processor).postProcessChildren(out, context);
+	            }
+            }
 		};
     }
 
@@ -163,11 +172,10 @@ class ChildrenAnnotationScanner
 	 * @param childProcessorClass
 	 * @param isAgregator
 	 * @param processor
-	 * @param processorMethod
 	 */
 	private void createChildProcessorForMultipleChildrenProcessor(boolean acceptNoChildren, ChildrenProcessor childrenProcessor, 
 																  Class<?> childProcessorClass, boolean isAgregator,
-																  WidgetChildProcessor<?> processor, final Method processorMethod)
+																  WidgetChildProcessor<?> processor)
     {
 	    TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 	    final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
@@ -182,7 +190,7 @@ class ChildrenAnnotationScanner
 	    
 	    final String childName = getChildTagName(tagName, isAgregator, (isAnyWidget || isAnyWidgetType));
 
-	    ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, processorMethod);
+	    ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor);
 	    if (!isAnyWidget && !isAnyWidgetType)
 	    {
 	    	childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));
@@ -269,11 +277,9 @@ class ChildrenAnnotationScanner
 					processor = child.value().newInstance();
 					processor.setWidgetCreator(widgetCreator);
 
-					final Method processorMethod = factoryHelper.getChildProcessorMethod(child.value());
-
 					createChildProcessorForMultipleChildrenProcessor(acceptNoChildren, childrenProcessor, 
 							childProcessorClass, isAgregator, 
-							processor, processorMethod);
+							processor);
 				}
             }
 			return childrenProcessor;
@@ -309,10 +315,8 @@ class ChildrenAnnotationScanner
 			processor = child.value().newInstance();
 			processor.setWidgetCreator(widgetCreator);
 
-			final Method processorMethod = factoryHelper.getChildProcessorMethod(child.value());
-
 			ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForSingleChild(processorClass, 
-					acceptNoChildren, processor, processorMethod, childProcessor);
+					acceptNoChildren, processor, childProcessor);
 
 			return childrenProcessor;
 		}
@@ -388,12 +392,11 @@ class ChildrenAnnotationScanner
 	 * @param processorClass 
 	 * @param acceptNoChildren
 	 * @param processor
-	 * @param processorMethod
 	 * @param childProcessorClass
 	 * @return
 	 */
-	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(Class<?> processorClass, final boolean acceptNoChildren, WidgetChildProcessor<?> processor, 
-																	  Method processorMethod, Class<?> childProcessorClass)
+	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(Class<?> processorClass, final boolean acceptNoChildren, 
+											WidgetChildProcessor<?> processor, Class<?> childProcessorClass)
     {
 		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 		final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
@@ -423,7 +426,7 @@ class ChildrenAnnotationScanner
 		};
 		scannedProcessors.put(processorClass.getCanonicalName(), childrenProcessor);
 		
-		ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, processorMethod);
+		ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor);
 		if (!isAnyWidget && !isAnyWidgetType)
 		{
 			childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));

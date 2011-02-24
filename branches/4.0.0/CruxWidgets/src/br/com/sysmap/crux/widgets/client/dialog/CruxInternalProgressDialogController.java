@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.Label;
  * @author Gesse S. F. Dafe
  */
 @Global
-@Controller(value="__progressDialog", lazy=false)
+@Controller(value="__progressDialog")
 public class CruxInternalProgressDialogController implements CruxInternalProgressDialogControllerCrossDoc
 {
 	private DialogBox dialog = null;
