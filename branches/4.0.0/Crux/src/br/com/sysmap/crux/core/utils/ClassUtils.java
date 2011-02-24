@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -386,15 +386,15 @@ public class ClassUtils
 	 * @param processorClass
 	 * @return
 	 */
-	public static TagChildAttributes getChildtrenAttributesAnnotation(Class<?> processorClass)
+	public static TagConstraints getChildTagConstraintsAnnotation(Class<?> processorClass)
 	{
-		TagChildAttributes attributes = processorClass.getAnnotation(TagChildAttributes.class);
+		TagConstraints attributes = processorClass.getAnnotation(TagConstraints.class);
 		if (attributes == null)
 		{
 			Class<?> superClass = processorClass.getSuperclass();
 			if (superClass != null && !superClass.equals(WidgetCreator.class))
 			{
-				attributes = getChildtrenAttributesAnnotation(superClass);
+				attributes = getChildTagConstraintsAnnotation(superClass);
 			}
 		}
 		

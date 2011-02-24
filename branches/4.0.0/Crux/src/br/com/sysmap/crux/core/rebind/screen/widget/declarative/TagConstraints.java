@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TagChildAttributes
+public @interface TagConstraints
 {
 	String minOccurs() default "1";
 	String maxOccurs() default "1";

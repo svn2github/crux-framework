@@ -16,7 +16,7 @@
 package br.com.sysmap.crux.core.rebind.screen.widget.creator.children;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 /**
  * 
@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttribut
  *
  * @param <T>
  */
-@TagChildAttributes(minOccurs="0")
+@TagConstraints(minOccurs="0")
 public abstract class TextChildProcessor <C extends WidgetCreatorContext> extends WidgetChildProcessor<C>
 {
 

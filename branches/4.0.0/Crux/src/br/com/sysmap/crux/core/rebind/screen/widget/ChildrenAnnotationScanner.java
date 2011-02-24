@@ -42,7 +42,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.TextChildPr
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.utils.ClassUtils;
@@ -177,7 +177,7 @@ class ChildrenAnnotationScanner
 																  Class<?> childProcessorClass, boolean isAgregator,
 																  WidgetChildProcessor<?> processor)
     {
-	    TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
+	    TagConstraints processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 	    final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
 	    String tagName = (processorAttributes!=null?processorAttributes.tagName():"");
 
@@ -208,7 +208,7 @@ class ChildrenAnnotationScanner
 	private ChildrenProcessor createChildProcessorForText(Class<?> processorClass, TagChild child, final boolean acceptNoChildren)
     {
 		Class<?> childProcessor = child.value();
-		TagChildAttributes processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessor);
+		TagConstraints processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessor);
 		final String widgetProperty = processorAttributes.widgetProperty();
 		final boolean isHasText = HasText.class.isAssignableFrom(factoryHelper.getWidgetType());
 		
@@ -398,7 +398,7 @@ class ChildrenAnnotationScanner
 	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(Class<?> processorClass, final boolean acceptNoChildren, 
 											WidgetChildProcessor<?> processor, Class<?> childProcessorClass)
     {
-		TagChildAttributes processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
+		TagConstraints processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 		final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
 		String tagName = (processorAttributes!=null?processorAttributes.tagName():"");
 
@@ -469,7 +469,7 @@ class ChildrenAnnotationScanner
 		try
 		{
 			Class<?> childProcessorType = child.value();
-			TagChildAttributes processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessorType);
+			TagConstraints processorAttributes = factoryHelper.getChildtrenAttributesAnnotation(childProcessorType);
 
 			if (processorAttributes != null)
 			{

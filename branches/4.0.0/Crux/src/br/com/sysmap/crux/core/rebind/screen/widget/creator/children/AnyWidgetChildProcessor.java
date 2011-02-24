@@ -17,13 +17,13 @@ package br.com.sysmap.crux.core.rebind.screen.widget.creator.children;
 
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@TagChildAttributes(type=AnyWidget.class)
+@TagConstraints(type=AnyWidget.class)
 public class AnyWidgetChildProcessor<C extends WidgetCreatorContext> extends WidgetChildProcessor<C>
 {
 }

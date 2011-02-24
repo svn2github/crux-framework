@@ -21,7 +21,7 @@ import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -87,9 +87,9 @@ public class WidgetCreatorHelper
 	 * @param processorClass
 	 * @return
 	 */
-	public TagChildAttributes getChildtrenAttributesAnnotation(Class<?> processorClass)
+	public TagConstraints getChildtrenAttributesAnnotation(Class<?> processorClass)
 	{
-		TagChildAttributes attributes = processorClass.getAnnotation(TagChildAttributes.class);
+		TagConstraints attributes = processorClass.getAnnotation(TagConstraints.class);
 		if (attributes == null)
 		{
 			Class<?> superClass = processorClass.getSuperclass();
