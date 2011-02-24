@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
@@ -94,7 +94,7 @@ public class WizardFactory extends AbstractWizardFactory
 	})
 	public static class WizardChildrenProcessor extends AllChildProcessor<WizardContext> {}
 	
-	@TagChildAttributes(tagName="navigationBar", minOccurs="0")
+	@TagConstraints(tagName="navigationBar", minOccurs="0")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="north"),
 		@TagAttributeDeclaration(value="showAllSteps", type=Boolean.class, defaultValue="true"),
@@ -177,20 +177,20 @@ public class WizardFactory extends AbstractWizardFactory
         }
 	}
 	
-	@TagChildAttributes(tagName="steps")
+	@TagConstraints(tagName="steps")
 	@TagChildren({
 		@TagChild(WizardStepsProcessor.class)
 	})
 	public static class StepsProcessor extends WidgetChildProcessor<WizardContext> {}
 
-	@TagChildAttributes(maxOccurs="unbounded")
+	@TagConstraints(maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(WidgetStepProcessor.class),
 		@TagChild(PageStepProcessor.class)
 	})
 	public static class WizardStepsProcessor extends ChoiceChildProcessor<WizardContext> {}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(WidgetProcessor.class),
 		@TagChild(CommandsProcessor.class)
@@ -223,13 +223,13 @@ public class WizardFactory extends AbstractWizardFactory
 		}
 	}
 	
-	@TagChildAttributes(tagName="commands", minOccurs="0")
+	@TagConstraints(tagName="commands", minOccurs="0")
 	@TagChildren({
 		@TagChild(WizardCommandsProcessor.class)
 	})
 	public static class CommandsProcessor extends WidgetChildProcessor<WizardContext> {}
 	
-	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
+	@TagConstraints(tagName="command", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="id", required=true),
 		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
@@ -290,7 +290,7 @@ public class WizardFactory extends AbstractWizardFactory
 		}
 	}
 	
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class WidgetProcessor extends WidgetChildProcessor<WizardContext> 
 	{
 		private EnterEvtBind enterEvtBind;
@@ -337,7 +337,7 @@ public class WizardFactory extends AbstractWizardFactory
 		}
 	}
 
-	@TagChildAttributes(tagName="page")
+	@TagConstraints(tagName="page")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="id", required=true),
 		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
@@ -368,7 +368,7 @@ public class WizardFactory extends AbstractWizardFactory
 		}
 	}
 	
-	@TagChildAttributes(tagName="controlBar", minOccurs="0")
+	@TagConstraints(tagName="controlBar", minOccurs="0")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="position", type=ControlPosition.class, defaultValue="south"),
 		@TagAttributeDeclaration(value="verticalAlignment", type=ControlVerticalAlign.class, defaultValue="top"),
@@ -509,13 +509,13 @@ public class WizardFactory extends AbstractWizardFactory
         }
 	}
 	
-	@TagChildAttributes(tagName="commands", minOccurs="0")
+	@TagConstraints(tagName="commands", minOccurs="0")
 	@TagChildren({
 		@TagChild(ControlBarCommandProcessor.class)
 	})
 	public static class ControlBarCommandsProcessor extends WidgetChildProcessor<WizardContext> {}
 	
-	@TagChildAttributes(tagName="command", maxOccurs="unbounded")
+	@TagConstraints(tagName="command", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="id", required=true),
 		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),

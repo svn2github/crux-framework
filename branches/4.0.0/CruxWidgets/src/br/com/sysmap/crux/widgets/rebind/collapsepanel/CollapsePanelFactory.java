@@ -28,7 +28,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
@@ -88,7 +88,7 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 		return varName;
 	}	
 	
-	@TagChildAttributes(tagName="title", minOccurs="0")
+	@TagConstraints(tagName="title", minOccurs="0")
 	@TagChildren({
 		@TagChild(TitleChildrenProcessor.class)
 	})
@@ -101,16 +101,16 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 	})
 	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(TitleWidgetTitleProcessor.class)
 	})
 	public static class CollapsePanelWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(widgetProperty="titleWidget")
+	@TagConstraints(widgetProperty="titleWidget")
 	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(tagName="body", minOccurs="0")
+	@TagConstraints(tagName="body", minOccurs="0")
 	@TagChildren({
 		@TagChild(BodyChildrenProcessor.class)
 	})
@@ -123,13 +123,13 @@ public class CollapsePanelFactory extends AbstractTitlePanelFactory
 	})
 	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(BodyWidgetContentProcessor.class)
 	})
 	public static class CollapsePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(widgetProperty="contentWidget")
+	@TagConstraints(widgetProperty="contentWidget")
 	@TagChildLazyConditions(all={
 		@TagChildLazyCondition(property="collapsible", notEquals="false"),
 		@TagChildLazyCondition(property="collapsed", equals="true")

@@ -40,7 +40,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
@@ -99,7 +99,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
         }
 	}	
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="tab" )
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="tabEnabled", type=Boolean.class, defaultValue="true"),
 		@TagAttributeDeclaration(value="tabWordWrap", type=Boolean.class, defaultValue="true")
@@ -123,7 +123,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		
 	}
 	
-	@TagChildAttributes(minOccurs="0")
+	@TagConstraints(minOccurs="0")
 	@TagChildren({
 		@TagChild(TextTabProcessor.class),
 		@TagChild(HTMLTabProcessor.class),
@@ -131,7 +131,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 	})		
 	public static class TabTitleProcessor extends ChoiceChildProcessor<RollingTabPanelContext> {}
 	
-	@TagChildAttributes(tagName="tabText", type=String.class)
+	@TagConstraints(tagName="tabText", type=String.class)
 	public static class TextTabProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
 	{
 		@Override
@@ -142,7 +142,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		}
 	}
 	
-	@TagChildAttributes(tagName="tabHtml", type=HTMLTag.class)
+	@TagConstraints(tagName="tabHtml", type=HTMLTag.class)
 	public static class HTMLTabProcessor extends WidgetChildProcessor<RollingTabPanelContext>
 	{
 		@Override
@@ -157,13 +157,13 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		}
 	}
 	
-	@TagChildAttributes(tagName="tabWidget")
+	@TagConstraints(tagName="tabWidget")
 	@TagChildren({
 		@TagChild(WidgetTitleProcessor.class)
 	})	
 	public static class WidgetTitleTabProcessor extends WidgetChildProcessor<RollingTabPanelContext> {}
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class WidgetTitleProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
 	{
 		@Override
@@ -178,13 +178,13 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		}
 	}
 	
-	@TagChildAttributes(tagName="panelContent")
+	@TagConstraints(tagName="panelContent")
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})	
 	public static class TabWidgetProcessor extends WidgetChildProcessor<RollingTabPanelContext> {}
 
-	@TagChildAttributes(type=AnyWidget.class)
+	@TagConstraints(type=AnyWidget.class)
 	public static class WidgetContentProcessor extends WidgetChildProcessor<RollingTabPanelContext> 
 	{
 		@Override

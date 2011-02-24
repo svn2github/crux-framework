@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
@@ -46,7 +46,7 @@ import br.com.sysmap.crux.widgets.rebind.event.BeforeFocusEvtBind;
 })
 public class DynaTabsFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	@TagChildAttributes(tagName="tab", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="tab", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="id", required=true),
 		@TagAttributeDeclaration(value="url", required=true),

@@ -27,7 +27,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.widgets.client.timer.Timer;
 import br.com.sysmap.crux.widgets.rebind.event.TimeoutEvtBind;
@@ -85,7 +85,7 @@ public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 		return varName;
 	}
 	
-	@TagChildAttributes(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="time", required=true, type=Integer.class),
 		@TagAttributeDeclaration(value="execute", required=true)

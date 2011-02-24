@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner;
 
@@ -61,7 +61,7 @@ public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		return varName;
 	}
 
-	@TagChildAttributes(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
+	@TagConstraints(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
 	public static class MessageProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{
 		@Override

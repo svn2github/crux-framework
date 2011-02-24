@@ -23,7 +23,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
 import br.com.sysmap.crux.widgets.rebind.decoratedpanel.AbstractDecoratedPanelFactory;
@@ -34,7 +34,7 @@ import br.com.sysmap.crux.widgets.rebind.decoratedpanel.AbstractDecoratedPanelFa
  */
 public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFactory
 {
-	@TagChildAttributes(tagName="title", minOccurs="0")
+	@TagConstraints(tagName="title", minOccurs="0")
 	@TagChildren({
 		@TagChild(TitleChildrenProcessor.class)
 	})
@@ -47,7 +47,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 	})
 	public static class TitleChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static abstract class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -59,7 +59,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		}
 	}
 
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static abstract class TextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -72,17 +72,17 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		}
 	}
 		
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(TitleWidgetTitleProcessor.class)
 	})
 	public static class TitlePanelWidgetChildProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	@TagChildAttributes(widgetProperty="titleWidget")
+	@TagConstraints(widgetProperty="titleWidget")
 	public static class TitleWidgetTitleProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 	
 	
-	@TagChildAttributes(tagName="body", minOccurs="0")
+	@TagConstraints(tagName="body", minOccurs="0")
 	@TagChildren({
 		@TagChild(BodyChildrenProcessor.class)
 	})
@@ -95,7 +95,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 	})
 	public static class BodyChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}	
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static abstract class BodyHTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -107,7 +107,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		}
 	}
 
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static abstract class BodyTextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -120,13 +120,13 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		}
 	}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(BodyWidgetContentProcessor.class)
 	})
 	public static class TitlePanelBodyWidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(widgetProperty="contentWidget")
+	@TagConstraints(widgetProperty="contentWidget")
 	public static class BodyWidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 
 	public static class TitlePanelHTMLChildProcessor extends HTMLChildProcessor{}

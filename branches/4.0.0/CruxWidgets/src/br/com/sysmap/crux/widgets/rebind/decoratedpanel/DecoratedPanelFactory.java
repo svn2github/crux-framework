@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChild
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
 import br.com.sysmap.crux.widgets.client.decoratedpanel.DecoratedPanel;
@@ -46,7 +46,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 	})
 	public static class ChildrenProcessor extends ChoiceChildProcessor<CellPanelContext> {}
 	
-	@TagChildAttributes(tagName="html", type=HTMLTag.class)
+	@TagConstraints(tagName="html", type=HTMLTag.class)
 	public static class HTMLChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -57,7 +57,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		}
 	}
 
-	@TagChildAttributes(tagName="text", type=String.class)
+	@TagConstraints(tagName="text", type=String.class)
 	public static class TextChildProcessor extends WidgetChildProcessor<CellPanelContext>
 	{
 		@Override
@@ -68,12 +68,12 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		}
 	}
 	
-	@TagChildAttributes(tagName="widget")
+	@TagConstraints(tagName="widget")
 	@TagChildren({
 		@TagChild(WidgetContentProcessor.class)
 	})
 	public static class WidgetProcessor extends WidgetChildProcessor<CellPanelContext> {}
 
-	@TagChildAttributes(widgetProperty="contentWidget")
+	@TagConstraints(widgetProperty="contentWidget")
 	public static class WidgetContentProcessor extends AnyWidgetChildProcessor<CellPanelContext> {}
 }

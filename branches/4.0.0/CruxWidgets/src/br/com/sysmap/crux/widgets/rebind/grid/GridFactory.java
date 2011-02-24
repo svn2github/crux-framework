@@ -41,7 +41,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
@@ -523,7 +523,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    return colDef;
     }
 	
-	@TagChildAttributes(maxOccurs="unbounded")
+	@TagConstraints(maxOccurs="unbounded")
 	@TagChildren({
 		@TagChild(DataColumnProcessor.class),
 		@TagChild(WidgetColumnProcessor.class)
@@ -535,7 +535,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	}
 
 	
-	@TagChildAttributes(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("width"),
 		@TagAttributeDeclaration(value="visible", type=Boolean.class),
@@ -549,7 +549,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	public static class DataColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagChildAttributes(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
+	@TagConstraints(tagName="widgetColumn", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration("width"),
 		@TagAttributeDeclaration(value="visible", type=Boolean.class),
