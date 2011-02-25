@@ -197,11 +197,20 @@ public class StackMenuItem extends Composite
 	}
 
 	/**
-	 * @return the parentMenu
+	 * Returns the stack menu that contains this item
 	 */
 	public StackMenu getParentMenu()
 	{
-		return parentMenu;
+		StackMenu result = this.parentMenu;
+		StackMenuItem item = this;
+		
+		while(result == null && item != null)
+		{
+			item = item.getParentItem();			
+			result = item.getParentMenu(); 
+		}
+		
+		return result;
 	}
 
 	/**
