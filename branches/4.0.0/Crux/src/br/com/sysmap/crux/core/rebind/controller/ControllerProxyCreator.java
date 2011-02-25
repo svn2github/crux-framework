@@ -16,6 +16,10 @@
 package br.com.sysmap.crux.core.rebind.controller;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -553,11 +557,33 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 */
 	private void generateControllerOverideExposedMethods(SourceWriter sourceWriter)
 	{
-		JMethod[] methods = controllerClass.getOverridableMethods(); 
+		List<JMethod> methods = new ArrayList<JMethod>();
+		JMethod[] controllerMethods = controllerClass.getOverridableMethods();
+		for (JMethod jMethod : controllerMethods)
+        {
+			if (isControllerMethodSignatureValid(jMethod))
+			{
+				methods.add(jMethod);
+			}
+        }
+		
+		if (isCrossDoc)
+		{
+			JMethod[] crossDocumentMethods = baseProxyType.getOverridableMethods();
+			for (JMethod jMethod : crossDocumentMethods)
+	        {
+				methods.add(jMethod);
+	        }
+		}
+		Set<String> processed = new HashSet<String>();
+		
 		for (JMethod method: methods) 
 		{
-			if (isControllerMethodSignatureValid(method))
+			String methodSignature = method.getJsniSignature();
+			if (!processed.contains(methodSignature))
 			{
+				processed.add(methodSignature);
+				
 				generateProxyExposedMethodSignature(sourceWriter, new NameFactory(), method);
 				sourceWriter.println("{");
 				sourceWriter.indent();		
@@ -568,12 +594,17 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				{
 					sourceWriter.println("updateControllerObjects();");
 				}
+				JType returnType = method.getReturnType().getErasedType();
+				boolean hasReturn = returnType != JPrimitiveType.VOID;
+
+				if (hasReturn)
+		    	{
+					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = null;");
+		    	}
 				
 				sourceWriter.println("try{");
 				sourceWriter.indent();
 
-				JType returnType = method.getReturnType().getErasedType();
-				boolean hasReturn = returnType != JPrimitiveType.VOID;
 			    Validate annot = method.getAnnotation(Validate.class);
 			    boolean mustValidade = annot != null; 
 			    if (mustValidade)
@@ -607,7 +638,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    
 		    	if (hasReturn)
 		    	{
-					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = ");
+					sourceWriter.println("ret = ");
 		    	}
 		    	
 		    	generateExposedMethodCall(sourceWriter, method);
