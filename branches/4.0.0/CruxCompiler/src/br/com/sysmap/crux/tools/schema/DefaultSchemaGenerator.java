@@ -646,6 +646,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:group ref=\"ScreenContent\" />");
 		out.println("<xs:attribute name=\"manageHistory\" type=\"xs:boolean\" default=\"false\"/>");
 		out.println("<xs:attribute name=\"title\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"fragment\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useController\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useSerializable\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useFormatter\" type=\"xs:string\"/>");
