@@ -57,6 +57,7 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 	{
 		items.add(item);
 		panel.add(item);
+		item.setParentMenu(this);
 	}	
 	
 	/**
