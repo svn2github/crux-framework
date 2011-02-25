@@ -73,7 +73,10 @@ public abstract class AbstractWizardFactory extends WidgetCreator<WizardContext>
 		
 		SourcePrinter printer = getSubTypeWriter(subType, null, 
 				new String[]{WizardDataSerializer.class.getCanonicalName()+"<"+wizardData+">"}, null, true);
-		printer.commit();
+		if (printer != null)
+		{
+			printer.commit();
+		}
 		return subType;
     }
 
