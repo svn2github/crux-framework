@@ -30,8 +30,8 @@ public interface ClientMessages extends Messages
 	String eventProcessorClientError(String call, String errMsg);
 	@DefaultMessage("[event 003] - Invalid declaration for handler method ''{0}''. Correct syntaxe is <controller.method>.")
 	String eventFactoryInvalidHandlerMethodDeclaration(String evt);
-	@DefaultMessage("[event 004] - Error loading lazy controller {0}.")
-	String eventProcessorClientControllerCanNotBeLoaded(String controller);
+	@DefaultMessage("[event 004] - Error loading screen fragment {0}.")
+	String viewFactoryCanNotBeLoaded(String controller);
 	@DefaultMessage("[event 005] - Service method is already being processed.")
 	String methodIsAlreadyBeingProcessed();
 	@DefaultMessage("[event 006] - Client Controller Named ''{0}'' does not implement CrossDocument interface and can not be called outside document.")

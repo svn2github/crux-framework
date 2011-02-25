@@ -597,14 +597,14 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				JType returnType = method.getReturnType().getErasedType();
 				boolean hasReturn = returnType != JPrimitiveType.VOID;
 
-				if (hasReturn)
+/*				if (hasReturn)
 		    	{
 					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = null;");
 		    	}
 				
 				sourceWriter.println("try{");
 				sourceWriter.indent();
-
+*/
 			    Validate annot = method.getAnnotation(Validate.class);
 			    boolean mustValidade = annot != null; 
 			    if (mustValidade)
@@ -638,12 +638,12 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    
 		    	if (hasReturn)
 		    	{
-					sourceWriter.println("ret = ");
+					sourceWriter.print(returnType.getQualifiedSourceName()+" ret = ");
 		    	}
 		    	
 		    	generateExposedMethodCall(sourceWriter, method);
 		    		
-				sourceWriter.outdent();
+/*				sourceWriter.outdent();
 				sourceWriter.println("}catch (Throwable e){");
 				sourceWriter.indent();
 
@@ -654,7 +654,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 				sourceWriter.outdent();
 				sourceWriter.println("}");
-				
+*/				
 				if (isAutoBindEnabled)
 				{
 					sourceWriter.println("updateScreenWidgets();");

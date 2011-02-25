@@ -15,8 +15,13 @@
  */
 package br.com.sysmap.crux.core.rebind.screen.widget;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.client.collection.FastMap;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.client.screen.ViewFactory;
@@ -28,6 +33,7 @@ import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -39,6 +45,8 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
+	private Map<String, Set<Screen>> fragmentedScreens = new HashMap<String, Set<Screen>>();
+
 	/**
 	 * @param logger
 	 * @param context
@@ -75,6 +83,11 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		
 		sourceWriter.outdent();
 		sourceWriter.println("}");
+
+		if (Environment.isProduction())
+		{
+			generateFragmentedViewFactoryCreation(sourceWriter);
+		}
     }
 
 	/**
@@ -93,7 +106,6 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	private void generateViewCreationForAllScreens(SourceWriter sourceWriter) 
 	{
 		List<Screen> screens = getScreens();
-		//TODO: Carregar as telas sob necessidade...com um fragment
 		
 		boolean first = true;
 		for (Screen screen : screens)
@@ -107,12 +119,81 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
 			sourceWriter.indent();
 			
-			generateViewCreator(sourceWriter, screen);
+			if (!StringUtils.isEmpty(screen.getFragment()))
+			{
+				Set<Screen> fragment = fragmentedScreens.get(screen.getFragment());
+				if (fragment == null)
+				{
+					fragment = new HashSet<Screen>();
+					fragmentedScreens.put(screen.getFragment(), fragment);
+				}
+				fragment.add(screen);
+				String fragmentName = screen.getFragment().replaceAll("\\W", "");
+				sourceWriter.println("__load"+fragmentName+"(screenId);");
+			}
+			else
+			{
+				generateViewCreator(sourceWriter, screen);
+			}
 
 			sourceWriter.outdent();
 			sourceWriter.println("}");
         }
 	}	
+	
+	/**
+	 * @param sourceWriter
+	 * @param controllerClassNames
+	 * @param controller
+	 * @param controllerAnnot
+	 */
+	private void generateFragmentedViewFactoryCreation(SourceWriter sourceWriter)
+    {
+		for (String screenFragment : fragmentedScreens.keySet())
+        {
+			String fragment = screenFragment.replaceAll("\\W", "");
+			sourceWriter.println("public void __load"+fragment+"(final String screenId){");
+			sourceWriter.indent();
+			sourceWriter.println("GWT.runAsync(new "+RunAsyncCallback.class.getCanonicalName()+"(){");
+			sourceWriter.indent();
+			sourceWriter.println("public void onFailure(Throwable reason){");
+			sourceWriter.indent();
+			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().viewFactoryCanNotBeLoaded(\""+fragment+"\"));");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			sourceWriter.println("public void onSuccess(){");
+			sourceWriter.indent();
+			
+			Set<Screen> screens = fragmentedScreens.get(screenFragment);
+			
+			boolean first = true;
+			for (Screen screen : screens)
+            {
+				if (!first)
+				{
+					sourceWriter.print("else ");
+				}
+				first = false;
+				
+				sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
+				sourceWriter.indent();
+				
+				generateViewCreator(sourceWriter, screen);
+
+				sourceWriter.outdent();
+				sourceWriter.println("}");
+            }
+			
+	        
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+			sourceWriter.outdent();
+			sourceWriter.println("});");
+			sourceWriter.outdent();
+			sourceWriter.println("}");
+        } 
+    }
+	
 	
 	/**
 	 * @param sourceWriter
@@ -167,6 +248,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	{
 		String[] imports = new String[] {
 				GWT.class.getCanonicalName(),
+				Crux.class.getCanonicalName(),
 				FastMap.class.getCanonicalName(),
 				ViewFactory.class.getCanonicalName(),
 				StringUtils.class.getCanonicalName(),

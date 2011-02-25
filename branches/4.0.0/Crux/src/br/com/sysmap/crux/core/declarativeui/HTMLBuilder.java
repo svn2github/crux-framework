@@ -419,6 +419,10 @@ class HTMLBuilder
 			{
 				Node attribute = attributes.item(i);
 				String attrName = attribute.getLocalName();
+				if (attrName == null)
+				{
+					attrName = attribute.getNodeName();
+				}
 				String attrValue = attribute.getNodeValue();
 				
 				if (!StringUtils.isEmpty(attrValue))

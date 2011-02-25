@@ -38,6 +38,7 @@ public class Screen
 {
 	protected String id;
 	protected String relativeId;
+	protected String fragment;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -266,4 +267,14 @@ public class Screen
 	public void setFactory(ViewFactoryCreator factory) {
 		this.factory = factory;
 	}
+
+	public String getFragment()
+    {
+	    return this.fragment;
+    }
+
+	protected void setFragment(String fragment)
+    {
+    	this.fragment = fragment;
+    }
 }
