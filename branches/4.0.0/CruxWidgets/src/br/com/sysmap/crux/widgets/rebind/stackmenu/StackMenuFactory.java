@@ -79,7 +79,6 @@ public class StackMenuFactory extends WidgetCreator<StackMenuContext>
 			
 			String label = context.getChildElement().optString("label");
 			label = getWidgetCreator().getDeclaredMessage(label);
-			label = EscapeUtils.quote(label);			
 			
 			String key = context.getChildElement().optString("key");
 			key = EscapeUtils.quote(key);	
