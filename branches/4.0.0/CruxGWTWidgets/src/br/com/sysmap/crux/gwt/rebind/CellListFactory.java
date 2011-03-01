@@ -18,6 +18,7 @@ package br.com.sysmap.crux.gwt.rebind;
 import org.json.JSONObject;
 
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
@@ -33,7 +34,7 @@ import com.google.gwt.user.cellview.client.CellList;
 @TagChildren({
 	@TagChild(value=CellListFactory.CellListChildProcessor.class, autoProcess=false)
 })
-public class CellListFactory extends AbstractHasDataFactory
+public class CellListFactory extends AbstractHasDataFactory<WidgetCreatorContext>
 {
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
@@ -45,5 +46,11 @@ public class CellListFactory extends AbstractHasDataFactory
 		out.println("final "+className + " " + varName+" = new "+className+"("+cell+", "+keyProvider+");");
 		return varName;
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }	
 }
 

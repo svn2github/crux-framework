@@ -20,33 +20,43 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.FocusableFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDataFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasKeyboardPagingPolicyFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.ValueChangeEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
+import com.google.gwt.user.cellview.client.CellWidget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@TagAttributes({
-	@TagAttribute(value="pageSize", type = Integer.class),
-	@TagAttribute(value="pageStart", type = Integer.class),
-	@TagAttribute(value="rowCount", type = Integer.class)
+@DeclarativeFactory(id="cellWidget", library="gwt", targetWidget=CellWidget.class)
+@TagEvents({
+	@TagEvent(ValueChangeEvtBind.class)
 })
-public abstract class AbstractHasDataFactory<C extends WidgetCreatorContext> extends AbstractCellFactory<C> 
-	   implements FocusableFactory<C>, HasKeyboardPagingPolicyFactory<C>, 
-	              HasDataFactory<C>
+@TagChildren({
+	@TagChild(value=CellWidgetFactory.CellListChildProcessor.class, autoProcess=false)
+})
+public class CellWidgetFactory extends AbstractCellFactory<WidgetCreatorContext>
 {
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
 		String className = getWidgetClassName()+"<"+getDataObject(metaElem)+">";
+		String cell = getCell(out, metaElem);
 		String keyProvider = getkeyProvider(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+keyProvider+");");
+		out.println("final "+className + " " + varName+" = new "+className+"("+cell+", "+keyProvider+");");
 		return varName;
 	}
+	
+	@Override
+    public WidgetCreatorContext instantiateContext()
+    {
+	    return new WidgetCreatorContext();
+    }
 }
+

@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
@@ -36,6 +37,70 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
  */
 public class ClassUtils
 {
+
+	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String dtoClassName, String colKey, 
+			String recordObject, boolean finishCommand) 
+					throws NoSuchFieldException
+    {
+        if (StringUtils.isEmpty(colKey))
+        {
+			throw new NoSuchFieldException(colKey);
+        }
+        String[] props;
+        if (colKey.contains("."))
+        {
+        	props = colKey.split("\\.");
+        }
+        else
+        {
+        	props = new String[]{colKey};
+        }
+        
+        if (props != null && props.length > 0)
+        {
+        	StringBuilder getExpression = new StringBuilder();
+        	StringBuilder checkNullExpression = new StringBuilder();
+        	
+        	getExpression.append(recordObject);
+        	JClassType baseType = dtoType;
+        	for (int i=0; i < props.length; i++)
+        	{
+        		String prop = props[i];
+        		if (i>0)
+        		{
+        			if (i>1)
+        			{
+        				checkNullExpression.append(" || ");
+        			}
+        			checkNullExpression.append(getExpression.toString()+"==null ");
+        		}
+        		
+        		String getterMethod = ClassUtils.getGetterMethod(prop, baseType);
+        		if (getterMethod == null)
+        		{
+        			throw new NoSuchFieldException(colKey);
+        		}
+        		getExpression.append("."+getterMethod+"()");
+        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseType, getterMethod, new JType[]{});
+        	}
+        	if (finishCommand)
+        	{
+        		getExpression.append(";");
+        	}
+        	
+        	if (checkNullExpression.length() > 0)
+        	{
+        		out.append(checkNullExpression.toString()+"?null:");
+        	}
+        	out.append(getExpression.toString());
+        	
+        	return baseType;
+        }
+        else
+        {
+			throw new NoSuchFieldException(colKey);
+        }
+    }		
 	/**
 	 * 
 	 * @param propertyName
