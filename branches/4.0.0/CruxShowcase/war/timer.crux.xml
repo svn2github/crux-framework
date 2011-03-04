@@ -16,30 +16,38 @@
 
 		<c:screen useController="timerController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="100">
-			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
-				<b:dockPanel id="widgetsPanel" spacing="10">
-					<b:cell direction="north" verticalAlignment="middle" horizontalAlignment="center">
-						<a:decoratedPanel id="timerBorder">
-							<a:widget>
-								<a:timer id="timer" start="true" style="paddingLeft:4px;paddingRight:4px;">
-									<a:onTimeout execute="timerController.afterThreeSeconds" time="3"/>
-									<a:onTimeout execute="timerController.afterTenSeconds" time="10"/>
-								</a:timer>
-							</a:widget>
-						</a:decoratedPanel>
-					</b:cell>
-					<b:cell direction="center" verticalAlignment="middle" horizontalAlignment="left">
-						<b:checkBox id="threeSecondsCheckBox" text="This checkbox will be checked after 3 seconds"/>
-					</b:cell>
-					<b:cell direction="south" verticalAlignment="middle" horizontalAlignment="left">
-						<b:checkBox id="tenSecondsCheckBox" text="This checkbox will be checked after 10 seconds"/>
-					</b:cell>				
-				</b:dockPanel>
-			</b:cell>
-		</b:dockPanel>
+		<center>
+			<b:verticalPanel id="vPanel" spacing="8" style="margin-top:30px;margin-bottom:30px;">
+				
+				<b:cell horizontalAlignment="center">
+					<a:decoratedPanel id="timerBorder">
+						<a:widget>
+							<a:timer id="timer" start="true" style="paddingLeft:4px;paddingRight:4px;" pattern="mm:ss">
+								<a:onTimeout execute="timerController.afterThreeSeconds" time="3"/>
+								<a:onTimeout execute="timerController.afterTenSeconds" time="10"/>
+							</a:timer>
+						</a:widget>
+					</a:decoratedPanel>
+				</b:cell>
+				
+				<b:cell horizontalAlignment="left">
+					<b:checkBox id="threeSecondsCheckBox" text="This checkbox will be checked after 3 seconds"/>
+				</b:cell>
+				
+				<b:cell horizontalAlignment="left">
+					<b:checkBox id="tenSecondsCheckBox" text="This checkbox will be checked after 10 seconds"/>
+				</b:cell>
+			</b:verticalPanel>
+		</center>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				Timers are widgets capable of measuring elapsed time. They can count forward or backward and can be programmed to trigger events when arbitrary moments are reached.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				the Timer was programmed to check the first check box after 3 seconds and the second one after 10 seconds.  
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

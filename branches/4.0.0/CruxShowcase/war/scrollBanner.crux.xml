@@ -28,7 +28,15 @@
 			</b:cell>
 		</b:dockPanel>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The ScrollBanner is a widget that can display sequential messages. The visible message can be automatically switched in an arbitrary period. There are arrows with which the users can switch manually the message being shown.
+				Messages can be added declaratively, on the HTML page, or programmatically, on the controller.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				the fisrt message was added declaratively and the next two were added programmatically.
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

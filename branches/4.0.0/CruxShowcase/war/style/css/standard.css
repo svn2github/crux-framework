@@ -93,3 +93,91 @@ TEXTAREA
 {
 	margin-right: 25px 
 }
+
+/********************
+	Horiz. Separator
+********************/
+.HrzSeparator
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background: url(../img/horizontal-separator.png) repeat-x center;
+	background-color: transparent;
+	height: 6px;
+	font-size: 0px;
+	font-family: monospace;
+}
+
+/********************
+	Strong Button
+********************/
+.StrongButton .leftCell 
+{
+	background-image: url(../img/strong-btn-left.png) !important;
+}
+.StrongButton .centerCell
+{
+	background-image: url(../img/strong-btn-bg.png) !important;
+}
+.StrongButton .rightCell 
+{
+	background-image: url(../img/strong-btn-right.png) !important;
+}
+
+/********************
+	Info Balloon
+********************/
+.Info-bg
+{
+	background: url(../img/info-bg.gif) repeat-x bottom;
+	background-color: #47739A;
+	width: 500px;
+}
+.Info-nw
+{
+	height: 37px;
+	width: 19px;
+	background: url(../img/info-nw.gif) no-repeat top left;
+	font-family: monospace;
+	font: 19px;
+}
+.Info-n
+{
+	background: url(../img/info-n.gif) repeat-x top;
+	font-family: monospace;
+	font: 19px;
+}
+.Info-ne
+{
+	width: 20px;
+	background: url(../img/info-ne.gif) no-repeat top right;
+	font-family: monospace;
+	font: 20px;
+}
+.Info-w
+{
+	background: url(../img/info-w.gif) repeat-y left;
+}
+.Info-text, .Info-text SPAN 
+{
+	color: #FFFFFF;
+	font-family: arial;
+	font-size: 12px;
+}
+.Info-e
+{
+	background: url(../img/info-e.gif) repeat-y right;
+}
+.Info-sw
+{
+	height: 23px;
+	background: url(../img/info-sw.gif) no-repeat top left;
+}
+.Info-s
+{
+	background: url(../img/info-s.gif) repeat-x bottom;
+}
+.Info-se
+{
+	background: url(../img/info-se.gif) no-repeat top right;
+}
