@@ -327,6 +327,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			annotationProcessor.processEvents(out, context);
 			processChildren(out, context);
 			annotationProcessor.processChildren(out, context);
+			context.setChildElement(context.getWidgetElement());
 			postProcess(out, context);
 			if (partialSupport)
 			{

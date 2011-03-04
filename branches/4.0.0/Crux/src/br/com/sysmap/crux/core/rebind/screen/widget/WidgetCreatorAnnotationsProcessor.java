@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
@@ -157,10 +159,12 @@ class WidgetCreatorAnnotationsProcessor
 		
 		void processChildren(SourcePrinter out, WidgetCreatorContext context)
 		{
+			JSONObject childElement = context.getChildElement();
 			if (childrenProcessor != null)
 			{
 				childrenProcessor.processChildren(out, context);
 			}
+			context.setChildElement(childElement);
 			postProcessChild(out, context);
 		}
 

@@ -38,7 +38,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 public class ClassUtils
 {
 
-	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String dtoClassName, String colKey, 
+	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String colKey, 
 			String recordObject, boolean finishCommand) 
 					throws NoSuchFieldException
     {
