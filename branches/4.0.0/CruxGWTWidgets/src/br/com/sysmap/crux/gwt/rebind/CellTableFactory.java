@@ -15,9 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
+import java.util.Comparator;
+
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
+import br.com.sysmap.crux.core.rebind.screen.Event;
+import br.com.sysmap.crux.core.rebind.screen.EventFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -40,29 +45,33 @@ import br.com.sysmap.crux.core.utils.ClassUtils;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.view.client.AbstractDataProvider;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.ListDataProvider;
 
 class CellTableContext extends WidgetCreatorContext
 {
 	String rowDataObject;
-	public String header;
-	public String footer;
-	public String colDataObject;
-	public String column;
-	public JClassType rowDataObjectType;
-	public JType colDataObjectType;
-	public String columnExpression;
-	public String columnWidth;
-	public String columnsortable;
-	public String columnHorizontalAlignment;
-	public String columnVerticalAlignment;
-	public String columnFieldUpdaterFactoryMethod;
+	JClassType rowDataObjectType;
+	boolean asyncDataProvider;
+	String dataProvider = null;;
+	String header;
+	String footer;
+	String colDataObject;
+	String column;
+	JType colDataObjectType;
+	String columnExpression;
 	
 	void clearColumnInformation()
 	{
@@ -72,11 +81,6 @@ class CellTableContext extends WidgetCreatorContext
 		colDataObjectType = null;
 		columnExpression = null;
 		column = null;
-		columnWidth = null;
-		columnsortable = null;
-		columnHorizontalAlignment = null;
-		columnVerticalAlignment = null;
-		columnFieldUpdaterFactoryMethod = null;
 	}
 }
 
@@ -88,17 +92,81 @@ class CellTableContext extends WidgetCreatorContext
 @TagAttributes({
 	@TagAttribute(value="tableLayoutFixed", type=Boolean.class) //TODO RowStyles??
 })
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="dataProviderFactoryMethod", required=true),
+	@TagAttributeDeclaration(value="autoLoad", type=Boolean.class)
+})
 @TagChildren({
 	@TagChild(value=CellTableFactory.ColumnsProcessor.class)
 })
 public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 {
+	private static final int DEFAULT_PAGE_SIZE = 15;
+
 	@Override
 	public void processAttributes(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 	{
 	    super.processAttributes(out, context);
 	    context.rowDataObject = getDataObject(context.getChildElement());
 	    context.rowDataObjectType = getContext().getTypeOracle().findType(context.rowDataObject);
+	    
+	    String dataProviderFactoryMethod = context.readChildProperty("dataProviderFactoryMethod");
+		if (!StringUtils.isEmpty(dataProviderFactoryMethod))
+		{
+			processDataProvider(out, context, dataProviderFactoryMethod);
+		}
+	}
+
+	private void processDataProvider(SourcePrinter out, CellTableContext context, String dataProviderFactoryMethod)
+    {
+	    context.dataProvider = createVariableName("dataProvider");
+	    
+	    out.print(AbstractDataProvider.class.getCanonicalName()+"<"+context.rowDataObject+"> " + context.dataProvider + " = ");
+	    EvtProcessor.printEvtCall(out, dataProviderFactoryMethod, "loadDataProvider", (String)null, null, this);
+	    out.println(context.dataProvider+".addDataDisplay("+context.getWidget()+");");
+
+    	Event event = EventFactory.getEvent("loadDataProvider", dataProviderFactoryMethod);
+    	String controller = ClientControllers.getController(event.getController());
+    	JClassType controllerClass = getContext().getTypeOracle().findType(controller);
+	    JMethod loadDataProviderMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
+	    if (loadDataProviderMethod == null)
+	    {
+	    	throw new CruxGeneratorException();//TODO message
+	    }
+	    JType returnType = loadDataProviderMethod.getReturnType();
+	    if (returnType instanceof JClassType)
+	    {
+	    	context.asyncDataProvider = 
+	    		((JClassType)returnType).isAssignableTo(getContext().getTypeOracle().findType(AsyncDataProvider.class.getCanonicalName()));
+	    }
+	    else
+	    {
+	    	context.asyncDataProvider = false;
+	    }
+    }
+
+	@Override
+	public void postProcess(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
+	{
+		String autoLoadProperty = context.readWidgetProperty("autoLoad");
+		if (!StringUtils.isEmpty(autoLoadProperty))
+		{
+			boolean autoLoad = Boolean.parseBoolean(autoLoadProperty);
+			if (autoLoad)
+			{
+				String pageSizeProperty = context.readWidgetProperty("pageSize");
+				int pageSize;
+				if (StringUtils.isEmpty(pageSizeProperty))
+				{
+					pageSize = DEFAULT_PAGE_SIZE;
+				}
+				else
+				{
+					pageSize = Integer.parseInt(pageSizeProperty);
+				}
+				out.println(context.getWidget()+".setPageSize("+pageSize+");");
+			}
+		}
 	}
 	
 	@TagConstraints(tagName="column", minOccurs="1", maxOccurs="unbounded")
@@ -125,14 +193,9 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 			try
             {
 				context.colDataObjectType = ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, 
-						context.rowDataObject, property, "object", true);
+						property, "object", true);
 				context.colDataObject = context.colDataObjectType.getParameterizedQualifiedSourceName();
 				context.columnExpression = getValueExpression.toString();
-				context.columnWidth = context.readChildProperty("width");
-				context.columnsortable = context.readChildProperty("sortable");
-				context.columnHorizontalAlignment = context.readChildProperty("horizontalAlignment");
-				context.columnVerticalAlignment = context.readChildProperty("verticalAlignment");
-				context.columnFieldUpdaterFactoryMethod = context.readChildProperty("fieldUpdaterFactoryMethod");
             }
             catch (NoSuchFieldException e)
             {
@@ -142,24 +205,32 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		
 		public void postProcessChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
         {
-		    if (!StringUtils.isEmpty(context.columnWidth))
+			String columnWidth = context.readChildProperty("width");
+		    if (!StringUtils.isEmpty(columnWidth))
 		    {
-		    	out.println(context.getWidget()+".setColumnWidth("+context.column+", "+EscapeUtils.quote(context.columnWidth)+");");
+		    	out.println(context.getWidget()+".setColumnWidth("+context.column+", "+EscapeUtils.quote(columnWidth)+");");
 		    }
-		    if (!StringUtils.isEmpty(context.columnsortable))
+			String columnsortable = context.readChildProperty("sortable");
+		    if (!StringUtils.isEmpty(columnsortable))
 		    {
-		    	out.println(context.column+".setSortable("+Boolean.parseBoolean(context.columnsortable)+");");
+		    	if (Boolean.parseBoolean(columnsortable))
+		    	{
+		    		setColumnSortable(out, context);
+		    	}
 		    }
-			if (!StringUtils.isEmpty(context.columnHorizontalAlignment))
+			String columnHorizontalAlignment = context.readChildProperty("horizontalAlignment");
+			if (!StringUtils.isEmpty(columnHorizontalAlignment))
 			{
 				out.println(context.column+".setHorizontalAlignment("+
-					  AlignmentAttributeParser.getHorizontalAlignment(context.columnHorizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
+					  AlignmentAttributeParser.getHorizontalAlignment(columnHorizontalAlignment, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_DEFAULT")+");");
 			}
-			if (!StringUtils.isEmpty(context.columnVerticalAlignment))
+			String columnVerticalAlignment = context.readChildProperty("verticalAlignment");
+			if (!StringUtils.isEmpty(columnVerticalAlignment))
 			{
-				out.println(context.column+".setVerticalAlignment("+AlignmentAttributeParser.getVerticalAlignment(context.columnVerticalAlignment)+");");
+				out.println(context.column+".setVerticalAlignment("+AlignmentAttributeParser.getVerticalAlignment(columnVerticalAlignment)+");");
 			}
-			if (!StringUtils.isEmpty(context.columnFieldUpdaterFactoryMethod))
+			String columnFieldUpdaterFactoryMethod = context.readChildProperty("fieldUpdaterFactoryMethod");
+			if (!StringUtils.isEmpty(columnFieldUpdaterFactoryMethod))
 			{
 				String updater = getWidgetCreator().createVariableName("updater");
 				
@@ -167,12 +238,18 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 						context.colDataObject+"> "+ updater + " = ("+FieldUpdater.class.getCanonicalName()+"<"+context.rowDataObject+","+
 						context.colDataObject+">)");
 				
-				EvtProcessor.printEvtCall(out, context.columnFieldUpdaterFactoryMethod, "loadFieldUpdater", (String)null, null, getWidgetCreator());
+				EvtProcessor.printEvtCall(out, columnFieldUpdaterFactoryMethod, "loadFieldUpdater", (String)null, null, getWidgetCreator());
 				out.println(context.column+".setFieldUpdater("+updater+");");
 			}
 			
+		    generateAddColumnMethod(out, context);
 			
-		    if (context.header != null)
+			context.clearColumnInformation();
+        }
+
+		private void generateAddColumnMethod(SourcePrinter out, CellTableContext context)
+        {
+	        if (context.header != null)
 			{
 				if (context.footer != null)
 				{
@@ -194,8 +271,77 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 					out.println(context.getWidget()+".addColumn("+context.column+");");
 				}
 			}
-			
-			context.clearColumnInformation();
+        }
+
+		private void setColumnSortable(SourcePrinter out, CellTableContext context)
+		{
+			if (context.asyncDataProvider)
+			{
+				out.println(context.getWidget()+".addColumnSortHandler(new "+AsyncHandler.class.getCanonicalName()+"("+context.getWidget()+"));");
+			}
+			else
+			{
+				JClassType colType = context.colDataObjectType.isClassOrInterface();
+
+				String columnSortHandler = getWidgetCreator().createVariableName("sortHandler");
+				String listHandlerClassName = ListHandler.class.getCanonicalName()+"<"+context.rowDataObject+">";
+				out.println(listHandlerClassName+" "+columnSortHandler+" = new "+listHandlerClassName+"((("+
+						ListDataProvider.class.getCanonicalName()+"<"+context.rowDataObject+">)"+context.dataProvider+").getList());");
+				out.println(columnSortHandler+".setComparator("+context.column+", new "+Comparator.class.getCanonicalName()+"<"+context.rowDataObject+">() {");
+				out.println("public int compare("+context.rowDataObject+" o1, "+context.rowDataObject+" o2) {");
+				out.println("if (o1 == o2) {");
+				out.println("return 0;");
+				out.println("}");
+				out.println("if (o1 != null) {");
+				out.println("if (o2 != null){");
+				if (colType != null && colType.isAssignableTo(getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName())))
+				{
+				    try
+                    {
+	                    String property = context.readChildProperty("property");
+	                    StringBuilder getValueExpression = new StringBuilder();			
+	                    ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
+	                    out.println(Comparable.class.getCanonicalName()+" c1 = "+getValueExpression.toString());
+	                    getValueExpression = new StringBuilder();			
+	                    ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
+	                    out.println(Comparable.class.getCanonicalName()+" c2 = "+getValueExpression.toString());
+	                    out.println("if (c1 == c2) {");
+	                    out.println("return 0;");
+	                    out.println("}");
+	                    out.println("if (c1 != null) {");
+	                    out.println("return (c2 != null) ? c1.compareTo(c2) : 1;");
+	                    out.println("}");
+	                    out.println("return -1;");
+                    }
+                    catch (NoSuchFieldException e)
+                    {
+						throw new CruxGeneratorException();//TODO message
+                    }
+				}
+				else
+				{
+					JPrimitiveType primitive = context.colDataObjectType.isPrimitive();
+					if (primitive != null)
+					{
+						out.println(primitive.getSimpleSourceName()+" c1 = o1."+context.columnExpression);
+						out.println(primitive.getSimpleSourceName()+" c2 = o2."+context.columnExpression);
+						out.println("return (c1==c2) ? 0 : (c1<c2) ? -1 : 1;");
+					}
+					else
+					{
+						throw new CruxGeneratorException();//TODO message.... nao eh comparable e nem primitive.... nao da pra ordenar
+					}
+				}
+				out.println("}");
+				out.println("return 1;");
+				out.println("}");
+				out.println("return -1;");
+				out.println("}");
+				out.println("});");
+				out.println(context.getWidget()+".addColumnSortHandler("+columnSortHandler+");");	        	
+			}
+			out.println(context.getWidget()+".getColumnSortList().push("+context.column+");");
+			out.println(context.column+".setSortable(true);");
         }
 	}
 	
