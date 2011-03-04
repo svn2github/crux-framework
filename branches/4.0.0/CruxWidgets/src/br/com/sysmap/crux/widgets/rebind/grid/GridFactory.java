@@ -286,7 +286,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 							JType propType;
 							try
 							{
-								propType = ClassUtils.buildGetValueExpression(getValueExpression, dtoType, dtoClassName, colKey, "recordObject", true);
+								propType = ClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
 							}
 							catch (Exception e)
 							{
