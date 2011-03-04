@@ -1152,6 +1152,7 @@
 {
 	background: url(../img/decorated-panel-smooth-bg.gif) repeat-x center bottom;
 	background-color: #FFFFFF;
+	display: inline;
 }
 .crux-DecoratedPanel .middleRightCell
 {
