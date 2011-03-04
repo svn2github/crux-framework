@@ -3,7 +3,9 @@ package br.com.sysmap.crux.widgets.client.stackmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.TableLayout;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -44,16 +46,21 @@ public class StackMenuItem extends Composite
 		
 		this.wrappingCanvas = new VerticalPanel();
 		this.wrappingCanvas.setStyleName("itemWrapper");
+		this.wrappingCanvas.setWidth("100%");
+		this.wrappingCanvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
 		this.wrappingCanvas.add(itemCaption);
 		
 		this.subItemsCanvas = new FlowPanel();
-		this.subItemsCanvas.setStyleName("subItemsWrapper");		
+		this.subItemsCanvas.setStyleName("subItemsWrapper");
+		this.subItemsCanvas.setWidth("100%");
 		this.wrappingCanvas.add(subItemsCanvas);
 		this.wrappingCanvas.setCellVerticalAlignment(subItemsCanvas, HasVerticalAlignment.ALIGN_TOP);
 		
 		showSubItens(false);
 		
 		initWidget(this.wrappingCanvas);
+		
+		Accessibility.setRole(getElement(), Accessibility.ROLE_MENUITEM);
 	}
 	
 	/**
@@ -219,5 +226,23 @@ public class StackMenuItem extends Composite
 	public String getKey()
 	{
 		return key;
+	}
+
+	/**
+	 * Changes the layout of the item if it is the first one
+	 * @param first
+	 */
+	void setFirst(boolean first)
+	{
+		itemCaption.setFirst(first);
+	}
+
+	/**
+	 * Changes the layout of the item if it is the last one
+	 * @param last
+	 */
+	public void setLast(boolean last)
+	{
+		itemCaption.setLast(last);		
 	}
 }

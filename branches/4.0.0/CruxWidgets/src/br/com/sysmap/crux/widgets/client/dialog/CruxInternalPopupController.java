@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 @Global
-@Controller("__popup")
+@Controller(value="__popup", lazy=false)
 public class CruxInternalPopupController implements CruxInternalPopupControllerCrossDoc
 {
 	protected CruxInternalPopupControllerCrossDoc crossDoc = GWT.create(CruxInternalPopupControllerCrossDoc.class);

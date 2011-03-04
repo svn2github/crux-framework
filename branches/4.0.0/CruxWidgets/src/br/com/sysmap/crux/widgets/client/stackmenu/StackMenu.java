@@ -24,6 +24,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -47,6 +48,7 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 		this.panel.setStyleName(DEFAULT_STYLE_NAME);
 		this.panel.getElement().getStyle().setProperty("display", "inline");
 		initWidget(panel);
+		Accessibility.setRole(getElement(), Accessibility.ROLE_MENUBAR);
 	}
 	
 	/**
@@ -58,6 +60,7 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 		items.add(item);
 		panel.add(item);
 		item.setParentMenu(this);
+		controlItemsStyles();
 	}	
 	
 	/**
@@ -68,6 +71,7 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 	{
 		items.remove(item);
 		panel.remove(item);
+		controlItemsStyles();
 	}
 	
 	/**
@@ -104,6 +108,20 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 		{
 			selectedItem.select();
 		}
+	}
+	
+	/**
+	 * Adjusts the items' styles, in order to apply a special look 
+	 * 	to the first and last top-level items.
+	 */
+	private void controlItemsStyles()
+	{
+		for (int i = 0; i < items.size(); i++)
+		{
+			StackMenuItem item = items.get(i);
+			item.setFirst(i == 0);
+			item.setLast(i == items.size() - 1);
+		}		
 	}
 	
 	/**

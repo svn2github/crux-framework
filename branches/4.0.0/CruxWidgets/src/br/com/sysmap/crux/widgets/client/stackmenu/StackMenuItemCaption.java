@@ -2,6 +2,7 @@ package br.com.sysmap.crux.widgets.client.stackmenu;
 
 import br.com.sysmap.crux.widgets.client.util.TextSelectionUtils;
 
+import com.google.gwt.dom.client.Style.TableLayout;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -14,9 +15,8 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 class StackMenuItemCaption extends Composite
 {
 	private FocusPanel widget;
-	private HorizontalPanel canvas;
+	private Grid canvas;
 	private SimplePanel hasSubItemsIndicator;
 	private final StackMenuItem stackMenuItem;
 	
@@ -39,12 +39,17 @@ class StackMenuItemCaption extends Composite
 	StackMenuItemCaption(String label, StackMenuItem stackMenuItem)
 	{
 		this.stackMenuItem = stackMenuItem;
-		canvas = new HorizontalPanel();
+		canvas = new Grid();
 		canvas.setStyleName("item");
+		canvas.setWidth("100%");
+		canvas.resize(3, 3);
+		canvas.setCellPadding(0);
+		canvas.setCellSpacing(0);
+		canvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
 		
-		createLeftBorder();
+		createTopBorders();
 		createBody(label);
-		createRightBorder();		
+		createBottomBorders();
 		
 		widget = new FocusPanel(canvas);
 		widget.addClickHandler(createBaseClickHandler());
@@ -54,6 +59,36 @@ class StackMenuItemCaption extends Composite
 	
 		initWidget(widget);
 	}
+	
+	/**
+	 * Creates the top borders of the item.
+	 */
+	private void createTopBorders()
+	{
+		canvas.setHTML(0, 0, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(0, 0, "item-border-nw");
+
+		canvas.setHTML(0, 1, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(0, 1, "item-border-n");
+		
+		canvas.setHTML(0, 2, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(0, 2, "item-border-ne");
+	}
+	
+	/**
+	 * Creates the bottom borders of the item.
+	 */
+	private void createBottomBorders()
+	{
+		canvas.setHTML(2, 0, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(2, 0, "item-border-sw");
+
+		canvas.setHTML(2, 1, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(2, 1, "item-border-s");
+		
+		canvas.setHTML(2, 2, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(2, 2, "item-border-se");
+	}
 
 	/**
 	 * Creates the label of the item
@@ -62,43 +97,35 @@ class StackMenuItemCaption extends Composite
 	 */
 	private Label createBody(String label)
 	{
+		canvas.setHTML(1, 0, "&nbsp;");
+		canvas.getCellFormatter().setStyleName(1, 0, "item-border-w");
+
 		Label menuItemLabel = new Label(label);
 		menuItemLabel.setStyleName("itemLabel");
 		TextSelectionUtils.makeUnselectable(menuItemLabel.getElement());
-		canvas.add(menuItemLabel);
-		canvas.setCellVerticalAlignment(menuItemLabel, HasVerticalAlignment.ALIGN_MIDDLE);
+		canvas.setWidget(1, 1, menuItemLabel);
+		canvas.getCellFormatter().setVerticalAlignment(1, 1, HasVerticalAlignment.ALIGN_MIDDLE);
+
+		this.hasSubItemsIndicator = createSubItemsIndicator();
+		canvas.setWidget(1, 2, this.hasSubItemsIndicator);
+		canvas.getCellFormatter().setStyleName(1, 2, "item-border-e");
+		canvas.getCellFormatter().setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_MIDDLE);
+		
 		return menuItemLabel;
 	}
 
 	/**
-	 * Creates the left border of the item
+	 * Creates an icon that indicates the presence of sub items.
 	 */
-	private void createLeftBorder()
+	private SimplePanel createSubItemsIndicator()
 	{
 		Label emptyLabel = new Label(" ");
-		emptyLabel.getElement().getStyle().setProperty("fontSize", "0px");
-		canvas.add(emptyLabel);
-		emptyLabel.getElement().getParentElement().setClassName("left-border");
-	}
-	
-	/**
-	 * Creates the right border of the item
-	 */
-	private void createRightBorder()
-	{
-		Label emptyLabel = new Label(" ");
-		emptyLabel.getElement().getStyle().setProperty("fontSize", "0px");
-		
-		this.hasSubItemsIndicator = new SimplePanel();
-		this.hasSubItemsIndicator.setStyleName("hasSubItems");
-		this.hasSubItemsIndicator.add(emptyLabel);
-		this.hasSubItemsIndicator.setVisible(false);
-		
-		canvas.add(this.hasSubItemsIndicator);
-		canvas.setCellHorizontalAlignment(hasSubItemsIndicator, HasHorizontalAlignment.ALIGN_RIGHT);
-		canvas.setCellVerticalAlignment(hasSubItemsIndicator, HasVerticalAlignment.ALIGN_MIDDLE);
-
-		this.hasSubItemsIndicator.getElement().getParentElement().setClassName("right-border");
+		emptyLabel.getElement().getStyle().setProperty("fontSize", "0px");		
+		SimplePanel indicator = new SimplePanel();
+		indicator.setStyleName("hasSubItems");
+		indicator.add(emptyLabel);
+		indicator.setVisible(false);
+		return indicator;
 	}
 
 	/**
@@ -123,7 +150,7 @@ class StackMenuItemCaption extends Composite
 	 */
 	void setLabel(String label)
 	{
-		((Label) this.canvas.getWidget(0)).setText(label);		
+		((Label) this.canvas.getWidget(1, 1)).setText(label);		
 	}
 	
 	/**
@@ -210,5 +237,30 @@ class StackMenuItemCaption extends Composite
 		event.preventDefault();
 		event.stopPropagation();		
 		stackMenuItem.select();
+	}
+	/**
+	 * Changes the layout of the item if it is the first one
+	 * @param first
+	 */
+	void setFirst(boolean first)
+	{
+		canvas.removeStyleDependentName("first");
+		if(first)
+		{
+			canvas.addStyleDependentName("first");
+		}
+	}
+
+	/**
+	 * Changes the layout of the item if it is the last one
+	 * @param last
+	 */
+	public void setLast(boolean last)
+	{
+		canvas.removeStyleDependentName("last");
+		if(last)
+		{
+			canvas.addStyleDependentName("last");
+		}
 	}
 }
