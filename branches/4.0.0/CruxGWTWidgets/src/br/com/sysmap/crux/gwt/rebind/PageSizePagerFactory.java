@@ -20,38 +20,30 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.ValueChangeEvtBind;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 
-import com.google.gwt.user.cellview.client.CellWidget;
+import com.google.gwt.user.cellview.client.PageSizePager;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="cellWidget", library="gwt", targetWidget=CellWidget.class)
-@TagEvents({
-	@TagEvent(ValueChangeEvtBind.class)
+@DeclarativeFactory(id="pageSizePager", library="gwt", targetWidget=PageSizePager.class)
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="increment", type=Integer.class, required=true)
 })
-@TagChildren({
-	@TagChild(value=CellWidgetFactory.CellListChildProcessor.class, autoProcess=false)
-})
-public class CellWidgetFactory extends AbstractCellFactory<WidgetCreatorContext> implements 
-									HasValueChangeHandlersFactory<WidgetCreatorContext> 
+public class PageSizePagerFactory extends AbstractPagerFactory  
 {
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
-		String className = getWidgetClassName()+"<"+getDataObject(metaElem)+">";
-		String cell = getCell(out, metaElem);
-		String keyProvider = getkeyProvider(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+cell+", "+keyProvider+");");
+		String className = getWidgetClassName();
+		
+		String increment = metaElem.optString("increment");
+		out.println("final "+className + " " + varName+" = new "+className+"("+Integer.parseInt(increment)+");");
 		return varName;
 	}
 	

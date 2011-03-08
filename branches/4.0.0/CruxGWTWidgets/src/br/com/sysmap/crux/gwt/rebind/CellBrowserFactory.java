@@ -20,38 +20,25 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.event.ValueChangeEvtBind;
+import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 
-import com.google.gwt.user.cellview.client.CellWidget;
+import com.google.gwt.user.cellview.client.CellBrowser;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="cellWidget", library="gwt", targetWidget=CellWidget.class)
-@TagEvents({
-	@TagEvent(ValueChangeEvtBind.class)
-})
-@TagChildren({
-	@TagChild(value=CellWidgetFactory.CellListChildProcessor.class, autoProcess=false)
-})
-public class CellWidgetFactory extends AbstractCellFactory<WidgetCreatorContext> implements 
-									HasValueChangeHandlersFactory<WidgetCreatorContext> 
+@DeclarativeFactory(id="cellBrowser", library="gwt", targetWidget=CellBrowser.class)
+public class CellBrowserFactory extends AbstractCellTreeFactory implements HasAnimationFactory<WidgetCreatorContext>
 {
 	@Override
 	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
 	{
 		String varName = createVariableName("widget");
-		String className = getWidgetClassName()+"<"+getDataObject(metaElem)+">";
-		String cell = getCell(out, metaElem);
-		String keyProvider = getkeyProvider(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+cell+", "+keyProvider+");");
+		String className = getWidgetClassName();
+		String model = getViewModel(out, metaElem);
+		out.println("final "+className + " " + varName+" = new "+className+"("+model+");");
 		return varName;
 	}
 	
@@ -59,6 +46,6 @@ public class CellWidgetFactory extends AbstractCellFactory<WidgetCreatorContext>
     public WidgetCreatorContext instantiateContext()
     {
 	    return new WidgetCreatorContext();
-    }
+    }	
 }
 
