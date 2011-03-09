@@ -17,31 +17,66 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import org.json.JSONObject;
 
+import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasKeyboardSelectionPolicyFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasOpenHandlersFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+
+import com.google.gwt.view.client.TreeViewModel;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="treeViewModelFactoryMethod", required=true),
+	@TagAttributeDeclaration(value="getValueMethod", required=true)
+})
 public class AbstractCellTreeFactory extends WidgetCreator<WidgetCreatorContext> implements 
 							HasCloseHandlersFactory<WidgetCreatorContext>, HasOpenHandlersFactory<WidgetCreatorContext>, 
 							HasKeyboardSelectionPolicyFactory<WidgetCreatorContext>
 {
 	@Override
+	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	{
+		String varName = createVariableName("widget");
+		String className = getWidgetClassName();
+		String model = getViewModel(out, metaElem);
+		String value = getValue(out, metaElem);
+		out.println("final "+className + " " + varName+" = new "+className+"("+model+", "+value+");");
+		return varName;
+	}
+	
+	@Override
     public WidgetCreatorContext instantiateContext()
     {
 	    return new WidgetCreatorContext();
-    }
+    }	
 	
 	protected String getViewModel(SourcePrinter out, JSONObject metaElem)
     {
-	    // TODO Auto-generated method stub
-	    return null;
+		String viewModelFactorymethod = metaElem.optString("treeViewModelFactoryMethod");
+		String viewModel = createVariableName("viewModel");
+		assert (!StringUtils.isEmpty(viewModelFactorymethod));
+		out.print(TreeViewModel.class.getCanonicalName()+" "+ viewModel + " = ("+TreeViewModel.class.getCanonicalName()+")");
+		EvtProcessor.printEvtCall(out, viewModelFactorymethod, "loadTreeViewModel", (String)null, null, this);
+		return viewModel;
+    }
+
+	protected String getValue(SourcePrinter out, JSONObject metaElem)
+    {
+		String getValuemethod = metaElem.optString("getValueMethod");
+		String value = createVariableName("value");
+		assert (!StringUtils.isEmpty(getValuemethod));
+		out.print("Object "+ value + " = ");
+		EvtProcessor.printEvtCall(out, getValuemethod, "loadValue", (String)null, null, this);
+		return value;
     }
 }
-

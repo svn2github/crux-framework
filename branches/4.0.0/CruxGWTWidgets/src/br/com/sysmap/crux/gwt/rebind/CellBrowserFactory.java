@@ -15,13 +15,11 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 
 import com.google.gwt.user.cellview.client.CellBrowser;
 
@@ -30,22 +28,11 @@ import com.google.gwt.user.cellview.client.CellBrowser;
  *
  */
 @DeclarativeFactory(id="cellBrowser", library="gwt", targetWidget=CellBrowser.class)
+@TagAttributes({
+	@TagAttribute(value="defaultColumnWidth", type=Integer.class), 
+	@TagAttribute(value="minimumColumnWidth", type=Integer.class) 
+})
 public class CellBrowserFactory extends AbstractCellTreeFactory implements HasAnimationFactory<WidgetCreatorContext>
 {
-	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
-	{
-		String varName = createVariableName("widget");
-		String className = getWidgetClassName();
-		String model = getViewModel(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+model+");");
-		return varName;
-	}
-	
-	@Override
-    public WidgetCreatorContext instantiateContext()
-    {
-	    return new WidgetCreatorContext();
-    }	
 }
 
