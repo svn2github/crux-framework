@@ -15,11 +15,9 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
@@ -37,14 +35,12 @@ import com.google.gwt.user.cellview.client.CellList;
 public class CellListFactory extends AbstractHasDataFactory<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
-		String className = getWidgetClassName()+"<"+getDataObject(metaElem)+">";
-		String cell = getCell(out, metaElem);
-		String keyProvider = getkeyProvider(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+cell+", "+keyProvider+");");
-		return varName;
+		String className = getWidgetClassName()+"<"+getDataObject(context.getWidgetElement())+">";
+		String cell = getCell(out, context.getWidgetElement());
+		String keyProvider = getkeyProvider(out, context.getWidgetElement());
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+cell+", "+keyProvider+");");
 	}
 	
 	@Override

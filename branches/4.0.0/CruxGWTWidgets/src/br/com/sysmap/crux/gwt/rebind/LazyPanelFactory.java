@@ -15,18 +15,16 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.user.client.ui.LazyPanel;
 
@@ -42,11 +40,10 @@ import com.google.gwt.user.client.ui.LazyPanel;
 public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext> 
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		out.println(className + " " + varName+" = new "+className+"(){");
+		out.println(className + " " + context.getWidget()+" = new "+className+"(){");
 		out.println("protected Widget createWidget(){");
 		out.println("return null;");
 		out.println("}");
@@ -54,7 +51,6 @@ public class LazyPanelFactory extends PanelFactory<WidgetCreatorContext>
 		out.println("setVisible(getElement(), visible);");
 		out.println("}");
 		out.println("};");
-		return varName;
 	}
 	
 	@TagConstraints(minOccurs="0", maxOccurs="1")

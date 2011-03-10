@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
@@ -53,19 +51,17 @@ import com.google.gwt.user.client.ui.NumberLabel;
 	}
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName()+"<Double>";
-		String numberPattern = metaElem.optString("numberPattern");
+		String numberPattern = context.readWidgetProperty("numberPattern");
 		if (numberPattern == null || numberPattern.length() == 0)
 		{
 			numberPattern = NumberFormatUtil.DECIMAL_PATTERN;
 		}
-		out.println("final "+className + " " + varName+" = new "+className+"("+
+		out.println("final "+className + " " + context.getWidget() +" = new "+className+"("+
 						NumberFormatUtil.class.getCanonicalName()+".getNumberFormat("+
 						EscapeUtils.quote(numberPattern)+"));");
-		return varName;	
 	}
 	
 	@Override

@@ -125,7 +125,7 @@ public class LayoutPanelFactory extends AbstractLayoutPanelFactory<LayoutPanelCo
 		@Override
 		public void processChildren(SourcePrinter out, LayoutPanelContext context) throws CruxGeneratorException 
 		{
-			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String rootWidget = context.getWidget();
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)

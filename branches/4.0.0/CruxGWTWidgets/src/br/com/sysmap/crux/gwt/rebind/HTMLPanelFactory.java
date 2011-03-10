@@ -15,21 +15,19 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyTag;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.gwt.client.CruxHTMLPanel;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -47,18 +45,17 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = CruxHTMLPanel.class.getCanonicalName();
-		String id = metaElem.optString("id");
+		String id = context.readWidgetProperty("id");
         if(StringUtils.isEmpty(id))
         {
         	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
         }
-		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(id)+");");
-		createChildren(out, varName, metaElem);
-		return varName;
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
+		createChildren(out, context);
 	}
 
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)

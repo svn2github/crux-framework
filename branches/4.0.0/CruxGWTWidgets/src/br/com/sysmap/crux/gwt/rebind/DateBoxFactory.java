@@ -21,9 +21,8 @@ import org.json.JSONObject;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -32,8 +31,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.gwt.client.DateFormatUtil;
@@ -88,12 +87,11 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 	}
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("dateBox");
 		String className = DateBox.class.getCanonicalName();
 
-		JSONArray children = ensureChildren(metaElem, true);
+		JSONArray children = ensureChildren(context.getWidgetElement(), true);
 		
 		if (children != null && children.length() > 0)
 		{
@@ -107,18 +105,16 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 				{
 					if (isWidget(childElement))
 					{
-						picker = createChildWidget(out, childElement);
+						picker = createChildWidget(out, childElement, context);
 					}
 				}
 			}			
-			out.println(className+" "+varName+" = new "+className+"("+picker+", null, "+getFormat(metaElem, widgetId)+");");
-			return varName;
+			out.println(className+" "+context.getWidget()+" = new "+className+"("+picker+", null, "+getFormat(context.getWidgetElement(), context.getWidgetId())+");");
 		}
 		else
 		{
-			out.println(className+" "+varName+" = new "+className+"();");
-			out.println(varName+".setFormat("+getFormat(metaElem, widgetId)+");");
-			return varName;
+			out.println(className+" "+context.getWidget()+" = new "+className+"();");
+			out.println(context.getWidget()+".setFormat("+getFormat(context.getWidgetElement(), context.getWidgetId())+");");
 		}		
 	}
 	

@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -41,12 +39,10 @@ public abstract class AbstractHasDataFactory<C extends WidgetCreatorContext> ext
 	              HasDataFactory<C>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
-		String className = getWidgetClassName()+"<"+getDataObject(metaElem)+">";
-		String keyProvider = getkeyProvider(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+keyProvider+");");
-		return varName;
+		String className = getWidgetClassName()+"<"+getDataObject(context.getWidgetElement())+">";
+		String keyProvider = getkeyProvider(out, context.getWidgetElement());
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+keyProvider+");");
 	}
 }

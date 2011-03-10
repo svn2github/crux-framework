@@ -15,16 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.screen.LazyPanel;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasCloseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasOpenHandlersFactory;
@@ -36,10 +33,10 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
@@ -69,35 +66,33 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
-		String headerText = metaElem.optString("headerText");
-		String varName = ViewFactoryCreator.createVariableName("dialogBox");
+		String headerText = context.readWidgetProperty("headerText");
 		String className = DisclosurePanel.class.getCanonicalName();
 		if (!StringUtils.isEmpty(headerText))
 		{
-			out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(headerText)+");");
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(headerText)+");");
 		}
 		else
 		{
-			out.println(className + " " + varName+" = new "+className+"();");
+			out.println(className + " " + context.getWidget()+" = new "+className+"();");
 		}
 		
-		String open = metaElem.optString("open");
+		String open = context.readWidgetProperty("open");
 		if (open == null || !StringUtils.unsafeEquals(open, "true"))
 		{
-			out.println(varName+".addOpenHandler(new "+OpenHandler.class.getCanonicalName()+"<"+className+">() {");
+			out.println(context.getWidget()+".addOpenHandler(new "+OpenHandler.class.getCanonicalName()+"<"+className+">() {");
 			out.println("private boolean loaded = false;");
 			out.println("public void onOpen("+OpenEvent.class.getCanonicalName()+"<"+className+"> event){"); 
 			out.println("if (!loaded){");
-			out.println(LazyPanel.class.getCanonicalName() +"widget = ("+LazyPanel.class.getCanonicalName()+")"+varName+".getContent();");
+			out.println(LazyPanel.class.getCanonicalName() +"widget = ("+LazyPanel.class.getCanonicalName()+")"+context.getWidget()+".getContent();");
 			out.println("widget.ensureWidget();");
 			out.println("loaded = true;");
 			out.println("}");
 			out.println("}");
 			out.println("});");
 		}
-		return varName;
 	}
 	
 	@Override

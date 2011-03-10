@@ -15,12 +15,10 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasSelectionHandlersFactory;
@@ -60,27 +58,25 @@ public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext>
                   HasAllKeyHandlersFactory<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("suggestBox");
 		String className = SuggestBox.class.getCanonicalName();
 
 		String event = ViewFactoryCreator.createVariableName("evt");
 		String oracle = ViewFactoryCreator.createVariableName("oracle");
 
-		String eventLoadOracle = metaElem.optString("onLoadOracle");
+		String eventLoadOracle = context.readWidgetProperty("onLoadOracle");
 		if (eventLoadOracle != null)
 		{
 			out.println("final Event "+event+" = Events.getEvent(\"onLoadOracle\", "+ EscapeUtils.quote(eventLoadOracle)+");");
 			out.println(SuggestOracle.class.getCanonicalName()+" "+oracle+" = Events.callEvent("+event+", new "+LoadOracleEvent.class.getCanonicalName()+
-					"<"+SuggestBox.class.getCanonicalName()+">("+EscapeUtils.quote(widgetId)+"));");
-			out.println(className + " " + varName+" = new "+className+"("+oracle+");");
+					"<"+SuggestBox.class.getCanonicalName()+">("+EscapeUtils.quote(context.getWidgetId())+"));");
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+oracle+");");
 		}
 		else
 		{
-			out.println(className + " " + varName+" = new "+className+"();");
+			out.println(className + " " + context.getWidget()+" = new "+className+"();");
 		}
-		return varName;
 	}	
 	
 	@Override

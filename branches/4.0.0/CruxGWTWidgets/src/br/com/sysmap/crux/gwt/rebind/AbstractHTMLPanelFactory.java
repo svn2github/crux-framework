@@ -40,25 +40,26 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 	 * @param metaElem
 	 * @throws CruxGeneratorException
 	 */
-	protected void createChildren(SourcePrinter out, String widget, JSONObject metaElem) throws CruxGeneratorException
+	protected void createChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
     {
-		out.println(widget+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+		out.println(context.getWidget()+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
 		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
 		out.println("if (event.isAttached()){");
-		JSONArray children = metaElem.optJSONArray("_children");
+		
+		JSONArray children = ensureChildren(context.getWidgetElement(), true);
 		if (children != null)
 		{
 			for(int i=0; i< children.length(); i++)
 			{
 				JSONObject child = children.optJSONObject(i);
-				String childWidget = createChildWidget(out, child);
+				String childWidget = createChildWidget(out, child, context);
 				boolean childPartialSupport = hasChildPartialSupport(child);
 				if (childPartialSupport)
 				{
 					out.println("if ("+getChildWidgetClassName(child)+".isSupported()){");
 				}
 				String panelId = ViewFactoryUtils.getEnclosingPanelPrefix()+child.optString("id");
-				out.println(widget+".add("+childWidget+", "+EscapeUtils.quote(panelId)+");");
+				out.println(context.getWidget()+".add("+childWidget+", "+EscapeUtils.quote(panelId)+");");
 				if (childPartialSupport)
 				{
 					out.println("}");

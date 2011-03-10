@@ -19,6 +19,7 @@ import java.util.Comparator;
 
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.controller.ClientControllers;
 import br.com.sysmap.crux.core.rebind.screen.Event;
@@ -102,6 +103,7 @@ class CellTableContext extends WidgetCreatorContext
 public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 {
 	private static final int DEFAULT_PAGE_SIZE = 15;
+	private static GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 
 	@Override
 	public void processAttributes(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
@@ -131,7 +133,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 	    JMethod loadDataProviderMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
 	    if (loadDataProviderMethod == null)
 	    {
-	    	throw new CruxGeneratorException();//TODO message
+	    	throw new CruxGeneratorException(messages.cellTableDataProviderMethodNotFound(event.getController(), event.getMethod()));
 	    }
 	    JType returnType = loadDataProviderMethod.getReturnType();
 	    if (returnType instanceof JClassType)
@@ -199,7 +201,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
             }
             catch (NoSuchFieldException e)
             {
-            	throw new CruxGeneratorException();//TODO message
+            	throw new CruxGeneratorException(messages.cellTableCanNotAccessProperty(property, context.rowDataObject));
             }
 		}
 		
@@ -294,43 +296,47 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 				out.println("}");
 				out.println("if (o1 != null) {");
 				out.println("if (o2 != null){");
-				if (colType != null && colType.isAssignableTo(getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName())))
+				String property = context.readChildProperty("property");
+				try
 				{
-				    try
-                    {
-	                    String property = context.readChildProperty("property");
-	                    StringBuilder getValueExpression = new StringBuilder();			
-	                    ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
-	                    out.println(Comparable.class.getCanonicalName()+" c1 = "+getValueExpression.toString());
-	                    getValueExpression = new StringBuilder();			
-	                    ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
-	                    out.println(Comparable.class.getCanonicalName()+" c2 = "+getValueExpression.toString());
-	                    out.println("if (c1 == c2) {");
-	                    out.println("return 0;");
-	                    out.println("}");
-	                    out.println("if (c1 != null) {");
-	                    out.println("return (c2 != null) ? c1.compareTo(c2) : 1;");
-	                    out.println("}");
-	                    out.println("return -1;");
-                    }
-                    catch (NoSuchFieldException e)
-                    {
-						throw new CruxGeneratorException();//TODO message
-                    }
-				}
-				else
-				{
-					JPrimitiveType primitive = context.colDataObjectType.isPrimitive();
-					if (primitive != null)
+					if (colType != null && colType.isAssignableTo(getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName())))
 					{
-						out.println(primitive.getSimpleSourceName()+" c1 = o1."+context.columnExpression);
-						out.println(primitive.getSimpleSourceName()+" c2 = o2."+context.columnExpression);
-						out.println("return (c1==c2) ? 0 : (c1<c2) ? -1 : 1;");
+						StringBuilder getValueExpression = new StringBuilder();			
+						ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
+						out.println(Comparable.class.getCanonicalName()+" c1 = "+getValueExpression.toString());
+						getValueExpression = new StringBuilder();			
+						ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
+						out.println(Comparable.class.getCanonicalName()+" c2 = "+getValueExpression.toString());
+						out.println("if (c1 == c2) {");
+						out.println("return 0;");
+						out.println("}");
+						out.println("if (c1 != null) {");
+						out.println("return (c2 != null) ? c1.compareTo(c2) : 1;");
+						out.println("}");
+						out.println("return -1;");
 					}
 					else
 					{
-						throw new CruxGeneratorException();//TODO message.... nao eh comparable e nem primitive.... nao da pra ordenar
+						JPrimitiveType primitive = context.colDataObjectType.isPrimitive();
+						if (primitive != null)
+						{
+							StringBuilder getValueExpression = new StringBuilder();			
+							ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
+							out.println(primitive.getSimpleSourceName()+" c1 = "+getValueExpression.toString());
+							getValueExpression = new StringBuilder();			
+							ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
+							out.println(primitive.getSimpleSourceName()+" c2 = "+getValueExpression.toString());
+							out.println("return (c1==c2) ? 0 : (c1<c2) ? -1 : 1;");
+						}
+						else
+						{
+							throw new CruxGeneratorException(messages.cellTableCanNotSortColumn(property, context.rowDataObject));
+						}
 					}
+				}
+				catch (NoSuchFieldException e)
+				{
+					throw new CruxGeneratorException(messages.cellTableCanNotAccessProperty(property, context.rowDataObject));
 				}
 				out.println("}");
 				out.println("return 1;");
@@ -464,9 +470,16 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		{
 			String cell = ((CellTableFactory)getWidgetCreator()).getCell(out, context.getChildElement());
 			String column = getWidgetCreator().createVariableName("column");
-			out.println(Column.class.getCanonicalName()+"<"+context.rowDataObject+","+context.colDataObject+">"+" "+column+
-					"=new "+Column.class.getCanonicalName()+"<"+context.rowDataObject+","+context.colDataObject+">("+cell+"){");
-			out.println("public "+context.colDataObject+" getValue("+context.rowDataObject+" object){");
+			
+			String colDataObject = context.colDataObject;
+			if (context.colDataObjectType.isPrimitive() != null)
+			{
+				colDataObject = context.colDataObjectType.isPrimitive().getQualifiedBoxedSourceName();
+			}
+			
+			out.println(Column.class.getCanonicalName()+"<"+context.rowDataObject+","+colDataObject+">"+" "+column+
+					"=new "+Column.class.getCanonicalName()+"<"+context.rowDataObject+","+colDataObject+">("+cell+"){");
+			out.println("public "+colDataObject+" getValue("+context.rowDataObject+" object){");
 			out.println("return "+context.columnExpression);
 			out.println("}");
 			out.println("};");

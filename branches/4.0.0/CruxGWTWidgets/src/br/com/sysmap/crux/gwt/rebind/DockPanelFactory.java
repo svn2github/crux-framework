@@ -113,7 +113,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 		public void processChildren(SourcePrinter out, DockPanelContext context) throws CruxGeneratorException
 		{
 			JSONObject childElement = context.getChildElement();
-			String child = getWidgetCreator().createChildWidget(out, childElement);
+			String child = getWidgetCreator().createChildWidget(out, childElement, context);
 			String parent = context.getWidget();
 			
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());

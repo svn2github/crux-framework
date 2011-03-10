@@ -65,7 +65,7 @@ public class VerticalPanelFactory extends CellPanelFactory<CellPanelContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String rootWidget = context.getWidget();
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)

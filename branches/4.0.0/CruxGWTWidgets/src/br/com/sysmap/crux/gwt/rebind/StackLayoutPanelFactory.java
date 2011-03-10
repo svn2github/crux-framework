@@ -15,14 +15,12 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
@@ -33,8 +31,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.StackLayoutPanel;
@@ -74,13 +72,12 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 	   implements HasBeforeSelectionHandlersFactory<StackLayoutContext>, 
 	   			  HasSelectionHandlersFactory<StackLayoutContext>
 {
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		Unit unit = AbstractLayoutPanelFactory.getUnit(metaElem.optString("unit"));
-		out.println(className + " " + varName+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
-		return varName;
+		Unit unit = AbstractLayoutPanelFactory.getUnit(context.readWidgetProperty("unit"));
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
 	}
 
 	@TagConstraints(tagName="item", maxOccurs="unbounded")
@@ -160,7 +157,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		@Override
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 		{
-			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			context.headerWidget = childWidget;
 			context.headerWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (context.headerWidgetPartialSupport)
@@ -182,7 +179,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		@Override
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException
 		{
-			String contentWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String contentWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String rootWidget = context.getWidget();
 			
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());

@@ -15,13 +15,11 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasDirectionEstimatorFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
@@ -53,19 +51,17 @@ import com.google.gwt.user.client.ui.DateLabel;
 	}
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		String datePattern = metaElem.optString("datePattern");
+		String datePattern = context.readWidgetProperty("datePattern");
 		if (datePattern == null || datePattern.length() == 0)
 		{
 			datePattern = DateFormatUtil.MEDIUM_DATE_PATTERN;
 		}
-		out.println("final "+className + " " + varName+" = new "+className+"("+
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+
 						DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+
 						EscapeUtils.quote(datePattern)+");");
-		return varName;	
 	}
 	
 	@Override

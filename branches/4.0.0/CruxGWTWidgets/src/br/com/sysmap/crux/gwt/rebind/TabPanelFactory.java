@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.TabPanel;
  * Factory for TabPanel widgets
  * @author Thiago da Rosa de Bustamante
  */
-@SuppressWarnings("deprecation")
 @DeclarativeFactory(id="tabPanel", library="gwt", targetWidget=TabPanel.class)
 @TagChildren({
 	@TagChild(TabPanelFactory.TabProcessor.class)

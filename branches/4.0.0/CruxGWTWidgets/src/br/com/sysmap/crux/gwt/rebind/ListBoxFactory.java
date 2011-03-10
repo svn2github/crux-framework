@@ -15,10 +15,7 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -47,20 +44,18 @@ public class ListBoxFactory extends AbstractListBoxFactory
 	public static class ListBoxItemsProcessor extends ItemsProcessor {}
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, ListBoxContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("label");
 		String className = getWidgetClassName();
-		String multiple = metaElem.optString("multiple");
+		String multiple = context.readWidgetProperty("multiple");
 		if (multiple != null && multiple.trim().length() > 0)
 		{
-			out.println(className + " " + varName+" = new "+className+"("+Boolean.parseBoolean(multiple)+");");
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+Boolean.parseBoolean(multiple)+");");
 
 		}
 		else
 		{
-			out.println(className + " " + varName+" = new "+className+"();");
+			out.println(className + " " + context.getWidget()+" = new "+className+"();");
 		}
-		return varName;
 	}
 }

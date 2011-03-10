@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -41,13 +39,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 })		
 public class DockLayoutPanelFactory extends AbstractDockLayoutPanelFactory<DockLayoutPanelContext>
 {
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, DockLayoutPanelContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		Unit unit = getUnit(metaElem.optString("unit"));
-		out.println(className + " " + varName+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
-		return varName;
+		Unit unit = getUnit(context.readWidgetProperty("unit"));
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+Unit.class.getCanonicalName()+"."+unit.toString()+");");
 	}
 	
 	@TagChildren({

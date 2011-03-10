@@ -90,7 +90,7 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 		@Override
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
-			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			
 			
 			if (!context.direction.equals(Direction.CENTER) && context.size == -1)

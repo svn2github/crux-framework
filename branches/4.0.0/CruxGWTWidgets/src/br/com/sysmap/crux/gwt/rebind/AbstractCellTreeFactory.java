@@ -44,14 +44,12 @@ public class AbstractCellTreeFactory extends WidgetCreator<WidgetCreatorContext>
 							HasKeyboardSelectionPolicyFactory<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		String model = getViewModel(out, metaElem);
-		String value = getValue(out, metaElem);
-		out.println("final "+className + " " + varName+" = new "+className+"("+model+", "+value+");");
-		return varName;
+		String model = getViewModel(out, context.getWidgetElement());
+		String value = getValue(out, context.getWidgetElement());
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+model+", "+value+");");
 	}
 	
 	@Override

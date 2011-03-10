@@ -15,14 +15,11 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -47,12 +44,10 @@ import com.google.gwt.user.client.ui.NamedFrame;
 public class NamedFrameFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("namedFrame");
 		String className = NamedFrame.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"("+EscapeUtils.quote(metaElem.optString("name"))+");");
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(context.readWidgetProperty("name"))+");");
 	}	
 	
 	/**

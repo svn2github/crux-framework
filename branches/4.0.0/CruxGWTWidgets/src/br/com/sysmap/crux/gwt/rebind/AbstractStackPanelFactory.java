@@ -87,7 +87,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		@Override
 		public void processChildren(SourcePrinter out,AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 		{
-			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String widget = context.getWidget();
 			
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());

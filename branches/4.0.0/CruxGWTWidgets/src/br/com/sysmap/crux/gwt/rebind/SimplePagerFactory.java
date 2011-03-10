@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
@@ -41,19 +39,17 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 public class SimplePagerFactory extends AbstractPagerFactory  
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
 		
-		String textLocationStr = metaElem.optString("textlocation");
+		String textLocationStr = context.readWidgetProperty("textlocation");
 		TextLocation textLocation = TextLocation.CENTER;
 		if (!StringUtils.isEmpty(textLocationStr))
 		{
 			textLocation = TextLocation.valueOf(textLocationStr);
 		}
-		out.println("final "+className + " " + varName+" = new "+className+"("+TextLocation.class.getCanonicalName()+"."+textLocation.toString()+");");
-		return varName;
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+TextLocation.class.getCanonicalName()+"."+textLocation.toString()+");");
 	}
 	
 	@Override

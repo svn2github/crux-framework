@@ -15,15 +15,14 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasNameFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 
 import com.google.gwt.user.client.ui.SimpleRadioButton;
 
@@ -36,16 +35,16 @@ import com.google.gwt.user.client.ui.SimpleRadioButton;
 @TagAttributes({
 	@TagAttribute(value="checked", type=Boolean.class)
 })
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="name", required=true)
+})
 public class SimpleRadioButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
-		implements HasNameFactory<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("simpleRadioButton");
 		String className = SimpleRadioButton.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"();");
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(context.readWidgetProperty("name"))+");");
 	}	
 	
 	@Override

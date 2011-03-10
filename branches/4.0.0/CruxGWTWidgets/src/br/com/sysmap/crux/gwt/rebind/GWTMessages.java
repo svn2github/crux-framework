@@ -48,5 +48,11 @@ public interface GWTMessages
 	String menubarItemWithoutChildrenOrCommand(String itemCaption);
 	@DefaultServerMessage("[gwt-widgets - 011] - The attribute size is required for cells not centered in DockLayoutPanel wiht id: ''{0}''.")
 	String dockLayoutPanelRequiredSize(String rootWidgetId);
+	@DefaultServerMessage("[gwt-widgets - 012] - DataProvider factory method not found: Controller[{0}], Method[{1}].")
+	String cellTableDataProviderMethodNotFound(String controller, String method);
+	@DefaultServerMessage("[gwt-widgets - 013] - Can not access property [{0}] on row object[{1}].")
+	String cellTableCanNotAccessProperty(String property, String rowDataObject);
+	@DefaultServerMessage("[gwt-widgets - 013] - Can not sort column for property [{0}] on row object[{1}]. Property must have a primitive or Comparable type.")
+	String cellTableCanNotSortColumn(String property, String rowDataObject);
 
 }

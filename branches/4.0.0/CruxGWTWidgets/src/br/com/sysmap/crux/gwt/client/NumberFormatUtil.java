@@ -38,11 +38,11 @@ public class NumberFormatUtil
 	{
 		NumberFormat result;
 		
-		if (CURRENCY_PATTERN.equals(patternString))
+		if (DECIMAL_PATTERN.equals(patternString))
 		{
 			result = NumberFormat.getDecimalFormat();
 		}
-		else if (DECIMAL_PATTERN.equals(patternString))
+		else if (CURRENCY_PATTERN.equals(patternString))
 		{
 			result = NumberFormat.getCurrencyFormat();
 		}

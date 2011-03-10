@@ -15,15 +15,13 @@
  */
 package br.com.sysmap.crux.gwt.rebind;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasBeforeSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasSelectionHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
@@ -36,8 +34,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -71,21 +69,20 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
        implements HasBeforeSelectionHandlersFactory<TabLayoutPanelContext>, 
                   HasSelectionHandlersFactory<TabLayoutPanelContext>
 {
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		String height = metaElem.optString("barHeight");
+		String height = context.readWidgetProperty("barHeight");
 		if (StringUtils.isEmpty(height))
 		{
-			out.println(className + " " + varName+" = new "+className+"(20,"+Unit.class.getCanonicalName()+".PX);");
+			out.println(className + " " + context.getWidget()+" = new "+className+"(20,"+Unit.class.getCanonicalName()+".PX);");
 		}
 		else
 		{
-			Unit unit = AbstractLayoutPanelFactory.getUnit(metaElem.optString("unit"));
-			out.println(className + " " + varName+" = new "+className+"("+Double.parseDouble(height)+","+Unit.class.getCanonicalName()+"."+unit.toString()+");");
+			Unit unit = AbstractLayoutPanelFactory.getUnit(context.readWidgetProperty("unit"));
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+Double.parseDouble(height)+","+Unit.class.getCanonicalName()+"."+unit.toString()+");");
 		}
-		return varName;
 	}
 	
 	/**
@@ -159,7 +156,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		@Override
 		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
-			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (context.titleWidgetPartialSupport)
 			{
@@ -180,7 +177,7 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		@Override
 		public void processChildren(SourcePrinter out, TabLayoutPanelContext context) throws CruxGeneratorException
 		{
-			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)
 			{

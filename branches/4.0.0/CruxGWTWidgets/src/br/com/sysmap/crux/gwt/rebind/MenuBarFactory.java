@@ -77,12 +77,10 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId)
+	public void instantiateWidget(SourcePrinter out, MenuBarContext context)
 	{
-		String varName = ViewFactoryCreator.createVariableName("menuBar");
 		String className = MenuBar.class.getCanonicalName();
-		out.println(className + " " + varName+" = new "+className+"("+isMenuVertical(metaElem)+");");
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+isMenuVertical(context.getWidgetElement())+");");
 	}	
 
 	/**
@@ -213,7 +211,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	protected static String getSubMenu(WidgetCreator<?> widgetCreator, SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 	{
 		String widget = context.getWidget();
-		String subMenu = widgetCreator.createChildWidget(out, context.getChildElement());	
+		String subMenu = widgetCreator.createChildWidget(out, context.getChildElement(), context);	
 		out.println(subMenu+".setAutoOpen("+widget+".getAutoOpen());");
 		out.println(subMenu+".setAnimationEnabled("+widget+".isAnimationEnabled());");
 		return subMenu;

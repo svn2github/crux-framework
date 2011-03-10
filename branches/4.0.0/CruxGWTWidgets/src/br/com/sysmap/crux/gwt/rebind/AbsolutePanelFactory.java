@@ -77,7 +77,7 @@ public class AbsolutePanelFactory extends ComplexPanelFactory<AbsolutePanelConte
 		@Override
 		public void processChildren(SourcePrinter out, AbsolutePanelContext context) throws CruxGeneratorException
 		{
-			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String absolutePanel = context.getWidget();
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)

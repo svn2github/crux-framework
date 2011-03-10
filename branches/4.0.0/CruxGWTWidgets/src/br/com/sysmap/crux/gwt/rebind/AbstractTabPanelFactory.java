@@ -145,7 +145,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		@Override
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
 		{
-			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			context.titleWidgetClassType = getWidgetCreator().getChildWidgetClassName(context.getChildElement());
 		}
@@ -157,7 +157,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		@Override
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException
 		{
-			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String tabWidget = context.getWidget();
 			
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());

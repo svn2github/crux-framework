@@ -194,7 +194,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)
 			{

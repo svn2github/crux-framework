@@ -17,16 +17,14 @@ package br.com.sysmap.crux.gwt.rebind;
 
 import java.util.LinkedList;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
@@ -44,15 +42,15 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import br.com.sysmap.crux.gwt.client.LoadImagesEvent;
 
 import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Tree.Resources;
+import com.google.gwt.user.client.ui.TreeItem;
 
 
 class TreeContext extends WidgetCreatorContext
@@ -89,12 +87,11 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 	
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, TreeContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = Tree.class.getCanonicalName();
 		
-		String eventLoadImage = metaElem.optString("onLoadImage");
+		String eventLoadImage = context.readWidgetProperty("onLoadImage");
 		
 		if (!StringUtils.isEmpty(eventLoadImage))
 		{
@@ -104,25 +101,23 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 			
 			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote("onLoadImage")+", "+ EscapeUtils.quote(eventLoadImage)+");");
 			out.println(LoadImagesEvent.class.getCanonicalName()+"<"+className+"> "+loadEvent+
-					" = new "+LoadImagesEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(widgetId)+");");
+					" = new "+LoadImagesEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(context.getWidgetId())+");");
 			out.println(Resources.class.getCanonicalName()+" "+treeImages+
 					" = ("+Resources.class.getCanonicalName()+") Events.callEvent("+event+", "+loadEvent+");");
 
-			String useLeafImagesStr = metaElem.optString("useLeafImages");
+			String useLeafImagesStr = context.readWidgetProperty("useLeafImages");
 			boolean useLeafImages = true;
 			if (useLeafImagesStr != null && useLeafImagesStr.length() > 0)
 			{
 				useLeafImages = (Boolean.parseBoolean(useLeafImagesStr));
 			}
 			
-			out.println(className + " " + varName+" = new "+className+"("+treeImages+", "+useLeafImages+");");
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+treeImages+", "+useLeafImages+");");
 		}
 		else
 		{
-			out.println(className + " " + varName+" = new "+className+"();");
+			out.println(className + " " + context.getWidget()+" = new "+className+"();");
 		}
-		
-		return varName;
 	}
 	
 	@Override
@@ -211,7 +206,7 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		@Override
 		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
-			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)
 			{
