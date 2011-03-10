@@ -555,6 +555,13 @@ class HTMLBuilder
 	        {
 	        	return (Element)headNodes.item(0);
 	        }
+	        Element headElement = htmlDocument.createElement("head");
+	        Element bodyElement = getCruxPageBodyElement(htmlDocument);
+	        if (bodyElement != null)
+	        {
+	        	htmlDocument.getDocumentElement().insertBefore(headElement, bodyElement);
+	        	return headElement;
+	        }
 	        return null;
         }
         catch (XPathExpressionException e)
