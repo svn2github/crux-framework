@@ -41,6 +41,7 @@ import br.com.sysmap.crux.widgets.client.wizard.Wizard;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlPosition;
 import br.com.sysmap.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
+import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
@@ -71,6 +72,10 @@ public class WizardFactory extends AbstractWizardFactory
 		String className = getGenericSignature(wizardContextObject);
 		String wizardData = DataObjects.getDataObject(wizardContextObject);
 	    String wizardDataSerializer = getWizardSerializerInterface(wizardContextObject);
+	    if (StringUtils.isEmpty(wizardData))
+	    {
+	    	wizardData = NoData.class.getCanonicalName();
+	    }
 		
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(context.getWidgetId())+", ("+
 				             WizardDataSerializer.class.getCanonicalName()+"<"+wizardData+">)GWT.create("+wizardDataSerializer+".class));");

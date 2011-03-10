@@ -33,6 +33,7 @@ import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
 import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
 import br.com.sysmap.crux.widgets.client.wizard.WizardDataSerializer;
 import br.com.sysmap.crux.widgets.client.wizard.WizardPage;
+import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -59,6 +60,10 @@ public class WizardPageFactory extends AbstractWizardFactory
 		String className = getGenericSignature(wizardContextObject);
 		String wizardData = DataObjects.getDataObject(wizardContextObject);
 	    String wizardDataSerializer = getWizardSerializerInterface(wizardContextObject);
+	    if (StringUtils.isEmpty(wizardData))
+	    {
+	    	wizardData = NoData.class.getCanonicalName();
+	    }
 		
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(wizardId)+", ("+
 				             WizardDataSerializer.class.getCanonicalName()+"<"+wizardData+">)GWT.create("+wizardDataSerializer+".class));");
