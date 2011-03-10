@@ -169,7 +169,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		@Override
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException
 		{
-			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			context.titleWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			context.titleWidgetPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (context.titleWidgetPartialSupport)
 			{
@@ -190,7 +190,7 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		@Override
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException
 		{
-			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String widget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String rootWidget = context.getWidget();
 			
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());

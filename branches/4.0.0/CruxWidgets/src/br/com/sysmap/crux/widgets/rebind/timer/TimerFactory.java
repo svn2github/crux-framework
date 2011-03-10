@@ -15,20 +15,18 @@
  */
 package br.com.sysmap.crux.widgets.rebind.timer;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.widgets.client.timer.Timer;
 import br.com.sysmap.crux.widgets.rebind.event.TimeoutEvtBind;
 
@@ -52,37 +50,35 @@ public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @see br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
 
 		long initial = 0;
 		boolean regressive = false;
 		boolean start = false;
 		
-		String strInitial = metaElem.optString("initial");  
+		String strInitial = context.readWidgetProperty("initial");  
 		if(strInitial != null && strInitial.trim().length() > 0)
 		{
 			initial = Long.parseLong(strInitial);
 		}
 		
-		String strRegressive = metaElem.optString("regressive");  
+		String strRegressive = context.readWidgetProperty("regressive");  
 		if(strRegressive != null && strRegressive.trim().length() > 0)
 		{
 			regressive = Boolean.parseBoolean(strRegressive);
 		}
 		
-		String strStart = metaElem.optString("start");  
+		String strStart = context.readWidgetProperty("start");  
 		if(strStart != null && strStart.trim().length() > 0)
 		{
 			start = Boolean.parseBoolean(strStart);
 		}
 
-		String pattern = metaElem.optString("pattern");  
+		String pattern = context.readWidgetProperty("pattern");  
 		
-		out.println(className + " " + varName+" = new "+className+"("+initial+", "+regressive+", "+EscapeUtils.quote(pattern)+", "+start+");");
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+initial+", "+regressive+", "+EscapeUtils.quote(pattern)+", "+start+");");
 	}
 	
 	@TagConstraints(tagName="onTimeout", minOccurs="0", maxOccurs="unbounded")

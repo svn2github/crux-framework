@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.wizard;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -32,8 +30,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
@@ -67,17 +65,15 @@ public class WizardFactory extends AbstractWizardFactory
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
-	    String wizardContextObject = metaElem.optString("wizardContextObject");
+	    String wizardContextObject = context.readWidgetProperty("wizardContextObject");
 		String className = getGenericSignature(wizardContextObject);
 		String wizardData = DataObjects.getDataObject(wizardContextObject);
 	    String wizardDataSerializer = getWizardSerializerInterface(wizardContextObject);
 		
-		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(widgetId)+", ("+
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(context.getWidgetId())+", ("+
 				             WizardDataSerializer.class.getCanonicalName()+"<"+wizardData+">)GWT.create("+wizardDataSerializer+".class));");
-		return varName;
 	}
 
 	@Override
@@ -299,7 +295,7 @@ public class WizardFactory extends AbstractWizardFactory
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 		{
-			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String childWidget = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String widget = context.getWidget();
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.stepLabel);

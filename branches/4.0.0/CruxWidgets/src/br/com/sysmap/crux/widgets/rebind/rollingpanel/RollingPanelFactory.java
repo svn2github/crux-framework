@@ -15,14 +15,12 @@
  */
 package br.com.sysmap.crux.widgets.rebind.rollingpanel;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasVerticalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.align.AlignmentAttributeParser;
@@ -37,8 +35,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDecl
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -76,18 +74,16 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
                   HasVerticalAlignmentFactory<RollingPanelContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		String verticalAttr = metaElem.optString("vertical");
+		String verticalAttr = context.readWidgetProperty("vertical");
 		boolean vertical = false;
 		if (!StringUtils.isEmpty(verticalAttr))
 		{
 			vertical = Boolean.parseBoolean(verticalAttr);
 		}
-		out.println(className + " " + varName+" = new "+className+"("+vertical+");");
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+vertical+");");
 	}
 	
 	@Override
@@ -131,7 +127,7 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
 		@Override
 		public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
 		{
-			String child = getWidgetCreator().createChildWidget(out, context.getChildElement());
+			String child = getWidgetCreator().createChildWidget(out, context.getChildElement(), context);
 			String rootWidget = context.getWidget();
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)

@@ -15,17 +15,15 @@
  */
 package br.com.sysmap.crux.widgets.rebind.maskedlabel;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.formatter.Formatter;
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.formatter.Formatters;
 import br.com.sysmap.crux.core.rebind.screen.widget.AttributeProcessor;
+import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
 import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
@@ -66,25 +64,24 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
 
-		String formatter = metaElem.optString("formatter");
+		String formatter = context.readWidgetProperty("formatter");
 		if (formatter != null && formatter.length() > 0)
 		{
 			String fmt = createVariableName("fmt");
 
 			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = "+Formatters.getFormatterInstantionCommand(formatter)+";");
 			out.println("assert ("+fmt+" != null):"+EscapeUtils.quote(widgetMessages.maskedLabelFormatterNotFound(formatter))+";");
-			out.println(className + " " + varName+" = new "+className+"("+fmt+");");
+			out.println(className + " " + context.getWidget()+" = new "+className+"("+fmt+");");
 		}	
 		else
 		{
 			throw new CruxGeneratorException(widgetMessages.maskedLabelFormatterRequired());	
 		}
-		return varName;
 	}	
 	
 	/**

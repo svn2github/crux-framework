@@ -97,18 +97,16 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
 
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	@Override
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		String columnsDefinitions = getColumnDefinitions(out, metaElem);
+		String columnsDefinitions = getColumnDefinitions(out, context);
 		
-		out.println(className + " " + varName+" = new "+className+"("+columnsDefinitions+", "+getPageSize(metaElem)+", "+
-                getRowSelectionModel(metaElem)+", "+getCellSpacing(metaElem)+", "+getAutoLoad(metaElem)+", "+
-                getStretchColumns(metaElem)+", "+getHighlightRowOnMouseOver(metaElem)+", "+
-                getEmptyDataFilling(metaElem)+", "+isFixedCellSize(metaElem)+", "+getSortingColumn(metaElem)+", "+getSortingType(metaElem)+");");
-		
-		return varName;
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+columnsDefinitions+", "+getPageSize(context.getWidgetElement())+", "+
+                getRowSelectionModel(context.getWidgetElement())+", "+getCellSpacing(context.getWidgetElement())+", "+getAutoLoad(context.getWidgetElement())+", "+
+                getStretchColumns(context.getWidgetElement())+", "+getHighlightRowOnMouseOver(context.getWidgetElement())+", "+
+                getEmptyDataFilling(context.getWidgetElement())+", "+isFixedCellSize(context.getWidgetElement())+", "+getSortingColumn(context.getWidgetElement())+", "+getSortingType(context.getWidgetElement())+");");
 	}
 	
 	/**
@@ -250,7 +248,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{
 			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
-			JClassType dtoType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{});
+			JClassType dtoType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{}).isClassOrInterface();
 
 			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoType.getParameterizedQualifiedSourceName()+">";
 			String dataSource = getWidgetCreator().createVariableName("dataSource");
@@ -374,13 +372,13 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	private String getColumnDefinitions(SourcePrinter out, JSONObject gridElem) throws CruxGeneratorException
+	private String getColumnDefinitions(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		String defs = createVariableName("defs");
 		
 		out.println(ColumnDefinitions.class.getCanonicalName()+" "+defs+" = new "+ColumnDefinitions.class.getCanonicalName()+"();");
 
-		JSONArray colElems = ensureChildren(gridElem, false);
+		JSONArray colElems = ensureChildren(context.getWidgetElement(), false);
 		int colsSize = colElems.length();
 		if(colsSize > 0)
 		{
@@ -422,7 +420,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 					}
 					else if("widgetColumn".equals(columnType))
 					{
-						String widgetCreator = getWidgetColumnCreator(out, colElem);
+						String widgetCreator = getWidgetColumnCreator(out, colElem, context);
 						
 						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+WidgetColumnDefinition.class.getCanonicalName()+"("+
 								label+", "+
@@ -434,7 +432,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 					}
 					else
 					{
-						throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(gridElem.optString("id")));
+						throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(context.readWidgetProperty("id")));
 					}
 
 					out.print(defs+".add("+EscapeUtils.quote(key)+", "+def+");");
@@ -443,7 +441,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		}
 		else
 		{
-			throw new CruxGeneratorException(widgetMessages.gridDoesNotHaveColumns(gridElem.optString("id")));
+			throw new CruxGeneratorException(widgetMessages.gridDoesNotHaveColumns(context.readWidgetProperty("id")));
 		}
 				
 		return defs;
@@ -454,7 +452,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @param colElem
 	 * @return
 	 */
-	private String getWidgetColumnCreator(SourcePrinter out, JSONObject colElem)
+	private String getWidgetColumnCreator(SourcePrinter out, JSONObject colElem, WidgetCreatorContext context)
     {
 	    String colDef = createVariableName("colDef");
 	    String className = WidgetColumnCreator.class.getCanonicalName();
@@ -463,7 +461,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    out.println("public Widget createWidgetForColumn(){");
 	    
 	    JSONObject child = ensureFirstChild(colElem, false);
-		String childWidget = createChildWidget(out, child, false);//TODO: o parametro addoToScreen deve ser propagado para os filhos da widget criada
+		String childWidget = createChildWidget(out, child, false, context);
         out.println("return "+childWidget+";");
 	    
 	    out.println("};");

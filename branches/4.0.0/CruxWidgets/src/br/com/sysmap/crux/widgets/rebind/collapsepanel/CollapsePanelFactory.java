@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.collapsepanel;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.screen.LazyPanel;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
@@ -28,10 +26,10 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
@@ -62,30 +60,27 @@ import br.com.sysmap.crux.widgets.rebind.titlepanel.AbstractTitlePanelFactory;
 public class CollapsePanelFactory extends AbstractTitlePanelFactory
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		out.println("final "+className + " " + varName+" = new "+className+"();");
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
 
-		String collapsible = metaElem.optString("collapsible");
-		String collapsed = metaElem.optString("collapsed");
+		String collapsible = context.readWidgetProperty("collapsible");
+		String collapsed = context.readWidgetProperty("collapsed");
 		if ((collapsible == null || !StringUtils.unsafeEquals(collapsible, "false")) &&
 			(collapsed != null && StringUtils.unsafeEquals(collapsed, "true")))
 		{
-			out.println(varName+".addBeforeExpandHandler(new "+BeforeExpandHandler.class.getCanonicalName()+"(){");
+			out.println(context.getWidget()+".addBeforeExpandHandler(new "+BeforeExpandHandler.class.getCanonicalName()+"(){");
 			out.println("private boolean loaded = false;");
 			out.println("public void onBeforeExpand("+BeforeExpandEvent.class.getCanonicalName()+" event){");
 			out.println("if (!loaded){");
-			out.println(LazyPanel.class.getCanonicalName()+" widget = ("+LazyPanel.class.getCanonicalName()+")"+varName+".getContentWidget();");
+			out.println(LazyPanel.class.getCanonicalName()+" widget = ("+LazyPanel.class.getCanonicalName()+")"+context.getWidget()+".getContentWidget();");
 			out.println("widget.ensureWidget();");
 			out.println("loaded = true;");
 			out.println("}");
 			out.println("}");
 			out.println("});");
 		}		
-		
-		return varName;
 	}	
 	
 	@TagConstraints(tagName="title", minOccurs="0")

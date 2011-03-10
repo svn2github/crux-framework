@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.widgets.rebind.scrollbanner;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
@@ -26,8 +24,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner;
 
 /**
@@ -44,21 +42,19 @@ import br.com.sysmap.crux.widgets.client.scrollbanner.ScrollBanner;
 public class ScrollBannerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
 
-		String period = metaElem.optString("messageScrollingPeriod");
+		String period = context.readWidgetProperty("messageScrollingPeriod");
 		if(period != null && period.trim().length() > 0)
 		{
-			out.println("final "+className + " " + varName+" = new "+className+"("+Integer.parseInt(period)+");");
+			out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+Integer.parseInt(period)+");");
 		}
 		else
 		{
-			out.println("final "+className + " " + varName+" = new "+className+"();");
+			out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
 		}
-		return varName;
 	}
 
 	@TagConstraints(tagName="message", minOccurs="0", maxOccurs="unbounded", type=String.class)
