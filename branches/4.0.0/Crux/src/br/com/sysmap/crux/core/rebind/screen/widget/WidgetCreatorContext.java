@@ -27,6 +27,7 @@ public class WidgetCreatorContext
 	private JSONObject widgetElement;
 	private String widget;
 	private String widgetId;
+	private boolean addToScreen;
 
 	public WidgetCreatorContext()
 	{
@@ -59,6 +60,10 @@ public class WidgetCreatorContext
 	{
 		return childElement;
 	}
+	public boolean isAddToScreen()
+	{
+		return addToScreen;
+	}
 	void setWidgetElement(JSONObject widgetElement) 
 	{
 		this.widgetElement = widgetElement;
@@ -71,4 +76,9 @@ public class WidgetCreatorContext
 	{
 		this.widgetId = widgetId;
 	}
+	void setAddToScreen(boolean addToScreen)
+    {
+    	this.addToScreen = addToScreen;
+    }
+	
 }

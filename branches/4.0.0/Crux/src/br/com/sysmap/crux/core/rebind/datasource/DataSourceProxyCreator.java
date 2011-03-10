@@ -401,11 +401,13 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	private JClassType getTypeFromMethodClass(String methodName)
     {
 		JType returnType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, methodName, new JType[]{});
-		if (returnType == null)
+		JClassType returnClassType = returnType.isClassOrInterface();
+		
+		if (returnClassType == null)
 		{
 			throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceInvalidBoundObject(dataSourceClass.getName()));
 		}
-		return (JClassType) returnType;
+		return returnClassType;
     }
 	
 	/**

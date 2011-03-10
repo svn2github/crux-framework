@@ -134,7 +134,7 @@ class ChildrenAnnotationScanner
 				}
 				else
 				{
-					childWidget = widgetCreator.createChildWidget(out, context.getChildElement());
+					childWidget = widgetCreator.createChildWidget(out, context.getChildElement(), context);
 				}
 				boolean childPartialSupport = widgetCreator.hasChildPartialSupport(context.getChildElement());
 				if (childPartialSupport)

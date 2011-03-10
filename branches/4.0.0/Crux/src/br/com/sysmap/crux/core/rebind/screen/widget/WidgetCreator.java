@@ -232,17 +232,13 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * 
 	 * @param out
 	 * @param metaElem
+	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		if (!metaElem.has("id"))
-		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
-		}
-		String widgetId = metaElem.optString("id");
-		return factory.newWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem));
+		return createChildWidget(out, metaElem, true, context);
 	}
 
 	/**
@@ -251,17 +247,18 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param out
 	 * @param metaElem
 	 * @param addToScreen
+	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem, boolean addToScreen) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		if (!metaElem.has("id"))
 		{
 			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
 		}
 		String widgetId = metaElem.optString("id");
-		return factory.newWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen);
+		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen, context);
 	}		
 	
 	/**
@@ -271,12 +268,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param metaElem
 	 * @param widgetId
 	 * @param widgetType
+	 * @param addToScreen
+	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, 
+			String widgetType, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		return factory.newWidget(out, metaElem, widgetId, widgetType);
+		return factory.newWidget(out, metaElem, widgetId, widgetType, addToScreen && context.isAddToScreen());
 	}
 	
 	/**
@@ -483,17 +483,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	
 	
 	/**
-	 * @param metaElem
-	 * @param widgetId
+	 * @param out
+	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, C context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = getWidgetClassName();
-		out.println("final "+className + " " + varName+" = new "+className+"();");
-		return varName;
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
 	}
 	
 	/**
@@ -556,25 +554,24 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	protected C createContext(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
 	{
-		String widget = instantiateWidget(out, metaElem, widgetId);
-		if (widget != null)
+		C context = instantiateContext();
+		context.setWidgetElement(metaElem);
+		context.setWidgetId(widgetId);
+		context.setChildElement(metaElem);
+		context.setAddToScreen(addToScreen);
+		String varName = createVariableName("widget");
+		context.setWidget(varName);
+
+		instantiateWidget(out, context);
+		if(addToScreen)
 		{
-			if(addToScreen)
+			out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+varName+");");
+			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
 			{
-				out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+widget+");");
-				if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
-				{
-					out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+widget+");");
-				}
-			}			
-			C context = instantiateContext();
-			context.setWidget(widget);
-			context.setWidgetElement(metaElem);
-			context.setWidgetId(widgetId);
-			context.setChildElement(metaElem);
-			return context;
-		}
-		return null;
+				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+varName+");");
+			}
+		}			
+		return context;
 	}
 
 	/**

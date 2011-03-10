@@ -62,9 +62,14 @@ public class ClassUtils
         	StringBuilder checkNullExpression = new StringBuilder();
         	
         	getExpression.append(recordObject);
-        	JClassType baseType = dtoType;
+        	JType baseType = dtoType;
+        	JClassType baseClassType = baseType.isClassOrInterface();
         	for (int i=0; i < props.length; i++)
         	{
+        		if (baseClassType == null && i < props.length-1)
+        		{
+        			throw new NoSuchFieldException(colKey);
+        		}
         		String prop = props[i];
         		if (i>0)
         		{
@@ -75,13 +80,14 @@ public class ClassUtils
         			checkNullExpression.append(getExpression.toString()+"==null ");
         		}
         		
-        		String getterMethod = ClassUtils.getGetterMethod(prop, baseType);
+        		String getterMethod = ClassUtils.getGetterMethod(prop, baseClassType);
         		if (getterMethod == null)
         		{
         			throw new NoSuchFieldException(colKey);
         		}
         		getExpression.append("."+getterMethod+"()");
-        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseType, getterMethod, new JType[]{});
+        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseClassType, getterMethod, new JType[]{});
+        		baseClassType = baseType.isClassOrInterface();
         	}
         	if (finishCommand)
         	{
@@ -354,7 +360,7 @@ public class ClassUtils
 	 * @param methodName
 	 * @return
 	 */
-	public static JClassType getReturnTypeFromMethodClass(JClassType clazz, String methodName, JType[] params)
+	public static JType getReturnTypeFromMethodClass(JClassType clazz, String methodName, JType[] params)
     {
 	    JMethod method = getMethod(clazz, methodName, params);
 		
@@ -363,11 +369,7 @@ public class ClassUtils
 			return null;
 		}
 		JType returnType = method.getReturnType();
-		if (!(returnType instanceof JClassType))
-		{
-			return null;
-		}
-		return (JClassType) returnType;
+		return returnType;
     }
 
 	/**
