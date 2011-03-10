@@ -17,6 +17,7 @@ package br.com.sysmap.crux.tools.quickstart.client.controller;
 
 import br.com.sysmap.crux.core.client.controller.Controller;
 import br.com.sysmap.crux.core.client.controller.Expose;
+import br.com.sysmap.crux.core.client.screen.Screen;
 
 import com.google.gwt.user.client.Window;
 
@@ -42,6 +43,6 @@ public class ExamplesController
 	@Expose
 	public void backToMainMenu()
 	{
-		Window.Location.assign("index.html");
+		Window.Location.assign(Screen.appendDebugParameters("index.html"));
 	}
 }

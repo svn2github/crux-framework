@@ -28,10 +28,12 @@
 	<property name="crux-modules-compiler-srcdir" value="../CruxModulesCompiler/src" />
 	<property name="crux-scannotation-srcdir" value="../CruxScannotation/src" />
 	<property name="crux-widgets-srcdir" value="../CruxWidgets/src" />
+	<property name="crux-gadgets-srcdir" value="../CruxGadgets/src" />
 
 	<property name="crux.dist" value="../Crux/dist" />
 	<property name="crux.gwt.dist" value="../CruxGWTWidgets/dist" />
 	<property name="crux.widgets.dist" value="../CruxWidgets/dist" />
+	<property name="crux.gadgets.dist" value="../CruxGadgets/dist" />
 	<property name="crux.compiler.dist" value="../CruxCompiler/dist" />
 	<property name="crux.themes.dist" value="../CruxThemes/dist" />
 	<property name="crux.scannotation.dist" value="../CruxScannotation/dist" />
@@ -104,7 +106,7 @@
 		</copydir>
 
 		<cruxmodulecompiler srcDir="${srcdir}" outputDir="${temp.dir}/webroot" webDir="${temp.dir}/webroot" 
-            keepPagesGeneratedFiles="true" pagesOutputDir="${temp.dir}/webroot" indentPages="false">
+            keepPagesGeneratedFiles="true" pagesOutputDir="${temp.dir}/webroot" indentPages="false" outputCharset="UTF-8">
 			<classpath>
 				<fileset dir="${web.lib.dir}">
 					<include name="**/*.jar" />
@@ -132,6 +134,13 @@
 			<fileset dir="${temp.dir}/webroot" />
 		</move>
 		
+		<serviceMapper projectDir="${temp.dir}/${war.name}.war">
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${target.classes.dir}" />
+			</classpath>
+		</serviceMapper>
+		
 		<move file="${temp.dir}/${war.name}.war" tofile="${expandeddir}/apps/${war.name}.war" />
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" />
 	</target>
@@ -143,7 +152,7 @@
 	-->
 	<target name="fast-compile-scripts">
 		<cruxmodulecompiler srcDir="${srcdir}" outputDir="${web.root}" 
-			keepPagesGeneratedFiles="true" pagesOutputDir="${web.root}">
+			keepPagesGeneratedFiles="true" pagesOutputDir="${web.root}" outputCharset="UTF-8">
 			<classpath>
 				<fileset dir="${web.lib.dir}">
 					<include name="**/*.jar" />
@@ -180,6 +189,7 @@
 			<fileset dir="${crux-modules-compiler-srcdir}" />
 			<fileset dir="${crux-scannotation-srcdir}" />
 			<fileset dir="${crux-widgets-srcdir}" />
+			<fileset dir="${crux-gadgets-srcdir}" />
 		</javadoc>
 	</target>
 

@@ -16,6 +16,8 @@
 package br.com.sysmap.crux.tools.quickstart.server.service;
 
 import java.util.PropertyResourceBundle;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeService;
 
@@ -26,17 +28,28 @@ import br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeService;
 public class WelcomeServiceImpl implements WelcomeService
 {
 	private static String cruxVersion = null;
-	
-	static
-	{
-		cruxVersion = PropertyResourceBundle.getBundle("version").getString("version");
-	}
+	private static Lock lock = new ReentrantLock();
 	
 	/**
 	 * @see br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeService#getCruxVersion()
 	 */
 	public String getCruxVersion()
 	{
+		if (cruxVersion == null)
+		{
+			lock.lock();
+			try
+			{
+				if (cruxVersion == null)
+				{
+					cruxVersion = PropertyResourceBundle.getBundle("version").getString("version");
+				}
+			}
+			finally
+			{
+				lock.unlock();
+			}
+		}
 		return cruxVersion;
 	}
 }
