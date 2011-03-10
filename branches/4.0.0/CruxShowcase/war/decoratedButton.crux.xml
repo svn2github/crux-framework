@@ -17,7 +17,7 @@
 		<c:screen useController="decoratedButtonController"/>
 
 		<center>
-			<b:dockPanel id="centeringPanel" height="100" spacing="5">
+			<b:dockPanel id="centeringPanel" spacing="5">
 				<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right">
 					<a:decoratedButton id="myButton" text="Click Me!" onClick="decoratedButtonController.onClick"/>
 				</b:cell>

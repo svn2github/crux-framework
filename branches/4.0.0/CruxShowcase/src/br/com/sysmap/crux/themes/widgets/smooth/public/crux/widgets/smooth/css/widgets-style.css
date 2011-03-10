@@ -768,7 +768,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 
 /******************************************************************************
-	RollingTabPanel
+	TabBar
 *******************************************************************************/
 .crux-TabBar
 {
@@ -827,8 +827,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 	opacity:0.2;
 	filter:alpha(opacity=20);	
 }
-
-
 .crux-TabBarFirst
 {
 	width:2px !important;
@@ -923,7 +921,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-right:5px;
 	white-space:nowrap;
 }
-
 .crux-DynaTabs .crux-TabBarItem-selected .flapLeft
 {
 	background-image: url(../img/dyna-tabs-tab-left-selected.gif);
@@ -940,7 +937,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	color:#7b8287;
 }
-
 .crux-DynaTabs .crux-TabBarItem .flapCloseButton 
 {
 	background-image: url(../img/dyna-tabs-close.png);
@@ -954,10 +950,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	font-size: 0px;
 }
-
-
-
-
 .crux-DynaTabs .flapCloseButton-disable 
 {
 	cursor: wait;
@@ -965,7 +957,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-DynaTabs IFRAME
 {
 	border: solid 0px !important;
-	height: 99.0% !important;
+	height: 100.0% !important;
 }			  
 
 /******************************************************************************
@@ -1053,75 +1045,65 @@ SPAN, DIV, TD, LI, STRONG, UL
 *******************************************************************************/
 .crux-TitlePanel
 {
-	margin-bottom: 6px;
+	background: url(../img/smooth-footer.gif) repeat-x bottom;
 }
 .crux-TitlePanel .topLeftCell 
 {
 	height:30px;
-	width:5px;
-	font-size: 5px;
+	width:8px;
+	font-size: 8px;
 	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat top left;
+	background: url(../img/collapse-panel-nw.gif) no-repeat top left;
 }
 .crux-TitlePanel .topCenterCell 
 {
 	font-size: 12px;
 	font-weight: bold;
-	color: #6C83C3;
+	color: #4f7fa7;
 	text-align: left;
 	font-family: Arial, Helvetica;
-	background: url(../img/title-panel-blue.gif) no-repeat top center;
-}
-.crux-TitlePanel .topCenterRightCell 
-{
-	width: 1px;
-	font-size: 0px;
-	background: url(../img/title-panel-blue.gif) no-repeat top center;
+	background: url(../img/collapse-panel-n.gif) repeat-x top center;
 }
 .crux-TitlePanel .topRightCell
 {
-	width:5px;
+	width:28px;
 	font-size: 5px;
 	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat top right;
+	background: url(../img/collapse-panel-ne.gif) no-repeat top right;
+	padding-right: 5px;
 }
 .crux-TitlePanel .middleLeftCell
 {
-	width: 5px;
-	font-size: 5px;
-	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat center left;
+	width: 8px;
+	font-size: 0px;
+	background: url(../img/collapse-panel-w.gif) repeat-y left;
 }
 .crux-TitlePanel .middleCenterCell
 {
-	background: url(../img/decorated-panel-smooth-bg.gif) repeat-x center bottom;
-	background-color: #FFFFFF;
+	padding: 2px;
+	background: transparent;
 }
 .crux-TitlePanel .middleRightCell
 {
-	width: 5px;
-	font-size: 5px;
-	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat center right;
+	width: 8px;
+	font-size: 0px;
+	background: url(../img/collapse-panel-e.gif) repeat-y right;
 }
 .crux-TitlePanel .bottomLeftCell
 {
 	font-size: 0px;
-	font-family: monospace;
-	height:5px;
-	background: url(../img/title-panel-blue.gif) no-repeat bottom left;
+	height:6px;
+	background: url(../img/collapse-panel-sw.gif) no-repeat bottom left;
 }
 .crux-TitlePanel .bottomCenterCell
 {
 	font-size: 0px;
-	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat bottom center;
+	background: url(../img/collapse-panel-s.gif) repeat-x bottom center;
 }
 .crux-TitlePanel .bottomRightCell
 {
 	font-size: 0px;
-	font-family: monospace;
-	background: url(../img/title-panel-blue.gif) no-repeat bottom right;
+	background: url(../img/collapse-panel-se.gif) no-repeat bottom right;
 }
 
 /******************************************************************************

@@ -24,7 +24,13 @@
 
 		<span id="sourceEditor"></span>
 		
-		<script>function doHighlight(){SyntaxHighlighter.highlight();}</script>
+		<script>
+			function doHighlight(){
+				SyntaxHighlighter.defaults['auto-links'] = false;
+				SyntaxHighlighter.defaults['quick-code'] = false;
+				SyntaxHighlighter.highlight();
+			}
+		</script>
 			
 	</body>
 </html>

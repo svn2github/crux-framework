@@ -16,17 +16,19 @@
 
 		<c:screen useController="scrollBannerController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="130">
-			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
-				<a:decoratedPanel id="borders">
-					<a:widget>
-						<a:scrollBanner id="scrollingMessages" height="70" width="250" messageScrollingPeriod="4000" onLoadWidget="scrollBannerController.addMessages">
-							<a:message>This message was assigned declaratively.</a:message>
-						</a:scrollBanner>
-					</a:widget>
-				</a:decoratedPanel>
-			</b:cell>
-		</b:dockPanel>
+		<center>
+			<b:dockPanel id="centeringPanel" height="130">
+				<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
+					<a:decoratedPanel id="borders">
+						<a:widget>
+							<a:scrollBanner id="scrollingMessages" height="70" width="250" messageScrollingPeriod="4000" onLoadWidget="scrollBannerController.addMessages">
+								<a:message>This message was assigned declaratively.</a:message>
+							</a:scrollBanner>
+						</a:widget>
+					</a:decoratedPanel>
+				</b:cell>
+			</b:dockPanel>
+		</center>
 		
 		<s:info sourcesController="baseSourcesController">
 			<s:widgetInfo>

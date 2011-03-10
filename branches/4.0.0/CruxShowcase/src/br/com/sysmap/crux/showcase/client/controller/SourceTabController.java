@@ -56,7 +56,7 @@ public class SourceTabController
 			try
 			{
 				Element editor = DOM.getElementById("sourceEditor");
-				String brush = "class=\"brush:" + (isJava ? "java" : "html") + "\"";
+				String brush = "class=\"brush:" + (isJava ? "java" : "xml") + "\"";
 				result = new SafeHtmlBuilder().appendEscaped(result).toSafeHtml().asString();
 				editor.setInnerHTML("<pre " + brush + ">" + result + "</pre>");
 				controller.syntaxHighlight();

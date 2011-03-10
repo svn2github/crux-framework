@@ -17,27 +17,33 @@
 
 		<c:screen useController="collapsePanelController"/>
 	
-		<b:dockPanel id="centeringPanel" width="100%" spacing="5">
-			
-			<b:cell horizontalAlignment="center" direction="north">
-				<a:collapsePanel id="collapsePanel" onBeforeExpand="collapsePanelController.onBeforeExpand" onBeforeCollapse="collapsePanelController.onBeforeCollapse" width="700" height="80" >
-					<a:title>
-						<a:text>Click the "-" icon to hide the contents</a:text>
-					</a:title>
-					<a:body>
-						<a:widget>
-							<b:dockPanel id="internalCentering" width="100%">
-								<b:cell direction="center" horizontalAlignment="center">
-									<b:image id="image" url="style/img/crux-logo.gif"/>
-								</b:cell>							
-							</b:dockPanel>
-						</a:widget>
-					</a:body>
-				</a:collapsePanel>
-			</b:cell>
+		<center>
+			<a:collapsePanel id="collapsePanel" onBeforeExpand="collapsePanelController.onBeforeExpand" onBeforeCollapse="collapsePanelController.onBeforeCollapse" width="500" height="120" >
+				<a:title>
+					<a:text>Click the (-) icon to hide the contents</a:text>
+				</a:title>
+				<a:body>
+					<a:widget>
+						<b:verticalPanel id="vPanel" spacing="10">
+							<b:label id="panelLabel" text="You can put text, HTML or widgets here."/>
+							<a:decoratedButton id="panelBtn" text="Ok" width="80"/>
+						</b:verticalPanel>
+					</a:widget>
+				</a:body>
+			</a:collapsePanel>
+		</center>		
 		
-		</b:dockPanel>
-		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The CollapsePanel widget is a kind of TitlePanel that can collapse or expand its body section. It is very useful to 
+				organize the screen and save space. Like a TitlePanel, you can put text, HTML or widgets in both the body and header sections
+				of the panel.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click the '-' icon, the contents of the panel will be hidden. Clicking the '+' icon, the contents are shown again. 
+				Looking at the example's source, you can see that we handle the collapsing and expanding events, in order to change
+				the text being shown in the title. 
+			</s:exampleInfo>
+		</s:info>
 	</body>
 </html>

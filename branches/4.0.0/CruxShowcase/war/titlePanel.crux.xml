@@ -16,50 +16,58 @@
 
 		<c:screen />
 	
-		<b:dockPanel id="centeringPanel" width="100%" spacing="5">
-			
-			<b:cell horizontalAlignment="center" direction="north">
-				<a:titlePanel id="textTitlePanel" width="700" height="80">
-					<a:title>
-						<a:text>Text Title</a:text>
-					</a:title>
-					<a:body>
-						<a:text>
-							This is a title panel with text content.
-						</a:text>
-					</a:body>
-				</a:titlePanel>
-			</b:cell>
-		
-			<b:cell horizontalAlignment="center" direction="center">
-				<a:titlePanel id="htmlTitlePanel" width="700" height="80">
-					<a:title>
-						<a:html><a href="#">HTML Title</a></a:html>
-					</a:title>
-					<a:body>
-						<a:html>
-							<h3>This is a title panel with HTML content.</h3>
-						</a:html>
-					</a:body>
-				</a:titlePanel>
-			</b:cell>
-		
-			<b:cell horizontalAlignment="center" direction="south">
-				<a:titlePanel id="widgetTitlePanel" width="700" height="80">
-					<a:title>
-						<a:widget><b:checkBox id="checkboxWidget" text="Widget Title" checked="true"/></a:widget>
-					</a:title>
-					<a:body>
-						<a:widget>
-							<b:textBox id="textBox" text="This is a title panel with widget content." width="500"/>
-						</a:widget>
-					</a:body>
-				</a:titlePanel>
-			</b:cell>
-		
-		</b:dockPanel>
-		
-		<s:sources/>
+		<center>
+			<b:dockPanel id="centeringPanel" spacing="10">
+				<b:cell direction="south">
+					<a:titlePanel id="widgetTitlePanel" width="100%" height="120">
+						<a:title>
+							<a:widget><b:checkBox id="checkboxWidget" text="You can put widgets inside the title." checked="true"/></a:widget>
+						</a:title>
+						<a:body>
+							<a:text>You can put pure text in the body.</a:text>
+						</a:body>
+					</a:titlePanel>
+				</b:cell>
+				<b:cell direction="west">
+					<a:titlePanel id="textTitlePanel" width="250" height="120">
+						<a:title>
+							<a:text>You Can Use a Textual Tile</a:text>
+						</a:title>
+						<a:body>
+							<a:html>
+								<li>and use HTML inside the body.</li>
+							</a:html>
+						</a:body>
+					</a:titlePanel>
+				</b:cell>
+				<b:cell direction="east">		
+					<a:titlePanel id="htmlTitlePanel" width="250" height="120">
+						<a:title>
+							<a:html>
+								<li><strong style="color:#4F7FA7"><u>You can use HTML in the title.</u></strong></li>
+							</a:html>
+						</a:title>
+						<a:body>
+							<a:widget>
+								<b:verticalPanel id="vPanel" spacing="10">
+									<b:label id="panelLabel" text="...and use widgets inside the body."/>
+									<a:decoratedButton id="panelBtn" text="Ok" width="80"/>
+								</b:verticalPanel>
+							</a:widget>						
+						</a:body>
+					</a:titlePanel>
+				</b:cell>
+			</b:dockPanel>
+		</center>
+	
+		<s:info sourcesController="noJavaSourcesController">
+			<s:widgetInfo>
+				The TitlePanel widget is a kind of DecoratedPanel but having two distinct sections: a title and a body. Both sections can contain whatever you want.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				we have three panels having different types of content on title and body sections. 
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

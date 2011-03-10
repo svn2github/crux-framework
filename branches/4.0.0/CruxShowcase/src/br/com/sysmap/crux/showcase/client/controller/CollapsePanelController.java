@@ -10,11 +10,11 @@ public class CollapsePanelController {
 	
 	@Expose
 	public void onBeforeExpand(){
-		Screen.get("collapsePanel", CollapsePanel.class).setTitleText("Click the \"-\" icon to hide the contents");
+		Screen.get("collapsePanel", CollapsePanel.class).setTitleText("Click the (-) icon to hide the contents");
 	}
 	
 	@Expose
 	public void onBeforeCollapse(){
-		Screen.get("collapsePanel", CollapsePanel.class).setTitleText("Click the \"+\" icon to view the contents");
+		Screen.get("collapsePanel", CollapsePanel.class).setTitleText("Click the (+) icon to view the contents");
 	}
 }

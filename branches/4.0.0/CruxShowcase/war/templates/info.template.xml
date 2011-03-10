@@ -5,7 +5,7 @@
 	xmlns:g="http://www.sysmap.com.br/crux/gwt"
 	library="showcase" useController="#{sourcesController}">
 
-	<g:horizontalPanel id="infoCenteringPanel" width="100%" style="magin-top:20px">
+	<g:horizontalPanel id="infoCenteringPanel" width="100%" style="margin-top:20px">
 		<g:cell horizontalAlignment="center">
 			<g:grid id="infoGrid" cellPadding="0" cellSpacing="0" height="150" styleName="Info-bg" width="#{width}">
 				<g:row>
@@ -24,7 +24,7 @@
 											<span class="Info-text">
 												<span><t:section name="widgetInfo"/></span>
 												<br/><br/>
-												<span>In the above example, </span>
+												<span style="margin-right:3px">In the above example,</span>
 												<span><t:section name="exampleInfo"/></span>
 											</span>
 										</g:html>			

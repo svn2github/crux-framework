@@ -17,8 +17,7 @@
 		<c:screen useController="timerController"/>
 
 		<center>
-			<b:verticalPanel id="vPanel" spacing="8" style="margin-top:30px;margin-bottom:30px;">
-				
+			<b:verticalPanel id="vPanel" spacing="8">				
 				<b:cell horizontalAlignment="center">
 					<a:decoratedPanel id="timerBorder">
 						<a:widget>
@@ -28,12 +27,10 @@
 							</a:timer>
 						</a:widget>
 					</a:decoratedPanel>
-				</b:cell>
-				
+				</b:cell>				
 				<b:cell horizontalAlignment="left">
 					<b:checkBox id="threeSecondsCheckBox" text="This checkbox will be checked after 3 seconds"/>
-				</b:cell>
-				
+				</b:cell>				
 				<b:cell horizontalAlignment="left">
 					<b:checkBox id="tenSecondsCheckBox" text="This checkbox will be checked after 10 seconds"/>
 				</b:cell>
