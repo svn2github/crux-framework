@@ -20,17 +20,36 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
 /**
- * Annotation to inform generators to instantiate automatically the field.
- * This annotation has two major proposes:
- * 1) It is used to makes the rpc mechanism painless. If an interface that extends
- * RemoteService (not annotated with @RemoteServiceRelativePath) is the type
- * for the field, the serviceEntryPoint is mapped to rpc (Crux default servlet)
- * 
- * 2)It is used to create DTOs that binds screen information and populate them automatically.
- * In that case, they can use the annotation @ScreenBind to inform the name of the widget (or element) 
- * that will provide the value for each object field. 
- * @author Thiago Bustamante
+ * This annotation can be used to instantiate automatically a controller field.
+ * It only makes any effect if used on fields of a {@link Controller} class.
+ * <p>
+ * The annotation can be used to create any field, but it is specially useful to:
+ * <p>
+ * 1) Make the rpc mechanism painless. If an interface that extends
+ * RemoteService (not annotated with {@code @}{@link RemoteServiceRelativePath}) is the type
+ * for the field, the serviceEntryPoint is mapped to {@code crux.rpc} (Crux default servlet)
+ * <p>
+ * 2) Create DTOs that bound to screen, using the annotation {@code @}{@link ScreenBind}. 
+ *<p>
+ * For example:
+ * <pre>
+ * {@code @}{@link Controller}("myController")
+ * public class MyController
+ * {
+ *    {@code @Create}
+ *    protected MyServiceAsync service;
+ *    
+ *    {@code @}{@link Expose}
+ *    public void myEventHandler()
+ *    {
+ *    	service.myMethod(new AsyncCallBackAdapter(){...});
+ *    }
+ * }
+ * </pre>
+ * @author Thiago da Rosa de Bustamante
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

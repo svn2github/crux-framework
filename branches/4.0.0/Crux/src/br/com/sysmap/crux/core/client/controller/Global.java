@@ -20,6 +20,54 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+/**
+ * This annotation can be used to give a Global scope to a controller.
+ * It only makes any effect if used on a {@link Controller} class.
+ * <p>
+ * A Global controller does not need to be imported on a screen to be used. All application screens
+ * will automatically import the controller. 
+ * <p>
+ * For example:
+ * <pre>
+ * {@code @}Global
+ * {@code @}{@link Controller}("myController")
+ * public class MyController
+ * {
+ *    {@code @}{@link Expose}
+ *    public void myEventHandler()
+ *    {
+ *    	Window.alert("event dispatched!");
+ *    }
+ *    
+ *    //Only can handle click events 
+ *    {@code @}{@link Expose}
+ *    public void myClickEventHandler({@link ClickEvent} event)
+ *    {
+ *    	Window.alert("event dispatched!");
+ *    }
+ * }
+ * </pre>
+ * <p>
+ * It can be used on a {@code .crux.xml} page, as illustrated by the following example: 
+ * <pre>
+ * {@code <html} 
+ *  xmlns="http://www.w3.org/1999/xhtml"
+ *  xmlns:c="http://www.sysmap.com.br/crux"  
+ *  xmlns:g="http://www.sysmap.com.br/crux/gwt"{@code >}
+ *     {@code <body>}
+ *        {@code <g:button} id="myButton" onClick="myController.myClickEventHandler" 
+ *            onDoubleClick="myController.myEventHandler" text="My Button" {@code ></g:button>}
+ *     {@code </body>}
+ *  {@code </html>}
+ * </pre>
+ *  
+ * NOTE: Only use this annotation when needed. Using this indiscriminately, can decrease 
+ * the performance, spending unnecessary memory on client.
+ *  
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Global {

@@ -16,11 +16,10 @@
 package br.com.sysmap.crux.core.client.controller;
 
 /**
+ * @deprecated Use {@link CrossDocument} instead.
  * @author Thiago da Rosa de Bustamante
- * @deprecated - use CrossDocument instead
  */
 @Deprecated
 public interface Invoker
 {
-
 }

@@ -20,6 +20,58 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+/**
+ * This annotation can be used to expose a controller method as an event handler method.
+ * It only makes any effect if used on methods of a {@link Controller} class.
+ * <p>
+ * Only methods annotated with this annotation can be refereed on {@code .crux.xml} page. 
+ * A method must obey the following constraints to be exposed as an event handler:  
+ * <p>
+ * 1) Be annotated with {@code @}Expose annotation.
+ * <p>
+ * 2) Have public visibility.
+ * <p>
+ * 3) Have no parameter or Have only one parameter, with type equals to the type of the event
+ * handled by the method.
+ * <p>
+ * For example:
+ * <pre>
+ * {@code @}{@link Controller}("myController")
+ * public class MyController
+ * {
+ *    {@code @}Expose
+ *    public void myEventHandler()
+ *    {
+ *    	Window.alert("event dispatched!");
+ *    }
+ *    
+ *    //Only can handle click events 
+ *    {@code @}Expose
+ *    public void myClickEventHandler({@link ClickEvent} event)
+ *    {
+ *    	Window.alert("event dispatched!");
+ *    }
+ * }
+ * </pre>
+ * <p>
+ * It can be used on a {@code .crux.xml} page, as illustrated by the following example: 
+ * <pre>
+ * {@code <html} 
+ *  xmlns="http://www.w3.org/1999/xhtml"
+ *  xmlns:c="http://www.sysmap.com.br/crux"  
+ *  xmlns:g="http://www.sysmap.com.br/crux/gwt"{@code >}
+ *     {@code <body>}
+ *        {@code <c:screen} useController="myController" {@code />}
+ *        {@code <g:button} id="myButton" onClick="myController.myClickEventHandler" 
+ *            onDoubleClick="myController.myEventHandler" text="My Button" {@code ></g:button>}
+ *     {@code </body>}
+ *  {@code </html>}
+ * </pre>
+ *  
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Expose {
