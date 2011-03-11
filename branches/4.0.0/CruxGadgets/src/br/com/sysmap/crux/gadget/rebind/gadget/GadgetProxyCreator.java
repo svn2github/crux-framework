@@ -59,7 +59,7 @@ import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -87,9 +87,9 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public GadgetProxyCreator(TreeLogger logger, GeneratorContext context)
+	public GadgetProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
-	    super(logger, context, context.getTypeOracle().findType(Gadget.class.getCanonicalName()));
+	    super(logger, context, context.getTypeOracle().findType(Gadget.class.getCanonicalName()), false);
 		try
 		{
 			Set<String> descriptorClasses = ClassScanner.searchClassesByInterface(GadgetInfo.class);

@@ -25,23 +25,23 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
-import com.google.gwt.core.ext.linker.ScriptReference;
-import com.google.gwt.core.ext.linker.StylesheetReference;
 import com.google.gwt.core.linker.CrossSiteIframeLinker;
 import com.google.gwt.dev.About;
-import com.google.gwt.util.tools.Utility;
 
 /**
  * Finalizes the module manifest file with the selection script.
  */
 public final class GadgetLinker extends CrossSiteIframeLinker
 {
-	  private static final String INSTALL_LOCATION_JS_PROPERTY = "com/google/gwt/core/ext/linker/impl/installLocationIframe.js";
-	  private static final String WAIT_FOR_BODY_LOADED_JS = "br/com/sysmap/crux/gadget/linker/waitForBodyLoaded.js";
-	  private static final String GADGET_PROCESS_METAS_JS = "br/com/sysmap/crux/gadget/linker/processMetas.js";
-	  private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "br/com/sysmap/crux/gadget/linker/computeScriptBase.js";
-	  
-	  private EmittedArtifact manifestArtifact;
+	private static final String GADGET_LINKER_TEMPLATE_JS = "br/com/sysmap/crux/gadget/linker/GadgetTemplate.js";
+	private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "br/com/sysmap/crux/gadget/linker/computeScriptBase.js";
+	private static final String GADGET_INSTALL_SCRIPT_JS = "br/com/sysmap/crux/gadget/linker/installScriptEarlyDownload.js";
+	private static final String GADGET_LOAD_EXTERNAL_STYLESHHETS_SCRIPT_JS = "br/com/sysmap/crux/gadget/linker/loadExternalStylesheets.js";
+	private static final String GADGET_PROCESS_METAS_JS = "br/com/sysmap/crux/gadget/linker/processMetas.js";
+	private static final String GADGET_WAIT_FOR_BODY_LOADED_JS = "br/com/sysmap/crux/gadget/linker/waitForBodyLoaded.js";
+	private static final String GADGET_SET_LOCALE_JS = "br/com/sysmap/crux/gadget/linker/setGadgetLocale.js";
+
+	private EmittedArtifact manifestArtifact;
 
 	/**
 	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getDescription()
@@ -98,8 +98,8 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 
 		logger = logger.branch(TreeLogger.DEBUG, "Building gadget manifest", null);
 
-		String bootstrap = "<script>" + context.optimizeJavaScript(logger, generateSelectionScript(logger, context, artifacts)) + 
-		                   "</script>";
+		String bootstrap = "<script>" + generateSelectionScript(logger, context, artifacts) + 
+		"</script>";
 
 		// Read the content
 		StringBuffer manifest = new StringBuffer();
@@ -125,118 +125,60 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	}
 
 	/**
-	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#generateScriptInjector(java.lang.String)
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#fillSelectionScriptTemplate(java.lang.StringBuffer, com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet, com.google.gwt.core.ext.linker.CompilationResult)
 	 */
 	@Override
-	protected String generateScriptInjector(String scriptUrl)
+	protected String fillSelectionScriptTemplate(StringBuffer selectionScript, TreeLogger logger, 
+			LinkerContext context, ArtifactSet artifacts, CompilationResult result) throws UnableToCompleteException
 	{
-		if (isRelativeURL(scriptUrl))
-		{
-			return "  if (!__gwt_scriptsLoaded['" + scriptUrl + "']) {\n" + 
-			       "    __gwt_scriptsLoaded['" + scriptUrl + "'] = true;\n" + 
-			       "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl(base+'" + 
-			       scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
-		}
-		else
-		{
-			return "  if (!__gwt_scriptsLoaded['" + scriptUrl + "']) {\n" + 
-			       "    __gwt_scriptsLoaded['" + scriptUrl + "'] = true;\n" + 
-			       "    document.write('<script language=\\\"javascript\\\" src=\\\"'+gadgets.io.getProxyUrl('" + 
-			       scriptUrl + "') + '\\\"></script>');\n" + "  }\n";
-		}
-	}
+		super.fillSelectionScriptTemplate(selectionScript, logger, context, artifacts, result);
 
-	/**
-	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#generateSelectionScript(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
-	 */
-	@Override
-	protected String generateSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
-	{
-		StringBuffer selectionScript = getSelectionScriptStringBuffer(logger, context);
-
-		String waitForBodyLoadedJs;
-		String installLocationJs;
-		String computeScriptBase;
-		String processMetas;
-
-		try
-		{
-			waitForBodyLoadedJs = Utility.getFileFromClassPath(WAIT_FOR_BODY_LOADED_JS);
-			installLocationJs = Utility.getFileFromClassPath(INSTALL_LOCATION_JS_PROPERTY);
-			processMetas = Utility.getFileFromClassPath(GADGET_PROCESS_METAS_JS);
-			computeScriptBase = Utility.getFileFromClassPath(GADGET_COMPUTE_SCRIPT_BASE_JS);
-		}
-		catch (IOException e)
-		{
-			logger.log(TreeLogger.ERROR, "Unable to read selection script template", e);
-			throw new UnableToCompleteException();
-		}
-
-		replaceAll(selectionScript, "__INSTALL_LOCATION__", installLocationJs);
-		replaceAll(selectionScript, "__WAIT_FOR_BODY_LOADED__", waitForBodyLoadedJs);
-		replaceAll(selectionScript, "__START_DOWNLOAD_IMMEDIATELY__", "true");
-		replaceAll(selectionScript, "__PROCESS_METAS__", processMetas);
-		replaceAll(selectionScript, "__COMPUTE_SCRIPT_BASE__", computeScriptBase);
-
-	    // Add external dependencies
-	    int startPos = selectionScript.indexOf("// __MODULE_STYLES_END__");
-	    if (startPos != -1) {
-	      for (StylesheetReference resource : artifacts.find(StylesheetReference.class)) {
-	        String text = generateStylesheetInjector(resource.getSrc());
-	        selectionScript.insert(startPos, text);
-	        startPos += text.length();
-	      }
-	    }
+	    includeJs(selectionScript, logger, getJsSetGadgetLocale(context), "__GADGET_SET_LOCALE__");
 		
-	    startPos = selectionScript.indexOf("// __MODULE_SCRIPTS_END__");
-	    if (startPos != -1) {
-	      for (ScriptReference resource : artifacts.find(ScriptReference.class)) {
-	        String text = generateScriptInjector(resource.getSrc());
-	        selectionScript.insert(startPos, text);
-	        startPos += text.length();
-	      }
-	    }
-
-		// This method needs to be called after all of the .js files have been
-		// swapped into the selectionScript since it will fill in
-		// __MODULE_NAME__
-		// and many of the .js files contain that template variable
-		selectionScript = processSelectionScriptCommon(selectionScript, logger, context);
-
-		// Add a substitution for the GWT major release number. e.g. "2.1"
+		// Add a substitution for the GWT major release number. e.g. "2.2"
 		int gwtVersions[] = About.getGwtVersionArray();
 		replaceAll(selectionScript, "__GWT_MAJOR_VERSION__", gwtVersions[0] + "." + gwtVersions[1]);
 		return selectionScript.toString();
 	}
-	
-	/**
-	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#generateStylesheetInjector(java.lang.String)
-	 */
-	@Override
-	protected String generateStylesheetInjector(String stylesheetUrl)
-	{
-		String hrefExpr = "'" + stylesheetUrl + "'";
-		if (isRelativeURL(stylesheetUrl))
-		{
-			hrefExpr = "base + " + hrefExpr;
-		}
-		hrefExpr = "gadgets.io.getProxyUrl(" + hrefExpr + ")";
 
-		return "if (!__gwt_stylesLoaded['" + stylesheetUrl + "']) {\n           " +
-		       "  var l = $doc.createElement('link');\n                          " + 
-		       "  __gwt_stylesLoaded['" + stylesheetUrl + "'] = l;\n             " + 
-		       "  l.setAttribute('rel', 'stylesheet');\n                         " + 
-		       "  l.setAttribute('href', " + hrefExpr + ");\n                    " + 
-		       "  $doc.getElementsByTagName('head')[0].appendChild(l);\n         " + 
-		       "}\n";
+	protected String getJsSetGadgetLocale(LinkerContext context)
+	{
+		return GADGET_SET_LOCALE_JS;
 	}
-    
-	/**
-	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getSelectionScriptTemplate(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext)
-	 */
+	
+	@Override
+	protected String getJsComputeScriptBase(LinkerContext context)
+	{
+		return GADGET_COMPUTE_SCRIPT_BASE_JS;
+	}
+
+	@Override
+	protected String getJsInstallScript(LinkerContext context)
+	{
+		return GADGET_INSTALL_SCRIPT_JS;
+	}
+
+	@Override
+	protected String getJsLoadExternalStylesheets(LinkerContext context)
+	{
+		return GADGET_LOAD_EXTERNAL_STYLESHHETS_SCRIPT_JS;
+	}
+
+	@Override
+	protected String getJsProcessMetas(LinkerContext context)
+	{
+		return GADGET_PROCESS_METAS_JS;
+	}
+
+	@Override
+	protected String getJsWaitForBodyLoaded(LinkerContext context)
+	{
+		return GADGET_WAIT_FOR_BODY_LOADED_JS;
+	}
+
 	@Override
 	protected String getSelectionScriptTemplate(TreeLogger logger, LinkerContext context)
 	{
-		return "br/com/sysmap/crux/gadget/linker/GadgetTemplate.js";
+		return GADGET_LINKER_TEMPLATE_JS;
 	}
 }

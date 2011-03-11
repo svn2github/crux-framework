@@ -29,6 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
+import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
@@ -46,6 +49,8 @@ public class GadgetFilter implements Filter
 	protected boolean production = true;
 	protected FilterConfig config = null;
 	
+	private DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
+
 	public void init(FilterConfig config) throws ServletException 
 	{
 		production = Environment.isProduction();
@@ -65,6 +70,16 @@ public class GadgetFilter implements Filter
 		}
 		else
 		{
+			String charset = config.getInitParameter("outputCharset");
+
+			if(charset != null)
+			{
+				CruxToHtmlTransformer.setOutputCharset(charset);
+			}
+			else
+			{
+				throw new ServletException(messages.declarativeUIFilterRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
+			}
 			String requestedScreen = getRequestedScreen(req);
 			if (requestedScreen != null)
 			{
@@ -77,7 +92,8 @@ public class GadgetFilter implements Filter
             }
             catch (Exception e)
             {
-            	logger.error(e.getMessage(), e); //TODO message
+				logger.error(e.getMessage(), e);
+				throw new ServletException(e.getMessage(),e);
             }
 		}
 	}

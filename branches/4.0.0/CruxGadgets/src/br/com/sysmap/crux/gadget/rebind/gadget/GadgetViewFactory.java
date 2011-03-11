@@ -15,8 +15,6 @@
  */
 package br.com.sysmap.crux.gadget.rebind.gadget;
 
-import org.json.JSONObject;
-
 import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
@@ -30,8 +28,8 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFacto
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildAttributes;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
+import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import br.com.sysmap.crux.gadget.client.widget.CruxGadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
@@ -53,19 +51,17 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
 	@Override
-	public String instantiateWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
+	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String varName = createVariableName("widget");
 		String className = CruxGadgetView.class.getCanonicalName();
-		String id = metaElem.optString("id");
+		String id = context.readWidgetProperty("id");
         if(StringUtils.isEmpty(id))
         {
         	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
         }
-		out.println("final "+className + " " + varName+" = new "+className+"("+EscapeUtils.quote(id)+");");
-		createChildren(out, varName, metaElem);
-		CruxGadgetView.getGadget();//initializes the gadget
-		return varName;
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
+		createChildren(out, context);
+		out.println(CruxGadgetView.class.getCanonicalName()+".getGadget();");//initializes the gadget
 	}
 	
 	@Override
@@ -79,6 +75,6 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	{
 	}
 	
-	@TagChildAttributes(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
+	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=AnyTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 }

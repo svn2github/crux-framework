@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import br.com.sysmap.crux.core.rebind.rpc.CruxProxyCreator;
 
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -58,7 +59,7 @@ public class CruxGadgetProxyCreator extends CruxProxyCreator
 	 * @see com.google.gwt.user.rebind.rpc.ProxyCreator#create(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.GeneratorContext)
 	 */
 	@Override
-	public String create(TreeLogger logger, GeneratorContext context)
+	public String create(TreeLogger logger, GeneratorContextExt context)
 			throws UnableToCompleteException
 	{
 		this.logger = logger;

@@ -2,6 +2,11 @@
  * gwt:property, gwt:onPropertyErrorFn, gwt:onLoadErrorFn
  */
 function processMetas() {
+  var metaProps = {}
+  var propertyErrorFunc;
+  var onLoadErrorFunc;
+
+
   var meta;
   var prefs = new $wnd.gadgets.Prefs();
 
@@ -38,5 +43,13 @@ function processMetas() {
       }
     }
   }
+  
+  // Set some of the variables in the main script
+  __gwt_getMetaProperty = function(name) {
+    var value = metaProps[name];
+    return (value == null) ? null : value;
+  }
+  __propertyErrorFunction = propertyErrorFunc;
+  __MODULE_FUNC__.__errFn = onLoadErrorFunc;  
 }
 

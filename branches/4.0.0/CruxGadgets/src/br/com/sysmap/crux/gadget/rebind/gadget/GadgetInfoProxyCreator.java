@@ -27,7 +27,7 @@ import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.gadgets.client.UserPreferences;
@@ -46,9 +46,9 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public GadgetInfoProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public GadgetInfoProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
-	    super(logger, context, baseIntf);
+	    super(logger, context, baseIntf, false);
     }
 	
 

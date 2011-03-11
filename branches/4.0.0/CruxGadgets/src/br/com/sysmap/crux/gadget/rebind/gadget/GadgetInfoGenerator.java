@@ -18,7 +18,7 @@ package br.com.sysmap.crux.gadget.rebind.gadget;
 import br.com.sysmap.crux.core.rebind.AbstractGenerator;
 import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -30,7 +30,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 public class GadgetInfoGenerator extends AbstractGenerator
 {
 	@Override
-    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf) throws UnableToCompleteException
+    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf) throws UnableToCompleteException
     {
 	    return new GadgetInfoProxyCreator(logger, ctx, baseIntf);
     }
