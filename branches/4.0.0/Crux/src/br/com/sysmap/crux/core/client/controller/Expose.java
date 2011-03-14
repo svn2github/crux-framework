@@ -32,7 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
  * <p>
  * 2) Have public visibility.
  * <p>
- * 3) Have no parameter or Have only one parameter, with type equals to the type of the event
+ * 3) Have no parameter or have only one parameter, with type equals to the type of the event
  * handled by the method.
  * <p>
  * For example:
