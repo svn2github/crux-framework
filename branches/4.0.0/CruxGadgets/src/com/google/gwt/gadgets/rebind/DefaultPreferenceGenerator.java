@@ -15,14 +15,16 @@
  */
 package com.google.gwt.gadgets.rebind;
 
+import java.lang.reflect.Method;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.user.rebind.SourceWriter;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Handles Preference instantiation for the built-in types of Preferences.
@@ -30,7 +32,7 @@ import org.w3c.dom.Element;
 public class DefaultPreferenceGenerator implements PreferenceGenerator {
 
   public void configurePreferenceElement(TreeLogger logger, Document d,
-      Element userPref, JClassType preferenceType, JMethod m)
+      Element userPref, Class<?> preferenceType, Method m)
       throws UnableToCompleteException {
     // No additional configuration is necessary
   }

@@ -24,15 +24,13 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import br.com.sysmap.crux.gadget.client.meta.LanguageDirection;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.GadgetLocale;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UseLongManifestName;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UserPreferences;
+import br.com.sysmap.crux.gadget.client.meta.LanguageDirection;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.gadgets.client.impl.PreferenceGeneratorName;
 
 
@@ -42,14 +40,14 @@ import com.google.gwt.gadgets.client.impl.PreferenceGeneratorName;
  */
 public class GadgetUtils
 {
-	public static boolean useLongManifestName(TreeLogger logger, TypeOracle typeOracle, JClassType extendsGadget)
+	public static boolean useLongManifestName(TreeLogger logger, Class<?> extendsGadget)
 	{
 		UseLongManifestName annotation = extendsGadget.getAnnotation(UseLongManifestName.class);
 		if (annotation == null)
 		{
 			logger.log(TreeLogger.WARN, "Gadget class " + extendsGadget.getName() + " is missing @UseLongManifestName annotation.  " + 
 					"Using short names will become the default in the future.");
-			return true;
+			return false;
 		}
 		return annotation.value();
 	}
@@ -93,6 +91,13 @@ public class GadgetUtils
 		}
 	}
 
+	/**
+	 * @param logger
+	 * @param d
+	 * @param parent
+	 * @param locales
+	 * @throws UnableToCompleteException
+	 */
 	public static void writeLocalesToElement(TreeLogger logger, Document d, Element parent, GadgetLocale[] locales) throws UnableToCompleteException
 	{
 		for (GadgetLocale locale : locales)
@@ -117,17 +122,17 @@ public class GadgetUtils
 	/**
 	 * Returns the subtype of UserPreferences accepted by a Gadget.
 	 */
-	public static JClassType getUserPrefsType(TreeLogger logger, TypeOracle typeOracle, JClassType extendsGadget) throws UnableToCompleteException
+	public static Class<?> getUserPrefsType(TreeLogger logger, Class<?> extendsGadget) throws UnableToCompleteException
 	{
 		UserPreferences annotation = extendsGadget.getAnnotation(UserPreferences.class);
 		if (annotation == null)
 		{
 			logger.log(TreeLogger.INFO, "Gadget class " + extendsGadget.getName() + " is missing @UserPreferences annotation.  " + 
 					"Using default value.");
-			return typeOracle.findType(com.google.gwt.gadgets.client.UserPreferences.class.getCanonicalName());
+			return com.google.gwt.gadgets.client.UserPreferences.class;
 		}
 		Class<? extends com.google.gwt.gadgets.client.UserPreferences> value = annotation.value();
-		return typeOracle.findType(value.getCanonicalName());
+		return value;
 	}
 	
 	
@@ -135,14 +140,14 @@ public class GadgetUtils
 	 * Return an instance of a PreferenceGenerator that can be used for a
 	 * subtype of Preference.
 	 */
-	public static PreferenceGenerator getPreferenceGenerator(TreeLogger logger, JClassType extendsPreferenceType) throws UnableToCompleteException
+	public static PreferenceGenerator getPreferenceGenerator(TreeLogger logger, Class<?> extendsPreferenceType) throws UnableToCompleteException
 	{
 
 		PreferenceGeneratorName generator = extendsPreferenceType.getAnnotation(PreferenceGeneratorName.class);
 
 		if (generator == null)
 		{
-			logger.log(TreeLogger.ERROR, "No PreferenceGenerator defined for type " + extendsPreferenceType.getQualifiedSourceName(), null);
+			logger.log(TreeLogger.ERROR, "No PreferenceGenerator defined for type " + extendsPreferenceType.getCanonicalName(), null);
 			throw new UnableToCompleteException();
 		}
 
@@ -164,22 +169,4 @@ public class GadgetUtils
 			throw new UnableToCompleteException();
 		}
 	}
-
-	/**
-	 * @param logger
-	 * @param typeOracle
-	 * @param extendsGadget
-	 * @return
-	 * @throws UnableToCompleteException
-	 *
-	static boolean allowHtmlQuirksMode(TreeLogger logger, TypeOracle typeOracle, JClassType extendsGadget) throws UnableToCompleteException
-	{
-		AllowHtmlQuirksMode annotation = extendsGadget.getAnnotation(AllowHtmlQuirksMode.class);
-		if (annotation == null)
-		{
-			logger.log(TreeLogger.INFO, "Gadget class " + extendsGadget.getName() + " is missing @AllowHtmlQuirksMode. " + "Using standards mode will become the default in the future.");
-			return true;
-		}
-		return annotation.value();
-	}*/
 }

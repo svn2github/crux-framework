@@ -15,14 +15,18 @@
  */
 package com.google.gwt.gadgets.rebind;
 
+import java.lang.reflect.Method;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import br.com.sysmap.crux.gadget.rebind.gadget.GadgetGenerator;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.user.rebind.SourceWriter;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Pluggable support for new Preference types.
@@ -33,7 +37,7 @@ public interface PreferenceGenerator {
    * element within the Gadget manifest.
    */
   void configurePreferenceElement(TreeLogger logger, Document d,
-      Element userPref, JClassType preferenceType, JMethod m)
+      Element userPref, Class<?> preferenceType, Method m)
       throws UnableToCompleteException;
 
   /**

@@ -30,7 +30,7 @@ import com.google.gwt.gadgets.client.rpc.RpcFeature;
 
 
 /**
- * Provides access to gadgets specif features
+ * Provides access to gadgets specification features
  * @author Thiago da Rosa de Bustamante
  */
 public interface Gadget 

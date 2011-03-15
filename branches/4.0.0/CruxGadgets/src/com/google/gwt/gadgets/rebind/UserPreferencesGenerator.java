@@ -34,111 +34,92 @@ import com.google.gwt.user.rebind.SourceWriter;
  * Provides a binding from a UserPreferences subtype to the Gadget container's
  * preferences API.
  */
-public class UserPreferencesGenerator extends Generator {
+public class UserPreferencesGenerator extends Generator
+{
 
-  @Override
-  public String generate(TreeLogger logger, GeneratorContext context,
-      String typeName) throws UnableToCompleteException {
+	@Override
+	public String generate(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException
+	{
 
-    // The TypeOracle knows about all types in the type system
-    TypeOracle typeOracle = context.getTypeOracle();
+		// The TypeOracle knows about all types in the type system
+		TypeOracle typeOracle = context.getTypeOracle();
 
-    // Get a reference to the type that the generator should implement
-    JClassType sourceType = typeOracle.findType(typeName);
+		// Get a reference to the type that the generator should implement
+		JClassType sourceType = typeOracle.findType(typeName);
 
-    // Ensure that the requested type exists
-    if (sourceType == null) {
-      logger.log(TreeLogger.ERROR, "Could not find requested typeName", null);
-      throw new UnableToCompleteException();
-    }
+		// Ensure that the requested type exists
+		if (sourceType == null)
+		{
+			logger.log(TreeLogger.ERROR, "Could not find requested typeName", null);
+			throw new UnableToCompleteException();
+		}
 
-    // Make sure the UserPreferences type is correctly defined
-    validateType(logger, sourceType);
+		// Make sure the UserPreferences type is correctly defined
+		validateType(logger, sourceType);
 
-    // Pick a name for the generated class to not conflict.
-    String generatedSimpleSourceName = sourceType.getSimpleSourceName()
-        + "UserPreferencesImpl";
+		// Pick a name for the generated class to not conflict.
+		String generatedSimpleSourceName = sourceType.getSimpleSourceName() + "UserPreferencesImpl";
 
-    // Begin writing the generated source.
-    ClassSourceFileComposerFactory f = new ClassSourceFileComposerFactory(
-        sourceType.getPackage().getName(), generatedSimpleSourceName);
-    f.addImport(GWT.class.getName());
-    f.addImport(PreferencesUtil.class.getName());
-    f.addImplementedInterface(typeName);
+		// Begin writing the generated source.
+		ClassSourceFileComposerFactory f = new ClassSourceFileComposerFactory(sourceType.getPackage().getName(), generatedSimpleSourceName);
+		f.addImport(GWT.class.getName());
+		f.addImport(PreferencesUtil.class.getName());
+		f.addImplementedInterface(typeName);
 
-    // All source gets written through this Writer
-    PrintWriter out = context.tryCreate(logger,
-        sourceType.getPackage().getName(), generatedSimpleSourceName);
+		// All source gets written through this Writer
+		PrintWriter out = context.tryCreate(logger, sourceType.getPackage().getName(), generatedSimpleSourceName);
 
-    // If an implementation already exists, we don't need to do any work
-    if (out != null) {
-      JClassType preferenceType = typeOracle.findType(
-          Preference.class.getName().replace('$', '.'));
-      assert preferenceType != null;
+		// If an implementation already exists, we don't need to do any work
+		if (out != null)
+		{
+			JClassType preferenceType = typeOracle.findType(Preference.class.getName().replace('$', '.'));
+			assert preferenceType != null;
 
-      // We really use a SourceWriter since it's convenient
-      SourceWriter sw = f.createSourceWriter(context, out);
+			// We really use a SourceWriter since it's convenient
+			SourceWriter sw = f.createSourceWriter(context, out);
 
-      for (JMethod m : sourceType.getOverridableMethods()) {
-        JClassType extendsPreferenceType = m.getReturnType().isClassOrInterface();
-        if (extendsPreferenceType == null) {
-          logger.log(TreeLogger.ERROR, "Return type of " + m.getName()
-              + " is not a class or interface (must be assignable to "
-              + preferenceType.getName() + ").", null);
-          throw new UnableToCompleteException();
-        }
+			for (JMethod m : sourceType.getOverridableMethods())
+			{
+				JClassType extendsPreferenceType = m.getReturnType().isClassOrInterface();
+				if (extendsPreferenceType == null)
+				{
+					logger.log(TreeLogger.ERROR, "Return type of " + m.getName() + " is not a class or interface (must be assignable to " + preferenceType.getName() + ").", null);
+					throw new UnableToCompleteException();
+				}
 
-        if (!preferenceType.isAssignableFrom(extendsPreferenceType)) {
-          logger.log(TreeLogger.ERROR, "Cannot assign "
-              + extendsPreferenceType.getQualifiedSourceName() + " to "
-              + preferenceType.getQualifiedSourceName(), null);
-          throw new UnableToCompleteException();
-        }
+				if (!preferenceType.isAssignableFrom(extendsPreferenceType))
+				{
+					logger.log(TreeLogger.ERROR, "Cannot assign " + extendsPreferenceType.getQualifiedSourceName() + " to " + preferenceType.getQualifiedSourceName(), null);
+					throw new UnableToCompleteException();
+				}
 
-        // private final FooProperty __propName = new FooProperty() {...}
-        sw.println("private final "
-            + extendsPreferenceType.getParameterizedQualifiedSourceName()
-            + " __" + m.getName() + " = ");
-        sw.indent();
-        writeInstantiation(logger, sw, extendsPreferenceType, m);
-        sw.println(";");
-        sw.outdent();
+				// private final FooProperty __propName = new FooProperty()
+				// {...}
+				sw.println("private final " + extendsPreferenceType.getParameterizedQualifiedSourceName() + " __" + m.getName() + " = new "+
+						extendsPreferenceType.getQualifiedSourceName()+"();");
 
-        // public FooProperty property() { return __property; }
-        sw.print("public ");
-        sw.print(m.getReadableDeclaration(true, true, true, true, true));
-        sw.println("{");
-        sw.indent();
-        sw.println("return __" + m.getName() + ";");
-        sw.outdent();
-        sw.println("}");
-      }
+				// public FooProperty property() { return __property; }
+				sw.print("public ");
+				sw.print(m.getReadableDeclaration(true, true, true, true, true));
+				sw.println("{");
+				sw.indent();
+				sw.println("return __" + m.getName() + ";");
+				sw.outdent();
+				sw.println("}");
+			}
 
-      sw.commit(logger);
-    }
+			sw.commit(logger);
+		}
 
-    return f.getCreatedClassName();
-  }
+		return f.getCreatedClassName();
+	}
 
-  protected void validateType(TreeLogger logger, JClassType sourceType)
-      throws UnableToCompleteException {
-    if (sourceType.isInterface() == null) {
-      logger.log(TreeLogger.ERROR, "UserPreferences type must be interfaces",
-          null);
-      throw new UnableToCompleteException();
-    }
-  }
-
-  /**
-   * Write an instantiation expression for a given Preference subtype.
-   */
-  protected void writeInstantiation(TreeLogger logger, SourceWriter sw,
-      JClassType extendsPreferenceType, JMethod prefMethod)
-      throws UnableToCompleteException {
-
-    PreferenceGenerator prefGenerator = GadgetUtils.getPreferenceGenerator(
-        logger, extendsPreferenceType);
-    prefGenerator.writeInstantiation(logger, sw, extendsPreferenceType,
-        prefMethod);
-  }
+	protected void validateType(TreeLogger logger, JClassType sourceType) throws UnableToCompleteException
+	{
+		if (sourceType.isInterface() == null)
+		{
+			logger.log(TreeLogger.ERROR, "UserPreferences type must be interfaces", null);
+			throw new UnableToCompleteException();
+		}
+	}
 }

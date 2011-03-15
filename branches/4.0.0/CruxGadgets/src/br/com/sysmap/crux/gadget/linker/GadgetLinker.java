@@ -15,10 +15,6 @@
  */
 package br.com.sysmap.crux.gadget.linker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -41,7 +37,7 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	private static final String GADGET_WAIT_FOR_BODY_LOADED_JS = "br/com/sysmap/crux/gadget/linker/waitForBodyLoaded.js";
 	private static final String GADGET_SET_LOCALE_JS = "br/com/sysmap/crux/gadget/linker/setGadgetLocale.js";
 
-	private EmittedArtifact manifestArtifact;
+	private ArtifactSet toLink;
 
 	/**
 	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getDescription()
@@ -52,15 +48,16 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 		return "Crux Gadget";
 	}
 
+	
 	/**
-	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#link(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
+	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#link(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet, boolean)
 	 */
 	@Override
-	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, boolean onePermutation) throws UnableToCompleteException
 	{
-		ArtifactSet toLink = new ArtifactSet(artifacts);
+		toLink = new ArtifactSet(artifacts);
 
-		// Mask the stub manifest created by the generator
+/*		// Mask the stub manifest created by the generator
 		for (EmittedArtifact res : toLink.find(EmittedArtifact.class))
 		{
 			if (res.getPartialPath().endsWith(".gadget.xml"))
@@ -76,7 +73,45 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 			if (artifacts.find(CompilationResult.class).isEmpty())
 			{
 				// Maybe hosted mode or junit, defer to XSLinker.
-				return new CrossSiteIframeLinker().link(logger, context, toLink);
+				return new CrossSiteIframeLinker().link(logger, context, toLink, onePermutation);
+			}
+			else
+			{
+				// When compiling for web mode, enforce that the manifest is
+				// present.
+				logger.log(TreeLogger.ERROR, "No gadget manifest found in ArtifactSet.");
+				throw new UnableToCompleteException();
+			}
+		}*/
+		ArtifactSet result = super.link(logger, context, toLink, onePermutation);
+		return result;
+	}
+
+	/**
+	 * @see com.google.gwt.core.ext.Linker#relink(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
+	 */
+	@Override
+	public ArtifactSet relink(TreeLogger logger, LinkerContext context, ArtifactSet newArtifacts) throws UnableToCompleteException
+	{
+		/*ArtifactSet toReLink = new ArtifactSet(newArtifacts);
+
+		// Mask the stub manifest created by the generator
+		for (EmittedArtifact res : toReLink.find(EmittedArtifact.class))
+		{
+			if (res.getPartialPath().endsWith(".gadget.xml"))
+			{
+				manifestArtifact = res;
+				toReLink.remove(res);
+				break;
+			}
+		}
+
+		if (manifestArtifact == null)
+		{
+			if (newArtifacts.find(CompilationResult.class).isEmpty())
+			{
+				// Maybe hosted mode or junit, defer to XSLinker.
+				return new CrossSiteIframeLinker().relink(logger, context, toReLink);
 			}
 			else
 			{
@@ -86,9 +121,18 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 				throw new UnableToCompleteException();
 			}
 		}
-		return super.link(logger, context, toLink);
+*/
+		permutationsUtil.setupPermutationsMap(toLink);
+		ArtifactSet toReturn = new ArtifactSet(toLink);
+		EmittedArtifact art = emitSelectionScript(logger, context, toLink);
+		if (art != null) {
+			toReturn.add(art);
+		}
+		maybeOutputPropertyMap(logger, context, toReturn);
+		maybeAddHostedModeFile(logger, context, toReturn, null);
+		return toReturn;
 	}
-
+	
 	/**
 	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#emitSelectionScript(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
 	 */
@@ -101,27 +145,11 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 		String bootstrap = "<script>" + generateSelectionScript(logger, context, artifacts) + 
 		"</script>";
 
-		// Read the content
-		StringBuffer manifest = new StringBuffer();
-
-		try
-		{
-			BufferedReader in = new BufferedReader(new InputStreamReader(manifestArtifact.getContents(logger)));
-			for (String line = in.readLine(); line != null; line = in.readLine())
-			{
-				manifest.append(line).append("\n");
-			}
-			in.close();
-		}
-		catch (IOException e)
-		{
-			logger.log(TreeLogger.ERROR, "Unable to read manifest stub", e);
-			throw new UnableToCompleteException();
-		}
-
+		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, context.getModuleName());
+		StringBuffer manifest = new StringBuffer(gadgetManifestGenerator.generateGadgetManifestFile());
 		replaceAll(manifest, "__BOOTSTRAP__", bootstrap);
 
-		return emitString(logger, manifest.toString(), manifestArtifact.getPartialPath());
+		return emitString(logger, manifest.toString(), gadgetManifestGenerator.getManifestName());
 	}
 
 	/**
