@@ -15,6 +15,8 @@
  */
 package br.com.sysmap.crux.core.client.controller;
 
+import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
+
 /**
  * @deprecated Use {@link CrossDocument} instead.
  * @author Thiago da Rosa de Bustamante

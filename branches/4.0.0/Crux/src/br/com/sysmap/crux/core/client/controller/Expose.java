@@ -69,6 +69,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
  *  {@code </html>}
  * </pre>
  *  
+ * @see Controller  
  * @author Thiago da Rosa de Bustamante
  *
  */

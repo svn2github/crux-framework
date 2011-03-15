@@ -23,12 +23,34 @@ import java.lang.annotation.Target;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * This annotation is used to link the import of a {@link Controller} class to the presence 
+ * of a particular type of widget in the {@code .crux.xml} page.
+ * <p>
+ * If a {@link Controller} class is annotated with {@code @}WidgetController annotation, it is 
+ * automatically imported by screen if the target widget is present in the page. 
+ * <p>
+ * For example:
+ * <pre>
+ * {@code @}{@link Controller}("myController")
+ * {@code @}WidgetController({MyWidget.class, MyOtherWidget.class })
+ * public class MyController
+ * {
+ * }
+ * </pre>
+ * <p>
+ * It is useful for widget developers that wants to ensure that a specific controller be present
+ * to handle something needed by their widgets, when they are used.
+ *     
+ * @see Controller  
  * @author Thiago da Rosa de Bustamante
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface WidgetController
 {
+	/**
+	 * The list of widget classes that makes the annotated controller automatically imported, 
+	 * if present in screen. 
+	 */
 	Class<? extends Widget>[] value();
 }

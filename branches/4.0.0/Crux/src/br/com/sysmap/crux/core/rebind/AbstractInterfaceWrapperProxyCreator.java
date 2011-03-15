@@ -44,6 +44,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	private static final String PROXY_SUFFIX = "_Impl";
 	protected JClassType baseIntf;
 	private boolean cacheable;
+	private boolean cacheableVersionFound;
 
 	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)
     {
@@ -59,6 +60,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	    {
 	    	if (findCacheableImplementationAndMarkForReuseIfAvailable())
 	    	{
+	    		this.cacheableVersionFound = true;
 	    		return getProxyQualifiedName();
 	    	}
 	    }
@@ -249,5 +251,10 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	protected boolean isCacheable()
 	{
 		return cacheable;
+	}
+	
+	protected boolean cacheableVersionFound()
+	{
+		return cacheableVersionFound;
 	}
 }

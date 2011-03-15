@@ -91,7 +91,8 @@ import br.com.sysmap.crux.core.client.errors.ValidationErrorHandler;
  *    }
  * }
  * </pre>
- * @see Expose  
+ * @see Expose
+ * @see Controller  
  * @author Thiago da Rosa de Bustamante
  */
 @Retention(RetentionPolicy.RUNTIME)

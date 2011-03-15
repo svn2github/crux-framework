@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
+
 /**
  * @deprecated Use {@link CrossDocument} instead.
  * @author Thiago da Rosa de Bustamante

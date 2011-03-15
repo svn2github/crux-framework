@@ -65,6 +65,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
  * NOTE: Only use this annotation when needed. Using this indiscriminately, can decrease 
  * the performance, spending unnecessary memory on client.
  *  
+ * @see Controller  
  * @author Thiago da Rosa de Bustamante
  *
  */

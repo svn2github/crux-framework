@@ -57,6 +57,8 @@ import java.lang.annotation.Target;
  * (through the {@code <c:screen>} tag) and the method {@code myEventHandler} of this controller
  * is associated with click events of the widget {@code myButton}.
  * 
+ * @see Expose  
+ * @see Create  
  * @author Thiago da Rosa de Bustamante
  *
  */

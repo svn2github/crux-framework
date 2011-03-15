@@ -49,6 +49,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  *    }
  * }
  * </pre>
+ * @see Controller  
  * @author Thiago da Rosa de Bustamante
  *
  */
