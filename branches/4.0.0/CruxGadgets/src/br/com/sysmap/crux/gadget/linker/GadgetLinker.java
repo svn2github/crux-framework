@@ -15,12 +15,6 @@
  */
 package br.com.sysmap.crux.gadget.linker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import br.com.sysmap.crux.core.server.Environment;
-
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -43,7 +37,6 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	private static final String GADGET_WAIT_FOR_BODY_LOADED_JS = "br/com/sysmap/crux/gadget/linker/waitForBodyLoaded.js";
 	private static final String GADGET_SET_LOCALE_JS = "br/com/sysmap/crux/gadget/linker/setGadgetLocale.js";
 
-	private EmittedArtifact manifestArtifact;
 	private ArtifactSet toLink;
 
 	/**
@@ -64,27 +57,6 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	{
 		toLink = new ArtifactSet(artifacts);
 
-		// Mask the stub manifest created by the generator
-		for (EmittedArtifact res : toLink.find(EmittedArtifact.class))
-		{
-			if (res.getPartialPath().endsWith(".gadget.xml"))
-			{
-				manifestArtifact = res;
-				toLink.remove(res);
-				break;
-			}
-		}
-
-		if (manifestArtifact == null)
-		{
-			if (!artifacts.find(CompilationResult.class).isEmpty())
-			{
-				// When compiling for web mode, enforce that the manifest is
-				// present.
-				logger.log(TreeLogger.ERROR, "No gadget manifest found in ArtifactSet.");
-				throw new UnableToCompleteException();
-			}
-		}
 		ArtifactSet result = super.link(logger, context, toLink, onePermutation);
 		return result;
 	}
@@ -95,35 +67,6 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	@Override
 	public ArtifactSet relink(TreeLogger logger, LinkerContext context, ArtifactSet newArtifacts) throws UnableToCompleteException
 	{
-		/*ArtifactSet toReLink = new ArtifactSet(newArtifacts);
-
-		// Mask the stub manifest created by the generator
-		for (EmittedArtifact res : toReLink.find(EmittedArtifact.class))
-		{
-			if (res.getPartialPath().endsWith(".gadget.xml"))
-			{
-				manifestArtifact = res;
-				toReLink.remove(res);
-				break;
-			}
-		}
-
-		if (manifestArtifact == null)
-		{
-			if (newArtifacts.find(CompilationResult.class).isEmpty())
-			{
-				// Maybe hosted mode or junit, defer to XSLinker.
-				return new CrossSiteIframeLinker().relink(logger, context, toReLink);
-			}
-			else
-			{
-				// When compiling for web mode, enforce that the manifest is
-				// present.
-				logger.log(TreeLogger.ERROR, "No gadget manifest found in ArtifactSet.");
-				throw new UnableToCompleteException();
-			}
-		}
-*/
 		permutationsUtil.setupPermutationsMap(toLink);
 		ArtifactSet toReturn = new ArtifactSet(toLink);
 		EmittedArtifact art = emitSelectionScript(logger, context, toLink);
@@ -147,32 +90,10 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 		String bootstrap = "<script>" + generateSelectionScript(logger, context, artifacts) + 
 		"</script>";
 		StringBuffer manifest = new StringBuffer();
-		String manifestName = null;
 		
-		if (!Environment.isProduction())
-		{
-			GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, context.getModuleName());
-			manifest.append(gadgetManifestGenerator.generateGadgetManifestFile());
-			manifestName = gadgetManifestGenerator.getManifestName();
-		}
-		else
-		{
-			try
-			{
-				manifestName = manifestArtifact.getPartialPath();
-				BufferedReader in = new BufferedReader(new InputStreamReader(manifestArtifact.getContents(logger)));
-				for (String line = in.readLine(); line != null; line = in.readLine())
-				{
-					manifest.append(line).append("\n");
-				}
-				in.close();
-			}
-			catch (IOException e)
-			{
-				logger.log(TreeLogger.ERROR, "Unable to read manifest stub", e);
-				throw new UnableToCompleteException();
-			}			
-		}
+		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, context.getModuleName());
+		manifest.append(gadgetManifestGenerator.generateGadgetManifestFile());
+		String manifestName = gadgetManifestGenerator.getManifestName();
 		replaceAll(manifest, "__BOOTSTRAP__", bootstrap);
 
 		return emitString(logger, manifest.toString(), manifestName);

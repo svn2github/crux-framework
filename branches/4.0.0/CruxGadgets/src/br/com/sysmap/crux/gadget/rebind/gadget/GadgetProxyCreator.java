@@ -15,16 +15,12 @@
  */
 package br.com.sysmap.crux.gadget.rebind.gadget;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.client.Crux;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.gadget.client.Gadget;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.Feature;
@@ -60,16 +56,6 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    	try
 	    	{
 	    		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, getCurrentScreen().getModule());
-
-	    		if (Environment.isProduction())
-	    		{
-	    			OutputStream manifestOut = context.tryCreateResource(logger, gadgetManifestGenerator.getManifestName());
-	    			if (manifestOut != null)
-	    			{
-	    				gadgetManifestGenerator.generateGadgetManifest(new PrintWriter(new OutputStreamWriter(manifestOut)));
-	    				context.commitResource(logger, manifestOut);
-	    			}
-	    		}
 	    		this.moduleMetaClass = gadgetManifestGenerator.getModuleMetaClass();
 	    	}
 	    	catch (Exception e)
