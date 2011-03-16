@@ -61,7 +61,7 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
         }
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
 		createChildren(out, context);
-		out.println(CruxGadgetView.class.getCanonicalName()+".getGadget();");//initializes the gadget
+//		out.println(CruxGadgetView.class.getCanonicalName()+".getGadget();");//initializes the gadget
 	}
 	
 	@Override

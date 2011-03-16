@@ -22,10 +22,15 @@ import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
 import com.google.gwt.core.linker.CrossSiteIframeLinker;
-import com.google.gwt.dev.About;
 
 /**
- * Finalizes the module manifest file with the selection script.
+ * A Gadget does not use the {@code .nocache.js} file for the bootstrap. All bootstrap code is inserted
+ * inside the gadget manifest file (the {@code .gadget.xml} file).
+ * <p>
+ * The linker also needs to change some script templates to integrate the application with the gadget container.
+ * All requests for resources must be piped through the gadget proxy (using {@code gadgets.io.getProxyUrl()} 
+ * method). 
+ * @author Thiago da Rosa de Bustamante
  */
 public final class GadgetLinker extends CrossSiteIframeLinker
 {
@@ -50,6 +55,8 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 
 	
 	/**
+	 * We need to save the original artifactSet received here to be able to re-emit the selection 
+	 * script when {@link #relink(TreeLogger, LinkerContext, ArtifactSet)} method is called.
 	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#link(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet, boolean)
 	 */
 	@Override
@@ -62,6 +69,10 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	}
 
 	/**
+	 * We must re-emit the selection script here, once the script is placed on the gadget manifest file.
+	 * <p>
+	 * It is necessary because the HTML code for the page is also placed on this same file. If we do not
+	 * re-generate the manifest file, hot deployment would not work for {@code .crux.xml} files.
 	 * @see com.google.gwt.core.ext.Linker#relink(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
 	 */
 	@Override
@@ -79,6 +90,7 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	}
 	
 	/**
+	 * This method changes the gwt default behavior to emit the selection script into the manifest file.
 	 * @see com.google.gwt.core.ext.linker.impl.SelectionScriptLinker#emitSelectionScript(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet)
 	 */
 	@Override
@@ -100,6 +112,8 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	}
 
 	/**
+	 * Locale handling is different for gadgets, so we need to insert a specific script
+	 * for it. 
 	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#fillSelectionScriptTemplate(java.lang.StringBuffer, com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext, com.google.gwt.core.ext.linker.ArtifactSet, com.google.gwt.core.ext.linker.CompilationResult)
 	 */
 	@Override
@@ -108,49 +122,72 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	{
 		super.fillSelectionScriptTemplate(selectionScript, logger, context, artifacts, result);
 
-	    includeJs(selectionScript, logger, getJsSetGadgetLocale(context), "__GADGET_SET_LOCALE__");
-		
-		// Add a substitution for the GWT major release number. e.g. "2.2"
-		int gwtVersions[] = About.getGwtVersionArray();
-		replaceAll(selectionScript, "__GWT_MAJOR_VERSION__", gwtVersions[0] + "." + gwtVersions[1]);
+		/*   
+		 * Gadget iframe URLs are generated with the locale in the URL as a
+		 * lang/country parameter pair (e.g. lang=en&country=US) in lieu of the
+		 * single locale parameter.
+		 * ($wnd.__gwt_Locale is read by the property provider in I18N.gwt.xml)
+		 */
+		includeJs(selectionScript, logger, getJsSetGadgetLocale(context), "__GADGET_SET_LOCALE__");
 		return selectionScript.toString();
 	}
 
+	/**
+	 * Gets the setLocale template for gadgets
+	 */
 	protected String getJsSetGadgetLocale(LinkerContext context)
 	{
 		return GADGET_SET_LOCALE_JS;
 	}
 	
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsComputeScriptBase(com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getJsComputeScriptBase(LinkerContext context)
 	{
 		return GADGET_COMPUTE_SCRIPT_BASE_JS;
 	}
 
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsInstallScript(com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getJsInstallScript(LinkerContext context)
 	{
 		return GADGET_INSTALL_SCRIPT_JS;
 	}
 
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsLoadExternalStylesheets(com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getJsLoadExternalStylesheets(LinkerContext context)
 	{
 		return GADGET_LOAD_EXTERNAL_STYLESHHETS_SCRIPT_JS;
 	}
 
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsProcessMetas(com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getJsProcessMetas(LinkerContext context)
 	{
 		return GADGET_PROCESS_METAS_JS;
 	}
 
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsWaitForBodyLoaded(com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getJsWaitForBodyLoaded(LinkerContext context)
 	{
 		return GADGET_WAIT_FOR_BODY_LOADED_JS;
 	}
 
+	/**
+	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getSelectionScriptTemplate(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.LinkerContext)
+	 */
 	@Override
 	protected String getSelectionScriptTemplate(TreeLogger logger, LinkerContext context)
 	{

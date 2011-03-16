@@ -36,7 +36,7 @@ import br.com.sysmap.crux.core.server.Environment;
 
 /**
  * Used to save the path to the current HTML page. This information is necessary
- * to generate the client handlers and formatters.
+ * to generate the client code.
  * 
  * @author Thiago da Rosa de Bustamante
  */
@@ -56,6 +56,9 @@ public class GadgetFilter implements Filter
 	{
 	}
 
+	/**
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) 
 	throws IOException, ServletException 
 	{

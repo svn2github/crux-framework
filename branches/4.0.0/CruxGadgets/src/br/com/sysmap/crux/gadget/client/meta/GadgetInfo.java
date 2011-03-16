@@ -21,7 +21,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Inherits this interface to provide Gadget informations, like user preferences, 
+ * Extends this interface to provide Gadget informations, like user preferences, 
  * required features and supported locales.
  * 
  * @author Thiago da Rosa de Bustamante

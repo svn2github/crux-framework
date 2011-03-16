@@ -54,6 +54,7 @@ import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
+import br.com.sysmap.crux.gadget.rebind.scanner.GadgetScreenResolver;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -186,10 +187,11 @@ public class GadgetManifestGenerator
     {
     	try
         {
-	        Set<String> screenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(moduleName);
+    		GadgetScreenResolver screenResourceResolver = (GadgetScreenResolver) ScreenResourceResolverInitializer.getScreenResourceResolver();
+			Set<String> screenIDs = screenResourceResolver.getAllScreenIDs(moduleName);
 	        for (String screenId : screenIDs)
             {
-				InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(screenId);
+				InputStream stream = screenResourceResolver.getScreenResource(screenId, true, false);
 				Document screenElement = XMLUtils.createNSUnawareDocument(stream);
 				Screen screen = ScreenFactory.getInstance().getScreen(screenId);
 				
@@ -200,6 +202,11 @@ public class GadgetManifestGenerator
 		        }
             }
         }
+    	catch (ClassCastException e)
+    	{
+			logger.log(TreeLogger.ERROR, "Could not retrieve screen ids", e);// TODO message to ensure that GadgetScreenResolver is the resolver
+			throw new UnableToCompleteException();
+    	}
         catch (Exception e)
         {
 			logger.log(TreeLogger.ERROR, "Could not retrieve screen ids", e);// TODO message
