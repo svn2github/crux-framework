@@ -1,6 +1,6 @@
 Crux
 Copyright (c) Sysmap Solutions, Ltda. 2009.  All rights reserved.
-Visit Crux Code (http://code.google.com/p/crux-framework).
+Visit Crux Code (http://www.cruxframework.org).
 
 This product includes software developed by:
  - Google
@@ -9,6 +9,6 @@ This product includes software developed by:
     - Commons-logging
 - JBoss
     - javassist (http://labs.jboss.com/javassist/)
--Scannotation (Modified and renamed to br.com.sysmap.crux.scannotation) included in jar crux-scannotation.jar    
+- Scannotation (Modified and renamed to br.com.sysmap.crux.scannotation)  
      - http://scannotation.sourceforge.net/
 For source availability and license information see COPYING.

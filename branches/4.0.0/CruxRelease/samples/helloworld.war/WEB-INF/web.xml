@@ -5,6 +5,11 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<context-param> 
+	    <param-name>outputCharset</param-name> 
+	    <param-value>UTF-8</param-value> 
+	</context-param> 
+
 	<listener>
         <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
     </listener>
@@ -18,7 +23,4 @@
 		<servlet-name>remoteServiceServlet</servlet-name>
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
-	
-	
-
 </web-app>
