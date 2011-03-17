@@ -26,7 +26,6 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
 import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
@@ -60,16 +59,6 @@ public class DeclarativeUIFilter extends CruxFilter
 				try
 				{
 					String screenId = requestedScreen.replace(".html", ".crux.xml");
-					String charset = config.getInitParameter("outputCharset");
-
-					if(charset != null)
-					{
-						CruxToHtmlTransformer.setOutputCharset(charset);
-					}
-					else
-					{
-						throw new ServletException(messages.declarativeUIFilterRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
-					}
 
 					InputStream screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(screenId);
 					if (screenResource != null)
