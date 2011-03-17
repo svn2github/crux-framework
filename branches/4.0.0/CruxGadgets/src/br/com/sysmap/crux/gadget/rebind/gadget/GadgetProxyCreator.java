@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.sysmap.crux.core.client.Crux;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.gadget.client.Gadget;
@@ -26,6 +27,7 @@ import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.Feature;
 import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import br.com.sysmap.crux.gadget.linker.GadgetManifestGenerator;
+import br.com.sysmap.crux.gadget.rebind.GadgetGeneratorMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -40,6 +42,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
+	private static GadgetGeneratorMessages messages = MessagesFactory.getMessages(GadgetGeneratorMessages.class);
 	private Set<String> neededFeatures = new HashSet<String>();
 	private Class<?> moduleMetaClass;
 	
@@ -60,7 +63,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    	}
 	    	catch (Exception e)
 	    	{
-	    		logger.log(TreeLogger.ERROR, "Error generating gadget proxy", e);//TODO message here
+	    		logger.log(TreeLogger.ERROR, messages.gadgetProxyCreatorError(), e);
 	    		throw new CruxGeneratorException();
 	    	}
 		}

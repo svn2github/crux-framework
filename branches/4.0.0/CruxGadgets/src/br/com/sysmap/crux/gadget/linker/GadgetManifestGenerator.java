@@ -39,6 +39,7 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
 import br.com.sysmap.crux.core.client.utils.StringUtils;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
 import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
@@ -54,6 +55,7 @@ import br.com.sysmap.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo;
 import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import br.com.sysmap.crux.gadget.client.widget.GadgetView.View;
+import br.com.sysmap.crux.gadget.rebind.GadgetGeneratorMessages;
 import br.com.sysmap.crux.gadget.rebind.scanner.GadgetScreenResolver;
 
 import com.google.gwt.core.ext.TreeLogger;
@@ -65,17 +67,26 @@ import com.google.gwt.gadgets.rebind.GadgetUtils;
 import com.google.gwt.gadgets.rebind.PreferenceGenerator;
 
 /**
+ * Generate the manifest file for the Gadget ({@code .gadget.xml} file).
+ * <p>
+ * The manifest file is generated based on the project descriptor interface 
+ * (that must extends the {@link GadgetInfo} interface).
+ * <p> 
+ * 
  * @author Thiago da Rosa de Bustamante
- *
+ * @see GadgetInfo
  */
 public class GadgetManifestGenerator
 {
-	private Class<?> moduleMetaClass;
+	private static GadgetGeneratorMessages messages = MessagesFactory.getMessages(GadgetGeneratorMessages.class);
+	
 	private final TreeLogger logger;
+	private Class<?> moduleMetaClass;
 	private String moduleName;
 	
 	/**
-	 * @param moduleMetaClass
+	 * @param logger
+	 * @param moduleName
 	 */
 	public GadgetManifestGenerator(TreeLogger logger, String moduleName)
     {
@@ -84,7 +95,7 @@ public class GadgetManifestGenerator
 		Set<String> descriptorClasses = ClassScanner.searchClassesByInterface(GadgetInfo.class);
 		if (descriptorClasses == null || descriptorClasses.size() != 1)
 		{
-			logger.log(TreeLogger.ERROR, "Error generating gadget proxy. You must declare a interface (only one) that implements the interface Gadget");//TODO message here
+			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorInterfaceNotFound());
 			throw new CruxGeneratorException();
 		}
 
@@ -94,22 +105,53 @@ public class GadgetManifestGenerator
         }
         catch (ClassNotFoundException e)
         {
-			logger.log(TreeLogger.ERROR, "Gadget Descriptor not found");//TODO message here
+			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorInterfaceNotLoaded());
 			throw new CruxGeneratorException();
         }
 		if (!moduleMetaClass.isInterface())
 		{
-			logger.log(TreeLogger.ERROR, "Gadget Descriptor must be an interface");//TODO message here
+			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorMustBeInterface());
 			throw new CruxGeneratorException();
 		}
     }
 
 	/**
-	 * @return
+	 * @param printWriter
+	 * @throws UnableToCompleteException 
 	 */
-	public Class<?> getModuleMetaClass()
+	public void generateGadgetManifest(PrintWriter out) throws UnableToCompleteException
     {
-    	return moduleMetaClass;
+	    logger.log(TreeLogger.DEBUG, "Building gadget manifest", null);
+
+		Document d;
+		LSSerializer serializer;
+		LSOutput output;
+
+		try
+		{
+			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+			DOMImplementation impl = registry.getDOMImplementation("Core 3.0");
+			d = impl.createDocument(null, "Module", null);
+			DOMImplementationLS implLS = (DOMImplementationLS) impl.getFeature("LS", "3.0");
+			output = implLS.createLSOutput();
+			output.setCharacterStream(out);
+			serializer = implLS.createLSSerializer();
+		}
+		catch (Exception e)
+		{
+			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorCanNotCreateDocument(), e);
+			throw new UnableToCompleteException();
+		}
+
+		Element module = d.getDocumentElement();
+		Element modulePrefs = (Element) module.appendChild(d.createElement("ModulePrefs"));	    
+	    
+	    generateModulePreferences(d, modulePrefs);
+		generateUserPreferences(d, module);
+		generateFeaturesList(d, modulePrefs, moduleMetaClass, new HashSet<String>());
+		generateContentSections(d, module);
+		
+	    serializer.write(d, output);
     }
 
 	/**
@@ -140,44 +182,69 @@ public class GadgetManifestGenerator
 	}
 	
 	/**
-	 * @param printWriter
-	 * @throws UnableToCompleteException 
+	 * @return
 	 */
-	public void generateGadgetManifest(PrintWriter out) throws UnableToCompleteException
+	public Class<?> getModuleMetaClass()
     {
-	    logger.log(TreeLogger.DEBUG, "Building gadget manifest", null);
+    	return moduleMetaClass;
+    }
+	
+	/**
+	 * @param d
+	 * @param userPref
+	 * @param preferenceType
+	 * @param m
+	 * @throws UnableToCompleteException
+	 */
+	private void configurePreferenceElement(Document d, Element userPref, Method m) throws UnableToCompleteException
+	{
+		logger.log(TreeLogger.DEBUG, "Generating userpref element for method " + m.toString(), null);
 
-		Document d;
-		LSSerializer serializer;
-		LSOutput output;
+		Class<?> prefType = m.getReturnType();
 
-		try
+		if (!Preference.class.isAssignableFrom(prefType))
 		{
-			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-			DOMImplementation impl = registry.getDOMImplementation("Core 3.0");
-			d = impl.createDocument(null, "Module", null);
-			DOMImplementationLS implLS = (DOMImplementationLS) impl.getFeature("LS", "3.0");
-			output = implLS.createLSOutput();
-			output.setCharacterStream(out);
-			serializer = implLS.createLSSerializer();
-		}
-		catch (Exception e)
-		{
-			logger.log(TreeLogger.ERROR, "Could not create document", e);// TODO message
+			logger.log(TreeLogger.ERROR, m.getReturnType().getCanonicalName() + " is not assignable to " + Preference.class.getCanonicalName(), null);
 			throw new UnableToCompleteException();
 		}
 
-		Element module = d.getDocumentElement();
-		Element modulePrefs = (Element) module.appendChild(d.createElement("ModulePrefs"));	    
-	    
-	    generateModulePreferences(d, modulePrefs);
-		generateUserPreferences(d, module);
-		generateFeaturesList(d, modulePrefs, moduleMetaClass, new HashSet<String>());
-		generateContentSections(d, module);
-		
-	    serializer.write(d, output);
-    }
-	
+		DataType dataType = prefType.getAnnotation(DataType.class);
+
+		if (dataType == null)
+		{
+			logger.log(TreeLogger.ERROR, prefType + " must define a DataType annotation", null);
+			throw new UnableToCompleteException();
+		}
+
+		userPref.setAttribute("name", m.getName());
+		userPref.setAttribute("datatype", dataType.value());
+
+		PreferenceAttributes attributes = m.getAnnotation(PreferenceAttributes.class);
+		if (attributes != null)
+		{
+			GadgetUtils.writeAnnotationToElement(logger, attributes, userPref);
+
+			switch (attributes.options())
+			{
+			case HIDDEN:
+				userPref.setAttribute("datatype", "hidden");
+				break;
+			case NORMAL:
+				break;
+			case REQUIRED:
+				userPref.setAttribute("required", "true");
+				break;
+			default:
+				logger.log(TreeLogger.ERROR, "Unknown Option " + attributes.options().name(), null);
+				throw new UnableToCompleteException();
+			}
+		}
+
+		// Allow type-specific modifications to the userpref Element to be made
+		PreferenceGenerator prefGenerator = GadgetUtils.getPreferenceGenerator(logger, prefType);
+		prefGenerator.configurePreferenceElement(logger, d, userPref, prefType, m);
+	}
+
 	/**
 	 * @param d
 	 * @param module
@@ -204,16 +271,115 @@ public class GadgetManifestGenerator
         }
     	catch (ClassCastException e)
     	{
-			logger.log(TreeLogger.ERROR, "Could not retrieve screen ids", e);// TODO message to ensure that GadgetScreenResolver is the resolver
+			logger.log(TreeLogger.ERROR, messages.gadgetScreenResolverCastError(), e);
 			throw new UnableToCompleteException();
     	}
         catch (Exception e)
         {
-			logger.log(TreeLogger.ERROR, "Could not retrieve screen ids", e);// TODO message
+			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorErrorReadingScreenIds(), e);
 			throw new UnableToCompleteException();
         }
     }
 
+	/**
+	 * Add required features to the manifest
+	 * {@code <require feature="someFeature" />}
+	 * @param d
+	 * @param modulePrefs
+	 */
+	private void generateFeaturesList(Document d, Element modulePrefs, Class<?> moduleMetaClass, Set<String> added)
+    {
+		NeedsFeatures needsFeature = moduleMetaClass.getAnnotation(NeedsFeatures.class);
+		
+		if (needsFeature != null)
+		{
+			Feature[] features = needsFeature.value();
+			if (features != null)
+			{
+				for (Feature feature : features)
+                {
+	                ContainerFeature containerFeature = feature.value();
+	                if (!added.contains(containerFeature.getFeatureName()))
+	                {
+	                	Element require = (Element) modulePrefs.appendChild(d.createElement("Require"));
+	                	require.setAttribute("feature", containerFeature.getFeatureName());
+
+	                	added.add(containerFeature.getFeatureName());
+	                }
+                }
+			}
+		}
+		
+		Class<?>[] interfaces = moduleMetaClass.getInterfaces();
+		if (interfaces != null)
+		{
+			for (Class<?> interfaceType : interfaces)
+            {
+				generateFeaturesList(d, modulePrefs, interfaceType, added);
+            }
+		}
+    }
+
+	/**
+	 * @param d
+	 * @param modulePrefs
+	 * @throws UnableToCompleteException 
+	 */
+	private void generateModulePreferences(Document d, Element modulePrefs) throws UnableToCompleteException
+    {
+	    ModulePrefs prefs = moduleMetaClass.getAnnotation(ModulePrefs.class);
+	    if (prefs != null) 
+	    {
+	      GadgetUtils.writeAnnotationToElement(logger, prefs, modulePrefs, "requirements", "locales");
+	      GadgetUtils.writeLocalesToElement(logger, d, modulePrefs, prefs.locales());
+	    }
+    }
+
+	/**
+	 * @param d
+	 * @param module
+	 * @throws UnableToCompleteException 
+	 */
+	private void generateUserPreferences(Document d, Element module) throws UnableToCompleteException
+    {
+
+		Class<?> prefsType = GadgetUtils.getUserPrefsType(logger, moduleMetaClass);
+		for (Method m : getOverridableMethods(prefsType))
+		{
+			Element userPref = (Element) module.appendChild(d.createElement("UserPref"));
+			configurePreferenceElement(d, userPref, m);
+		}
+    }
+
+	/**
+	 * @param out
+	 * @param element
+	 * @throws IOException
+	 */
+	private void getBodyContent(StringWriter out, Element element) throws IOException
+    {
+	    NodeList bodyChildren = element.getChildNodes();
+	    
+	    boolean hasDynamicFeature = NeedsDynamicHeightFeature.class.isAssignableFrom(this.moduleMetaClass);
+	    
+	    if (hasDynamicFeature)
+	    {
+	    	out.write("<div id=\"__gwt_gadget_content_div\">");
+	    }
+	    for(int j=0; j<bodyChildren.getLength(); j++)
+	    {
+	    	Node child = bodyChildren.item(j);
+	    	if (child.getNodeType() != Node.ELEMENT_NODE || !isModuleScriptTag((Element) child))
+	    	{
+	    		HTMLUtils.write(child, out);
+	    	}
+	    }
+	    if (hasDynamicFeature)
+	    {
+	    	out.write("</div>");
+	    }
+    }
+	
 	/**
 	 * @param d
 	 * @param screenDocument
@@ -291,36 +457,7 @@ public class GadgetManifestGenerator
 		}
 		return result;
     }
-
-	/**
-	 * @param out
-	 * @param element
-	 * @throws IOException
-	 */
-	private void getBodyContent(StringWriter out, Element element) throws IOException
-    {
-	    NodeList bodyChildren = element.getChildNodes();
-	    
-	    boolean hasDynamicFeature = NeedsDynamicHeightFeature.class.isAssignableFrom(this.moduleMetaClass);
-	    
-	    if (hasDynamicFeature)
-	    {
-	    	out.write("<div id=\"__gwt_gadget_content_div\">");
-	    }
-	    for(int j=0; j<bodyChildren.getLength(); j++)
-	    {
-	    	Node child = bodyChildren.item(j);
-	    	if (child.getNodeType() != Node.ELEMENT_NODE || !isModuleScriptTag((Element) child))
-	    	{
-	    		HTMLUtils.write(child, out);
-	    	}
-	    }
-	    if (hasDynamicFeature)
-	    {
-	    	out.write("</div>");
-	    }
-    }
-
+	
 	/**
 	 * @param out
 	 * @param element
@@ -344,76 +481,6 @@ public class GadgetManifestGenerator
 				}
 			}
 	    }
-    }
-
-	
-	private boolean isModuleScriptTag(Element elem)
-	{
-		if (elem.getNodeName().equalsIgnoreCase("script"))
-		{
-			String src = elem.getAttribute("src");
-			if (src != null && src.endsWith(".nocache.js"))
-			{
-				return true;
-			}
-		}
-		return false;
-		
-	}
-	
-	/**
-	 * Add required features to the manifest
-	 * {@code <require feature="someFeature" />}
-	 * @param d
-	 * @param modulePrefs
-	 */
-	private void generateFeaturesList(Document d, Element modulePrefs, Class<?> moduleMetaClass, Set<String> added)
-    {
-		NeedsFeatures needsFeature = moduleMetaClass.getAnnotation(NeedsFeatures.class);
-		
-		if (needsFeature != null)
-		{
-			Feature[] features = needsFeature.value();
-			if (features != null)
-			{
-				for (Feature feature : features)
-                {
-	                ContainerFeature containerFeature = feature.value();
-	                if (!added.contains(containerFeature.getFeatureName()))
-	                {
-	                	Element require = (Element) modulePrefs.appendChild(d.createElement("Require"));
-	                	require.setAttribute("feature", containerFeature.getFeatureName());
-
-	                	added.add(containerFeature.getFeatureName());
-	                }
-                }
-			}
-		}
-		
-		Class<?>[] interfaces = moduleMetaClass.getInterfaces();
-		if (interfaces != null)
-		{
-			for (Class<?> interfaceType : interfaces)
-            {
-				generateFeaturesList(d, modulePrefs, interfaceType, added);
-            }
-		}
-    }
-
-	/**
-	 * @param d
-	 * @param module
-	 * @throws UnableToCompleteException 
-	 */
-	private void generateUserPreferences(Document d, Element module) throws UnableToCompleteException
-    {
-
-		Class<?> prefsType = GadgetUtils.getUserPrefsType(logger, moduleMetaClass);
-		for (Method m : getOverridableMethods(prefsType))
-		{
-			Element userPref = (Element) module.appendChild(d.createElement("UserPref"));
-			configurePreferenceElement(d, userPref, m);
-		}
     }
 	
 	/**
@@ -449,75 +516,22 @@ public class GadgetManifestGenerator
         }
 		return allMethods.toArray(new Method[allMethods.size()]);
 	}
-	
-	/**
-	 * @param d
-	 * @param modulePrefs
-	 * @throws UnableToCompleteException 
-	 */
-	private void generateModulePreferences(Document d, Element modulePrefs) throws UnableToCompleteException
-    {
-	    ModulePrefs prefs = moduleMetaClass.getAnnotation(ModulePrefs.class);
-	    if (prefs != null) 
-	    {
-	      GadgetUtils.writeAnnotationToElement(logger, prefs, modulePrefs, "requirements", "locales");
-	      GadgetUtils.writeLocalesToElement(logger, d, modulePrefs, prefs.locales());
-	    }
-    }
 
 	/**
-	 * @param d
-	 * @param userPref
-	 * @param preferenceType
-	 * @param m
-	 * @throws UnableToCompleteException
+	 * @param elem
+	 * @return
 	 */
-	private void configurePreferenceElement( Document d, Element userPref, Method m) throws UnableToCompleteException
+	private boolean isModuleScriptTag(Element elem)
 	{
-		logger.log(TreeLogger.DEBUG, "Generating userpref element for method " + m.toString(), null);
-
-		Class<?> prefType = m.getReturnType();
-
-		if (!Preference.class.isAssignableFrom(prefType))
+		if (elem.getNodeName().equalsIgnoreCase("script"))
 		{
-			logger.log(TreeLogger.ERROR, m.getReturnType().getCanonicalName() + " is not assignable to " + Preference.class.getCanonicalName(), null);
-			throw new UnableToCompleteException();
-		}
-
-		DataType dataType = prefType.getAnnotation(DataType.class);
-
-		if (dataType == null)
-		{
-			logger.log(TreeLogger.ERROR, prefType + " must define a DataType annotation", null);
-			throw new UnableToCompleteException();
-		}
-
-		userPref.setAttribute("name", m.getName());
-		userPref.setAttribute("datatype", dataType.value());
-
-		PreferenceAttributes attributes = m.getAnnotation(PreferenceAttributes.class);
-		if (attributes != null)
-		{
-			GadgetUtils.writeAnnotationToElement(logger, attributes, userPref);
-
-			switch (attributes.options())
+			String src = elem.getAttribute("src");
+			if (src != null && src.endsWith(".nocache.js"))
 			{
-			case HIDDEN:
-				userPref.setAttribute("datatype", "hidden");
-				break;
-			case NORMAL:
-				break;
-			case REQUIRED:
-				userPref.setAttribute("required", "true");
-				break;
-			default:
-				logger.log(TreeLogger.ERROR, "Unknown Option " + attributes.options().name(), null);
-				throw new UnableToCompleteException();
+				return true;
 			}
 		}
-
-		// Allow type-specific modifications to the userpref Element to be made
-		PreferenceGenerator prefGenerator = GadgetUtils.getPreferenceGenerator(logger, prefType);
-		prefGenerator.configurePreferenceElement(logger, d, userPref, prefType, m);
+		return false;
+		
 	}
 }

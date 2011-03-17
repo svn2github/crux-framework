@@ -18,7 +18,7 @@ package br.com.sysmap.crux.gadget.rebind.gadget;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.module.Module;
 import br.com.sysmap.crux.gadget.client.GadgetException;
-import br.com.sysmap.crux.gadget.rebind.GadgetRebindMessages;
+import br.com.sysmap.crux.gadget.rebind.GadgetGeneratorMessages;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,7 +26,7 @@ import br.com.sysmap.crux.gadget.rebind.GadgetRebindMessages;
  */
 public class GadgetInformationFactory
 {
-	private static GadgetRebindMessages messages = MessagesFactory.getMessages(GadgetRebindMessages.class);
+	private static GadgetGeneratorMessages messages = MessagesFactory.getMessages(GadgetGeneratorMessages.class);
 	
 	/**
 	 * @param module
