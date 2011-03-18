@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default="export" name="Crux" basedir="../">
+<project default="dist" name="Crux" basedir="../">
 
 	<tstamp>
 		<format property="build.date" pattern="MM/dd/yyyy hh:mm:ss" />
 	</tstamp>
 
-	<property file="../CruxRelease/build/version.properties" />
+	<property file="build/version.properties" />
+	
+	<property name="core-srcdir" value="src/core" />
+	<property name="module-srcdir" value="src/module" />
+	<property name="gadget-srcdir" value="src/ui/gadget" />
+	<property name="gwt-srcdir" value="src/ui/gwt" />
+	<property name="widgets-srcdir" value="src/ui/widgets" />
+	<property name="themes-srcdir" value="src/ui/themes" />
+	<property name="tools-srcdir" value="src/tools" />
 
-	<property name="srcdir" value="src" />
-	<property name="testsrcdir" value="test" />
 	<property name="libdir" value="lib" />
 	<property name="classesdir" value="bin/classes" />
-	<property name="testclassesdir" value="bin/test" />
-	<property name="testreportxml" value="dist/report/junit/xml" />
-	<property name="testreporthtml" value="dist/report/junit/html" />
 	<property name="distdir" value="dist" />
 	<property name="javadocdir" value="dist/javadoc" />
-	<property name="final.name" value="crux-core" />
-	<property name="testbenchmarkpath" value="dist/report/junit/benchmark" />
+	<property name="crux.dev.name" value="crux-dev" />
+	<property name="crux.runtime.name" value="crux-runtime" />
+	<property name="crux.gadget.name" value="crux-runtime" />
 	<property name="crux.libs.project" value="../CruxLibs/crux" />	
-	<property name="cruxscannotationdistdir" value="../CruxScannotation/dist" />
 
 	<path id="build.classpath">
 		<fileset dir="${libdir}">
@@ -30,10 +33,41 @@
 
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 
-	<target name="export" description="Creates a jar file and exports it to the CruxLibs project.">
-
+	<!-- 
+	========================================================================================================
+		GenerateJavadoc
+	========================================================================================================
+	-->
+	<target name="generate-javadoc">
+		<javadoc encoding="UTF-8" destdir="${expandeddir}/docs" protected="true" source="1.5" classpathref="build.classpath">
+			<fileset dir="${core-srcdir}" />
+			<fileset dir="${module-srcdir}" />
+			<fileset dir="${gadget-srcdir}" />
+			<fileset dir="${gwt-srcdir}" />
+			<fileset dir="${widgets-srcdir}" />
+			<fileset dir="${themes-srcdir}" />
+			<fileset dir="${tools-srcdir}" />
+		</javadoc>
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		ExportJars
+	========================================================================================================
+	-->
+	<target name="dist" description="Creates the crux zip file.">
 		<delete dir="${distdir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${distdir}" />
+	</target>
+
+	
+	<!-- 
+	========================================================================================================
+		Export crux-dev.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-dev" description="Creates the crux-dev.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.dev.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
 		<mkdir dir="${classesdir}" />
@@ -41,34 +75,115 @@
 		<javac destdir="${classesdir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
-				<pathelement location="${srcdir}" />
+				<pathelement location="${core-srcdir}"/>
+				<pathelement location="${module-srcdir}"/>
+				<pathelement location="${gwt-srcdir}"/>
+				<pathelement location="${tools-srcdir}"/>
 			</src>
 			<classpath refid="build.classpath" />
-			<classpath>
-				<fileset dir="${cruxscannotationdistdir}">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
 		</javac>
 
 		<svn failonerror="false" javahl="false" svnkit="true">
 			<wcversion path="${basedir}" />
 		</svn>
 		
-		<jar jarfile="${distdir}/${final.name}.jar">
+		<jar jarfile="${distdir}/${crux.dev.name}.jar">
 			<fileset dir="${classesdir}" excludes="**/public/*" />
-			<fileset dir="${srcdir}" excludes="**/public/*" />
+			<fileset dir="${core-srcdir}" />
+			<fileset dir="${module-srcdir}" />
+			<fileset dir="${gwt-srcdir}" />
+			<fileset dir="${tools-srcdir}" />
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
 				<attribute name="Implementation-Version" value="${version}" />
 				<attribute name="Implementation-Revision" value="${revision.max}" />
 			</manifest>
 		</jar>
-		
-		<copy todir="${crux.libs.project}">
-			<fileset dir="${distdir}">
-				<filename name="${final.name}.jar"/>
-			</fileset>
-		</copy>
 	</target>
+
+	<!-- 
+	========================================================================================================
+		Export crux-runtime.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-runtime" description="Creates the crux-runtime.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.runtime.name}.jar" failonerror="no" />
+		
+		<delete dir="${classesdir}" failonerror="no" />
+		<mkdir dir="${classesdir}" />
+		
+		<javac destdir="${classesdir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+			   encoding="UTF-8">
+			<src>
+				<pathelement location="${core-srcdir}"/>
+			</src>
+			<classpath refid="build.classpath" />
+		</javac>
+
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
+		
+		<jar jarfile="${distdir}/${crux.runtime.name}.jar">
+			<fileset dir="${classesdir}" >
+				<exclude name="**/public/*" />
+				<exclude name="br/com/sysmap/crux/core/client/**/*" />
+				<exclude name="br/com/sysmap/crux/core/rebind/**/*" />
+				<exclude name="br/com/sysmap/crux/core/declarativeui/**/*" />
+				<exclude name="br/com/sysmap/crux/core/client" />
+				<exclude name="br/com/sysmap/crux/core/rebind" />
+				<exclude name="br/com/sysmap/crux/core/declarativeui" />
+			</fileset>
+			<fileset dir="${core-srcdir}" >
+				<exclude name="br/com/sysmap/crux/core/client/**/*" />
+				<exclude name="br/com/sysmap/crux/core/rebind/**/*" />
+				<exclude name="br/com/sysmap/crux/core/declarativeui/**/*" />
+				<exclude name="br/com/sysmap/crux/core/client" />
+				<exclude name="br/com/sysmap/crux/core/rebind" />
+				<exclude name="br/com/sysmap/crux/core/declarativeui" />
+				<exclude name="br/com/sysmap/crux/core/Crux.gwt.xml" />
+				<exclude name="META-INF/crux-ui.template.xslt" />
+			</fileset>
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		Export crux-gadget.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-gadget" description="Creates the crux-dev.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.gadget.name}.jar" failonerror="no" />
+		
+		<delete dir="${classesdir}" failonerror="no" />
+		<mkdir dir="${classesdir}" />
+		
+		<javac destdir="${classesdir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+			   encoding="UTF-8">
+			<src>
+				<pathelement location="${gadget-srcdir}"/>
+			</src>
+			<classpath refid="build.classpath" />
+		</javac>
+
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
+		
+		<jar jarfile="${distdir}/${crux.gadget.name}.jar">
+			<fileset dir="${classesdir}" excludes="**/public/*" />
+			<fileset dir="${gadget-srcdir}" />
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+	</target>
+	
 </project>
