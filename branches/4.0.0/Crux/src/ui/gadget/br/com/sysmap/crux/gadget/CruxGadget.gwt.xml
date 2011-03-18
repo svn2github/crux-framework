@@ -1,0 +1,27 @@
+<module>
+	<!-- Inherit the Crux Core and GWT Gadget stuff  .          -->
+	<inherits name='br.com.sysmap.crux.core.Crux'/>
+	<inherits name='com.google.gwt.gadgets.Gadgets' />
+
+	<!-- Produces the final Gadget manifest -->
+	<define-linker name="gadget" class="br.com.sysmap.crux.gadget.linker.GadgetLinker"/>
+	<add-linker name="gadget"/>
+
+	<!-- Servlet used to handle RPC event calls.                -->
+	<servlet path="/crux.rpc" class="br.com.sysmap.crux.gadget.server.dispatch.GadgetRemoteServiceServlet"/>
+
+	<!-- Specify the generator for RPC stubs.                   -->
+	<generate-with class="br.com.sysmap.crux.gadget.rebind.rpc.CruxGadgetServiceGenerator">
+		<when-type-assignable class="com.google.gwt.user.client.rpc.RemoteService"/>
+	</generate-with>
+
+	<!-- Specify the generator for Gadget.                   -->
+	<generate-with class="br.com.sysmap.crux.gadget.rebind.gadget.GadgetGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.gadget.client.Gadget"/>
+	</generate-with>
+
+	<!-- Specify the generator for GadgetInfo.                   -->
+	<generate-with class="br.com.sysmap.crux.gadget.rebind.gadget.GadgetInfoGenerator">
+		<when-type-assignable class="br.com.sysmap.crux.gadget.client.meta.GadgetInfo"/>
+	</generate-with>
+</module>
