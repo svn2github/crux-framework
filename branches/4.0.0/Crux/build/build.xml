@@ -20,10 +20,12 @@
 	<property name="classesdir" value="bin/classes" />
 	<property name="distdir" value="dist" />
 	<property name="javadocdir" value="dist/javadoc" />
+	
 	<property name="crux.dev.name" value="crux-dev" />
 	<property name="crux.runtime.name" value="crux-runtime" />
-	<property name="crux.gadget.name" value="crux-runtime" />
-	<property name="crux.libs.project" value="../CruxLibs/crux" />	
+	<property name="crux.gadgets.name" value="crux-gadgets" />
+	<property name="crux.widgets.name" value="crux-widgets" />
+	<property name="crux.themes.name" value="crux-themes" />
 
 	<path id="build.classpath">
 		<fileset dir="${libdir}">
@@ -35,7 +37,17 @@
 
 	<!-- 
 	========================================================================================================
-		GenerateJavadoc
+		Download Dependencies
+	========================================================================================================
+	-->
+	<target name="install-dependencies" description="Download all Crux dependencies and configure the project" >
+		<get src="http:/repoGesse/crux-dev-deps.jar" dest="${libdir}/crux-dev-deps.jar" verbose="true"/>
+		<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${libdir}/crux-runtime-deps.jar" verbose="true"/>
+	</target>
+
+	<!-- 
+	========================================================================================================
+		Generate Javadoc
 	========================================================================================================
 	-->
 	<target name="generate-javadoc">
@@ -52,12 +64,17 @@
 	
 	<!-- 
 	========================================================================================================
-		ExportJars
+		Export Jars
 	========================================================================================================
 	-->
 	<target name="dist" description="Creates the crux zip file.">
 		<delete dir="${distdir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${distdir}" />
+		<antcall target="export-crux-dev" />
+		<antcall target="export-crux-runtime" />
+		<antcall target="export-crux-gadgets" />
+		<antcall target="export-crux-widgets" />
+		<antcall target="export-crux-themes" />
 	</target>
 
 	
@@ -157,8 +174,8 @@
 		Export crux-gadget.jar
 	========================================================================================================
 	-->
-	<target name="export-crux-gadget" description="Creates the crux-dev.jar file and exports it to the dist folder.">
-		<delete  file="${distdir}/${crux.gadget.name}.jar" failonerror="no" />
+	<target name="export-crux-gadgets" description="Creates the crux-gadgets.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.gadgets.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
 		<mkdir dir="${classesdir}" />
@@ -166,6 +183,8 @@
 		<javac destdir="${classesdir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
+				<pathelement location="${core-srcdir}"/>
+				<pathelement location="${gwt-srcdir}" />
 				<pathelement location="${gadget-srcdir}"/>
 			</src>
 			<classpath refid="build.classpath" />
@@ -175,8 +194,12 @@
 			<wcversion path="${basedir}" />
 		</svn>
 		
-		<jar jarfile="${distdir}/${crux.gadget.name}.jar">
-			<fileset dir="${classesdir}" excludes="**/public/*" />
+		<jar jarfile="${distdir}/${crux.gadgets.name}.jar">
+			<fileset dir="${classesdir}" excludes="**/public/*" >
+				<include name="br/com/sysmap/crux/gadget/**/*" />
+				<include name="com/google/gwt/gadgets/**/*" />
+				<include name="com/google/gwt/ajaxloader/**/*" />
+			</fileset>	
 			<fileset dir="${gadget-srcdir}" />
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
@@ -186,4 +209,66 @@
 		</jar>
 	</target>
 	
+	<!-- 
+	========================================================================================================
+		Export crux-widgets.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-widgets" description="Creates the crux-widgets.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.widgets.name}.jar" failonerror="no" />
+		
+		<delete dir="${classesdir}" failonerror="no" />
+		<mkdir dir="${classesdir}" />
+		
+		<javac destdir="${classesdir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+			   encoding="UTF-8">
+			<src>
+				<pathelement location="${core-srcdir}"/>
+				<pathelement location="${gwt-srcdir}" />
+				<pathelement location="${widgets-srcdir}"/>
+			</src>
+			<classpath refid="build.classpath" />
+		</javac>
+
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
+		
+		<jar jarfile="${distdir}/${crux.widgets.name}.jar">
+			<fileset dir="${classesdir}" excludes="**/public/*" >
+				<include name="br/com/sysmap/crux/widgets/**/*" />
+			</fileset>	
+			<fileset dir="${widgets-srcdir}" />
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		Export crux-themes.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-themes" description="Creates the crux-themes.jar file and exports it to the dist folder.">
+		<delete  file="${distdir}/${crux.themes.name}.jar" failonerror="no" />
+		
+		<delete dir="${classesdir}" failonerror="no" />
+		<mkdir dir="${classesdir}" />
+		
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
+		
+		<jar jarfile="${distdir}/${crux.themes.name}.jar">
+			<fileset dir="${themes-srcdir}" />
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+	</target>
 </project>

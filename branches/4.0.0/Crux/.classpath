@@ -8,11 +8,9 @@
 	<classpathentry kind="src" path="src/ui/gwt"/>
 	<classpathentry kind="src" path="src/ui/gadget"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-dev.jar" sourcepath="lib/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-user.jar"/>
-	<classpathentry kind="lib" path="lib/javassist.jar"/>
-	<classpathentry kind="lib" path="lib/saxon9.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CruxScannotation"/>
+	<classpathentry kind="lib" path="lib/crux-dev-deps.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
