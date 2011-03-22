@@ -159,4 +159,7 @@ public interface ServerMessages
 
 	@DefaultServerMessage("[widgetConfig 002] - Error initializing widgets. Invalid widget type: {0}")
 	String widgetConfigInitializeErrorInvalidType(String widgetType);
+	
+	@DefaultServerMessage("[listener 001] - Missing required parameter for {0} in web.xml: {1}.")
+	String initializerListenerRequiredParameterMissing(String filterName, String parameterName);
 }

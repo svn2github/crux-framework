@@ -1,0 +1,67 @@
+/*
+ * Copyright 2011 Sysmap Solutions Software e Consultoria Ltda.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package br.com.sysmap.crux.core.rebind;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
+import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.rebind.screen.widget.WidgetConfig;
+import br.com.sysmap.crux.core.server.Environment;
+import br.com.sysmap.crux.core.server.InitializerListener;
+import br.com.sysmap.crux.core.server.ServerMessages;
+
+/**
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
+public class DevModeInitializerListener implements ServletContextListener
+{
+	private static final Log logger = LogFactory.getLog(InitializerListener.class);
+	private ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
+
+	/**
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
+	public void contextInitialized(ServletContextEvent contextEvent)
+    {
+		String charset = contextEvent.getServletContext().getInitParameter("outputCharset");
+
+		if(charset != null)
+		{
+			CruxToHtmlTransformer.setOutputCharset(charset);
+		}
+		else
+		{
+			logger.error(messages.initializerListenerRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
+		}
+		if (!Environment.isProduction())
+		{
+			WidgetConfig.initialize();
+		}
+    }
+
+	/**
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
+	public void contextDestroyed(ServletContextEvent sce)
+    {
+    }
+}

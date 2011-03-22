@@ -112,7 +112,4 @@ public interface DeclarativeUIMessages
 
 	@DefaultServerMessage("[declarativeui 031] - Error scanning dir: {0}.")
 	String templatesHotDeploymentScannerErrorScanningDir(String name);
-
-	@DefaultServerMessage("[declarativeui 032] - Missing required parameter for {0} in web.xml: {1}.")
-	String declarativeUIFilterRequiredParameterMissing(String filterName, String parameterName);
 }

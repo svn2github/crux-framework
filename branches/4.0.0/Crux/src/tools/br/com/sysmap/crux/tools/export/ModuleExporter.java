@@ -28,7 +28,7 @@ import java.util.jar.Manifest;
 import br.com.sysmap.crux.classpath.URLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.FileUtils;

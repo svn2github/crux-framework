@@ -24,6 +24,7 @@ import br.com.sysmap.crux.core.rebind.screen.Screen;
 import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;

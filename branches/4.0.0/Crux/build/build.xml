@@ -27,23 +27,16 @@
 	<property name="crux.widgets.name" value="crux-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 
+	<property name="expandeddir" value="${distdir}/crux-${version}" />
+	
 	<path id="build.classpath">
 		<fileset dir="${libdir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
 
-	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-
-	<!-- 
-	========================================================================================================
-		Download Dependencies
-	========================================================================================================
-	-->
-	<target name="install-dependencies" description="Download all Crux dependencies and configure the project" >
-		<get src="http:/repoGesse/crux-dev-deps.jar" dest="${libdir}/crux-dev-deps.jar" verbose="true"/>
-		<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${libdir}/crux-runtime-deps.jar" verbose="true"/>
-	</target>
+	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${libdir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
+	<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${libdir}/crux-runtime-deps.jar" verbose="true" usetimestamp="yes"/-->
 
 	<!-- 
 	========================================================================================================
@@ -68,8 +61,13 @@
 	========================================================================================================
 	-->
 	<target name="dist" description="Creates the crux zip file.">
-		<delete dir="${distdir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
-		<mkdir dir="${distdir}" />
+		<!--delete dir="${distdir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
+		<mkdir dir="${distdir}" /-->
+
+        <delete dir="${expandeddir}" failonerror="no" includeemptydirs="true" />
+		<mkdir dir="${expandeddir}" />
+
+		
 		<antcall target="export-crux-dev" />
 		<antcall target="export-crux-runtime" />
 		<antcall target="export-crux-gadgets" />
@@ -84,6 +82,7 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-dev" description="Creates the crux-dev.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 		<delete  file="${distdir}/${crux.dev.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
@@ -124,6 +123,7 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-runtime" description="Creates the crux-runtime.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 		<delete  file="${distdir}/${crux.runtime.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
@@ -151,6 +151,9 @@
 				<exclude name="br/com/sysmap/crux/core/rebind" />
 				<exclude name="br/com/sysmap/crux/core/declarativeui" />
 			</fileset>
+			<fileset dir="${classesdir}">
+				<include name="br/com/sysmap/crux/core/client/rpc/**/*" />
+			</fileset>
 			<fileset dir="${core-srcdir}" >
 				<exclude name="br/com/sysmap/crux/core/client/**/*" />
 				<exclude name="br/com/sysmap/crux/core/rebind/**/*" />
@@ -159,7 +162,6 @@
 				<exclude name="br/com/sysmap/crux/core/rebind" />
 				<exclude name="br/com/sysmap/crux/core/declarativeui" />
 				<exclude name="br/com/sysmap/crux/core/Crux.gwt.xml" />
-				<exclude name="META-INF/crux-ui.template.xslt" />
 			</fileset>
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
@@ -175,6 +177,7 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-gadgets" description="Creates the crux-gadgets.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 		<delete  file="${distdir}/${crux.gadgets.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
@@ -215,6 +218,7 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-widgets" description="Creates the crux-widgets.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 		<delete  file="${distdir}/${crux.widgets.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />
@@ -253,6 +257,7 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-themes" description="Creates the crux-themes.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 		<delete  file="${distdir}/${crux.themes.name}.jar" failonerror="no" />
 		
 		<delete dir="${classesdir}" failonerror="no" />

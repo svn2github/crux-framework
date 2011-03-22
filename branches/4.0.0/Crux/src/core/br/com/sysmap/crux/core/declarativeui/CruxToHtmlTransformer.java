@@ -35,7 +35,7 @@ import org.w3c.dom.Document;
 
 import br.com.sysmap.crux.core.declarativeui.template.TemplatesPreProcessor;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 
@@ -124,6 +124,9 @@ public class CruxToHtmlTransformer
 		CruxScreenBridge.getInstance().registerPageOutputCharset(charset);
 	}	
 
+	/**
+	 * @return
+	 */
 	public static String getOutputCharset()
 	{
 		if (outputCharset == null)

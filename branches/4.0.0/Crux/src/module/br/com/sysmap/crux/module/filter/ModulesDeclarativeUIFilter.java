@@ -26,8 +26,8 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 import br.com.sysmap.crux.module.CruxModuleBridge;
 

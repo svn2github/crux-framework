@@ -18,18 +18,11 @@ package br.com.sysmap.crux.core.server;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
-import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
-import br.com.sysmap.crux.core.declarativeui.DeclarativeUIMessages;
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetConfig;
 import br.com.sysmap.crux.core.server.dispatch.ServiceFactoryInitializer;
 
 /**
@@ -41,23 +34,26 @@ import br.com.sysmap.crux.core.server.dispatch.ServiceFactoryInitializer;
  */
 public class InitializerListener implements ServletContextListener
 {
-	private static final Log logger = LogFactory.getLog(InitializerListener.class);
-
-	private DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static ServletContext context;
+	private static final Log logger = LogFactory.getLog(InitializerListener.class);
 	
+	/**
+	 * @return
+	 */
 	public static ServletContext getContext()
 	{
 		return context;
 	}
 	
-	
+	/**
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
 	public void contextDestroyed(ServletContextEvent contextEvent) 
 	{
 	}
 
 	/**
-	 * 
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 	public void contextInitialized(ServletContextEvent contextEvent) 
 	{
@@ -73,7 +69,7 @@ public class InitializerListener implements ServletContextListener
 			//TODO - Thiago remover quebras de linha e espacos antes de gravar....
 			
 			String classScannerAllowedPackages = contextEvent.getServletContext().getInitParameter("classScannerAllowedPackages");
-			if (!StringUtils.isEmpty(classScannerAllowedPackages))
+			if (classScannerAllowedPackages != null && classScannerAllowedPackages.length() > 0)
 			{
 				CruxScreenBridge.getInstance().registerScanAllowedPackages(classScannerAllowedPackages);
 			}
@@ -83,7 +79,7 @@ public class InitializerListener implements ServletContextListener
 			}
 			
 			String classScannerIgnoredPackages = contextEvent.getServletContext().getInitParameter("classScannerIgnoredPackages");
-			if (!StringUtils.isEmpty(classScannerIgnoredPackages))
+			if (classScannerIgnoredPackages != null && classScannerIgnoredPackages.length() > 0)
 			{
 				CruxScreenBridge.getInstance().registerScanIgnoredPackages(classScannerIgnoredPackages);
 			}
@@ -91,37 +87,12 @@ public class InitializerListener implements ServletContextListener
 			{
 				CruxScreenBridge.getInstance().registerScanIgnoredPackages("");
 			}
-
-			String charset = contextEvent.getServletContext().getInitParameter("outputCharset");
-
-			if(charset != null)
-			{
-				CruxToHtmlTransformer.setOutputCharset(charset);
-			}
-			else
-			{
-				throw new ServletException(messages.declarativeUIFilterRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
-			}
 			ConfigurationFactory.getConfigurations();
-			initialize(contextEvent.getServletContext());
+			ServiceFactoryInitializer.initialize(context);
 		}
 		catch (Throwable e) 
 		{
 			logger.error(e.getMessage(), e);
 		}
-	}
-	
-	/**
-	 * 
-	 * @param context
-	 * @throws Exception
-	 */
-	protected void initialize(ServletContext context) throws Exception
-	{
-		if (!Environment.isProduction())
-		{
-			WidgetConfig.initialize();
-		}
-		ServiceFactoryInitializer.initialize(context);
 	}
 }

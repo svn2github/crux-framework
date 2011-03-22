@@ -16,6 +16,7 @@
 package br.com.sysmap.crux.core.server.dispatch.st;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -30,7 +31,6 @@ import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.user.server.Base64Utils;
 
 /**

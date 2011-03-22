@@ -26,12 +26,15 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
+/**
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
 public class ClassScanner
 {
 	private static final Log logger = LogFactory.getLog(ClassScanner.class);
@@ -48,7 +51,6 @@ public class ClassScanner
 	{
 		
 	}
-	
 	
 	/**
 	 * 
@@ -98,7 +100,7 @@ public class ClassScanner
 		scannerDB.addRequiredPackage("com.google.gwt.i18n.client");
 		
 		String scanAllowedPackages = CruxScreenBridge.getInstance().getScanAllowedPackages();
-		if (!StringUtils.isEmpty(scanAllowedPackages))
+		if (scanAllowedPackages != null && scanAllowedPackages.length() > 0)
 		{
 			String[] allowedPackages = RegexpPatterns.REGEXP_COMMA.split(scanAllowedPackages);
 			for (String allowed : allowedPackages) 
@@ -108,7 +110,7 @@ public class ClassScanner
 		}
 		
 		String scanIgnoredPackages = CruxScreenBridge.getInstance().getScanIgnoredPackages();
-		if (!StringUtils.isEmpty(scanIgnoredPackages))
+		if (scanIgnoredPackages != null && scanIgnoredPackages.length() > 0)
 		{
 			String[] ignoredPackages = RegexpPatterns.REGEXP_COMMA.split(scanIgnoredPackages);
 			for (String ignored : ignoredPackages) 

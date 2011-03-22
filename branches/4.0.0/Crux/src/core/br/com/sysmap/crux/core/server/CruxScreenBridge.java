@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.rebind;
+package br.com.sysmap.crux.core.server;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.utils.FileUtils;
 
 
@@ -33,7 +32,10 @@ import br.com.sysmap.crux.core.utils.FileUtils;
  * A Bridge class for allow Generators to know the name of the module 
  * that starts the generation process. Crux Generators need this information
  * to obtain better performance for method handlers in client side of 
- * applications. 
+ * applications.
+ * <p>
+ * When GWT generators and the application server run in different JVMs, 
+ * the only way to obtain these informations is using a bridge. 
  * 
  * @author Thiago da Rosa de Bustamante
  *
@@ -51,8 +53,6 @@ public class CruxScreenBridge
 	private String screenRequested = null;
 	private String outputCharset = null;
 	
-	//How GWT generators and the application server run in different JVMs, 
-	//the only way to obtain these informations is using a bridge.
 	private File screenRequestedFile;
 	private File outputCharsetFile;
 	private boolean singleVM = false;

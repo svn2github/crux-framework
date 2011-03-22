@@ -25,7 +25,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
 
 /**
  * Used to save the path to the current HTML page. This information is necessary

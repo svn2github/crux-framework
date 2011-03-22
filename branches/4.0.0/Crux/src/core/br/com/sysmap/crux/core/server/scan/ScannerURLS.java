@@ -23,8 +23,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
+import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
+import br.com.sysmap.crux.scannotation.ClasspathUrlFinder;
 
 /**
  * 
@@ -75,15 +77,21 @@ public class ScannerURLS
 		if (urls != null) return urls;
 		try
 		{
-			try
+			if (Environment.isProduction())
 			{
-				urls = ClassPathResolverInitializer.getClassPathResolver().findWebInfLibJars();
+				try
+				{
+					urls = ClassPathResolverInitializer.getClassPathResolver().findWebInfLibJars();
+				}
+				catch (Throwable e) 
+				{
+					logger.error(messages.scannerURLSErrorSearchingLibDir(e.getLocalizedMessage()), e);
+				}
 			}
-			catch (Throwable e) 
+			else
 			{
-				logger.error(messages.scannerURLSErrorSearchingLibDir(e.getLocalizedMessage()), e);
+				urls = ClasspathUrlFinder.findClassPaths();
 			}
-
 			URL webInfClasses = ClassPathResolverInitializer.getClassPathResolver().findWebInfClassesPath();
 
 			if (webInfClasses != null)

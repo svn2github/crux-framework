@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 
 import br.com.sysmap.crux.classpath.URLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.rebind.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxScreenBridge;
 import br.com.sysmap.crux.core.server.InitializerListener;
 import br.com.sysmap.crux.scannotation.archiveiterator.Filter;
 import br.com.sysmap.crux.scannotation.archiveiterator.URLIterator;
