@@ -38,6 +38,9 @@
 	distribution file. Don't remove those comments.
 	===========================================================================			
 	-->
+	<listener>
+        <listener-class>br.com.sysmap.crux.core.rebind.DevModeInitializerListener</listener-class>
+    </listener>
 	<filter>
 		<display-name>ModulesDeclarativeUIFilter</display-name>
 		<filter-name>ModulesDeclarativeUIFilter</filter-name>
