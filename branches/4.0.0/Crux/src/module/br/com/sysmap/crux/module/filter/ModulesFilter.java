@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import br.com.sysmap.crux.core.server.CruxFilter;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 import br.com.sysmap.crux.module.CruxModuleBridge;
 import br.com.sysmap.crux.module.CruxModuleHandler;
@@ -76,7 +76,7 @@ public class ModulesFilter extends CruxFilter
 				String currentModule = requestedScreen.substring(0, index);
 				requestedScreen = requestedScreen.substring(index+1);
 				CruxModuleBridge.getInstance().registerCurrentModule(currentModule);
-				CruxScreenBridge.getInstance().registerLastPageRequested(requestedScreen);
+				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
 				try
 				{
 					InputStream screenResource = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenResource(requestedScreen);

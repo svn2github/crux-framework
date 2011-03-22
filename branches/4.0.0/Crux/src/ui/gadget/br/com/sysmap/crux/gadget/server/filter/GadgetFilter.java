@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.rebind.screen.ScreenConfigException;
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.Environment;
 
 /**
@@ -71,7 +71,7 @@ public class GadgetFilter implements Filter
 			String requestedScreen = getRequestedScreen(req);
 			if (requestedScreen != null)
 			{
-				CruxScreenBridge.getInstance().registerLastPageRequested(requestedScreen);
+				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
 			}
 						
 			try

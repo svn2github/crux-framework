@@ -62,7 +62,7 @@ public class InitializerListener implements ServletContextListener
 			context = contextEvent.getServletContext();
 			if (Environment.isProduction())
 			{
-				CruxScreenBridge.getInstance().setSingleVM(true);	
+				CruxBridge.getInstance().setSingleVM(true);	
 			}
 			
 			//TODO - Thiago documentar isso no wiki
@@ -71,21 +71,21 @@ public class InitializerListener implements ServletContextListener
 			String classScannerAllowedPackages = contextEvent.getServletContext().getInitParameter("classScannerAllowedPackages");
 			if (classScannerAllowedPackages != null && classScannerAllowedPackages.length() > 0)
 			{
-				CruxScreenBridge.getInstance().registerScanAllowedPackages(classScannerAllowedPackages);
+				CruxBridge.getInstance().registerScanAllowedPackages(classScannerAllowedPackages);
 			}
 			else
 			{
-				CruxScreenBridge.getInstance().registerScanAllowedPackages("");
+				CruxBridge.getInstance().registerScanAllowedPackages("");
 			}
 			
 			String classScannerIgnoredPackages = contextEvent.getServletContext().getInitParameter("classScannerIgnoredPackages");
 			if (classScannerIgnoredPackages != null && classScannerIgnoredPackages.length() > 0)
 			{
-				CruxScreenBridge.getInstance().registerScanIgnoredPackages(classScannerIgnoredPackages);
+				CruxBridge.getInstance().registerScanIgnoredPackages(classScannerIgnoredPackages);
 			}
 			else
 			{
-				CruxScreenBridge.getInstance().registerScanIgnoredPackages("");
+				CruxBridge.getInstance().registerScanIgnoredPackages("");
 			}
 			ConfigurationFactory.getConfigurations();
 			ServiceFactoryInitializer.initialize(context);

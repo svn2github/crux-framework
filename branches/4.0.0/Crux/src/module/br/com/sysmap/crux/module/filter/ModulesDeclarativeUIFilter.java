@@ -27,7 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 import br.com.sysmap.crux.module.CruxModuleBridge;
 
@@ -57,7 +57,7 @@ public class ModulesDeclarativeUIFilter extends ModulesFilter
 				String currentModule = requestedScreen.substring(0, index);
 				requestedScreen = requestedScreen.substring(index+1);
 				CruxModuleBridge.getInstance().registerCurrentModule(currentModule);
-				CruxScreenBridge.getInstance().registerLastPageRequested(requestedScreen);
+				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
 				try
 				{
 					String screenId = requestedScreen.replace(".html", ".crux.xml");

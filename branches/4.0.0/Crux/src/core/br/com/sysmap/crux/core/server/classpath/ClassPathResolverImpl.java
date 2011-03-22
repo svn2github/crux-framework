@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 
 import br.com.sysmap.crux.classpath.URLResourceHandler;
 import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.InitializerListener;
 import br.com.sysmap.crux.scannotation.archiveiterator.Filter;
 import br.com.sysmap.crux.scannotation.archiveiterator.URLIterator;
@@ -187,12 +187,12 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	    if (context != null)
 	    {
 	    	URL webInfClasses = context.getResource("/WEB-INF/classes/");
-	    	CruxScreenBridge.getInstance().registerWebinfClasses(webInfClasses.toString());
+	    	CruxBridge.getInstance().registerWebinfClasses(webInfClasses.toString());
 			return webInfClasses;
 	    }
 	    else
 	    {
-	    	return new URL(CruxScreenBridge.getInstance().getWebinfClasses());
+	    	return new URL(CruxBridge.getInstance().getWebinfClasses());
 	    }
     }
 
@@ -206,12 +206,12 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	    if (context != null)
 	    {
 	    	URL webInfClasses = context.getResource("/WEB-INF/lib/");
-	    	CruxScreenBridge.getInstance().registerWebinfLib(webInfClasses.toString());
+	    	CruxBridge.getInstance().registerWebinfLib(webInfClasses.toString());
 			return webInfClasses;
 	    }
 	    else
 	    {
-	    	return new URL(CruxScreenBridge.getInstance().getWebinfLib());
+	    	return new URL(CruxBridge.getInstance().getWebinfLib());
 	    }
     }
 }

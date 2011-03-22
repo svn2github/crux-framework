@@ -40,10 +40,10 @@ import br.com.sysmap.crux.core.utils.FileUtils;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class CruxScreenBridge 
+public class CruxBridge 
 {
-	private static CruxScreenBridge instance = new CruxScreenBridge();
-	private static final Log logger = LogFactory.getLog(CruxScreenBridge.class);
+	private static CruxBridge instance = new CruxBridge();
+	private static final Log logger = LogFactory.getLog(CruxBridge.class);
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	private String scanAllowedPackages = null;
@@ -65,7 +65,7 @@ public class CruxScreenBridge
 	/**
 	 * 
 	 */
-	private CruxScreenBridge() 
+	private CruxBridge() 
 	{
 	}
 
@@ -73,7 +73,7 @@ public class CruxScreenBridge
 	 * Singleton method
 	 * @return
 	 */
-	public static CruxScreenBridge getInstance()
+	public static CruxBridge getInstance()
 	{
 		return instance;
 	}

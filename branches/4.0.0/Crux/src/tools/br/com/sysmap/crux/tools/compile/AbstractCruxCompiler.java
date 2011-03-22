@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
 import br.com.sysmap.crux.core.declarativeui.CruxToHtmlTransformer;
 import br.com.sysmap.crux.core.rebind.module.Module;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.FileUtils;
@@ -82,7 +82,7 @@ public abstract class AbstractCruxCompiler
 	 */
 	public AbstractCruxCompiler()
 	{
-		CruxScreenBridge.getInstance().setSingleVM(true);
+		CruxBridge.getInstance().setSingleVM(true);
 		clearCruxBridgeProperties();
 	}
 
@@ -249,7 +249,7 @@ public abstract class AbstractCruxCompiler
 	 */
 	public void setScanAllowedPackages(String packages)
     {
-	    CruxScreenBridge.getInstance().registerScanAllowedPackages(packages);
+	    CruxBridge.getInstance().registerScanAllowedPackages(packages);
     }
 
 	/**
@@ -257,7 +257,7 @@ public abstract class AbstractCruxCompiler
 	 */
 	public void setScanIgnoredPackages(String packages)
     {
-	    CruxScreenBridge.getInstance().registerScanIgnoredPackages(packages);
+	    CruxBridge.getInstance().registerScanIgnoredPackages(packages);
     }
 
 	/**
@@ -302,9 +302,9 @@ public abstract class AbstractCruxCompiler
 	 */
 	protected void clearCruxBridgeProperties()
     {
-	    CruxScreenBridge.getInstance().registerScanAllowedPackages("");
-		CruxScreenBridge.getInstance().registerScanIgnoredPackages("");
-		CruxScreenBridge.getInstance().registerLastPageRequested("");
+	    CruxBridge.getInstance().registerScanAllowedPackages("");
+		CruxBridge.getInstance().registerScanIgnoredPackages("");
+		CruxBridge.getInstance().registerLastPageRequested("");
     }
 
 	/**
@@ -481,7 +481,7 @@ public abstract class AbstractCruxCompiler
 	protected void doCompileModule(URL url, Module module) throws Exception
     {
 		boolean isModuleNotCompiled = !isModuleCompiled(module);
-	    CruxScreenBridge.getInstance().registerLastPageRequested(url.toString());
+	    CruxBridge.getInstance().registerLastPageRequested(url.toString());
 	    URL preprocessedFile = preProcessCruxPage(url, module);
 	    if (isModuleNotCompiled)
 	    {

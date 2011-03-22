@@ -59,7 +59,7 @@ public class CruxFilter implements Filter
 			String requestedScreen = getRequestedScreen(req);
 			if (requestedScreen != null)
 			{
-				CruxScreenBridge.getInstance().registerLastPageRequested(requestedScreen);
+				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
 			}
 						
 			chain.doFilter(req, resp);

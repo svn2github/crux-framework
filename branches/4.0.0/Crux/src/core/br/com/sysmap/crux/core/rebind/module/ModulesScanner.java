@@ -41,7 +41,7 @@ import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.GeneratorMessages;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ScannerURLS;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
@@ -106,7 +106,7 @@ public class ModulesScanner extends AbstractScanner
 	private void initializeAllowedPackages()
 	{
 		addRequiredPackage("br.com.sysmap.crux");
-		String scanAllowedPackages = CruxScreenBridge.getInstance().getScanAllowedPackages();
+		String scanAllowedPackages = CruxBridge.getInstance().getScanAllowedPackages();
 		if (!StringUtils.isEmpty(scanAllowedPackages))
 		{
 			String[] allowedPackages = RegexpPatterns.REGEXP_COMMA.split(scanAllowedPackages);
@@ -116,7 +116,7 @@ public class ModulesScanner extends AbstractScanner
 			}
 		}
 		
-		String scanIgnoredPackages = CruxScreenBridge.getInstance().getScanIgnoredPackages();
+		String scanIgnoredPackages = CruxBridge.getInstance().getScanIgnoredPackages();
 		if (!StringUtils.isEmpty(scanIgnoredPackages))
 		{
 			String[] ignoredPackages = RegexpPatterns.REGEXP_COMMA.split(scanIgnoredPackages);

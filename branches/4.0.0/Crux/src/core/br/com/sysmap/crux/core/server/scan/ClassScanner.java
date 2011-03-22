@@ -27,7 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
@@ -99,7 +99,7 @@ public class ClassScanner
 		scannerDB.addRequiredPackage("br.com.sysmap.crux");
 		scannerDB.addRequiredPackage("com.google.gwt.i18n.client");
 		
-		String scanAllowedPackages = CruxScreenBridge.getInstance().getScanAllowedPackages();
+		String scanAllowedPackages = CruxBridge.getInstance().getScanAllowedPackages();
 		if (scanAllowedPackages != null && scanAllowedPackages.length() > 0)
 		{
 			String[] allowedPackages = RegexpPatterns.REGEXP_COMMA.split(scanAllowedPackages);
@@ -109,7 +109,7 @@ public class ClassScanner
 			}
 		}
 		
-		String scanIgnoredPackages = CruxScreenBridge.getInstance().getScanIgnoredPackages();
+		String scanIgnoredPackages = CruxBridge.getInstance().getScanIgnoredPackages();
 		if (scanIgnoredPackages != null && scanIgnoredPackages.length() > 0)
 		{
 			String[] ignoredPackages = RegexpPatterns.REGEXP_COMMA.split(scanIgnoredPackages);

@@ -35,7 +35,7 @@ import org.w3c.dom.Document;
 
 import br.com.sysmap.crux.core.declarativeui.template.TemplatesPreProcessor;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.Environment;
 import br.com.sysmap.crux.core.utils.StreamUtils;
 
@@ -121,7 +121,7 @@ public class CruxToHtmlTransformer
 	public static void setOutputCharset(String charset)
 	{
 		outputCharset = charset;
-		CruxScreenBridge.getInstance().registerPageOutputCharset(charset);
+		CruxBridge.getInstance().registerPageOutputCharset(charset);
 	}	
 
 	/**
@@ -131,7 +131,7 @@ public class CruxToHtmlTransformer
 	{
 		if (outputCharset == null)
 		{
-			outputCharset = CruxScreenBridge.getInstance().getOutputCharset();
+			outputCharset = CruxBridge.getInstance().getOutputCharset();
 		}
 		return outputCharset;
 	}

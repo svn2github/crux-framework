@@ -22,7 +22,7 @@ import java.util.List;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.rebind.module.Modules;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.module.CruxModuleHandler;
 import br.com.sysmap.crux.module.CruxModuleMessages;
 
@@ -60,10 +60,10 @@ public class ModulesLauncher
 		File webinfClassesDir = new File(webDir, "WEB-INF/classes");
 		File webinfLibDir = new File(webDir, "WEB-INF/lib");
 		
-		CruxScreenBridge.getInstance().registerWebinfClasses(webinfClassesDir.toURI().toURL().toString());
-		CruxScreenBridge.getInstance().registerWebinfLib(webinfLibDir.toURI().toURL().toString());
-		CruxScreenBridge.getInstance().registerScanIgnoredPackages("");
-		CruxScreenBridge.getInstance().registerScanAllowedPackages("");
+		CruxBridge.getInstance().registerWebinfClasses(webinfClassesDir.toURI().toURL().toString());
+		CruxBridge.getInstance().registerWebinfLib(webinfLibDir.toURI().toURL().toString());
+		CruxBridge.getInstance().registerScanIgnoredPackages("");
+		CruxBridge.getInstance().registerScanAllowedPackages("");
 
 		List<String> modules = new ArrayList<String>();
 		for (String moduleName : developmentModules)

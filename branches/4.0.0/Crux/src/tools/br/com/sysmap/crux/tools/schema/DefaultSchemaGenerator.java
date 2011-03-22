@@ -60,7 +60,7 @@ import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
 import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.core.server.CruxScreenBridge;
+import br.com.sysmap.crux.core.server.CruxBridge;
 import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
 import br.com.sysmap.crux.core.utils.ClassUtils;
@@ -193,7 +193,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
     {
 	    try
         {
-	        CruxScreenBridge.getInstance().setSingleVM(true);
+	        CruxBridge.getInstance().setSingleVM(true);
 	        ConfigurationFactory.getConfigurations().setEnableHotDeploymentForWebDirs(false);
 	        ConfigurationFactory.getConfigurations().setEnableWebRootScannerCache(true);
 	        URL[] urls = ClasspathUrlFinder.findClassPaths();
