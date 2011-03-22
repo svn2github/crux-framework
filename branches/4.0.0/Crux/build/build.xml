@@ -122,6 +122,9 @@
 		<copy todir="${expanded.dir}/apps/helloworld.war">
 			<fileset dir="${samples.dir}/helloworld.war" excludes="**/*.jar"/>
 		</copy>	
+		<copy todir="${expanded.dir}/apps/quickstart.war">
+			<fileset dir="${samples.dir}/quickstart.war" excludes="**/*.jar"/>
+		</copy>	
 
 		<!--antcall target="generate-javadoc" /-->
 		<!--zip basedir="${expanded.dir}" destfile="${distdir}/crux-${version}.zip" /-->
