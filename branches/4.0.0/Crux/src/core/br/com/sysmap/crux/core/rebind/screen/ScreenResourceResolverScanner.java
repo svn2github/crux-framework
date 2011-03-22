@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.com.sysmap.crux.core.config.ConfigurationFactory;
+import br.com.sysmap.crux.core.declarativeui.DeclarativeUIScreenResolver;
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 import br.com.sysmap.crux.core.server.ServerMessages;
 import br.com.sysmap.crux.core.server.scan.ClassScanner;
@@ -65,6 +66,6 @@ public class ScreenResourceResolverScanner
 		{
 			logger.debug(messages.screenResourceResolverUsingDefault());
 		}
-		return ScreenResourceResolverImpl.class;
+		return DeclarativeUIScreenResolver.class;
 	}
 }

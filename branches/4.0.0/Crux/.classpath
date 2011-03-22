@@ -10,7 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/gwt-dev.jar" sourcepath="lib/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-user.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CruxScannotation"/>
 	<classpathentry kind="lib" path="lib/crux-dev-deps.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
