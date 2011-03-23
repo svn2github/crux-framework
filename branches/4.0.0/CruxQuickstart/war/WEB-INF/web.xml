@@ -26,7 +26,7 @@
 	
     <context-param>
 	    <param-name>classScannerAllowedPackages</param-name>
-	    <param-value>br.com.sysmap.crux.tools.quickstart</param-value>
+	    <param-value>org.cruxframework.crux.tools.quickstart</param-value>
   	</context-param>
 	
 	<!--antReplacementBlockBegin-->

@@ -13,25 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.screen;
+package org.cruxframework.crux.tools.quickstart.client.screen;
 
-import br.com.sysmap.crux.core.client.screen.ScreenWrapper;
-import br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel;
-import br.com.sysmap.crux.widgets.client.select.SingleSelect;
-import br.com.sysmap.crux.widgets.client.wizard.Wizard;
+import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public interface QuickStartScreen extends ScreenWrapper
+public interface OverviewScreen extends ScreenWrapper
 {
-	SingleSelect getProjectLayout();
-	FlexTable getProjectInfo();
-	Wizard<?> getQuickstartWizard();
-	RollingPanel getDirSelectorRollingPanel();
-	VerticalPanel getDirSelectorBox();
+	Label getVersionLabel();
 }

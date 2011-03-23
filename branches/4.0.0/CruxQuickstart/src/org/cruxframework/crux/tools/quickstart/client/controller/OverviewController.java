@@ -13,18 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.controller;
+package org.cruxframework.crux.tools.quickstart.client.controller;
+
+import org.cruxframework.crux.tools.quickstart.client.QuickStartMessages;
+import org.cruxframework.crux.tools.quickstart.client.remote.WelcomeServiceAsync;
+import org.cruxframework.crux.tools.quickstart.client.screen.OverviewScreen;
 
 import com.google.gwt.user.client.Window;
 
-import br.com.sysmap.crux.core.client.controller.Controller;
-import br.com.sysmap.crux.core.client.controller.Create;
-import br.com.sysmap.crux.core.client.controller.Expose;
-import br.com.sysmap.crux.core.client.rpc.AsyncCallbackAdapter;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.tools.quickstart.client.QuickStartMessages;
-import br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeServiceAsync;
-import br.com.sysmap.crux.tools.quickstart.client.screen.OverviewScreen;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Create;
+import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
+import org.cruxframework.crux.core.client.screen.Screen;
 
 /**
  * @author Thiago da Rosa de Bustamante -

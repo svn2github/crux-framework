@@ -13,15 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.remote;
+package org.cruxframework.crux.tools.quickstart.client.screen;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.cruxframework.crux.core.client.screen.ScreenWrapper;
+import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.select.SingleSelect;
+import org.cruxframework.crux.widgets.client.wizard.Wizard;
+
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public interface WelcomeServiceAsync
+public interface QuickStartScreen extends ScreenWrapper
 {
-	void getCruxVersion(AsyncCallback<String> callback);
+	SingleSelect getProjectLayout();
+	FlexTable getProjectInfo();
+	Wizard<?> getQuickstartWizard();
+	RollingPanel getDirSelectorRollingPanel();
+	VerticalPanel getDirSelectorBox();
 }

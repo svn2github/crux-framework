@@ -13,20 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.remote;
+package org.cruxframework.crux.tools.quickstart.client.remote;
 
-import br.com.sysmap.crux.tools.quickstart.client.dto.DirectoryInfo;
-import br.com.sysmap.crux.tools.quickstart.client.dto.ProjectInfo;
-
-import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public interface QuickStartService extends RemoteService
+public interface WelcomeServiceAsync
 {
-	ProjectInfo getProjectInfoDefaultValues();
-	DirectoryInfo getDirectoryInfo(String directoryPath);
-	Boolean generateProject(ProjectInfo projectInfo);
+	void getCruxVersion(AsyncCallback<String> callback);
 }

@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client;
+package org.cruxframework.crux.tools.quickstart.client;
 
-import br.com.sysmap.crux.core.client.i18n.MessageName;
+import org.cruxframework.crux.core.client.i18n.MessageName;
 
 import com.google.gwt.i18n.client.Messages;
 

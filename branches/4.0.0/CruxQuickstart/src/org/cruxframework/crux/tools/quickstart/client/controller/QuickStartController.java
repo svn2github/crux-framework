@@ -13,27 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.controller;
+package org.cruxframework.crux.tools.quickstart.client.controller;
 
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.controller.Controller;
-import br.com.sysmap.crux.core.client.controller.Create;
-import br.com.sysmap.crux.core.client.controller.Expose;
-import br.com.sysmap.crux.core.client.rpc.AsyncCallbackAdapter;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.tools.quickstart.client.QuickStartMessages;
-import br.com.sysmap.crux.tools.quickstart.client.dto.DirectoryInfo;
-import br.com.sysmap.crux.tools.quickstart.client.dto.ProjectInfo;
-import br.com.sysmap.crux.tools.quickstart.client.remote.QuickStartServiceAsync;
-import br.com.sysmap.crux.tools.quickstart.client.screen.QuickStartScreen;
-import br.com.sysmap.crux.widgets.client.dialog.MessageBox;
-import br.com.sysmap.crux.widgets.client.dialog.ProgressDialog;
-import br.com.sysmap.crux.widgets.client.event.OkEvent;
-import br.com.sysmap.crux.widgets.client.event.OkHandler;
-import br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel;
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar;
+import org.cruxframework.crux.tools.quickstart.client.QuickStartMessages;
+import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
+import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
+import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartServiceAsync;
+import org.cruxframework.crux.tools.quickstart.client.screen.QuickStartScreen;
+
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Create;
+import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.dialog.MessageBox;
+import org.cruxframework.crux.widgets.client.dialog.ProgressDialog;
+import org.cruxframework.crux.widgets.client.event.OkEvent;
+import org.cruxframework.crux.widgets.client.event.OkHandler;
+import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

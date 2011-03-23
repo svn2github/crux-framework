@@ -13,22 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.server.service;
+package org.cruxframework.crux.tools.quickstart.client.remote;
 
-import br.com.sysmap.crux.core.i18n.DefaultServerMessage;
+import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
- * Server-side messages.
- * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
+ * @author Thiago da Rosa de Bustamante -
+ *
  */
-public interface QuickStartServerMessages
+public interface WelcomeService extends RemoteService
 {
-	@DefaultServerMessage("Monolithic Application")
-	String projectLayoutMonolithicApp();
-	
-	@DefaultServerMessage("Module Application")
-	String projectLayoutModuleApp();
-	
-	@DefaultServerMessage("Module Container Application")
-	String projectLayoutModuleContainerApp();
+	String getCruxVersion();
 }

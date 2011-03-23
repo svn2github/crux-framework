@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.server.service;
+package org.cruxframework.crux.tools.quickstart.server.service;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,15 +25,15 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
+import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
+import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.tools.projectgen.CruxProjectGenerator;
-import br.com.sysmap.crux.tools.projectgen.CruxProjectGeneratorOptions;
-import br.com.sysmap.crux.tools.projectgen.CruxProjectGenerator.Names;
-import br.com.sysmap.crux.tools.projectgen.CruxProjectGeneratorOptions.ProjectLayout;
-import br.com.sysmap.crux.tools.quickstart.client.dto.DirectoryInfo;
-import br.com.sysmap.crux.tools.quickstart.client.dto.ProjectInfo;
-import br.com.sysmap.crux.tools.quickstart.client.remote.QuickStartService;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions.ProjectLayout;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -45,7 +45,7 @@ public class QuickStartServiceImpl implements QuickStartService
 	private static QuickStartServerMessages messages = MessagesFactory.getMessages(QuickStartServerMessages.class);
 
 	/**
-	 * @see br.com.sysmap.crux.tools.quickstart.client.remote.QuickStartService#getProjectInfoDefaultValues()
+	 * @see org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService#getProjectInfoDefaultValues()
 	 */
 	public ProjectInfo getProjectInfoDefaultValues()
     {
@@ -84,7 +84,7 @@ public class QuickStartServiceImpl implements QuickStartService
     }
 
 	/**
-	 * @see br.com.sysmap.crux.tools.quickstart.client.remote.QuickStartService#generateProject(br.com.sysmap.crux.tools.quickstart.client.dto.ProjectInfo)
+	 * @see org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService#generateProject(org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo)
 	 */
 	public Boolean generateProject(ProjectInfo projectInfo)
     {
@@ -106,7 +106,7 @@ public class QuickStartServiceImpl implements QuickStartService
     }
 
 	/**
-	 * @see br.com.sysmap.crux.tools.quickstart.client.remote.QuickStartService#getDirectoryInfo(java.lang.String)
+	 * @see org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService#getDirectoryInfo(java.lang.String)
 	 */
 	public DirectoryInfo getDirectoryInfo(String directoryPath)
     {

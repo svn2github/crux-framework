@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.dto;
+package org.cruxframework.crux.tools.quickstart.client.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.controller.ValueObject;
+import org.cruxframework.crux.core.client.controller.ValueObject;
 
 /**
  * @author Thiago da Rosa de Bustamante -

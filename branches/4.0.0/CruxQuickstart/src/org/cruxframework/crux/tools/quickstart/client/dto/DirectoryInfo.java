@@ -13,20 +13,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.remote;
+package org.cruxframework.crux.tools.quickstart.client.dto;
 
-import br.com.sysmap.crux.tools.quickstart.client.dto.DirectoryInfo;
-import br.com.sysmap.crux.tools.quickstart.client.dto.ProjectInfo;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.io.Serializable;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public interface QuickStartServiceAsync
+public class DirectoryInfo implements Serializable
 {
-	void getProjectInfoDefaultValues(AsyncCallback<ProjectInfo> callback);
-	void getDirectoryInfo(String directoryPath, AsyncCallback<DirectoryInfo> callback);
-	void generateProject(ProjectInfo projectInfo, AsyncCallback<Boolean> callback);
+    private static final long serialVersionUID = -2345561176695686467L;
+
+    private String fullPath;
+
+	private String[] contents;
+
+	public void setFullPath(String fullPath)
+    {
+		this.fullPath = fullPath;
+    }
+
+	public String getFullPath()
+    {
+    	return fullPath;
+    }
+
+	public void setContents(String[] contents)
+    {
+		this.contents = contents;
+    }
+
+	public String[] getContents()
+    {
+    	return contents;
+    }
 }

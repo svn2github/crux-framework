@@ -29,7 +29,7 @@
 		</fileset>
 	</path>
 
-	<taskdef resource="br/com/sysmap/crux/tools/crux-module-tools.xml">
+	<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
 		<classpath>
 			<path refid="build.classpath" />
 		</classpath>

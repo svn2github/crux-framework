@@ -13,17 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.screen;
+package org.cruxframework.crux.tools.quickstart.server.service;
 
-import br.com.sysmap.crux.core.client.screen.ScreenWrapper;
-
-import com.google.gwt.user.client.ui.Label;
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
 /**
- * @author Thiago da Rosa de Bustamante -
- *
+ * Server-side messages.
+ * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
  */
-public interface OverviewScreen extends ScreenWrapper
+public interface QuickStartServerMessages
 {
-	Label getVersionLabel();
+	@DefaultServerMessage("Monolithic Application")
+	String projectLayoutMonolithicApp();
+	
+	@DefaultServerMessage("Module Application")
+	String projectLayoutModuleApp();
+	
+	@DefaultServerMessage("Module Container Application")
+	String projectLayoutModuleContainerApp();
 }

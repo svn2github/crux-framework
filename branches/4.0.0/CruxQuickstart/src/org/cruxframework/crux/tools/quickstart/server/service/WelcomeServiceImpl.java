@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.server.service;
+package org.cruxframework.crux.tools.quickstart.server.service;
 
 import java.util.PropertyResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeService;
+import org.cruxframework.crux.tools.quickstart.client.remote.WelcomeService;
+
 
 /**
  * @author Thiago da Rosa de Bustamante 
@@ -31,7 +32,7 @@ public class WelcomeServiceImpl implements WelcomeService
 	private static Lock lock = new ReentrantLock();
 	
 	/**
-	 * @see br.com.sysmap.crux.tools.quickstart.client.remote.WelcomeService#getCruxVersion()
+	 * @see org.cruxframework.crux.tools.quickstart.client.remote.WelcomeService#getCruxVersion()
 	 */
 	public String getCruxVersion()
 	{

@@ -13,39 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.tools.quickstart.client.dto;
+package org.cruxframework.crux.tools.quickstart.client.controller;
 
-import java.io.Serializable;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.screen.Screen;
+
+import com.google.gwt.user.client.Window;
 
 /**
  * @author Thiago da Rosa de Bustamante -
  *
  */
-public class DirectoryInfo implements Serializable
+@Controller("examplesController")
+public class ExamplesController
 {
-    private static final long serialVersionUID = -2345561176695686467L;
-
-    private String fullPath;
-
-	private String[] contents;
-
-	public void setFullPath(String fullPath)
-    {
-		this.fullPath = fullPath;
-    }
-
-	public String getFullPath()
-    {
-    	return fullPath;
-    }
-
-	public void setContents(String[] contents)
-    {
-		this.contents = contents;
-    }
-
-	public String[] getContents()
-    {
-    	return contents;
-    }
+	@Expose
+	public void openShowcase()
+	{
+		Window.Location.assign("http://crux-showcase.appspot.com/");
+	}
+	
+	@Expose
+	public void openHelloWorld()
+	{
+		Window.Location.assign("/helloworld/index.html");
+	}	
+	
+	@Expose
+	public void backToMainMenu()
+	{
+		Window.Location.assign(Screen.appendDebugParameters("index.html"));
+	}
 }
