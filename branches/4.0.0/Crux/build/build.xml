@@ -151,24 +151,24 @@
 		<jar jarfile="${dist.dir}/${crux.runtime.name}.jar">
 			<fileset dir="${classes.dir}" >
 				<exclude name="**/public/*" />
-				<exclude name="br/com/sysmap/crux/core/client/**/*" />
-				<exclude name="br/com/sysmap/crux/core/rebind/**/*" />
-				<exclude name="br/com/sysmap/crux/core/declarativeui/**/*" />
-				<exclude name="br/com/sysmap/crux/core/client" />
-				<exclude name="br/com/sysmap/crux/core/rebind" />
-				<exclude name="br/com/sysmap/crux/core/declarativeui" />
+				<exclude name="org/cruxframework/crux/core/client/**/*" />
+				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
+				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+				<exclude name="org/cruxframework/crux/core/client" />
+				<exclude name="org/cruxframework/crux/core/rebind" />
+				<exclude name="org/cruxframework/crux/core/declarativeui" />
 			</fileset>
 			<fileset dir="${classes.dir}">
-				<include name="br/com/sysmap/crux/core/client/rpc/**/*" />
+				<include name="org/cruxframework/crux/core/client/rpc/**/*" />
 			</fileset>
 			<fileset dir="${core.src.dir}" >
-				<exclude name="br/com/sysmap/crux/core/client/**/*" />
-				<exclude name="br/com/sysmap/crux/core/rebind/**/*" />
-				<exclude name="br/com/sysmap/crux/core/declarativeui/**/*" />
-				<exclude name="br/com/sysmap/crux/core/client" />
-				<exclude name="br/com/sysmap/crux/core/rebind" />
-				<exclude name="br/com/sysmap/crux/core/declarativeui" />
-				<exclude name="br/com/sysmap/crux/core/Crux.gwt.xml" />
+				<exclude name="org/cruxframework/crux/core/client/**/*" />
+				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
+				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+				<exclude name="org/cruxframework/crux/core/client" />
+				<exclude name="org/cruxframework/crux/core/rebind" />
+				<exclude name="org/cruxframework/crux/core/declarativeui" />
+				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
 			</fileset>
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
@@ -206,7 +206,7 @@
 		
 		<jar jarfile="${dist.dir}/${crux.gadgets.name}.jar">
 			<fileset dir="${classes.dir}" excludes="**/public/*" >
-				<include name="br/com/sysmap/crux/gadget/**/*" />
+				<include name="org/cruxframework/crux/gadget/**/*" />
 				<include name="com/google/gwt/gadgets/**/*" />
 				<include name="com/google/gwt/ajaxloader/**/*" />
 			</fileset>	
@@ -247,7 +247,7 @@
 		
 		<jar jarfile="${dist.dir}/${crux.widgets.name}.jar">
 			<fileset dir="${classes.dir}" excludes="**/public/*" >
-				<include name="br/com/sysmap/crux/widgets/**/*" />
+				<include name="org/cruxframework/crux/widgets/**/*" />
 			</fileset>	
 			<fileset dir="${widgets.src.dir}" />
 			<manifest>

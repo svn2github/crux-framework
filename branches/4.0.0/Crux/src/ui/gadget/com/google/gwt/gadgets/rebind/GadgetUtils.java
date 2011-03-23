@@ -21,13 +21,13 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cruxframework.crux.gadget.client.meta.LanguageDirection;
+import org.cruxframework.crux.gadget.client.meta.GadgetInfo.GadgetLocale;
+import org.cruxframework.crux.gadget.client.meta.GadgetInfo.UseLongManifestName;
+import org.cruxframework.crux.gadget.client.meta.GadgetInfo.UserPreferences;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.GadgetLocale;
-import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UseLongManifestName;
-import br.com.sysmap.crux.gadget.client.meta.GadgetInfo.UserPreferences;
-import br.com.sysmap.crux.gadget.client.meta.LanguageDirection;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;

@@ -17,10 +17,10 @@ package com.google.gwt.gadgets.rebind;
 
 import java.lang.reflect.Method;
 
+import org.cruxframework.crux.gadget.rebind.gadget.GadgetGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import br.com.sysmap.crux.gadget.rebind.gadget.GadgetGenerator;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
