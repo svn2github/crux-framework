@@ -5,6 +5,11 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<context-param> 
+	    <param-name>outputCharset</param-name> 
+	    <param-value>UTF-8</param-value> 
+	</context-param> 
+
 	<listener>
         <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
     </listener>
@@ -28,6 +33,9 @@
 	distribution file. Don't remove those comments.
 	===========================================================================			
 	-->
+	<listener>
+        <listener-class>br.com.sysmap.crux.core.rebind.DevModeInitializerListener</listener-class>
+    </listener>
 	<filter>
 		<display-name>CruxFilter</display-name>
 		<filter-name>CruxFilter</filter-name>
@@ -41,10 +49,6 @@
 		<display-name>HtmlTagsFilter</display-name>
 		<filter-name>HtmlTagsFilter</filter-name>
 		<filter-class>br.com.sysmap.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
-		<init-param>
-			<param-name>outputCharset</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>HtmlTagsFilter</filter-name>
