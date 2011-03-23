@@ -13,23 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
-
+package org.cruxframework.crux.module;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ModuleInfo
+public class CruxModuleException extends RuntimeException
 {
-	private String description;
-	
-	public String getDescription()
+	private static final long serialVersionUID = -7434006850475781532L;
+
+	/**
+	 * 
+	 */
+	public CruxModuleException()
 	{
-		return description;
 	}
-	public void setDescription(String description)
+
+	/**
+	 * @param message
+	 */
+	public CruxModuleException(String message)
 	{
-		this.description = description;
+		super(message);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public CruxModuleException(Throwable cause)
+	{
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public CruxModuleException(String message, Throwable cause)
+	{
+		super(message, cause);
 	}
 }

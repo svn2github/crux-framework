@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
+package org.cruxframework.crux.module;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,22 +31,22 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.cruxframework.crux.classpath.URLResourceHandler;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.rebind.module.Module;
+import org.cruxframework.crux.core.rebind.module.Modules;
+import org.cruxframework.crux.core.server.Environment;
+import org.cruxframework.crux.core.utils.RegexpPatterns;
+import org.cruxframework.crux.module.config.CruxModuleConfigurationFactory;
+import org.cruxframework.crux.module.validation.CruxModuleValidator;
+import org.cruxframework.crux.scannotation.URLStreamManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import br.com.sysmap.crux.classpath.URLResourceHandler;
-import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.module.Module;
-import br.com.sysmap.crux.core.rebind.module.Modules;
-import br.com.sysmap.crux.core.server.Environment;
-import br.com.sysmap.crux.core.utils.RegexpPatterns;
-import br.com.sysmap.crux.module.config.CruxModuleConfigurationFactory;
-import br.com.sysmap.crux.module.validation.CruxModuleValidator;
-import br.com.sysmap.crux.scannotation.URLStreamManager;
 
 /**
  * @author Thiago da Rosa de Bustamante

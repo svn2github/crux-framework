@@ -13,18 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.launch;
+package org.cruxframework.crux.module.launch;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.module.Modules;
-import br.com.sysmap.crux.core.server.CruxBridge;
-import br.com.sysmap.crux.module.CruxModuleHandler;
-import br.com.sysmap.crux.module.CruxModuleMessages;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.rebind.module.Modules;
+import org.cruxframework.crux.core.server.CruxBridge;
+import org.cruxframework.crux.module.CruxModuleHandler;
+import org.cruxframework.crux.module.CruxModuleMessages;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

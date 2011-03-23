@@ -13,45 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
+package org.cruxframework.crux.module.validation;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class CruxModuleException extends RuntimeException
+public interface CruxModuleVersionChecker
 {
-	private static final long serialVersionUID = -7434006850475781532L;
-
-	/**
-	 * 
-	 */
-	public CruxModuleException()
-	{
-	}
-
-	/**
-	 * @param message
-	 */
-	public CruxModuleException(String message)
-	{
-		super(message);
-	}
-
-	/**
-	 * @param cause
-	 */
-	public CruxModuleException(Throwable cause)
-	{
-		super(cause);
-	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public CruxModuleException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+	boolean checkMaxVersion(String expectedVersion, String realVersion);
+	boolean checkMinVersion(String expectedVersion, String realVersion);
 }

@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
+package org.cruxframework.crux.module;
 
 import java.net.URL;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import br.com.sysmap.crux.core.rebind.module.Module;
+import org.cruxframework.crux.core.rebind.module.Module;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

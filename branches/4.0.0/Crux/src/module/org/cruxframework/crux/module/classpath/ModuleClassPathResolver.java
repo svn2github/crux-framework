@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.classpath;
+package org.cruxframework.crux.module.classpath;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.sysmap.crux.classpath.URLResourceHandler;
-import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl;
-import br.com.sysmap.crux.module.CruxModule;
-import br.com.sysmap.crux.module.CruxModuleHandler;
+import org.cruxframework.crux.classpath.URLResourceHandler;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.core.server.classpath.ClassPathResolverImpl;
+import org.cruxframework.crux.module.CruxModule;
+import org.cruxframework.crux.module.CruxModuleHandler;
+
 
 /**
  * A classPathResolver that maps all modules public folders as web root folders 
@@ -33,7 +34,7 @@ import br.com.sysmap.crux.module.CruxModuleHandler;
 public class ModuleClassPathResolver extends ClassPathResolverImpl
 {
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl#findWebBaseDirs()
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolverImpl#findWebBaseDirs()
 	 */
 	@Override
 	public URL[] findWebBaseDirs()

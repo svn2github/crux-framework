@@ -13,14 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.validation;
+package org.cruxframework.crux.module;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface CruxModuleVersionChecker
+public class ModuleInfo
 {
-	boolean checkMaxVersion(String expectedVersion, String realVersion);
-	boolean checkMinVersion(String expectedVersion, String realVersion);
+	private String description;
+	
+	public String getDescription()
+	{
+		return description;
+	}
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
 }

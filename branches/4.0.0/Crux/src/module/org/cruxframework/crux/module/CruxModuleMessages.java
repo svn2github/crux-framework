@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
+package org.cruxframework.crux.module;
 
-import br.com.sysmap.crux.core.i18n.DefaultServerMessage;
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
 /**
  * @author Thiago da Rosa de Bustamante

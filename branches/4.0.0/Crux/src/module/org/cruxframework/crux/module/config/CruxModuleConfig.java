@@ -13,24 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.rebind;
+package org.cruxframework.crux.module.config;
 
-import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
-import br.com.sysmap.crux.core.rebind.config.CruxClientConfigGenerator;
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ConfigGenerator extends CruxClientConfigGenerator
+public interface CruxModuleConfig
 {
-	@Override
-    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf)
-    {
-	    return new ConfigProxyCreator(logger, ctx);
-    }
+	String developmentModules();
+
+	@DefaultServerMessage("org.cruxframework.crux.module.validation.DecimalNotationVersionChecker")
+	String cruxModuleVersionChecker();
+	
+	void setDevelopmentModules(String value);
+	void setCruxModuleVersionChecker(String value);
 }

@@ -13,39 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module;
+package org.cruxframework.crux.module.filter;
+
 
 /**
+ * Used to locate the resources inside the modules structure. Used only for development. When this filter is used, you need 
+ * to remove CruxFilter and HtmlTagsFilter from your web.xml
+ * 
  * @author Thiago da Rosa de Bustamante
- *
+ * @deprecated - Use ModulesDeclarativeUIFilter instead
  */
-public class ModuleRef 
+@Deprecated
+public class ModulesHtmlTagsFilter extends ModulesDeclarativeUIFilter
 {
-	private String name;
-	
-	/**
-	 * 
-	 */
-	public ModuleRef()
-    {
-    }
-	
-	/**
-	 * @param name
-	 * @param group
-	 */
-	public ModuleRef(String name)
-    {
-		this.name = name;
-    }
-
-	public String getName()
-    {
-    	return name;
-    }
-
-	public void setName(String name)
-    {
-    	this.name = name;
-    }
 }

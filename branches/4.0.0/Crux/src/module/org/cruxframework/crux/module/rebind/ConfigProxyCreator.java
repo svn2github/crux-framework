@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.rebind;
+package org.cruxframework.crux.module.rebind;
 
-import br.com.sysmap.crux.core.config.ConfigurationFactory;
-import br.com.sysmap.crux.core.rebind.config.CruxClientConfigProxyCreator;
-import br.com.sysmap.crux.module.CruxModuleHandler;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
+import org.cruxframework.crux.core.rebind.config.CruxClientConfigProxyCreator;
+import org.cruxframework.crux.module.CruxModuleHandler;
+
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;

@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.validation;
+package org.cruxframework.crux.module.validation;
 
-import br.com.sysmap.crux.module.CruxModule;
-import br.com.sysmap.crux.module.CruxModuleHandler;
-import br.com.sysmap.crux.module.ModuleRef;
+import org.cruxframework.crux.module.CruxModule;
+import org.cruxframework.crux.module.CruxModuleHandler;
+import org.cruxframework.crux.module.ModuleRef;
 
 /**
  * @author Thiago da Rosa de Bustamante

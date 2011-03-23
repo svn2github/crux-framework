@@ -13,17 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.validation;
+package org.cruxframework.crux.module.validation;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.module.CruxModuleMessages;
+import org.cruxframework.crux.module.config.CruxModuleConfigurationFactory;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.module.CruxModuleMessages;
-import br.com.sysmap.crux.module.config.CruxModuleConfigurationFactory;
 
 /**
  * @author Thiago da Rosa de Bustamante

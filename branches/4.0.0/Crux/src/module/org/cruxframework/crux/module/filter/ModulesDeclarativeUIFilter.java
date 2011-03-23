@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.filter;
+package org.cruxframework.crux.module.filter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +25,11 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import org.cruxframework.crux.core.server.CruxBridge;
+import org.cruxframework.crux.core.utils.StreamUtils;
+import org.cruxframework.crux.module.CruxModuleBridge;
 
-import br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverInitializer;
-import br.com.sysmap.crux.core.server.CruxBridge;
-import br.com.sysmap.crux.core.utils.StreamUtils;
-import br.com.sysmap.crux.module.CruxModuleBridge;
 
 /**
  * Used to locate the resources inside the modules structure. Used only for development. When this filter is used, you need 

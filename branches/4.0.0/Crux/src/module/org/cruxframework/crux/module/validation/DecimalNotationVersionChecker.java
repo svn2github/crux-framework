@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.validation;
+package org.cruxframework.crux.module.validation;
 
 import java.util.regex.Pattern;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.utils.RegexpPatterns;
-import br.com.sysmap.crux.module.CruxModuleMessages;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.utils.RegexpPatterns;
+import org.cruxframework.crux.module.CruxModuleMessages;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

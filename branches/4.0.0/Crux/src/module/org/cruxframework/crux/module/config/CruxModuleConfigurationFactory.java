@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.module.config;
+package org.cruxframework.crux.module.config;
 
-import br.com.sysmap.crux.core.config.AbstractPropertiesFactory;
-import br.com.sysmap.crux.core.config.ConfigurationInvocationHandler;
-import br.com.sysmap.crux.core.config.ConstantsInvocationHandler;
-import br.com.sysmap.crux.core.i18n.MessageException;
+import org.cruxframework.crux.core.config.AbstractPropertiesFactory;
+import org.cruxframework.crux.core.config.ConfigurationInvocationHandler;
+import org.cruxframework.crux.core.config.ConstantsInvocationHandler;
+import org.cruxframework.crux.core.i18n.MessageException;
 
 /**
  * Factory for configuration parameters. Receive an Interface and use it's name to look for 
