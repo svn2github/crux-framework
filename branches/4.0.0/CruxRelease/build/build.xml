@@ -59,6 +59,7 @@
 		<copy todir="${expanded.dir}/docs">
 			<fileset dir="${crux.dist.dir}/docs" includes="**/*"/>
 		</copy>	
+		<antcall target="update-applications-jars" />
 		
 		<!-- Copy all files to distribution folder -->
 		<copy todir="${expanded.dir}/lib/build">
