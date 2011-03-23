@@ -337,7 +337,7 @@ public class CruxProjectGenerator
 	 */
 	private String getTemplateFile(String templateName) throws IOException
 	{
-		InputStream in = this.getClass().getResourceAsStream("br/com/sysmap/crux/tools/projectgen/templates/" + templateName);
+		InputStream in = this.getClass().getResourceAsStream("/br/com/sysmap/crux/tools/projectgen/templates/" + templateName);
 		return FileUtils.read(in);
 	}
 
