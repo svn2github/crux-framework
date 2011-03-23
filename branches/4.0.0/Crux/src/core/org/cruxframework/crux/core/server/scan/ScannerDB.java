@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.server.scan;
+package org.cruxframework.crux.core.server.scan;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,8 +22,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.cruxframework.crux.scannotation.AnnotationDB;
+
 import javassist.bytecode.ClassFile;
-import br.com.sysmap.crux.scannotation.AnnotationDB;
 
 /**
  * 

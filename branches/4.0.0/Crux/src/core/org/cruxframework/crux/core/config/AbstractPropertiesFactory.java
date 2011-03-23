@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.config;
+package org.cruxframework.crux.core.config;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -22,7 +22,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import br.com.sysmap.crux.core.i18n.MessageException;
+import org.cruxframework.crux.core.i18n.MessageException;
+
 
 /**
  * Abstract Factory for messages based on property files . Receive an Interface and use it's name to look for 

@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.scannotation.archiveiterator;
+package org.cruxframework.crux.scannotation.archiveiterator;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>

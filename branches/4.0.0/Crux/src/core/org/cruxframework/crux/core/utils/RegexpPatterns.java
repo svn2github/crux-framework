@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.utils;
+package org.cruxframework.crux.core.utils;
 
 import java.util.regex.Pattern;
 

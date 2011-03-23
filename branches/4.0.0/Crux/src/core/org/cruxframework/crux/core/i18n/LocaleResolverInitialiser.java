@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.i18n;
+package org.cruxframework.crux.core.i18n;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
+import org.cruxframework.crux.core.server.ServerMessages;
 
-import br.com.sysmap.crux.core.config.ConfigurationFactory;
-import br.com.sysmap.crux.core.server.ServerMessages;
 
 /**
  * Initialises the LocaleResolver class

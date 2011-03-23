@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.scannotation.archiveiterator;
+package org.cruxframework.crux.scannotation.archiveiterator;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class FileProtocolIteratorFactory implements DirectoryIteratorFactory
 {
 
 	/**
-	 * @see br.com.sysmap.crux.scannotation.archiveiterator.DirectoryIteratorFactory#create(java.net.URL, br.com.sysmap.crux.scannotation.archiveiterator.Filter)
+	 * @see org.cruxframework.crux.scannotation.archiveiterator.DirectoryIteratorFactory#create(java.net.URL, org.cruxframework.crux.scannotation.archiveiterator.Filter)
 	 */
 	public URLIterator create(URL url, Filter filter) throws IOException
 	{

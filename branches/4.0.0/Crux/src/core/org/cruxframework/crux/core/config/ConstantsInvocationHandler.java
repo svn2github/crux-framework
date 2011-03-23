@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.core.config;
+package org.cruxframework.crux.core.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-import br.com.sysmap.crux.core.i18n.DefaultServerMessage;
-import br.com.sysmap.crux.core.i18n.MessageException;
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
+import org.cruxframework.crux.core.i18n.MessageException;
+
 
 /**
  * Dynamic proxy for message resources.
@@ -118,7 +119,7 @@ public abstract class ConstantsInvocationHandler implements InvocationHandler
 		}
 		else
 		{
-			br.com.sysmap.crux.core.i18n.DefaultMessage annot = method.getAnnotation(br.com.sysmap.crux.core.i18n.DefaultMessage.class);
+			org.cruxframework.crux.core.i18n.DefaultMessage annot = method.getAnnotation(org.cruxframework.crux.core.i18n.DefaultMessage.class);
 			if (annot != null)
 			{
 				String value = MessageFormat.format(annot.value(),args);

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.server.scan;
+package org.cruxframework.crux.core.server.scan;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -25,11 +25,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.server.CruxBridge;
+import org.cruxframework.crux.core.server.ServerMessages;
+import org.cruxframework.crux.core.utils.RegexpPatterns;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.server.CruxBridge;
-import br.com.sysmap.crux.core.server.ServerMessages;
-import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -95,8 +95,8 @@ public class ClassScanner
 	 */
 	private static void initializeAllowedPackages()
 	{
-		scannerDB.addIgnoredPackage("br.com.sysmap.crux.core.rebind.screen.wrapper");
-		scannerDB.addRequiredPackage("br.com.sysmap.crux");
+		scannerDB.addIgnoredPackage("org.cruxframework.crux.core.rebind.screen.wrapper");
+		scannerDB.addRequiredPackage("org.cruxframework.crux");
 		scannerDB.addRequiredPackage("com.google.gwt.i18n.client");
 		
 		String scanAllowedPackages = CruxBridge.getInstance().getScanAllowedPackages();

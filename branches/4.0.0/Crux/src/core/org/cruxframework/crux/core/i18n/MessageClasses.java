@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.i18n;
+package org.cruxframework.crux.core.i18n;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +21,11 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import br.com.sysmap.crux.core.client.i18n.MessageName;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.server.ServerMessages;
-import br.com.sysmap.crux.core.server.scan.ClassScanner;
+import org.cruxframework.crux.core.client.i18n.MessageName;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.server.ServerMessages;
+import org.cruxframework.crux.core.server.scan.ClassScanner;
+
 
 import com.google.gwt.i18n.client.LocalizableResource;
 
@@ -73,7 +74,7 @@ public class MessageClasses
 						{
 							Class<?> messageClass = Class.forName(message);
 							MessageName messageNameAnnot = messageClass.getAnnotation(MessageName.class);
-							br.com.sysmap.crux.core.client.i18n.Name nameAnnot = messageClass.getAnnotation(br.com.sysmap.crux.core.client.i18n.Name.class);
+							org.cruxframework.crux.core.client.i18n.Name nameAnnot = messageClass.getAnnotation(org.cruxframework.crux.core.client.i18n.Name.class);
 							if (messageNameAnnot!= null)
 							{
 								if (messagesClasses.containsKey(messageNameAnnot.value()))

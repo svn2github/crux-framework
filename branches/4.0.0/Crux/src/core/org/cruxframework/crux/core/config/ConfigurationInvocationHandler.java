@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.config;
+package org.cruxframework.crux.core.config;
 
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+
 
 /**
  * Dynamic proxy for message resources.

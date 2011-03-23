@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.utils;
+package org.cruxframework.crux.core.utils;
 
 import java.io.File;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import br.com.sysmap.crux.scannotation.URLStreamManager;
+import org.cruxframework.crux.scannotation.URLStreamManager;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

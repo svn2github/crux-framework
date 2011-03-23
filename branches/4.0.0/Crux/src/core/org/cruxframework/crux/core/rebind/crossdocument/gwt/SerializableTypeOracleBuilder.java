@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.rebind.crossdocument.gwt;
+package org.cruxframework.crux.core.rebind.crossdocument.gwt;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -35,8 +35,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeParameterExposureComputer.TypeParameterFlowInfo;
-import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypePaths.TypePath;
+import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeParameterExposureComputer.TypeParameterFlowInfo;
+import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypePaths.TypePath;
+
 
 import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;

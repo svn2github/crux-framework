@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.scannotation.archiveiterator;
+package org.cruxframework.crux.scannotation.archiveiterator;
 
 import java.io.IOException;
 import java.net.URL;

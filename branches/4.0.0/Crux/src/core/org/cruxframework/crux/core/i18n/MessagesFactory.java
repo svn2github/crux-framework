@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.i18n;
+package org.cruxframework.crux.core.i18n;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -22,8 +22,9 @@ import java.util.PropertyResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import br.com.sysmap.crux.core.config.AbstractPropertiesFactory;
-import br.com.sysmap.crux.core.config.ConstantsInvocationHandler;
+import org.cruxframework.crux.core.config.AbstractPropertiesFactory;
+import org.cruxframework.crux.core.config.ConstantsInvocationHandler;
+
 
 /**
  * Factory for messages. Receive an Interface and use it's name to look for 

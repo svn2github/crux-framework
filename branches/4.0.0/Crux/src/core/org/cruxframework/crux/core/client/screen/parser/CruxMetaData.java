@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen.parser;
+package org.cruxframework.crux.core.client.screen.parser;
 
-import br.com.sysmap.crux.core.client.collection.Map;
+import org.cruxframework.crux.core.client.collection.Map;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.client.screen.parser;
+package org.cruxframework.crux.core.client.screen.parser;
 
 /**
  * @author Thiago da Rosa de Bustamante

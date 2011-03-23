@@ -14,7 +14,7 @@
  * the License.
  */
 
-package br.com.sysmap.crux.core.rebind.crossdocument.gwt;
+package org.cruxframework.crux.core.rebind.crossdocument.gwt;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;

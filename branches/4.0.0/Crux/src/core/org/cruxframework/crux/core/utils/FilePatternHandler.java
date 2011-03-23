@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.utils;
+package org.cruxframework.crux.core.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.i18n;
+package org.cruxframework.crux.core.i18n;
 
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.sysmap.crux.core.server.ServerMessages;
+import org.cruxframework.crux.core.server.ServerMessages;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

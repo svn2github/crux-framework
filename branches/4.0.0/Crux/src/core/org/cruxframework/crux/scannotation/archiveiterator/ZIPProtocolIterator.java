@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.scannotation.archiveiterator;
+package org.cruxframework.crux.scannotation.archiveiterator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,8 +9,9 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import br.com.sysmap.crux.classpath.URLResourceHandler;
-import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.classpath.URLResourceHandler;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+
 
 
 /**

@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.config;
+package org.cruxframework.crux.core.config;
 
-import br.com.sysmap.crux.core.i18n.MessageException;
+import org.cruxframework.crux.core.i18n.MessageException;
 
 /**
  * Factory for configuration parameters. Receive an Interface and use it's name to look for 

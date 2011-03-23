@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.server.scan;
+package org.cruxframework.crux.core.server.scan;
 
 import java.net.URL;
 import java.util.concurrent.locks.Lock;
@@ -21,12 +21,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.server.Environment;
+import org.cruxframework.crux.core.server.ServerMessages;
+import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.server.Environment;
-import br.com.sysmap.crux.core.server.ServerMessages;
-import br.com.sysmap.crux.core.server.classpath.ClassPathResolverInitializer;
-import br.com.sysmap.crux.scannotation.ClasspathUrlFinder;
 
 /**
  * 

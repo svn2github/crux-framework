@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.server.classpath;
+package org.cruxframework.crux.core.server.classpath;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,12 +22,13 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import br.com.sysmap.crux.classpath.URLResourceHandler;
-import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
-import br.com.sysmap.crux.core.server.CruxBridge;
-import br.com.sysmap.crux.core.server.InitializerListener;
-import br.com.sysmap.crux.scannotation.archiveiterator.Filter;
-import br.com.sysmap.crux.scannotation.archiveiterator.URLIterator;
+import org.cruxframework.crux.classpath.URLResourceHandler;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.core.server.CruxBridge;
+import org.cruxframework.crux.core.server.InitializerListener;
+import org.cruxframework.crux.scannotation.archiveiterator.Filter;
+import org.cruxframework.crux.scannotation.archiveiterator.URLIterator;
+
 
 /**
  * This basic classPathResolver works on most application servers.
@@ -43,7 +44,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	private URL webInfLibPath = null;
 	
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#findWebBaseDirs()
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#findWebBaseDirs()
 	 */
 	public synchronized URL[] findWebBaseDirs()
 	{
@@ -68,7 +69,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#findWebInfClassesPath()
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#findWebInfClassesPath()
 	 */
 	public synchronized URL findWebInfClassesPath()
 	{
@@ -87,7 +88,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#findWebInfLibJars()
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#findWebInfLibJars()
 	 */
 	public synchronized URL[] findWebInfLibJars() 
 	{		
@@ -120,7 +121,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#findWebInfLibPath()
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#findWebInfLibPath()
 	 */
 	public synchronized URL findWebInfLibPath()
 	{
@@ -139,7 +140,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#setWebBaseDirs(java.net.URL[])
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#setWebBaseDirs(java.net.URL[])
 	 */
 	public synchronized void setWebBaseDirs(URL[] url)
     {
@@ -147,7 +148,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
     }
 
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#setWebInfClassesPath(java.net.URL)
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#setWebInfClassesPath(java.net.URL)
 	 */
 	public synchronized void setWebInfClassesPath(URL url)
     {
@@ -155,7 +156,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
     }
 
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#setWebInfLibJars(java.net.URL[])
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#setWebInfLibJars(java.net.URL[])
 	 */
 	public synchronized void setWebInfLibJars(URL[] url)
     {
@@ -170,7 +171,7 @@ public class ClassPathResolverImpl implements ClassPathResolver
     }
 
 	/**
-	 * @see br.com.sysmap.crux.core.server.classpath.ClassPathResolver#setWebInfLibPath(java.net.URL)
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#setWebInfLibPath(java.net.URL)
 	 */
 	public synchronized void setWebInfLibPath(URL url)
     {

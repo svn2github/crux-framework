@@ -1,9 +1,10 @@
-package br.com.sysmap.crux.scannotation.archiveiterator;
+package org.cruxframework.crux.scannotation.archiveiterator;
 
 import java.io.IOException;
 import java.net.URL;
 
-import br.com.sysmap.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>

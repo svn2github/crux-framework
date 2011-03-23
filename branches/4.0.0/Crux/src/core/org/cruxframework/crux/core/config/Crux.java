@@ -13,22 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.core.config;
+package org.cruxframework.crux.core.config;
 
-import br.com.sysmap.crux.core.i18n.DefaultServerMessage;
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
 public interface Crux 
 {
-	@DefaultServerMessage("br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl")
+	@DefaultServerMessage("org.cruxframework.crux.core.server.dispatch.ServiceFactoryImpl")
 	String serviceFactory();
 	
-	@DefaultServerMessage("br.com.sysmap.crux.core.i18n.LocaleResolverImpl")
+	@DefaultServerMessage("org.cruxframework.crux.core.i18n.LocaleResolverImpl")
 	String localeResolver();
 
-	@DefaultServerMessage("br.com.sysmap.crux.core.declarativeui.DeclarativeUIScreenResolver")
+	@DefaultServerMessage("org.cruxframework.crux.core.declarativeui.DeclarativeUIScreenResolver")
 	String screenResourceResolver();
 
-	@DefaultServerMessage("br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl")
+	@DefaultServerMessage("org.cruxframework.crux.core.server.classpath.ClassPathResolverImpl")
 	String classPathResolver();
 	
 	@DefaultServerMessage("true")
