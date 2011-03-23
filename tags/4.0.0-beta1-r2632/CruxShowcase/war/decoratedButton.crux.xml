@@ -1,0 +1,39 @@
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.sysmap.com.br/crux" 
+	xmlns:a="http://www.sysmap.com.br/crux/widgets"
+	xmlns:b="http://www.sysmap.com.br/crux/gwt"
+	xmlns:s="http://www.sysmap.com.br/templates/showcase">
+
+	<head>
+		<title>Decorated Button</title>
+		<link rel="stylesheet" type="text/css" href="style/css/standard.css" />
+	</head>
+
+	<body>
+
+		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
+
+		<c:screen useController="decoratedButtonController"/>
+
+		<center>
+			<b:dockPanel id="centeringPanel" spacing="5">
+				<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right">
+					<a:decoratedButton id="myButton" text="Click Me!" onClick="decoratedButtonController.onClick"/>
+				</b:cell>
+				<b:cell direction="east" verticalAlignment="middle" horizontalAlignment="left">
+					<b:checkBox id="enable" text="Enable Button?" checked="true" onChange="decoratedButtonController.enableButton"/>
+				</b:cell>
+			</b:dockPanel>
+		</center>
+		
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				A DecoratedButton is a push button that can be flexibly styled. Using CSS and images, you can easily define a sophisticated appearance to it.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				you can enable or disable the 'Click Me!' button and see how its style is affected.  
+			</s:exampleInfo>
+		</s:info>		
+	</body>
+</html>
