@@ -32,7 +32,13 @@
 	<property name="quickstart.dir" value="../CruxQuickstart" />
 	<property name="quickstart.build.dir" value="${quickstart.dir}/build" />
 	<property name="quickstart.dist.dir" value="${quickstart.dir}/dist" />
+	<property name="quickstart.webinf.dir" value="${quickstart.dir}/war/WEB-INF" />
 	
+	<!-- Proporties refering Showcase Project -->
+	<property name="showcase.dir" value="../CruxShowcase" />
+	<property name="showcase.build.dir" value="${showcase.dir}/build" />
+	<property name="showcase.webinf.dir" value="${showcase.dir}/war/WEB-INF" />
+
 	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
 	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>
 	<get src="http:/repoGesse/gwt-servlet-deps.jar" dest="${dependencies.dir}/gwt-servlet-deps.jar" verbose="true" usetimestamp="yes"/>
@@ -104,5 +110,63 @@
 		</copy>	
 
 		<!--zip basedir="${expanded.dir}" destfile="${distdir}/crux-${version}.zip" /-->
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		Compile Crux and update apllications with new jars
+	========================================================================================================
+	-->
+	<target name="compile-update-applications-jars" >
+		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
+		<antcall target="update-applications-jars" />
+	</target>
+	
+	
+	<!-- 
+	========================================================================================================
+		Update apllications with new jars
+	========================================================================================================
+	-->
+	<target name="update-applications-jars" >
+		<!-- Update Quickstart application -->
+		<copy todir="${quickstart.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${quickstart.webinf.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.runtime.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+	
+		<!-- Update Showcase application -->
+		<copy todir="${showcase.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${showcase.webinf.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.runtime.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
 	</target>
 </project>
