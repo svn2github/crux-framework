@@ -156,7 +156,14 @@ public class CruxProjectGenerator
 		
 		getReplacements().add(new String[]{"classpathLibs", libs.toString()});
 		
-		createFile(options.getProjectDir(), ".classpath", "classpath.xml");
+		if (this.options.getProjectLayout().equals(ProjectLayout.MONOLITHIC_APP))
+		{
+			createFile(options.getProjectDir(), ".classpath", "classpath.xml");
+		}
+		else
+		{
+			createFile(options.getProjectDir(), ".classpath", "modules/classpath.xml");
+		}
 	}
 
 	/**

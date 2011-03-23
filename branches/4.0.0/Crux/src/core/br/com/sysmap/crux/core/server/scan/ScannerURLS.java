@@ -87,29 +87,29 @@ public class ScannerURLS
 				{
 					logger.error(messages.scannerURLSErrorSearchingLibDir(e.getLocalizedMessage()), e);
 				}
+				URL webInfClasses = ClassPathResolverInitializer.getClassPathResolver().findWebInfClassesPath();
+				
+				if (webInfClasses != null)
+				{
+					urls = urls != null ? urls : new URL[0];
+					URL[] tempUrls = new URL[urls.length + 1];
+					System.arraycopy(urls, 0, tempUrls, 0, urls.length);
+					
+					urls = tempUrls;		
+					
+					try
+					{
+						urls[urls.length -1] = webInfClasses;
+					}
+					catch (Throwable e) 
+					{
+						logger.error(messages.scannerURLSErrorSearchingClassesDir(e.getLocalizedMessage()), e);
+					}
+				}
 			}
 			else
 			{
 				urls = ClasspathUrlFinder.findClassPaths();
-			}
-			URL webInfClasses = ClassPathResolverInitializer.getClassPathResolver().findWebInfClassesPath();
-
-			if (webInfClasses != null)
-			{
-				urls = urls != null ? urls : new URL[0];
-				URL[] tempUrls = new URL[urls.length + 1];
-				System.arraycopy(urls, 0, tempUrls, 0, urls.length);
-
-				urls = tempUrls;		
-
-				try
-				{
-					urls[urls.length -1] = webInfClasses;
-				}
-				catch (Throwable e) 
-				{
-					logger.error(messages.scannerURLSErrorSearchingClassesDir(e.getLocalizedMessage()), e);
-				}
 			}
 		}
 		finally
