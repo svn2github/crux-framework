@@ -13,19 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusHandler;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvent;
-import br.com.sysmap.crux.widgets.client.rollingtabs.RollingTabPanel;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
+import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
+
 
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
@@ -81,7 +82,7 @@ public class DynaTabs extends Composite
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static void invokeOnTab(String tabId, String call, Object param) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static void invokeOnTab(String tabId, String call, Object param) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		DynaTabsControllerInvoker.invokeOnTab(tabId, call, param);
 	}
@@ -97,7 +98,7 @@ public class DynaTabs extends Composite
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static <T> T invokeOnTab(String tabId, String call, Object param, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static <T> T invokeOnTab(String tabId, String call, Object param, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		return DynaTabsControllerInvoker.invokeOnTab(tabId, call, param, resultType);
 	}

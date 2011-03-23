@@ -13,28 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.dynatabs;
+package org.cruxframework.crux.widgets.rebind.dynatabs;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
-import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabs;
-import br.com.sysmap.crux.widgets.client.dynatabs.Tab;
-import br.com.sysmap.crux.widgets.rebind.event.BeforeBlurEvtBind;
-import br.com.sysmap.crux.widgets.rebind.event.BeforeCloseEvtBind;
-import br.com.sysmap.crux.widgets.rebind.event.BeforeFocusEvtBind;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
+import org.cruxframework.crux.widgets.client.dynatabs.DynaTabs;
+import org.cruxframework.crux.widgets.client.dynatabs.Tab;
+import org.cruxframework.crux.widgets.rebind.event.BeforeBlurEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.BeforeCloseEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.BeforeFocusEvtBind;
+
 
 /**
  * Factory for Decorated Button widget

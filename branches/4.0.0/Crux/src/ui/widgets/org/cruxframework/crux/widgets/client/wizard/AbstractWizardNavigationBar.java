@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;

@@ -13,22 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.timer;
+package org.cruxframework.crux.widgets.rebind.timer;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import br.com.sysmap.crux.widgets.client.timer.Timer;
-import br.com.sysmap.crux.widgets.rebind.event.TimeoutEvtBind;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.widgets.client.timer.Timer;
+import org.cruxframework.crux.widgets.rebind.event.TimeoutEvtBind;
+
 
 /**
  * Factory for Timer widget
@@ -47,7 +48,7 @@ import br.com.sysmap.crux.widgets.rebind.event.TimeoutEvtBind;
 public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
+	 * @see org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator#instantiateWidget(com.google.gwt.dom.client.Element, java.lang.String)
 	 */
 	@Override
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException

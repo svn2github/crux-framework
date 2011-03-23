@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
 import java.io.Serializable;
 

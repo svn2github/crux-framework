@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,11 +21,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.decoratedbutton.DecoratedButton;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
+
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -330,7 +331,7 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
     }
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardStepListener#stepChanged(br.com.sysmap.crux.widgets.client.wizard.Step, br.com.sysmap.crux.widgets.client.wizard.Step)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardStepListener#stepChanged(org.cruxframework.crux.widgets.client.wizard.Step, org.cruxframework.crux.widgets.client.wizard.Step)
 	 */
 	public void stepChanged(Step<T> currentStep, Step<T> previousStep)
     {

@@ -1,6 +1,6 @@
-package br.com.sysmap.crux.widgets.client.select;
+package org.cruxframework.crux.widgets.client.select;
 
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

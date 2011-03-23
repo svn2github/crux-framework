@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -21,18 +21,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.utils.StyleUtils;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.row.HasRowClickHandlers;
-import br.com.sysmap.crux.widgets.client.event.row.HasRowDoubleClickHandlers;
-import br.com.sysmap.crux.widgets.client.event.row.HasRowRenderHandlers;
-import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowClickHandler;
-import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickHandler;
-import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowRenderHandler;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.row.HasRowClickHandlers;
+import org.cruxframework.crux.widgets.client.event.row.HasRowDoubleClickHandlers;
+import org.cruxframework.crux.widgets.client.event.row.HasRowRenderHandlers;
+import org.cruxframework.crux.widgets.client.event.row.RowClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowClickHandler;
+import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickHandler;
+import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowRenderHandler;
+
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -129,7 +130,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.row.HasRowClickHandlers#addRowClickHandler(br.com.sysmap.crux.widgets.client.event.row.RowClickHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.row.HasRowClickHandlers#addRowClickHandler(org.cruxframework.crux.widgets.client.event.row.RowClickHandler)
 	 */
 	public HandlerRegistration addRowClickHandler(RowClickHandler handler)
 	{
@@ -137,7 +138,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.row.HasRowDoubleClickHandlers#addRowDoubleClickHandler(br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.row.HasRowDoubleClickHandlers#addRowDoubleClickHandler(org.cruxframework.crux.widgets.client.event.row.RowDoubleClickHandler)
 	 */
 	public HandlerRegistration addRowDoubleClickHandler(RowDoubleClickHandler handler)
 	{
@@ -145,7 +146,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.row.HasRowRenderHandlers#addRowRenderHandler(br.com.sysmap.crux.widgets.client.event.row.RowRenderHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.row.HasRowRenderHandlers#addRowRenderHandler(org.cruxframework.crux.widgets.client.event.row.RowRenderHandler)
 	 */
 	public HandlerRegistration addRowRenderHandler(RowRenderHandler handler)
 	{

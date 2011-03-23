@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.paging;
+package org.cruxframework.crux.widgets.rebind.paging;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.widgets.client.paging.SequentialPager;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.widgets.client.paging.SequentialPager;
+
 
 /**
  * @author Gesse S. F. Dafe

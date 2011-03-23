@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -72,7 +73,7 @@ public class WidgetStep<T extends Serializable> extends AbstractWidgetStep<T> im
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.HasCommands#getCommands()
+	 * @see org.cruxframework.crux.widgets.client.wizard.HasCommands#getCommands()
 	 */
 	public Iterator<WizardCommand<T>> iterateCommands()
     {

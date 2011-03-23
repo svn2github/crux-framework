@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.maskedtextbox;
+package org.cruxframework.crux.widgets.client.maskedtextbox;
 
-import br.com.sysmap.crux.core.client.formatter.MaskedFormatter;
+import org.cruxframework.crux.core.client.formatter.MaskedFormatter;
 
 import com.google.gwt.user.client.ui.Widget;
 

@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.event;
+package org.cruxframework.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.widgets.client.event.paging.PageEvent;
-import br.com.sysmap.crux.widgets.client.event.paging.PageHandler;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.widgets.client.event.paging.PageEvent;
+import org.cruxframework.crux.widgets.client.event.paging.PageHandler;
+
 
 /**
  * TODO - Gesse - Comment this
@@ -34,7 +35,7 @@ public class PageEvtBind extends EvtProcessor
 	private static final String EVENT_NAME = "onPage";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+	 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

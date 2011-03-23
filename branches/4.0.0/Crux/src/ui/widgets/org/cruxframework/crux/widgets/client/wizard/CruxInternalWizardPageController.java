@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
-import br.com.sysmap.crux.core.client.controller.Controller;
-import br.com.sysmap.crux.core.client.controller.WidgetController;
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.dynatabs.DynaTabsControllerInvoker;
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.WidgetController;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.dynatabs.DynaTabsControllerInvoker;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+
 
 import com.google.gwt.dom.client.Element;
 

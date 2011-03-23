@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
 /**
  * Invoker for calling existing controllers/methods on a tab that belongs to a DynaTabs object rendered in the current document.

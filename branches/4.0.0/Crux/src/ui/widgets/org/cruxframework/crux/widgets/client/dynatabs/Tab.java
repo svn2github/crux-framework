@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusHandler;
-import br.com.sysmap.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
+import org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 

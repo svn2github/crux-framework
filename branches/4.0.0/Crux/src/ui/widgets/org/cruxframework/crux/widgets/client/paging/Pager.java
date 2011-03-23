@@ -1,6 +1,6 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.widgets.client.event.paging.HasPageHandlers;
+import org.cruxframework.crux.widgets.client.event.paging.HasPageHandlers;
 
 
 public interface Pager extends HasPageHandlers

@@ -1,8 +1,8 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.paging.PageEvent;
-import br.com.sysmap.crux.widgets.client.event.paging.PageHandler;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.paging.PageEvent;
+import org.cruxframework.crux.widgets.client.event.paging.PageHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
@@ -19,7 +19,7 @@ public abstract class AbstractPager extends Composite implements Pager
 	private boolean enabled = true;
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.paging.HasPageHandlers#addPageHandler(br.com.sysmap.crux.widgets.client.event.paging.PageHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.paging.HasPageHandlers#addPageHandler(org.cruxframework.crux.widgets.client.event.paging.PageHandler)
 	 */
 	public HandlerRegistration addPageHandler(PageHandler handler)
 	{
@@ -27,7 +27,7 @@ public abstract class AbstractPager extends Composite implements Pager
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.Pager#update(int, boolean)
+	 * @see org.cruxframework.crux.widgets.client.paging.Pager#update(int, boolean)
 	 */
 	public void update(int currentPage, boolean isLastPage)
 	{

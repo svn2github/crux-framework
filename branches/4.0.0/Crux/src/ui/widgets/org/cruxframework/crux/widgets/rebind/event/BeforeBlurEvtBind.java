@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.event;
+package org.cruxframework.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler;
+
 
 /**
  * Helper Class for before blur events binding

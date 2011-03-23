@@ -1,6 +1,6 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.widgets.client.event.paging.PageEvent;
+import org.cruxframework.crux.widgets.client.event.paging.PageEvent;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -63,7 +63,7 @@ public class RandomPager extends NavigationButtonsPager
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.AbstractPager#showLoading()
+	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#showLoading()
 	 */
 	@Override
 	protected void showLoading()
@@ -72,7 +72,7 @@ public class RandomPager extends NavigationButtonsPager
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.AbstractPager#hideLoading()
+	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#hideLoading()
 	 */
 	@Override
 	protected void hideLoading()

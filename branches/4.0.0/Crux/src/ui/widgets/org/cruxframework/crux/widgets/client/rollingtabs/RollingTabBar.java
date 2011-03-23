@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.rollingtabs;
+package org.cruxframework.crux.widgets.client.rollingtabs;
 
-import br.com.sysmap.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

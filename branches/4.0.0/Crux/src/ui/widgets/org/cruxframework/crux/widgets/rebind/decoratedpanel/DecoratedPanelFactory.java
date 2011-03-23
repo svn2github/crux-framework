@@ -13,21 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.decoratedpanel;
+package org.cruxframework.crux.widgets.rebind.decoratedpanel;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
-import br.com.sysmap.crux.widgets.client.decoratedpanel.DecoratedPanel;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.gwt.rebind.CellPanelContext;
+import org.cruxframework.crux.widgets.client.decoratedpanel.DecoratedPanel;
+
 
 /**
  * Factory for Decorated Panel widget

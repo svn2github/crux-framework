@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.controller.crossdoc.TargetDocument;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.widgets.client.dynatabs.AbstractTab;
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.dynatabs.AbstractTab;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.LazyPanel;

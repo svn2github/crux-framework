@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.scrollbanner;
+package org.cruxframework.crux.widgets.client.scrollbanner;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.widgets.client.util.TextSelectionUtils;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.widgets.client.util.TextSelectionUtils;
+
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

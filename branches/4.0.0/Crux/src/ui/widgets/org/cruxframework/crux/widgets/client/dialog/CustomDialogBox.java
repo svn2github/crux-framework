@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;

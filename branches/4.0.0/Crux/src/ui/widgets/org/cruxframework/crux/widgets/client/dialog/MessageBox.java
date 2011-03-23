@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.widgets.client.event.HasOkHandlers;
-import br.com.sysmap.crux.widgets.client.event.OkEvent;
-import br.com.sysmap.crux.widgets.client.event.OkHandler;
+import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
+import org.cruxframework.crux.widgets.client.event.OkEvent;
+import org.cruxframework.crux.widgets.client.event.OkHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;

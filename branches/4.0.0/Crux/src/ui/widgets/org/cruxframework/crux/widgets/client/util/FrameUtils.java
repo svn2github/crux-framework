@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.util;
+package org.cruxframework.crux.widgets.client.util;
 
-import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -216,7 +216,7 @@ public class FrameUtils
 					element.onreadystatechange=null;
 					try
 					{
-						callback.@br.com.sysmap.crux.widgets.client.util.FrameStateCallback::onComplete()();
+						callback.@org.cruxframework.crux.widgets.client.util.FrameStateCallback::onComplete()();
 						if (timer != null)
 						{
 							timer.@com.google.gwt.user.client.Timer::cancel()();
@@ -267,7 +267,7 @@ public class FrameUtils
 				element.onload=null;
 				try
 				{
-					callback.@br.com.sysmap.crux.widgets.client.util.FrameStateCallback::onComplete()();
+					callback.@org.cruxframework.crux.widgets.client.util.FrameStateCallback::onComplete()();
 					if (timer != null)
 					{
 						timer.@com.google.gwt.user.client.Timer::cancel()();

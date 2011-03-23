@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
-import br.com.sysmap.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.core.client.formatter.Formatter;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;

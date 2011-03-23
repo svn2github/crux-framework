@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.maskedtextbox;
+package org.cruxframework.crux.widgets.client.maskedtextbox;
 
-import br.com.sysmap.crux.core.client.formatter.FilterFormatter;
-import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.formatter.HasFormatter;
-import br.com.sysmap.crux.core.client.formatter.MaskedFormatter;
-import br.com.sysmap.crux.widgets.client.event.paste.HasPasteHandlers;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteEvent;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteEventSourceRegisterFactory;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
+import org.cruxframework.crux.core.client.formatter.FilterFormatter;
+import org.cruxframework.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.formatter.MaskedFormatter;
+import org.cruxframework.crux.widgets.client.event.paste.HasPasteHandlers;
+import org.cruxframework.crux.widgets.client.event.paste.PasteEvent;
+import org.cruxframework.crux.widgets.client.event.paste.PasteEventSourceRegisterFactory;
+import org.cruxframework.crux.widgets.client.event.paste.PasteHandler;
+
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;

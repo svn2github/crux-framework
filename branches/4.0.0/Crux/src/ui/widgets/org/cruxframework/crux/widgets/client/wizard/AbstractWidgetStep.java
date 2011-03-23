@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
@@ -43,7 +43,7 @@ public abstract class AbstractWidgetStep<T extends Serializable> extends Composi
 	public abstract boolean addCommand(String id, String label, WizardCommandHandler<T> handler, int order);
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.HasEnterHandlers#addEnterHandler(br.com.sysmap.crux.widgets.client.wizard.EnterHandler)
+	 * @see org.cruxframework.crux.widgets.client.wizard.HasEnterHandlers#addEnterHandler(org.cruxframework.crux.widgets.client.wizard.EnterHandler)
 	 */
 	public HandlerRegistration addEnterHandler(EnterHandler<T> handler)
 	{
@@ -51,7 +51,7 @@ public abstract class AbstractWidgetStep<T extends Serializable> extends Composi
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.HasLeaveHandlers#addLeaveHandler(br.com.sysmap.crux.widgets.client.wizard.LeaveHandler)
+	 * @see org.cruxframework.crux.widgets.client.wizard.HasLeaveHandlers#addLeaveHandler(org.cruxframework.crux.widgets.client.wizard.LeaveHandler)
 	 */
 	public HandlerRegistration addLeaveHandler(LeaveHandler<T> handler)
 	{

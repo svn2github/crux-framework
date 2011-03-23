@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
 import java.util.Iterator;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+
 
 /**
  * Represents the columns to be rendered by a grid widget.

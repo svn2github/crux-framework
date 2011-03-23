@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.textarea;
+package org.cruxframework.crux.widgets.client.textarea;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.paste.HasPasteHandlers;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteEvent;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteEventSourceRegisterFactory;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.paste.HasPasteHandlers;
+import org.cruxframework.crux.widgets.client.event.paste.PasteEvent;
+import org.cruxframework.crux.widgets.client.event.paste.PasteEventSourceRegisterFactory;
+import org.cruxframework.crux.widgets.client.event.paste.PasteHandler;
+
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -116,7 +117,7 @@ public class TextArea extends com.google.gwt.user.client.ui.TextArea implements 
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.paste.HasPasteHandlers#addPasteHandler(br.com.sysmap.crux.widgets.client.event.paste.PasteHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.paste.HasPasteHandlers#addPasteHandler(org.cruxframework.crux.widgets.client.event.paste.PasteHandler)
 	 */
 	public HandlerRegistration addPasteHandler(PasteHandler handler)
 	{
@@ -167,7 +168,7 @@ public class TextArea extends com.google.gwt.user.client.ui.TextArea implements 
 		}
 		
 		/**
-		 * @see br.com.sysmap.crux.widgets.client.event.paste.PasteHandler#onPaste(br.com.sysmap.crux.widgets.client.event.paste.PasteEvent)
+		 * @see org.cruxframework.crux.widgets.client.event.paste.PasteHandler#onPaste(org.cruxframework.crux.widgets.client.event.paste.PasteEvent)
 		 */
 		public void onPaste(PasteEvent event)
 		{

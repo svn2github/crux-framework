@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.titlepanel;
+package org.cruxframework.crux.widgets.rebind.titlepanel;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.widgets.client.titlepanel.TitlePanel;
+
 
 /**
  * Factory for Title Panel widget

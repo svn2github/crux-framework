@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.transferlist;
+package org.cruxframework.crux.widgets.rebind.transferlist;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
-import br.com.sysmap.crux.gwt.rebind.CompositeFactory;
-import br.com.sysmap.crux.widgets.client.transferlist.TransferList;
-import br.com.sysmap.crux.widgets.rebind.event.BeforeMoveItemsEvtBind;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.gwt.rebind.CompositeFactory;
+import org.cruxframework.crux.widgets.client.transferlist.TransferList;
+import org.cruxframework.crux.widgets.rebind.event.BeforeMoveItemsEvtBind;
+
 
 /**
  * Factory for Transfer List widget

@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.maskedlabel;
+package org.cruxframework.crux.widgets.client.maskedlabel;
 
-import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.core.client.formatter.HasFormatter;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -92,7 +92,7 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers, HasDoubleClick
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.core.client.formatter.HasFormatter#getFormatter()
+	 * @see org.cruxframework.crux.core.client.formatter.HasFormatter#getFormatter()
 	 */
 	public Formatter getFormatter()
 	{
@@ -100,7 +100,7 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers, HasDoubleClick
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.formatter.HasFormatter#getUnformattedValue()
+	 * @see org.cruxframework.crux.core.client.formatter.HasFormatter#getUnformattedValue()
 	 */
 	public Object getUnformattedValue()
 	{
@@ -116,7 +116,7 @@ HasWordWrap, HasDirection, HasClickHandlers, HasAllMouseHandlers, HasDoubleClick
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.core.client.formatter.HasFormatter#setUnformattedValue(java.lang.Object)
+	 * @see org.cruxframework.crux.core.client.formatter.HasFormatter#setUnformattedValue(java.lang.Object)
 	 */
 	public void setUnformattedValue(Object value)
 	{

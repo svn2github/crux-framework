@@ -13,35 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
-import br.com.sysmap.crux.core.client.datasource.HasDataSource;
-import br.com.sysmap.crux.core.client.datasource.LocalDataSource;
-import br.com.sysmap.crux.core.client.datasource.LocalDataSourceCallback;
-import br.com.sysmap.crux.core.client.datasource.MeasurableDataSource;
-import br.com.sysmap.crux.core.client.datasource.MeasurablePagedDataSource;
-import br.com.sysmap.crux.core.client.datasource.MeasurableRemoteDataSource;
-import br.com.sysmap.crux.core.client.datasource.PagedDataSource;
-import br.com.sysmap.crux.core.client.datasource.RemoteDataSource;
-import br.com.sysmap.crux.core.client.datasource.RemoteDataSourceCallback;
-import br.com.sysmap.crux.core.client.formatter.Formatter;
-import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
-import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectHandler;
-import br.com.sysmap.crux.widgets.client.event.row.HasBeforeRowSelectHandlers;
-import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
-import br.com.sysmap.crux.widgets.client.paging.Pageable;
-import br.com.sysmap.crux.widgets.client.paging.Pager;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.datasource.DataSourceRecord;
+import org.cruxframework.crux.core.client.datasource.HasDataSource;
+import org.cruxframework.crux.core.client.datasource.LocalDataSource;
+import org.cruxframework.crux.core.client.datasource.LocalDataSourceCallback;
+import org.cruxframework.crux.core.client.datasource.MeasurableDataSource;
+import org.cruxframework.crux.core.client.datasource.MeasurablePagedDataSource;
+import org.cruxframework.crux.core.client.datasource.MeasurableRemoteDataSource;
+import org.cruxframework.crux.core.client.datasource.PagedDataSource;
+import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
+import org.cruxframework.crux.core.client.datasource.RemoteDataSourceCallback;
+import org.cruxframework.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectEvent;
+import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectHandler;
+import org.cruxframework.crux.widgets.client.event.row.HasBeforeRowSelectHandlers;
+import org.cruxframework.crux.widgets.client.event.row.RowClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
+import org.cruxframework.crux.widgets.client.paging.Pageable;
+import org.cruxframework.crux.widgets.client.paging.Pager;
+
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -459,7 +460,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.Pageable#setPager(br.com.sysmap.crux.widgets.client.paging.Pager)
+	 * @see org.cruxframework.crux.widgets.client.paging.Pageable#setPager(org.cruxframework.crux.widgets.client.paging.Pager)
 	 */
 	public void setPager(Pager pager)
 	{
@@ -560,7 +561,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.row.HasBeforeRowSelectHandlers#addBeforeRowSelectHandler(br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.row.HasBeforeRowSelectHandlers#addBeforeRowSelectHandler(org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectHandler)
 	 */
 	public HandlerRegistration addBeforeRowSelectHandler(BeforeRowSelectHandler handler)
 	{
@@ -591,7 +592,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.Pageable#goToPage(int)
+	 * @see org.cruxframework.crux.widgets.client.paging.Pageable#goToPage(int)
 	 */
 	public void goToPage(int page)
 	{
@@ -615,7 +616,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.Pageable#isDataLoaded()
+	 * @see org.cruxframework.crux.widgets.client.paging.Pageable#isDataLoaded()
 	 */
 	public boolean isDataLoaded()
 	{

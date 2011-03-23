@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.transferlist;
+package org.cruxframework.crux.widgets.client.transferlist;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHandlers;
-import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsEvent;
-import br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.widgets.client.event.moveitem.BeforeMoveItemsEvent;
+import org.cruxframework.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler;
+import org.cruxframework.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHandlers;
+
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -319,7 +320,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHandlers#addBeforeMoveItemsHandler(br.com.sysmap.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHandlers#addBeforeMoveItemsHandler(org.cruxframework.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler)
 	 */
 	public HandlerRegistration addBeforeMoveItemsHandler(BeforeMoveItemsHandler handler)
 	{

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;

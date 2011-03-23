@@ -1,14 +1,15 @@
-package br.com.sysmap.crux.widgets.client.dynatabs;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusEvent;
-import br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusHandler;
-import br.com.sysmap.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvent;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseHandler;
-import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
-import br.com.sysmap.crux.widgets.client.rollingtabs.SimpleDecoratedPanel;
+package org.cruxframework.crux.widgets.client.dynatabs;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
+import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
+import org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
+import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
+import org.cruxframework.crux.widgets.client.rollingtabs.SimpleDecoratedPanel;
+
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,7 +50,7 @@ class FlapPanel extends Composite  implements HasBeforeFocusAndBeforeBlurHandler
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.focusblur.HasBeforeBlurHandlers#addBeforeBlurHandler(br.com.sysmap.crux.widgets.client.event.focusblur.BeforeBlurHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeBlurHandlers#addBeforeBlurHandler(org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler)
 	 */
 	public HandlerRegistration addBeforeBlurHandler(BeforeBlurHandler handler)
 	{
@@ -57,7 +58,7 @@ class FlapPanel extends Composite  implements HasBeforeFocusAndBeforeBlurHandler
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.focusblur.HasBeforeFocusHandlers#addBeforeFocusHandler(br.com.sysmap.crux.widgets.client.event.focusblur.BeforeFocusHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeFocusHandlers#addBeforeFocusHandler(org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler)
 	 */
 	public HandlerRegistration addBeforeFocusHandler(BeforeFocusHandler handler)
 	{
@@ -65,7 +66,7 @@ class FlapPanel extends Composite  implements HasBeforeFocusAndBeforeBlurHandler
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler)
 	 */
 	public HandlerRegistration addBeforeCloseHandler(BeforeCloseHandler handler)
 	{

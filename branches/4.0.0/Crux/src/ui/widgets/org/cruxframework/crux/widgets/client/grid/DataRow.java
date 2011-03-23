@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.grid;
+package org.cruxframework.crux.widgets.client.grid;
 
-import br.com.sysmap.crux.core.client.datasource.DataSource;
-import br.com.sysmap.crux.core.client.datasource.DataSourceRecord;
-import br.com.sysmap.crux.core.client.datasource.PagedDataSource;
+import org.cruxframework.crux.core.client.datasource.DataSource;
+import org.cruxframework.crux.core.client.datasource.DataSourceRecord;
+import org.cruxframework.crux.core.client.datasource.PagedDataSource;
 
 import com.google.gwt.dom.client.Element;
 

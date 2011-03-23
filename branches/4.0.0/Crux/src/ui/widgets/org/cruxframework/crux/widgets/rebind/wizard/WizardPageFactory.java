@@ -13,27 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.wizard;
+package org.cruxframework.crux.widgets.rebind.wizard;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.dto.DataObjects;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
-import br.com.sysmap.crux.widgets.client.wizard.WizardCommandEvent;
-import br.com.sysmap.crux.widgets.client.wizard.WizardCommandHandler;
-import br.com.sysmap.crux.widgets.client.wizard.WizardDataSerializer;
-import br.com.sysmap.crux.widgets.client.wizard.WizardPage;
-import br.com.sysmap.crux.widgets.client.wizard.Wizard.NoData;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.dto.DataObjects;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.widgets.client.wizard.WizardCommandEvent;
+import org.cruxframework.crux.widgets.client.wizard.WizardCommandHandler;
+import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
+import org.cruxframework.crux.widgets.client.wizard.WizardPage;
+import org.cruxframework.crux.widgets.client.wizard.Wizard.NoData;
+
 
 /**
  * @author Thiago da Rosa de Bustamante -

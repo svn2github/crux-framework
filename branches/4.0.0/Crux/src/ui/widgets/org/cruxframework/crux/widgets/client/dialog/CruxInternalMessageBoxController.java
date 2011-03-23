@@ -13,17 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.controller.Controller;
-import br.com.sysmap.crux.core.client.controller.Global;
-import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
-import br.com.sysmap.crux.core.client.controller.crossdoc.TargetDocument;
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.decoratedbutton.DecoratedButton;
-import br.com.sysmap.crux.widgets.client.event.OkEvent;
+import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Global;
+import org.cruxframework.crux.core.client.controller.crossdoc.Target;
+import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
+import org.cruxframework.crux.widgets.client.event.OkEvent;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
 public interface Pageable
 {

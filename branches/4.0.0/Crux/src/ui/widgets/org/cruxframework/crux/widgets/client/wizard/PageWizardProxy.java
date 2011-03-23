@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
-import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
-import br.com.sysmap.crux.core.client.controller.crossdoc.TargetDocument;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.core.client.controller.crossdoc.Target;
+import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+
 
 import com.google.gwt.core.client.GWT;
 
@@ -49,7 +50,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#back()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#back()
 	 */
 	public boolean back()
     {
@@ -57,7 +58,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#cancel()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#cancel()
 	 */
 	public void cancel()
     {
@@ -65,7 +66,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#finish()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#finish()
 	 */
 	public boolean finish()
     {
@@ -73,7 +74,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#first()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#first()
 	 */
 	public boolean first()
     {
@@ -81,7 +82,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#getControlBar()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#getControlBar()
 	 */
 	public WizardControlBarAccessor getControlBar()
     {
@@ -89,7 +90,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#getStepOrder(java.lang.String)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#getStepOrder(java.lang.String)
 	 */
 	public int getStepOrder(String id)
     {
@@ -97,7 +98,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#next()
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#next()
 	 */
 	public boolean next()
     {
@@ -105,7 +106,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#readData(java.lang.Class)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#readData(java.lang.Class)
 	 */
     public T readData()
 	{
@@ -117,7 +118,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#selectStep(java.lang.String, boolean)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#selectStep(java.lang.String, boolean)
 	 */
 	public boolean selectStep(String id, boolean ignoreLeaveEvent)
     {
@@ -125,7 +126,7 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
     }
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardProxy#updateContext(T)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#updateContext(T)
 	 */
 	public void updateData(T data)
 	{

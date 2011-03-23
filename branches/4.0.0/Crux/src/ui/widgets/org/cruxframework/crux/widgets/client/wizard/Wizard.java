@@ -13,22 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
-import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.client.utils.StyleUtils;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
-import br.com.sysmap.crux.widgets.client.event.CancelEvent;
-import br.com.sysmap.crux.widgets.client.event.CancelHandler;
-import br.com.sysmap.crux.widgets.client.event.FinishEvent;
-import br.com.sysmap.crux.widgets.client.event.FinishHandler;
-import br.com.sysmap.crux.widgets.client.event.HasCancelHandlers;
-import br.com.sysmap.crux.widgets.client.event.HasFinishHandlers;
+import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.CancelEvent;
+import org.cruxframework.crux.widgets.client.event.CancelHandler;
+import org.cruxframework.crux.widgets.client.event.FinishEvent;
+import org.cruxframework.crux.widgets.client.event.FinishHandler;
+import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
+import org.cruxframework.crux.widgets.client.event.HasFinishHandlers;
+
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -89,7 +90,7 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
     }
 
     /**
-	 * @see br.com.sysmap.crux.widgets.client.event.HasCancelHandlers#addCancelHandler(br.com.sysmap.crux.widgets.client.event.CancelHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.HasCancelHandlers#addCancelHandler(org.cruxframework.crux.widgets.client.event.CancelHandler)
 	 */
 	public HandlerRegistration addCancelHandler(CancelHandler handler)
     {
@@ -97,7 +98,7 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.HasFinishHandlers#addFinishHandler(br.com.sysmap.crux.widgets.client.event.FinishHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.HasFinishHandlers#addFinishHandler(org.cruxframework.crux.widgets.client.event.FinishHandler)
 	 */
 	public HandlerRegistration addFinishHandler(FinishHandler handler)
     {

@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.decoratedpanel;
+package org.cruxframework.crux.widgets.rebind.decoratedpanel;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasVerticalAlignmentFactory;
-import br.com.sysmap.crux.gwt.rebind.CellPanelContext;
-import br.com.sysmap.crux.gwt.rebind.CellPanelFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasVerticalAlignmentFactory;
+import org.cruxframework.crux.gwt.rebind.CellPanelContext;
+import org.cruxframework.crux.gwt.rebind.CellPanelFactory;
+
 
 /**
  * Base factory for Decorated Panels

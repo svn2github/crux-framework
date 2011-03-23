@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.decoratedpanel;
+package org.cruxframework.crux.widgets.client.decoratedpanel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

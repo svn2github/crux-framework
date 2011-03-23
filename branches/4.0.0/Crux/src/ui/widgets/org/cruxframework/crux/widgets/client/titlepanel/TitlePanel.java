@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.titlepanel;
+package org.cruxframework.crux.widgets.client.titlepanel;
 
-import br.com.sysmap.crux.widgets.client.decoratedpanel.DecoratedPanel;
+import org.cruxframework.crux.widgets.client.decoratedpanel.DecoratedPanel;
 
 import com.google.gwt.user.client.ui.Widget;
 

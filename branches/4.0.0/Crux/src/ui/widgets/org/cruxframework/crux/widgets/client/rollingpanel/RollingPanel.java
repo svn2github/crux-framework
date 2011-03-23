@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.rollingpanel;
+package org.cruxframework.crux.widgets.client.rollingpanel;
 
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;

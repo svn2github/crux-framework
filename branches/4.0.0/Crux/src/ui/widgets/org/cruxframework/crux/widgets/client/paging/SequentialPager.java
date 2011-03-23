@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -44,7 +44,7 @@ public class SequentialPager extends NavigationButtonsPager
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.AbstractPager#showLoading()
+	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#showLoading()
 	 */
 	@Override
 	protected void showLoading()
@@ -54,7 +54,7 @@ public class SequentialPager extends NavigationButtonsPager
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.AbstractPager#hideLoading()
+	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#hideLoading()
 	 */
 	@Override
 	protected void hideLoading()

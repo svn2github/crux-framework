@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.wizard;
+package org.cruxframework.crux.widgets.rebind.wizard;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.widgets.client.wizard.LeaveEvent;
-import br.com.sysmap.crux.widgets.client.wizard.LeaveHandler;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.widgets.client.wizard.LeaveEvent;
+import org.cruxframework.crux.widgets.client.wizard.LeaveHandler;
+
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -34,7 +35,7 @@ public class LeaveEvtBind extends EvtProcessor
 	private static final String EVENT_NAME = "onLeave";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+	 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public String getEventName()
 	{

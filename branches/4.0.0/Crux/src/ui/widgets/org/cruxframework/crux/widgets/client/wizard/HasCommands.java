@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 import java.util.Iterator;
 
-import br.com.sysmap.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
+
 
 /**
  * @author Thiago da Rosa de Bustamante -

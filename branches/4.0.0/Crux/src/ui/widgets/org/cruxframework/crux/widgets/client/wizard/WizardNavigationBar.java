@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
@@ -117,7 +117,7 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
     }
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.WizardStepListener#stepChanged(br.com.sysmap.crux.widgets.client.wizard.Step, br.com.sysmap.crux.widgets.client.wizard.Step)
+	 * @see org.cruxframework.crux.widgets.client.wizard.WizardStepListener#stepChanged(org.cruxframework.crux.widgets.client.wizard.Step, org.cruxframework.crux.widgets.client.wizard.Step)
 	 */
 	public void stepChanged(Step<T> currentStep, Step<T> previousStep)
     {
@@ -125,7 +125,7 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
     }
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.wizard.AbstractWizardNavigationBar#setWizard(br.com.sysmap.crux.widgets.client.wizard.Wizard)
+	 * @see org.cruxframework.crux.widgets.client.wizard.AbstractWizardNavigationBar#setWizard(org.cruxframework.crux.widgets.client.wizard.Wizard)
 	 */
 	@Override
 	protected void setWizard(Wizard<T> wizard)

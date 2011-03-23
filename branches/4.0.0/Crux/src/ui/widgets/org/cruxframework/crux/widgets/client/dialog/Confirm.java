@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
-import br.com.sysmap.crux.core.client.controller.crossdoc.TargetDocument;
-import br.com.sysmap.crux.widgets.client.event.CancelEvent;
-import br.com.sysmap.crux.widgets.client.event.CancelHandler;
-import br.com.sysmap.crux.widgets.client.event.HasCancelHandlers;
-import br.com.sysmap.crux.widgets.client.event.HasOkHandlers;
-import br.com.sysmap.crux.widgets.client.event.OkEvent;
-import br.com.sysmap.crux.widgets.client.event.OkHandler;
+import org.cruxframework.crux.core.client.controller.crossdoc.Target;
+import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.widgets.client.event.CancelEvent;
+import org.cruxframework.crux.widgets.client.event.CancelHandler;
+import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
+import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
+import org.cruxframework.crux.widgets.client.event.OkEvent;
+import org.cruxframework.crux.widgets.client.event.OkHandler;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;

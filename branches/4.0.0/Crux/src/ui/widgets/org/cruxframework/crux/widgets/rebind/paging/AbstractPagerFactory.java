@@ -13,21 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.paging;
+package org.cruxframework.crux.widgets.rebind.paging;
 
-import br.com.sysmap.crux.core.client.utils.EscapeUtils;
-import br.com.sysmap.crux.core.i18n.MessagesFactory;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
-import br.com.sysmap.crux.widgets.client.paging.Pageable;
-import br.com.sysmap.crux.widgets.rebind.WidgetGeneratorMessages;
-import br.com.sysmap.crux.widgets.rebind.event.PageEvtBind;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.widgets.client.paging.Pageable;
+import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
+import org.cruxframework.crux.widgets.rebind.event.PageEvtBind;
+
 
 /**
  * @author Gesse S. F. Dafe

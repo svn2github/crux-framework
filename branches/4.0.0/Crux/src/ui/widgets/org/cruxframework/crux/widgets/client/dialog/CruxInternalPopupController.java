@@ -13,20 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.controller.Controller;
-import br.com.sysmap.crux.core.client.controller.Global;
-import br.com.sysmap.crux.core.client.controller.crossdoc.Target;
-import br.com.sysmap.crux.core.client.controller.crossdoc.TargetDocument;
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvent;
-import br.com.sysmap.crux.widgets.client.event.openclose.OpenEvent;
-import br.com.sysmap.crux.widgets.client.util.FrameStateCallback;
-import br.com.sysmap.crux.widgets.client.util.FrameUtils;
+import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Global;
+import org.cruxframework.crux.core.client.controller.crossdoc.Target;
+import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
+import org.cruxframework.crux.widgets.client.event.openclose.OpenEvent;
+import org.cruxframework.crux.widgets.client.util.FrameStateCallback;
+import org.cruxframework.crux.widgets.client.util.FrameUtils;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -132,7 +133,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static void invokeOnOpener(String call, Object param) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static void invokeOnOpener(String call, Object param) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		callOpenerControllerAccessor(call,  Screen.getCruxSerializer().serialize(param));
 	}
@@ -144,7 +145,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	 */
 	@SuppressWarnings("unchecked")
 	@Deprecated
-	public static <T> T invokeOnOpener(String call, Object param, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static <T> T invokeOnOpener(String call, Object param, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		String result = callOpenerControllerAccessor(call,  Screen.getCruxSerializer().serialize(param));
 		return (T) Screen.getCruxSerializer().deserialize(result);
@@ -190,7 +191,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	
 	/**
 	 * Called by top window
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#onClose()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#onClose()
 	 */
 	public void onClose()
 	{
@@ -203,7 +204,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	
 	/**
 	 * Called from popup window and executed on popup opener
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#close()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#close()
 	 */
 	public void close()
 	{
@@ -218,7 +219,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	
 	/**
 	 * Called by top window
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#prepareToOpen()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#prepareToOpen()
 	 */
 	public void prepareToOpen()
 	{
@@ -227,7 +228,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	
 	/**
 	 * Called by top window
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#isWaitingForOpen()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#isWaitingForOpen()
 	 */
 	public boolean isWaitingForOpenEvent()
 	{
@@ -236,7 +237,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 
 	/**
 	 * Called by top window
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#onOpen()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupControllerCrossDoc#onOpen()
 	 */
 	public void onOpen()
 	{
@@ -343,7 +344,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		}
 		
 		/**
-		 * @see br.com.sysmap.crux.widgets.client.util.FrameStateCallback#onComplete()
+		 * @see org.cruxframework.crux.widgets.client.util.FrameStateCallback#onComplete()
 		 */
 		public void onComplete()
 		{

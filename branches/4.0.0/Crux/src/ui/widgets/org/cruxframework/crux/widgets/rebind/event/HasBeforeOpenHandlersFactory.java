@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.event;
+package org.cruxframework.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvent;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagEvents;
-import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeOpenHandlers;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeOpenHandlers;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

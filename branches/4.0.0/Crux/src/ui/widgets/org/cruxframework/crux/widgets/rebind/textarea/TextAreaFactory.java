@@ -13,18 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.textarea;
+package org.cruxframework.crux.widgets.rebind.textarea;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.children.TextChildProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChild;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagChildren;
-import br.com.sysmap.crux.gwt.rebind.TextBoxBaseFactory;
-import br.com.sysmap.crux.widgets.client.textarea.TextArea;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.TextChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.gwt.rebind.TextBoxBaseFactory;
+import org.cruxframework.crux.widgets.client.textarea.TextArea;
+
 
 /**
  * Factory for TextArea widget

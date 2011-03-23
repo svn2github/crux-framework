@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.controller.crossdoc.CrossDocument;
+import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocument;
 
 /**
  * @author Thiago da Rosa de Bustamante

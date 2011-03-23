@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.JSWindow;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.IFrameElement;

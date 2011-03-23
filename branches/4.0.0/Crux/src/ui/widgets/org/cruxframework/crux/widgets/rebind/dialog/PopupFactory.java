@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */ 
-package br.com.sysmap.crux.widgets.rebind.dialog;
+package org.cruxframework.crux.widgets.rebind.dialog;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import br.com.sysmap.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import br.com.sysmap.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import br.com.sysmap.crux.widgets.client.dialog.Popup;
-import br.com.sysmap.crux.widgets.rebind.event.HasBeforeCloseHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
+import org.cruxframework.crux.widgets.client.dialog.Popup;
+import org.cruxframework.crux.widgets.rebind.event.HasBeforeCloseHandlersFactory;
+
 
 /**
  * @author Thiago da Rosa de Bustamante

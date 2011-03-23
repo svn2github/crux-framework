@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.maskedtextbox;
+package org.cruxframework.crux.widgets.client.maskedtextbox;
 
-import br.com.sysmap.crux.core.client.formatter.InvalidFormatException;
-import br.com.sysmap.crux.core.client.formatter.annotation.FormatterName;
+import org.cruxframework.crux.core.client.formatter.InvalidFormatException;
+import org.cruxframework.crux.core.client.formatter.annotation.FormatterName;
 
 /**
  * @author Thiago da Rosa de Bustamante

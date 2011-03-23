@@ -1,4 +1,4 @@
-package br.com.sysmap.crux.widgets.client.util;
+package org.cruxframework.crux.widgets.client.util;
 
 import com.google.gwt.dom.client.Element;
 

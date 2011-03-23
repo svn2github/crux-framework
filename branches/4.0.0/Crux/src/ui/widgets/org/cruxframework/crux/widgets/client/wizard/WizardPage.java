@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.wizard;
+package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import br.com.sysmap.crux.core.client.Crux;
-import br.com.sysmap.crux.core.client.collection.FastMap;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

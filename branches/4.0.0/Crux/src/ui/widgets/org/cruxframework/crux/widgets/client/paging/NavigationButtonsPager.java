@@ -1,6 +1,6 @@
-package br.com.sysmap.crux.widgets.client.paging;
+package org.cruxframework.crux.widgets.client.paging;
 
-import br.com.sysmap.crux.widgets.client.event.paging.PageEvent;
+import org.cruxframework.crux.widgets.client.event.paging.PageEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -18,7 +18,7 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	private FocusPanel lastButton;
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.paging.AbstractPager#update(int, boolean)
+	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#update(int, boolean)
 	 */
 	@Override
 	public void update(int currentPage, boolean isLastPage)

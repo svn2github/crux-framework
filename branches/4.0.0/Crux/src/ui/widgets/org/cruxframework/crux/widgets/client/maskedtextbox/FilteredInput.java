@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.maskedtextbox;
+package org.cruxframework.crux.widgets.client.maskedtextbox;
 
-import br.com.sysmap.crux.widgets.client.event.paste.PasteEvent;
-import br.com.sysmap.crux.widgets.client.event.paste.PasteHandler;
+import org.cruxframework.crux.widgets.client.event.paste.PasteEvent;
+import org.cruxframework.crux.widgets.client.event.paste.PasteHandler;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;

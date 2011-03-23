@@ -13,18 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.event;
+package org.cruxframework.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
-import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectHandler;
-import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowClickHandler;
-import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickHandler;
-import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
-import br.com.sysmap.crux.widgets.client.event.row.RowRenderHandler;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectEvent;
+import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectHandler;
+import org.cruxframework.crux.widgets.client.event.row.RowClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowClickHandler;
+import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickHandler;
+import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
+import org.cruxframework.crux.widgets.client.event.row.RowRenderHandler;
+
 
 /**
  * All event binders for grid row events
@@ -45,7 +46,7 @@ public class RowEventsBind
 		private static final String EVENT_NAME = "onRowClick";
 
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -78,7 +79,7 @@ public class RowEventsBind
 		private static final String EVENT_NAME = "onRowDoubleClick";
 
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -111,7 +112,7 @@ public class RowEventsBind
 		private static final String EVENT_NAME = "onRowRender";
 
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{
@@ -144,7 +145,7 @@ public class RowEventsBind
 		private static final String EVENT_NAME = "onBeforeRowSelect";
 
 		/**
-		 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 		 */
 		public String getEventName()
 		{

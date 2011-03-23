@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.event;
+package org.cruxframework.crux.widgets.rebind.event;
 
-import br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor;
-import br.com.sysmap.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import br.com.sysmap.crux.core.rebind.screen.widget.WidgetCreator;
-import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutEvent;
-import br.com.sysmap.crux.widgets.client.event.timeout.TimeoutHandler;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.widgets.client.event.timeout.TimeoutEvent;
+import org.cruxframework.crux.widgets.client.event.timeout.TimeoutHandler;
+
 
 /**
  * TODO - Gesse - Comment this
@@ -30,7 +31,7 @@ public class TimeoutEvtBind
 	private static final String EVENT_NAME = "onTimeout";
 
 	/**
-	 * @see br.com.sysmap.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+	 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
 	 */
 	public static String getEventName()
 	{

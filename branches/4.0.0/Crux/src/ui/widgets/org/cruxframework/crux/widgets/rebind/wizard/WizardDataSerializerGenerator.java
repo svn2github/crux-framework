@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.wizard;
+package org.cruxframework.crux.widgets.rebind.wizard;
 
-import br.com.sysmap.crux.core.rebind.AbstractGenerator;
-import br.com.sysmap.crux.core.rebind.AbstractProxyCreator;
+import org.cruxframework.crux.core.rebind.AbstractGenerator;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;

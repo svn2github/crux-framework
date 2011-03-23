@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.collapsepanel;
+package org.cruxframework.crux.widgets.client.collapsepanel;
 
-import br.com.sysmap.crux.core.client.screen.LazyPanel;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseOrBeforeExpandEvent;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandEvent;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandHandler;
-import br.com.sysmap.crux.widgets.client.event.collapseexpand.HasBeforeCollapseAndBeforeExpandHandlers;
-import br.com.sysmap.crux.widgets.client.titlepanel.TitlePanel;
+import org.cruxframework.crux.core.client.screen.LazyPanel;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseOrBeforeExpandEvent;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeExpandEvent;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeExpandHandler;
+import org.cruxframework.crux.widgets.client.event.collapseexpand.HasBeforeCollapseAndBeforeExpandHandlers;
+import org.cruxframework.crux.widgets.client.titlepanel.TitlePanel;
+
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -153,7 +154,7 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.collapseexpand.HasBeforeCollapseHandlers#addBeforeCollapseHandler(br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.collapseexpand.HasBeforeCollapseHandlers#addBeforeCollapseHandler(org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler)
 	 */
 	public HandlerRegistration addBeforeCollapseHandler(BeforeCollapseHandler handler)
 	{
@@ -161,7 +162,7 @@ public class CollapsePanel extends TitlePanel implements HasBeforeCollapseAndBef
 	}
 
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.event.collapseexpand.HasBeforeExpandHandlers#addBeforeExpandHandler(br.com.sysmap.crux.widgets.client.event.collapseexpand.BeforeExpandHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.collapseexpand.HasBeforeExpandHandlers#addBeforeExpandHandler(org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeExpandHandler)
 	 */
 	public HandlerRegistration addBeforeExpandHandler(BeforeExpandHandler handler)
 	{

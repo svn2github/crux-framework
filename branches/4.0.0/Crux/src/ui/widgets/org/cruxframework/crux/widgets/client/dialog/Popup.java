@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dialog;
+package org.cruxframework.crux.widgets.client.dialog;
 
-import br.com.sysmap.crux.core.client.collection.FastList;
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseEvent;
-import br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseHandler;
-import br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
-import br.com.sysmap.crux.widgets.client.event.openclose.HasOpenHandlers;
-import br.com.sysmap.crux.widgets.client.event.openclose.OpenEvent;
-import br.com.sysmap.crux.widgets.client.event.openclose.OpenHandler;
+import org.cruxframework.crux.core.client.collection.FastList;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
+import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
+import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
+import org.cruxframework.crux.widgets.client.event.openclose.HasOpenHandlers;
+import org.cruxframework.crux.widgets.client.event.openclose.OpenEvent;
+import org.cruxframework.crux.widgets.client.event.openclose.OpenHandler;
+
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
@@ -107,7 +108,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static void invokeOnOpener(String call, Object param) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static void invokeOnOpener(String call, Object param) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		CruxInternalPopupController.invokeOnOpener(call, param);
 	}
@@ -118,7 +119,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static <T> T invokeOnOpener(String call, Object param, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static <T> T invokeOnOpener(String call, Object param, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		return CruxInternalPopupController.invokeOnOpener(call, param, resultType);
 	}
@@ -218,7 +219,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 	}
 	
 	/*
-	 * @see br.com.sysmap.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(br.com.sysmap.crux.widgets.client.event.openclose.BeforeCloseHandler)
+	 * @see org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler)
 	 */
 	public HandlerRegistration addBeforeCloseHandler(BeforeCloseHandler handler)
 	{

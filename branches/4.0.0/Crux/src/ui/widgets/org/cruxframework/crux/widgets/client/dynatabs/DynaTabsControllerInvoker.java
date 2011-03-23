@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.core.client.screen.JSWindow;
-import br.com.sysmap.crux.core.client.screen.ModuleComunicationException;
-import br.com.sysmap.crux.core.client.screen.Screen;
-import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.ModuleComunicationException;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -66,12 +67,12 @@ public class DynaTabsControllerInvoker
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static void invokeOnSiblingTab(String tabId, String call, Object param) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static void invokeOnSiblingTab(String tabId, String call, Object param) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{		
 		Element tabIFrame = getSiblingTabInternalFrameElement(tabId);
 		if(tabIFrame == null)
 		{
-			throw new br.com.sysmap.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoSiblingTabFound(tabId));
+			throw new org.cruxframework.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoSiblingTabFound(tabId));
 		}
 	
 		retrieveTabWindowAndInvoke(call, param, tabIFrame);
@@ -88,12 +89,12 @@ public class DynaTabsControllerInvoker
 	 * @throws ModuleComunicationException
 	 */	
 	@Deprecated
-	public static <T> T invokeOnSiblingTab(String tabId, String call, Object param, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static <T> T invokeOnSiblingTab(String tabId, String call, Object param, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{		
 		Element tabIFrame = getSiblingTabInternalFrameElement(tabId);
 		if(tabIFrame == null)
 		{
-			throw new br.com.sysmap.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoSiblingTabFound(tabId));
+			throw new org.cruxframework.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoSiblingTabFound(tabId));
 		}
 	
 		return retrieveTabWindowAndInvoke(call, param, tabIFrame, resultType);
@@ -107,12 +108,12 @@ public class DynaTabsControllerInvoker
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static void invokeOnTab(String tabId, String call, Object param) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static void invokeOnTab(String tabId, String call, Object param) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{		
 		Element tabIFrame = getTabInternalFrameElement(tabId);
 		if(tabIFrame == null)
 		{
-			throw new br.com.sysmap.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoTabFound(tabId));
+			throw new org.cruxframework.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoTabFound(tabId));
 		}
 	
 		retrieveTabWindowAndInvoke(call, param, tabIFrame);
@@ -129,12 +130,12 @@ public class DynaTabsControllerInvoker
 	 * @throws ModuleComunicationException
 	 */
 	@Deprecated
-	public static <T> T invokeOnTab(String tabId, String call, Object param, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	public static <T> T invokeOnTab(String tabId, String call, Object param, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{		
 		Element tabIFrame = getTabInternalFrameElement(tabId);
 		if(tabIFrame == null)
 		{
-			throw new br.com.sysmap.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoTabFound(tabId));
+			throw new org.cruxframework.crux.core.client.screen.ModuleComunicationException(WidgetMsgFactory.getMessages().tabsControllerNoTabFound(tabId));
 		}
 	
 		return retrieveTabWindowAndInvoke(call, param, tabIFrame, resultType);
@@ -187,7 +188,7 @@ public class DynaTabsControllerInvoker
 	}-*/;
 	
 	@Deprecated
-	private static void retrieveTabWindowAndInvoke(String call, Object param, Element tabIFrame) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	private static void retrieveTabWindowAndInvoke(String call, Object param, Element tabIFrame) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		JSWindow window = retrieveTabWindow(tabIFrame);
 		callSiblingTabControllerAccessor(window, call,  Screen.getCruxSerializer().serialize(param));
@@ -195,7 +196,7 @@ public class DynaTabsControllerInvoker
 	
 	@SuppressWarnings("unchecked")
 	@Deprecated
-	private static <T> T retrieveTabWindowAndInvoke(String call, Object param, Element tabIFrame, Class<T> resultType) throws br.com.sysmap.crux.core.client.screen.ModuleComunicationException
+	private static <T> T retrieveTabWindowAndInvoke(String call, Object param, Element tabIFrame, Class<T> resultType) throws org.cruxframework.crux.core.client.screen.ModuleComunicationException
 	{
 		JSWindow window = retrieveTabWindow(tabIFrame);
 		String result = callSiblingTabControllerAccessor(window, call,  Screen.getCruxSerializer().serialize(param));

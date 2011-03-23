@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.sysmap.crux.widgets.rebind.wizard;
+package org.cruxframework.crux.widgets.rebind.wizard;
 
-import br.com.sysmap.crux.core.client.context.ContextManager;
-import br.com.sysmap.crux.core.client.utils.StringUtils;
-import br.com.sysmap.crux.core.rebind.CruxGeneratorException;
-import br.com.sysmap.crux.core.rebind.crossdocument.CrossDocumentProxyCreator;
-import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializationUtils;
-import br.com.sysmap.crux.core.rebind.crossdocument.gwt.Shared;
-import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
+import org.cruxframework.crux.core.client.context.ContextManager;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.crossdocument.CrossDocumentProxyCreator;
+import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
+import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
+import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;

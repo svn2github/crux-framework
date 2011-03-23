@@ -1,6 +1,6 @@
-package br.com.sysmap.crux.widgets.client.dynatabs;
+package org.cruxframework.crux.widgets.client.dynatabs;
 
-import br.com.sysmap.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
