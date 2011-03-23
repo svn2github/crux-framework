@@ -19,8 +19,7 @@
 	<property name="lib.dir" value="lib" />
 	<property name="classes.dir" value="bin/classes" />
 	<property name="dist.dir" value="dist" />
-	<property name="expanded.dir" value="${dist.dir}/crux-${version}" />
-	<property name="javadoc.dir" value="${expanded.dir}/docs" />
+	<property name="javadoc.dir" value="${dist.dir}/docs" />
 	<property name="dependencies.dir" value="build/dependencies" />
 	
 	<property name="crux.dev.name" value="crux-dev" />
@@ -72,7 +71,7 @@
 	-->
 	<target name="dist" description="Creates the crux zip file.">
 		<delete dir="${dist.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
-		<mkdir dir="${expanded.dir}" />
+		<mkdir dir="${dist.dir}" />
 		
 		<!-- Export all crux jars -->
 		<antcall target="export-crux-dev" />
@@ -81,53 +80,6 @@
 		<antcall target="export-crux-widgets" />
 		<antcall target="export-crux-themes" />
 
-		<!-- Copy all files to distribution folder -->
-		<copy todir="${expanded.dir}/lib/build">
-			<fileset dir="${dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
-			</fileset>
-			<fileset dir="${lib.dir}" >
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
-		<copy todir="${expanded.dir}/lib/web-inf">
-			<fileset dir="${dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
-			</fileset>
-			<fileset dir="${dependencies.dir}" >
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
-		<copy todir="${expanded.dir}/lib/gadget">
-			<fileset dir="${dist.dir}" >
-				<include name="${crux.gadgets.name}.jar" />				
-			</fileset>
-		</copy>
-		
-		<copy todir="${expanded.dir}" file="${project.config}" />
-		<copy todir="${expanded.dir}" file="${cmd.file}" />
-		<copy todir="${expanded.dir}" file="${sh.file}" />
-		<copy todir="${expanded.dir}" file="${launcher.sh.file}" />
-		<copy todir="${expanded.dir}" file="${launcher.cmd.file}" />
-		
-		<exec command="chmod 755 ${expanded.dir}/projectGenerator.sh" />
-		<exec command="chmod 755 ${expanded.dir}/start.sh" />
-
-		<copy todir="${expanded.dir}">
-			<fileset dir="${resource.dir}/static" includes="*" />
-		</copy>
-
-		<copy todir="${expanded.dir}/apps/helloworld.war">
-			<fileset dir="${samples.dir}/helloworld.war" excludes="**/*.jar"/>
-		</copy>	
-		<copy todir="${expanded.dir}/apps/quickstart.war">
-			<fileset dir="${samples.dir}/quickstart.war" excludes="**/*.jar"/>
-		</copy>	
-
-		<!--antcall target="generate-javadoc" /-->
-		<!--zip basedir="${expanded.dir}" destfile="${distdir}/crux-${version}.zip" /-->
 	</target>
 
 	
