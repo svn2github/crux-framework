@@ -11,12 +11,12 @@
 	</context-param> 
 
 	<listener>
-        <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
+        <listener-class>org.cruxframework.crux.core.server.InitializerListener</listener-class>
     </listener>
 
 	<servlet>
 		<servlet-name>remoteServiceServlet</servlet-name>
-		<servlet-class>br.com.sysmap.crux.core.server.dispatch.RemoteServiceServlet</servlet-class>
+		<servlet-class>org.cruxframework.crux.core.server.dispatch.RemoteServiceServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
@@ -39,12 +39,12 @@
 	===========================================================================			
 	-->
 	<listener>
-        <listener-class>br.com.sysmap.crux.core.rebind.DevModeInitializerListener</listener-class>
+        <listener-class>org.cruxframework.crux.core.rebind.DevModeInitializerListener</listener-class>
     </listener>
 	<filter>
 		<display-name>ModulesDeclarativeUIFilter</display-name>
 		<filter-name>ModulesDeclarativeUIFilter</filter-name>
-		<filter-class>br.com.sysmap.crux.module.filter.ModulesDeclarativeUIFilter</filter-class>
+		<filter-class>org.cruxframework.crux.module.filter.ModulesDeclarativeUIFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>ModulesDeclarativeUIFilter</filter-name>

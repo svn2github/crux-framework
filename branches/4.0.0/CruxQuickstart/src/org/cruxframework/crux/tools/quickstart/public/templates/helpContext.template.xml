@@ -1,7 +1,7 @@
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:c="http://www.sysmap.com.br/crux"  
-			xmlns:gwt="http://www.sysmap.com.br/crux/gwt"
-            xmlns:t="http://www.sysmap.com.br/templates" library="quickstart"
+			xmlns:c="http://www.cruxframework.org/crux"  
+			xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+            xmlns:t="http://www.cruxframework.org/templates" library="quickstart"
             useController="contextHelpController">
 
 	<gwt:horizontalPanel id="#{id}HelpHPanel">
