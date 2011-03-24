@@ -242,6 +242,8 @@ class TypeParameterExposureComputer {
     }
 
     private void computeIndirectExposureCauses() {
+      // TODO(spoon): this only needs to consider immediate subtypes, not all
+      // subtypes
       JClassType[] subtypes = baseType.getSubtypes();
       for (JClassType subtype : subtypes) {
         JGenericType isGeneric = subtype.isGenericType();
