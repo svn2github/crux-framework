@@ -96,7 +96,7 @@
 		<delete dir="${classes.dir}" failonerror="no" />
 		<mkdir dir="${classes.dir}" />
 		
-		<javac destdir="${classes.dir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
@@ -137,7 +137,7 @@
 		<delete dir="${classes.dir}" failonerror="no" />
 		<mkdir dir="${classes.dir}" />
 		
-		<javac destdir="${classes.dir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
@@ -191,7 +191,7 @@
 		<delete dir="${classes.dir}" failonerror="no" />
 		<mkdir dir="${classes.dir}" />
 		
-		<javac destdir="${classes.dir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
@@ -245,7 +245,7 @@
 		<delete dir="${classes.dir}" failonerror="no" />
 		<mkdir dir="${classes.dir}" />
 		
-		<javac destdir="${classes.dir}" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" excludes="**/public/*" 
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>

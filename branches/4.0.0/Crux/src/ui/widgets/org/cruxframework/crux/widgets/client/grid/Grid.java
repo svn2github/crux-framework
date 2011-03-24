@@ -31,7 +31,6 @@ import org.cruxframework.crux.core.client.datasource.PagedDataSource;
 import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
 import org.cruxframework.crux.core.client.datasource.RemoteDataSourceCallback;
 import org.cruxframework.crux.core.client.formatter.Formatter;
-import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectEvent;
@@ -42,7 +41,6 @@ import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickEvent;
 import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
 import org.cruxframework.crux.widgets.client.paging.Pageable;
 import org.cruxframework.crux.widgets.client.paging.Pager;
-
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -319,7 +317,6 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * Creates a widget
 	 * @param column
 	 * @return
-	 * @throws InterfaceConfigException 
 	 */
 	private Widget createWidget(WidgetColumnDefinition column)
 	{
