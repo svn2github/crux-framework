@@ -236,7 +236,7 @@ public class WizardDataSerializerProxyCreator extends CrossDocumentProxyCreator
 		try
         {
 	        TypeSerializerCreator tsc = new TypeSerializerCreator(logger, typesSentFromBrowser, typesSentToBrowser, context, 
-	        										SerializationUtils.getTypeSerializerQualifiedName(baseProxyType));
+	        										SerializationUtils.getTypeSerializerQualifiedName(baseProxyType), SerializationUtils.getTypeSerializerSimpleName(baseProxyType));
 	        tsc.realize(logger);
         }
         catch (Exception e)
