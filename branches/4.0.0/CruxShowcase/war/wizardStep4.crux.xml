@@ -13,7 +13,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="wizardStep4Controller" />
+		<c:screen useController="wizardStep4Controller" fragment="wizards"/>
 
 		<a:wizardPage id="wizardPage" onEnter="wizardStep4Controller.onEnter" onLeave="wizardStep4Controller.onLeave" wizardId="wizard" wizardContextObject="person"/>
 

@@ -22,10 +22,19 @@
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
 		<c:screen onLoad="widgetGridController.onLoad" useController="widgetGridController" 
-			useDataSource="simpleGridDataSource" useFormatter="birthday"/>
+			useDataSource="simpleGridDataSource" useFormatter="birthday" fragment="grids"/>
 		
+		<b:simplePanel id="testeSimpleInvisible" visible="false"/>		
+		
+		<b:HTMLPanel id="externalHTMLPanel">
+		<a:collapsePanel id="testeSuperCollapse" collapsed="true" visible="false">
+			<a:title><a:text>Teste wrapper collapse</a:text></a:title>
+			<a:body>
+				<a:widget>
+		<b:lazyPanel id="lazy02">
+		<b:HTMLPanel id="invisibleHTMLPanel" visible="false">
 		<center>
-		
+		<b:lazyPanel id="lazy01">
 			<b:horizontalPanel id="mainPanel" spacing="20">
 				<b:cell verticalAlignment="top">
 					<a:titlePanel id="tPanel" width="470">
@@ -78,9 +87,16 @@
 					</a:decoratedPanel>
 				</b:cell>
 			</b:horizontalPanel>
+		</b:lazyPanel >
 			
 			<s:gridSources pageName="simpleGrid"/>
 	
-		</center>						
+		</center>
+		</b:HTMLPanel>						
+		</b:lazyPanel >
+				</a:widget>
+			</a:body>
+		</a:collapsePanel>
+		</b:HTMLPanel>						
 	</body>	
 </html>

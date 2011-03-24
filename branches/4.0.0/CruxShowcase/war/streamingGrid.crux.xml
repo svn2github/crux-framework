@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
 		<c:screen onLoad="streamingGridController.onLoad" useController="streamingGridController,streamingGridSourcesController" 
-			useDataSource="streamingGridDataSource" useFormatter="birthday"/>
+			useDataSource="streamingGridDataSource" useFormatter="birthday" fragment="grids"/>
 		
 		<center>
 		

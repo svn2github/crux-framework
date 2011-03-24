@@ -21,7 +21,7 @@
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
 		<c:screen onLoad="gridEventsController.onLoad" useController="gridEventsController" 
-			useDataSource="simpleGridDataSource" useFormatter="birthday"/>
+			useDataSource="simpleGridDataSource" useFormatter="birthday" fragment="grids"/>
 		
 		<center>
 			<b:horizontalPanel id="mainPanel" spacing="20">

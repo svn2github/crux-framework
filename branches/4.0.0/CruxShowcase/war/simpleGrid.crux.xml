@@ -14,8 +14,8 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
-		<c:screen onLoad="simpleGridController.onLoad" useController="simpleGridController,simpleGridSourcesController" 
-			useDataSource="simpleGridDataSource" useFormatter="birthday"/>
+		<c:screen onLoad="simpleGridController.onLoad" useController="simpleGridController" 
+			useDataSource="simpleGridDataSource" useFormatter="birthday" fragment="grids"/>
 		
 		<center>
 		

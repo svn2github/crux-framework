@@ -14,7 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="decoratedButtonController"/>
+		<c:screen fragment="hugePage"/>
 
 		<center>
 			<b:verticalPanel id="centeringPanel" spacing="5">

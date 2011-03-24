@@ -40,6 +40,9 @@
 					</b:item>
 				</b:tree>
 			</b:cell>
+			<b:cell direction="west" horizontalAlignment="left"	verticalAlignment="top" width="120">
+				<b:audio id="testAudio" src="music.mp3" showControls="true"/>
+			</b:cell>
 			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="top">
 				<b:datePicker id="datePicker" />
 			</b:cell>
