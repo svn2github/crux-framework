@@ -1,7 +1,7 @@
 <t:template 
     xmlns:t="http://www.sysmap.com.br/templates"
 	xmlns:s="http://www.sysmap.com.br/templates/showcase"
-	library="showcase">
+	library="showcase" useController="#{pageName}SourcesController">
 
 	<s:sources/>
 	<s:source onLoadSource="#{pageName}SourcesController.loadDTO" title="View binded object source" id="contact"/>
