@@ -25,6 +25,7 @@
 	<property name="crux.dev.name" value="crux-dev" />
 	<property name="crux.runtime.name" value="crux-runtime" />
 	<property name="crux.gadgets.name" value="crux-gadgets" />
+	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 	
@@ -39,11 +40,6 @@
 	<property name="showcase.build.dir" value="${showcase.dir}/build" />
 	<property name="showcase.webinf.dir" value="${showcase.dir}/war/WEB-INF" />
 
-	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/gwt-servlet-deps.jar" dest="${dependencies.dir}/gwt-servlet-deps.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${dependencies.dir}/crux-runtime-deps.jar" verbose="true" usetimestamp="yes"/-->
-	
 	<!-- 
 	========================================================================================================
 		Dist
@@ -80,9 +76,14 @@
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		<copy todir="${expanded.dir}/lib/gadget">
+		<copy todir="${expanded.dir}/lib/gadget/build">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.gadgets.name}.jar" />				
+			</fileset>
+		</copy>
+		<copy todir="${expanded.dir}/lib/gadget/web-inf">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.gadgets.runtime.name}.jar" />				
 			</fileset>
 		</copy>
 		
