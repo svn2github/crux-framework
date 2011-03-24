@@ -1,6 +1,6 @@
 <t:template 
-    xmlns:t="http://www.sysmap.com.br/templates"
-	xmlns:s="http://www.sysmap.com.br/templates/showcase"
+    xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:s="http://www.cruxframework.org/templates/showcase"
 	library="showcase" useController="i18nSourcesController"
 >
 	<s:sources/>

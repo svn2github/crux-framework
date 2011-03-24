@@ -13,6 +13,11 @@
 	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
 	<property name="xsd.dir" value="xsd" />
 
+	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
+	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>
+	<get src="http:/repoGesse/gwt-servlet-deps.jar" dest="${dependencies.dir}/gwt-servlet-deps.jar" verbose="true" usetimestamp="yes"/>
+	<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${dependencies.dir}/crux-runtime-deps.jar" verbose="true" usetimestamp="yes"/-->
+
 	<path id="build.classpath">
 		<fileset dir="${web.lib.dir}">
 			<include name="**/*.jar" />
@@ -66,13 +71,7 @@
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${temp.dir}" />
 
-		<copydir dest="${temp.dir}/webroot" src="${web.root}">
-			<exclude name="**/crux-gwt-widgets.jar" />
-			<exclude name="**/crux-widgets.jar" />
-			<exclude name="**/crux-themes.jar" />
-			<exclude name="**/saxon9-dom.jar" />
-			<exclude name="**/saxon9.jar" />
-		</copydir>
+		<copydir dest="${temp.dir}/webroot" src="${web.root}" />
 
 		<cruxcompiler srcDir="${src.dir}" keepPagesGeneratedFiles="true" outputDir="${temp.dir}/webroot" 
 			          webDir="${temp.dir}/webroot" pagesOutputDir="${temp.dir}/webroot" outputCharset="UTF-8">

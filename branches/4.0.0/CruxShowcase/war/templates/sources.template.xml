@@ -1,7 +1,7 @@
 <t:template 
-    xmlns:t="http://www.sysmap.com.br/templates"
-	xmlns:c="http://www.sysmap.com.br/crux" 
-	xmlns:s="http://www.sysmap.com.br/templates/showcase"
+    xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:s="http://www.cruxframework.org/templates/showcase"
 	library="showcase" useController="sourcesController" >
 
 	<s:source id="xmlSource" onLoadSource="sourcesController.loadXmlSource" title="View page source"/>
