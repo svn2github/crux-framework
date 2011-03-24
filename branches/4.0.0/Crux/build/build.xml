@@ -25,6 +25,7 @@
 	<property name="crux.dev.name" value="crux-dev" />
 	<property name="crux.runtime.name" value="crux-runtime" />
 	<property name="crux.gadgets.name" value="crux-gadgets" />
+	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 
@@ -211,6 +212,19 @@
 				<include name="com/google/gwt/ajaxloader/**/*" />
 			</fileset>	
 			<fileset dir="${gadget.src.dir}" />
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+		<jar jarfile="${dist.dir}/${crux.gadgets.runtime.name}.jar">
+			<fileset dir="${classes.dir}" excludes="**/public/*" >
+				<include name="org/cruxframework/crux/gadget/server/dispatch/**/*" />
+			</fileset>	
+			<fileset dir="${gadget.src.dir}" >
+				<include name="org/cruxframework/crux/gadget/server/dispatch/**/*" />
+			</fileset>	
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
 				<attribute name="Implementation-Version" value="${version}" />

@@ -1,7 +1,7 @@
-<xs:schema xmlns="http://www.sysmap.com.br/module"
+<xs:schema xmlns="http://www.cruxframework.org/module"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	attributeFormDefault="unqualified" elementFormDefault="qualified"
-	targetNamespace="http://www.sysmap.com.br/module">
+	targetNamespace="http://www.cruxframework.org/module">
 
 	<xs:element name="module" type="Module" />
 	<xs:complexType name="Module">

@@ -40,9 +40,6 @@ public interface Crux
 	@DefaultServerMessage("true")
 	String enableHotDeploymentForWebDirs();
 
-	@DefaultServerMessage("true")
-	String enableHotDeploymentForWidgetFactories();
-	
 	@DefaultServerMessage("false")
 	String enableCrux2OldInterfacesCompatibility();
 	
@@ -50,12 +47,11 @@ public interface Crux
 	String renderWidgetsWithIDs();
 
 	@DefaultServerMessage("false")
-	String useCompileTimeClassScanning();
+	String useCompileTimeClassScanningForDevelopment();
 
 	void setEnableWebRootScannerCache(Boolean value);
 	void setEnableChildrenWindowsDebug(Boolean value);
 	void setEnableHotDeploymentForWebDirs(Boolean value);
-	void setEnableHotDeploymentForWidgetFactories(Boolean value);
 	void setRenderWidgetsWithIDs(Boolean value);
 	void setUseCompileTimeClassScanning(Boolean value);
 	void setEnableCrux2OldInterfacesCompatibility(Boolean value);

@@ -60,7 +60,7 @@ import org.w3c.dom.Text;
  */
 class HTMLBuilder
 {
-	private static final String CRUX_CORE_NAMESPACE= "http://www.sysmap.com.br/crux";
+	private static final String CRUX_CORE_NAMESPACE= "http://www.cruxframework.org/crux";
 	private static DocumentBuilder documentBuilder;
 	private static XPathExpression findCruxPagesBodyExpression;
 	private static XPathExpression findHTMLHeadExpression;
@@ -68,7 +68,7 @@ class HTMLBuilder
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static Map<String, String> referenceWidgetsList;
-	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.sysmap.com.br/crux/";
+	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.cruxframework.org/crux/";
 	private static Set<String> widgetsSubTags;
 	private static Set<String> hasInnerHTMLWidgetTags;
 	private static final String XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml";

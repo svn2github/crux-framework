@@ -20,7 +20,33 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.Screen;
+//TODO: terminar essa documentacao
 /**
+ * This annotation can be used to bind a Data Object to the {@link Screen}.
+ * <p>
+ * Objects tied to the screen are automatically populated with information from associated 
+ * fields before any event is dispatched to your {@link Controller}.
+ * <p>
+ * After the event handler method finish, the screen is updated with any change made on the 
+ * tied object.
+ *<p>
+ * For example, see the following controller:
+ *
+ * <pre>
+ * {@code @Controller}("myController")
+ * public class MyController
+ * {
+ *    {@code @}{@link Expose}
+ *    public void myEventHandler()
+ *    {
+ *    	Window.alert("event dispatched!");
+ *    }
+ * }
+ * </pre>
+ * 
+ * @see Controller  
+ * @see Create  
  * @author Thiago da Rosa de Bustamante
  *
  */

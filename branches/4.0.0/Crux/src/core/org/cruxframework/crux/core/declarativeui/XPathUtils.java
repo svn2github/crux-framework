@@ -40,7 +40,7 @@ public class XPathUtils
 		{
 			public String getNamespaceURI(String prefix)
 			{
-				return "http://www.sysmap.com.br/crux";
+				return "http://www.cruxframework.org/crux";
 			}
 
 			public String getPrefix(String namespaceURI)

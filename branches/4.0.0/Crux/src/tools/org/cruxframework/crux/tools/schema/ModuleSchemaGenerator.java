@@ -72,7 +72,7 @@ public class ModuleSchemaGenerator extends DefaultSchemaGenerator
 			xhtmlFile.createNewFile();
 			FileOutputStream out = new FileOutputStream(xhtmlFile);
 
-			String targetNS = "http://www.sysmap.com.br/module";
+			String targetNS = "http://www.cruxframework.org/module";
 			registerNamespaceForCatalog(targetNS, xhtmlFile);
 
 			StreamUtils.write(getClass().getResourceAsStream("/META-INF/module.xsd"), out, true);

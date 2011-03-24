@@ -246,13 +246,13 @@ public class Templates
 				String namespaceURI = element.getNamespaceURI();
 				if (namespaceURI != null)
 				{
-					if (namespaceURI.startsWith("http://www.sysmap.com.br/crux/"))
+					if (namespaceURI.startsWith("http://www.cruxframework.org/crux/"))
 					{
 						isWidget = true;
 					}
-					else if (namespaceURI.startsWith("http://www.sysmap.com.br/templates/"))
+					else if (namespaceURI.startsWith("http://www.cruxframework.org/templates/"))
 					{
-						String library = namespaceURI.substring("http://www.sysmap.com.br/templates/".length());
+						String library = namespaceURI.substring("http://www.cruxframework.org/templates/".length());
 						Document refTemplate = getTemplate(library, element.getLocalName());
 						isWidget = isWidgetTemplate(refTemplate);
 					}

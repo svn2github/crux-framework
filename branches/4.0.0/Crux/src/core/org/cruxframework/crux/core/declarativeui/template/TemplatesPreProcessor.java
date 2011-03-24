@@ -65,7 +65,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		XPath htmlPath = XPathUtils.getHtmlXPath();
 		try
 		{
-			findTemplatesExpression = findPath.compile(".//*[contains(namespace-uri(), 'http://www.sysmap.com.br/templates/')]");
+			findTemplatesExpression = findPath.compile(".//*[contains(namespace-uri(), 'http://www.cruxframework.org/templates/')]");
 			findScreensExpression = findPath.compile("//c:screen");
 			findBodyExpression = htmlPath.compile("//h:body");
 		}
@@ -117,7 +117,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			}
 			else
 			{
-				screen = doc.createElementNS("http://www.sysmap.com.br/crux", "c:screen");
+				screen = doc.createElementNS("http://www.cruxframework.org/crux", "c:screen");
 				NodeList bodyNodes = (NodeList)findBodyExpression.evaluate(doc, XPathConstants.NODESET);
 				if (bodyNodes.getLength() > 0)
 				{

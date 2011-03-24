@@ -577,20 +577,20 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        }
 	        coreFile.createNewFile();
 	        
-	        String targetNS = "http://www.sysmap.com.br/crux";
+	        String targetNS = "http://www.cruxframework.org/crux";
 	        registerNamespaceForCatalog(targetNS, coreFile);
 	        
 	        PrintStream out = new PrintStream(coreFile);
 	        out.println("<xs:schema ");
-	        out.println("xmlns=\"http://www.sysmap.com.br/crux\" ");
+	        out.println("xmlns=\"http://www.cruxframework.org/crux\" ");
 	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
 	        for (String lib : libraries)
 	        {
-	        	out.println("xmlns:_"+lib+"=\"http://www.sysmap.com.br/crux/"+lib+"\" ");
+	        	out.println("xmlns:_"+lib+"=\"http://www.cruxframework.org/crux/"+lib+"\" ");
 	        }
 	        for (String lib : templateLibraries)
 	        {
-	        	out.println("xmlns:_"+lib+"=\"http://www.sysmap.com.br/templates/"+lib+"\" ");
+	        	out.println("xmlns:_"+lib+"=\"http://www.cruxframework.org/templates/"+lib+"\" ");
 	        }
 	        out.println("attributeFormDefault=\"unqualified\" ");
 	        out.println("elementFormDefault=\"qualified\" ");
@@ -620,11 +620,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	{
 		for (String lib : libraries)
 		{
-			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.sysmap.com.br/crux/"+lib+"\"/>");
+			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/crux/"+lib+"\"/>");
 		}
 		for (String lib : templateLibraries)
 		{
-			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.sysmap.com.br/templates/"+lib+"\"/>");
+			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/templates/"+lib+"\"/>");
 		}
 	}	
 	
@@ -868,18 +868,18 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        coreFile.createNewFile();
 	        PrintStream out = new PrintStream(coreFile);
 
-	        String targetNS = "http://www.sysmap.com.br/crux/" + library;
+	        String targetNS = "http://www.cruxframework.org/crux/" + library;
 	        registerNamespaceForCatalog(targetNS, coreFile);
 	        
 	        out.println("<xs:schema ");
-	        out.println("xmlns=\"http://www.sysmap.com.br/crux/"+library+"\" ");
+	        out.println("xmlns=\"http://www.cruxframework.org/crux/"+library+"\" ");
 	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
-	        out.println("xmlns:c=\"http://www.sysmap.com.br/crux\" ");
+	        out.println("xmlns:c=\"http://www.cruxframework.org/crux\" ");
 	        for (String lib : allLibraries)
 	        {
 	        	if (!lib.equals(library))
 	        	{
-	        		out.println("xmlns:_"+lib+"=\"http://www.sysmap.com.br/crux/"+lib+"\" ");
+	        		out.println("xmlns:_"+lib+"=\"http://www.cruxframework.org/crux/"+lib+"\" ");
 	        	}
 	        }
 	        out.println("attributeFormDefault=\"unqualified\" ");
@@ -924,13 +924,13 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        coreFile.createNewFile();
 	        PrintStream out = new PrintStream(coreFile);
 	        
-	        String targetNS = "http://www.sysmap.com.br/templates/" + library;
+	        String targetNS = "http://www.cruxframework.org/templates/" + library;
 	        registerNamespaceForCatalog(targetNS, coreFile);
 
 	        out.println("<xs:schema ");
-	        out.println("xmlns=\"http://www.sysmap.com.br/templates/"+library+"\" ");
+	        out.println("xmlns=\"http://www.cruxframework.org/templates/"+library+"\" ");
 	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
-	        out.println("xmlns:c=\"http://www.sysmap.com.br/crux\" ");
+	        out.println("xmlns:c=\"http://www.cruxframework.org/crux\" ");
 	        out.println("attributeFormDefault=\"unqualified\" ");
 	        out.println("elementFormDefault=\"qualified\" ");
 	        out.println("targetNamespace=\"" + targetNS+ "\" >");
@@ -958,19 +958,19 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateSchemaImportsForLibrary(String library, Set<String> allLibraries, Set<String> templateLibraries, PrintStream out)
 	{
-		out.println("<xs:import schemaLocation=\"core.xsd\" namespace=\"http://www.sysmap.com.br/crux\"/>");
+		out.println("<xs:import schemaLocation=\"core.xsd\" namespace=\"http://www.cruxframework.org/crux\"/>");
 		for (String lib : allLibraries)
 		{
 			if (!lib.equals(library))
 			{
-				out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.sysmap.com.br/crux/"+lib+"\"/>");
+				out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/crux/"+lib+"\"/>");
 			}
 		}
 		for (String lib : templateLibraries)
 		{
 			if (!lib.equals(library))
 			{
-				out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.sysmap.com.br/templates/"+lib+"\"/>");
+				out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/templates/"+lib+"\"/>");
 			}
 		}
 	}
@@ -1039,12 +1039,12 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        }
 	        coreFile.createNewFile();
 	        
-	        String targetNS = "http://www.sysmap.com.br/templates";
+	        String targetNS = "http://www.cruxframework.org/templates";
 	        registerNamespaceForCatalog(targetNS, coreFile);
 	        
 	        PrintStream out = new PrintStream(coreFile);
 	        out.println("<xs:schema ");
-	        out.println("xmlns=\"http://www.sysmap.com.br/templates\" ");
+	        out.println("xmlns=\"http://www.cruxframework.org/templates\" ");
 	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
 	        out.println("attributeFormDefault=\"unqualified\" ");
 	        out.println("elementFormDefault=\"qualified\" ");

@@ -1,8 +1,8 @@
 <html 
 	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:c="http://www.sysmap.com.br/crux" 
-	xmlns:crux="http://www.sysmap.com.br/crux/widgets"
-	xmlns:gwt="http://www.sysmap.com.br/crux/gwt"
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 >
 	<head>
 		<title>My Page</title>

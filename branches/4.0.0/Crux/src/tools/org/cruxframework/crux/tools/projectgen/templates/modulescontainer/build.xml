@@ -38,16 +38,7 @@
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${temp.dir}" />
 
-		<copydir dest="${temp.dir}/webroot" src="${web.root}">
-			<exclude name="**/crux-widgets.jar" />
-			<exclude name="**/crux-gwt-widgets.jar" />
-			<exclude name="**/crux-modules.jar" />
-			<exclude name="**/crux-themes.jar" />
-			<exclude name="**/saxon9-dom.jar" />
-			<exclude name="**/saxon9.jar" />
-			<!-- use code below for removing unnecessary crux files from the compacted war 
-			-->
-		</copydir>
+		<copydir dest="${temp.dir}/webroot" src="${web.root}"/>
 		
 		<cruxmodulecontainercompiler srcDir="${src.dir}" outputDir="${temp.dir}/webroot" webDir="${temp.dir}/webroot" 
 			                keepPagesGeneratedFiles="true" pagesOutputDir="${temp.dir}/webroot" indentPages="false" 

@@ -64,7 +64,7 @@ public class TemplateParser
 		{
 			public String getNamespaceURI(String prefix)
 			{
-				return "http://www.sysmap.com.br/templates";
+				return "http://www.cruxframework.org/templates";
 			}
 
 			public String getPrefix(String namespaceURI)

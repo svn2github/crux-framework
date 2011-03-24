@@ -122,7 +122,7 @@ public class ServiceFactoryImpl implements ServiceFactory
 	 */
 	public ServiceFactoryImpl()
 	{
-		if (Environment.isProduction() ||  Boolean.parseBoolean(ConfigurationFactory.getConfigurations().useCompileTimeClassScanning()))
+		if (Environment.isProduction() ||  Boolean.parseBoolean(ConfigurationFactory.getConfigurations().useCompileTimeClassScanningForDevelopment()))
 		{
 			strategy = new CompileTimeStrategy();
 		}

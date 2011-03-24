@@ -59,8 +59,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
  * <pre>
  * {@code <html} 
  *  xmlns="http://www.w3.org/1999/xhtml"
- *  xmlns:c="http://www.sysmap.com.br/crux"  
- *  xmlns:g="http://www.sysmap.com.br/crux/gwt"{@code >}
+ *  xmlns:c="http://www.cruxframework.org/crux"  
+ *  xmlns:g="http://www.cruxframework.org/crux/gwt"{@code >}
  *     {@code <body>}
  *        {@code <c:screen} useController="myController" {@code />}
  *        {@code <g:button} id="myButton" onClick="myController.myClickEventHandler" 
