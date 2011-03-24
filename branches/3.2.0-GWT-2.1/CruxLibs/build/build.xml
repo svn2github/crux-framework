@@ -163,6 +163,7 @@
 			<fileset dir="${dependencies.jars.dir}">
 				<include name="commons-logging.jar" />
 				<include name="gwt-servlet.jar"/>
+				<include name="gwt-servlet-deps.jar"/>
 				<include name="javassist.jar" />
 				<include name="saxon9.jar" />
 				<include name="saxon9-dom.jar" />
@@ -190,6 +191,7 @@
 			<fileset dir="${dependencies.jars.dir}">
 				<include name="commons-logging.jar" />
 				<include name="gwt-servlet.jar"/>
+				<include name="gwt-servlet-deps.jar"/>
 				<include name="javassist.jar" />
 				<include name="saxon9.jar" />
 				<include name="commons-lang.jar" />
