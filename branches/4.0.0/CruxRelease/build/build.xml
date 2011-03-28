@@ -35,6 +35,13 @@
 	<property name="quickstart.dist.dir" value="${quickstart.dir}/dist" />
 	<property name="quickstart.webinf.dir" value="${quickstart.dir}/war/WEB-INF" />
 	
+	<!-- Proporties refering Quickstart Project -->
+	<property name="helloworld.dir" value="../HelloWorld" />
+	<property name="helloworld.build.dir" value="${helloworld.dir}/build" />
+	<property name="helloworld.dist.dir" value="${helloworld.dir}/dist" />
+	<property name="helloworld.webinf.dir" value="${helloworld.dir}/war/WEB-INF" />
+	
+	
 	<!-- Proporties refering Showcase Project -->
 	<property name="showcase.dir" value="../CruxShowcase" />
 	<property name="showcase.build.dir" value="${showcase.dir}/build" />
@@ -101,8 +108,9 @@
 		</copy>
 
 		<!-- Add HelloWord sample application -->
+		<ant inheritall="false" target="dist" antfile="${helloworld.build.dir}/build.xml"/>
 		<copy todir="${expanded.dir}/apps/helloworld.war">
-			<fileset dir="${samples.dir}/helloworld.war" excludes="**/*.jar"/>
+			<fileset dir="${helloworld.dist.dir}/helloworld.war" excludes="**/*.jar"/>
 		</copy>	
 
 		<!-- Add Quickstart application -->
@@ -143,6 +151,26 @@
 			</fileset>
 		</copy>
 		<copy todir="${quickstart.webinf.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.runtime.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<!-- Update HelloWorld application -->
+		<copy todir="${helloworld.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${helloworld.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.runtime.name}.jar" />				
 			</fileset>
