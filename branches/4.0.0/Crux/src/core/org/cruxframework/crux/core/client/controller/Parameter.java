@@ -21,13 +21,52 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Thiago da Rosa de Bustamante
+ * This annotation can be used to binding of a {@link Controller} field with 
+ * an URL paramter.
+ * <p>
+ * It only makes any effect if used on fields of a {@link Controller} class.
+ * <p>
+ * For the following URL...
+ * <pre>
+        http://myhost.com/myapp/mymodule/mypage.html?person=Thiago&parameterName=123
+ * </pre>
+ * <p>
+ *...you may have a Controller like this:
+ *<pre>
+ *{@code @}{@link Controller}("myController")
+ *public class MyClass
+ *{
+ *  {@code @}Parameter
+ *   protected String person;
  *
+ *   {@code @}Parameter(value="parameterName", required=true)
+ *   protected int field;
+ *
+ *   {@code @}{@link Expose}
+ *   public void myMethod()
+ *   {
+ *       Window.alert(person);
+ *       Window.alert(Integer.toString(field));
+ *   }
+ *}
+ *</pre>
+ *<p>
+ * In the above example, the value of the "person" parameter on window URL will be bound to 
+ * field "person" of the controller (the same is true to "field").
+ * @author Thiago da Rosa de Bustamante
+ * @see ParameterObject
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Parameter
 {
+	/**
+	 * The name of the parameter. If empty, the field name is used 
+	 */
 	String value() default "";
+	
+	/**
+	 * If true, a validation is done to ensure that the parameter is present in the URL.
+	 */
 	boolean required() default false;
 }
