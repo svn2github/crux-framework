@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to binding of a {@link Controller} field with 
+ * This annotation can be used to bind of a {@link Controller} field with 
  * an URL paramter.
  * <p>
  * It only makes any effect if used on fields of a {@link Controller} class.
