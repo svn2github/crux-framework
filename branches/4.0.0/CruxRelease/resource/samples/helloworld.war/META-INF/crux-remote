@@ -1,3 +1,0 @@
-#Crux RemoteServices implementations
-#Thu Mar 10 16:45:54 BRT 2011
-br.com.sysmap.crux.samples.client.remote.GreetingService=br.com.sysmap.crux.samples.server.GreetingServiceImpl
