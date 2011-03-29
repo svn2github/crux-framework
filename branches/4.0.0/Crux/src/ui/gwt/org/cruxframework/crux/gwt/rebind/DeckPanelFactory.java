@@ -62,7 +62,7 @@ public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {
 			String widget = context.getWidget();
-			out.println(widget+".showWidget("+Integer.parseInt(attributeValue)+");");
+			printlnPostProcessing(widget+".showWidget("+Integer.parseInt(attributeValue)+");");
         }
 	}
 	
