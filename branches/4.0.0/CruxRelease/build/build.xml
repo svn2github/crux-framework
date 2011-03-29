@@ -23,7 +23,9 @@
 	<property name="launcher.sh.file" value="${crux.resource.dir}/start.sh" />
 	<property name="launcher.cmd.file" value="${crux.resource.dir}/start.cmd" />
 	<property name="crux.dev.name" value="crux-dev" />
+	<property name="crux.dev.deps.name" value="crux-dev-deps" />
 	<property name="crux.runtime.name" value="crux-runtime" />
+	<property name="crux.runtime.deps.name" value="crux-runtime-deps" />
 	<property name="crux.gadgets.name" value="crux-gadgets" />
 	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
@@ -72,7 +74,7 @@
 				<include name="${crux.themes.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
-				<include name="**/*.jar" />
+				<include name="${crux.dev.deps.name}.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${expanded.dir}/lib/web-inf">
@@ -80,7 +82,8 @@
 				<include name="${crux.runtime.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
-				<include name="**/*.jar" />
+				<include name="${crux.runtime.deps.name}.jar" />
+				<include name="gwt-servlet-deps.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${expanded.dir}/lib/gadget/build">
