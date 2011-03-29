@@ -16,10 +16,26 @@
 package org.cruxframework.crux.core.client.errors;
 
 /**
+ * An ValidationErrorHandler is called to report errors caused by a bad use of 
+ * the application (typically validations over the screen state, based in business rules, 
+ * before performing an action).
+ *  
+ * <p>
+ * To specify your own ValidationErrorHandler, configure in your application module descriptor
+ * something like:
+ * <p>
+ * <pre>
+ * {@code <replace-with class="YourValidationErrorHandlerClass">}
+ *     {@code <when-type-assignable class="org.cruxframework.crux.core.client.errors.ValidationErrorHandler" />}
+ * {@code </replace-with>}
+ * </pre>
+
  * @author Thiago da Rosa de Bustamante
- *
  */
 public interface ValidationErrorHandler
 {
+	/**Handle a validation error 
+	 * @param errorMessage The error message.
+	 */
 	void handleValidationError(String errorMessage);
 }

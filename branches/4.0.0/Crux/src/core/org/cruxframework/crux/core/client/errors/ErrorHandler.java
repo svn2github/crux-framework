@@ -16,12 +16,39 @@
 package org.cruxframework.crux.core.client.errors;
 
 /**
+ * An ErrorHandler is called to report errors in application code 
+ * (bad use of the framework, or an uncaught exception).
+ * <p>
+ * To specify your own ErrorHandler, configure in your application module descriptor
+ * something like:
+ * <p>
+ * <pre>
+ * {@code <replace-with class="YourErrorHandlerClass">}
+ *     {@code <when-type-assignable class="org.cruxframework.crux.core.client.errors.ErrorHandler" />}
+ * {@code </replace-with>}
+ * </pre>
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
 public interface ErrorHandler
 {
+	/**
+	 * Handle an error on application
+	 * @param errorMessage The error message
+	 */
 	void handleError(String errorMessage);
+	
+	/**
+	 * Handle an error on application
+	 * @param t The exception 
+	 */
 	void handleError(Throwable t);
+	
+	/**
+	 * Handle an error on application
+	 * @param errorMessage The error message
+	 * @param t The exception 
+	 */
 	void handleError(String errorMessage, Throwable t);
 }
