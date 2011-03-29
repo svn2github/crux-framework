@@ -18,7 +18,7 @@ package org.cruxframework.crux.core.client.controller.crossdoc;
 /**
  * This exception is used to report errors during a cross document call.
  * @author Thiago da Rosa de Bustamante
- *
+ * @see CrossDocument
  */
 public class CrossDocumentException extends RuntimeException
 {

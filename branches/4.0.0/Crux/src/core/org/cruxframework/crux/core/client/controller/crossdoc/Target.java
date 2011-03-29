@@ -19,13 +19,33 @@ package org.cruxframework.crux.core.client.controller.crossdoc;
  * All possible targets for a cross document call.
  * 
  * @author Thiago da Rosa de Bustamante
- *
+ * @see CrossDocument
  */
 public enum Target
 {
+	/**
+	 * The top frame
+	 */
 	TOP,
+	
+	/**
+	 * The parent frame
+	 */
 	PARENT,
+	
+	/**
+	 * The top frame located on the outermost window of your application, no matter
+     * if executed from inside a frame or other window (e.g. blank, popup, etc.)
+	 */
 	ABSOLUTE_TOP,
+	
+	/**
+	 * The current window
+	 */
 	SELF, 
+	
+	/**
+	 * The opener window
+	 */
 	OPENER
 }

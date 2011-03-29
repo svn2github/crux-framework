@@ -33,6 +33,7 @@ import com.google.gwt.user.client.rpc.impl.Serializer;
 /**
  * For internal use only. Used for cross document serialization.
  * This is a modified version of the GWT ClientSerializationStreamWriter
+ * @see CrossDocument
  */
 public final class ClientSerializationStreamWriter implements SerializationStreamWriter
 {

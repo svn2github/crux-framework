@@ -15,14 +15,36 @@
  */
 package org.cruxframework.crux.core.client.controller.crossdoc;
 
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Create;
+import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.JSWindow;
 
 /**
  * All cross document objects created by Crux implements that interface. It can be
  * used to allow the caller to define where the method will be invoked.
+ * <p>
+ * You must cast your {@link CrossDocument} interface to TargetDocument to change the
+ * target of the cross document call.
+ * <p>
+ * For example:
+ * <pre>
+ *{@code @}{@link Controller}("mySecondController")
+ *public class MySecondController {
+ *   {@code @}{@link Create}
+ *   protected MyControllerCrossDoc crossDoc; // you could also use GWT.create(MyControllerCrossDoc.class)
+ *
+ *   {@code @}{@link Expose}
+ *   public void onClick(ClickEvent event){
+ *      ((TargetDocument)crossDoc).setTarget(Target.TOP);       
+ *      crossDoc.myMethod("test", true, new MySerializableDTO());
+ *   }
+ *}
+ *</pre>
  * 
  * @author Thiago da Rosa de Bustamante
- *
+ * @see CrossDocument
+ * @see Target
  */
 public interface TargetDocument extends CrossDocument
 {

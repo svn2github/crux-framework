@@ -36,7 +36,19 @@ import com.google.gwt.user.client.Timer;
 
 
 /**
- * CRUX Client Engine. It starts a ScreenFactory to build the client view. 
+ * CRUX Client Engine. It starts a ScreenFactory to build the client view.
+ * Any module of a Crux application must inherit Crux module.
+ * <p>
+ * The following example shows a HelloWorld module using Crux:
+ * <pre>
+ * {@code <module rename-to='helloworld'>}
+ *	 {@code <inherits name='org.cruxframework.crux.core.Crux'/>}
+ *	 {@code <inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>}
+ *   ...
+ * {@code </module>}
+ * </pre>
+ * 
+ *  
  * @author Thiago da Rosa de Bustamante
  */
 public class Crux implements EntryPoint 

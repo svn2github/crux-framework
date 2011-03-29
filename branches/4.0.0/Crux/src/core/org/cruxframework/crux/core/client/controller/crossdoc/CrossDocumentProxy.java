@@ -28,7 +28,7 @@ import com.google.gwt.user.client.rpc.impl.Serializer;
 /**
  * The base class for invocation proxies created to make cross document calls
  * @author Thiago da Rosa de Bustamante
- *
+ * @see CrossDocument
  */
 public abstract class CrossDocumentProxy extends ScreenAccessor implements TargetDocument
 {
