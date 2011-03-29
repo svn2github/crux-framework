@@ -32,14 +32,16 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 
 /**
+ * Complete Crux installation and starts the quickstart application.
  * @author Thiago da Rosa de Bustamante
- *
  */
 public class Launcher
 {
 
 	/**
-	 * @param port
+	 * Start the jetty server, containing the quickstart and helloworld applications 
+	 * and the Crux documentation.
+	 * @param port port used by jetty to serve the applicatoins.
 	 * @throws Exception
 	 */
 	public void startServer(int port) throws Exception
@@ -63,6 +65,7 @@ public class Launcher
 	}
 	
 	/**
+	 * Open the default braowser pointing to the quickstart application URL.
 	 * @param port
 	 * @throws Exception 
 	 */
@@ -91,7 +94,10 @@ public class Launcher
 	}
 	
 	/**
-	 * @param appDir
+	 * Create a jetty handler for each application located on the appDir directory.
+	 * <p>
+	 * Applications must be deployed as an .war package.
+	 * @param appDir directory that contains the applications to be installed.
 	 * @return
 	 */
 	protected Handler[] getApplications(File appDir) throws Exception
@@ -118,6 +124,7 @@ public class Launcher
 	}
 
 	/**
+	 * Create a handler to serve the Crux javadoc on the embedded jetty
 	 * @return
 	 */
 	protected ContextHandler getDocumentationHandler()
@@ -133,6 +140,7 @@ public class Launcher
     }
 	
 	/**
+	 * Install Quickstart application on the embedded jetty
 	 * @throws Exception
 	 */
 	protected void installQuickStartApp() throws Exception
@@ -146,6 +154,7 @@ public class Launcher
 	}
 	
 	/**
+	 * Install HelloWorld application on the embedded jetty
 	 * @throws Exception
 	 */
 	protected void installHelloWorldApp() throws Exception
@@ -157,6 +166,7 @@ public class Launcher
 	}
 	
 	/**
+     * Complete Crux installation and starts the quickstart application.
 	 * @param args
 	 * @throws Exception 
 	 */
@@ -170,8 +180,11 @@ public class Launcher
 		{
 			System.out.println("Installing quickstart application...");
 			launcher.installQuickStartApp();
+
+			System.out.println("Installing helloworld application...");
 			launcher.installHelloWorldApp();
-			System.out.println("Quickstart application installed. To Uninstall, just remove the crux distribution folder.");
+
+			System.out.println("Applications installed. To Uninstall, just remove the crux distribution folder.");
 		}
 		
 		launcher.startServer(port);
