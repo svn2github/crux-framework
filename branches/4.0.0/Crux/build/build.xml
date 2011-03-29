@@ -54,7 +54,8 @@
 	========================================================================================================
 	-->
 	<target name="generate-javadoc">
-		<javadoc encoding="UTF-8" destdir="${javadoc.dir}" protected="true" source="1.5" classpathref="build.classpath">
+		<javadoc encoding="UTF-8" destdir="${javadoc.dir}" protected="true" source="1.5" classpathref="build.classpath" 
+			overview="${core.src.dir}/overview.html">
 			<fileset dir="${core.src.dir}" />
 			<fileset dir="${module.src.dir}" />
 			<fileset dir="${gadget.src.dir}" />
