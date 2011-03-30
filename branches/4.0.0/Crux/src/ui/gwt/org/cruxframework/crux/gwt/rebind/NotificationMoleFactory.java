@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.NotificationMole;
 @DeclarativeFactory(id="notificationMole", library="gwt", targetWidget=NotificationMole.class)
 @TagAttributes({
 	@TagAttribute(value="animationDuration", type=Integer.class),
-	@TagAttribute(value="message", required=true, supportsI18N=true),
+	@TagAttribute(value="message", required=true, supportsI18N=true)
 })
 @TagAttributesDeclaration({
 	@TagAttributeDeclaration(value="show", type=Boolean.class)

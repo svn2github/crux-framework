@@ -37,7 +37,7 @@ import com.google.gwt.view.client.HasRows;
 	@TagAttribute(value="rangeLimited", type=Boolean.class)
 })
 @TagAttributesDeclaration({
-	@TagAttributeDeclaration(value="pageSize", type=Integer.class),
+	@TagAttributeDeclaration(value="pageSize", type=Integer.class)
 })
 public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorContext>  
 {
