@@ -109,7 +109,7 @@ To add widgets to your pages, you can use these methods:
 === 3.1.1 Pages as XML Files===
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -131,10 +131,6 @@ You must attempt to:
    <display-name>DeclarativeUIFilter</display-name>
    <filter-name>DeclarativeUIFilter</filter-name>
    <filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
-   <init-param>
-      <param-name>outputCharset</param-name>
-      <param-value>ISO-8859-1</param-value>
-   </init-param>
 </filter>
 <filter-mapping>
    <filter-name>DeclarativeUIFilter</filter-name>
@@ -167,8 +163,8 @@ _*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declara
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:crux="http://www.cruxframework.org/crux" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -284,7 +280,7 @@ It's important to advice that you must initialize the context before using it. T
 Screen.createContext();
 }}}
 
-If you call {{{Screen.createContext()}}} more than once, you will erase the context and create a new one. When we talk about calling it only once, we mean once per user session. For example, you may call it only the user logs in your application successfully.
+If you call {{{Screen.createContext()}}} more than once, you will erase the context and create a new one. When we talk about calling it only once, we mean once per user session. For example, you may call it when the user logs in your application successfully.
 
 Screen class has the following static methods to support Context management:
 
@@ -316,7 +312,7 @@ or Declaratively:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" >
+      xmlns:crux="http://www.cruxframework.org/crux" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -371,8 +367,8 @@ For example:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:crux="http://www.cruxframework.org/crux" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -466,7 +462,6 @@ The Controller annotation has the following properties:
 ||stateful||no||{{{true}}}||If {{{true}}}, one controller object is created and the same instance is <br>used to handle all events. If {{{false}}}, a new instance is used for each new event||
 ||autoBind||no||{{{true}}}||If {{{true}}}, [UserManual#3.3.3.4_Value_Binding ValueObjects] are automatically bound from screen widgets before the event <br>occurs and bound back to screen widgets when the event handling terminates ||
 ||lazy||no|| {{{true}}} ||If {{{true}}}, the controller object is built only when first called.||
-||fragment||no|| {{{<empty>}}} ||You can inform a fragment identifier. The compiler will split your code grouping controllers<br> by these identifiers.||
 
 ==== 3.3.3.2 The @Create Annotation====
 
@@ -515,11 +510,7 @@ You must note, however, that to use {{{@Create}}} on a field, that field must ha
 
 ==== 3.3.3.3 The @Expose Annotation====
 
-The Expose annotation has the following properties:
-
-|| *Property* || *Required* || *Default Value* || *Description* ||
-||allowMultipleCalls||no|| {{{false}}} ||If {{{true}}}, allow user to dispatch more than one event at time.<br/> If {{{false}}}, when an event handler is called, the screen is blocked <br/>until the method finishes.||
-
+The Expose annotation is used to expose a  method as an event handler.
 
 ==== 3.3.3.4 Value Binding====
 
@@ -569,8 +560,8 @@ public class MyClass
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt">
+      xmlns:crux="http://www.cruxframework.org/crux" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt">
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -615,8 +606,8 @@ public class Person
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:crux="http://www.cruxframework.org/crux" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -729,8 +720,8 @@ public class Address
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux"
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:crux="http://www.cruxframework.org/crux"
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -776,7 +767,7 @@ To inform that a controller will be used on a screen, you must explicitly "impor
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" >
+      xmlns:crux="http://www.cruxframework.org/crux" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1147,7 +1138,7 @@ And the crux page that uses it:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" >
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1345,8 +1336,8 @@ Here you can see how a formatter could be used:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:c="http://www.sysmap.com.br/crux"
-      xmlns:crux="http://www.sysmap.com.br/crux/widgets" >
+      xmlns:c="http://www.cruxframework.org/crux"
+      xmlns:crux="http://www.cruxframework.org/crux/widgets" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1486,7 +1477,7 @@ Templates in _*Crux*_ are parameterizable XML files that can be used to:
   # Create smart fragments that can be used to compose greater pages;
   # Define reusable layout pages.
 
-A template must be defined in a file with the extension {{{.template.xml}}} and  can be placed anywhere under your classpath (even inside a jar file).Template files must follow the schema {{{http://www.sysmap.com.br/templates}}}.
+A template must be defined in a file with the extension {{{.template.xml}}} and  can be placed anywhere under your classpath (even inside a jar file).Template files must follow the schema {{{http://www.cruxframework.org/templates}}}.
 
 Sections [UserManual#3.9.1.1_Creating_a_Simple_Component Creating a Simple Component], [UserManual#3.9.1.2_Creating_a_Smart_Fragment Creating a Smart Fragment] and
 [UserManual#3.9.1.3_Defining_a_Reusable_Layout Defining a Reusable Layout] shows examples of templates usage.
@@ -1502,8 +1493,8 @@ A template can be defined to receive parameters and include sub-sections, as sho
 The file {{{labeledBox.template.xml}}} defines a template for a simple labeled box component:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:t="http://www.sysmap.com.br/templates" 
-	  xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
+	  xmlns:t="http://www.cruxframework.org/templates" 
+	  xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
 	  library="custom">
    
    <gwt:horizontalPanel id="#{id}.hPanel" >
@@ -1516,7 +1507,7 @@ The file {{{labeledBox.template.xml}}} defines a template for a simple labeled b
 Then, you can use it on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+      xmlns:c="http://www.cruxframework.org/templates/custom" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1532,8 +1523,8 @@ The File {{{userInfo.template.xml}}} defines a simple header, which can show the
 It has its own Controller and its own business logic:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:t="http://www.sysmap.com.br/templates" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
+      xmlns:t="http://www.cruxframework.org/templates" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
       library="custom" useController="userController">
    <b:HTMLPanel id="userPanel" onLoadWidget="userController.loadUserInfo" >
       <table>
@@ -1553,8 +1544,8 @@ It has its own Controller and its own business logic:
 You can use it on any page you want, without any additional configuration:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
-      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+      xmlns:c="http://www.cruxframework.org/templates/custom" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1569,10 +1560,10 @@ You can use it on any page you want, without any additional configuration:
 The file {{{pageLayout.template.xml}}} defines a common layout that has a menu located on the left and a place to insert the page body:
 {{{
 <t:template xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:t="http://www.sysmap.com.br/templates" 
-      xmlns:crux="http://www.sysmap.com.br/crux/widgets"
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
-      xmlns:c="http://www.sysmap.com.br/templates/custom" 
+      xmlns:t="http://www.cruxframework.org/templates" 
+      xmlns:crux="http://www.cruxframework.org/crux/widgets"
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+      xmlns:c="http://www.cruxframework.org/templates/custom" 
 	  library="custom">
 
    <gwt:dockPanel id="centeringPanel" width="100%" height="100%">
@@ -1596,9 +1587,9 @@ The file {{{pageLayout.template.xml}}} defines a common layout that has a menu l
 Then, you can use it on any crux page:
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:crux="http://www.sysmap.com.br/crux" 
-      xmlns:gwt="http://www.sysmap.com.br/crux/gwt" 
-      xmlns:c="http://www.sysmap.com.br/templates/custom" >
+      xmlns:crux="http://www.cruxframework.org/crux" 
+      xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+      xmlns:c="http://www.cruxframework.org/templates/custom" >
    <head>
        <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
    </head>
@@ -1621,7 +1612,7 @@ Note that the above template reuses another template (userInfo) defined in previ
 According with template.xsd file, the tag {{{<template>}}} declare the following attributes:
 
 || *Attribute* || *Description* ||
-||library||Required attribute that inform the library into which this template will be included.<br> This will define the name of the xsd file where the template<br> definition will be put and the namespace associated with this file.<br> ({{{http://www.sysmap.com.br/templates/<library>}}})||
+||library||Required attribute that inform the library into which this template will be included.<br> This will define the name of the xsd file where the template<br> definition will be put and the namespace associated with this file.<br> ({{{http://www.cruxframework.org/templates/<library>}}})||
 ||useController||Adds controllers to screen controller list||  
 ||useSerializable||Adds serializables to screen serializable list||  
 ||useFormatter||Adds formatters to screen formatter list||  
@@ -1774,6 +1765,9 @@ To setup the _*Crux* Front Controller_, shown in [3.5_Client-Server_Communicatio
 There are some other configurations you will need to do to run your application in development environment: 
 
 {{{
+	<listener>
+        <listener-class>org.cruxframework.crux.core.rebind.DevModeInitializerListener</listener-class>
+    </listener>
 	<filter>
 		<display-name>CruxFilter</display-name>
 		<filter-name>CruxFilter</filter-name>
@@ -1793,10 +1787,6 @@ In development time, you will need to have this too:
 		<display-name>DeclarativeUIFilter</display-name>
 		<filter-name>DeclarativeUIFilter</filter-name>
 		<filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
-		<init-param>
-			<param-name>outputCharset</param-name>
-			<param-value>ISO-8859-1</param-value>
-		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>DeclarativeUIFilter</filter-name>
@@ -1806,7 +1796,7 @@ In development time, you will need to have this too:
 
 This filter is used to transform your _.crux.xml_ files in pure _html_ files. This process is only done in development. In a production environment, your application can access the generated version of the page directly. 
 
-The two above filters, does nothing (its right... nothing!) if used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [UserManual#2.1_Install _*Crux* Project Generator_]).
+The two above filters should not be used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [UserManual#2.1_Install _*Crux* Project Generator_]).
 
 You can add an optional listener called InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
 
