@@ -135,5 +135,6 @@
 </table>
 === Previous Releases Docs ===
   * [http://crux-framework.googlecode.com/svn/wiki/older/crux-wiki-2x.zip Release 2.x]
+  * [http://crux-framework.googlecode.com/svn/wiki/older/crux-wiki-3x.zip Release 3.x]
 
   

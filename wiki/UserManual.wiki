@@ -1,20 +1,23 @@
 #labels Featured,Phase-Implementation
-= Crux 3.0.0 =
+= Crux 4.0.0 =
 
 = 1 Introduction =
 
-_*Crux*_ applications are basically GWT applications. It means you must attempt to all GWT restrictions in terms of source code limitations and project structure directives.
+_*Crux*_ applications are basically GWT applications. It means you must attempt to all GWT restrictions in terms of source code limitations 
+and project structure directives.
 If you are not familiar with GWT, please consult its [http://code.google.com/intl/pt-BR/webtoolkit/ documentation] first.
 
-This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. In order to easy follow this documentation you will need:
-  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.5 or higher (we recommend 1.6);
+This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. 
+Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. 
+In order to easy follow this documentation you will need:
+  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.6 or higher;
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
 To see an example application using _*Crux*_, take a look at the [http://showcase.cruxframework.org/ Showcase].
 == 1.1 _Crux_ and GWT==
 
 _*Crux*_ is built over GWT and support all of its features.
-Current _*Crux*_ version uses GWT 2.0.
+Current _*Crux*_ version uses GWT 2.2.x
 
 = 2 Quick Start=
 
@@ -22,10 +25,15 @@ Current _*Crux*_ version uses GWT 2.0.
 
   * Download the latest _*Crux*_ release [http://code.google.com/p/crux-framework/downloads/list here];
   * Unzip the archive into a folder you want;
-  * Be sure that your default JVM is the version 1.6 or higher. It is necessary to execute the _*Crux*_ installer (in runtime, Crux projects run fine with Java 1.5);
+  * Be sure that your default JVM is the version 1.6 or higher;
   * Execute the {{{start.cmd}}} or {{{start.sh}}} file, according to your operating system;
+    * The first time you run the script, it will try to locate the GWT jars.
+      * If you already have GWT 2.2 on your machine, pass the argument {{{gwtFolder <folderName>}}} to script, 
+      where folderName is the name of the folder containing all gwt jar files.
+      * If you do not have GWT 2.2 on your machine, pass the argument {{{-downloadDependencies}}} to script, 
+      to download all dependencies before start the _*Crux QuickStart*_ tool.   
   * The _*Crux QuickStart*_ tool will start, opened in your default web browser:
-  
+    
   http://crux-framework.googlecode.com/svn/wiki/images/quickstart-begin.gif
   
   * Click the {{{Generate New Crux Application}}} button and follow the instructions. At the end of the wizard, an Eclipse project will be generated for you.
@@ -57,11 +65,11 @@ Here we will explore the application generated in the previous section, explaini
   * The {{{war}}} folder is the root context of your application and contains: 
     * a WEB-INF folder, compliant with JEE specifications, where you will find:
       * the {{{web.xml}}} file (more details at [UserManual#4.3.1_Web.xml 4.3.1 Web.xml]);
-      * the {{{lib}}} folder, which stores all _*Crux*_ jar files your need at development time (more details at section [UserManual#4.3_Setup Setup]);
+      * the {{{lib}}} folder, which stores all _*Crux*_ jar needed (more details at section [UserManual#4.3_Setup Setup]);
       * a {{{classes}}} folder, which is the output for java compilation;
     * a {{{<the name you gave>.crux.xml}}} file: the _welcome file_ of your application (more about _*Crux*_ XML files at [UserManual#3.1.2_Writing_XML_Pages 3.1.2 Writing XML Pages];
   * the {{{build}}} folder, containing:
-    * a {{{lib}}} folder, containing the files needed by _*Crux*_ compilation;
+    * a {{{lib}}} folder, containing the files needed by _*Crux*_ for development purposes only;
     * a {{{build.xml}}} ant file, which defines the following tasks:
       * *dist*: generates the war file for deployment;
       * *compile-scripts*: invokes the _*Crux*_ compilation, generating the static files that can be tested in browsers;
@@ -77,19 +85,19 @@ Here we will explore the application generated in the previous section, explaini
       
 = 3 Coding Client Side =
 
-Your modules must inherit _*br.com.sysmap.crux.core.Crux*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that loads its engine. 
+Your modules must inherit _*org.cruxframework.crux.core.Crux*_. You don't need to specify an EntryPoint, because _*Crux*_ defines a basic one that loads its engine. 
 
-The following example shows a typical module which can use all _*Crux*_ features:
+The following example shows a typical module which can use all _*Crux*_ basic features:
 {{{
 <module rename-to='mymodule'>
-	<inherits name='br.com.sysmap.crux.core.Crux'/>
-	<inherits name='br.com.sysmap.crux.gwt.CruxGWTWidgets'/>
-	<inherits name='br.com.sysmap.crux.widgets.CruxWidgets'/>
+	<inherits name='org.cruxframework.crux.core.Crux'/>
+	<inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>
+	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 </module>
 }}}
 
-The code above creates a module that inherits the _*Crux*_ core and the two sets of widgets that compose the default distribution. 
-  * The [Widgets#1_GWT_Widgets CruxGWTWidgets]  set contains all widgets that are distributed directly with GWT. It's packaged in the {{{crux-gwt-widgets.jar}}} file. 
+The code above creates a module that inherits the _*Crux*_ core and two sets of widgets included in the default distribution. 
+  * The [Widgets#1_GWT_Widgets CruxGWTWidgets]  set contains the code to integrate all widgets that are distributed directly with GWT.  
   * The  [Widgets#2_Crux_Widgets CruxWidgets] set contains some complex widgets like MaskedTexBox, multi-frame capable dialogs, etc. It's packaged in the {{{crux-widgets.jar}}} file.
 
 == 3.1 Building User Interface ==
@@ -124,7 +132,7 @@ You must attempt to:
 <filter>
    <display-name>DeclarativeUIFilter</display-name>
    <filter-name>DeclarativeUIFilter</filter-name>
-   <filter-class>br.com.sysmap.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
+   <filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
    <init-param>
       <param-name>outputCharset</param-name>
       <param-value>ISO-8859-1</param-value>
@@ -232,7 +240,7 @@ _*Crux*_ Screen support the following events:
 
 The _*Crux*_ Context is a common area where you can store and retrieve data. Each data entry is associated with a key. You can think this mechanism like a web session, but residing on the client side of the application. It means you can store not only general-use information, but user-related data too.
 
-Behind the scenes, Crux contexts are nothing but cookies. It means you should not trust in its contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
+However, you should not trust in its contents when executing security-sensible operations, like verifying authenticity or permissions of your user, for example.
 
 The data you store in a Context are visible to any Window on your application, no matter if it is a Popup, a Tab Page, or an IFrame. So, it is a very useful mechanism to share data between different HTML documents.
 
@@ -1316,12 +1324,12 @@ If you want to change the default error handling class, you can specify in your 
 {{{
 	<!-- Specify the implementation to ErrorHandler.-->
 	<replace-with class="YourErrorHandlerClass">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.errors.ErrorHandler" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ErrorHandler" />
 	</replace-with>
 
 	<!-- Specify the implementation to ValidationErrorHandler.-->
 	<replace-with class="YourValidationErrorHandlerClass">
-		<when-type-assignable class="br.com.sysmap.crux.core.client.errors.ValidationErrorHandler" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ValidationErrorHandler" />
 	</replace-with>
 
 }}}
@@ -1685,7 +1693,7 @@ public class GreetingServiceImpl implements GreetingService, RequestAware, Respo
 
 _*Crux*_ provides a mechanism to use i18n in your server-side classes. It's very similar to the GWT i18n for client-side.
 
-You can create interfaces and use the annotation {{{@br.com.sysmap.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client-side.
+You can create interfaces and use the annotation {{{@org.cruxframework.crux.core.i18n.DefaultServerMessage}}} exactly as you do at client-side.
 
 The main differences are:
   * Your interfaces don't need to extend any other interface;
@@ -1755,7 +1763,7 @@ To setup the _*Crux* Front Controller_, shown in [3.5_Client-Server_Communicatio
 	<servlet>
 		<servlet-name>remoteServiceServlet</servlet-name>
 		<servlet-class>
-			br.com.sysmap.crux.core.server.dispatch.RemoteServiceServlet
+			org.cruxframework.crux.core.server.dispatch.RemoteServiceServlet
 		</servlet-class>
 	</servlet>
 
@@ -1771,7 +1779,7 @@ There are some other configurations you will need to do to run your application 
 	<filter>
 		<display-name>CruxFilter</display-name>
 		<filter-name>CruxFilter</filter-name>
-		<filter-class>br.com.sysmap.crux.core.server.CruxFilter</filter-class>
+		<filter-class>org.cruxframework.crux.core.server.CruxFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>CruxFilter</filter-name>
@@ -1786,7 +1794,7 @@ In development time, you will need to have this too:
 	<filter>
 		<display-name>DeclarativeUIFilter</display-name>
 		<filter-name>DeclarativeUIFilter</filter-name>
-		<filter-class>br.com.sysmap.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
+		<filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
 		<init-param>
 			<param-name>outputCharset</param-name>
 			<param-value>ISO-8859-1</param-value>
@@ -1806,7 +1814,7 @@ You can add an optional listener called InitializerListener to initialize some _
 
 {{{
    <listener>
-      <listener-class>br.com.sysmap.crux.core.server.InitializerListener</listener-class>
+      <listener-class>org.cruxframework.crux.core.server.InitializerListener</listener-class>
    </listener>
 }}}
 
@@ -1816,7 +1824,7 @@ If you need i18n before the _*Crux* FrontController_ Servlet, you have to put th
 	<filter>
 		<display-name>I18NFilter</display-name>
 		<filter-name>I18NFilter</filter-name>
-		<filter-class>br.com.sysmap.crux.core.i18n.I18NFilter</filter-class>
+		<filter-class>org.cruxframework.crux.core.i18n.I18NFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>I18NFilter</filter-name>
@@ -1838,10 +1846,10 @@ The following properties can be set:
 
 || *Property* || *Description* || *Default Value* ||
 ||wrapSiblingWidgets||If {{{false}}}, widgets created declaratively under the same parent<br> has no guarantee of order||{{{true}}}||
-||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||br.com.sysmap.crux.core.i18n.LocaleResolverImpl||
-||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||br.com.sysmap.crux.core.rebind.screen.ScreenResourceResolverImpl||
-||classPathResolver||Class used by _*Crux*_ to resolve classpath files||br.com.sysmap.crux.core.server.classpath.ClassPathResolverImpl||
-||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||br.com.sysmap.crux.core.server.dispatch.ServiceFactoryImpl||
+||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||org.cruxframework.crux.core.i18n.LocaleResolverImpl||
+||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverImpl||
+||classPathResolver||Class used by _*Crux*_ to resolve classpath files||org.cruxframework.crux.core.server.classpath.ClassPathResolverImpl||
+||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||org.cruxframework.crux.core.server.dispatch.ServiceFactoryImpl||
 ||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||{{{true}}}||
 ||enableChildrenWindowsDebug||If {{{true}}}, propagates the GWT debug parameters to <br>other windows opened while application runs under the DevMode||{{{true}}}||
 ||enableWebRootScannerCache||If {{{true}}}, uses a cache for the resources scanner||{{{true}}}||
@@ -2013,7 +2021,7 @@ The {{{Schema Generator}}} Tool searches in the project classpath for _*Crux*_ w
 
 You can invoke SchemaGenerator in two different ways:
   # calling it with the command line:
-      {{{java br.com.sysmap.crux.tools.schema.SchemaGenerator <projectBaseDir> <outputDir>}}}
+      {{{java org.cruxframework.crux.tools.schema.SchemaGenerator <projectBaseDir> <outputDir>}}}
   # calling the ant task {{{<generate-schemas>}}}, that is already defined on the project {{{build.xml}}} file, generated by the [UserManual#2.1_Install Project Generator]
 
 SchemaGenerator also produces an eclipse catalog file containing all generated XSD files.
@@ -2024,7 +2032,7 @@ The {{{CruxCompiler}}} tool compiles a crux project. It converts all {{{.crux.xm
 
 You can invoke CruxCompiler in two different ways:
   # calling it with the command line:
-      {{{java br.com.sysmap.crux.tools.compile.CruxCompiler <outputDir>}}}
+      {{{java org.cruxframework.crux.tools.compile.CruxCompiler <outputDir>}}}
   # calling the ant task {{{<compile-scripts>}}}, that is already defined on the project {{{build.xml}}} file, generated by the [UserManual#2.1_Install Project Generator]
 
 
