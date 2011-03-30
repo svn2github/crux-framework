@@ -28,10 +28,8 @@ Current _*Crux*_ version uses GWT 2.2.x
   * Be sure that your default JVM is the version 1.6 or higher;
   * Execute the {{{start.cmd}}} or {{{start.sh}}} file, according to your operating system;
     * The first time you run the script, it will try to locate the GWT jars.
-      * If you already have GWT 2.2 on your machine, pass the argument {{{gwtFolder <folderName>}}} to script, 
-      where folderName is the name of the folder containing all gwt jar files.
-      * If you do not have GWT 2.2 on your machine, pass the argument {{{-downloadDependencies}}} to script, 
-      to download all dependencies before start the _*Crux QuickStart*_ tool.   
+      * If you already have GWT 2.2 on your machine, pass the argument {{{gwtFolder <folderName>}}} to script, where folderName is the name of the folder containing all gwt jar files.
+      * If you do not have GWT 2.2 on your machine, pass the argument {{{-downloadDependencies}}} to script, to download all dependencies before start the _*Crux QuickStart*_ tool.   
   * The _*Crux QuickStart*_ tool will start, opened in your default web browser:
     
   http://crux-framework.googlecode.com/svn/wiki/images/quickstart-begin.gif
