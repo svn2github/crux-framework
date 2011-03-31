@@ -19,6 +19,8 @@ import br.com.sysmap.crux.core.client.declarative.DeclarativeFactory;
 import br.com.sysmap.crux.core.client.declarative.TagAttributeDeclaration;
 import br.com.sysmap.crux.core.client.declarative.TagAttributesDeclaration;
 import br.com.sysmap.crux.core.client.screen.InterfaceConfigException;
+import br.com.sysmap.crux.core.client.screen.ScreenLoadEvent;
+import br.com.sysmap.crux.core.client.screen.ScreenLoadHandler;
 import br.com.sysmap.crux.core.client.screen.factory.HasAnimationFactory;
 
 import com.google.gwt.dom.client.Element;
@@ -46,12 +48,20 @@ public class DeckPanelFactory extends ComplexPanelFactory<DeckPanel>
 	{
 		super.processAttributes(context);
 		
-		DeckPanel widget = context.getWidget();
-		
-		String visibleWidget = context.readWidgetProperty("visibleWidget");
+		final DeckPanel widget = context.getWidget();		
+		final String visibleWidget = context.readWidgetProperty("visibleWidget");
 		if (visibleWidget != null && visibleWidget.length() > 0)
 		{
-			widget.showWidget(Integer.parseInt(visibleWidget));
+			addScreenLoadedHandler
+			(
+				new ScreenLoadHandler()
+				{
+					public void onLoad(ScreenLoadEvent screenLoadEvent)
+					{					
+						widget.showWidget(Integer.parseInt(visibleWidget));						
+					}				
+				}		
+			);		
 		}
 	}	
 }
