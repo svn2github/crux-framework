@@ -110,8 +110,10 @@ public class QuickStartController
 				{
 					outputDir = "";
 				}
-				updateDirSelectorRollingPanel(result);
-				updateDirSelectorBox(result);
+				if (result.getFullPath().length() > 0) {
+					updateDirSelectorRollingPanel(result);
+					updateDirSelectorBox(result);
+				}
             }
 		});
     }	
@@ -142,7 +144,7 @@ public class QuickStartController
 					separator.setStyleName("FileSystemSeparator");
 					rollingPanel.add(separator);
 				}
-				needsSeparator = i >= 1;
+				needsSeparator = (i >= 1) || (i==0 && !folders[0].equals("/"));
 				final Label label = new Label(folders[i].trim().length()>0?folders[i]:"/");
 				label.setStyleName("FileSystemLabel");
 
@@ -174,7 +176,11 @@ public class QuickStartController
 		selectorBox.clear();
 		if (result != null)
 		{
-			addDirectory("..");
+			if(result.isHasParent())
+			{
+				addDirectory("..");
+			}
+			
 			for (String item : result.getContents())
 			{
 				addDirectory(item);
@@ -189,7 +195,7 @@ public class QuickStartController
 	private void addDirectory(final String item)
 	{
 		Image icon = new Image("style/img/folder.gif");
-		Label label = new Label(item);		
+		Label label = new Label(item);
 		HorizontalPanel panel = new HorizontalPanel();
 		panel.setSpacing(2);
 		panel.add(icon);

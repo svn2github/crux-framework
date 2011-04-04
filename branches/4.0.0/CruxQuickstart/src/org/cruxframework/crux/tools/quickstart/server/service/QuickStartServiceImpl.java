@@ -112,20 +112,32 @@ public class QuickStartServiceImpl implements QuickStartService
     {
 		try
         {
+        boolean isRoot = directoryPath.equals("/..") || (directoryPath.length() == 5 && directoryPath.charAt(1) == ':' && directoryPath.substring(2).equals("/.."));
 			DirectoryInfo result = new DirectoryInfo();
-			File dir = new File(directoryPath);
+			File dir = new File(directoryPath + "/");
+			
+			if ((!isRoot) && (!directoryPath.equals("/")))
+			{
+				result.setFullPath(getFullPath(dir));
+				result.setHasParent(true);
+				result.setContents(getDirContents(dir));
+			}
+			else
+			{
+				result.setFullPath("/");
+				result.setHasParent(false);
+				result.setContents(getAllDrives());
+			}
+			
+			return result;
+		}
+		catch (Throwable e)
+		{
+			logger.error(e.getMessage(), e);
+		}
 
-			result.setFullPath(getFullPath(dir));
-	        result.setContents(getDirContents(dir));
-	        return result;
-        }
-        catch (IOException e)
-        {
-        	logger.error(e.getMessage(), e);
-        }
-		
-	    return null;
-    }
+		return null;
+	}
 
 	/**
 	 * @param dir
@@ -133,17 +145,26 @@ public class QuickStartServiceImpl implements QuickStartService
 	 * @throws IOException
 	 */
 	private String getFullPath(File dir) throws IOException
-    {
-	    String fullPath = dir.getCanonicalPath();
-	    
-	    int index = fullPath.indexOf(':');
-	    if (index > 0 && index < fullPath.length()-1)
-	    {
-	    	fullPath = fullPath.substring(index+1);
-	    }
-	    
-	    return fullPath.replace('\\', '/');
-    }
+	{
+		String fullPath = dir.getCanonicalPath();
+		return fullPath.replace('\\', '/');
+	}
+
+	/**
+	 * @param
+	 * @return String[]
+	 * @throws IOException
+	 */
+	public String[] getAllDrives() throws IOException
+	{
+		File[] roots = File.listRoots();
+		String[] drives = new String[roots.length];
+		for (int i = 0; i < roots.length; i++)
+		{
+			drives[i] = roots[i].getAbsolutePath().replaceAll("[\\\\/]", "");
+		}
+		return drives;
+	}
 
 	/**
 	 * @param dir

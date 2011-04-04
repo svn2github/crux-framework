@@ -28,6 +28,18 @@ public class DirectoryInfo implements Serializable
     private String fullPath;
 
 	private String[] contents;
+	
+	private boolean hasParent;
+
+	public boolean isHasParent()
+	{
+		return hasParent;
+	}
+
+	public void setHasParent(boolean hasParent)
+	{
+		this.hasParent = hasParent;
+	}
 
 	public void setFullPath(String fullPath)
     {
