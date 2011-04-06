@@ -61,55 +61,61 @@ The example shown assumes that the widget {{{MyWidget}}} contains a public Strin
 
 == 2.2 WidgetCreator ==
 
-{{{WidgetCreator}}} is the basic class for any _*Crux*_ widget factory. {{{ScreenFactory}}} delegates to those factories the creation of the requested widget, based ont the widget element on the {{{.crux.xml}}} page DOM.
+{{{WidgetCreator}}} is the basic class for any _*Crux*_ widget factory. {{{ScreenFactory}}} delegates to those factories the generation of the code responsible for the creation of the requested widget, based on the widget element on the {{{.crux.xml}}} page's DOM.
 
-{{{WidgetCreator.createWidget()}}} method is called for this creation. It executes the following steps:
+{{{WidgetCreator}}} subclasses can use some annotations to describe the attributes, events and children that the widget accepts. These annotations are used for two purposes:
+  # Automatically bind the information declared into the {{{.crux.xml}}} pages with the widgets created by the _*Crux*_ engine.
+  # Inform to _*Crux*_ engine which attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]).
 
-  # Calls the method {{{T instantiateWidget(element, widgetId)}}}
-  # Calls the method {{{void processAttributes(WidgetCreatorContext<T> context)}}}
-  # Calls the method {{{void processEvents(WidgetCreatorContext<T> context)}}}
-  # Calls the method {{{void processChildren(WidgetCreatorContext<T> context)}}}
-  # Calls the method {{{void postProcess(WidgetCreatorContext<T> context)}}}
-  # Return the created widget to {{{ScreenFactory}}}, that will properly attach it on screen and replaces its {{{<span>}}} metadata tag.
+{{{WidgetCreator.createWidget()}}} method is called for the widget creation. It processes the attributes, events and children declared through the factory annotations and then executes the following steps:
+
+  # Calls the method {{{void instantiateWidget(SourcePrinter out, C context)}}}
+  # Calls the method {{{void processAttributes(SourcePrinter out, C context)}}}
+  # Calls the method {{{void processEvents(SourcePrinter out, C context)}}}
+  # Calls the method {{{void processChildren(SourcePrinter out, C context)}}}
+  # Calls the method {{{void postProcess(SourcePrinter out, C context)}}}
   
-The  {{{instantiateWidget}}} method is abstract and must be implemented by any Factory subclass. The other methods can be used by the factory to specify and process the information about widget's attributes, events and children.  All of those other methods receive  a parameter of type {{{WidgetCreatorContext}}}. This class has the following public methods:
+These methods can be used by the factory to specify and process the information about widget's attributes, events and children. All of those methods receive a parameter of type {{{WidgetCreatorContext}}}. This class has the following public methods:
 
 || *Method* || *Description* ||
-|| getWidget || Returns the widget previously instantiated be the method {{{instantiateWidget}}} ||
-|| getElement || Returns the widget metadata element (the {{{<span>}}} tag) ||
+|| getWidget || Returns the name of the variable containing the widget to be created  ||
+|| getWidgetElement || Returns the widget metadata element (a JSONObject) ||
 || getWidgetId || Returns the widget identifier ||
-|| setAttribute(String key, Object value) || Allows the factory to set some information to use in some other step of the parser, (like during the children processing) ||
-|| getAttribute(String key) || Returns some attribute previously set by method setAttribute||
+|| readWidgetProperty(String propertyName) || Read the property value from the widget metadata ||
+|| readChildProperty(String key) || Read the property value from the metadata of the current widget child been processed ||
 
-The next sections describe how  to properly overwrite each of those methods to serve your widget needs.
-
-
-=== 2.3.1 The instantiateWidget method===
+These methods can be overridden when you want to add some specific behavior.
 
 
-The {{{instantiateWidget}}} method is called to instantiate a new widget object . The {{{<span>}}} element is passed as parameter and can be used if the widget to be created needs some attribute in its constructor.If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute, we could write something like:
+=== 2.2.1 The instantiateWidget method===
+
+
+The {{{instantiateWidget}}} method is called to generate the code for instantiate a new widget object. If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute to be instantiated, we could write something like:
 
 {{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget>
+@DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
+public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>
 {
    @Override
-   public MyWidget instantiateWidget(Element element, String widgetId) 
+   public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
    {
-      return new MyWidget(element.getAttribute("_theRequiredAttribute"));
+      String className = getWidgetClassName();
+		
+      String theRequiredAttribute = context.readWidgetProperty("theRequiredAttribute");
+      out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(theRequiredAttribute)+");");
    }
-  ...
+   ...
 }
 }}}
 
 The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods, shown bellow, in order to take advantage of all benefits this engine offers you.
 
-=== 2.3.2 Attributes and Events Processing===
+=== 2.2.2 Attributes and Events Processing===
 
-The {{{processAttributes}}} and {{{processEvents}}} methods are used to the binding of the {{{<span>}}} elements and the widgets created. 
+The {{{processAttributes}}} and {{{processEvents}}} methods are used to process attributes and events that can not be handled automatically (only declared with the factory annotations).  
 
 
-==== 2.3.2.1 The processAttributes method====
+==== 2.2.2.1 The processAttributes method====
 
 This method has two goals:
   # Turn easier the binding beetwen the widget metadata element (the {{{<span>}}} tag) and the widget itself.
