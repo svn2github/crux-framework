@@ -1730,7 +1730,7 @@ To use _*Crux*_ in your application, you will need the following files:
     * gwt-servlet.jar
     * gwt-servlet-deps.jar
   * In development time:
-    * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
+    * in any folder, since it is visible for the GWT DevMode Console and for ANT tasks:
       * crux-dev.jar
       * crux-dev-deps.jar
       * crux-widgets.jar
@@ -1760,18 +1760,22 @@ To setup the _*Crux* Front Controller_, shown in [3.5_Client-Server_Communicatio
 There are some other configurations you will need to do to run your application in development environment: 
 
 {{{
-	<listener>
+    <context-param> 
+        <param-name>outputCharset</param-name> 
+        <param-value>UTF-8</param-value> 
+    </context-param> 
+    <listener>
         <listener-class>org.cruxframework.crux.core.rebind.DevModeInitializerListener</listener-class>
     </listener>
-	<filter>
-		<display-name>CruxFilter</display-name>
-		<filter-name>CruxFilter</filter-name>
-		<filter-class>org.cruxframework.crux.core.server.CruxFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CruxFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
+    <filter>
+        <display-name>CruxFilter</display-name>
+        <filter-name>CruxFilter</filter-name>
+        <filter-class>org.cruxframework.crux.core.server.CruxFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CruxFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
 }}}
 
 The above lines is needed by _*Crux*_ [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideCodingBasics.html#DevGuideDeferredBinding Generators] to find out which module is being compiled. This is used for better performance (see [FAQ#Performance this] for more information). Because that information is used only for compilation, it just needs to be present in development environment.
