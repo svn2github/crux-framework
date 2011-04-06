@@ -298,7 +298,7 @@ The annotation {{{@TagEventDeclaration}}} has one attribute of type {{{String}}}
 
 When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_Attributes_and_Events_Processing this section]).
 
-=== 2.2.1 The WidgetCreator Methods===
+=== 2.2.2 The WidgetCreator Methods===
 
 ==== 2.2.2.1 The instantiateWidget method====
 
@@ -335,39 +335,34 @@ When overriding these methods, remember that you need to call {{{super.processAt
 
 === 2.2.3 Factories Inheritance===
 
-The annotations present on {{{processAttributes}}} and {{{processEvents}}} methods of Widget factories super classes and implemented  interfaces are also considered by _*Crux*_ engine. 
+The annotations present on Widget factories super classes and implemented interfaces are also considered by _*Crux*_ engine. 
 
 Let's take a look at the following example. 
 
 {{{
-public interface HasNameFactory<T extends HasName>
+@TagAttributes({
+	@TagAttribute("name")
+})	
+public interface HasNameFactory<C extends WidgetCreatorContext>
 {
-   @TagAttributes({
-      @TagAttribute("name")
-   })	
-   void processAttributes(WidgetCreatorContext<T> context) throws InterfaceConfigException;
 }
 }}}  
 
 {{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget> implements HasNameFactory<MyWidget>
+@DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
+@TagAttributes({
+   @TagAttribute("myWidgetAttribute")
+})
+public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext> 
+                             implements HasNameFactory<WidgetCreatorContext>
 {
 	...
-   @Override
-   @TagAttributes({
-      @TagAttribute("myWidgetAttribute")
-   })
-   public void processAttributes(WidgetCreatorContext<MyWidget> context) throws InterfaceConfigException 
-   {
-      super.processAttributes(context);
-   }
 }
 }}}
 
 That factory shown above will accept and automatically bind the attributes {{{myWidgetAttribute}}} and {{{name}}} to {{{MyWidget}}}.
 
-_*Crux*_ libraries use the inheritance support to turn easy the development of its factories. GWTWidgets library has interfaces that binds attributes and events for most of GWT basic interfaces for widgets. Just implementing some of those interfaces is enough to provide your factory with the ability of binding various attributes and events. The current existing interfaces are:
+_*Crux*_ libraries use the inheritance support to turn easy the development of its factories. GWTWidgets library has interfaces that binds attributes and events for most of GWT basic interfaces for widgets. Just implementing some of those interfaces is enough to provide your factory with the ability of binding various attributes and events. Some of the provided interfaces are:
 
 || *Interface* || *Attributes* || *Events* || 
 || HasAllFocusHandlersFactory || - || onFocus, onBlur ||
@@ -389,10 +384,10 @@ _*Crux*_ libraries use the inheritance support to turn easy the development of i
 || HasValueChangeHandlersFactory || - || onChange ||
 || HasWordWrapFactory || wordWrap || - ||
 
-=== 2.3.3 Children Processing===
+=== 2.2.3 Children Processing===
 
-==== 2.3.3.1 The processChildren  method====
+==== 2.2.3.1 The processChildren  method====
 
-==== 2.3.3.2 WidgetChildProcessor====
+==== 2.2.3.2 WidgetChildProcessor====
 
-=== 2.3.4 The postProcess  method===
+=== 2.2.4 The postProcess  method===
