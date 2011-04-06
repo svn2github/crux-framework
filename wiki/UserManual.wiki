@@ -1725,22 +1725,17 @@ However, if you plan to access i18n messages in classes called by a filter (that
 To use _*Crux*_ in your application, you will need the following files:
 
   * In production time, inside the {{{WEB-INF/lib}}} folder:
-    * commons-logging.jar
-    * crux-core.jar
+    * crux-runtime.jar
+    * crux-runtime-deps.jar
     * gwt-servlet.jar
-    * crux-scannotation.jar
-    * javassist.jar
+    * gwt-servlet-deps.jar
   * In development time:
-   	* in addition to the previous files, inside the {{{WEB-INF/lib}}} folder:
-      * crux-widgets.jar
-      * crux-gwt-widgets.jar
-      * saxon9.jar
-      * saxon9-dom.jar
     * in any folder, since it is visible for the GWT Hosted Mode Console and for ANT tasks:
-      * crux-compiler.jar
+      * crux-dev.jar
+      * crux-dev-deps.jar
+      * crux-widgets.jar
+      * crux-themes.jar (optional)
       * gwt-dev.jar 
-      * gwt-ll.dll (platform dependent)
-      * gwt-module.dtd
       * gwt-user.jar
 
 Using the [UserManual#2.1_Install Project Generator] you will get a ready to use project structure. 
