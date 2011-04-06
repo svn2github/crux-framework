@@ -353,6 +353,24 @@ You can block and unblock the user interaction with the page using the static me
    ...
 }}} 
 
+=== 3.2.6 Fragmenting the Code===
+
+Screen tag has an attribute called {{{fragment}}}, that can be used to help you to fragment your code into different javascript files.
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:crux="http://www.cruxframework.org/crux" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <crux:screen useController="clientHandler" fragment="fragment1" />
+   </body>
+</html>
+}}}
+
+All screens are grouped by its _fragment_ attribute. If the screen declares no fragment, all of its code is put on the main script file.
+
 == 3.3 Managing Events ==
 
 It's possible to add event handlers:
