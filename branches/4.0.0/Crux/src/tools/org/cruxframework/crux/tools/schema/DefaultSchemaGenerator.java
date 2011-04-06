@@ -324,7 +324,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			for (TagAttribute attr : attrs.value())
 			{
-				if (!added.contains(attr.value()))
+				if (!added.contains(attr.value()) && !attr.xsdIgnore())
 				{
 					out.print("<xs:attribute name=\""+attr.value()+"\" type=\""+getSchemaType(attr.type(), library)+"\" ");
 					if (attr.required())
