@@ -3,13 +3,3 @@
 *Q: Why is it called _Crux_?*
 
 A: _*Crux*_ is the hardest point in a climbing. One of the authors (Thiago) is a climber (at least he tries :) )... 
-
-==_*Crux*_ Design==
-*Q: Why create widgets declaratively inside the HTML page?*
-
-A: The goal of the _*Crux*_ design is avoid that you need to write any other visual artifact in adition of your page.
-We consider that XML files with component information (like you have in JSF and other frameworks) turn the development process harder than it need to be. 
-
-Even the GWT model (that is similar to java swing) is harder to code than _*Crux*_ model that keep all the visual part of the interface in the same file and can be understood (and writen) much easier than lot of java code.  
-
-Of course, the GWT programmatic mechanism to create widgets is more powerfull. It allows that widgets be created at runtime, depending on some user action. _*Crux*_ supports that you work mixing the two strategies. We are glad that GWT works how it is. It allows _Crux_ to create the widgets programmatically, based on a parser on the current page document. 
