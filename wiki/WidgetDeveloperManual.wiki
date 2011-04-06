@@ -186,7 +186,9 @@ Another way to do a specific processing for an attribute is to use an AttributeP
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
 @TagAttributes({
-	@TagAttribute(value="animation", type=MyWidgetCreator.Animations.class, processor=MyWidgetCreator.AnimationAttributeProcessor.class) 
+	@TagAttribute(value="animation", 
+	              type=MyWidgetCreator.Animations.class, 
+	              processor=MyWidgetCreator.AnimationAttributeProcessor.class) 
 })
 public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
    public static enum Animations{slide, reveal}
@@ -198,17 +200,24 @@ public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
       }
 
       @Override
-      public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue){
+      public void processAttribute(SourcePrinter out, WidgetCreatorContext context, 
+                                   String attributeValue){
          Animations animation = Animations.valueOf(attributeValue);
 	        
          switch (animation){
-            case slide: out.println(context.getWidget()+".setAnimation("+SlideAnimation.class.getCanonicalName()+".create());"); break;
-            case reveal: out.println(context.getWidget()+".setAnimation("+RevealAnimation.class.getCanonicalName()+".create());"); break;
+            case slide: out.println(context.getWidget()+".setAnimation("+
+                                  SlideAnimation.class.getCanonicalName()+".create());"); 
+            break;
+            case reveal: out.println(context.getWidget()+".setAnimation("+
+                                  RevealAnimation.class.getCanonicalName()+".create());"); 
+            break;
          }
       }
    }
 }
 }}}
+
+The processor must extends the abstract class {{{org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor}}}. 
 
 ==== 2.2.1.2 Processing Events====
 
@@ -216,14 +225,9 @@ To process events, you can use the annotations {{{@TagEvents}}} and {{{@TagEvent
 
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
-@TagAttributes({
-   @TagAttribute("myAttribute"),
-   @TagAttribute(value="theRequiredAttribute", required=true),
-   @TagAttribute(value="intAttribute", type=Integer.class),
-   @TagAttribute(value="otherAttribute", property="widgetProperty"),
-   @TagAttribute(value="nested", property="element.widgetProperty"),
-   @TagAttribute(value="style", processor=StyleAttributeProcessor.class)
-})
+@TagEvents({
+	@TagEvent(ClickEvtBind.class)
+})	
 public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
    @Override
    public WidgetCreatorContext instantiateContext()
@@ -233,6 +237,31 @@ public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
 }
 }}}
 
+The {{{@TagEvent}}} annotation has a value property of type {{{Class<? extends EvtProcessor>}}}. 
+
+An event processor must extends the abstract class {{{org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor}}}. See the following example.
+
+{{{
+public class ClickEvtBind extends EvtProcessor{
+    private static final String EVENT_NAME = "onClick";
+
+    public ClickEvtBind(WidgetCreator<?> widgetCreator){
+        super(widgetCreator);
+    }
+
+    public String getEventName(){
+        return EVENT_NAME;
+    }
+	
+    public Class<?> getEventClass(){
+        return ClickEvent.class;
+    }
+
+    public Class<?> getEventHandlerClass(){
+        return ClickHandler.class;
+    }
+}
+}}}
 
 
 
