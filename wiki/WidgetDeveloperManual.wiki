@@ -100,7 +100,9 @@ To process attributes, you can use the annotations {{{@TagAttributes}}} and {{{@
 @TagAttributes({
    @TagAttribute("myAttribute"),
    @TagAttribute(value="theRequiredAttribute", required=true),
-   @TagAttribute(value="intAttribute", type=Integer.class)
+   @TagAttribute(value="intAttribute", type=Integer.class),
+   @TagAttribute(value="otherAttribute", property="widgetProperty")
+   @TagAttribute(value="nested", property="element.widgetProperty")
 })
 public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
    @Override
@@ -117,9 +119,13 @@ public class MyWidget extends Widget{
 	public void setMyAttribute(String myAttribute){...}
 	public void setTheRequiredAttribute(String theRequiredAttribute){...}
 	public void setIntAttribute(int intAttribute){...}
+	public void setWidgetProperty(int intAttribute){...}
+	public Element getElement(){...}// Where "Element" has the property "widgetProperty"
     ...
 }
 }}}
+
+On the previous example, all the binding between the declaration on the {{{.crux.xml}}} pages and the widgets created is done automatically by _*Crux*_ engine.
 
 The {{{@TagAttributes}}} has one attribute (value) of type array of {{{@TagAttribute}}}. Each {{{@TagAttribute}}} is used to inform one attribute of the widget.
 
@@ -131,6 +137,10 @@ The {{{@TagAttributes}}} has one attribute (value) of type array of {{{@TagAttri
 || type || Class<?> || no || String || The type of the attribute. ||
 || required || boolean || no || false || Inform if the attribute is required. ||
 || supportsI18N || boolean || no || false || Inform if the attribute support _*Crux*_ declarative i18n. ||
+|| property || String || no || the name of the attribute (value property) || If informed, it changes the generated code to populate that<br> property on the generated widget (the widget must have <br>the correspondent setter method). <br> _*Crux*_ allows nested properties, like {{{property1.property2}}}||
+|| processor || Class<?> || no || - || A subclass of {{{AttributeProcessor}}}. Used to generate the code for the attribute processing.||
+|| xsdIgnore || boolean || no || false || If true, makes the SchemaGenerator ignore this attribute on XSD. ||
+
 
 The supported types for an attribute is:
   * any primitive type or primitive wrapper;
