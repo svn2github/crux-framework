@@ -93,6 +93,7 @@ _*Crux*_ provides annotations to help the processing of attributes, events and c
 
 To process attributes, you can use the annotations {{{@TagAttributes}}} and {{{@TagAttribute}}}, like on the following example:
 
+{{{
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
 @TagAttributes({
    @TagAttribute("myAttribute"),
