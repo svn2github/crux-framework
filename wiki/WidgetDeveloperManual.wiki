@@ -179,7 +179,7 @@ public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
 
 The annotations {{{@TagAttributesDeclaration}}} and {{{@TagAttributeDeclaration}}} are similar to the {{{@TagAttributes}}} and {{{@TagAttribute}}} annotations. However, they only declare the attributes (needed by [UserManual#5.1_Schema_Generator SchemaGenerator]). They don't generate any processing automatically.
 
-When using {{{@TagAttributesDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.1_The_processAttributes_method this section]).
+When using {{{@TagAttributesDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_Attributes_and_Events_Processing this section]).
 
 Another way to do a specific processing for an attribute is to use an AttributeProcessor, like:
 
@@ -296,10 +296,11 @@ _*Crux*_ offers {{{EvtBinders}}} for all GWT events and for  custom _*Crux*_ wid
 
 The annotation {{{@TagEventDeclaration}}} has one attribute of type {{{String}}}. This attribute only informs to _*Crux*_ the name of the event.
 
-When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_The_processEvents_method this section]).
+When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_Attributes_and_Events_Processing this section]).
 
+=== 2.2.1 The WidgetCreator Methods===
 
-=== 2.2.2 The instantiateWidget method===
+==== 2.2.2.1 The instantiateWidget method====
 
 
 The {{{instantiateWidget}}} method is called to generate the code for instantiate a new widget object. If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute to be instantiated, we could write something like:
@@ -325,196 +326,14 @@ public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
 
 The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods, shown bellow, in order to take advantage of all benefits this engine offers you.
 
-=== 2.2.2 Attributes and Events Processing===
+==== 2.2.2.2 Attributes and Events Processing====
 
 The {{{processAttributes}}} and {{{processEvents}}} methods are used to process attributes and events that can not be handled automatically (only declared with the factory annotations).  
 
-
-==== 2.2.2.1 The processAttributes method====
-
-This method has two goals:
-  # Turn easier the binding beetwen the widget metadata element (the {{{<span>}}} tag) and the widget itself.
-  # Inform to _*Crux*_ engine which attributes this factory can handle. This information is used to generate a proper XSD file, that can be used to enable autocompletion for developers (See  [UserManual#5.1_Schema_Generator SchemaGenerator]).
-  
-
-See the following code:
-   
-{{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget>
-{
-
-   @Override
-   @TagAttributesDeclaration({
-      @TagAttributeDeclaration("myWidgetAttribute")
-   })
-   public void processAttributes(WidgetCreatorContext<MyWidget> context) throws InterfaceConfigException 
-   {
-      super.processAttributes(context);
-      
-      MyWidget widget = context.getWidget();
-      String attr = element.getAttribute("_myWidgetAttribute");
-      if (StringUtils.isNotEmpty(attr))
-      {
-         widget.setMyWidgetAttribute(attr);
-      }
-   }
-}
-}}}
-
-The first thing done by the above processAttributes method is call {{{super.processAttributes}}}. It is important, once all attributes common to all GWT widgets (like {{{visible, width, height}}} and others) are handled by {{{WidgetCreator.processAttributes}}}. 
-
-Other important point to observe is the annotation {{{@TagAttributesDeclaration}}} on method. It is used to inform all attributes supported by this widget. This information is used by [UserManual#5.1_Schema_Generator SchemaGenerator]. Note that {{{WidgetCreator.processAttributes}}} has this same annotation including more attributes.   [UserManual#5.1_Schema_Generator SchemaGenerator] will consider attributes declared on super classes to generate the XSD files.
+When overriding these methods, remember that you need to call {{{super.processAttributes()}}} or {{{super.processEvents()}}} (depending on which method you are overriding).
 
 
-If you observe the code shown on section [WidgetDeveloperManual#2.1_Overview 2.1], you will note that the annotation {{{@TagAttributes}}} is used in the place of {{{@TagAttributesDeclaration}}}. The two annotations are very similar and support the same attributes. However, when you use the {{{@TagAttributes}}}, _*Crux*_ will generate the code for the binding of those attributes. The code on section 2.1 just declare the attribute {{{myWidgetAttribute}}} on the method annotation and does not need to implement all the code shown in this section.
-
-In other words, the above code can bre written as:
-
-{{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget>
-{
-   @Override
-   @TagAttributes({
-      @TagAttribute("myWidgetAttribute")
-   })
-   public void processAttributes(WidgetCreatorContext<MyWidget> context) throws InterfaceConfigException 
-   {
-      super.processAttributes(context);
-   }
-}
-}}}
-
-The annotation {{{@TagAttributesDeclaration}}} must be used when you want to inform _*Crux*_ that the attributes exist (because the [UserManual#5.1_Schema_Generator SchemaGenerator]), but you need to parse it programmatically. The code below shows a situation where you can face this need: the widget has an attribute that is required by its constructor. Note that you can use both annotations on a {{{processAttributes}}} method:
-
-{{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget>
-{
-   @Override
-   public MyWidget instantiateWidget(Element element, String widgetId) 
-   {
-      return new MyWidget(element.getAttribute("_theRequiredAttribute"));
-   }
-   
-   @Override
-   @TagAttributes({
-      @TagAttribute("myWidgetAttribute")
-   })
-   @TagAttributesDeclaration({
-      @TagAttributeDeclaration(value="theRequiredAttribute", required=true)
-   })
-   public void processAttributes(WidgetCreatorContext<MyWidget> context) throws InterfaceConfigException 
-   {
-      super.processAttributes(context);
-   }
-}
-}}}
-
-===== 2.3.2.1.1 @TagAttributes Annotation=====
-
-The {{{@TagAttributes}}} has one attribute (value) of type array of {{{@TagAttribute}}}. Each {{{@TagAttribute}}} is used to inform one attribute of the widget.
-
-{{{@TagAttribute}}} accepts the following attributes:
-
-|| *Name* || *Type* || *Required* || *Default* || *Description* ||
-|| value || String || yes || - || The name of the attribute. ||
-|| defaultValue || String || no || "" || The default value to be used on XSD. ||
-|| type || Class<?> || no || String || The type of the attribute. ||
-|| required || boolean || no || false || Inform if the attribute is required. ||
-|| supportsI18N || boolean || no || false || Inform if the attribute support _*Crux*_ declarative i18n. ||
-
-The supported types for an attribute is:
-  * any primitive type or primitive wrapper;
-  * String;
-  * Date;
-  * any enum type.
- 
-All enum types will be mapped to simpleTypes on the generated XSD. 
-
-The parser generated by _*Crux*_ will handle all type conversions needed and all declarative i18n messages.
-
-The same properties exist on {{{@TagAttributesDeclaration}}} annotation. However, using it, the parsing of the {{{<span>}}} element and the binding of the attributes is not done automatically.
-
-
-==== 2.3.2.2 The processEvents  method====
-
-This method does almost the same as processAttributes, however, it handles widget events.
-
-Two annotations can be used on {{{processEvents}}} method: {{{@TagEvents}}} and {{{@TagEventsDeclaration}}}.
-
-We can compare these annotations with {{{@TagAttributes}}} and  {{{@TagAttributesDeclaration}}} .
-
-See the following example:
-
-{{{
-@DeclarativeFactory(id="myWidget", library="myLibrary")
-public class MyWidgetCreator extends WidgetCreator<MyWidget>
-{
-   @Override
-   @TagEvents({
-      @TagEvent(ClickEvtBind.class)
-   })	
-   @TagEventsDeclaration({
-      @TagEventDeclaration("onCustomEvent")
-   })
-   public void processEvents(WidgetCreatorContext<MyWidget> context) throws InterfaceConfigException 
-   {
-      super.processEvents(context);
-      
-      final Event eventCustom = EvtBind.getWidgetEvent(context.getElement(), "onCustomEvent");
-      if (eventCustom != null)
-      {
-         context.getWidget().addCustomEventHandler(new CustomEventHandler()
-         {
-            public void onCustomEvent(CustomEvent event)
-            {
-               Events.callEvent(eventCustom, event);
-            }
-         });
-      }
-   }
-}
-}}}
-
-===== 2.3.2.2.1 @TagEvents Annotation=====
-
-
-The {{{@TagEvents}}} has one attribute (value) of type array of {{{@TagEvent}}}. Each {{{@TagEvent}}} is used to inform one event of the widget.
-
-{{{@TagEvent}}} accepts one attribute of type {{{EvtBinder}}}. {{{EvtBinders}}} are classes that can automatically bind event declarations to widgets.
-
-_*Crux*_ offers {{{EvtBinders}}} for all GWT events and for  custom _*Crux*_ widgets events. The following table shows the GWT {{{EvtBinders}}}:
-
-|| *Event type* || *Class* || *Widget type* ||
-|| onBeforeSelection || BeforeSelectionEvtBind || HasBeforeSelectionHandlers<?> ||
-|| onBlur || BlurEvtBind || HasBlurHandlers ||
-|| onChange || ChangeEvtBind || HasChangeHandlers ||
-|| onClick || ClickEvtBind || HasClickHandlers ||
-|| onFocus || FocusEvtBind || HasFocusHandlers ||
-|| onHighlight || HighlightEvtBind || HasHighlightHandlers<?> ||
-|| onKeyDown || KeyDownEvtBind || HasKeyDownHandlers ||
-|| onKeyPress || KeyPressEvtBind || HasKeyPressHandlers ||
-|| onKeyUp|| KeyUpEvtBind || HasKeyUpHandlers ||
-|| onError || LoadErrorEvtBind || HasErrorHandlers ||
-|| onLoad || LoadEvtBind || HasLoadHandlers ||
-|| onMouseDown || MouseDownEvtBind || HasMouseDownHandlers ||
-|| onMouseMove || MouseMoveEvtBind || HasMouseMoveHandlers ||
-|| onMouseOut || MouseOutEvtBind || HasMouseOutHandlers ||
-|| onMouseOver || MouseOverEvtBind || HasMouseOverHandlers ||
-|| onMouseUp || MouseUpEvtBind || HasMouseUpHandlers ||
-|| onMouseWheel || MouseWheelEvtBind || HasMouseWheelHandlers ||
-|| onOpen || OpenEvtBind || HasOpenHandlers<?> ||
-|| onScroll || ScrollEvtBind || HasScrollHandlers ||
-|| onSelection || SelectionEvtBind || HasSelectionHandlers<?> ||
-|| onShowRange || ShowRangeEvtBind || HasShowRangeHandlers<?> ||
-|| onChange || ValueChangeEvtBind || HasValueChangeHandlers<?> ||
-
-
-The annotation {{{@TagEventDeclaration}}} has one attribute of type {{{String}}}. This attribute only informs to _*Crux*_ the name of the event. The parsing of the {{{<span>}}} element and the binding with the widget must be done programmatically, as shown on the previous example.
-
-==== 2.3.2.3 Factories Inheritance====
+=== 2.2.3 Factories Inheritance===
 
 The annotations present on {{{processAttributes}}} and {{{processEvents}}} methods of Widget factories super classes and implemented  interfaces are also considered by _*Crux*_ engine. 
 
