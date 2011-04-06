@@ -84,25 +84,65 @@ These methods can be used by the factory to specify and process the information 
 || readWidgetProperty(String propertyName) || Read the property value from the widget metadata ||
 || readChildProperty(String key) || Read the property value from the metadata of the current widget child been processed ||
 
-These methods can be overridden when you want to add some specific behavior.
+The WidgetCreator's methods can be overridden when you want to add some specific behavior.
 
 
-=== 2.2.1 The instantiateWidget method===
+=== 2.2.1 The WidgetCreator Annotations===
+
+_*Crux*_ provides annotations to help the processing of attributes, events and children.
+
+To process attributes, you can use the annotations {{{@TagAttributes}}} and {{{@TagAttribute}}}, like on the following example:
+
+@DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
+@TagAttributes({
+   @TagAttribute("myAttribute"),
+   @TagAttribute(value="theRequiredAttribute", required=true),
+   @TagAttribute(value="intAttribute", type=Integer.class)
+})
+public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
+   @Override
+   public WidgetCreatorContext instantiateContext()
+   {
+      return new WidgetCreatorContext();
+   }
+}
+}}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=== 2.2.2 The instantiateWidget method===
 
 
 The {{{instantiateWidget}}} method is called to generate the code for instantiate a new widget object. If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute to be instantiated, we could write something like:
 
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
-public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>
-{
+public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
    @Override
-   public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-   {
+   public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) 
+                                throws CruxGeneratorException{
       String className = getWidgetClassName();
 		
       String theRequiredAttribute = context.readWidgetProperty("theRequiredAttribute");
-      out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(theRequiredAttribute)+");");
+      out.println("final "+className + " " + context.getWidget()+" = new "+
+                   className+"("+EscapeUtils.quote(theRequiredAttribute)+");");
    }
    ...
 }
