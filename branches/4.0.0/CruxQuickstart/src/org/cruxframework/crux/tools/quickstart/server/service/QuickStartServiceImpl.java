@@ -112,11 +112,12 @@ public class QuickStartServiceImpl implements QuickStartService
     {
 		try
         {
-        boolean isRoot = directoryPath.equals("/..") || (directoryPath.length() == 5 && directoryPath.charAt(1) == ':' && directoryPath.substring(2).equals("/.."));
+			boolean isRoot = directoryPath.equals("/") || directoryPath.equals("/..") || 
+			                 (directoryPath.length() == 5 && directoryPath.charAt(1) == ':' && directoryPath.substring(2).equals("/.."));
 			DirectoryInfo result = new DirectoryInfo();
 			File dir = new File(directoryPath + "/");
 			
-			if ((!isRoot) && (!directoryPath.equals("/")))
+			if (!isRoot)
 			{
 				result.setFullPath(getFullPath(dir));
 				result.setHasParent(true);
@@ -126,7 +127,14 @@ public class QuickStartServiceImpl implements QuickStartService
 			{
 				result.setFullPath("/");
 				result.setHasParent(false);
-				result.setContents(getAllDrives());
+				if (isUnix())
+				{
+					result.setContents(getDirContents(dir));
+				}
+				else
+				{
+					result.setContents(getAllDrives());
+				}
 			}
 			
 			return result;
@@ -164,6 +172,16 @@ public class QuickStartServiceImpl implements QuickStartService
 			drives[i] = roots[i].getAbsolutePath().replaceAll("[\\\\/]", "");
 		}
 		return drives;
+	}
+	
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean isUnix() throws IOException
+	{
+		File[] roots = File.listRoots();
+		return roots == null || (roots.length == 1 && roots[0].getCanonicalPath().equals("/"));
 	}
 
 	/**

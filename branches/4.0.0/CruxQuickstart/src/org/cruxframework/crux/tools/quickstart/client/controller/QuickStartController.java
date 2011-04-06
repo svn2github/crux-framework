@@ -138,13 +138,14 @@ public class QuickStartController
 
 			for (int i=0; i< folders.length; i++)
 			{
+				Label separator = new Label();
+				separator.setStyleName("FileSystemSeparator");
 				if (needsSeparator)
 				{
-					Label separator = new Label("/");
-					separator.setStyleName("FileSystemSeparator");
-					rollingPanel.add(separator);
+					separator.setText("/");
 				}
-				needsSeparator = (i >= 1) || (i==0 && !folders[0].equals("/"));
+				rollingPanel.add(separator);
+				needsSeparator = (i >= 1) || (i==0 && !folders[0].equals(""));
 				final Label label = new Label(folders[i].trim().length()>0?folders[i]:"/");
 				label.setStyleName("FileSystemLabel");
 
