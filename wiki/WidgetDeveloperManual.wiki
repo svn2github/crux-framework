@@ -191,6 +191,7 @@ Another way to do a specific processing for an attribute is to use an AttributeP
 	              processor=MyWidgetCreator.AnimationAttributeProcessor.class) 
 })
 public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
+
    public static enum Animations{slide, reveal}
 	
    public static class AnimationAttributeProcessor extends AttributeProcessor<WidgetCreatorContext>
@@ -263,11 +264,39 @@ public class ClickEvtBind extends EvtProcessor{
 }
 }}}
 
+{{{EvtBinders}}} are classes that can automatically bind event declarations to widgets.
+
+_*Crux*_ offers {{{EvtBinders}}} for all GWT events and for  custom _*Crux*_ widgets events. The following table shows some of the GWT {{{EvtBinders}}}:
+
+|| *Event type* || *Class* || *Widget type* ||
+|| onAttach || AttachEvtBind || Widget ||
+|| onBeforeSelection || BeforeSelectionEvtBind || HasBeforeSelectionHandlers<?> ||
+|| onBlur || BlurEvtBind || HasBlurHandlers ||
+|| onChange || ChangeEvtBind || HasChangeHandlers ||
+|| onClick || ClickEvtBind || HasClickHandlers ||
+|| onFocus || FocusEvtBind || HasFocusHandlers ||
+|| onHighlight || HighlightEvtBind || HasHighlightHandlers<?> ||
+|| onKeyDown || KeyDownEvtBind || HasKeyDownHandlers ||
+|| onKeyPress || KeyPressEvtBind || HasKeyPressHandlers ||
+|| onKeyUp|| KeyUpEvtBind || HasKeyUpHandlers ||
+|| onError || LoadErrorEvtBind || HasErrorHandlers ||
+|| onLoad || LoadEvtBind || HasLoadHandlers ||
+|| onMouseDown || MouseDownEvtBind || HasMouseDownHandlers ||
+|| onMouseMove || MouseMoveEvtBind || HasMouseMoveHandlers ||
+|| onMouseOut || MouseOutEvtBind || HasMouseOutHandlers ||
+|| onMouseOver || MouseOverEvtBind || HasMouseOverHandlers ||
+|| onMouseUp || MouseUpEvtBind || HasMouseUpHandlers ||
+|| onMouseWheel || MouseWheelEvtBind || HasMouseWheelHandlers ||
+|| onOpen || OpenEvtBind || HasOpenHandlers<?> ||
+|| onScroll || ScrollEvtBind || HasScrollHandlers ||
+|| onSelection || SelectionEvtBind || HasSelectionHandlers<?> ||
+|| onShowRange || ShowRangeEvtBind || HasShowRangeHandlers<?> ||
+|| onChange || ValueChangeEvtBind || HasValueChangeHandlers<?> ||
 
 
+The annotation {{{@TagEventDeclaration}}} has one attribute of type {{{String}}}. This attribute only informs to _*Crux*_ the name of the event.
 
-
-
+When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_The_processEvents_method this section]).
 
 
 === 2.2.2 The instantiateWidget method===
