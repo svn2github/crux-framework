@@ -1862,7 +1862,7 @@ public interface LocaleResolver
 }
 }}}
 
-==== 4.3.2.3 screenResourceResolver ====
+==== 4.3.2.2 screenResourceResolver ====
 
 The property {{{screenResourceResolver}}} tells _*Crux*_ which class will be used to retrieve an InputStream related to a given a page of your application. 
 It can be useful to create new plugins which may need to do some processing on pages before they are consumed by the framework.
@@ -1877,7 +1877,7 @@ public interface ScreenResourceResolver
 }
 }}}
 
-==== 4.3.2.4 classPathResolver ====
+==== 4.3.2.3 classPathResolver ====
 
 _*Crux*_ depends on knowing some paths in your application in order to retrieve the HTML pages, scan for Controllers and other operations. The interface
 {{{ClassPathResolver}}} is used for this purpose. 
@@ -1890,7 +1890,7 @@ There are two default ClassPathResolvers delivered with _*Crux*_. The one you ne
 
  
 
-==== 4.3.2.5 serviceFactory ====
+==== 4.3.2.4 serviceFactory ====
 
 The section [UserManual#4.1_Writing_Server-Side_Code Writing Server-Side Code] shows the default mechanism used to discovery your service implementation classes.
 
@@ -1906,32 +1906,20 @@ public interface ServiceFactory
 }
 }}}
 
-==== 4.3.2.6 allowAutoBindWithNonDeclarativeWidgets====
 
-This property tells to _*Crux*_ that it must support the AutoBind feature even if the widget that is  bound with a specific field is created and added to Screen programmatically. To prevent undesirable  bugs on applications, the default value to this is {{{true}}}. 
+==== 4.3.2.5 enableChildrenWindowsDebug====
 
-However, if you don't need this feature, you can disable it to have some performance improvement. If this property is set to {{{false}}}, _*Crux*_ can transfer to a generator the responsibility of handling the binding code, keeping the final code smaller and simpler.
+GWT 2.x uses a parameter on the browser URL to inform the GWT Plugin that it must enable the debugger. If  {{{enableChildrenWindowsDebug}}} parameter is set to {{{true}}}, _*Crux*_ will propagate the GWT debug parameter to other windows, for example, when you invoke {{{Popup.open}}}.
 
-==== 4.3.2.7 enableChildrenWindowsDebug====
-
-GWT 2.0 uses a parameter on the browser URL to inform the GWT Plugin that it must enable the debugger. If  {{{enableChildrenWindowsDebug}}} parameter is set to {{{true}}}, _*Crux*_ will propagate the GWT debug parameter to other windows, for example, when you invoke {{{Popup.open}}}.
-
-==== 4.3.2.8 enableWebRootScannerCache====
+==== 4.3.2.6 enableWebRootScannerCache====
 
 _*Crux*_ uses a resource scanner to find the application pages, templates and other things. The process of scanning the entire application is not a fast task. 
 For this reason, _*Crux*_ uses an internal cache to avoid the duplicated processing of some resources, enhancing the performance of the scanner. By the way, 
 if need, you can disable that cache, setting {{{enableWebRootScannerCache}}} to {{{false}}}. 
 
-==== 4.3.2.9 enableHotDeploymentForWebDirs====
+==== 4.3.2.7 enableHotDeploymentForWebDirs====
 
 Enabling this options costs a little bit more in performance terms, but can turn easier the development, once you will not need to restart your server to see changes on templates.
-
-==== 4.3.2.10 enableHotDeploymentForWidgetFactories====
-
-_*Crux*_ only register on its client engine the WidgetFactories that are already used to parse your page(s). If you set this option to {{{true}}}, _*Crux*_ will register all possible factories. It will turn possible hot deployments that insert new kinds of widgets on your page.
-
-This behavior will be adopted only if you are under development mode ({{{-DCrux.dev=true}}}). When you compile your source for distribution (to deploy in production environment), you must run the compiler in production mode ({{{-DCrux.dev=false}}} or absent). This will make _*Crux*_ ignore the {{{enableHotDeploymentForWidgetFactories}}} option and optimize the generated code. 
-
 
 = 5 Crux Tools =
 
@@ -1988,7 +1976,7 @@ project can be coded, tested, versioned and even delivered totally separated of 
 can provide a drastic improvement in the development speed, in the cost of maintenance and, we believe, in the 
 quality of the final product. 
 
-Every application of this flavor must be packaged a jar file, named with the following pattern {{{<moduleName>.module.jar}}}. 
+Every application of this flavor must be packaged as a jar file, named with the following pattern {{{<moduleName>.module.jar}}}. 
 This way, it will be ready to be used by another module or by a [UserManual#6.3_Module_Container_Application Module Container Application]. 
 A packaged module can contain pre-compiled resources for improving the compiling speed of the dependent applications. 
 
