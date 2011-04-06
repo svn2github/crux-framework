@@ -1795,7 +1795,7 @@ In development time, you will need to have this too:
 
 This filter is used to transform your _.crux.xml_ files in pure _html_ files. This process is only done in development. In a production environment, your application can access the generated version of the page directly. 
 
-The two above filters should not be used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [UserManual#2.1_Install _*Crux* Project Generator_]).
+The two above filters should not be used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [UserManual#2.1_Install *Crux* Project Generator]).
 
 You can add an optional listener called InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
 
@@ -1824,7 +1824,7 @@ If you need i18n before the _*Crux* FrontController_ Servlet, you have to put th
 _*Crux*_ provides some configuration options that can modify behaviors on the framework.
 
 Those options can be informed through:
-  # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{e.g.: -DCrux.wrapSiblingWidgets=false}}}.
+  # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{e.g.: -DCrux.enableChildrenWindowsDebug=false}}}.
   # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
 
 If you use both ways shown, the command line has precedence. 
@@ -1832,83 +1832,16 @@ If you use both ways shown, the command line has precedence.
 The following properties can be set:
 
 || *Property* || *Description* || *Default Value* ||
-||wrapSiblingWidgets||If {{{false}}}, widgets created declaratively under the same parent<br> has no guarantee of order||{{{true}}}||
 ||localeResolver||Class used by _*Crux*_ to resolve locale for user at the server side||org.cruxframework.crux.core.i18n.LocaleResolverImpl||
 ||screenResourceResolver||Class used by _*Crux*_ to retrieve the screen page files||org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverImpl||
 ||classPathResolver||Class used by _*Crux*_ to resolve classpath files||org.cruxframework.crux.core.server.classpath.ClassPathResolverImpl||
 ||serviceFactory||Class used by _*Crux*_ to instantiate controller classes||org.cruxframework.crux.core.server.dispatch.ServiceFactoryImpl||
-||allowAutoBindWithNonDeclarativeWidgets||Allow AutoBind feature to be used with widgets that were not created by the declarative engine|||{{{true}}}||
 ||enableChildrenWindowsDebug||If {{{true}}}, propagates the GWT debug parameters to <br>other windows opened while application runs under the DevMode||{{{true}}}||
 ||enableWebRootScannerCache||If {{{true}}}, uses a cache for the resources scanner||{{{true}}}||
 ||enableHotDeploymentForWebDirs||If {{{true}}}, _*Crux*_ enables hot deployment for all resources on web dir, including templates||{{{true}}}||
-||enableHotDeploymentForWidgetFactories||If {{{true}}}, *Crux*_ supports hot deployment when new widgets types are used on screens.||{{{true}}}||
 
 
-==== 4.3.2.1 wrapSiblingWidgets ====
-
-To achieve very significant improvements on screen creation performance, _*Crux*_ needs that each widget in your page is the unique child of its parent HTML element.
-
-The property {{{wrapSiblingWidgets}}} will automatically create an empty {{{<span>}}} tag around each widget that does not follow this restriction. 
-
-See the following example:
-
-{{{
-   ...
-   <body>
-       <crux:textBox id="box1" />
-       <crux:textBox id="box2" />
-       <div>
-	       <crux:textBox id="box3" />
-       </div>
-   </body>
-   ...
-}}}
-
-That will be transformed into the following DOM elements:
-
-{{{
-   ...
-   <body>
-       <span><input type="text" id="box1" ... /></span>
-       <span><input type="text" id="box2" ... /></span>
-       <div>
-	       <input type="text" id="box3" ... />
-       </div>
-   </body>
-   ...
-}}}
-
-If you want, you can disable this mechanism setting this property to {{{false}}}. In such a case, you will need to care about placing each widget inside a panel, or inside its own html tag. Otherwise, _*Crux*_ will not guarantee the order of the sibling widgets.
-
-If this property is disabled, the previous example can result in the following sequence of elements into the DOM:
-{{{
-   ...
-   <body>
-       <input type="text" id="box2" ... />
-       <div>
-	       <input type="text" id="box3" ... />
-       </div>
-       <input type="text" id="box1" ... />
-   </body>
-   ...
-}}}
-
-In that case, the best would be refactoring the code to:
-{{{
-   ...
-   <body>
-       <crux:flowPanel id="panel1">   
-          <crux:textBox id="box1" />
-          <crux:textBox id="box2" />
-          <div>
-	         <crux:textBox id="box3" />
-          </div>
-       </crux:flowPanel>   
-   </body>
-   ...
-}}}
-
-==== 4.3.2.2 localeResolver ====
+==== 4.3.2.1 localeResolver ====
 
 By default, _*Crux*_ will use the same mechanism used by [http://code.google.com/intl/pt-BR/webtoolkit/doc/1.6/DevGuideI18nAndA11y.html#DevGuideSpecifyingLocale GWT at client side] to resolve the user locale.
 
