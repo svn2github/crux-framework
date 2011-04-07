@@ -304,7 +304,7 @@ When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the c
 
 You can declare children to your widget tag on _*Crux*_ declarative engine. To do this, you must use the {{{@TagChildren}}} and {{{@TagChild}}} annotations.
 
-The follow code shows a complete example, using declaring a widget tag with children and using a custom context:  
+The follow code shows a complete example, declaring a widget tag with children and using a custom context:  
 {{{
 
 class MyWidgetContextContext extends WidgetCreatorContext{
