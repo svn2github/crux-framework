@@ -130,9 +130,9 @@ public class MyWidget extends Widget{
 
 On the previous example, all the binding between the declaration on the {{{.crux.xml}}} pages and the widgets created is done automatically by _*Crux*_ engine.
 
-The {{{@TagAttributes}}} has one attribute (value) of type array of {{{@TagAttribute}}}. Each {{{@TagAttribute}}} is used to inform one attribute of the widget.
+The {{{@TagAttributes}}} has one property (value) of type array of {{{@TagAttribute}}}. Each {{{@TagAttribute}}} is used to inform one attribute of the widget.
 
-{{{@TagAttribute}}} accepts the following attributes:
+{{{@TagAttribute}}} accepts the following properties:
 
 || *Name* || *Type* || *Required* || *Default* || *Description* ||
 || value || String || yes || - || The name of the attribute. ||
@@ -305,7 +305,7 @@ When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the c
 ==== 2.2.2.1 The instantiateWidget method====
 
 
-The {{{instantiateWidget}}} method is called to generate the code for instantiate a new widget object. If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute to be instantiated, we could write something like:
+The {{{instantiateWidget}}} method can be overridden to generate the code for instantiate the new widget object. If the widget shown on [WidgetDeveloperManual#2.1_Overview section 2.1] needs some attribute to be instantiated, we could write something like:
 
 {{{
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
@@ -326,6 +326,8 @@ public class MyWidgetCreator extends WidgetCreator<WidgetCreatorContext>{
 }
 }}}
 
+This method prints the widget instantiation. The widget variable name is passed to the instantiateWidget method on the {{{context.getWidget()}}} method. It is also important to observe that you must create the widget and assign it to a *final* variable, like shown on the previous example.
+
 The purpose of this method is just instantiate the widget. The best place to handle the extraction of attributes, events and children is not here. You must use the other methods, shown bellow, in order to take advantage of all benefits this engine offers you.
 
 ==== 2.2.2.2 Attributes and Events Processing====
@@ -337,7 +339,7 @@ When overriding these methods, remember that you need to call {{{super.processAt
 
 === 2.2.3 Factories Inheritance===
 
-The annotations present on Widget factories super classes and implemented interfaces are also considered by _*Crux*_ engine. 
+The annotations for attributes and events processing present on Widget factories super classes and implemented interfaces are also considered by _*Crux*_ engine. 
 
 Let's take a look at the following example. 
 
@@ -388,7 +390,7 @@ _*Crux*_ libraries use the inheritance support to turn easy the development of i
 
 === 2.2.3 Children Processing===
 
-==== 2.2.3.1 The processChildren  method====
+==== 2.2.3.1 The processChildren method====
 
 ==== 2.2.3.2 WidgetChildProcessor====
 
