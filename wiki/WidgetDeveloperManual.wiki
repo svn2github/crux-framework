@@ -75,7 +75,7 @@ The example shown assumes that the widget {{{MyWidget}}} contains a public Strin
   # Calls the method {{{void processChildren(SourcePrinter out, C context)}}}
   # Calls the method {{{void postProcess(SourcePrinter out, C context)}}}
   
-These methods can be used by the factory to specify and process the information about widget's attributes, events and children. All of those methods receive a parameter of type {{{WidgetCreatorContext}}}. This class has the following public methods:
+These methods can be used by the factory to specify and process the information about widget's attributes, events and children. All of those methods receive a parameter of type {{{C extends WidgetCreatorContext}}}. The base class {{{WidgetCreatorContext}}} has the following public methods:
 
 || *Method* || *Description* ||
 || getWidget || Returns the name of the variable containing the widget to be created  ||
@@ -83,6 +83,8 @@ These methods can be used by the factory to specify and process the information 
 || getWidgetId || Returns the widget identifier ||
 || readWidgetProperty(String propertyName) || Read the property value from the widget metadata ||
 || readChildProperty(String key) || Read the property value from the metadata of the current widget child been processed ||
+
+You can extend {{{WidgetCreatorContext}}} to add custom properties and methods to your context.
 
 The WidgetCreator's methods can be overridden when you want to add some specific behavior.
 
