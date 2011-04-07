@@ -751,7 +751,7 @@ public class ViewFactoryCreator
 
 		if (!isAttachToDOM(widgetType))
 		{
-			widget = newWidget(printer, metaElem, widgetType, widgetId);
+			widget = newWidget(printer, metaElem, widgetId, widgetType);
 		}
 		else if (isHtmlContainer(widgetType))
 		{
