@@ -308,12 +308,12 @@ The follow code shows a complete example, declaring a widget tag with children a
 {{{
 
 class MyWidgetContext extends WidgetCreatorContext{
-	int index = 0;
+   int index = 0;
 }
 
 @DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
 @TagChildren({
-	@TagChild(MyWidgetCreator.ItemProcessor.class)
+   @TagChild(MyWidgetCreator.ItemProcessor.class)
 })	
 public class MyWidgetCreator extends WidgetCreator<MyWidgetContext>{
    
@@ -343,7 +343,8 @@ public class MyWidgetCreator extends WidgetCreator<MyWidgetContext>{
 
          String selected = context.readChildProperty("selected");
          if (selected != null && selected.length() > 0){
-            out.println(context.getWidget()+".setItemSelected("+context.index+", "+Boolean.parseBoolean(selected)+");");
+            out.println(context.getWidget()+".setItemSelected("+context.index+", "+
+                                                             Boolean.parseBoolean(selected)+");");
          }
          context.index += 1;
       }
@@ -375,6 +376,11 @@ That example creates a factory to understand the following code:
    </body>
 </html>
 }}}
+
+Note that you can insert attributes and events for child tags, using {{{@TagAttributesDeclaration}}} and {{{@TagEventsDeclaration}}}, and other children, using {{{@TagChildren}}}, on the child processor class.
+
+A child processor class must extends {{{WidgetChildProcessor}}} class, or one of its sub-classes.
+
 
 === 2.2.2 The WidgetCreator Methods===
 
