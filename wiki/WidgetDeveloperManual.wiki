@@ -300,6 +300,81 @@ The annotation {{{@TagEventDeclaration}}} has one attribute of type {{{String}}}
 
 When using {{{@TagEventsDeclaration}}} annotation, you must write yourself the code for the processing (see [WidgetDeveloperManual#2.2.2.2_Attributes_and_Events_Processing this section]).
 
+==== 2.2.1.2 Processing Children====
+
+You can declare children to your widget tag on _*Crux*_ declarative engine. To do this, you must use the {{{@TagChildren}}} and {{{@TagChild}}} annotations.
+
+{{{
+
+class MyWidgetContextContext extends WidgetCreatorContext{
+	int index = 0;
+}
+
+@DeclarativeFactory(id="myWidget", library="myLibrary", targetWidget=MyWidget.class)
+@TagChildren({
+	@TagChild(MyWidgetCreator.ItemProcessor.class)
+})	
+public class MyWidgetCreator extends WidgetCreator<MyWidgetContextContext>{
+   
+   @TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
+   @TagAttributesDeclaration({
+      @TagAttributeDeclaration("value"),
+      @TagAttributeDeclaration(value="label", supportsI18N=true),
+      @TagAttributeDeclaration(value="selected", type=Boolean.class)
+   })
+   public static class ItemProcessor extends WidgetChildProcessor<MyWidgetContextContext>{
+      @Override
+      public void processChildren(SourcePrinter out, MyWidgetContextContext context) 
+               throws CruxGeneratorException
+      {
+         String label = context.readChildProperty("label");
+         String value = context.readChildProperty("value");
+			
+         if(label != null && label.length() > 0){
+            label = getWidgetCreator().getDeclaredMessage(label);
+         }			
+         if (value == null || value.length() == 0){
+            value = label;
+         }else{
+            value = EscapeUtils.quote(value);
+         }
+         out.println(context.getWidget()+".insertItem("+label+", "+value+", "+context.index+");");
+
+         String selected = context.readChildProperty("selected");
+         if (selected != null && selected.length() > 0){
+            out.println(context.getWidget()+".setItemSelected("+context.index+", "+Boolean.parseBoolean(selected)+");");
+         }
+         context.index += 1;
+      }
+   }
+   
+   @Override
+   public WidgetCreatorContext instantiateContext() {
+      return new WidgetCreatorContext();
+   }
+}
+}}}
+
+That example creates a factory to understand the following code:
+
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:mylib="http://www.cruxframework.org/crux/myLibrary" >
+   <head>
+       <script language="javascript" src="cruxtest/cruxtest.nocache.js"></script>
+   </head>
+   <body>
+       <mylib:myWidget id="myWidgetID" >
+          <myLib:item label="#{myMessageBundle.label1}" value="value1" />
+          <myLib:item label="#{myMessageBundle.label2}" value="value2" />
+          <myLib:item label="#{myMessageBundle.label3}" value="value3" selected="true"/>
+          <myLib:item label="#{myMessageBundle.label4}" value="value4" />
+          <myLib:item label="#{myMessageBundle.label5}" value="value5" />
+       </mylib:myWidget>
+   </body>
+</html>
+}}}
+
 === 2.2.2 The WidgetCreator Methods===
 
 ==== 2.2.2.1 The instantiateWidget method====
@@ -336,6 +411,9 @@ The {{{processAttributes}}} and {{{processEvents}}} methods are used to process 
 
 When overriding these methods, remember that you need to call {{{super.processAttributes()}}} or {{{super.processEvents()}}} (depending on which method you are overriding).
 
+==== 2.2.2.3 Children Processing====
+
+The {{{processChildren}}} method is used to add custom behavior to the children processing. When overriding this method you don't need to call {{{super.processChildren}}} (as you need for attributes and events). Children processing logic is not inherited from super classes (attributes and events processing are).
 
 === 2.2.3 Factories Inheritance===
 
