@@ -422,6 +422,10 @@ When overriding these methods, remember that you need to call {{{super.processAt
 
 The {{{processChildren}}} method is used to add custom behavior to the children processing. When overriding this method you don't need to call {{{super.processChildren}}} (as you need for attributes and events). Children processing logic is not inherited from super classes (attributes and events processing are).
 
+==== 2.2.2.4 Post-processing ====
+
+The {{{postProcess}}} method can be overridden to add custom logic after the attributes, events and children are processed.
+
 === 2.2.3 Factories Inheritance===
 
 The annotations for attributes and events processing present on Widget factories super classes and implemented interfaces are also considered by _*Crux*_ engine. 
@@ -472,11 +476,3 @@ _*Crux*_ libraries use the inheritance support to turn easy the development of i
 || HasTextFactory || text || - ||
 || HasValueChangeHandlersFactory || - || onChange ||
 || HasWordWrapFactory || wordWrap || - ||
-
-=== 2.2.3 Children Processing===
-
-==== 2.2.3.1 The processChildren method====
-
-==== 2.2.3.2 WidgetChildProcessor====
-
-=== 2.2.4 The postProcess  method===
