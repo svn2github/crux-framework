@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.CruxSerializable;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.serializable.annotation.SerializableName;
+import org.cruxframework.crux.core.rebind.screen.serializable.annotation.SerializableName;
 import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 

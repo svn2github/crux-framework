@@ -112,4 +112,7 @@ public interface DeclarativeUIMessages
 
 	@DefaultServerMessage("[declarativeui 031] - Error scanning dir: {0}.")
 	String templatesHotDeploymentScannerErrorScanningDir(String name);
+
+	@DefaultServerMessage("[declarativeui 033] - No module declared on screen {0}.")
+	String htmlBuilderNoModulesOnPage(String screenId);
 }

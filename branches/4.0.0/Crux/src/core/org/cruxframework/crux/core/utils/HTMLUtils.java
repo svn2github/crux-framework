@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -147,7 +148,17 @@ public class HTMLUtils
 	 */
 	public static void writeRawText(Node child, Writer out) throws DOMException, IOException
     {
-	    out.write(child.getNodeValue()); 
+		
+		boolean isCDATA = child instanceof CDATASection;
+		if (isCDATA)
+		{
+			out.write("<![CDATA[");
+		}
+		out.write(child.getNodeValue()); 
+		if (isCDATA)
+		{
+			out.write("]]>");
+		}
     }
 	
 	/**

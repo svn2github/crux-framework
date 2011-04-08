@@ -202,6 +202,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[ScreenFactory 014] - To use this feature you need to enable crux2 old interfaces compatibility.")
 	String crux2OldInterfacesCompatibilityDisabled();
 
+	@DefaultServerMessage("[screenFactory 015] - No module declared on screen {0}.")
+	String screenFactoryErrorNoModulesOnPage(String screenId);
+
 	@DefaultServerMessage("[Screen 001] - Error setting property {0} for screen {1}.")
 	String screenPropertyError(String property, String screenId);
 	
@@ -301,7 +304,7 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[eventProcessor 001] - Controller {0} not found.")
 	String eventProcessorErrorControllerNotFound(String controller);
 
-	@DefaultServerMessage("[eventProcessor 001] - Method {1} not found on Controller {0}.")
+	@DefaultServerMessage("[eventProcessor 002] - Method {1} not found on Controller {0}.")
 	String eventProcessorErrorControllerMethodNotFound(String controller, String method);
 
 	@DefaultServerMessage("[dataObjects 001] - Duplicated DataObject found: {0}.")

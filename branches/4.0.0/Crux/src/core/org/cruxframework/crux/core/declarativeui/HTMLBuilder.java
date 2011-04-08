@@ -444,10 +444,24 @@ class HTMLBuilder
 	 */
 	private void generateCruxMetaDataElement(String screenId, Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
     {
+		ScreenFactory factory = ScreenFactory.getInstance();
+		String screenModule = null;
 		try
 		{
-			ScreenFactory factory = ScreenFactory.getInstance();
-			String screenModule = factory.getScreenModule(htmlDocument);
+			screenModule = factory.getScreenModule(htmlDocument);
+			
+		}
+		catch (Exception e)
+		{
+			throw new HTMLBuilderException(e.getMessage(), e);
+		}
+			
+		if (screenModule == null)
+		{
+			throw new HTMLBuilderException(messages.htmlBuilderNoModulesOnPage(screenId));
+		}
+		try
+		{
 			screenId = factory.getRelativeScreenId(screenId, screenModule);
 
 			Element cruxMetaData = htmlDocument.createElement("script");

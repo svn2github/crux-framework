@@ -198,10 +198,15 @@ public class ScreenFactory
 	 * @param id
 	 * @param module
 	 * @return
+	 * @throws ScreenConfigException 
 	 */
-	public String getRelativeScreenId(String id, String module)
+	public String getRelativeScreenId(String id, String module) throws ScreenConfigException
 	{
 		Module mod = Modules.getInstance().getModule(module);
+		if (mod == null)
+		{
+			throw new ScreenConfigException(messages.screenFactoryErrorNoModulesOnPage(id));
+		}
 		return Modules.getInstance().getRelativeScreenId(mod, id);
 	}
 	
@@ -406,42 +411,46 @@ public class ScreenFactory
 		}
 
 		String screenModule = getScreenModule(source);
-		
-		try
-        {
-	        if(screenModule != null)
-	        {
-	        	JSONArray metaData = getMetaData(source, id);
 
-	        	screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule, metaData);
-	        	
-	        	int length = metaData.length();
-	        	for (int i = 0; i < length; i++) 
-	        	{
-	        		JSONObject compCandidate = metaData.getJSONObject(i);
-	        		
-	        		if (isScreenDefinition(compCandidate))
-	        		{
-	        			parseScreenElement(screen,compCandidate);
-	        		}
-	        		else if (isValidWidget(compCandidate))
-	        		{
-	        			try 
-	        			{
-	        				createWidget(compCandidate, screen);
-	        			} 
-	        			catch (ScreenConfigException e) 
-	        			{
-	        				logger.error(messages.screenFactoryGenericErrorCreateWidget(id, e.getLocalizedMessage()));
-	        			}
-	        		}
-	        	}
-	        }
-        }
-        catch (JSONException e)
-        {
-        	throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()), e);
-        }
+		if(screenModule != null)
+		{
+			try
+			{
+				JSONArray metaData = getMetaData(source, id);
+
+				screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule, metaData);
+
+				int length = metaData.length();
+				for (int i = 0; i < length; i++) 
+				{
+					JSONObject compCandidate = metaData.getJSONObject(i);
+
+					if (isScreenDefinition(compCandidate))
+					{
+						parseScreenElement(screen,compCandidate);
+					}
+					else if (isValidWidget(compCandidate))
+					{
+						try 
+						{
+							createWidget(compCandidate, screen);
+						} 
+						catch (ScreenConfigException e) 
+						{
+							logger.error(messages.screenFactoryGenericErrorCreateWidget(id, e.getLocalizedMessage()));
+						}
+					}
+				}
+			}
+			catch (JSONException e)
+			{
+				throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()), e);
+			}
+		}
+		else
+		{
+			throw new ScreenConfigException(messages.screenFactoryErrorNoModulesOnPage(id));
+		}
 		
 		return screen;
 	}

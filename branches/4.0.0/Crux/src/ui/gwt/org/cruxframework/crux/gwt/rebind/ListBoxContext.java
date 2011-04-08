@@ -23,5 +23,5 @@ import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
  */
 public class ListBoxContext extends WidgetCreatorContext
 {
-	int index = 0;
+	public int index = 0;
 }
