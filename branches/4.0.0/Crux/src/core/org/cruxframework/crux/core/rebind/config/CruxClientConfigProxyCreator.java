@@ -91,7 +91,7 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 	{
 		sourceWriter.println("public boolean enableCrux2OldInterfacesCompatibility(){");
 		sourceWriter.indent();
-		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().enableCrux2OldInterfacesCompatibility() + ";");
+		sourceWriter.println("return " + isCrux2OldInterfacesCompatibilityEnabled() + ";");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}

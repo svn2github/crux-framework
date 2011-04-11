@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -46,7 +47,7 @@ public class RadioButtonFactory extends AbstractCheckBoxFactory
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
 		String className = RadioButton.class.getCanonicalName();
-		out.println(className + " " + context.getWidget()+" = new "+className+"("+context.readWidgetProperty("name")+");");
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(context.readWidgetProperty("name"))+");");
 	}	
 
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)

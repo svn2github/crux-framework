@@ -166,11 +166,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	{
 		
 		generateInvokeMethod(srcWriter);
-		
-		if (!isCrux2OldInterfacesCompatibilityEnabled())
-		{
-			generateControllerOverideExposedMethods(srcWriter);
-		}
+		generateControllerOverideExposedMethods(srcWriter);
 		
 		//TODO: create a interface screenBinder, que possua os metodos de bind entre screen e controller.
 		// A screen deve definir um binder para si e eassociar ao controller... desta forma nao precisa de 
@@ -580,7 +576,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		
 		for (JMethod method: methods) 
 		{
-			String methodSignature = method.getJsniSignature();
+			String methodSignature = method.getReadableDeclaration(true, true, true, true, true);
 			if (!processed.contains(methodSignature))
 			{
 				processed.add(methodSignature);
@@ -598,14 +594,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				JType returnType = method.getReturnType().getErasedType();
 				boolean hasReturn = returnType != JPrimitiveType.VOID;
 
-/*				if (hasReturn)
-		    	{
-					sourceWriter.println(returnType.getQualifiedSourceName()+" ret = null;");
-		    	}
-				
-				sourceWriter.println("try{");
-				sourceWriter.indent();
-*/
 			    Validate annot = method.getAnnotation(Validate.class);
 			    boolean mustValidade = annot != null; 
 			    if (mustValidade)
@@ -644,18 +632,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		    	
 		    	generateExposedMethodCall(sourceWriter, method);
 		    		
-/*				sourceWriter.outdent();
-				sourceWriter.println("}catch (Throwable e){");
-				sourceWriter.indent();
-
-				String call = controllerName+"."+method.getName();
-				
-				sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientError("+EscapeUtils.quote(call)
-						              +", e.getLocalizedMessage()), e);");
-
-				sourceWriter.outdent();
-				sourceWriter.println("}");
-*/				
 				if (isAutoBindEnabled)
 				{
 					sourceWriter.println("updateScreenWidgets();");

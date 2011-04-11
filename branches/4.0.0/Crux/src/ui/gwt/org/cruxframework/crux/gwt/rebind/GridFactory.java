@@ -55,8 +55,11 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 		
 		int count = getNonNullChildrenCount(children);
 		
-		String widget = context.getWidget();
-		out.println(widget+".resizeRows("+count+");");
+		if (count > 0)
+		{
+			String widget = context.getWidget();
+			out.println(widget+".resizeRows("+count+");");
+		}
 	}
 
 	/**
@@ -64,14 +67,17 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	 * @return
 	 */
 	private static int getNonNullChildrenCount(JSONArray children)
-    {
-	    int count = 0;
-		int size = children.length();
-		for (int i=0; i<size; i++)
+	{
+		int count = 0;
+		if (children != null)
 		{
-			if (children.opt(i) != null)
+			int size = children.length();
+			for (int i=0; i<size; i++)
 			{
-				count++;
+				if (children.opt(i) != null)
+				{
+					count++;
+				}
 			}
 		}
 	    return count;

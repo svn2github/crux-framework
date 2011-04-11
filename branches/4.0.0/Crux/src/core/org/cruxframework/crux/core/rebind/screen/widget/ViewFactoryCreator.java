@@ -387,6 +387,15 @@ public class ViewFactoryCreator
 	    }
     }
 	
+	/**
+	 * Gets all messages declared on this screen
+	 * @return
+	 */
+	Map<String, String> getDeclaredMessages()
+	{
+		return declaredMessages;
+	}
+	
     /**
 	 * Gets the list of classes used by the ViewFactory.
 	 * 
@@ -902,7 +911,7 @@ public class ViewFactoryCreator
 	 * Return the qualified name of the ViewFactory class created for the associated screen
 	 * @return
 	 */
-	private String getQualifiedName()
+	String getQualifiedName()
     {
 	    return ViewFactory.class.getPackage().getName() + "." + getSimpleName();
     }
@@ -911,7 +920,7 @@ public class ViewFactoryCreator
 	 * Return the simple name of the ViewFactory class created for the associated screen
 	 * @return
 	 */
-	private String getSimpleName()
+	String getSimpleName()
     {
 		String className = screen.getModule()+"_"+screen.getRelativeId(); 
 		className = className.replaceAll("[\\W]", "_");

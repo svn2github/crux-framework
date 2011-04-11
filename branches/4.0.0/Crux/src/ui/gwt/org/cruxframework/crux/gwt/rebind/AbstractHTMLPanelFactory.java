@@ -46,6 +46,8 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
 		out.println("if (event.isAttached()){");
 		
+		createPostProcessingScope();
+
 		JSONArray children = ensureChildren(context.getWidgetElement(), true);
 		if (children != null)
 		{
@@ -67,6 +69,8 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 			}
 		}
 
+		commitPostProcessing(out);
+		
 		out.println("}");
 		out.println("}");
 		out.println("});");

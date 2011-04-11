@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.screen.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,9 +69,9 @@ public class LazyPanelFactory
 														null, 
 														getImports());
 		
-		generateFields(lazyPrinter, lazyPanel+"Class");
 		generateConstructor(lazyPrinter, lazyPanel+"Class", lazyId);
 		generateCreateWidgetMethod(lazyPrinter, element, lazyId);
+		generateFields(lazyPrinter, lazyPanel+"Class");
 		
 		lazyPrinter.commit();
 		
@@ -86,6 +87,11 @@ public class LazyPanelFactory
 	private void generateFields(SourcePrinter printer, String className)
     {
 		printer.println("private static Logger "+factory.getLoggerVariable()+" = Logger.getLogger("+className+".class.getName());");
+	    Map<String, String> declaredMessages = factory.getDeclaredMessages();
+		for (String messageClass: declaredMessages.keySet())
+	    {
+	    	printer.println("private "+messageClass+" "+declaredMessages.get(messageClass) + " = GWT.create("+messageClass+".class);");
+	    }
     }
 
 	/**

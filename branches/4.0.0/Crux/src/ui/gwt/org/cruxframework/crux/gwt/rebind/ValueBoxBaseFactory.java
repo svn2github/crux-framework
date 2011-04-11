@@ -27,6 +27,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasTextFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
 
+import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
+
 
 /**
  * Base class for text box based widget factories
@@ -59,7 +61,7 @@ public abstract class ValueBoxBaseFactory extends FocusWidgetFactory<WidgetCreat
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
 		{
 			TextAlign align = TextAlign.valueOf(attributeValue);
-			String textAlignClassName = TextAlign.class.getCanonicalName();
+			String textAlignClassName = TextAlignment.class.getCanonicalName();
 			switch (align) {
 				case center: out.println(context.getWidget() + ".setAlignment(" + textAlignClassName + ".CENTER);");
 				break;

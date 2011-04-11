@@ -575,6 +575,23 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 
 	/**
+	 * Create a new post-processing scope
+	 */
+	protected void createPostProcessingScope()
+	{
+		factory.createPostProcessingScope();
+	}
+	
+	/**
+	 * Close the current postProcessing scope and schedule the execution of all scope commands.
+	 * @param printer
+	 */
+	protected void commitPostProcessing(SourcePrinter printer)
+	{
+		factory.commitPostProcessing(printer);
+	}
+	
+	/**
 	 * Print code that will be executed after the viewFactory completes the widgets construction
 	 * @param s code string
 	 */
