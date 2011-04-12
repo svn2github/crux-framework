@@ -464,7 +464,7 @@ public class ScreenFactory {
 		DeclarativeWidgetFactory widgetFactory = (DeclarativeWidgetFactory) registeredWidgetFactories.getWidgetFactory(widgetType);
 		if (!widgetFactory.isAttachToDOM())
 		{
-			widget = newWidget(element, widgetType, widgetId);
+			widget = newWidget(element, widgetId, widgetType);
 		}
 		else
 		{
