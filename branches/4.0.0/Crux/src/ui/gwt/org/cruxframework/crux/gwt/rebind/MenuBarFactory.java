@@ -172,12 +172,10 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 			String executeEvt = context.readChildProperty("onExecute");
 			if (executeEvt != null)
 			{
-				String event = ViewFactoryCreator.createVariableName("evt");
 				String item = createMenuItem(out, context);
 				
 				out.println(item+".setCommand(new "+Command.class.getCanonicalName()+"(){);");
 				out.println("public void execute(){");
-				out.println("final Event "+event+" = Events.getEvent(\"onExecute\", "+ EscapeUtils.quote(executeEvt)+");");
 
 				EvtProcessor.printEvtCall(out, executeEvt, "onExecute", ExecuteEvent.class, 
 										" new "+ExecuteEvent.class.getCanonicalName()+"<"+MenuBar.class.getCanonicalName()+

@@ -277,8 +277,8 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[widgetCreator 006] - Error creating AttibuteProcessor.")
 	String widgetCreatorErrorCreatingAttributeProcessor();
 
-	@DefaultServerMessage("[widgetCreator 007] - Error running attribute processor for attribute :{0}.")
-	String widgetCreatorRunningAttributeProcessor(String attrName);
+	@DefaultServerMessage("[widgetCreator 007] - Error running attribute processor for attribute {0}, from widget {1}, on screen {2}.")
+	String widgetCreatorRunningAttributeProcessor(String attrName, String widgetId, String screenId);
 
 	@DefaultServerMessage("[widgetCreator 008] - Error creating evtBinder.")
 	String widgetCreatorErrorCreatingEvtBinder();

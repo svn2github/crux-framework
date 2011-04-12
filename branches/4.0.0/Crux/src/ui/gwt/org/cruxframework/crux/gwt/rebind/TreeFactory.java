@@ -22,6 +22,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
@@ -96,15 +97,12 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		
 		if (!StringUtils.isEmpty(eventLoadImage))
 		{
-			String loadEvent = createVariableName("evt");
-			String event = createVariableName("evt");
 			String treeImages = createVariableName("treeImages");
 			
-			out.println("final Event "+event+" = Events.getEvent("+EscapeUtils.quote("onLoadImage")+", "+ EscapeUtils.quote(eventLoadImage)+");");
-			out.println(LoadImagesEvent.class.getCanonicalName()+"<"+className+"> "+loadEvent+
-					" = new "+LoadImagesEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(context.getWidgetId())+");");
 			out.println(Resources.class.getCanonicalName()+" "+treeImages+
-					" = ("+Resources.class.getCanonicalName()+") Events.callEvent("+event+", "+loadEvent+");");
+					" = ("+Resources.class.getCanonicalName()+") ");
+			EvtProcessor.printEvtCall(out, eventLoadImage, "onLoadImage", LoadImagesEvent.class.getCanonicalName()+"<"+className+">", 
+					" new "+LoadImagesEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(context.getWidgetId())+")", this);
 
 			String useLeafImagesStr = context.readWidgetProperty("useLeafImages");
 			boolean useLeafImages = true;

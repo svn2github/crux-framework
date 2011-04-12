@@ -529,6 +529,8 @@ public class WizardFactory extends AbstractWizardFactory
 	})
 	public static class ControlBarCommandProcessor extends WidgetChildProcessor<WizardContext>
 	{
+		private WizardCommandEvtBind commandEvtBind;
+
 		@Override
 		public void processChildren(SourcePrinter out, WizardContext context) throws CruxGeneratorException 
 		{
@@ -541,13 +543,14 @@ public class WizardFactory extends AbstractWizardFactory
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));
 			int order = Integer.parseInt(context.readChildProperty("order"));
 			
-			String onCommand = context.readChildProperty("onCommand");
-			String commandEvent = getWidgetCreator().createVariableName("evt");
-			out.println("final Event "+commandEvent+" = Events.getEvent("+EscapeUtils.quote("onCommand")+", "+ EscapeUtils.quote(onCommand)+");");
-
-			String widget = context.getWidget();
+			if (commandEvtBind == null) commandEvtBind = new WizardCommandEvtBind(getWidgetCreator());
 			
-			out.println(widget+".getControlBar().addCommand("+EscapeUtils.quote(id)+", "+label+", "+commandEvent+", "+order+");");
+			String widget = context.getWidget();
+			String onCommand = context.readChildProperty("onCommand");
+			if (!StringUtils.isEmpty(onCommand))
+			{
+				commandEvtBind.processEvent(out, onCommand, widget+".getControlBar()", id, label, order);
+			}
 			
 			String styleName = context.readChildProperty("styleName");
 			if (!StringUtils.isEmpty(styleName))

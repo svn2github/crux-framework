@@ -18,6 +18,8 @@ package org.cruxframework.crux.gwt.rebind;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
@@ -33,11 +35,13 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import org.cruxframework.crux.gwt.client.DateFormatUtil;
+import org.cruxframework.crux.gwt.client.LoadFormatEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DateBox.Format;
 
 /**
  * Factory for TabPanel widgets
@@ -93,6 +97,7 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 
 		JSONArray children = ensureChildren(context.getWidgetElement(), true);
 		
+		String format = getFormat(out, context.getWidgetElement(), context.getWidgetId());
 		if (children != null && children.length() > 0)
 		{
 			int length = children.length();
@@ -109,12 +114,12 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 					}
 				}
 			}			
-			out.println(className+" "+context.getWidget()+" = new "+className+"("+picker+", null, "+getFormat(context.getWidgetElement(), context.getWidgetId())+");");
+			out.println(className+" "+context.getWidget()+" = new "+className+"("+picker+", null, "+format+");");
 		}
 		else
 		{
 			out.println(className+" "+context.getWidget()+" = new "+className+"();");
-			out.println(context.getWidget()+".setFormat("+getFormat(context.getWidgetElement(), context.getWidgetId())+");");
+			out.println(context.getWidget()+".setFormat("+format+");");
 		}		
 	}
 	
@@ -126,14 +131,16 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 	 * @param widgetId 
 	 * @return
 	 */
-	public String getFormat(JSONObject element, String widgetId)
+	public String getFormat(SourcePrinter out, JSONObject element, String widgetId)
 	{
-		String format = null;
+		
+		String format = ViewFactoryCreator.createVariableName("format");
 		String pattern = element.optString("pattern");
 		
 		if (!StringUtils.isEmpty(pattern))
 		{
-			format = "new "+DateBox.class.getCanonicalName()+".DefaultFormat("+DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+EscapeUtils.quote(pattern)+"))";
+			out.println(Format.class.getCanonicalName()+" "+format+" = new "+DateBox.class.getCanonicalName()+
+					".DefaultFormat("+DateFormatUtil.class.getCanonicalName()+".getDateTimeFormat("+EscapeUtils.quote(pattern)+"));");
 		}
 		else
 		{
@@ -141,13 +148,14 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 			String eventLoadFormat = element.optString("onLoadFormat");
 			if (eventLoadFormat != null)
 			{
-			
-				format = "(Format) Events.callEvent(Events.getEvent(\"onLoadFormat\", "+EscapeUtils.quote(eventLoadFormat)+
-				         "), new LoadFormatEvent<"+DateBox.class.getCanonicalName()+">("+ EscapeUtils.quote(widgetId)+"))";
+				String className = DateBox.class.getCanonicalName();
+				out.println(Format.class.getCanonicalName()+" "+format+" =("+Format.class.getCanonicalName()+") ");
+				EvtProcessor.printEvtCall(out, eventLoadFormat, "onLoadFormat", LoadFormatEvent.class.getCanonicalName()+"<"+className+">", 
+					" new "+LoadFormatEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(widgetId)+")", this);
 			}
 			else 
 			{
-				format = "GWT.create("+DateBox.class.getCanonicalName()+".DefaultFormat.class)";
+				out.println(Format.class.getCanonicalName()+" "+format+" = GWT.create("+DateBox.class.getCanonicalName()+".DefaultFormat.class);");
 			}
 		}
 		

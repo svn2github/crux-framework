@@ -15,8 +15,10 @@
  */
 package org.cruxframework.crux.widgets.rebind.wizard;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.widgets.client.wizard.WizardCommandEvent;
 import org.cruxframework.crux.widgets.client.wizard.WizardCommandHandler;
 
@@ -53,4 +55,13 @@ public class WizardCommandEvtBind extends EvtProcessor
     {
 	    return WizardCommandHandler.class;
     }
+
+	public void processEvent(SourcePrinter out, String eventValue, String widget, String id, String label, int order) 
+	{
+		out.println(widget+".addCommand("+EscapeUtils.quote(id)+","+EscapeUtils.quote(label)+",new "+getEventHandlerClass().getCanonicalName()+"(){");
+		out.println("public void "+getEventName()+"("+getEventClass().getCanonicalName()+" event){");
+		printEvtCall(out, eventValue, "event");
+		out.println("}");
+		out.println("}, "+order+");");
+    }	
 }

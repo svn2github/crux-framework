@@ -161,7 +161,9 @@ class AttributesAnnotationScanner
                     }
                     catch (Exception e)
                     {
-            	        throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName), e);
+                    	
+            	        throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName, 
+            	        		context.getWidgetId(), widgetCreator.getScreen().getId()), e);
                     }
 				}
 			}

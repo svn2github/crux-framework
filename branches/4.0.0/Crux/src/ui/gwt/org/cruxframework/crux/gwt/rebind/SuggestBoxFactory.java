@@ -16,6 +16,7 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
@@ -30,7 +31,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import org.cruxframework.crux.gwt.client.LoadOracleEvent;
-
 
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -63,15 +63,14 @@ public class SuggestBoxFactory extends CompositeFactory<WidgetCreatorContext>
 	{
 		String className = SuggestBox.class.getCanonicalName();
 
-		String event = ViewFactoryCreator.createVariableName("evt");
 		String oracle = ViewFactoryCreator.createVariableName("oracle");
 
 		String eventLoadOracle = context.readWidgetProperty("onLoadOracle");
 		if (eventLoadOracle != null)
 		{
-			out.println("final Event "+event+" = Events.getEvent(\"onLoadOracle\", "+ EscapeUtils.quote(eventLoadOracle)+");");
-			out.println(SuggestOracle.class.getCanonicalName()+" "+oracle+" = Events.callEvent("+event+", new "+LoadOracleEvent.class.getCanonicalName()+
-					"<"+SuggestBox.class.getCanonicalName()+">("+EscapeUtils.quote(context.getWidgetId())+"));");
+			out.println(SuggestOracle.class.getCanonicalName()+" "+oracle+" = ("+SuggestOracle.class.getCanonicalName()+")");
+			EvtProcessor.printEvtCall(out, eventLoadOracle, "onLoadOracle", LoadOracleEvent.class.getCanonicalName()+"<"+className+">", 
+					" new "+LoadOracleEvent.class.getCanonicalName()+"<"+className+">("+EscapeUtils.quote(context.getWidgetId())+")", this);
 			out.println(className + " " + context.getWidget()+" = new "+className+"("+oracle+");");
 		}
 		else
