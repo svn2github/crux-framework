@@ -63,7 +63,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		}
 		else
 		{
-			throw new CruxGeneratorException(widgetMessages.pagerNoPageableSet()); 
+			throw new CruxGeneratorException(widgetMessages.pagerNoPageableSet(context.getWidgetId(), getScreen().getId())); 
 		}							
 	}
 	

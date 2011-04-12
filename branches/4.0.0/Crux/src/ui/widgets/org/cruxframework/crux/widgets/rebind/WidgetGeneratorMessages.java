@@ -53,8 +53,8 @@ public interface WidgetGeneratorMessages
 	@DefaultServerMessage("[maskedTextBox] - The attribute formatter is required for MaskedTextBox.")
 	String maskedTextBoxFormatterRequired();
 
-	@DefaultServerMessage("[pager 001] - No pageable widget set for this pager.")
-	String pagerNoPageableSet();
+	@DefaultServerMessage("[pager 001] - No pageable widget set for the pager {0}, on screen {1}.")
+	String pagerNoPageableSet(String widgetId, String screenID);
 }
 
 

@@ -307,6 +307,12 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[eventProcessor 002] - Method {1} not found on Controller {0}.")
 	String eventProcessorErrorControllerMethodNotFound(String controller, String method);
 
+	@DefaultServerMessage("[eventProcessor 003] - Method {1} of Controller {0} is not exposed, so it can not be called from crux.xml pages.")
+	String eventProcessorErrorControllerMethodNotExposed(String controller, String method);
+
+	@DefaultServerMessage("[eventProcessor 004] - Method {1} of Controller {0} can not be exposed. It can throw a checked exception.")
+	String eventProcessorErrorControllerMethodTrhowsException(String controller, String method);
+
 	@DefaultServerMessage("[dataObjects 001] - Duplicated DataObject found: {0}.")
 	String dataObjectsDuplicatedObject(String value);
 

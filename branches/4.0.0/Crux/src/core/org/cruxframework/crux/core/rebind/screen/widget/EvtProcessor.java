@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -138,15 +139,19 @@ public abstract class EvtProcessor extends AbstractProcessor
     		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
     	}
     	
-    	if (getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
+    	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass); 
+    	if (exposedMethod == null)
     	{
-    		if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+    		exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
+    		if (exposedMethod == null)
     		{
         		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
     		}
     		hasEventParameter = false;
-    	}//TODO: checar se o metodo esta exposto..caso contrario reportar erro
+    	}
     	
+    	checkExposedMethod(event, controller, exposedMethod, context);
+
     	out.print("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
     			")ScreenFactory.getInstance().getRegisteredControllers().getController("
     			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
@@ -157,6 +162,34 @@ public abstract class EvtProcessor extends AbstractProcessor
     	}
     	out.println(");");
     }
+
+	/**
+	 * @param event
+	 * @param controller
+	 * @param exposedMethod
+	 * @param context
+	 */
+	private static void checkExposedMethod(Event event, String controller, JMethod exposedMethod, GeneratorContext context) 
+	{
+		if (exposedMethod.getAnnotation(Expose.class) == null)
+    	{
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotExposed(controller, event.getMethod()));
+    	}
+    	
+		JClassType runtimeExceptionType = context.getTypeOracle().findType(RuntimeException.class.getCanonicalName());
+		
+    	JClassType[] methodThrows = exposedMethod.getThrows();
+    	if (methodThrows != null)
+    	{
+    		for (JClassType exception : methodThrows) 
+    		{
+    			if (!exception.isAssignableTo(runtimeExceptionType))
+    			{
+    				throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodTrhowsException(controller, event.getMethod()));
+    			}
+			}
+    	}
+	}
 
 	/**
 	 * @param methodName
@@ -234,14 +267,19 @@ public abstract class EvtProcessor extends AbstractProcessor
     	{
     		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
     	}
-    	if (getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
+    	
+    	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass);
+		if (exposedMethod == null)
     	{
-    		if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+			exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
+    		if (exposedMethod == null)
     		{
         		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
     		}
     		hasEventParameter = false;
-    	}//TODO: checar se o metodo esta exposto..caso contrario reportar erro
+    	}
+    	
+    	checkExposedMethod(event, controller, exposedMethod, creator.getContext());
     	
         creator.printlnPostProcessing("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
         		")ScreenFactory.getInstance().getRegisteredControllers().getController("

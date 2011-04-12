@@ -26,6 +26,31 @@ public class DataColumnDefinition extends ColumnDefinition
 	private boolean wrapLine;
 	private boolean sortable;
 
+	/**
+	 * @param label
+	 * @param width
+	 * @param formatter
+	 * @param visible
+	 * @param wrapLine
+	 * @param horizontalAlign
+	 * @param verticalAlign
+	 */
+	@Deprecated
+	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	{
+		this(label, width, formatter, visible, true, wrapLine, horizontalAlign, verticalAlign);
+	}
+
+	/**
+	 * @param label
+	 * @param width
+	 * @param formatter
+	 * @param visible
+	 * @param sortable
+	 * @param wrapLine
+	 * @param horizontalAlign
+	 * @param verticalAlign
+	 */
 	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		super(label, width, visible, horizontalAlign, verticalAlign);
