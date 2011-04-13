@@ -83,7 +83,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      */
     public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, WidgetCreator<?> creator)
     {
-    	printEvtCall(out, eventValue, eventName,  eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, creator.getContext());
+    	printEvtCall(out, eventValue, eventName,  eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, creator);
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      */
     public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, String eventClassName, String cruxEvent, WidgetCreator<?> creator)
     {
-    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext());
+    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext(), creator.getScreen().getId());
     }
 
     /**
@@ -107,9 +107,9 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param cruxEvent
      * @param context
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, GeneratorContext context)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, GeneratorContext context, String screenId)
     {
-    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context);
+    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context, screenId);
     }
     
     /**
@@ -120,7 +120,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param cruxEvent
      * @param context
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName,String eventClassName, String cruxEvent, GeneratorContext context)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName,String eventClassName, String cruxEvent, GeneratorContext context, String screenId)
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
     	
@@ -129,14 +129,14 @@ public abstract class EvtProcessor extends AbstractProcessor
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(event.getController(), screenId));
     	}
 
     	boolean hasEventParameter = true;
     	JClassType controllerClass = context.getTypeOracle().findType(controller);
     	if (controllerClass == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screenId));
     	}
     	
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass); 
@@ -145,7 +145,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     		exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
-        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screenId, controller, event.getMethod()));
     		}
     		hasEventParameter = false;
     	}
@@ -258,14 +258,14 @@ public abstract class EvtProcessor extends AbstractProcessor
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(event.getController(), creator.getScreen().getId()));
     	}
 
     	boolean hasEventParameter = true;
     	JClassType controllerClass = creator.getContext().getTypeOracle().findType(controller);
     	if (controllerClass == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, creator.getScreen().getId()));
     	}
     	
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass);
@@ -274,7 +274,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 			exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
-        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(creator.getScreen().getId(), controller, event.getMethod()));
     		}
     		hasEventParameter = false;
     	}

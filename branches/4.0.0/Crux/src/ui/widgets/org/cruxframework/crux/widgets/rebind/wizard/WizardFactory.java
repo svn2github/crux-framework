@@ -214,7 +214,7 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
 			}
 			
 			context.stepId = id;
@@ -251,7 +251,7 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
 			}
 			
 			String widget = context.getWidget();
@@ -354,7 +354,7 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
 			}
 			
 			String widget = context.getWidget();
@@ -537,7 +537,7 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
 			}
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));

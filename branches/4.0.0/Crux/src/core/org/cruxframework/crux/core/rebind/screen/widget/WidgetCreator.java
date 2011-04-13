@@ -255,7 +255,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!metaElem.has("id"))
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), factory.getMetaElementType(metaElem)));
 		}
 		String widgetId = metaElem.optString("id");
 		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen, context);

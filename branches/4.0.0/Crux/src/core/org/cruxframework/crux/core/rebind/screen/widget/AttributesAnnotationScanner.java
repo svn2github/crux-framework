@@ -292,7 +292,7 @@ class AttributesAnnotationScanner
 				{
 					expression = attrValue;
 				}
-			
+			    //TODO: checar o tipo da expressao... se for boolean, integer, etc...fazer o parseXxx, para garantir que eh um valor valido... senao o erro gerado eh de dificil compreensao
 				return expression;
             }
 		};

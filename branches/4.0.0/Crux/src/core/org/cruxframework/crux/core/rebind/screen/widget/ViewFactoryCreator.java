@@ -577,7 +577,7 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowCloseHandler(new CloseHandler<Window>(){");
 			printer.println("public void onClose(CloseEvent<Window> event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event", context);
+			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event", context, screen.getId());
 			
 			printer.println("}");
 			printer.println("});");
@@ -597,7 +597,7 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowClosingHandler(new Window.ClosingHandler(){");
 			printer.println("public void onWindowClosing(ClosingEvent event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event", context);
+			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event", context, screen.getId());
 			
 			printer.println("}");
 			printer.println("});");
@@ -618,7 +618,7 @@ public class ViewFactoryCreator
 			printer.println("public void onValueChange(ValueChangeEvent<String> event){");
 
 			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
-					"onHistoryChanged", ValueChangeEvent.class, "event", context);
+					"onHistoryChanged", ValueChangeEvent.class, "event", context, screen.getId());
 			
 			printer.println("}");
 			printer.println("});");
@@ -684,20 +684,20 @@ public class ViewFactoryCreator
 			String controller = ClientControllers.getController(event.getController());
 			if (controller == null)
 			{
-				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screen.getId()));
 			}
 
 			boolean hasEventParameter = true;
 			JClassType controllerClass = context.getTypeOracle().findType(controller);
 			if (controllerClass == null)
 			{
-				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller));
+				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screen.getId()));
 			}
 			if (EvtProcessor.getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
 			{
 				if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
 				{
-					throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(controller, event.getMethod()));
+					throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screen.getId(), controller, event.getMethod()));
 				}
 				hasEventParameter = false;
 			}
@@ -728,7 +728,7 @@ public class ViewFactoryCreator
 			printer.println("screen.addWindowResizeHandler(new ResizeHandler(){");
 			printer.println("public void onResize(ResizeEvent event){"); 
 
-			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event", context);
+			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event", context, screen.getId());
 			
 			printer.println("}");
 			printer.println("});");
@@ -748,14 +748,14 @@ public class ViewFactoryCreator
 	{
 		if (!metaElem.has("id"))
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(screen.getId(), widgetType));
 		}
 		String widget;
 
 		String widgetId = metaElem.optString("id");
 		if (widgetId == null || widgetId.length() == 0)
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(screen.getId(), widgetType));
 		}
 
 		if (!isAttachToDOM(widgetType))

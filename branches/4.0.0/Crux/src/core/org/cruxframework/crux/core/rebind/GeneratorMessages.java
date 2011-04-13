@@ -160,8 +160,8 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[parameter 002] - Error parsing parameter {0}.")
 	String errorReadingParameter(String name);
 
-	@DefaultServerMessage("[screenFactory 001] - The id attribute is required for CRUX Widgets.")
-	String screenFactoryWidgetIdRequired();
+	@DefaultServerMessage("[screenFactory 001] - The id attribute is required for CRUX Widgets. On page {0}, there is an widget of type {1} without id.")
+	String screenFactoryWidgetIdRequired(String screenId, String widgetType);
 
 	@DefaultServerMessage("[screenFactory 002] - Can not create widget {0}. Verify the widget type.")
 	String screenFactoryErrorCreatingWidget(String widgetId);
@@ -301,11 +301,11 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[widgetCreator 014] - Invalid tagName for child processor.")
 	String widgetCreatorInvalidTagName();
 
-	@DefaultServerMessage("[eventProcessor 001] - Controller {0} not found.")
-	String eventProcessorErrorControllerNotFound(String controller);
+	@DefaultServerMessage("[eventProcessor 001] - Controller {0} , declared on screen {1},  not found.")
+	String eventProcessorErrorControllerNotFound(String controller, String screenId);
 
-	@DefaultServerMessage("[eventProcessor 002] - Method {1} not found on Controller {0}.")
-	String eventProcessorErrorControllerMethodNotFound(String controller, String method);
+	@DefaultServerMessage("[eventProcessor 002] - Screen {0} tries to invoke the method {2} on controller {1}. That method does not exist.")
+	String eventProcessorErrorControllerMethodNotFound(String screenId, String controller, String method);
 
 	@DefaultServerMessage("[eventProcessor 003] - Method {1} of Controller {0} is not exposed, so it can not be called from crux.xml pages.")
 	String eventProcessorErrorControllerMethodNotExposed(String controller, String method);

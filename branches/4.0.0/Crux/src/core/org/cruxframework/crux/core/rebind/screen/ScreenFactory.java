@@ -222,7 +222,7 @@ public class ScreenFactory
 	{
 		if (!elem.has("id"))
 		{
-			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired());
+			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired(screen.getId(), elem.optString("_type")));
 		}
 		String widgetId;
         try
@@ -231,7 +231,7 @@ public class ScreenFactory
         }
         catch (JSONException e)
         {
-			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired());
+			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired(screen.getId(), elem.optString("_type")));
         }
 		Widget widget = screen.getWidget(widgetId);
 		if (widget != null)

@@ -30,7 +30,7 @@ public class StackMenuItem extends Composite
 	private VerticalPanel wrappingCanvas;
 	private StackMenuItemCaption itemCaption;
 	private FlowPanel subItemsCanvas;
-	
+	private Object userData;
 	
 	/**
 	 * Constructs a menu item with the given label and a given key.
@@ -203,6 +203,24 @@ public class StackMenuItem extends Composite
 		this.parentMenu = menu;
 	}
 
+	/**
+	 * Gets the userData object associated with this menu item.
+	 * @return userData
+	 */
+	public Object getUserData()
+	{
+		return userData;
+	}
+	
+	/**
+	 * Associate an userData object with this menu item.
+	 * @param userData the user data object
+	 */
+	public void setUserData(Object userData)
+	{
+		this.userData = userData;
+	}
+	
 	/**
 	 * Returns the stack menu that contains this item
 	 */

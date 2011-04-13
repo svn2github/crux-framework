@@ -53,7 +53,7 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 		String id = context.readWidgetProperty("id");
         if(StringUtils.isEmpty(id))
         {
-        	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired());
+        	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), context.readChildProperty("_type")));
         }
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
 		createChildren(out, context);
