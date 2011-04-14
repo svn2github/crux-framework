@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
-import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
@@ -37,7 +36,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -78,11 +76,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	public static JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException 
+	public JSONArray ensureChildren(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId) throws CruxGeneratorException 
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
 		}
 		
 		JSONArray children = metaElem.optJSONArray("_children");
@@ -93,7 +91,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 
 		if (!acceptsNoChild && (children == null || children.length() == 0 || children.opt(0)==null))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
 		}
 		return children;
 	}	
@@ -103,11 +101,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param acceptsNoChild
 	 * @return
 	 */
-	public static JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public JSONObject ensureFirstChild(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId) throws CruxGeneratorException
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
 		}
 		JSONArray children = metaElem.optJSONArray("_children");
 		if (acceptsNoChild && children == null)
@@ -116,12 +114,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		if (!acceptsNoChild && (children == null || children.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
 		}
 		JSONObject firstChild = children.optJSONObject(0);
 		if (!acceptsNoChild && firstChild == null)
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
 		}
 		return firstChild;
 	}
@@ -133,12 +131,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	public static String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public String ensureHtmlChild(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_html");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureHtmlChildEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureHtmlChildEmpty(getScreen().getId(), parentWidgetId));
 		}
 		return result;
 	}
@@ -150,12 +148,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	public static String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild) throws CruxGeneratorException
+	public String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_text");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureTextChildEmpty());
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureTextChildEmpty(getScreen().getId(), parentWidgetId));
 		}
 		return result;
 	}
@@ -353,9 +351,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param element
 	 * @return
 	 */
-	public JSONObject ensureWidget(JSONObject metaElem) 
+	public JSONObject ensureWidget(JSONObject metaElem, String parentWidgetId) 
 	{
-		assert(isWidget(metaElem)):Crux.getMessages().widgetFactoryEnsureWidgetFail();
+		if (!isWidget(metaElem))
+		{
+			throw new CruxGeneratorException(messages.widgetCreatorEnsureWidgetFail(getScreen().getId(), parentWidgetId));
+		}
 		return metaElem;
 	}
 	

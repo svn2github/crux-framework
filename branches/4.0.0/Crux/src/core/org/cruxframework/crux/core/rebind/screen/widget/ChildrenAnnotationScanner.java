@@ -91,7 +91,7 @@ class ChildrenAnnotationScanner
 	 * @param processor
 	 * @return
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings("unchecked")
 	private ChildProcessor createChildProcessor(final boolean isAnyWidget, final String widgetProperty, 
 																	  final WidgetLazyChecker lazyChecker,  final WidgetChildProcessor processor)
     {
@@ -216,7 +216,7 @@ class ChildrenAnnotationScanner
 		{
 			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
 			{
-				String child = WidgetCreator.ensureTextChild(context.getChildElement(), acceptNoChildren);
+				String child = widgetCreator.ensureTextChild(context.getChildElement(), acceptNoChildren, context.getWidgetId());
 				if (!StringUtils.isEmpty(child))
 				{
 					if (!StringUtils.isEmpty(widgetProperty))
@@ -350,7 +350,7 @@ class ChildrenAnnotationScanner
 				}
 				else
 				{
-					JSONArray children = WidgetCreator.ensureChildren(context.getChildElement(), acceptNoChildren);
+					JSONArray children = widgetCreator.ensureChildren(context.getChildElement(), acceptNoChildren, context.getWidgetId());
 					if (children != null)
 					{
 						for (int i = 0; i < children.length(); i++)
@@ -416,7 +416,7 @@ class ChildrenAnnotationScanner
 		{
 			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
 			{
-				JSONObject child = WidgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren);
+				JSONObject child = widgetCreator.ensureFirstChild(context.getChildElement(), acceptNoChildren, context.getWidgetId());
 				if (child != null)
 				{
 					context.setChildElement(child);

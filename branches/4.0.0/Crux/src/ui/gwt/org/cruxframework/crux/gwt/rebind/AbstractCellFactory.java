@@ -125,9 +125,9 @@ public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extend
 	 * @param metaElem
 	 * @return
 	 */
-	protected String getCell(SourcePrinter out, JSONObject metaElem)
+	protected String getCell(SourcePrinter out, JSONObject metaElem, String parentWidgetId)
 	{
-		JSONObject child = ensureFirstChild(metaElem, false);
+		JSONObject child = ensureFirstChild(metaElem, false, parentWidgetId);
 		String childName = getChildName(child);
 		String cell = createVariableName("cell");
 		
@@ -150,7 +150,7 @@ public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extend
 		}
 		else if (childName.equals("selectionCell"))
 		{
-			getSelectionCell(out, child);
+			getSelectionCell(out, child, parentWidgetId);
 		}
 		else if (childName.equals("textInputCell"))
 		{
@@ -297,17 +297,17 @@ public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extend
 	 * @param out
 	 * @param child
 	 */
-	protected void getSelectionCell(SourcePrinter out, JSONObject child)
+	protected void getSelectionCell(SourcePrinter out, JSONObject child, String parentWidgetId)
     {
 	    String options = createVariableName("options");
 	    out.println(ArrayList.class.getCanonicalName()+"<String> "+options+" = "+ArrayList.class.getCanonicalName()+"<String>();");
-	    JSONArray children = ensureChildren(child, true);
+	    JSONArray children = ensureChildren(child, true, parentWidgetId);
 	    if (children != null)
 	    {
 	    	for (int i=0; i< children.length(); i++)
 	    	{
 	    		JSONObject optionElement = children.optJSONObject(i);
-	    		String textOption = ensureTextChild(optionElement, true);
+	    		String textOption = ensureTextChild(optionElement, true, parentWidgetId);
 	    		out.println(options+".add("+EscapeUtils.quote(textOption)+");");
 	    	}
 	    }

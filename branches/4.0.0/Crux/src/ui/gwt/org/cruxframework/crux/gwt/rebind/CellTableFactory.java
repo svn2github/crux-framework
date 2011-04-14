@@ -371,7 +371,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(),true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
 			context.header = "new "+TextHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -382,7 +382,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(),true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
 			context.header = "new "+SafeHtmlHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -425,7 +425,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(),true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
 			context.footer = "new "+TextHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -436,7 +436,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(),true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
 			context.footer = "new "+SafeHtmlHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}		
 	}
@@ -469,7 +469,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String cell = ((CellTableFactory)getWidgetCreator()).getCell(out, context.getChildElement());
+			String cell = ((CellTableFactory)getWidgetCreator()).getCell(out, context.getChildElement(), context.getWidgetId());
 			String column = getWidgetCreator().createVariableName("column");
 			
 			String colDataObject = context.colDataObject;

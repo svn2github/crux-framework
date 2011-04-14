@@ -131,7 +131,8 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		@Override
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
-			context.title = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			context.title = getWidgetCreator().getDeclaredMessage(getWidgetCreator().
+					ensureTextChild(context.getChildElement(), true, context.getWidgetId()));
 			context.isHtmlTitle = false;
 		}
 	}
@@ -142,7 +143,7 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		@Override
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
-			context.title = ensureHtmlChild(context.getChildElement(), true);
+			context.title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
 			if (context.title != null)
 			{
 				context.title = EscapeUtils.quote(context.title);

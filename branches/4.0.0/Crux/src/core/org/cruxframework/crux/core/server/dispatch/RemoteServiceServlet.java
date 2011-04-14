@@ -56,6 +56,7 @@ public class RemoteServiceServlet extends com.google.gwt.user.server.rpc.RemoteS
 			RPCRequest rpcRequest = RPC.decodeRequest(payload, service.getClass(), this);
 			onAfterRequestDeserialized(rpcRequest);
 
+			//TODO: criar um ponto de injecao de comportamento aki.... para permitir que plugins sejam criados (ex: seguranca, logs, etc)
 			CruxSynchronizerTokenHandler handler = CruxSynchronizerTokenHandlerFactory.getCruxSynchronizerTokenHandler(getThreadLocalRequest());
 
 			boolean useToken = checkSynchonizerToken(rpcRequest, handler);

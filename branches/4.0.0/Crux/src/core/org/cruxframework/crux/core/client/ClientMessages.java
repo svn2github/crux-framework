@@ -59,14 +59,6 @@ public interface ClientMessages extends Messages
 	
 	@DefaultMessage("[screen 002] - Error creating view: ")
 	String screenFactoryErrorCreatingView();
-
-	//  widget
-	@DefaultMessage("[widget 002] - The widget ''{0}'' does not implement HasWidgets and can not contains any other widget.")
-	String screenFactoryInvalidWidgetParent(String widgetId);
-	@DefaultMessage("[widget 005] - The element does not represents a widget.")
-	String widgetFactoryEnsureWidgetFail();
-	@DefaultMessage("[widget 006] - The element is not a span.")
-	String widgetFactoryEnsureSpanFail();
 	
 	@DefaultMessage("[callback 001] - An Invalid controller was passed to AsyncCallbackAdapter.")
 	String asyncCallbackInvalidHandlerError();

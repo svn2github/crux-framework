@@ -17,7 +17,6 @@ package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
@@ -73,7 +72,8 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			String title = getWidgetCreator().getDeclaredMessage(WidgetCreator.ensureTextChild(context.getChildElement(), false));
+			String title = getWidgetCreator().getDeclaredMessage(getWidgetCreator().
+					ensureTextChild(context.getChildElement(), false, context.getWidgetId()));
 			out.println(context.getWidget()+".setCaptionText("+title+");");
 		}
 	}
@@ -84,7 +84,7 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
-			String title = WidgetCreator.ensureHtmlChild(context.getChildElement(), false);
+			String title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), false, context.getWidgetId());
 			out.println(context.getWidget()+".setCaptionHTML("+EscapeUtils.quote(title)+");");
 		}
 	}

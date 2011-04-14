@@ -54,7 +54,8 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(ensureHtmlChild(context.getChildElement(), true))+");");
+			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(getWidgetCreator().
+					ensureHtmlChild(context.getChildElement(), true, context.getWidgetId()))+");");
 		}
 	}
 
@@ -65,7 +66,8 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentText("+EscapeUtils.quote(ensureTextChild(context.getChildElement(), true))+");");
+			out.println(rootWidget+".setContentText("+EscapeUtils.quote(getWidgetCreator().
+					ensureTextChild(context.getChildElement(), true, context.getWidgetId()))+");");
 		}
 	}
 	

@@ -95,7 +95,7 @@ public class DateBoxFactory extends CompositeFactory<WidgetCreatorContext>
 	{
 		String className = DateBox.class.getCanonicalName();
 
-		JSONArray children = ensureChildren(context.getWidgetElement(), true);
+		JSONArray children = ensureChildren(context.getWidgetElement(), true, context.getWidgetId());
 		
 		String format = getFormat(out, context.getWidgetElement(), context.getWidgetId());
 		if (children != null && children.length() > 0)

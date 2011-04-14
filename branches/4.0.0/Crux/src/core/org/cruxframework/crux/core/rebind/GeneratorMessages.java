@@ -259,14 +259,14 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[viewFactory 004] - Error retrieveing widgetFactory for type {0}.")
 	String viewFactoryErrorRetrievingWidgetFactory(String widgetType);
 
-	@DefaultServerMessage("[widgetCreator 001] - The element must contain at least one child.")
-	String widgetCreatorEnsureChildrenEmpty();
+	@DefaultServerMessage("[widgetCreator 001] - The widget {1}, declared on screen {0}, must contain at least one child.")
+	String widgetCreatorEnsureChildrenEmpty(String screenId, String widgetId);
 
-	@DefaultServerMessage("[widgetCreator 002] - The element must contain a text node child.")
-	String widgetCreatorEnsureTextChildEmpty();
+	@DefaultServerMessage("[widgetCreator 002] - The widget {1}, declared on screen {0}, must contain a text node child.")
+	String widgetCreatorEnsureTextChildEmpty(String screenId, String widgetId);
 
-	@DefaultServerMessage("[widgetCreator 003] - The element must contain an inner HTML.")
-	String widgetCreatorEnsureHtmlChildEmpty();
+	@DefaultServerMessage("[widgetCreator 003] - The widget {1}, declared on screen {0}, must contain an inner HTML.")
+	String widgetCreatorEnsureHtmlChildEmpty(String screenId, String widgetId);
 
 	@DefaultServerMessage("[widgetCreator 004] - Error reading factory declaration.")
 	String widgetCreatorErrorReadingFactoryDeclaration();
@@ -301,6 +301,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[widgetCreator 014] - Invalid tagName for child processor.")
 	String widgetCreatorInvalidTagName();
 
+	@DefaultServerMessage("[widgetCreator 0015] - The widget {1}, declared on screen {0}, must contain a valid widget as child.")
+	String widgetCreatorEnsureWidgetFail(String id, String parentWidgetId);
+	
 	@DefaultServerMessage("[eventProcessor 001] - Controller {0} , declared on screen {1},  not found.")
 	String eventProcessorErrorControllerNotFound(String controller, String screenId);
 

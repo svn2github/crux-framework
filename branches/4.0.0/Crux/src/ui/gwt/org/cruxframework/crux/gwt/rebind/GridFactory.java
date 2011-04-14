@@ -51,7 +51,7 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	@Override
 	public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException	
 	{
-		JSONArray children = ensureChildren(context.getWidgetElement(), true);
+		JSONArray children = ensureChildren(context.getWidgetElement(), true, context.getWidgetId());
 		
 		int count = getNonNullChildrenCount(children);
 		
@@ -94,7 +94,7 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 		{
 			if (!context.cellsInitialized)
 			{
-				JSONArray children = ensureChildren(context.getChildElement(), true);
+				JSONArray children = getWidgetCreator().ensureChildren(context.getChildElement(), true, context.getWidgetId());
 				String rootWidget = context.getWidget();
 				out.println(rootWidget+".resizeColumns("+getNonNullChildrenCount(children)+");");
 				context.cellsInitialized = true;

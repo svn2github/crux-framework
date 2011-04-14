@@ -48,7 +48,7 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 		
 		createPostProcessingScope();
 
-		JSONArray children = ensureChildren(context.getWidgetElement(), true);
+		JSONArray children = ensureChildren(context.getWidgetElement(), true, context.getWidgetId());
 		if (children != null)
 		{
 			for(int i=0; i< children.length(); i++)

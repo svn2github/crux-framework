@@ -46,7 +46,7 @@ public class CellWidgetFactory extends AbstractCellFactory<WidgetCreatorContext>
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		String className = getWidgetClassName()+"<"+getDataObject(context.getWidgetElement())+">";
-		String cell = getCell(out, context.getWidgetElement());
+		String cell = getCell(out, context.getWidgetElement(), context.getWidgetId());
 		String keyProvider = getkeyProvider(out, context.getWidgetElement());
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+cell+", "+keyProvider+");");
 	}

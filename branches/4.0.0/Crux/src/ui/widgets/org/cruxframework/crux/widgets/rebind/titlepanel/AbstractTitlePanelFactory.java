@@ -54,7 +54,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerHtml = ensureHtmlChild(context.getChildElement(),true);
+			String innerHtml = getWidgetCreator().ensureHtmlChild(context.getChildElement(),true, context.getWidgetId());
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setTitleHtml("+EscapeUtils.quote(innerHtml)+");");
 		}
@@ -66,7 +66,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(),true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setTitleText("+i18nText+");");
@@ -102,7 +102,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerHtml = ensureHtmlChild(context.getChildElement(), true);
+			String innerHtml = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(innerHtml)+");");
 		}
@@ -114,7 +114,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerText = ensureTextChild(context.getChildElement(), true);
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId());
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setContentText("+i18nText+");");

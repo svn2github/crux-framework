@@ -119,7 +119,8 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		@Override
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException 
 		{
-			context.title = getWidgetCreator().getDeclaredMessage(ensureTextChild(context.getChildElement(), true));
+			context.title = getWidgetCreator().getDeclaredMessage(getWidgetCreator().
+					ensureTextChild(context.getChildElement(), true, context.getWidgetId()));
 			context.isHTMLTitle = false;
 		}
 	}
@@ -130,7 +131,7 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		@Override
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException 
 		{
-			context.title = ensureHtmlChild(context.getChildElement(), true);
+			context.title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
 			if (context.title != null)
 			{
 				context.title = EscapeUtils.quote(context.title);

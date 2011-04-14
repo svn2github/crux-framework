@@ -267,7 +267,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			String columnDefinitionsClassName = org.cruxframework.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
 			out.println(columnDefinitionsClassName+" "+colDefs+" = new "+columnDefinitionsClassName+"();");
 
-			JSONArray colElems = ensureChildren(gridElem, false);
+			JSONArray colElems = widgetCreator.ensureChildren(gridElem, false, gridId);
 			int colsSize = colElems.length();
 			if(colsSize > 0)
 			{
@@ -378,7 +378,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		
 		out.println(ColumnDefinitions.class.getCanonicalName()+" "+defs+" = new "+ColumnDefinitions.class.getCanonicalName()+"();");
 
-		JSONArray colElems = ensureChildren(context.getWidgetElement(), false);
+		JSONArray colElems = ensureChildren(context.getWidgetElement(), false, context.getWidgetId());
 		int colsSize = colElems.length();
 		if(colsSize > 0)
 		{
@@ -460,7 +460,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    out.println(className+" "+colDef+" = new "+className+"(){");
 	    out.println("public Widget createWidgetForColumn(){");
 	    
-	    JSONObject child = ensureFirstChild(colElem, false);
+	    JSONObject child = ensureFirstChild(colElem, false, context.getWidgetId());
 		String childWidget = createChildWidget(out, child, false, context);
         out.println("return "+childWidget+";");
 	    
