@@ -17,9 +17,11 @@ package org.cruxframework.crux.tools.projectgen;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
@@ -45,11 +47,18 @@ public class DependenciesChecker
 	private static final String REPO_GWT_SERVLET_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-servlet/2.2.0/gwt-servlet-2.2.0.jar";
 	private static final String REPO_GWT_USER_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-user/2.2.0/gwt-user-2.2.0.jar";
 	private static final String REPO_GWT_DEV_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/2.2.0/gwt-dev-2.2.0.jar";
+	private static final String REPO_SHINDIG_WAR = "http://repo2.maven.org/maven2/org/apache/shindig/shindig-server/2.0.0/shindig-server-2.0.0.war";
 
 	private static final int GWT_DEV_TOTAL_BYTES = 27914742;
 	private static final int GWT_USER_TOTAL_BYTES = 10682696;
 	private static final int GWT_SERVLET_TOTAL_BYTES = 4380952;
-	private static final int GWT_SERVLET__DEPS_TOTAL_BYTES = 84088;
+	private static final int GWT_SERVLET_DEPS_TOTAL_BYTES = 84088;
+	private static final int SHINDIG_TOTAL_BYTES = 18902990;
+
+	private boolean downloadDependenciesIfNeeded;
+	private boolean downloadOptionalDependenciesIfNeeded;
+	private String gwtFolder;
+	private String shindigFolder;
 	
 	/**
      * Check all crux dependencies. If needed (and requested) install the jars.
@@ -70,8 +79,10 @@ public class DependenciesChecker
 			else
 			{
 				boolean downloadDependenciesIfNeeded = parameters.containsKey("-downloadDependencies");
+				boolean downloadOptionalDependenciesIfNeeded = parameters.containsKey("-downloadOptionalDependencies");
 				String gwtFolder = parameters.containsKey("gwtFolder")?parameters.get("gwtFolder").getValue():null;
-				checkDependencies(downloadDependenciesIfNeeded, gwtFolder);
+				String shindigFolder = parameters.containsKey("shindigFolder")?parameters.get("shindigFolder").getValue():null;
+				new DependenciesChecker(downloadDependenciesIfNeeded, downloadOptionalDependenciesIfNeeded, gwtFolder, shindigFolder).checkDependencies();
 			}
 		}
 		catch (ConsoleParametersProcessingException e)
@@ -81,17 +92,29 @@ public class DependenciesChecker
 		}
 		catch (Exception e) 
 		{
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			System.exit(1);
 		}
     }
 
 	/**
-	 * Ensure that all required jars are present. If not try to install them or raise an error.
 	 * @param downloadDependenciesIfNeeded - if true, makes Crux to try retrieve the jars from a maven repository.
-	 * @param gwtFolder - If not null, try to install the jars from a folder on disk.
+	 * @param downloadOptionalDependenciesIfNeeded if true, makes Crux to try retrieve optional dependencies from a maven repository.
+	 * @param gwtFolder If not null, try to install the jars from a folder on disk.
+	 * @param shindigFolder If not null, try to install the shindig from a folder on disk.
 	 */
-	private static void checkDependencies(boolean downloadDependenciesIfNeeded, String gwtFolder)
+	private DependenciesChecker(boolean downloadDependenciesIfNeeded, boolean downloadOptionalDependenciesIfNeeded, String gwtFolder, String shindigFolder)
+	{
+		this.downloadDependenciesIfNeeded = downloadDependenciesIfNeeded;
+		this.downloadOptionalDependenciesIfNeeded = downloadOptionalDependenciesIfNeeded;
+		this.gwtFolder = gwtFolder;
+		this.shindigFolder = shindigFolder;
+	}
+	
+	/**
+	 * Ensure that all required jars are present. If not try to install them or raise an error.
+	 */
+	private void checkDependencies()
     {
 		List<Dependency> requiredDeps = new ArrayList<Dependency>();
 		
@@ -113,16 +136,12 @@ public class DependenciesChecker
 /*		jarFile = new File("./lib/web-inf/gwt-servlet-deps.jar");
 		if (!jarFile.exists())
 		{
-			requiredDeps.add(new Dependency("gwt-servlet-deps.jar", "./lib/web-inf", REPO_GWT_SERVLET_DEPS_JAR));
+			requiredDeps.add(new Dependency("gwt-servlet-deps.jar", "./lib/web-inf", REPO_GWT_SERVLET_DEPS_JAR, GWT_SERVLET_DEPS_TOTAL_BYTES));
 		}
 */		
 		if (requiredDeps.size() > 0)
 		{
-			if (!downloadDependenciesIfNeeded && (gwtFolder == null || gwtFolder.length() == 0))
-			{
-				throw new RuntimeException("Crux required jars are missing! Please run again passing [-downloadDependencies]" +
-						" or [gwtFolder] option. For help, call passing [-h] option.");
-			}
+			getRequiredDependencies();
 
 			if (gwtFolder != null && gwtFolder.length() > 0)
 			{
@@ -133,6 +152,107 @@ public class DependenciesChecker
 				downloadCruxDependencies(requiredDeps);
 			}
 		}
+		
+		checkOptionalDependencies();
+    }
+
+	/**
+	 * Check if optional dependencies are present. If not ask user if we need to try to install them.
+	 */
+	private void checkOptionalDependencies()
+    {
+		File warFile = new File("./shindig/shindig.war");
+		if (!warFile.exists())
+		{
+			getOptionalDependencies();
+			if (downloadOptionalDependenciesIfNeeded)
+			{
+				downloadDependency(new Dependency("shindig.war", "./shindig", REPO_SHINDIG_WAR, SHINDIG_TOTAL_BYTES));
+			}
+		}
+    }
+
+	/**
+	 * Ask user if we need to retrieve the optional dependencies
+	 */
+	private void getOptionalDependencies()
+    {
+	    try
+        {
+	        if (!downloadOptionalDependenciesIfNeeded && (shindigFolder == null || shindigFolder.length() == 0))
+	        {
+	        	System.out.println("Crux optional dependencies are missing! (needed if you want to create gadgets). Type one of the options and press enter:");
+	        	String option = null;
+	        	
+	        	while (option == null || (!option.equals("1") && option.equals("2") && option.equals("3")))
+	        	{
+	        		System.out.println("\t1) To download from the web.");
+	        		System.out.println("\t2) To copy from a folder on your disk.");
+	        		System.out.println("\t3) To finish the installation.");
+
+	        		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	        		option = reader.readLine();
+
+	        		if (option.equals("1"))
+	        		{
+	        			downloadOptionalDependenciesIfNeeded = true;
+	        		}
+	        		else if (option.equals("2"))
+	        		{
+		        		System.out.println("\tType the shindig folder and press enter:");
+		        		shindigFolder = reader.readLine();
+	        		}
+	        		else if (option.equals("3"))
+	        		{
+		        		System.out.println("\tIf you want to download the optional dependencies, just run again this program.");
+	        		}
+	        	}
+	        	
+	        }
+        }
+        catch (IOException e)
+        {
+	        throw new RuntimeException("Error reading system input.", e);
+        }
+    }
+
+	/**
+	 * Retrieve the dependencies
+	 */
+	private void getRequiredDependencies()
+    {
+	    try
+        {
+	        if (!downloadDependenciesIfNeeded && (gwtFolder == null || gwtFolder.length() == 0))
+	        {
+	        	System.out.println("Crux required jars are missing! Type one of the options and press enter:");
+	        	String option = null;
+	        	
+	        	while (option == null || (!option.equals("1") && option.equals("2")))
+	        	{
+	        		System.out.println("\t1) To download from the web.");
+	        		System.out.println("\t2) To copy from a folder on your disk.");
+
+	        		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	        		option = reader.readLine();
+
+	        		if (option.equals("1"))
+	        		{
+	        			downloadDependenciesIfNeeded = true;
+	        		}
+	        		else if (option.equals("2"))
+	        		{
+		        		System.out.println("\tType the gwt folder and press enter:");
+		        		gwtFolder = reader.readLine();
+	        		}
+	        	}
+	        	
+	        }
+        }
+        catch (IOException e)
+        {
+	        throw new RuntimeException("Error reading system input.", e);
+        }
     }
 
 	/**
@@ -140,7 +260,7 @@ public class DependenciesChecker
 	 * @param requiredDeps Dependencies to install
 	 * @param gwtFolder The folder
 	 */
-	private static void copyCruxDependencies(List<Dependency> requiredDeps, File gwtFolder)
+	private void copyCruxDependencies(List<Dependency> requiredDeps, File gwtFolder)
     {
 	    System.out.println("Copying required jars from folder "+gwtFolder.getName()+"...");
 		if (!gwtFolder.exists())
@@ -167,7 +287,7 @@ public class DependenciesChecker
 	 * Retrieve the jars from the web.
 	 * @param requiredDeps Dependencies to install
 	 */
-	private static void downloadCruxDependencies(List<Dependency> requiredDeps)
+	private void downloadCruxDependencies(List<Dependency> requiredDeps)
     {
 	    System.out.println("Downloading required jars...");
 	    for (Dependency dependency : requiredDeps)
@@ -182,7 +302,7 @@ public class DependenciesChecker
 	 * Retrieve a jar file from the web.
 	 * @param requiredDeps Dependencies to install
 	 */
-	private static void downloadDependency(Dependency dependency)
+	private void downloadDependency(Dependency dependency)
 	{
 		BufferedInputStream in = null;
 		BufferedOutputStream out = null;
@@ -216,7 +336,7 @@ public class DependenciesChecker
 		}
 		catch (Exception e) 
 		{
-			throw new RuntimeException("Error downloading file "+ dependency.getJarName());
+			throw new RuntimeException("Error downloading file "+ dependency.getJarName(), e);
 		}
 		finally
 		{
@@ -241,6 +361,7 @@ public class DependenciesChecker
 		parameter.addParameterOption(new ConsoleParameterOption("folderName", "The name of the folder"));
 		parametersProcessor.addSupportedParameter(parameter);
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-downloadDependencies", "Download and install dependencies before start.", false, true));
+		parametersProcessor.addSupportedParameter(new ConsoleParameter("-downloadOptionalDependencies", "Download and install optional dependencies before start.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-help", "Display the usage screen.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-h", "Display the usage screen.", false, true));
 		return parametersProcessor;

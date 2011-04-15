@@ -69,4 +69,9 @@ public interface ClassPathResolver
 	 * @param url list of applications web folders
 	 */
 	void setWebBaseDirs(URL[] url);
+
+	/**
+	 * Initialize the classpath resolver
+	 */
+	void initialize();
 }

@@ -96,8 +96,14 @@ public class CruxProjectGenerator
 		String hostedModeVMArgs = config.getProperty(Names.hostedModeVMArgs);
 		String appDescription = config.getProperty(Names.appDescription);
 		
-		return new CruxProjectGeneratorOptions(workspaceDir, projectName, hostedModeStartupModule, hostedModeStartupURL, 
-											   hostedModeVMArgs, projectLayout, appDescription);
+		CruxProjectGeneratorOptions options = new CruxProjectGeneratorOptions(workspaceDir, projectName, hostedModeStartupModule);
+		
+		options.setHostedModeStartupURL(hostedModeStartupURL);
+		options.setProjectLayout(projectLayout);
+		options.setHostedModeVMArgs(hostedModeVMArgs);
+		options.setAppDescription(appDescription);
+		
+		return options;
 	}
 
 	/**
@@ -132,6 +138,29 @@ public class CruxProjectGenerator
 			this.replacements.add(new String[]{"moduleSimpleNameUpperCase", this.options.getModuleSimpleName()});
 			this.replacements.add(new String[]{"moduleSimpleName", this.options.getModuleSimpleName().toLowerCase()});
 			this.replacements.add(new String[]{"modulePackage", this.options.getModulePackage()});
+
+			this.replacements.add(new String[]{"gadgetUseLongManifestName", Boolean.toString(this.options.isGadgetUseLongManifestName())});
+			this.replacements.add(new String[]{"gadgetAuthor", this.options.getGadgetAuthor()});
+			this.replacements.add(new String[]{"gadgetAuthorAboutMe", this.options.getGadgetAuthorAboutMe()});
+			this.replacements.add(new String[]{"gadgetAuthorAffiliation", this.options.getGadgetAuthorAffiliation()});
+			this.replacements.add(new String[]{"gadgetAuthorEmail", this.options.getGadgetAuthorEmail()});
+			this.replacements.add(new String[]{"gadgetAuthorLink", this.options.getGadgetAuthorLink()});
+			this.replacements.add(new String[]{"gadgetAuthorLocation", this.options.getGadgetAuthorLocation()});
+			this.replacements.add(new String[]{"gadgetAuthorPhoto", this.options.getGadgetAuthorPhoto()});
+			this.replacements.add(new String[]{"gadgetAuthorQuote", this.options.getGadgetAuthorQuote()});
+			this.replacements.add(new String[]{"gadgetDescription", this.options.getGadgetDescription()});
+			this.replacements.add(new String[]{"gadgetDirectoryTitle", this.options.getGadgetDirectoryTitle()});
+			this.replacements.add(new String[]{"gadgetHeight", Integer.toString(this.options.getGadgetHeight())});
+			this.replacements.add(new String[]{"gadgetWidth", Integer.toString(this.options.getGadgetWidth())});
+			this.replacements.add(new String[]{"gadgetScreenshot", this.options.getGadgetScreenshot()});
+			this.replacements.add(new String[]{"gadgetThumbnail", this.options.getGadgetThumbnail()});
+			this.replacements.add(new String[]{"gadgetTitle", this.options.getGadgetTitle()});
+			this.replacements.add(new String[]{"gadgetTitleUrl", this.options.getGadgetTitleUrl()});
+			this.replacements.add(new String[]{"gadgetScrolling", Boolean.toString(this.options.isGadgetScrolling())});
+			this.replacements.add(new String[]{"gadgetSingleton", Boolean.toString(this.options.isGadgetSingleton())});
+			this.replacements.add(new String[]{"gadgetScaling", Boolean.toString(this.options.isGadgetScaling())});
+			this.replacements.add(new String[]{"gadgetFeatures", this.options.getGadgetFeatures()});
+			this.replacements.add(new String[]{"gadgetLocales", this.options.getGadgetLocales()});
 		}
 		
 		return this.replacements;
@@ -157,7 +186,8 @@ public class CruxProjectGenerator
 		
 		getReplacements().add(new String[]{"classpathLibs", libs.toString()});
 		
-		if (this.options.getProjectLayout().equals(ProjectLayout.MONOLITHIC_APP))
+		if (this.options.getProjectLayout().equals(ProjectLayout.MONOLITHIC_APP) ||
+			this.options.getProjectLayout().equals(ProjectLayout.GADGET_APP))
 		{
 			createFile(options.getProjectDir(), ".classpath", "classpath.xml");
 		}
@@ -178,6 +208,13 @@ public class CruxProjectGenerator
 		if (this.options.getProjectLayout().equals(ProjectLayout.MODULE_APP))
 		{
 			createFile(buildLibDir.getParentFile(), "build.xml", "modules/build.xml");
+		}
+		if (this.options.getProjectLayout().equals(ProjectLayout.GADGET_APP))
+		{
+			File webInfLibDir = getWebInfLibDir();
+			FileUtils.copyFilesFromDir(new File(options.getLibDir(), "gadget/build"), buildLibDir);
+			FileUtils.copyFilesFromDir(new File(options.getLibDir(), "gadget/web-inf"), webInfLibDir);
+			createFile(buildLibDir.getParentFile(), "build.xml", "gadget/build.xml");
 		}
 		else if (this.options.getProjectLayout().equals(ProjectLayout.MODULE_CONTAINER_APP))
 		{
@@ -229,6 +266,10 @@ public class CruxProjectGenerator
 		{
 			createFile(options.getProjectDir(), options.getProjectName() + ".launch", "modules/launch.xml");
 		}
+		else if (this.options.getProjectLayout().equals(ProjectLayout.GADGET_APP))
+		{
+			createFile(options.getProjectDir(), options.getProjectName() + ".launch", "gadget/launch.xml");
+		}
 		else
 		{
 			createFile(options.getProjectDir(), options.getProjectName() + ".launch", "launch.xml");
@@ -264,6 +305,12 @@ public class CruxProjectGenerator
 			createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "modules/module.xml");
 			createFile(moduleDir, this.options.getModuleSimpleName() + ".module.xml", "modules/ModuleInfo.module.xml");
 		}
+		else if (this.options.getProjectLayout().equals(ProjectLayout.GADGET_APP))
+		{
+			createFile(sourceDir, "Crux.properties", "gadget/crux.properties.txt");
+			createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "gadget/module.xml");
+			createFile(clientPackage,  this.options.getProjectName()+".java", "gadget/GadgetDescriptor.java.txt");
+		}
 		else
 		{
 			createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "module.xml");
@@ -290,6 +337,11 @@ public class CruxProjectGenerator
 		{
 			createFile(getWebInfLibDir().getParentFile(), "web.xml", "modules/web.xml");
 			createFile(getModulePublicDir(), pageName, "modules/index.crux.xml");
+		}
+		else if (this.options.getProjectLayout().equals(ProjectLayout.GADGET_APP))
+		{
+			createFile(getWebInfLibDir().getParentFile(), "web.xml", "modules/web.xml");
+			createFile(getWarDir(), pageName, "gadget/index.crux.xml");
 		}
 		else
 		{

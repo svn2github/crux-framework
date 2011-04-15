@@ -28,31 +28,55 @@ import org.cruxframework.crux.core.utils.FileUtils;
  */
 public class CruxProjectGeneratorOptions
 {
-	private final String appDescription;
+	private String appDescription;
 	private final String hostedModeStartupModule;
-	private final String hostedModeStartupURL;
-	private final String hostedModeVMArgs;
-	private File libDir;
+	private String hostedModeStartupURL;
+	private String hostedModeVMArgs;
+	private final File libDir;
 	private final String modulePackage;
 	private final String moduleSimpleName;
-	private File projectDir;
+	private final File projectDir;
 	private final String projectName;
 	
-	private final ProjectLayout projectLayout;
+	private ProjectLayout projectLayout;
 	private final File workspaceDir;
 
-	public CruxProjectGeneratorOptions(File workspaceDir, String projectName, String hostedModeStartupModule, String hostedModeStartupURL,
-			String hostedModeVMArgs, ProjectLayout projectLayout, String appDescription) throws Exception
+	private boolean gadgetUseLongManifestName = false;
+	private String gadgetAuthor = "";
+	private String gadgetAuthorAboutMe = "";
+	private String gadgetAuthorAffiliation = "";
+	private String gadgetAuthorEmail = "";
+	private String gadgetAuthorLink = "";
+	private String gadgetAuthorLocation = "";
+	private String gadgetAuthorPhoto = "";
+	private String gadgetAuthorQuote = "";
+	private String gadgetDescription = "";
+	private String gadgetDirectoryTitle = "";
+	private int gadgetHeight = 200;
+	private int gadgetWidth = 320;
+	private String gadgetLocales = "{}";
+	private String gadgetScreenshot = "";
+	private String gadgetThumbnail = "";
+	private boolean gadgetScrolling = false;
+	private boolean gadgetSingleton = true;
+	private boolean gadgetScaling = true;
+	private String gadgetTitle = "";
+	private String gadgetTitleUrl = "";
+	private String gadgetFeatures = "";
+
+	/**
+	 * @param workspaceDir
+	 * @param projectName
+	 * @param hostedModeStartupModule
+	 * @throws Exception
+	 */
+	public CruxProjectGeneratorOptions(File workspaceDir, String projectName, String hostedModeStartupModule) throws Exception
     {
 		this.workspaceDir = workspaceDir;
 		this.projectName = projectName;
 		this.hostedModeStartupModule = hostedModeStartupModule;
-		this.hostedModeStartupURL = hostedModeStartupURL;
-		this.hostedModeVMArgs = hostedModeVMArgs;
-		this.appDescription = appDescription;
 		this.moduleSimpleName = getModuleSimpleName(hostedModeStartupModule) ;
 		this.modulePackage = getModulePackage(hostedModeStartupModule);
-		this.projectLayout = projectLayout;
 		
 		this.projectDir = createProjectDir();
 		this.libDir = findLibDir();
@@ -119,6 +143,246 @@ public class CruxProjectGeneratorOptions
 		return projectLayout;
 	}		
 
+	public boolean isGadgetUseLongManifestName()
+    {
+    	return gadgetUseLongManifestName;
+    }
+
+	public void setGadgetUseLongManifestName(boolean gadgetUseLongManifestName)
+    {
+    	this.gadgetUseLongManifestName = gadgetUseLongManifestName;
+    }
+
+	public String getGadgetAuthorAboutMe()
+    {
+    	return gadgetAuthorAboutMe;
+    }
+
+	public void setGadgetAuthorAboutMe(String gadgetAuthorAboutMe)
+    {
+    	this.gadgetAuthorAboutMe = gadgetAuthorAboutMe;
+    }
+
+	public String getGadgetAuthorAffiliation()
+    {
+    	return gadgetAuthorAffiliation;
+    }
+
+	public void setGadgetAuthorAffiliation(String gadgetAuthorAffiliation)
+    {
+    	this.gadgetAuthorAffiliation = gadgetAuthorAffiliation;
+    }
+
+	public String getGadgetAuthorEmail()
+    {
+    	return gadgetAuthorEmail;
+    }
+
+	public void setGadgetAuthorEmail(String gadgetAuthorEmail)
+    {
+    	this.gadgetAuthorEmail = gadgetAuthorEmail;
+    }
+
+	public String getGadgetAuthorLink()
+    {
+    	return gadgetAuthorLink;
+    }
+
+	public void setGadgetAuthorLink(String gadgetAuthorLink)
+    {
+    	this.gadgetAuthorLink = gadgetAuthorLink;
+    }
+
+	public String getGadgetAuthorLocation()
+    {
+    	return gadgetAuthorLocation;
+    }
+
+	public void setGadgetAuthorLocation(String gadgetAuthorLocation)
+    {
+    	this.gadgetAuthorLocation = gadgetAuthorLocation;
+    }
+
+	public String getGadgetAuthorPhoto()
+    {
+    	return gadgetAuthorPhoto;
+    }
+
+	public void setGadgetAuthorPhoto(String gadgetAuthorPhoto)
+    {
+    	this.gadgetAuthorPhoto = gadgetAuthorPhoto;
+    }
+
+	public String getGadgetAuthor()
+    {
+    	return gadgetAuthor;
+    }
+
+	public void setGadgetAuthor(String gadgetAuthor)
+    {
+    	this.gadgetAuthor = gadgetAuthor;
+    }
+
+	public String getGadgetAuthorQuote()
+    {
+    	return gadgetAuthorQuote;
+    }
+
+	public void setGadgetAuthorQuote(String gadgetAuthorQuote)
+    {
+    	this.gadgetAuthorQuote = gadgetAuthorQuote;
+    }
+
+	public String getGadgetDescription()
+    {
+    	return gadgetDescription;
+    }
+
+	public void setGadgetDescription(String gadgetDescription)
+    {
+    	this.gadgetDescription = gadgetDescription;
+    }
+
+	public String getGadgetDirectoryTitle()
+    {
+    	return gadgetDirectoryTitle;
+    }
+
+	public void setGadgetDirectoryTitle(String gadgetDirectoryTitle)
+    {
+    	this.gadgetDirectoryTitle = gadgetDirectoryTitle;
+    }
+
+	public int getGadgetHeight()
+    {
+    	return gadgetHeight;
+    }
+
+	public void setGadgetHeight(int gadgetHeight)
+    {
+    	this.gadgetHeight = gadgetHeight;
+    }
+
+	public int getGadgetWidth()
+    {
+    	return gadgetWidth;
+    }
+
+	public void setGadgetWidth(int gadgetWidth)
+    {
+    	this.gadgetWidth = gadgetWidth;
+    }
+
+	public String getGadgetLocales()
+    {
+    	return gadgetLocales;
+    }
+
+	public void setGadgetLocales(String gadgetLocales)
+    {
+    	this.gadgetLocales = gadgetLocales;
+    }
+
+	public String getGadgetScreenshot()
+    {
+    	return gadgetScreenshot;
+    }
+
+	public void setGadgetScreenshot(String gadgetScreenshot)
+    {
+    	this.gadgetScreenshot = gadgetScreenshot;
+    }
+
+	public String getGadgetThumbnail()
+    {
+    	return gadgetThumbnail;
+    }
+
+	public void setGadgetThumbnail(String gadgetThumbnail)
+    {
+    	this.gadgetThumbnail = gadgetThumbnail;
+    }
+
+	public boolean isGadgetScrolling()
+    {
+    	return gadgetScrolling;
+    }
+
+	public void setGadgetScrolling(boolean gadgetScrolling)
+    {
+    	this.gadgetScrolling = gadgetScrolling;
+    }
+
+	public boolean isGadgetSingleton()
+    {
+    	return gadgetSingleton;
+    }
+
+	public void setGadgetSingleton(boolean gadgetSingleton)
+    {
+    	this.gadgetSingleton = gadgetSingleton;
+    }
+
+	public boolean isGadgetScaling()
+    {
+    	return gadgetScaling;
+    }
+
+	public void setGadgetScaling(boolean gadgetScaling)
+    {
+    	this.gadgetScaling = gadgetScaling;
+    }
+
+	public String getGadgetTitle()
+    {
+    	return gadgetTitle;
+    }
+
+	public void setGadgetTitle(String gadgetTitle)
+    {
+    	this.gadgetTitle = gadgetTitle;
+    }
+
+	public String getGadgetTitleUrl()
+    {
+    	return gadgetTitleUrl;
+    }
+
+	public void setGadgetTitleUrl(String gadgetTitleUrl)
+    {
+    	this.gadgetTitleUrl = gadgetTitleUrl;
+    }
+
+	public String getGadgetFeatures()
+    {
+    	return gadgetFeatures;
+    }
+
+	public void setGadgetFeatures(String gadgetFeatures)
+    {
+    	this.gadgetFeatures = gadgetFeatures;
+    }
+
+	public void setAppDescription(String appDescription)
+    {
+    	this.appDescription = appDescription;
+    }
+
+	public void setHostedModeStartupURL(String hostedModeStartupURL)
+    {
+    	this.hostedModeStartupURL = hostedModeStartupURL;
+    }
+
+	public void setHostedModeVMArgs(String hostedModeVMArgs)
+    {
+    	this.hostedModeVMArgs = hostedModeVMArgs;
+    }
+
+	public void setProjectLayout(ProjectLayout projectLayout)
+    {
+    	this.projectLayout = projectLayout;
+    }
+
 	/**
 	 * @return
 	 * @throws IOException
@@ -184,6 +448,7 @@ public class CruxProjectGeneratorOptions
 	{
 		MONOLITHIC_APP,
 		MODULE_APP,
-		MODULE_CONTAINER_APP;
+		MODULE_CONTAINER_APP,
+		GADGET_APP;
 	}
 }

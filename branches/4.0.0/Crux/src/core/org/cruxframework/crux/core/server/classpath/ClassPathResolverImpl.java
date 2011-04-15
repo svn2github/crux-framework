@@ -140,6 +140,17 @@ public class ClassPathResolverImpl implements ClassPathResolver
 	}
 	
 	/**
+	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#initialize()
+	 */
+	public void initialize()
+    {
+		findWebBaseDirs();
+		findWebInfClassesPath();
+		findWebInfLibJars();
+		findWebInfLibPath();
+    }
+
+	/**
 	 * @see org.cruxframework.crux.core.server.classpath.ClassPathResolver#setWebBaseDirs(java.net.URL[])
 	 */
 	public synchronized void setWebBaseDirs(URL[] url)
