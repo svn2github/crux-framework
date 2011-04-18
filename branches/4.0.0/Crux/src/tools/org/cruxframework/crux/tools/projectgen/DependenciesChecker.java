@@ -181,7 +181,7 @@ public class DependenciesChecker
         {
 	        if (!downloadOptionalDependenciesIfNeeded && (shindigFolder == null || shindigFolder.length() == 0))
 	        {
-	        	System.out.println("Crux optional dependencies are missing! (needed if you want to create gadgets). Type one of the options and press enter:");
+	        	System.out.println("Do you want to install shindig, required to work with gadgets?. Type one of the options and press enter:");
 	        	String option = null;
 	        	
 	        	while (option == null || (!option.equals("1") && option.equals("2") && option.equals("3")))
@@ -225,7 +225,7 @@ public class DependenciesChecker
         {
 	        if (!downloadDependenciesIfNeeded && (gwtFolder == null || gwtFolder.length() == 0))
 	        {
-	        	System.out.println("Crux required jars are missing! Type one of the options and press enter:");
+	        	System.out.println("To complete the installation, you need the GWT jars! Type one of the options and press enter:");
 	        	String option = null;
 	        	
 	        	while (option == null || (!option.equals("1") && option.equals("2")))
