@@ -31,4 +31,7 @@ public interface QuickStartServerMessages
 	
 	@DefaultServerMessage("Module Container Application")
 	String projectLayoutModuleContainerApp();
+
+	@DefaultServerMessage("Gadget Application")
+	String projectLayoutGadgetApp();
 }

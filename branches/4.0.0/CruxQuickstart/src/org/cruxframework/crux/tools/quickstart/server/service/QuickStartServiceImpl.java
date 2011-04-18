@@ -73,6 +73,7 @@ public class QuickStartServiceImpl implements QuickStartService
 	        info.addProjectLayout(messages.projectLayoutMonolithicApp(), ProjectLayout.MONOLITHIC_APP.name());
 	        info.addProjectLayout(messages.projectLayoutModuleApp(), ProjectLayout.MODULE_APP.name());
 	        info.addProjectLayout(messages.projectLayoutModuleContainerApp(), ProjectLayout.MODULE_CONTAINER_APP.name());
+	        info.addProjectLayout(messages.projectLayoutGadgetApp(), ProjectLayout.GADGET_APP.name());
 	        
         }
         catch (Exception e)
@@ -91,11 +92,14 @@ public class QuickStartServiceImpl implements QuickStartService
 		try
         {
 			CruxProjectGeneratorOptions options = new CruxProjectGeneratorOptions(new File(projectInfo.getWorkspaceDir()), 
-					projectInfo.getProjectName(), projectInfo.getHostedModeStartupModule(), 
-					projectInfo.getHostedModeStartupURL(), projectInfo.getHostedModeVMArgs(), 
-					ProjectLayout.valueOf(projectInfo.getProjectLayout()), projectInfo.getAppDescription());
-			
-	        new CruxProjectGenerator(options).generate();
+					projectInfo.getProjectName(), projectInfo.getHostedModeStartupModule());
+
+			options.setHostedModeStartupURL(projectInfo.getHostedModeStartupURL());
+			options.setProjectLayout(ProjectLayout.valueOf(projectInfo.getProjectLayout()));
+			options.setHostedModeVMArgs(projectInfo.getHostedModeVMArgs());
+			options.setAppDescription(projectInfo.getAppDescription());
+
+			new CruxProjectGenerator(options).generate();
 	        return true;
         }
         catch (Exception e)
