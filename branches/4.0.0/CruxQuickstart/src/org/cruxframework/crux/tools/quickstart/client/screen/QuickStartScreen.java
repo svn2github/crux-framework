@@ -18,6 +18,7 @@ package org.cruxframework.crux.tools.quickstart.client.screen;
 import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
 import org.cruxframework.crux.widgets.client.select.SingleSelect;
+import org.cruxframework.crux.widgets.client.transferlist.TransferList;
 import org.cruxframework.crux.widgets.client.wizard.Wizard;
 
 import com.google.gwt.user.client.ui.FlexTable;
@@ -34,4 +35,6 @@ public interface QuickStartScreen extends ScreenWrapper
 	Wizard<?> getQuickstartWizard();
 	RollingPanel getDirSelectorRollingPanel();
 	VerticalPanel getDirSelectorBox();
+	FlexTable getGadgetInfo();
+	TransferList getFeatures();
 }

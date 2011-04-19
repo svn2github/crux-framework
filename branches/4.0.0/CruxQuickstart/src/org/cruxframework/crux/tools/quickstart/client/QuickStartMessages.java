@@ -43,6 +43,9 @@ public interface QuickStartMessages extends Messages
 	
 	@DefaultMessage("Project Information")
 	String projectInfo();
+	
+	@DefaultMessage("Gadget Information")
+	String gadgetInfo();
 
 	@DefaultMessage("Project Name:")
 	String projectName();
@@ -98,6 +101,9 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Fill in the basic information of your project:")
 	String projectInfoTitle();
 	
+	@DefaultMessage("Fill in the basic information of your gadget project:")
+	String gadgetInfoTitle();
+	
 	@DefaultMessage("The name of your project. This will be used to generate an Eclipse Project for you. Because some project''s resources will inherit this name, we recomend you to avoid special or blank characters.")
 	String projectNameHelpText();
 	
@@ -130,4 +136,148 @@ public interface QuickStartMessages extends Messages
 	
 	@DefaultMessage("Hello World")
 	String openHelloWorld();
+	
+	@DefaultMessage("Use Long Manifest Name:")
+	String useLongManifestName();
+	
+	@DefaultMessage("Enabing this will make Crux use manifests with long names. The name of the manifest file will be generated using the module package name as suffix.")
+	String useLongManifestNameHelpText();
+
+	@DefaultMessage("Author:")
+	String author();
+	
+	@DefaultMessage("The Author property of this gadget.")
+	String authorHelpText();
+
+	@DefaultMessage("About Me:")
+	String authorAboutMe();
+	
+	@DefaultMessage("The Author About-Me property of this gadget.")
+	String authorAboutMeHelpText();
+	
+	@DefaultMessage("Affiliation:")
+	String authorAffiliation();
+	
+	@DefaultMessage("The Author Affiliation property of this gadget.")
+	String authorAffiliationHelpText();
+	
+	@DefaultMessage("Email:")
+	String authorEmail();
+	
+	@DefaultMessage("The Author Email property of this gadget.")
+	String authorEmailHelpText();
+	
+	@DefaultMessage("Link:")
+	String authorLink();
+	
+	@DefaultMessage("The Author Link property of this gadget.")
+	String authorLinkHelpText();
+
+	@DefaultMessage("Location:")
+	String authorLocation();
+	
+	@DefaultMessage("The Author Location property of this gadget.")
+	String authorLocationHelpText();
+	
+	@DefaultMessage("Photo:")
+	String authorPhoto();
+	
+	@DefaultMessage("The Author Photo property of this gadget.")
+	String authorPhotoHelpText();
+	
+	@DefaultMessage("Quote:")
+	String authorQuote();
+	
+	@DefaultMessage("The Author Quote property of this gadget.")
+	String authorQuoteHelpText();
+	
+	@DefaultMessage("Description:")
+	String description();
+	
+	@DefaultMessage("The Description property of this gadget.")
+	String descriptionHelpText();
+	
+	@DefaultMessage("Directory Title:")
+	String directoryTitle();
+	
+	@DefaultMessage("The Directory Title property of this gadget.")
+	String directoryTitleHelpText();
+
+	@DefaultMessage("Height:")
+	String height();
+	
+	@DefaultMessage("The Height property of this gadget.")
+	String heightHelpText();
+
+	@DefaultMessage("Width:")
+	String width();
+	
+	@DefaultMessage("The Width property of this gadget.")
+	String widthHelpText();
+	
+	@DefaultMessage("Screenshot:")
+	String screenshot();
+	
+	@DefaultMessage("The Screenshot property of this gadget.")
+	String screenshotHelpText();
+
+	@DefaultMessage("Thumbnail:")
+	String thumbnail();
+	
+	@DefaultMessage("The Thumbnail property of this gadget.")
+	String thumbnailHelpText();
+
+	@DefaultMessage("Title:")
+	String title();
+	
+	@DefaultMessage("The Title property of this gadget.")
+	String titleHelpText();
+
+	@DefaultMessage("Title URL:")
+	String titleUrl();
+	
+	@DefaultMessage("The Title URL property of this gadget.")
+	String titleUrlHelpText();
+
+	@DefaultMessage("Scrolling:")
+	String scrolling();
+	
+	@DefaultMessage("The Scrolling property of this gadget.")
+	String scrollingHelpText();
+
+	@DefaultMessage("Singleton:")
+	String singleton();
+	
+	@DefaultMessage("The Singleton property of this gadget.")
+	String singletonHelpText();
+
+	@DefaultMessage("Scaling:")
+	String scaling();
+	
+	@DefaultMessage("The Scaling property of this gadget.")
+	String scalingHelpText();
+	
+	@DefaultMessage("Locales:")
+	String locales();
+	
+	@DefaultMessage("The Locales property of this gadget. The locales must be inserted separeted by commas. Eg: pt_BR,en_US")
+	String localesHelpText();
+	
+	@DefaultMessage("Features:")
+	String features();
+	
+	@DefaultMessage("The Features needed by this gadget.")
+	String featuresHelpText();
+		
+	@DefaultMessage("Available Features")
+	String availableFeatures();
+	
+	@DefaultMessage("Choosen Features")
+	String usedFeatures();
+	
+	@DefaultMessage("User Preferences:")
+	String userPreferences();
+	
+	@DefaultMessage("The userPreferences class used by Gadget to store gadget configuration parameters.")
+	String userPreferencesHelpText();
 }

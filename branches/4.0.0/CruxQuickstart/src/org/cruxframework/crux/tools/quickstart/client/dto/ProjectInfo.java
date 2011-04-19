@@ -38,6 +38,7 @@ public class ProjectInfo implements Serializable
 	private String projectLayout;
 	private String appDescription;
 	private List<String[]> allProjectLayouts = new ArrayList<String[]>();
+	private GadgetInfo gadgetInfo;
 
 	public String getProjectName()
 	{
@@ -134,4 +135,14 @@ public class ProjectInfo implements Serializable
 	{
 		this.projectLayout = projectLayout;
 	}
+
+	public GadgetInfo getGadgetInfo()
+    {
+    	return gadgetInfo;
+    }
+
+	public void setGadgetInfo(GadgetInfo gadgetInfo)
+    {
+    	this.gadgetInfo = gadgetInfo;
+    }
 }

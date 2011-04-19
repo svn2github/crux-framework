@@ -24,6 +24,9 @@
 					<crux:widget id="projectInfoStep" label="${quickMsg.projectInfo}" >
 						<q:projectInfo/>
 					</crux:widget>
+					<crux:widget id="gagdetInfoStep" label="${quickMsg.gadgetInfo}" enabled="false" >
+						<q:gadgetInfo/>
+					</crux:widget>
 					<crux:widget id="summaryStep" label="${quickMsg.summaryQuickstartLabel}" onEnter="quickStartController.onSummaryEnter"
 								 onLeave="quickStartController.onSummaryLeave">
 						<gwt:dockPanel id="summary">

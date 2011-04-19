@@ -17,23 +17,23 @@ package org.cruxframework.crux.tools.quickstart.client.controller;
 
 import java.util.List;
 
-import org.cruxframework.crux.tools.quickstart.client.QuickStartMessages;
-import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
-import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
-import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartServiceAsync;
-import org.cruxframework.crux.tools.quickstart.client.screen.QuickStartScreen;
-
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.tools.quickstart.client.QuickStartMessages;
+import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
+import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
+import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartServiceAsync;
+import org.cruxframework.crux.tools.quickstart.client.screen.QuickStartScreen;
 import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 import org.cruxframework.crux.widgets.client.dialog.ProgressDialog;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
 import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.transferlist.TransferList.Item;
 import org.cruxframework.crux.widgets.client.wizard.WizardControlBar;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -301,6 +301,30 @@ public class QuickStartController
 		String selectedLayout = screen.getProjectLayout().getValue();
 		boolean visible = (!StringUtils.isEmpty(selectedLayout) && "MODULE_APP".equals(selectedLayout));
 		screen.getProjectInfo().getRowFormatter().setVisible(6, visible);
+		boolean gadgetVisible = (!StringUtils.isEmpty(selectedLayout) && "GADGET_APP".equals(selectedLayout));
+		screen.getQuickstartWizard().setStepEnabled("gagdetInfoStep", gadgetVisible);
+	}
+	
+	@Expose
+	public void onFeaturesChange()
+	{
+		List<Item> itens = screen.getFeatures().getRightItens();
+		if (itens != null)
+		{
+			StringBuilder str = new StringBuilder();
+			boolean needsComma = false;
+			for (Item item : itens)
+            {
+				if (needsComma)
+				{
+					str.append(",");
+				}
+				needsComma = true;
+	            str.append(item.getValue());
+            }
+			
+			projectInfo.getGadgetInfo().setFeatures(str.toString());
+		}
 	}
 
 	/**

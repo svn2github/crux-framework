@@ -25,15 +25,14 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
 import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
 import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
 import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService;
-
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator;
-import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
-import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
-import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions.ProjectLayout;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -70,10 +69,10 @@ public class QuickStartServiceImpl implements QuickStartService
 	        info.setProjectLayout(projectLayout);
 	        info.setHostedModeVMArgs(hostedModeVMArgs);
 	        
-	        info.addProjectLayout(messages.projectLayoutMonolithicApp(), ProjectLayout.MONOLITHIC_APP.name());
-	        info.addProjectLayout(messages.projectLayoutModuleApp(), ProjectLayout.MODULE_APP.name());
-	        info.addProjectLayout(messages.projectLayoutModuleContainerApp(), ProjectLayout.MODULE_CONTAINER_APP.name());
-	        info.addProjectLayout(messages.projectLayoutGadgetApp(), ProjectLayout.GADGET_APP.name());
+	        info.addProjectLayout(messages.projectLayoutMonolithicApp(), "MONOLITHIC_APP");
+	        info.addProjectLayout(messages.projectLayoutModuleApp(), "MODULE_APP");
+	        info.addProjectLayout(messages.projectLayoutModuleContainerApp(), "MODULE_CONTAINER_APP");
+	        info.addProjectLayout(messages.projectLayoutGadgetApp(), "GADGET_APP");
 	        
         }
         catch (Exception e)
@@ -91,15 +90,91 @@ public class QuickStartServiceImpl implements QuickStartService
     {
 		try
         {
-			CruxProjectGeneratorOptions options = new CruxProjectGeneratorOptions(new File(projectInfo.getWorkspaceDir()), 
-					projectInfo.getProjectName(), projectInfo.getHostedModeStartupModule());
+			CruxProjectGenerator cruxProjectGenerator = new CruxProjectGenerator(new File(projectInfo.getWorkspaceDir()), projectInfo.getProjectName(), 
+					                 projectInfo.getHostedModeStartupModule(), projectInfo.getProjectLayout());
+			
+			CruxProjectGeneratorOptions layoutParameters = cruxProjectGenerator.getLayoutParameters();
 
-			options.setHostedModeStartupURL(projectInfo.getHostedModeStartupURL());
-			options.setProjectLayout(ProjectLayout.valueOf(projectInfo.getProjectLayout()));
-			options.setHostedModeVMArgs(projectInfo.getHostedModeVMArgs());
-			options.setAppDescription(projectInfo.getAppDescription());
-
-			new CruxProjectGenerator(options).generate();
+			layoutParameters.setHostedModeStartupURL(projectInfo.getHostedModeStartupURL());
+			layoutParameters.setHostedModeVMArgs(projectInfo.getHostedModeVMArgs());
+			layoutParameters.setAppDescription(projectInfo.getAppDescription());
+			
+			layoutParameters.getOption("gadgetUseLongManifestName").setValue(Boolean.toString(projectInfo.getGadgetInfo().isUseLongManifestName()));
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthor()))
+			{
+				layoutParameters.getOption("gadgetAuthor").setValue(projectInfo.getGadgetInfo().getAuthor());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAboutMe()))
+			{
+				layoutParameters.getOption("gadgetAuthorAboutMe").setValue(projectInfo.getGadgetInfo().getAuthorAboutMe());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAffiliation()))
+			{
+				layoutParameters.getOption("gadgetAuthorAffiliation").setValue(projectInfo.getGadgetInfo().getAuthorAffiliation());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorEmail()))
+			{
+				layoutParameters.getOption("gadgetAuthorEmail").setValue(projectInfo.getGadgetInfo().getAuthorEmail());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLink()))
+			{
+				layoutParameters.getOption("gadgetAuthorLink").setValue(projectInfo.getGadgetInfo().getAuthorLink());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLocation()))
+			{
+				layoutParameters.getOption("gadgetAuthorLocation").setValue(projectInfo.getGadgetInfo().getAuthorLocation());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorPhoto()))
+			{
+				layoutParameters.getOption("gadgetAuthorPhoto").setValue(projectInfo.getGadgetInfo().getAuthorPhoto());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+			{
+				layoutParameters.getOption("gadgetAuthorQuote").setValue(projectInfo.getGadgetInfo().getAuthorQuote());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+			{
+				layoutParameters.getOption("getDescription").setValue(projectInfo.getGadgetInfo().getDescription());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+			{
+				layoutParameters.getOption("getDirectoryTitle").setValue(projectInfo.getGadgetInfo().getDirectoryTitle());
+			}
+			layoutParameters.getOption("gadgetHeight").setValue(Integer.toString(projectInfo.getGadgetInfo().getHeight()));
+			layoutParameters.getOption("gadgetWidth").setValue(Integer.toString(projectInfo.getGadgetInfo().getWidth()));
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getScreenshot()))
+			{
+				layoutParameters.getOption("gadgetScreenshot").setValue(projectInfo.getGadgetInfo().getScreenshot());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getThumbnail()))
+			{
+				layoutParameters.getOption("gadgetThumbnail").setValue(projectInfo.getGadgetInfo().getThumbnail());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitle()))
+			{
+				layoutParameters.getOption("gadgetTitle").setValue(projectInfo.getGadgetInfo().getTitle());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitleUrl()))
+			{
+				layoutParameters.getOption("gadgetTitleUrl").setValue(projectInfo.getGadgetInfo().getTitleUrl());
+			}
+			layoutParameters.getOption("gadgetScrolling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScrolling()));
+			layoutParameters.getOption("gadgetSingleton").setValue(Boolean.toString(projectInfo.getGadgetInfo().isSingleton()));
+			layoutParameters.getOption("gadgetScaling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScaling()));
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getLocales()))
+			{
+				layoutParameters.getOption("gadgetLocales").setValue(projectInfo.getGadgetInfo().getLocales());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getFeatures()))
+			{
+				layoutParameters.getOption("gadgetFeatures").setValue(projectInfo.getGadgetInfo().getFeatures());
+			}
+			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getUserPreferences()))
+			{
+				layoutParameters.getOption("gadgetUserPreferences").setValue(projectInfo.getGadgetInfo().getUserPreferences());
+			}
+			
+    		cruxProjectGenerator.generate();
 	        return true;
         }
         catch (Exception e)
