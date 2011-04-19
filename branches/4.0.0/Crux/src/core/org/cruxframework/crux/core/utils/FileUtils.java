@@ -17,10 +17,19 @@ package org.cruxframework.crux.core.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author Gesse S. F. Dafe - <code>gesse@sysmap.com.br</code>
@@ -232,5 +241,153 @@ public class FileUtils
 		{
 			StreamUtils.write(new FileInputStream(sourceLocation), new FileOutputStream(targetLocation), true);
 		}
-	}	
+	}
+	
+	/**
+	 * Recursively gets all files with a given extension contained in a directory
+	 * @param path
+	 * @param extension
+	 * @param result
+	 */
+	public static List<File> scanFiles(File path, final String extension, ArrayList<File> result)
+	{
+		if(path.isDirectory())
+		{
+			File[] found = path.listFiles(new FileFilter()
+			{
+				public boolean accept(File file)
+				{
+					return file.getName().endsWith(extension) || file.isDirectory();
+				}
+			});
+			
+			for (File file : found)
+			{
+				scanFiles(file, extension, result);
+			}
+		}
+		else
+		{
+			if(path.getName().endsWith(extension))
+			{
+				result.add(path);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Unzips a file to an output directory 
+	 * @param zippedFile
+	 * @param outputDirectory
+	 * @throws IOException
+	 */
+	public static void unzip(File zippedFile, File outputDirectory) throws IOException
+	{
+		Set<String> added = new HashSet<String>();
+		
+		ZipInputStream inStream = null;
+		
+		try
+		{
+			inStream = new ZipInputStream(new FileInputStream(zippedFile));
+
+			ZipEntry entry;
+			byte[] buffer = new byte[1024];
+
+			while ((entry = inStream.getNextEntry()) != null) 
+			{
+				String name = entry.getName();
+				if (name != null && name.length() > 0 && !added.contains(name))
+				{
+					File outputFile = new File(outputDirectory, name);
+
+					if (entry.isDirectory())
+					{
+						outputFile.mkdirs();
+					}
+					else
+					{
+						extractFileFromZip(inStream, buffer, outputFile);
+					}
+				
+					added.add(name);	        		 
+				}
+			}
+
+			inStream.close();
+		}
+		finally
+		{
+			if (inStream != null)
+			{
+				inStream.close();
+			}
+		}
+	}
+
+	/**
+	 * Extracts a zip entry for a physical file
+	 * @param inStream
+	 * @param buffer
+	 * @param outputFile
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private static void extractFileFromZip(ZipInputStream inStream, byte[] buffer, File outputFile) throws FileNotFoundException, IOException
+    {
+	    int nrBytesRead;
+	    if(!outputFile.getParentFile().exists())
+	    {
+	    	outputFile.getParentFile().mkdirs();
+	    }
+	    
+	    OutputStream outStream = new FileOutputStream(outputFile);
+	    try
+	    {
+	    	while ((nrBytesRead = inStream.read(buffer)) > 0) 
+	    	{
+	    		outStream.write(buffer, 0, nrBytesRead);
+	    	}
+	    }
+	    finally
+	    {
+	    	if (outStream != null)
+	    	{
+	    		outStream.close();
+	    	}
+	    }
+    }
+	
+	/**
+	 * Copies a file;
+	 * @param source
+	 * @param destination
+	 * @throws IOException
+	 */
+	public static void copyFile(File source, File destination) throws IOException
+	{
+		FileOutputStream out = null;
+		FileInputStream in = null;
+		
+		try
+		{
+			destination.getParentFile().mkdirs();
+			out = new FileOutputStream(destination);
+			in = new FileInputStream(source);
+			byte[] buff = new byte[1024];
+			int read = 0;
+			while((read = in.read(buff)) > 0)
+			{
+				out.write(buff, 0, read);
+			}
+			out.flush();
+		}
+		finally
+		{
+			if(in != null) {in.close();}
+			if(out != null) {out.close();}
+		}
+	}
 }

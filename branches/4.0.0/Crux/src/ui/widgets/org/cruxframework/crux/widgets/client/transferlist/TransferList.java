@@ -22,6 +22,9 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.widgets.client.event.moveitem.BeforeMoveItemsEvent;
 import org.cruxframework.crux.widgets.client.event.moveitem.BeforeMoveItemsHandler;
 import org.cruxframework.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHandlers;
+import org.cruxframework.crux.widgets.client.event.moveitem.HasMoveItemsHandlers;
+import org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsEvent;
+import org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsHandler;
 
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,7 +43,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * A decorated panel, with a title bar.
  * @author Gesse S. F. Dafe
  */
-public class TransferList extends Composite implements HasBeforeMoveItemsHandlers
+public class TransferList extends Composite implements HasBeforeMoveItemsHandlers, HasMoveItemsHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-TransferList" ;
 	
@@ -260,17 +263,28 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		
 		for (Item item : items)
 		{
-			if(item.location.equals(ItemLocation.left))
-			{
-				leftList.addItem(item.getLabel(), item.getValue());
-			}
-			else
-			{
-				rightList.addItem(item.getLabel(), item.getValue());
-			}
+			addItem(item);
 		}	
 	}
 
+	
+	/**
+	 * Adds a new item 
+	 * @param item
+	 */
+	public void addItem(Item item)
+	{
+		if(item.location.equals(ItemLocation.left))
+		{
+			leftList.addItem(item.getLabel(), item.getValue());
+		}
+		else
+		{
+			rightList.addItem(item.getLabel(), item.getValue());
+		}
+	}
+	
+	
 	/**
 	 * @param parseInt
 	 */
@@ -326,6 +340,14 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		return addHandler(handler, BeforeMoveItemsEvent.getType());
 	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.event.moveitem.HasMoveItemsHandlers#addMoveItemsHandler(org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsHandler)
+	 */
+	public HandlerRegistration addMoveItemsHandler(MoveItemsHandler handler)
+    {
+		return addHandler(handler, MoveItemsEvent.getType());
+    }	
 	
 	/**
 	 * Click handler for transfer list buttons
@@ -393,6 +415,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 					listToRemove.addItem(item[0], item[1]);
 				}
 			}
+			MoveItemsEvent.fire(transferList, itemsForEvet, leftToRight);
 		}
 		
 		/**
@@ -466,5 +489,5 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		{
 			list.setItemSelected(i, false);
 		}
-	}	
+	}
 }

@@ -196,6 +196,8 @@
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${module.src.dir}"/>
+				<pathelement location="${tools.src.dir}"/>
 				<pathelement location="${gwt.src.dir}" />
 				<pathelement location="${gadget.src.dir}"/>
 			</src>
@@ -209,6 +211,7 @@
 		<jar jarfile="${dist.dir}/${crux.gadgets.name}.jar">
 			<fileset dir="${classes.dir}" excludes="**/public/*" >
 				<include name="org/cruxframework/crux/gadget/**/*" />
+				<include name="org/cruxframework/crux/tools/projectgen/templates/gadget/**/*" />
 				<include name="com/google/gwt/gadgets/**/*" />
 				<include name="com/google/gwt/ajaxloader/**/*" />
 			</fileset>	

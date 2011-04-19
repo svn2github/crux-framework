@@ -3,7 +3,9 @@ package ${modulePackage}.client;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.UseLongManifestName;
+import org.cruxframework.crux.gadget.client.meta.GadgetInfo.UserPreferences;
 
+@UserPreferences(${gadgetUserPreferences})
 @UseLongManifestName(${gadgetUseLongManifestName})
 @ModulePrefs(author = "${gadgetAuthor}", 
 		     author_aboutme = "${gadgetAuthorAboutMe}", 

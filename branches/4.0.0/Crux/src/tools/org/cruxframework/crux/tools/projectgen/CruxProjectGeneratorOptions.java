@@ -18,6 +18,9 @@ package org.cruxframework.crux.tools.projectgen;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.cruxframework.crux.core.utils.FileUtils;
 
@@ -28,6 +31,89 @@ import org.cruxframework.crux.core.utils.FileUtils;
  */
 public class CruxProjectGeneratorOptions
 {
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class GeneratorOption
+	{
+		private String name;
+		private String value;
+		private Class<?> type;
+
+		private GeneratorOption()
+        {
+        }
+		
+		public String getName()
+        {
+        	return name;
+        }
+		public void setName(String name)
+        {
+        	this.name = name;
+        }
+		public String getValue()
+        {
+        	return value;
+        }
+		public void setValue(String value)
+        {
+        	this.value = value;
+        }
+		public Class<?> getType()
+        {
+        	return type;
+        }
+		public void setType(Class<?> type)
+        {
+        	this.type = type;
+        }
+	}
+	
+	private Map<String, GeneratorOption> options = new HashMap<String, CruxProjectGeneratorOptions.GeneratorOption>();
+
+	
+	/**
+	 * @param name
+	 * @param value
+	 * @param type
+	 */
+	public void addOption(String name, String value, Class<?> type)
+	{
+		GeneratorOption option = new GeneratorOption();
+		option.setName(name);
+		option.setType(type);
+		option.setValue(value);
+		
+		options.put(name, option);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public GeneratorOption getOption(String name)
+	{
+		return options.get(name);
+	}
+	
+	/**
+	 * @return
+	 */
+	public Iterator<GeneratorOption> iterateOptions()
+	{
+		return options.values().iterator();
+	}
+	
+	/**
+	 * @return
+	 */
+	public Iterator<String> iterateOptionNames()
+	{
+		return options.keySet().iterator();
+	}
+
 	private String appDescription;
 	private final String hostedModeStartupModule;
 	private String hostedModeStartupURL;
@@ -38,31 +124,7 @@ public class CruxProjectGeneratorOptions
 	private final File projectDir;
 	private final String projectName;
 	
-	private ProjectLayout projectLayout;
 	private final File workspaceDir;
-
-	private boolean gadgetUseLongManifestName = false;
-	private String gadgetAuthor = "";
-	private String gadgetAuthorAboutMe = "";
-	private String gadgetAuthorAffiliation = "";
-	private String gadgetAuthorEmail = "";
-	private String gadgetAuthorLink = "";
-	private String gadgetAuthorLocation = "";
-	private String gadgetAuthorPhoto = "";
-	private String gadgetAuthorQuote = "";
-	private String gadgetDescription = "";
-	private String gadgetDirectoryTitle = "";
-	private int gadgetHeight = 200;
-	private int gadgetWidth = 320;
-	private String gadgetLocales = "{}";
-	private String gadgetScreenshot = "";
-	private String gadgetThumbnail = "";
-	private boolean gadgetScrolling = false;
-	private boolean gadgetSingleton = true;
-	private boolean gadgetScaling = true;
-	private String gadgetTitle = "";
-	private String gadgetTitleUrl = "";
-	private String gadgetFeatures = "";
 
 	/**
 	 * @param workspaceDir
@@ -135,234 +197,6 @@ public class CruxProjectGeneratorOptions
 		return appDescription;
 	}
 
-	/**
-	 * @return the projectLayout
-	 */
-	public ProjectLayout getProjectLayout()
-	{
-		return projectLayout;
-	}		
-
-	public boolean isGadgetUseLongManifestName()
-    {
-    	return gadgetUseLongManifestName;
-    }
-
-	public void setGadgetUseLongManifestName(boolean gadgetUseLongManifestName)
-    {
-    	this.gadgetUseLongManifestName = gadgetUseLongManifestName;
-    }
-
-	public String getGadgetAuthorAboutMe()
-    {
-    	return gadgetAuthorAboutMe;
-    }
-
-	public void setGadgetAuthorAboutMe(String gadgetAuthorAboutMe)
-    {
-    	this.gadgetAuthorAboutMe = gadgetAuthorAboutMe;
-    }
-
-	public String getGadgetAuthorAffiliation()
-    {
-    	return gadgetAuthorAffiliation;
-    }
-
-	public void setGadgetAuthorAffiliation(String gadgetAuthorAffiliation)
-    {
-    	this.gadgetAuthorAffiliation = gadgetAuthorAffiliation;
-    }
-
-	public String getGadgetAuthorEmail()
-    {
-    	return gadgetAuthorEmail;
-    }
-
-	public void setGadgetAuthorEmail(String gadgetAuthorEmail)
-    {
-    	this.gadgetAuthorEmail = gadgetAuthorEmail;
-    }
-
-	public String getGadgetAuthorLink()
-    {
-    	return gadgetAuthorLink;
-    }
-
-	public void setGadgetAuthorLink(String gadgetAuthorLink)
-    {
-    	this.gadgetAuthorLink = gadgetAuthorLink;
-    }
-
-	public String getGadgetAuthorLocation()
-    {
-    	return gadgetAuthorLocation;
-    }
-
-	public void setGadgetAuthorLocation(String gadgetAuthorLocation)
-    {
-    	this.gadgetAuthorLocation = gadgetAuthorLocation;
-    }
-
-	public String getGadgetAuthorPhoto()
-    {
-    	return gadgetAuthorPhoto;
-    }
-
-	public void setGadgetAuthorPhoto(String gadgetAuthorPhoto)
-    {
-    	this.gadgetAuthorPhoto = gadgetAuthorPhoto;
-    }
-
-	public String getGadgetAuthor()
-    {
-    	return gadgetAuthor;
-    }
-
-	public void setGadgetAuthor(String gadgetAuthor)
-    {
-    	this.gadgetAuthor = gadgetAuthor;
-    }
-
-	public String getGadgetAuthorQuote()
-    {
-    	return gadgetAuthorQuote;
-    }
-
-	public void setGadgetAuthorQuote(String gadgetAuthorQuote)
-    {
-    	this.gadgetAuthorQuote = gadgetAuthorQuote;
-    }
-
-	public String getGadgetDescription()
-    {
-    	return gadgetDescription;
-    }
-
-	public void setGadgetDescription(String gadgetDescription)
-    {
-    	this.gadgetDescription = gadgetDescription;
-    }
-
-	public String getGadgetDirectoryTitle()
-    {
-    	return gadgetDirectoryTitle;
-    }
-
-	public void setGadgetDirectoryTitle(String gadgetDirectoryTitle)
-    {
-    	this.gadgetDirectoryTitle = gadgetDirectoryTitle;
-    }
-
-	public int getGadgetHeight()
-    {
-    	return gadgetHeight;
-    }
-
-	public void setGadgetHeight(int gadgetHeight)
-    {
-    	this.gadgetHeight = gadgetHeight;
-    }
-
-	public int getGadgetWidth()
-    {
-    	return gadgetWidth;
-    }
-
-	public void setGadgetWidth(int gadgetWidth)
-    {
-    	this.gadgetWidth = gadgetWidth;
-    }
-
-	public String getGadgetLocales()
-    {
-    	return gadgetLocales;
-    }
-
-	public void setGadgetLocales(String gadgetLocales)
-    {
-    	this.gadgetLocales = gadgetLocales;
-    }
-
-	public String getGadgetScreenshot()
-    {
-    	return gadgetScreenshot;
-    }
-
-	public void setGadgetScreenshot(String gadgetScreenshot)
-    {
-    	this.gadgetScreenshot = gadgetScreenshot;
-    }
-
-	public String getGadgetThumbnail()
-    {
-    	return gadgetThumbnail;
-    }
-
-	public void setGadgetThumbnail(String gadgetThumbnail)
-    {
-    	this.gadgetThumbnail = gadgetThumbnail;
-    }
-
-	public boolean isGadgetScrolling()
-    {
-    	return gadgetScrolling;
-    }
-
-	public void setGadgetScrolling(boolean gadgetScrolling)
-    {
-    	this.gadgetScrolling = gadgetScrolling;
-    }
-
-	public boolean isGadgetSingleton()
-    {
-    	return gadgetSingleton;
-    }
-
-	public void setGadgetSingleton(boolean gadgetSingleton)
-    {
-    	this.gadgetSingleton = gadgetSingleton;
-    }
-
-	public boolean isGadgetScaling()
-    {
-    	return gadgetScaling;
-    }
-
-	public void setGadgetScaling(boolean gadgetScaling)
-    {
-    	this.gadgetScaling = gadgetScaling;
-    }
-
-	public String getGadgetTitle()
-    {
-    	return gadgetTitle;
-    }
-
-	public void setGadgetTitle(String gadgetTitle)
-    {
-    	this.gadgetTitle = gadgetTitle;
-    }
-
-	public String getGadgetTitleUrl()
-    {
-    	return gadgetTitleUrl;
-    }
-
-	public void setGadgetTitleUrl(String gadgetTitleUrl)
-    {
-    	this.gadgetTitleUrl = gadgetTitleUrl;
-    }
-
-	public String getGadgetFeatures()
-    {
-    	return gadgetFeatures;
-    }
-
-	public void setGadgetFeatures(String gadgetFeatures)
-    {
-    	this.gadgetFeatures = gadgetFeatures;
-    }
-
 	public void setAppDescription(String appDescription)
     {
     	this.appDescription = appDescription;
@@ -376,11 +210,6 @@ public class CruxProjectGeneratorOptions
 	public void setHostedModeVMArgs(String hostedModeVMArgs)
     {
     	this.hostedModeVMArgs = hostedModeVMArgs;
-    }
-
-	public void setProjectLayout(ProjectLayout projectLayout)
-    {
-    	this.projectLayout = projectLayout;
     }
 
 	/**
@@ -438,17 +267,5 @@ public class CruxProjectGeneratorOptions
 		}
 		
 		return hostedModeStartupModule;
-	}
-	
-	/**
-	 * Currently available project layouts.
-	 * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
-	 */
-	public static enum ProjectLayout
-	{
-		MONOLITHIC_APP,
-		MODULE_APP,
-		MODULE_CONTAINER_APP,
-		GADGET_APP;
 	}
 }

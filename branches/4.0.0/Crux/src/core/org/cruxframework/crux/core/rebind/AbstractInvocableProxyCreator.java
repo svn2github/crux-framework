@@ -589,15 +589,12 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		else if (type instanceof JClassType && ((JClassType)type).getAnnotation(ValueObject.class) != null)
 		{
-			if (!populateScreen)
-			{
-				sourceWriter.println("if (" +getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
-				sourceWriter.indent();
-				
-				generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
-				sourceWriter.outdent();
-				sourceWriter.println("}");
-			}
+			sourceWriter.println("if (" +getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
+			sourceWriter.indent();
+
+			generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
+			sourceWriter.outdent();
+			sourceWriter.println("}");
 			parentVariable = getFieldValueGet(voClass, field, parentVariable, allowProtected);
 			if (parentVariable != null)
 			{

@@ -148,7 +148,9 @@ public class Launcher
 		File webAppLib = new File("./apps/quickstart.war/WEB-INF/lib");
 		File buildLib = new File("./lib/build");
 		File webInfLib = new File("./lib/web-inf");
+		File gadgetBuildLib = new File("./lib/gadget/build");
 		
+		FileUtils.copyFilesFromDir(gadgetBuildLib, webAppLib);
 		FileUtils.copyFilesFromDir(buildLib, webAppLib);
 		FileUtils.copyFilesFromDir(webInfLib, webAppLib);
 	}

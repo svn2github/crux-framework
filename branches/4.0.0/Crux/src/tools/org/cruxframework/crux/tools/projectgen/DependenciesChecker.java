@@ -15,13 +15,13 @@
  */
 package org.cruxframework.crux.tools.projectgen;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
@@ -48,12 +48,14 @@ public class DependenciesChecker
 	private static final String REPO_GWT_USER_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-user/2.2.0/gwt-user-2.2.0.jar";
 	private static final String REPO_GWT_DEV_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/2.2.0/gwt-dev-2.2.0.jar";
 	private static final String REPO_SHINDIG_WAR = "http://repo2.maven.org/maven2/org/apache/shindig/shindig-server/2.0.0/shindig-server-2.0.0.war";
+	private static final String REPO_JSP_API_JAR = "http://repo1.maven.org/maven2/javax/servlet/jsp/jsp-api/2.1/jsp-api-2.1.jar";
 
 	private static final int GWT_DEV_TOTAL_BYTES = 27914742;
 	private static final int GWT_USER_TOTAL_BYTES = 10682696;
 	private static final int GWT_SERVLET_TOTAL_BYTES = 4380952;
 	private static final int GWT_SERVLET_DEPS_TOTAL_BYTES = 84088;
 	private static final int SHINDIG_TOTAL_BYTES = 18902990;
+	private static final int JSP_API_TOTAL_BYTES = 100636;
 
 	private boolean downloadDependenciesIfNeeded;
 	private boolean downloadOptionalDependenciesIfNeeded;
@@ -167,7 +169,18 @@ public class DependenciesChecker
 			getOptionalDependencies();
 			if (downloadOptionalDependenciesIfNeeded)
 			{
-				downloadDependency(new Dependency("shindig.war", "./shindig", REPO_SHINDIG_WAR, SHINDIG_TOTAL_BYTES));
+				downloadDependency(new Dependency("zipedShindig.war", "./shindig", REPO_SHINDIG_WAR, SHINDIG_TOTAL_BYTES));
+				try
+                {
+	                File zippedFile = new File("./shindig/zipedShindig.war");
+					FileUtils.unzip(zippedFile, warFile);
+					zippedFile.delete();
+                }
+                catch (IOException e)
+                {
+                	throw new RuntimeException("Error unzipping shindig file", e);
+                }
+                downloadDependency(new Dependency("jsp-api-2.1.jar", "./shindig/shindig.war/WEB-INF/lib", REPO_JSP_API_JAR, JSP_API_TOTAL_BYTES));
 			}
 		}
     }
@@ -304,16 +317,18 @@ public class DependenciesChecker
 	 */
 	private void downloadDependency(Dependency dependency)
 	{
-		BufferedInputStream in = null;
-		BufferedOutputStream out = null;
+		InputStream in = null;
+		OutputStream out = null;
 		try
 		{
+			checkDestinationFolder(dependency);
+			
 			System.out.println("Downloading file "+ dependency.getJarName()+"...");
 			URL url = new URL(dependency.getResourceURL());
 			URLConnection urlc = url.openConnection();
 
-			in = new BufferedInputStream( urlc.getInputStream() );
-			out = new BufferedOutputStream(new FileOutputStream(new File(dependency.getDestFolder(), dependency.getJarName())));
+			in = urlc.getInputStream();
+			out = new FileOutputStream(new File(dependency.getDestFolder(), dependency.getJarName()));
 			NumberFormat percentFormat = NumberFormat.getPercentInstance();
 			int blockSize = 4 * 1024;
 			byte[] buf = new byte[blockSize]; // 4K buffer
@@ -332,6 +347,9 @@ public class DependenciesChecker
 					updateProgressBar = 0;
 				}
 			}
+			out.flush();
+			out.close();
+			in.close();
 			System.out.println("\r100%  ");
 		}
 		catch (Exception e) 
@@ -350,6 +368,18 @@ public class DependenciesChecker
 			}
 		}
 	}
+
+	/**
+	 * @param dependency
+	 */
+	private void checkDestinationFolder(Dependency dependency)
+    {
+	    File destFolder = dependency.getDestFolder();
+	    if (!destFolder.exists())
+	    {
+	    	destFolder.mkdirs();
+	    }
+    }
 
 	/** Create a processor for command line parameters
 	 * @return

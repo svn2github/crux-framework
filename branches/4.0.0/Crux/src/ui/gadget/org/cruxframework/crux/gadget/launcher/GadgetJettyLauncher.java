@@ -39,7 +39,7 @@ import com.google.gwt.dev.util.InstalledHelpInfo;
 public class GadgetJettyLauncher extends JettyLauncher
 {
 	private int shindigJettyPort = 8080;
-	private String shindigBindAddress = "127.0.0.1";
+	private String shindigBindAddress = "localhost";
 	
 	public void setShindigBindAddress(String bindAddress) 
 	{
