@@ -20,8 +20,8 @@ public class SVNServiceImpl implements SVNService{
 	
 	private static final long TOKEN = new Date().getTime(); 
 	private static final Log log = LogFactory.getLog(SVNServiceImpl.class);	
-	private static final String BASE_XML_URL = "http://crux-framework.googlecode.com/svn/trunk/CruxShowcase/war/";
-	private static final String BASE_MODULE_URL = "http://crux-framework.googlecode.com/svn/trunk/CruxShowcase/src/org/cruxframework/crux/showcase/";
+	private static final String BASE_XML_URL = "http://crux-framework.googlecode.com/svn/branches/4.0.0/CruxShowcase/war/";
+	private static final String BASE_MODULE_URL = "http://crux-framework.googlecode.com/svn/branches/4.0.0/CruxShowcase/src/org/cruxframework/crux/showcase/";
 	
 	private static Map<String, String> cachedResources = new ConcurrentHashMap<String,String>();
 	

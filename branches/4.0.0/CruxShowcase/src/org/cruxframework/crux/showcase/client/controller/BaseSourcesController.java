@@ -47,7 +47,7 @@ public class BaseSourcesController implements BaseSourcesControllerCrossDoc {
 		for (SourceTab tab : tabs)
 		{
 			String tabId = tab.getLocation().replaceAll("^[a-zA-Z0-9]", "");
-			String url = "sourceTab.html?isJava=" + tab.isJava() + "&sourceLocation=" + URL.encodeQueryString(tab.getLocation()); 
+			String url = "../sourceTab.html?isJava=" + tab.isJava() + "&sourceLocation=" + URL.encodeQueryString(tab.getLocation()); 
 			if(first)
 			{
 				screen.getSourcesTabs().openTab(tabId, tab.getLabel(), url, false, false);

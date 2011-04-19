@@ -16,56 +16,56 @@
 
 		<c:screen useController="valueBindController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="130" spacing="15">
+		<b:dockPanel id="centeringPanel" width="100%" spacing="15">
 			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
 				<a:decoratedPanel id="borders">
 					<a:widget>
-						<b:grid id="grid" cellSpacing="5">
-							<b:row>
-								<b:cell>
-									<b:text>Name:</b:text>
-								</b:cell>
-								<b:cell>
-									<b:widget><b:textBox id="name" width="300"/></b:widget>
-								</b:cell>
-							</b:row>
-							<b:row>
-								<b:cell>
-									<b:text>Phone:</b:text>
-								</b:cell>
-								<b:cell>
-									<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100"/></b:widget>
-								</b:cell>
-							</b:row>
-							<b:row>
-								<b:cell>
-									<b:text>Date of Birth:</b:text>
-								</b:cell>
-								<b:cell>
-									<b:widget><a:maskedTextBox id="dateOfBirth" formatter="date" width="100"/></b:widget>
-								</b:cell>
-							</b:row>
-							<b:row>
-								<b:cell>
-									<b:text>Another Date:</b:text>
-								</b:cell>
-								<b:cell>
-									<b:widget><b:dateBox id="date2" pattern="MM/dd/yyyy" width="100"/></b:widget>
-								</b:cell>
-							</b:row>
-						</b:grid>
+						<b:verticalPanel id="formAndButtonPanel" width="100%" spacing="10">
+							<b:grid id="grid" cellSpacing="5">
+								<b:row>
+									<b:cell>
+										<b:text>Name:</b:text>
+									</b:cell>
+									<b:cell>
+										<b:widget><b:textBox id="name" width="300" value="Anna Prentice"/></b:widget>
+									</b:cell>
+								</b:row>
+								<b:row>
+									<b:cell>
+										<b:text>Phone:</b:text>
+									</b:cell>
+									<b:cell>
+										<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100" value="(123)456-7890"/></b:widget>
+									</b:cell>
+								</b:row>
+								<b:row>
+									<b:cell>
+										<b:text>Date of Birth:</b:text>
+									</b:cell>
+									<b:cell>
+										<b:widget><a:maskedTextBox id="dateOfBirth" formatter="date" width="100" value="06/08/1980"/></b:widget>
+									</b:cell>
+								</b:row>
+							</b:grid>
+							<a:decoratedButton id="button" text="Click Me!" onClick="valueBindController.onClick" width="120"/>
+						</b:verticalPanel>
 					</a:widget>
 				</a:decoratedPanel>
 			</b:cell>
 		</b:dockPanel>
 		
-		<center>
-			<a:decoratedButton id="button" text="Click Me" onClick="valueBindController.onClick" width="120"/>
-		</center>
-		
-		<br/>
-		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController" width="600">
+			<s:widgetInfo>
+				Crux has a mechanism that provides the automatic binding of values between the user interface and your code. 
+				By annotating the variables on your controller, Crux ensures that its values will always be up to date with 
+				the user interface values. The binding is made in both ways: if the user changes any value on the UI, your 
+				controller is updated; if you change a value on your controller, the UI is updated.  
+			</s:widgetInfo>
+			<s:exampleInfo>
+				we have a simple form, which maps an object called Person. If you change any value on the form and click the button,
+				you can see the new value being reflected into the controller's variables.<br/>
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

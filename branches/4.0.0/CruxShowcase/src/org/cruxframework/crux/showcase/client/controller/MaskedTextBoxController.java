@@ -42,7 +42,7 @@ public class MaskedTextBoxController {
 	public static class PhoneFormatter extends MaskedTextBoxBaseFormatter{
 		
 		public String getMask(){
-			return "(99)9999-9999";
+			return "(999)999-9999";
 		}
 
 		public String format(Object input){
@@ -51,7 +51,7 @@ public class MaskedTextBoxController {
 			}
 			
 			String strInput = (String) input;
-			return "("+strInput.substring(0,2)+")"+strInput.substring(2,6)+"-"+strInput.substring(6);
+			return "("+strInput.substring(0,3)+")"+strInput.substring(3,6)+"-"+strInput.substring(6);
 		}
 
 		public Object unformat(String input) throws InvalidFormatException{
@@ -59,7 +59,7 @@ public class MaskedTextBoxController {
 				return "";
 			}
 			String inputStr = (String)input;
-			inputStr = inputStr.substring(1,3)+inputStr.substring(4,8)+inputStr.substring(9,13);
+			inputStr = inputStr.substring(1,4)+inputStr.substring(5,8)+inputStr.substring(9,13);
 			return inputStr;
 		}
 	}

@@ -436,7 +436,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height: 23px;
 	cursor:pointer;
 	background: url(../img/menu-lv1-off-bg.gif) repeat-x bottom;
-	background-color: #7D8288;
+	background-color: #5386AF;
 	width: 100%;
 }
 .crux-StackMenu .item .item-border-nw
@@ -511,7 +511,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-StackMenu .item-over
 {
 	background-image: url(../img/menu-lv1-on-bg.gif);
-	background-color: #5386AF;
+	background-color: #7D8288;
 }
 /*=====================
     second level 
