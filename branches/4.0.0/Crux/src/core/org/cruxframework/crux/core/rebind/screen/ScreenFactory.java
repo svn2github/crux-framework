@@ -82,6 +82,14 @@ public class ScreenFactory
 	}
 	
 	/**
+	 * Clear the screen cache
+	 */
+	public void clearScreenCache()
+	{
+		screenCache.clear();
+	}
+	
+	/**
 	 * Factory method for screens.
 	 * @param id
 	 * @return

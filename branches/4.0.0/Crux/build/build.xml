@@ -156,9 +156,11 @@
 				<exclude name="org/cruxframework/crux/core/client/**/*" />
 				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
 				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
 				<exclude name="org/cruxframework/crux/core/client" />
 				<exclude name="org/cruxframework/crux/core/rebind" />
 				<exclude name="org/cruxframework/crux/core/declarativeui" />
+				<exclude name="org/cruxframework/crux/core/server/launcher" />
 			</fileset>
 			<fileset dir="${classes.dir}">
 				<include name="org/cruxframework/crux/core/client/rpc/**/*" />
@@ -167,9 +169,11 @@
 				<exclude name="org/cruxframework/crux/core/client/**/*" />
 				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
 				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
 				<exclude name="org/cruxframework/crux/core/client" />
 				<exclude name="org/cruxframework/crux/core/rebind" />
 				<exclude name="org/cruxframework/crux/core/declarativeui" />
+				<exclude name="org/cruxframework/crux/core/server/launcher" />
 				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
 			</fileset>
 			<manifest>

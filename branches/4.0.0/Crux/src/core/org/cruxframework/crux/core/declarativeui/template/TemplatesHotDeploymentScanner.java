@@ -28,7 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 
 
 /**
@@ -56,30 +57,21 @@ public class TemplatesHotDeploymentScanner
 	 * 
 	 * @param url
 	 */
-	public void scan(final URL url)
+	public void startScanner(final File file)
 	{
-		try
-		{
-			final File file = new File(url.toURI());
-			
-			threadPool.scheduleWithFixedDelay(new Runnable(){
-				public void run()
+		threadPool.scheduleWithFixedDelay(new Runnable(){
+			public void run()
+			{
+				try
 				{
-					try
-					{
-						scan(file);
-					}
-					catch (Exception e) 
-					{
-						logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(file.getName()), e);
-					}
+					scan(file);
 				}
-			}, 0, 5, TimeUnit.SECONDS);
-		}
-		catch (URISyntaxException e)
-		{
-			logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(url.toString()), e);
-		}
+				catch (Exception e) 
+				{
+					logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(file.getName()), e);
+				}
+			}
+		}, 0, 5, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -113,6 +105,7 @@ public class TemplatesHotDeploymentScanner
 						lastModified.put(fileName, modified);
 						logger.info(messages.templatesHotDeploymentScannerTemplateFileModified(fileName));
 						Templates.restart();
+						ScreenFactory.getInstance().clearScreenCache();
 					}
 				}
 			}
@@ -124,14 +117,26 @@ public class TemplatesHotDeploymentScanner
 	 */
 	public static void scanWebDirs()
 	{
-		URL[] dirs = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+		URL[] dirs = ClasspathUrlFinder.findClassPaths();
 		TemplatesHotDeploymentScanner scanner = new TemplatesHotDeploymentScanner(dirs.length);
 
 		for (URL url : dirs)
 		{
 			if (url.getProtocol().equalsIgnoreCase("file"))
 			{
-				scanner.scan(url);
+				try
+				{
+					final File file = new File(url.toURI());
+					
+					if (file.isDirectory() || file.getName().endsWith("template.xml"))
+					{
+						scanner.startScanner(file);
+					}
+				}
+				catch (URISyntaxException e)
+				{
+					logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(url.toString()), e);
+				}
 			}
 		}
 	}

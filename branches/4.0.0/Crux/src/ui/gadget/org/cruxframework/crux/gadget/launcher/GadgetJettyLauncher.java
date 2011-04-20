@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.cruxframework.crux.core.server.launcher.CruxJettyLauncher;
 import org.mortbay.jetty.AbstractConnector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.RequestLogHandler;
@@ -29,14 +30,13 @@ import org.mortbay.log.Log;
 
 import com.google.gwt.core.ext.ServletContainer;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.dev.shell.jetty.JettyLauncher;
 import com.google.gwt.dev.util.InstalledHelpInfo;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class GadgetJettyLauncher extends JettyLauncher
+public class GadgetJettyLauncher extends CruxJettyLauncher
 {
 	private int shindigJettyPort = 8080;
 	private String shindigBindAddress = "localhost";
@@ -97,6 +97,7 @@ public class GadgetJettyLauncher extends JettyLauncher
 	{
 		String webappPath = appFile.getCanonicalPath();
 		WebAppContext webAppContext = new WebAppContextWithReload(logger, webappPath, "/");
+	    webAppContext.setConfigurationClasses(__dftConfigurationClasses);
 		return webAppContext;
 	}
 

@@ -233,7 +233,7 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	private String getFeaturesReplacement(String value)
     {
 		StringBuilder result = new StringBuilder();
-		if (value != null)
+		if (value != null && value.trim().length() > 0)
 		{
 			String[] features = value.split(",");
 			if (features.length > 0)
