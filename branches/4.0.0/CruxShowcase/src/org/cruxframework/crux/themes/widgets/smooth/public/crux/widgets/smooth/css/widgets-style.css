@@ -13,67 +13,76 @@ SPAN, DIV, TD, LI, STRONG, UL
 *******************************************************************************/
 .crux-MessageBox
 {
-	color:#333333;
-	font-family:Courier,monospace;
-	font-size:12px;
-	font-weight:bold;
 }
 .crux-MessageBox .dialogTopLeft 
 {
-	height:40px;
-	width:15px;
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top left;
-	cursor: move;
+	height:41px;
+	width:19px;
+	font-size: 19px;
+	font-family: monospace;
+	background: url(../img/dialogs-nw.png) no-repeat top left;
 }
 .crux-MessageBox .dialogTopCenter 
 {
-	font-size: 12px;
-	font-weight: bold;
-	color: #6C83C3;
 	text-align: left;
 	font-family: Arial, Helvetica;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top center;
+	background: url(../img/dialogs-n.png) repeat-x top center;
 	cursor: move;
 	padding-top: 8px;
 	padding-left: 2px;
 }
+.crux-MessageBox .dialogTopCenter .Caption
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: #EEEEEE;
+	text-shadow: -1px -1px #2f5578;
+}
 .crux-MessageBox .dialogTopRight
 {
-	width:15px;
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top right;
+	width:20px;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-ne.png) no-repeat top right;
+	padding-right: 5px;
 	cursor: move;
 }
 .crux-MessageBox .dialogMiddleLeft
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat center left;
+	width:19px;
+	font-size: 19px;
+	font-family: monospace;
+	background: url(../img/dialogs-w.png) repeat-y center left;
 }
 .crux-MessageBox .dialogMiddleCenter
 {
-	background: url(../img/dialogs-blue-bg.png) no-repeat center center;
+	background-color: #FFFFFF;
 }
 .crux-MessageBox .dialogMiddleRight
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat center right;
+	width:20px;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-e.png) repeat-y center right;
 }
 .crux-MessageBox .dialogBottomLeft
 {
-	font-size: 0px;
-	height:15px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom left;
+	font-size: 19px;
+	font-family: monospace;
+	height:20px;
+	background: url(../img/dialogs-sw.png) no-repeat top left;
 }
 .crux-MessageBox .dialogBottomCenter
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom center;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-s.png) repeat-x top center;
 }
 .crux-MessageBox .dialogBottomRight
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom right;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-se.png) no-repeat top right;
 }
 .crux-MessageBox .message
 {
@@ -92,84 +101,71 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-ProgressDialog .dialogTopLeft
 {
-	width: 14px;
-	height: 14px;
+	width: 20px;
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat top left;
-	cursor: move;	
 }
 .crux-ProgressDialog .dialogTopCenter
 {
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat top center;
-	cursor: move;
-	padding-top: 8px;
-	padding-left: 2px;
 }
 .crux-ProgressDialog .dialogTopRight
 {
-	width: 14px;
+	width: 20px;
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat top right;
-	cursor: move;	
 }
 .crux-ProgressDialog .dialogMiddleLeft
 {
-	height: 20px;
-	font-size: 0px;
+	height: 60px;
+	font-size: 20px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat left;	
+	background: url(../img/progressdialog-w.png) no-repeat left;	
 }
 .crux-ProgressDialog .dialogMiddleCenter
 {
 	font-size: 0px;
 	font-family: monospace;
-	background-color: #FFFFFF;
+	background: url(../img/progressdialog-c.png) repeat-x center;	
 }
 .crux-ProgressDialog .dialogMiddleRight
 {
-	font-size: 0px;
+	font-size: 20px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat right;
+	background: url(../img/progressdialog-e.png) no-repeat right;
 }
 .crux-ProgressDialog .dialogBottomLeft
 {
-	height: 14px;
+	height: 0px;
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat bottom left;	
 }
 .crux-ProgressDialog .dialogBottomCenter
 {
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat bottom center;	
 }
 .crux-ProgressDialog .dialogBottomRight
 {
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progress-dialog.png) no-repeat bottom right;	
 }
 .crux-ProgressDialog .icon
 {
-	background: url(../img/progress-dialog-icon.gif) no-repeat;
-	width: 16px;
-	height: 16px;
-	margin-left: 8px;
+	background: url(../img/progressdialog-icon.gif) no-repeat;
+	width: 32px;
+	height: 32px;
 }
 .crux-ProgressDialog .message
 {
-	font-family: Arial, Helvetica;
 	font-size: 12px;
 	font-weight: bold;
-	color: #7d7d7d;
+	color: #FFFFFF;
 	padding-left: 8px;
-	padding-right: 8px;
-	padding-top: 2px;
+	padding-right: 15px;
+	padding-top: 9px;
+	text-shadow: -1px -1px #2f5578;
 }
 
 /******************************************************************************

@@ -31,7 +31,7 @@
 				<b:cell direction="west">
 					<a:titlePanel id="textTitlePanel" width="250" height="120">
 						<a:title>
-							<a:text>You Can Use a Textual Tile</a:text>
+							<a:text>You Can Use a Textual Title</a:text>
 						</a:title>
 						<a:body>
 							<a:html>
@@ -65,7 +65,7 @@
 				The TitlePanel widget is a kind of DecoratedPanel but having two distinct sections: a title and a body. Both sections can contain whatever you want.
 			</s:widgetInfo>
 			<s:exampleInfo>
-				we have three panels having different types of content on title and body sections. 
+				we have three panels having different content types in title and body sections. 
 			</s:exampleInfo>
 		</s:info>
 		

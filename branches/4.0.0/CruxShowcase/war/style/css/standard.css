@@ -187,3 +187,17 @@ TEXTAREA
 {
 	background: url(../img/info-se.gif) no-repeat top right;
 }
+
+.InfoLink
+{
+	margin-left: 3px;
+	margin-right: 3px;
+	color: #FFFFFF; 
+}
+
+.help-Popup .topCenterCell, .crux-Popup .topLeftCell, .crux-Popup .topRightCell
+{
+	color: #EEEEEE;
+	text-shadow: -1px -1px #2f5578;
+	cursor: default !important;
+}

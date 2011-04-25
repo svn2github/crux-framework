@@ -16,5 +16,9 @@
 	<set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 	<set-property name="gwt.logging.systemHandler" value="DISABLED"/>
 	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED"/>
+	
+	<replace-with class="org.cruxframework.crux.showcase.client.common.ShowcaseErrorHandler">
+		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ErrorHandler" />
+	</replace-with>	
          
 </module>

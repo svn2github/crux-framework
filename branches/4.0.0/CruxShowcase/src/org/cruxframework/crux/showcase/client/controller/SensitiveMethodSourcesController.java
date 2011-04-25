@@ -1,31 +1,20 @@
 package org.cruxframework.crux.showcase.client.controller;
 
+import java.util.ArrayList;
+
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Expose;
 
 @Controller("sensitiveMethodSourcesController")
-public class SensitiveMethodSourcesController extends SourcesController {
+public class SensitiveMethodSourcesController extends BaseSourcesController implements SensitiveMethodSourcesControllerCrossDoc {
 	
-	private boolean serviceLoaded;
-	private boolean serviceImplLoaded;
-
-	@Expose
-	public void loadServiceSource() {
-		
-		if(!serviceLoaded){
-			serviceLoaded = true;
-			
-			loadFile("client/remote/SensitiveServerService.java", "serviceInterfaceSource");
-		}
+	/**
+	 * @see org.cruxframework.crux.showcase.client.controller.BaseSourcesController#getAdditionalSources()
+	 */
+	protected ArrayList<SourceTab> getAdditionalSources() {
+		ArrayList<SourceTab> aditionalTabs = new ArrayList<SourceTab>();
+		aditionalTabs.add(new SourceTab("client/remote/SensitiveServerService.java", "Service Interface", true));
+		aditionalTabs.add(new SourceTab("server/SensitiveServerServiceImpl.java", "Service Implementation", true));
+		return aditionalTabs;
 	}
-
-	@Expose
-	public void loadServiceImplSource() {
-		
-		if(!serviceImplLoaded){
-			serviceImplLoaded = true;
-			
-			loadFile("server/SensitiveServerServiceImpl.java", "ServiceImplementationSource");
-		}
-	}
+	
 }
