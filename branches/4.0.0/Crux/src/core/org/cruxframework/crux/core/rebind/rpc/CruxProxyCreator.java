@@ -24,12 +24,12 @@ import java.util.Map;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.rpc.st.CruxSynchronizerTokenService;
 import org.cruxframework.crux.core.client.rpc.st.CruxSynchronizerTokenServiceAsync;
+import org.cruxframework.crux.core.client.rpc.st.SensitiveMethodAlreadyBeingProcessedException;
 import org.cruxframework.crux.core.client.rpc.st.UseSynchronizerToken;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.utils.ClassUtils;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -341,7 +341,11 @@ public class CruxProxyCreator extends ProxyCreator
 			srcWriter.println("else{");
 			srcWriter.indent();
 
-			srcWriter.println(Crux.class.getName()+".getErrorHandler().handleError("+Crux.class.getName()+".getMessages().methodIsAlreadyBeingProcessed());");
+			String sensitiveErrMsg = Crux.class.getName() + ".getMessages().methodIsAlreadyBeingProcessed()";
+			srcWriter.println(Crux.class.getName()+".getErrorHandler().handleError("
+					+ sensitiveErrMsg 
+					+ ", new " + SensitiveMethodAlreadyBeingProcessedException.class.getName() + "(" + sensitiveErrMsg + ")" +
+			");");
 			
 			srcWriter.outdent();
 			srcWriter.println("}");
