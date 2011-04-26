@@ -30,7 +30,15 @@
 			</b:cell>
 		</b:dockPanel>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The TransferList is a component to separate in panels, or groups, 'selected elements' and 'selectable elements'.
+				The elements never belong into two panels at the same time.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click in the some element and in the buttons '&lt;&lt;' or '&gt;&gt;', the selected content of panel will be transferred to near panel.
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

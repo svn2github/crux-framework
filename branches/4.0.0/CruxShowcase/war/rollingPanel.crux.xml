@@ -33,7 +33,16 @@
 				</a:rollingPanel>
 			</b:cell>
 		</b:dockPanel>
-		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The RollingPanel is a kind of panel with horizontal or vertical rollover into which you can insert elements beyond of destinated area's limit.
+				The DynaTabs for example can explode in tabs number the screen area limit.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click in the side buttons, the elements of the list will be displayed. 
+				Looking at the example's source, you can see that we handle the rolling events, in order to roll
+				the elements being shown in the list. 
+			</s:exampleInfo>
+		</s:info>
 	</body>
 </html>
