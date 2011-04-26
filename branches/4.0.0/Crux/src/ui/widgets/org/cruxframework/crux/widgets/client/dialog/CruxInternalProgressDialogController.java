@@ -21,9 +21,14 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -44,15 +49,45 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	
 	
 	private FastList<String> stack = new FastList<String>(); 
+	private HandlerRegistration previewHandler = null; 
 	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
+	 */
+	public void disableEventsOnOpener()
+	{
+		previewHandler = Event.addNativePreviewHandler(new NativePreviewHandler()
+		{
+			public void onPreviewNativeEvent(NativePreviewEvent event)
+			{
+				event.cancel();
+				return;
+			}
+		});
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
+	 */
+	public void enableEventsOnOpener()
+	{
+		if (previewHandler != null)
+		{
+			previewHandler.removeHandler();
+		}
+	}
+
 	/**
 	 * Invoke showProgressDialogOnTop on top window. It is required to handle multi-frame pages.
 	 * @param data
 	 */
 	public void showProgressDialog(ProgressDialogData data)
 	{
+		pushProgressDialogOnStack();
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
 		crossDoc.showProgressDialogBox(data);
+		((TargetDocument)crossDoc).setTargetWindow(getOpener());
+		crossDoc.disableEventsOnOpener();
 	}
 	
 	/**
@@ -61,8 +96,11 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 */
 	public void hideProgressDialog()
 	{
+		((TargetDocument)crossDoc).setTargetWindow(getOpener());
+		crossDoc.enableEventsOnOpener();
 		((TargetDocument)crossDoc).setTarget(Target.TOP);
 		crossDoc.hideProgressDialogBox();
+		popProgressDialogFromStack();
 	}
 	
 	/**
@@ -161,4 +199,35 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		label.setStyleName("message");
 		return label;
 	}
+	
+	
+	/**
+	 * Closes the popup, removing its window from the stack 
+	 */
+	private static native boolean popProgressDialogFromStack()/*-{
+		if($wnd.top._progressDialog_origin != null)
+		{
+			$wnd.top._progressDialog_origin.pop();
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	private native void pushProgressDialogOnStack()/*-{
+		if($wnd.top._progressDialog_origin == null)
+		{
+			$wnd.top._progressDialog_origin = new Array();
+		}		
+		$wnd.top._progressDialog_origin.push($wnd);
+	}-*/;
+	
+	public static native JSWindow getOpener()/*-{
+	try{
+		return $wnd.top._progressDialog_origin[$wnd.top._progressDialog_origin.length - 1];
+	}catch(e)
+	{
+		return null;
+	}
+}-*/;
+	
 }
