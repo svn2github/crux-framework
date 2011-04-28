@@ -80,100 +80,102 @@ public class QuickStartServiceImpl implements QuickStartService
         	logger.error(e.getMessage(), e);
         }
 		
-	    return info;
+        return info;
     }
 
 	/**
 	 * @see org.cruxframework.crux.tools.quickstart.client.remote.QuickStartService#generateProject(org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo)
 	 */
 	public Boolean generateProject(ProjectInfo projectInfo)
-    {
+	{
 		try
-        {
+		{
 			CruxProjectGenerator cruxProjectGenerator = new CruxProjectGenerator(new File(projectInfo.getWorkspaceDir()), projectInfo.getProjectName(), 
-					                 projectInfo.getHostedModeStartupModule(), projectInfo.getProjectLayout());
-			
+					projectInfo.getHostedModeStartupModule(), projectInfo.getProjectLayout());
+
 			CruxProjectGeneratorOptions layoutParameters = cruxProjectGenerator.getLayoutParameters();
 
 			layoutParameters.setHostedModeStartupURL(projectInfo.getHostedModeStartupURL());
 			layoutParameters.setHostedModeVMArgs(projectInfo.getHostedModeVMArgs());
 			layoutParameters.setAppDescription(projectInfo.getAppDescription());
-			
-			layoutParameters.getOption("gadgetUseLongManifestName").setValue(Boolean.toString(projectInfo.getGadgetInfo().isUseLongManifestName()));
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthor()))
+
+			if ("GADGET_APP".equals(projectInfo.getProjectLayout()))
 			{
-				layoutParameters.getOption("gadgetAuthor").setValue(projectInfo.getGadgetInfo().getAuthor());
+				layoutParameters.getOption("gadgetUseLongManifestName").setValue(Boolean.toString(projectInfo.getGadgetInfo().isUseLongManifestName()));
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthor()))
+				{
+					layoutParameters.getOption("gadgetAuthor").setValue(projectInfo.getGadgetInfo().getAuthor());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAboutMe()))
+				{
+					layoutParameters.getOption("gadgetAuthorAboutMe").setValue(projectInfo.getGadgetInfo().getAuthorAboutMe());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAffiliation()))
+				{
+					layoutParameters.getOption("gadgetAuthorAffiliation").setValue(projectInfo.getGadgetInfo().getAuthorAffiliation());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorEmail()))
+				{
+					layoutParameters.getOption("gadgetAuthorEmail").setValue(projectInfo.getGadgetInfo().getAuthorEmail());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLink()))
+				{
+					layoutParameters.getOption("gadgetAuthorLink").setValue(projectInfo.getGadgetInfo().getAuthorLink());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLocation()))
+				{
+					layoutParameters.getOption("gadgetAuthorLocation").setValue(projectInfo.getGadgetInfo().getAuthorLocation());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorPhoto()))
+				{
+					layoutParameters.getOption("gadgetAuthorPhoto").setValue(projectInfo.getGadgetInfo().getAuthorPhoto());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+				{
+					layoutParameters.getOption("gadgetAuthorQuote").setValue(projectInfo.getGadgetInfo().getAuthorQuote());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+				{
+					layoutParameters.getOption("getDescription").setValue(projectInfo.getGadgetInfo().getDescription());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
+				{
+					layoutParameters.getOption("getDirectoryTitle").setValue(projectInfo.getGadgetInfo().getDirectoryTitle());
+				}
+				layoutParameters.getOption("gadgetHeight").setValue(Integer.toString(projectInfo.getGadgetInfo().getHeight()));
+				layoutParameters.getOption("gadgetWidth").setValue(Integer.toString(projectInfo.getGadgetInfo().getWidth()));
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getScreenshot()))
+				{
+					layoutParameters.getOption("gadgetScreenshot").setValue(projectInfo.getGadgetInfo().getScreenshot());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getThumbnail()))
+				{
+					layoutParameters.getOption("gadgetThumbnail").setValue(projectInfo.getGadgetInfo().getThumbnail());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitle()))
+				{
+					layoutParameters.getOption("gadgetTitle").setValue(projectInfo.getGadgetInfo().getTitle());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitleUrl()))
+				{
+					layoutParameters.getOption("gadgetTitleUrl").setValue(projectInfo.getGadgetInfo().getTitleUrl());
+				}
+				layoutParameters.getOption("gadgetScrolling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScrolling()));
+				layoutParameters.getOption("gadgetSingleton").setValue(Boolean.toString(projectInfo.getGadgetInfo().isSingleton()));
+				layoutParameters.getOption("gadgetScaling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScaling()));
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getLocales()))
+				{
+					layoutParameters.getOption("gadgetLocales").setValue(projectInfo.getGadgetInfo().getLocales());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getFeatures()))
+				{
+					layoutParameters.getOption("gadgetFeatures").setValue(projectInfo.getGadgetInfo().getFeatures());
+				}
+				if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getUserPreferences()))
+				{
+					layoutParameters.getOption("gadgetUserPreferences").setValue(projectInfo.getGadgetInfo().getUserPreferences());
+				}
 			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAboutMe()))
-			{
-				layoutParameters.getOption("gadgetAuthorAboutMe").setValue(projectInfo.getGadgetInfo().getAuthorAboutMe());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorAffiliation()))
-			{
-				layoutParameters.getOption("gadgetAuthorAffiliation").setValue(projectInfo.getGadgetInfo().getAuthorAffiliation());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorEmail()))
-			{
-				layoutParameters.getOption("gadgetAuthorEmail").setValue(projectInfo.getGadgetInfo().getAuthorEmail());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLink()))
-			{
-				layoutParameters.getOption("gadgetAuthorLink").setValue(projectInfo.getGadgetInfo().getAuthorLink());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorLocation()))
-			{
-				layoutParameters.getOption("gadgetAuthorLocation").setValue(projectInfo.getGadgetInfo().getAuthorLocation());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorPhoto()))
-			{
-				layoutParameters.getOption("gadgetAuthorPhoto").setValue(projectInfo.getGadgetInfo().getAuthorPhoto());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
-			{
-				layoutParameters.getOption("gadgetAuthorQuote").setValue(projectInfo.getGadgetInfo().getAuthorQuote());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
-			{
-				layoutParameters.getOption("getDescription").setValue(projectInfo.getGadgetInfo().getDescription());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getAuthorQuote()))
-			{
-				layoutParameters.getOption("getDirectoryTitle").setValue(projectInfo.getGadgetInfo().getDirectoryTitle());
-			}
-			layoutParameters.getOption("gadgetHeight").setValue(Integer.toString(projectInfo.getGadgetInfo().getHeight()));
-			layoutParameters.getOption("gadgetWidth").setValue(Integer.toString(projectInfo.getGadgetInfo().getWidth()));
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getScreenshot()))
-			{
-				layoutParameters.getOption("gadgetScreenshot").setValue(projectInfo.getGadgetInfo().getScreenshot());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getThumbnail()))
-			{
-				layoutParameters.getOption("gadgetThumbnail").setValue(projectInfo.getGadgetInfo().getThumbnail());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitle()))
-			{
-				layoutParameters.getOption("gadgetTitle").setValue(projectInfo.getGadgetInfo().getTitle());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getTitleUrl()))
-			{
-				layoutParameters.getOption("gadgetTitleUrl").setValue(projectInfo.getGadgetInfo().getTitleUrl());
-			}
-			layoutParameters.getOption("gadgetScrolling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScrolling()));
-			layoutParameters.getOption("gadgetSingleton").setValue(Boolean.toString(projectInfo.getGadgetInfo().isSingleton()));
-			layoutParameters.getOption("gadgetScaling").setValue(Boolean.toString(projectInfo.getGadgetInfo().isScaling()));
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getLocales()))
-			{
-				layoutParameters.getOption("gadgetLocales").setValue(projectInfo.getGadgetInfo().getLocales());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getFeatures()))
-			{
-				layoutParameters.getOption("gadgetFeatures").setValue(projectInfo.getGadgetInfo().getFeatures());
-			}
-			if (!StringUtils.isEmpty(projectInfo.getGadgetInfo().getUserPreferences()))
-			{
-				layoutParameters.getOption("gadgetUserPreferences").setValue(projectInfo.getGadgetInfo().getUserPreferences());
-			}
-			
     		cruxProjectGenerator.generate();
 	        return true;
         }
