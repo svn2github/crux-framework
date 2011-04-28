@@ -30,7 +30,7 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.formatter.Formatters;
 import br.com.sysmap.crux.core.utils.RegexpPatterns;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -49,7 +49,7 @@ public class RegisteredClientFormattersProxyCreator extends AbstractInterfaceWra
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredClientFormattersProxyCreator(TreeLogger logger, GeneratorContext context)
+	public RegisteredClientFormattersProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredClientFormatters.class.getCanonicalName()));
     }	

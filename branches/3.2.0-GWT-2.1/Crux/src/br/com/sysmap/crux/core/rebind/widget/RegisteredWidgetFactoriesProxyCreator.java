@@ -32,7 +32,7 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 import br.com.sysmap.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -51,7 +51,7 @@ public class RegisteredWidgetFactoriesProxyCreator extends AbstractInterfaceWrap
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredWidgetFactoriesProxyCreator(TreeLogger logger, GeneratorContext context)
+	public RegisteredWidgetFactoriesProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredWidgetFactories.class.getCanonicalName()));
     }

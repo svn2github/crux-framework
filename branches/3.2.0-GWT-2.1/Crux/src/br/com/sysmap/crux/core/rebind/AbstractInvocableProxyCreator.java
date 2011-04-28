@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.client.utils.EscapeUtils;
 import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -53,7 +53,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 {
 	protected JClassType invocableClassType;
 	
-	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType, JClassType invocableClassType)
+	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType, JClassType invocableClassType)
     {
 	    super(logger, context, baseProxyType);
 	    this.invocableClassType = invocableClassType;

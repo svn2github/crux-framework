@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
 import br.com.sysmap.crux.core.rebind.scanner.screen.config.WidgetConfig;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -51,7 +51,7 @@ public class DeclaredLazyWidgetsProxyCreator extends AbstractInterfaceWrapperPro
 	 * @param logger
 	 * @param context
 	 */
-	public DeclaredLazyWidgetsProxyCreator(TreeLogger logger, GeneratorContext context, JClassType invokerIntf)
+	public DeclaredLazyWidgetsProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
     {
 	    super(logger, context, invokerIntf);
     }

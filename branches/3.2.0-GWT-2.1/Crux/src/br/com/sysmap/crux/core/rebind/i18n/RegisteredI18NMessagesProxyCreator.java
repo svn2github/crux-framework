@@ -31,7 +31,7 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.Screen;
 import br.com.sysmap.crux.core.rebind.scanner.screen.Widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -48,7 +48,7 @@ public class RegisteredI18NMessagesProxyCreator extends AbstractInterfaceWrapper
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredI18NMessagesProxyCreator(TreeLogger logger, GeneratorContext context)
+	public RegisteredI18NMessagesProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
 	    super(logger, context, context.getTypeOracle().findType(DeclaredI18NMessages.class.getCanonicalName()));
     }	

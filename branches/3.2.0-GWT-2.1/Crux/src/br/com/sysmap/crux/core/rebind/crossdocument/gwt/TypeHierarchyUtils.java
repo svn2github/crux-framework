@@ -16,6 +16,8 @@
 
 package br.com.sysmap.crux.core.rebind.crossdocument.gwt;
 
+import com.google.gwt.core.ext.typeinfo.JClassType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
-import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
  * Collection of utility methods for dealing with type hierarchies.

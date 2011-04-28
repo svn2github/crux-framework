@@ -42,6 +42,7 @@ import br.com.sysmap.crux.core.utils.ClassUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -84,7 +85,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public ControllerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType controllerClass)
+	public ControllerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType controllerClass)
 	{
 		super(logger, context, getCrossDocumentInterface(logger, context, controllerClass), controllerClass);
 		this.controllerClass = controllerClass;

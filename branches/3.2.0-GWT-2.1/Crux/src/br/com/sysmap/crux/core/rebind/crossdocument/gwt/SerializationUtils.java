@@ -15,6 +15,16 @@
  */
 package br.com.sysmap.crux.core.rebind.crossdocument.gwt;
 
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JArrayType;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JField;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.dev.util.Util;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,16 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.CRC32;
-
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JArrayType;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.dev.javac.TypeOracleMediator;
-import com.google.gwt.dev.util.Util;
 
 /**
  * Utilities used for implementing serialization.
@@ -69,6 +69,47 @@ public class SerializationUtils {
     TYPES_WHOSE_IMPLEMENTATION_IS_EXCLUDED_FROM_SIGNATURES.add("junit.framework.AssertionFailedError");
   }
 
+  /**
+   * Returns the binary name of a type. This is the same name that would be
+   * returned by {@link Class#getName()} for this type.
+   * 
+   * @param type TypeOracle type to get the name for
+   * @return binary name for a type
+   */
+  public static String getRpcTypeName(JType type) {
+    JPrimitiveType primitiveType = type.isPrimitive();
+    if (primitiveType != null) {
+      return primitiveType.getJNISignature();
+    }
+  
+    JArrayType arrayType = type.isArray();
+    if (arrayType != null) {
+      JType component = arrayType.getComponentType();
+      if (component.isClassOrInterface() != null) {
+        return "[L" + getRpcTypeName(arrayType.getComponentType())
+            + ";";
+      } else {
+        return "[" + getRpcTypeName(arrayType.getComponentType());
+      }
+    }
+  
+    JParameterizedType parameterizedType = type.isParameterized();
+    if (parameterizedType != null) {
+      return getRpcTypeName(parameterizedType.getBaseType());
+    }
+  
+    JClassType classType = type.isClassOrInterface();
+    assert (classType != null);
+  
+    JClassType enclosingType = classType.getEnclosingType();
+    if (enclosingType != null) {
+      return getRpcTypeName(enclosingType) + "$"
+          + classType.getSimpleSourceName();
+    }
+  
+    return classType.getQualifiedSourceName();
+  }
+  
   /**
    * Returns the set of fields that are serializable for a given class type.
    * This method does not consider any superclass fields.
@@ -145,7 +186,7 @@ public class SerializationUtils {
       String serializerName = name[0] + "." + name[1];
       if (SerializableTypeOracleBuilder.isInStandardJavaPackage(classType.getQualifiedSourceName())) {
         /*
-         * Don't generate code into java packages. If you do hosted mode
+         * Don't generate code into java packages. If you do Development Mode
          * CompilingClassLoader will fail to resolve references to the generated
          * code.
          */
@@ -154,29 +195,6 @@ public class SerializationUtils {
       }
 
       return serializerName;
-    } else {
-      return name[1];
-    }
-  }
-  
-  /**
-   * Returns the qualified name of the type deserializer class for the given
-   * interface.
-   * 
-   * @param serviceIntf service interface
-   * @return name of the type serializer that handles the service interface
-   */
-  public static String getTypeDeserializerQualifiedName(JClassType serviceIntf)
-      throws IllegalArgumentException {
-    if (serviceIntf.isInterface() == null) {
-      throw new IllegalArgumentException(serviceIntf.getQualifiedSourceName()
-          + " is not a service interface");
-    }
-
-    String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
-    		TYPE_DESERIALIZER_SUFFIX);
-    if (name[0].length() > 0) {
-      return name[0] + "." + name[1];
     } else {
       return name[1];
     }
@@ -204,6 +222,29 @@ public class SerializationUtils {
       return name[1];
     }
   }
+  
+  /**
+   * Returns the qualified name of the type deserializer class for the given
+   * service interface.
+   * 
+   * @param serviceIntf service interface
+   * @return name of the type deserializer that handles the service interface
+   */
+  public static String getTypeDeserializerQualifiedName(JClassType serviceIntf)
+      throws IllegalArgumentException {
+    if (serviceIntf.isInterface() == null) {
+      throw new IllegalArgumentException(serviceIntf.getQualifiedSourceName()
+          + " is not a service interface");
+    }
+
+    String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
+        TYPE_DESERIALIZER_SUFFIX);
+    if (name[0].length() > 0) {
+      return name[0] + "." + name[1];
+    } else {
+      return name[1];
+    }
+  }  
 
   /**
    * Returns the simple name of the type serializer class for the given service
@@ -222,7 +263,7 @@ public class SerializationUtils {
         TYPE_SERIALIZER_SUFFIX);
     return name[1];
   }
-  
+
   /**
    * Returns the simple name of the type deserializer class for the given service
    * interface.
@@ -237,7 +278,7 @@ public class SerializationUtils {
     }
 
     String[] name = Shared.synthesizeTopLevelClassName(serviceIntf,
-		TYPE_DESERIALIZER_SUFFIX);
+        TYPE_DESERIALIZER_SUFFIX);
     return name[1];
   }
 
@@ -260,7 +301,7 @@ public class SerializationUtils {
       return;
     }
 
-    String serializedTypeName = TypeOracleMediator.computeBinaryClassName(type);
+    String serializedTypeName = getRpcTypeName(type);
     crc.update(serializedTypeName.getBytes(Util.DEFAULT_ENCODING));
 
     if (excludeImplementationFromSerializationSignature(type)) {
@@ -282,7 +323,7 @@ public class SerializationUtils {
         assert (field != null);
 
         crc.update(field.getName().getBytes(Util.DEFAULT_ENCODING));
-        crc.update(TypeOracleMediator.computeBinaryClassName(field.getType()).getBytes(
+        crc.update(getRpcTypeName(field.getType()).getBytes(
             Util.DEFAULT_ENCODING));
       }
 
@@ -292,5 +333,4 @@ public class SerializationUtils {
       }
     }
   }
-
 }

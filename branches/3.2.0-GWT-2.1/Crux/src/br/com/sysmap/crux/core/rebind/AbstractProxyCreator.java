@@ -17,7 +17,7 @@ package br.com.sysmap.crux.core.rebind;
 
 import br.com.sysmap.crux.core.i18n.MessagesFactory;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
@@ -30,7 +30,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 public abstract class AbstractProxyCreator
 {
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	protected final GeneratorContext context;
+	protected final GeneratorContextExt context;
 	protected final TreeLogger logger;
 
 	/**
@@ -38,7 +38,7 @@ public abstract class AbstractProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public AbstractProxyCreator(TreeLogger logger, GeneratorContext context)
+	public AbstractProxyCreator(TreeLogger logger, GeneratorContextExt context)
     {
 		this.logger = logger;
 		this.context = context;
@@ -128,5 +128,13 @@ public abstract class AbstractProxyCreator
 	 * @return a sourceWriter for the proxy class
 	 */
 	protected abstract SourceWriter getSourceWriter();
+	
+	/**
+	 * @return
+	 */
+	protected boolean isCacheable()
+	{
+		return false;
+	}
 	
 }

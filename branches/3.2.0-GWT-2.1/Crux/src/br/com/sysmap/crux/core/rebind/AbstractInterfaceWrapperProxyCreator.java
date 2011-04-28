@@ -26,7 +26,7 @@ import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenFactory;
 import br.com.sysmap.crux.core.rebind.scanner.screen.ScreenResourceResolverInitializer;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
@@ -44,7 +44,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	private static final String PROXY_SUFFIX = "_Impl";
 	protected JClassType baseIntf;
 
-	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
 	    super(logger, context);
 		this.baseIntf = baseIntf;

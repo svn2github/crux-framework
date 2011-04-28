@@ -17,7 +17,7 @@ package br.com.sysmap.crux.core.rebind;
 
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.SerializableTypeOracleBuilder;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -43,7 +43,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public AbstractSerializableProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType)
+	public AbstractSerializableProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType)
     {
 		super(logger, context);
 		this.baseProxyType = baseProxyType;

@@ -24,7 +24,7 @@ import br.com.sysmap.crux.core.rebind.crossdocument.gwt.Shared;
 import br.com.sysmap.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 import br.com.sysmap.crux.core.utils.ClassUtils;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -55,7 +55,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * @param context
 	 * @param baseProxyType
 	 */
-	public ContextProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType)
+	public ContextProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType)
 	{
 		super(logger, context, baseProxyType);
 	}
