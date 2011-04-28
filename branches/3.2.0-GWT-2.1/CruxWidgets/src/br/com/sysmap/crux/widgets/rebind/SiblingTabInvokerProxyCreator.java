@@ -15,11 +15,11 @@
  */
 package br.com.sysmap.crux.widgets.rebind;
 
-import com.google.gwt.core.ext.GeneratorContext;
+import br.com.sysmap.crux.widgets.client.dynatabs.Tab;
+
+import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-
-import br.com.sysmap.crux.widgets.client.dynatabs.Tab;
 
 /**
  * generates a invoker for calling existing controllers/methods on a sibling tab.
@@ -28,7 +28,7 @@ import br.com.sysmap.crux.widgets.client.dynatabs.Tab;
 @Deprecated
 public class SiblingTabInvokerProxyCreator extends AbstractTabInvokerProxyCreator
 {
-	public SiblingTabInvokerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public SiblingTabInvokerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }
