@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <antlib>
-	<taskdef name="cruxmodulecontainercompiler" classname="org.cruxframework.crux.tools.compile.CruxModuleContainerApplicationCompilerTask" />
 	<taskdef name="cruxmodulecompiler" classname="org.cruxframework.crux.tools.compile.CruxModulesCompilerTask" />
 	<taskdef name="blockremove" classname="org.cruxframework.crux.tools.compile.utils.BlockRemoveTask" />
 	<taskdef name="generateSchemas" classname="org.cruxframework.crux.tools.schema.SchemaGeneratorModulesTask" />
