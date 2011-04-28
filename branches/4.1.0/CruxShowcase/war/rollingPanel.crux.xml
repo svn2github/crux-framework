@@ -1,0 +1,48 @@
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:a="http://www.cruxframework.org/crux/widgets"
+	xmlns:b="http://www.cruxframework.org/crux/gwt"
+	xmlns:s="http://www.cruxframework.org/templates/showcase"
+>
+
+	<head>
+		<title>Rolling Panel</title>
+		<link rel="stylesheet" type="text/css" href="style/css/standard.css" />
+	</head>
+
+	<body>
+
+		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
+
+		<b:dockPanel id="centeringPanel" width="100%" spacing="5">
+			<b:cell horizontalAlignment="center" direction="north">
+				<a:rollingPanel id="rollingPanel" width="350" height="80">
+					<b:image id="image1" url="style/img/crux-logo.gif"/>
+					<b:image id="image2" url="style/img/crux-logo.gif"/>
+					<b:image id="image3" url="style/img/crux-logo.gif"/>
+					<b:image id="image4" url="style/img/crux-logo.gif"/>
+					<b:image id="image5" url="style/img/crux-logo.gif"/>
+					<b:image id="image6" url="style/img/crux-logo.gif"/>
+					<b:image id="image7" url="style/img/crux-logo.gif"/>
+					<b:image id="image8" url="style/img/crux-logo.gif"/>
+					<b:image id="image9" url="style/img/crux-logo.gif"/>
+					<b:image id="image10" url="style/img/crux-logo.gif"/>
+					<b:image id="image11" url="style/img/crux-logo.gif"/>
+					<b:image id="image12" url="style/img/crux-logo.gif"/>
+				</a:rollingPanel>
+			</b:cell>
+		</b:dockPanel>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The RollingPanel is a kind of panel with horizontal or vertical rollover into which you can insert elements beyond of destinated area's limit.
+				The DynaTabs for example can explode in tabs number the screen area limit.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click in the side buttons, the elements of the list will be displayed. 
+				Looking at the example's source, you can see that we handle the rolling events, in order to roll
+				the elements being shown in the list. 
+			</s:exampleInfo>
+		</s:info>
+	</body>
+</html>

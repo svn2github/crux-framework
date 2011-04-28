@@ -1,0 +1,44 @@
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:a="http://www.cruxframework.org/crux/widgets"
+	xmlns:b="http://www.cruxframework.org/crux/gwt"
+	xmlns:s="http://www.cruxframework.org/templates/showcase">
+
+	<head>
+		<title>Scroll Banner</title>
+		<link rel="stylesheet" type="text/css" href="style/css/standard.css" />
+	</head>
+
+	<body>
+
+		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
+
+		<c:screen useController="transferListController"/>
+
+		<b:dockPanel id="centeringPanel" width="100%" height="130" spacing="15">
+			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
+				<a:decoratedPanel id="borders">
+					<a:widget>
+						<a:transferList id="transferList" leftListLabel="Left Items" 
+			                rightListLabel="Right Items" visibleItemCount="5"
+			                leftToRightButtonText="&gt;&gt;" rightToLeftButtonText="&lt;&lt;"
+			                onBeforeMoveItems="transferListController.onBeforeMoveItems"
+			                onLoadWidget="transferListController.loadItems" style="padding:5px;"/>
+					</a:widget>
+				</a:decoratedPanel>
+			</b:cell>
+		</b:dockPanel>
+		
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The TransferList is a component to separate in panels, or groups, 'selected elements' and 'selectable elements'.
+				The elements never belong into two panels at the same time.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click in the some element and in the buttons '&lt;&lt;' or '&gt;&gt;', the selected content of panel will be transferred to near panel.
+			</s:exampleInfo>
+		</s:info>
+		
+	</body>
+</html>
