@@ -44,6 +44,7 @@ public class ModuleContainerLayoutProjectGenerator extends AbstractLayoutProject
 		String packageDir = this.options.getModulePackage().replaceAll("\\.", "/");
 		File moduleDir = createDir(sourceDir, packageDir);
 		
+		createFile(sourceDir, "Crux.properties", "modules/crux.properties.txt");
 		createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "module.xml");
     }
 
@@ -62,7 +63,7 @@ public class ModuleContainerLayoutProjectGenerator extends AbstractLayoutProject
 		
 		String pageName = getPageName();
 		
-		createFile(getWebInfLibDir().getParentFile(), "web.xml", "web.xml");
+		createFile(getWebInfLibDir().getParentFile(), "web.xml", "modules/web.xml");
 		createFile(getWarDir(), pageName, "index.crux.xml");		
     }
 

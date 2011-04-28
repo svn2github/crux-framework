@@ -40,10 +40,9 @@
 
 		<copydir dest="${temp.dir}/webroot" src="${web.root}"/>
 		
-		<cruxmodulecontainercompiler srcDir="${src.dir}" outputDir="${temp.dir}/webroot" webDir="${temp.dir}/webroot" 
+		<cruxmodulecompiler srcDir="${src.dir}" outputDir="${temp.dir}/webroot" webDir="${temp.dir}/webroot" 
 			                keepPagesGeneratedFiles="true" pagesOutputDir="${temp.dir}/webroot" indentPages="false" 
 							outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
 			<classpath>
 				<path refid="build.classpath" />
 			</classpath>
@@ -58,7 +57,7 @@
 			<arg value="-logLevel"/>
 			<arg value="DEBUG"/>
 			-->
-		</cruxmodulecontainercompiler>
+		</cruxmodulecompiler>
 		<delete>
 			<fileset dir="${temp.dir}/webroot">
 				<include name="**/*.crux.xml"/>
@@ -90,8 +89,7 @@
 	========================================================================================================
 	-->
 	<target name="compile-scripts">
-		<cruxmodulecontainercompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
+		<cruxmodulecompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
 			<classpath>
 				<path refid="build.classpath" />
 				<pathelement path="${web.root}" />
@@ -107,7 +105,7 @@
 			<arg value="-logLevel"/>
 			<arg value="DEBUG"/>
 			-->
-		</cruxmodulecontainercompiler>
+		</cruxmodulecompiler>
 	</target>
 
 	<!-- 
@@ -116,8 +114,7 @@
 	========================================================================================================
 	-->
 	<target name="fast-compile-scripts">
-		<cruxmodulecontainercompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
+		<cruxmodulecompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
 			<classpath>
 				<path refid="build.classpath" />
 				<pathelement path="${web.root}" />
@@ -135,7 +132,7 @@
 			<arg value="-logLevel"/>
 			<arg value="DEBUG"/>
 			-->
-		</cruxmodulecontainercompiler>
+		</cruxmodulecompiler>
 	</target>
 
 	<!-- 
