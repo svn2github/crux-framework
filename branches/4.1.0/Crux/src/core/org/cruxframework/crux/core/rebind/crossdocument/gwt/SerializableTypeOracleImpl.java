@@ -15,11 +15,11 @@
  */
 package org.cruxframework.crux.core.rebind.crossdocument.gwt;
 
+import java.util.Set;
+
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
-
-import java.util.Set;
 
 final class SerializableTypeOracleImpl implements SerializableTypeOracle {
 

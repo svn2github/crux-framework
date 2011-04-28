@@ -157,8 +157,8 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 			PropertyOracle propertyOracle = context.getPropertyOracle();
 			try
             {
-	            SerializableTypeOracleBuilder typesSentFromDocBuilder = new SerializableTypeOracleBuilder(logger, propertyOracle, typeOracle);
-	            SerializableTypeOracleBuilder typesSentToDocBuilder = new SerializableTypeOracleBuilder(logger, propertyOracle, typeOracle);
+	            SerializableTypeOracleBuilder typesSentFromDocBuilder = new SerializableTypeOracleBuilder(logger, propertyOracle, context);
+	            SerializableTypeOracleBuilder typesSentToDocBuilder = new SerializableTypeOracleBuilder(logger, propertyOracle, context);
 
 	            addRoots(typeOracle, typesSentFromDocBuilder, typesSentToDocBuilder);
 

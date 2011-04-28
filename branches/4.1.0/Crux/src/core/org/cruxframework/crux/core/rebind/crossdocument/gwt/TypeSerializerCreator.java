@@ -188,19 +188,17 @@ public class TypeSerializerCreator {
 
     if (srcWriter != null) {
       writeStaticFields();
-
       writeStaticInitializer();
 
-      writeLoadMethodsJava();
-
-      writeLoadMethodsNative();
-
-      writeLoadSignaturesJava();
-
-      writeLoadSignaturesNative();
+      if (context.isProdMode()) {
+        writeLoadMethodsNative();
+        writeLoadSignaturesNative();
+      } else {
+        writeLoadMethodsJava();
+        writeLoadSignaturesJava();
+      }
 
       writeConstructor();
-
       srcWriter.commit(logger);
     }
 
@@ -239,7 +237,7 @@ public class TypeSerializerCreator {
   
       JClassType customFieldSerializer = SerializableTypeOracleBuilder.findCustomFieldSerializer(
           typeOracle, type);
-      FieldSerializerCreator creator = new FieldSerializerCreator(typeOracle,
+      FieldSerializerCreator creator = new FieldSerializerCreator(context,
           serializationOracle, deserializationOracle, (JClassType) type,
           customFieldSerializer);
       creator.realize(logger, ctx);
@@ -374,7 +372,11 @@ public class TypeSerializerCreator {
    */
   private void writeConstructor() {
     srcWriter.println("public " + typeSerializerSimpleName + "() {");
-    srcWriter.indentln("super(methodMapJava, methodMapNative, signatureMapJava, signatureMapNative);");
+    if (context.isProdMode()) {
+      srcWriter.indentln("super(null, methodMapNative, null, signatureMapNative);");
+    } else {
+      srcWriter.indentln("super(methodMapJava, null, signatureMapJava, null);");      
+    }
     srcWriter.println("}");
     srcWriter.println();
   }
@@ -577,20 +579,13 @@ public class TypeSerializerCreator {
         continue;
       }
 
-      String jsniTypeRef;
-      jsniTypeRef = SerializationUtils.getRpcTypeName(type.getLeafType());
-      while (type.isArray() != null) {
-        jsniTypeRef += "[]";
-        type = type.isArray().getComponentType();
-      }
-
       if (shard && ++shardCount % shardSize == 0) {
         srcWriter.println("})();");
         srcWriter.println("(function() {");
       }
 
       srcWriter.println("result[@com.google.gwt.core.client.impl.Impl::getHashCode(Ljava/lang/Object;)(@"
-          + jsniTypeRef + "::class)] = \"" + typeString + "\";");
+          + type.getQualifiedSourceName() + "::class)] = \"" + typeString + "\";");
     }
 
     if (shard) {
@@ -614,10 +609,13 @@ public class TypeSerializerCreator {
    * </pre>
    */
   private void writeStaticFields() {
-    srcWriter.println("private static final Map<String, String> methodMapJava;");
-    srcWriter.println("private static final MethodMap methodMapNative;");
-    srcWriter.println("private static final Map<String, String> signatureMapJava;");
-    srcWriter.println("private static final JsArrayString signatureMapNative;");
+    if (context.isProdMode()) {
+      srcWriter.println("private static final MethodMap methodMapNative;");
+      srcWriter.println("private static final JsArrayString signatureMapNative;");
+    } else {
+      srcWriter.println("private static final Map<String, String> methodMapJava;");
+      srcWriter.println("private static final Map<String, String> signatureMapJava;");      
+    }
     srcWriter.println();
   }
 
@@ -643,21 +641,13 @@ public class TypeSerializerCreator {
   private void writeStaticInitializer() {
     srcWriter.println("static {");
     srcWriter.indent();
-    srcWriter.println("if (GWT.isScript()) {");
-    srcWriter.indent();
-    srcWriter.println("methodMapJava = null;");
-    srcWriter.println("methodMapNative = loadMethodsNative();");
-    srcWriter.println("signatureMapJava = null;");
-    srcWriter.println("signatureMapNative = loadSignaturesNative();");
-    srcWriter.outdent();
-    srcWriter.println("} else {");
-    srcWriter.indent();
-    srcWriter.println("methodMapJava = loadMethodsJava();");
-    srcWriter.println("methodMapNative = null;");
-    srcWriter.println("signatureMapJava = loadSignaturesJava();");
-    srcWriter.println("signatureMapNative = null;");
-    srcWriter.outdent();
-    srcWriter.println("}");
+    if (context.isProdMode()) {
+      srcWriter.println("methodMapNative = loadMethodsNative();");
+      srcWriter.println("signatureMapNative = loadSignaturesNative();");
+    } else {
+      srcWriter.println("methodMapJava = loadMethodsJava();");
+      srcWriter.println("signatureMapJava = loadSignaturesJava();");
+    }
     srcWriter.outdent();
     srcWriter.println("}");
     srcWriter.println();

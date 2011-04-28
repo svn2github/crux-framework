@@ -57,7 +57,7 @@ public class GadgetJettyLauncher extends CruxJettyLauncher
 		// Setup our branch logger during startup.
 		Log.setLog(new JettyTreeLogger(branch));
 
-		AbstractConnector connector = getConnector();
+		AbstractConnector connector = getConnector(logger);
 		if (shindigBindAddress != null) {
 			connector.setHost(shindigBindAddress);
 		}
