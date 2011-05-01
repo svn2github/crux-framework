@@ -69,4 +69,20 @@
     		<when-property-is name="user.agent" value="ie8" />
     	</any>
     </replace-with>
+    
+    <replace-with
+    	class="br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedInputMobileImpl">
+    	<when-type-assignable class="br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedInput" />
+    	<any>
+    		<when-property-is name="user.agent" value="safari" />
+    	</any>
+    </replace-with>
+    <replace-with
+    	class="br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedInputImpl">
+    	<when-type-assignable class="br.com.sysmap.crux.widgets.client.maskedtextbox.MaskedInput" />
+    	<none>
+    		<when-property-is name="user.agent" value="safari" />
+    	</none>
+    </replace-with>
+    
 </module>
