@@ -23,9 +23,7 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.UnsafeNativeLong;
+import com.google.gwt.lang.LongLib;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.Serializer;
@@ -86,13 +84,6 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
 		}
 		return new double[] { low, high };
 	}
-
-	@UnsafeNativeLong
-	// Keep synchronized with LongLib
-	private static native double[] makeLongComponents0(long value) /*-{
-		return value;
-	}-*/;
-	
 
 	public void append(String token)
 	{
@@ -194,24 +185,7 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
 
 	public void writeLong(long fieldValue)
 	{
-		/*
-		 * Client code represents longs internally as an array of two Numbers.
-		 * In order to make serialization of longs faster, we'll send the
-		 * component parts so that the value can be directly reconstituted on
-		 * the server.
-		 */
-		double[] parts;
-		if (GWT.isScript())
-		{
-			parts = makeLongComponents0(fieldValue);
-		}
-		else
-		{
-			parts = makeLongComponents((int) (fieldValue >> 32), (int) fieldValue);
-		}
-		assert parts.length == 2;
-		writeDouble(parts[0]);
-		writeDouble(parts[1]);
+		writeString(LongLib.toBase64(fieldValue));
 	}
 
 	public void writeObject(Object instance) throws SerializationException
