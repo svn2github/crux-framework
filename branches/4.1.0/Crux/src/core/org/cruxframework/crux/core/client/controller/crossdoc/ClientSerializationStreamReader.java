@@ -17,9 +17,8 @@ package org.cruxframework.crux.core.client.controller.crossdoc;
 
 import org.cruxframework.crux.core.client.collection.FastList;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.UnsafeNativeLong;
+import com.google.gwt.lang.LongLib;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.impl.Serializer;
@@ -46,11 +45,6 @@ public final class ClientSerializationStreamReader implements SerializationStrea
 
 	private static native JavaScriptObject eval(String encoded) /*-{
 		return eval(encoded);
-	}-*/;
-
-	@UnsafeNativeLong
-	private static native long readLong0(double low, double high) /*-{
-		return [low, high];
 	}-*/;
 
 	public void prepareToRead(String encoded) throws SerializationException
@@ -105,14 +99,8 @@ public final class ClientSerializationStreamReader implements SerializationStrea
 	 */
 	public long readLong()
 	{
-		if (GWT.isScript())
-		{
-			return readLong0(readDouble(), readDouble());
-		}
-		else
-		{
-			return (long) readDouble() + (long) readDouble();
-		}
+		String s = readString();
+		return LongLib.longFromBase64(s);
 	}
 
 	/**

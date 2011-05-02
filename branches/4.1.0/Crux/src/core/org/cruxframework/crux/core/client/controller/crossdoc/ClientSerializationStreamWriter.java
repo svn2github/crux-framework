@@ -23,9 +23,7 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.UnsafeNativeLong;
+import com.google.gwt.lang.LongLib;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.Serializer;
@@ -41,10 +39,6 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
     private static final String POSTLUDE = "])";
     private static final String PRELUDE = "].concat([";
 
-    // Keep synchronized with LongLib
-	private static final double TWO_PWR_16_DBL = 0x10000;
-    // Keep synchronized with LongLib
-	private static final double TWO_PWR_32_DBL = TWO_PWR_16_DBL * TWO_PWR_16_DBL;
     private int count = 0;
     private StringBuffer encodeBuffer;
 	private boolean needsComma = false;
@@ -66,33 +60,6 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
 	{
 		this.serializer = serializer;
 	}
-
-	/**
-	 * Make an instance equivalent to stringing highBits next to lowBits, where
-	 * highBits and lowBits are assumed to be in 32-bit twos-complement
-	 * notation. As a result, for any double[] l, the following identity holds:
-	 * 
-	 * <blockquote> <code>l == makeFromBits(l.highBits(), l.lowBits())</code>
-	 * </blockquote>
-	 */
-	// Keep synchronized with LongLib
-	public static double[] makeLongComponents(int highBits, int lowBits)
-	{
-		double high = highBits * TWO_PWR_32_DBL;
-		double low = lowBits;
-		if (lowBits < 0)
-		{
-			low += TWO_PWR_32_DBL;
-		}
-		return new double[] { low, high };
-	}
-
-	@UnsafeNativeLong
-	// Keep synchronized with LongLib
-	private static native double[] makeLongComponents0(long value) /*-{
-		return value;
-	}-*/;
-	
 
 	public void append(String token)
 	{
@@ -181,7 +148,6 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
 		append(String.valueOf(fieldValue));
 	}
 
-
 	public void writeFloat(float fieldValue)
 	{
 		writeDouble(fieldValue);
@@ -194,24 +160,7 @@ public final class ClientSerializationStreamWriter implements SerializationStrea
 
 	public void writeLong(long fieldValue)
 	{
-		/*
-		 * Client code represents longs internally as an array of two Numbers.
-		 * In order to make serialization of longs faster, we'll send the
-		 * component parts so that the value can be directly reconstituted on
-		 * the server.
-		 */
-		double[] parts;
-		if (GWT.isScript())
-		{
-			parts = makeLongComponents0(fieldValue);
-		}
-		else
-		{
-			parts = makeLongComponents((int) (fieldValue >> 32), (int) fieldValue);
-		}
-		assert parts.length == 2;
-		writeDouble(parts[0]);
-		writeDouble(parts[1]);
+		writeString(LongLib.toBase64(fieldValue));
 	}
 
 	public void writeObject(Object instance) throws SerializationException
