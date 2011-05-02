@@ -17,9 +17,8 @@ package br.com.sysmap.crux.core.client.controller.crossdoc;
 
 import br.com.sysmap.crux.core.client.collection.FastList;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.UnsafeNativeLong;
+import com.google.gwt.lang.LongLib;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.impl.Serializer;
@@ -45,11 +44,6 @@ public final class ClientSerializationStreamReader implements SerializationStrea
 
 	private static native JavaScriptObject eval(String encoded) /*-{
 		return eval(encoded);
-	}-*/;
-
-	@UnsafeNativeLong
-	private static native long readLong0(double low, double high) /*-{
-		return [low, high];
 	}-*/;
 
 	public void prepareToRead(String encoded) throws SerializationException
@@ -91,7 +85,24 @@ public final class ClientSerializationStreamReader implements SerializationStrea
 		return this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::results[++this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::index];
 	}-*/;
 
-	private native int readTableSize() /*-{
+//    @UnsafeNativeLong
+//    public native long readLong() /*-{
+//      var s = this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::results[--this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::index];
+//      return @com.google.gwt.lang.LongLib::longFromBase64(Ljava/lang/String;)(s);
+//    }-*/;
+    
+    public long readLong()
+    {
+    	String s = readString();
+    	return LongLib.longFromBase64(s);
+    }
+    
+    /*-{
+      var s = this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::results[--this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::index];
+      return @com.google.gwt.lang.LongLib::longFromBase64(Ljava/lang/String;)(s);
+    }-*/;
+
+    private native int readTableSize() /*-{
 		return this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::results[this.@br.com.sysmap.crux.core.client.controller.crossdoc.ClientSerializationStreamReader::results.length-1];
 	}-*/;
 	
@@ -99,21 +110,6 @@ public final class ClientSerializationStreamReader implements SerializationStrea
 		return array.length;
 	}-*/;	
 	
-	/**
-	 * @see com.google.gwt.user.client.rpc.SerializationStreamReader#readLong()
-	 */
-	public long readLong()
-	{
-		if (GWT.isScript())
-		{
-			return readLong0(readDouble(), readDouble());
-		}
-		else
-		{
-			return (long) readDouble() + (long) readDouble();
-		}
-	}
-
 	/**
 	 * @see com.google.gwt.user.client.rpc.SerializationStreamReader#readObject()
 	 */
