@@ -102,7 +102,7 @@ public class MaskedInputMobileImpl implements MaskedInput, KeyDownHandler, KeyPr
 		
 		this.textBox.getElement().setAttribute("placeholder", new String(this.buffer));
 		String textValue = this.textBox.getText();
-		trySetValue(textValue);
+		trySetValue(textValue, true);
 	}
 	
 	/**
@@ -227,55 +227,94 @@ public class MaskedInputMobileImpl implements MaskedInput, KeyDownHandler, KeyPr
 	public void onPaste(PasteEvent event)
 	{
 		String textValue = this.textBox.getText();
-		trySetValue(textValue);
+		trySetValue(textValue, false);
 	}
 
-	private void trySetValue(String textValue)
+	/**
+	 * @param textValue
+	 * @param applyMask
+	 */
+	private void trySetValue(String textValue, boolean applyMask)
 	{
 		int textValueLength = textValue.length();
 		if (textValueLength == tests.size())
 		{
-			for(int i=0; i<textValueLength; i++)
-			{
-				String c = ""+textValue.charAt(i);
-				if (!c.matches(tests.get(i)))
-				{
-					textBox.setText("");
-					return;
-				}
-			}
-			textBox.setText(mask(textValue));
+			trySetValueUnmasked(textValue, applyMask, textValueLength);
 		}
 		else if (textValueLength > tests.size() && textValueLength <= buffer.length)
 		{
-			StringBuilder unmasked = new StringBuilder();
-			int j=0;
-			for(int i=0; i<textValueLength; i++)
-			{
-				String c = ""+textValue.charAt(i);
-				if (buffer[i] != placeHolder)
-				{
-					if (buffer[i] != textValue.charAt(i))
-					{
-						textBox.setText("");
-						return;
-					}
-				}
-				else if (!c.matches(tests.get(j++)))
-				{
-					textBox.setText("");
-					return;
-				}
-				else
-				{
-					unmasked.append(c);
-				}
-			}
-			textBox.setText(mask(unmasked.toString()));
+			trySetValueMasked(textValue, applyMask, textValueLength);
 		}
 		else
 		{
 			textBox.setText("");
+		}
+	}
+
+	/**
+	 * @param textValue
+	 * @param applyMask
+	 * @param textValueLength
+	 */
+	private void trySetValueUnmasked(String textValue, boolean applyMask, int textValueLength)
+	{
+		for(int i=0; i<textValueLength; i++)
+		{
+			String c = ""+textValue.charAt(i);
+			if (!c.matches(tests.get(i)))
+			{
+				textBox.setText("");
+				return;
+			}
+		}
+		if (applyMask)
+		{
+			textBox.setText(mask(textValue));
+		}
+		else
+		{
+			textBox.setText(textValue);
+		}
+		return;
+	}
+
+	/**
+	 * @param textValue
+	 * @param applyMask
+	 * @param textValueLength
+	 */
+	private void trySetValueMasked(String textValue, boolean applyMask, int textValueLength)
+	{
+		StringBuilder unmasked = new StringBuilder();
+		int j=0;
+		for(int i=0; i<textValueLength; i++)
+		{
+			String c = ""+textValue.charAt(i);
+			if (buffer[i] != placeHolder)
+			{
+				if (buffer[i] != textValue.charAt(i))
+				{
+					textBox.setText("");
+					return;
+				}
+			}
+			else if (!c.matches(tests.get(j++)))
+			{
+				textBox.setText("");
+				return;
+			}
+			else
+			{
+				unmasked.append(c);
+			}
+		}
+		if (applyMask)
+		{
+			textBox.setText(mask(unmasked.toString()));
+		}
+		else
+		{
+			textBox.setText(unmasked.toString());
 		}
 	}
 
