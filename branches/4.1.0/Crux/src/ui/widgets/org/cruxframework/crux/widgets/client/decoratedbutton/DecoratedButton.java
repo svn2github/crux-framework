@@ -82,12 +82,12 @@ public class DecoratedButton extends FocusWidget implements HasText
 		}
 		else if(type == Event.ONMOUSEUP)
 		{
-			this.face.removeStyleDependentName("down");
+//			this.face.removeStyleDependentName("down");
 			onClick();
 		}		
 		else if (type == Event.ONMOUSEDOWN)
 		{
-			this.face.addStyleDependentName("down");
+//			this.face.addStyleDependentName("down");
 			this.setFocus(true);
 		}
 		else if (type == Event.ONMOUSEOUT)
