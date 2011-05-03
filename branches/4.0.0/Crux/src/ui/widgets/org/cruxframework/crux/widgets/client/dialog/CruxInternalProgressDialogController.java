@@ -74,6 +74,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		if (previewHandler != null)
 		{
 			previewHandler.removeHandler();
+			previewHandler = null;
 		}
 	}
 
