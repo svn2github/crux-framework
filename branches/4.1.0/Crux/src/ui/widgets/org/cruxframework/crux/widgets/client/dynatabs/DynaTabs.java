@@ -261,7 +261,7 @@ public class DynaTabs extends Composite
 			
 			if(reloadIfAlreadyOpen)
 			{
-				tab.changeURL(tab.getUrl());
+				tab.changeURL(Screen.appendDebugParameters(url));
 			}
 		}			
 
