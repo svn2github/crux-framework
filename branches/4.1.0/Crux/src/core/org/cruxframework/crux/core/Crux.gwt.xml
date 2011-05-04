@@ -40,8 +40,17 @@
 	</generate-with>
 
 	<!-- Specify the default implementation to ContextHandler.-->
+	<replace-with class="org.cruxframework.crux.core.client.context.LocalStorageContextHandler">
+		<when-type-assignable class="org.cruxframework.crux.core.client.context.ContextHandler" />
+		<none>
+			<when-property-is name="user.agent" value="ie6" />
+		</none>
+	</replace-with>
 	<replace-with class="org.cruxframework.crux.core.client.context.CookieContextHandler">
 		<when-type-assignable class="org.cruxframework.crux.core.client.context.ContextHandler" />
+		<any>
+			<when-property-is name="user.agent" value="ie6" />
+		</any>
 	</replace-with>
 
 	<!-- Specify the default implementation to ErrorHandler.-->
