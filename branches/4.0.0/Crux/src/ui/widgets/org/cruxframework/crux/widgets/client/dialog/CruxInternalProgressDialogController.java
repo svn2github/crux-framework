@@ -50,20 +50,25 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	
 	private FastList<String> stack = new FastList<String>(); 
 	private HandlerRegistration previewHandler = null; 
+	private int numProgressDialogOnDocument = 0;
 	
 	/**
 	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
 	 */
 	public void disableEventsOnOpener()
 	{
-		previewHandler = Event.addNativePreviewHandler(new NativePreviewHandler()
+		numProgressDialogOnDocument++;
+		if (numProgressDialogOnDocument == 1)
 		{
-			public void onPreviewNativeEvent(NativePreviewEvent event)
+			previewHandler = Event.addNativePreviewHandler(new NativePreviewHandler()
 			{
-				event.cancel();
-				return;
-			}
-		});
+				public void onPreviewNativeEvent(NativePreviewEvent event)
+				{
+					event.cancel();
+					return;
+				}
+			});
+		}
 	}
 	
 	/**
@@ -71,10 +76,14 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 */
 	public void enableEventsOnOpener()
 	{
-		if (previewHandler != null)
+		numProgressDialogOnDocument--;
+		if (numProgressDialogOnDocument == 0)
 		{
-			previewHandler.removeHandler();
-			previewHandler = null;
+			if (previewHandler != null)
+			{
+				previewHandler.removeHandler();
+				previewHandler = null;
+			}
 		}
 	}
 
