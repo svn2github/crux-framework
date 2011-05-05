@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind;
+package org.cruxframework.crux.core.server;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -23,9 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
-import org.cruxframework.crux.core.server.Environment;
-import org.cruxframework.crux.core.server.InitializerListener;
-import org.cruxframework.crux.core.server.ServerMessages;
 
 
 /**

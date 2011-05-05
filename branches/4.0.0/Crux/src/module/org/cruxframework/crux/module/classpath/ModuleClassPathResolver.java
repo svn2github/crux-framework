@@ -57,4 +57,10 @@ public class ModuleClassPathResolver extends ClassPathResolverImpl
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public void initialize()
+	{
+	    // Do nothing
+	}
 }

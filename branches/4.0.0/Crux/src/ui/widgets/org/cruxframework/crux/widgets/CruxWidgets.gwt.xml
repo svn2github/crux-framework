@@ -63,4 +63,20 @@
     		<when-property-is name="user.agent" value="ie8" />
     	</any>
     </replace-with>
+	<replace-with
+    	class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonCSS2Impl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf" />
+    	<any>
+      		<when-property-is name="user.agent" value="ie6" />
+    		<when-property-is name="user.agent" value="ie8" />
+    	</any>
+    </replace-with>
+	<replace-with
+    	class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonCSS3Impl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf" />
+    	<none>
+      		<when-property-is name="user.agent" value="ie6" />
+    		<when-property-is name="user.agent" value="ie8" />
+    	</none>
+    </replace-with>
 </module>

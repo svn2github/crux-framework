@@ -115,4 +115,7 @@ public interface DeclarativeUIMessages
 
 	@DefaultServerMessage("[declarativeui 033] - No module declared on screen {0}.")
 	String htmlBuilderNoModulesOnPage(String screenId);
+
+	@DefaultServerMessage("[declarativeui 032] - Outputcharset is undefined. Check your web.xml file to ensure that DevModeInitializerListener is correctly configured.")
+	String transformerErrorOutputCharsetUndefined();
 }
