@@ -112,7 +112,32 @@ public abstract class AbstractLayoutProjectGenerator implements LayoutProjectGen
 	 */
 	public void createXSDs()
     {
-		SchemaGenerator.generateSchemas(options.getProjectDir(), new File(options.getProjectDir(),"xsd"), null, false);
+		try
+        {
+	        StringBuilder classpath = new StringBuilder(".");
+	        
+	        String projectDir = options.getProjectDir().getCanonicalPath();
+	        
+	        for (String jar : listJars(getWebInfLibDir()))
+	        {
+	        	classpath.append(File.pathSeparator+projectDir+"/war/WEB-INF/lib/" + jar);
+	        }
+	        
+	        for (String jar : listJars(getBuildLibDir()))
+	        {
+	        	classpath.append(File.pathSeparator+projectDir+"/build/lib/" + jar);
+	        }
+
+	        ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath.toString(), 
+	        		SchemaGenerator.class.getCanonicalName(), projectDir,  new File(options.getProjectDir(),"xsd").getCanonicalPath());
+
+	        Process process = builder.start();
+	        process.waitFor();
+        }
+        catch (Exception e)
+        {
+        	throw new RuntimeException("Error creating XSD files",e);
+        }
     }
 
 	/**
