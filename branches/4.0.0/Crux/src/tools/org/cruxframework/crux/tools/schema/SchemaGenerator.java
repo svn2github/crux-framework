@@ -77,6 +77,7 @@ public class SchemaGenerator
 													parameters.get("outputDir").getValue(), 
 													webDir);
 				}
+				System.exit(0);
 			}
 			catch (ConsoleParametersProcessingException e)
 			{
@@ -87,6 +88,7 @@ public class SchemaGenerator
 		{
 			e.printStackTrace();
 		}
+		System.exit(1);
 	}
 
 	/**

@@ -17,8 +17,10 @@ package org.cruxframework.crux.tools.projectgen;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.cruxframework.crux.core.utils.FileUtils;
+import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.tools.schema.ModuleSchemaGenerator;
 import org.cruxframework.crux.tools.schema.SchemaGenerator;
 
@@ -94,7 +96,10 @@ public class ModuleLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	        		"-DCruxToolsConfig.schemaGeneratorClass="+ModuleSchemaGenerator.class.getName(),
 	        		SchemaGenerator.class.getCanonicalName(), projectDir,  new File(options.getProjectDir(),"xsd").getCanonicalPath());
 
+	        builder.redirectErrorStream(true);
 	        Process process = builder.start();
+	        InputStream processStream = process.getInputStream();
+        	System.out.println(StreamUtils.readAsUTF8(processStream));
 	        process.waitFor();
         }
         catch (Exception e)

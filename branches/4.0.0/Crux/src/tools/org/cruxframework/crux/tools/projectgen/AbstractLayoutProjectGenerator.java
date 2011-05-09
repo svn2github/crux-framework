@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.utils.FileUtils;
+import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
 import org.cruxframework.crux.tools.schema.SchemaGenerator;
 
@@ -131,7 +132,10 @@ public abstract class AbstractLayoutProjectGenerator implements LayoutProjectGen
 	        ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath.toString(), 
 	        		SchemaGenerator.class.getCanonicalName(), projectDir,  new File(options.getProjectDir(),"xsd").getCanonicalPath());
 
+	        builder.redirectErrorStream(true);
 	        Process process = builder.start();
+	        InputStream processStream = process.getInputStream();
+        	System.out.println(StreamUtils.readAsUTF8(processStream));
 	        process.waitFor();
         }
         catch (Exception e)
