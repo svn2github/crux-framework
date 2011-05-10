@@ -1521,3 +1521,35 @@ SPAN, DIV, TD, LI, STRONG, UL
 	-moz-opacity: 0.32;
 	opacity: .32;
 }
+
+
+/*
+###############################################################################
+	CSS3 Styles
+###############################################################################
+*/
+
+/******************************************************************************
+	Decorated Button
+*******************************************************************************/
+.crux-DecoratedButtonCSS3
+{
+	color:#FFFFFF;
+	font-family:Arial,Helvetica;
+	font-weight: bold;
+	font-size:11px;
+	text-decoration: none;
+	cursor: default;
+	border: solid 1px #40688b;
+	border-top: solid 1px #598ab2;
+	padding: 4px; 
+	-webkit-box-shadow:0px 0px 2px 2px #ebebeb;
+	-webkit-border-radius: 3px;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
+	-webkit-user-select:none;
+}
+
+.crux-DecoratedButtonCSS3:active
+{
+	background: #3f668a;
+}

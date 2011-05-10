@@ -30,8 +30,6 @@ import com.google.gwt.user.client.ui.HasText;
  */
 public class DecoratedButtonCSS2Impl extends FocusWidget implements HasText, DecoratedButtonIntf
 {
-	static final String DEFAULT_STYLE_NAME = "crux-DecoratedButton";
-	
 	private DecoratedButtonFace face;
 	private boolean allowClick;
 
@@ -145,5 +143,13 @@ public class DecoratedButtonCSS2Impl extends FocusWidget implements HasText, Dec
 		}
 		
 		super.setEnabled(enabled);
+	}
+
+	/*
+	 * @see org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf#getSpecificStyleName(java.lang.String)
+	 */
+	public String getSpecificStyleName(String style)
+	{
+		return style;
 	}
 }

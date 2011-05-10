@@ -60,6 +60,8 @@ public class DecoratedButton extends Composite implements HasText,
 									HasAllFocusHandlers, HasAllGestureHandlers, HasAllKeyHandlers, 
 									HasAllMouseHandlers, HasAllTouchHandlers, Focusable
 {
+	public static final String DEFAULT_STYLE_NAME = "crux-DecoratedButton";
+	
 	private DecoratedButtonIntf impl; 
 
 	/**
@@ -69,6 +71,7 @@ public class DecoratedButton extends Composite implements HasText,
 	{
 		impl = GWT.create(DecoratedButtonIntf.class);
 		initWidget((Widget)impl);
+		setStyleName(DEFAULT_STYLE_NAME);
 	}
 
 	/**
@@ -216,4 +219,10 @@ public class DecoratedButton extends Composite implements HasText,
     {
 	    return this.impl.addClickHandler(handler);
     }
+	
+	@Override
+	public void setStyleName(String style)
+	{
+		super.setStyleName(impl.getSpecificStyleName(style));
+	}
 }

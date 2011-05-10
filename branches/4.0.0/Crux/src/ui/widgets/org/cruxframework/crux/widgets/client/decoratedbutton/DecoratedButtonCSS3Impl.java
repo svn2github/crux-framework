@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.widgets.client.util.CSS3Utils;
+
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -23,11 +26,17 @@ import com.google.gwt.user.client.ui.Button;
  */
 public class DecoratedButtonCSS3Impl extends Button implements DecoratedButtonIntf
 {
-	private static final String DEFAULT_STYLE_NAME = "crux-DecoratedButtonCSS3";
-	
 	public DecoratedButtonCSS3Impl()
     {
 		super();
-		setStyleName(DEFAULT_STYLE_NAME);
+		getStyleElement().getStyle().setDisplay(Display.INLINE_BLOCK);
     }
+
+	/*
+	 * @see org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf#getSpecificStyleName(java.lang.String)
+	 */
+	public String getSpecificStyleName(String style)
+	{
+		return CSS3Utils.getCSS3StyleName(style);
+	}
 }

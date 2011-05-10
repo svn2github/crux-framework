@@ -35,4 +35,6 @@ public interface DecoratedButtonIntf extends HasText,
 									HasAllFocusHandlers, HasAllGestureHandlers, HasAllKeyHandlers, 
 									HasAllMouseHandlers, HasAllTouchHandlers, Focusable
 {
+
+	String getSpecificStyleName(String style);
 }
