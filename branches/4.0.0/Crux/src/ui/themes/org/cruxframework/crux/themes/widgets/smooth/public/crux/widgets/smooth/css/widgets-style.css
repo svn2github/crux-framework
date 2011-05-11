@@ -1544,8 +1544,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border-top: solid 1px #598ab2;
 	padding: 4px; 
 	-webkit-box-shadow:0px 0px 2px 2px #ebebeb;
+	-moz-box-shadow:0px 0px 2px 2px #ebebeb;
 	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
+	background: -moz-linear-gradient(top, #6b9bc2,#3f668a);
 	-webkit-user-select:none;
 }
 
