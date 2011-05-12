@@ -1547,12 +1547,20 @@ SPAN, DIV, TD, LI, STRONG, UL
 	-moz-box-shadow:0px 0px 2px 2px #ebebeb;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
-	background: -moz-linear-gradient(top, #6b9bc2,#3f668a);
-	-webkit-user-select:none;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
+	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
 }
 
 .crux-DecoratedButtonCSS3:active
 {
-	background: #3f668a;
+	background-image: #3f668a;
+}
+
+.crux-DecoratedButtonCSS3-disabled, .crux-DecoratedButtonCSS3-disabled:active
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
+	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	color: #787878;
+	text-shadow: #FFFFFF 1px 1px 0;
+	border: solid 1px #BBBBBB;	
 }

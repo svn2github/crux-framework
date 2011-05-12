@@ -39,4 +39,19 @@ public class DecoratedButtonCSS3Impl extends Button implements DecoratedButtonIn
 	{
 		return CSS3Utils.getCSS3StyleName(style);
 	}
+	
+	@Override
+	public void setEnabled(boolean enabled)
+	{
+		if(enabled)
+		{
+			removeStyleDependentName("disabled");
+		}
+		else
+		{
+			addStyleDependentName("disabled");
+		}
+		
+		super.setEnabled(enabled);
+	}
 }
