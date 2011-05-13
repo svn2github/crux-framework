@@ -47,7 +47,6 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 	{
 		this.panel = new FlowPanel();
 		this.panel.setStyleName(DEFAULT_STYLE_NAME);
-		this.panel.getElement().getStyle().setProperty("display", "inline");
 		initWidget(panel);
 		Accessibility.setRole(getElement(), Accessibility.ROLE_MENUBAR);
 	}
