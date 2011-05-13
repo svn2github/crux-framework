@@ -36,6 +36,7 @@ import br.com.sysmap.crux.core.client.screen.WidgetFactory;
 import br.com.sysmap.crux.core.client.screen.children.AllChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.AnyWidgetChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.ChoiceChildProcessor;
+import br.com.sysmap.crux.core.client.screen.children.HasPostProcessor;
 import br.com.sysmap.crux.core.client.screen.children.SequenceChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.TextChildProcessor;
 import br.com.sysmap.crux.core.client.screen.children.WidgetChildProcessor;
@@ -106,6 +107,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 	private final JClassType widgetFactoryContextType;
 	
 	private final JClassType widgetType;
+	private JClassType postProcessorType;
 
 	/**
 	 * @param logger
@@ -120,6 +122,8 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 
 		JClassType elementType = factoryClass.getOracle().findType(Element.class.getCanonicalName());
 		JClassType stringType = factoryClass.getOracle().findType(String.class.getCanonicalName());
+		
+		postProcessorType = factoryClass.getOracle().findType(HasPostProcessor.class.getCanonicalName());
 		
 		this.widgetFactoryContextType = ClassUtils.getReturnTypeFromMethodClass(factoryClass, "createContext", 
 				new JType[]{elementType, stringType, JPrimitiveType.BOOLEAN});
@@ -346,6 +350,12 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 		{
 			source.append(childrenProcessorMethodName+"(c);\n");
 		}
+		
+		if (childProcessor.isAssignableTo(postProcessorType))
+		{
+			source.append(evtBinderVar+".postProcessChildren(c);\n");
+		}
+		
 		return source.toString();
 	}
 
@@ -821,6 +831,7 @@ public class WidgetFactoryProxyCreator extends AbstractProxyCreator
 			sourceWriter.println("c.setChildElement(context.getElement());");
 			sourceWriter.println(childrenProcessorMethodName+"(c);");
 		}
+		
 		sourceWriter.println("}");
 	}
 
