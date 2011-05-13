@@ -72,6 +72,8 @@ public class StackMenuFactory extends WidgetCreator<StackMenuContext>
 	})
 	public static class StackMenuItemProcessor extends WidgetChildProcessor<StackMenuContext> implements HasPostProcessor<StackMenuContext>
 	{
+		StyleProcessor styleProcessor;
+				
 		@Override
 		public void processChildren(SourcePrinter out, StackMenuContext context) throws CruxGeneratorException 
 		{
@@ -114,7 +116,11 @@ public class StackMenuFactory extends WidgetCreator<StackMenuContext>
 			String style = context.readChildProperty("style");
 			if (!StringUtils.isEmpty(style))
 			{
-				out.println(item + ".setStyle(" + EscapeUtils.quote(style) + ");");
+				if (styleProcessor == null)
+				{
+			        styleProcessor = new StyleProcessor(getWidgetCreator());
+				}
+				styleProcessor.processAttribute(out, context, style);
 			}
 			
 			String styleName = context.readChildProperty("styleName");
