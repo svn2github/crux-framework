@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sysmap Solutions Software e Consultoria Ltda.
+ * Copyright 2011 cruxframework.org.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,15 +20,21 @@ import java.util.List;
 
 import br.com.sysmap.crux.widgets.client.filter.Filterable;
 
+
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
- * TODO - Gesse - Comment
+ * A vertical hierarchical menu.
  * 
- * @author Gesse S. F. Dafe
+ * @author Gesse Dafe
  */
-public class StackMenu extends Composite implements Filterable<StackMenuItem>
+public class StackMenu extends Composite implements Filterable<StackMenuItem>, HasSelectionHandlers<StackMenuItem>
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-StackMenu";
 	private FlowPanel panel;
@@ -43,28 +49,34 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>
 		this.panel.setStyleName(DEFAULT_STYLE_NAME);
 		this.panel.getElement().getStyle().setProperty("display", "inline");
 		initWidget(panel);
+		Accessibility.setRole(getElement(), Accessibility.ROLE_MENUBAR);
 	}
 	
 	/**
+	 * Adds an item.
 	 * @param item
 	 */
 	public void add(StackMenuItem item)
 	{
 		items.add(item);
 		panel.add(item);
+		item.setParentMenu(this);
+		controlItemsStyles();
 	}	
 	
 	/**
+	 * Removes an item.
 	 * @param item
 	 */
 	public void remove(StackMenuItem item)
 	{
 		items.remove(item);
 		panel.remove(item);
+		controlItemsStyles();
 	}
 	
 	/**
-	 * 
+	 * Removes all items.
 	 */
 	public void clear()
 	{
@@ -73,15 +85,48 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>
 	}
 
 	/**
-	 * @return the items
+	 * Returns all items. 
 	 */
 	public List<StackMenuItem> getItems()
 	{
 		return items;
 	}
-
+	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.filter.Filterable#filter(java.lang.String)
+	 * @see com.google.gwt.event.logical.shared.HasSelectionHandlers#addSelectionHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+	 */
+	public HandlerRegistration addSelectionHandler(SelectionHandler<StackMenuItem> handler)
+	{
+		return addHandler(handler, SelectionEvent.getType());
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.filter.Filterable#onSelectItem(java.lang.Object)
+	 */
+	public void onSelectItem(StackMenuItem selectedItem)
+	{
+		if(!selectedItem.hasChildren())
+		{
+			selectedItem.select();
+		}
+	}
+	
+	/**
+	 * Adjusts the items' styles, in order to apply a special look 
+	 * 	to the first and last top-level items.
+	 */
+	private void controlItemsStyles()
+	{
+		for (int i = 0; i < items.size(); i++)
+		{
+			StackMenuItem item = items.get(i);
+			item.setFirst(i == 0);
+			item.setLast(i == items.size() - 1);
+		}		
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.widgets.client.filter.Filterable#filter(java.lang.String)
 	 */
 	public List<FilterResult<StackMenuItem>> filter(String query)
 	{
@@ -89,24 +134,26 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>
 		
 		for (final StackMenuItem item : items)
 		{
-			addMatchingMenuItem(item, query, result, "");
+			addMatchingMenuItem(result, item, query, "");
 		}
 		
 		return result;
 	}
-
+	
 	/**
-	 * @param query
+	 *  Adds to <code>result<code> all child items that match the filter query and does not coitain children.
 	 * @param result
 	 * @param item
+	 * @param query
+	 * @param currentPath
 	 */
-	private void addMatchingMenuItem(final StackMenuItem item, String query, List<FilterResult<StackMenuItem>> result, String currentPath)
+	private void addMatchingMenuItem(List<FilterResult<StackMenuItem>> result, final StackMenuItem item, String query, String currentPath)
 	{
 		String label = item.getLabel();
 		
 		currentPath = currentPath + (currentPath.length() > 0 ? " > " : "") + label;
 		
-		if(item.hasAction() && label != null && label.toUpperCase().contains(query.toUpperCase()))
+		if(!item.hasChildren() && label != null && label.toUpperCase().contains(query.toUpperCase()))
 		{
 			
 			FilterResult<StackMenuItem> resultItem = new FilterResult<StackMenuItem>(item, currentPath);
@@ -117,16 +164,8 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>
 		{
 			for (StackMenuItem subItem : item.getSubItems())
 			{
-				addMatchingMenuItem(subItem, query, result, currentPath);
+				addMatchingMenuItem(result, subItem, query, currentPath);
 			}
 		}
-	}
-
-	/**
-	 * @see br.com.sysmap.crux.widgets.client.filter.Filterable#onSelectItem(java.lang.Object)
-	 */
-	public void onSelectItem(StackMenuItem selectedItem)
-	{
-		selectedItem.click();	
 	}
 }
