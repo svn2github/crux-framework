@@ -54,62 +54,63 @@
 			<b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
 				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
 					<b:cell direction="west" width="160">
-						<a:stackMenu id="menu" height="400">
-							<a:item id="widgetsItem" label="Widgets" open="true">
-								<a:item id="decoratedButtonItem" label="Decorated Button" onClick="mainController.onClickDecoratedButtonItem"/>
-								<a:item id="timerItem" label="Timer" onClick="mainController.onClickTimerItem"/>
-								<a:item id="scrollBannerItem" label="Scroll Banner" onClick="mainController.onClickScrollBannerItem"/>
+						<a:stackMenu id="menu" height="400" onSelection="mainController.openExample" width="150">
+							<a:item key="widgets" label="Widgets" open="true">
+								<a:item key="decoratedButton" label="Decorated Button" />
+								<a:item key="timer" label="Timer" />
+								<a:item key="scrollBanner" label="Scroll Banner" />
 							</a:item>
-							<a:item id="panelsItem" label="Panels">
-								<a:item id="decoratedPanelItem" label="Decorated Panel" onClick="mainController.onClickDecoratedPanelItem" />
-								<a:item id="titlePanelItem" label="Title Panel" onClick="mainController.onClickTitlePanelItem" />
-								<a:item id="collapsePanelItem" label="Collapse Panel" onClick="mainController.onClickCollapsePanelItem" />
-								<a:item id="rollingPanelItem" label="Rolling Panel" onClick="mainController.onClickRollingPanelItem" />
+							<a:item key="panels" label="Panels">
+								<a:item key="decoratedPanel" label="Decorated Panel" />
+								<a:item key="titlePanel" label="Title Panel" />
+								<a:item key="collapsePanel" label="Collapse Panel" />
+								<a:item key="rollingPanel" label="Rolling Panel" />
 							</a:item>
-							<a:item id="listsItem" label="Lists and Menus">
-								<a:item id="transferListItem" label="Transfer List" onClick="mainController.onClickTransferListItem" />
-								<a:item id="stackMenuItem" label="Stack Menu" onClick="mainController.onClickStackMenuItem" />
-								<a:item id="filterMenuItem" label="Filter" onClick="mainController.onClickFilterItem" />
+							<a:item key="lists" label="Lists and Menus">
+								<a:item key="transferList" label="Transfer List" />
+								<a:item key="stackMenu" label="Stack Menu" />
+								<a:item key="filter" label="Filter" />
 							</a:item>
-							<a:item id="textItem" label="Text Widgets">
-								<a:item id="maskedTextBoxItem" label="Masked Text Box" onClick="mainController.onClickMaskedTextBoxItem" />
-								<a:item id="maskedLabelItem" label="Masked Label" onClick="mainController.onClickMaskedLabelItem" />
-								<a:item id="textAreaItem" label="Text Area" onClick="mainController.onClickTextAreaItem"/>
+							<a:item key="text" label="Text Widgets">
+								<a:item key="maskedTextBox" label="Masked Text Box" />
+								<a:item key="maskedLabel" label="Masked Label" />
+								<a:item key="textArea" label="Text Area" />
 							</a:item>
-							<a:item id="tabsItem" label="Tabs">
-								<a:item id="dynaTabsItem" label="Dyna Tabs" onClick="mainController.onClickDynaTabsItem" />
+							<a:item key="tabs" label="Tabs">
+								<a:item key="dynaTabs" label="Dyna Tabs" />
 								<!-- a:item id="rollingTabsItem" label="Rolling Tab Panel" onClick="mainController.onClickRollingTabsItem" /-->
 							</a:item>
-							<a:item id="gridsItem" label="Grids">
-								<a:item id="simpleGridItem" label="Simple" onClick="mainController.onClickSimpleGridItem" />
-								<a:item id="streamingGridItem" label="Streaming Data" onClick="mainController.onClickStreamingGridItem" />
-								<a:item id="widgetGridItem" label="Grid with Widgets" onClick="mainController.onClickWidgetGridItem" />
-								<a:item id="gridEventsItem" label="Grid Events" onClick="mainController.onClickGridEventsItem" />
+							<a:item key="grids" label="Grids">
+								<a:item key="simpleGrid" label="Simple" />
+								<a:item key="streamingGrid" label="Streaming Data" />
+								<a:item key="widgetGrid" label="Grid with Widgets" />
+								<a:item key="gridEvents" label="Grid Events" />
 							</a:item>
-							<a:item id="popupsItem" label="Popups">
-								<a:item id="confirmItem" label="Confirm" onClick="mainController.onClickConfirmItem" />
-								<a:item id="messageBoxItem" label="Message Box" onClick="mainController.onClickMessageBoxItem" />
-								<a:item id="popupItem" label="Popup" onClick="mainController.onClickPopupItem" />
-								<a:item id="progressDialogItem" label="Progress Dialog" onClick="mainController.onClickProgressDialogItem" />
+							<a:item key="popups" label="Popups">
+								<a:item key="confirm" label="Confirm" />
+								<a:item key="messageBox" label="Message Box" />
+								<a:item key="popup" label="Popup" />
+								<a:item key="progressDialog" label="Progress Dialog" />
 							</a:item>
-							<a:item id="wizardsItem" label="Wizards">
-								<a:item id="simpleWizard" label="Simple Wizard" onClick="mainController.onClickSimpleWizardItem" />
-								<a:item id="multiplePagesWizard" label="Multiple Pages Wizard" onClick="mainController.onClickMultiplePagesWizardItem" />
+							<a:item key="wizards" label="Wizards">
+								<a:item key="simpleWizard" label="Simple Wizard" />
+								<a:item key="multiPagesWizard" label="Multiple Pages Wizard" />
 							</a:item>
-							<a:item id="integration" label="Integration">
-								<a:item id="gwtItem" label="GWT Widgets" onClick="mainController.onClickGwtItem" />
+							<a:item key="integration" label="Integration">
+								<a:item key="gwt" label="GWT Widgets" />
+								<a:item key="gwtGrids" label="GWT Grids" />
 							</a:item>
-							<a:item id="features" label="Other Features">
-								<a:item id="valueBindItem" label="Value Binding" onClick="mainController.onClickValueBindItem" />
-								<a:item id="parameterBindItem" label="Parameter Binding" onClick="mainController.onClickParameterBindItem" />
-								<a:item id="screenWrapperItem" label="Screen Wrappers" onClick="mainController.onClickScreenWrapperItem" />
-								<a:item id="screenCommunicationItem" label="Screen Communication" onClick="mainController.onClickScreenCommunicationItem" />
-								<a:item id="contextItem" label="Shared Context" onClick="mainController.onClickContextItem" />
-								<a:item id="validationItem" label="Validation" onClick="mainController.onClickValidationItem" />
-								<a:item id="serverItem" label="Server Communication" onClick="mainController.onClickServerItem" />
-								<a:item id="i18nItem" label="I18N" onClick="mainController.onClickI18NItem" />
-								<a:item id="sensitiveMethodProtectionItem" label="Sensitive Method Protection" onClick="mainController.onClickSensitiveMethodProtectionItem" />
-								<a:item id="hugePageItem" label="Performance Test" onClick="mainController.onClickHugePageItem" />
+							<a:item key="features" label="Other Features">
+								<a:item key="valueBind" label="Value Binding" />
+								<a:item key="parameterBind" label="Parameter Binding" />
+								<a:item key="screenWrapper" label="Screen Wrappers" />
+								<a:item key="screenCommunication" label="Screen Communication" />
+								<a:item key="context" label="Shared Context" />
+								<a:item key="validation" label="Validation" />
+								<a:item key="serverCommunication" label="Server Communication" />
+								<a:item key="i18n" label="I18N" />
+								<a:item key="sensitiveMethod" label="Sensitive Method Protection" />
+								<a:item key="hugePage" label="Performance Test" />
 							</a:item>
 						</a:stackMenu>
 					</b:cell>
