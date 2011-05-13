@@ -35,8 +35,8 @@
 	-->
 	<target name="generate-xsd">
 		<generateSchemas outputDir="${xsd.dir}">
-			<jvmarg value="-Xdebug" />
-			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+			<!--jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
 			<classpath>
 				<path refid="build.classpath" />
 				<pathelement path="${web.root}" />
@@ -137,6 +137,8 @@
 			<arg value="DETAILED"/>
 			<arg value="-gen"/>
 			<arg value="generated"/>
+			<arg value="-localWorkers"/>
+			<arg value="2"/>
 
 			<!-- use these parameters if you want to modify GWT output settings
 			<jvmarg value="-Xdebug" />
