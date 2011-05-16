@@ -17,20 +17,23 @@
 
 		<b:dockPanel id="centeringPanel" width="100%" spacing="5">
 			<b:cell horizontalAlignment="center" direction="north">
-				<a:rollingPanel id="rollingPanel" width="350" height="80">
-					<b:image id="image1" url="style/img/crux-logo.gif"/>
-					<b:image id="image2" url="style/img/crux-logo.gif"/>
-					<b:image id="image3" url="style/img/crux-logo.gif"/>
-					<b:image id="image4" url="style/img/crux-logo.gif"/>
-					<b:image id="image5" url="style/img/crux-logo.gif"/>
-					<b:image id="image6" url="style/img/crux-logo.gif"/>
-					<b:image id="image7" url="style/img/crux-logo.gif"/>
-					<b:image id="image8" url="style/img/crux-logo.gif"/>
-					<b:image id="image9" url="style/img/crux-logo.gif"/>
-					<b:image id="image10" url="style/img/crux-logo.gif"/>
-					<b:image id="image11" url="style/img/crux-logo.gif"/>
-					<b:image id="image12" url="style/img/crux-logo.gif"/>
-				</a:rollingPanel>
+				<a:decoratedPanel id="scrollerBorder" horizontalAlignment="center">
+					<a:widget>
+						<a:rollingPanel id="rollingPanel" width="350" spacing="0">
+							<b:image id="image6" url="style/img/climb6.png"/>
+							<b:image id="image5" url="style/img/climb5.png"/>
+							<b:image id="image4" url="style/img/climb4.png"/>
+							<b:image id="image3" url="style/img/climb3.png"/>
+							<b:image id="image2" url="style/img/climb2.png"/>
+							<b:image id="image1" url="style/img/climb1.png"/>
+							<b:image id="image7" url="style/img/climb7.png"/>
+							<b:image id="image8" url="style/img/climb8.png"/>
+							<b:image id="image9" url="style/img/climb9.png"/>
+							<b:image id="image10" url="style/img/climb10.png"/>
+							<b:image id="image11" url="style/img/climb11.png"/>
+						</a:rollingPanel>
+					</a:widget>
+				</a:decoratedPanel>
 			</b:cell>
 		</b:dockPanel>
 		<s:info sourcesController="baseSourcesController">
