@@ -146,6 +146,9 @@
 			<jvmarg value="-Xms256M" />
 			<!--jvmarg value="-Xdebug" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
+
+			<arg value="-localWorkers" />
+			<arg value="2" />
 			
 		</cruxmodulecompiler>
 		<delete>
