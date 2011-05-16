@@ -337,9 +337,9 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{
 			position = 0;
 		}
-		else if (position > itemsScrollPanel.getOffsetWidth())
+		else if (position > itemsPanel.getOffsetWidth())
 		{
-			position = itemsScrollPanel.getOffsetWidth();
+			position = itemsPanel.getOffsetWidth();
 		}
 		itemsScrollPanel.getElement().setScrollLeft(position);
 	}
@@ -378,9 +378,9 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{
 			position = 0;
 		}
-		else if (position > itemsScrollPanel.getOffsetHeight())
+		else if (position > itemsPanel.getOffsetHeight())
 		{
-			position = itemsScrollPanel.getOffsetHeight();
+			position = itemsPanel.getOffsetHeight();
 		}
 	    DOM.setElementPropertyInt(itemsScrollPanel.getElement(), "scrollTop", position);
 	}
