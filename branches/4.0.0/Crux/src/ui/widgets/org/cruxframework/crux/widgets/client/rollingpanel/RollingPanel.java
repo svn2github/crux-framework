@@ -22,6 +22,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -120,7 +121,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 			this.layoutPanel.setCellHeight(this.itemsScrollPanel, "100%");
 		}
 		initWidget(layoutPanel);
-		setSpacing(5);
+		setSpacing(0);
 		setStyleName(DEFAULT_STYLE_NAME);
 		
 		Screen.addResizeHandler(new ResizeHandler()
@@ -390,7 +391,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	 */
 	protected void createHorizontalNavigationButtons()
 	{
-		horizontalPreviousButton = new Button(" ");
+		horizontalPreviousButton = new Button("\u003C");
 		horizontalPreviousButton.setStyleName(DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME);
 		HorizontalNavButtonEvtHandler handler = new HorizontalNavButtonEvtHandler(-20, -5);
 		horizontalPreviousButton.addMouseDownHandler(handler);
@@ -398,7 +399,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 
 		this.layoutPanel.add(horizontalPreviousButton, DockPanel.WEST);
 		
-		horizontalNextButton = new Button(" ");
+		horizontalNextButton = new Button("\u003E");
 		horizontalNextButton.setStyleName(DEFAULT_NEXT_HORIZONTAL_STYLE_NAME);
 		handler = new HorizontalNavButtonEvtHandler(20, 5);
 		horizontalNextButton.addMouseDownHandler(handler);
@@ -410,8 +411,15 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		{
 			public void execute()
 			{
-				getWrapperElement(horizontalPreviousButton).setClassName(DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME + "Wrapper");
-				getWrapperElement(horizontalNextButton).setClassName(DEFAULT_NEXT_HORIZONTAL_STYLE_NAME + "Wrapper");
+				Element prevWrapper = getWrapperElement(horizontalPreviousButton);
+				Element nextWrapper = getWrapperElement(horizontalNextButton);
+				
+				prevWrapper.setClassName(DEFAULT_PREVIOUS_HORIZONTAL_STYLE_NAME + "Wrapper");
+				nextWrapper.setClassName(DEFAULT_NEXT_HORIZONTAL_STYLE_NAME + "Wrapper");
+				
+				((TableCellElement)prevWrapper).setVAlign("middle");
+				((TableCellElement)nextWrapper).setVAlign("middle");
+				
 			}
 		});
 	}
@@ -429,14 +437,14 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	 */
 	protected void createVerticalNavigationButtons()
 	{
-		verticalPreviousButton = new Button(" ");
+		verticalPreviousButton = new Button("\u2227");
 		verticalPreviousButton.setStyleName(DEFAULT_PREVIOUS_VERTICAL_STYLE_NAME);
 		VerticalNavButtonEvtHandler handler = new VerticalNavButtonEvtHandler(-20, -5);
 		verticalPreviousButton.addMouseDownHandler(handler);
 		verticalPreviousButton.addMouseUpHandler(handler);
 		this.layoutPanel.add(verticalPreviousButton, DockPanel.NORTH);
 
-		verticalNextButton = new Button(" ");
+		verticalNextButton = new Button("\u2228");
 		handler = new VerticalNavButtonEvtHandler(20, 5);
 		verticalNextButton.addMouseDownHandler(handler);
 		verticalNextButton.addMouseUpHandler(handler);

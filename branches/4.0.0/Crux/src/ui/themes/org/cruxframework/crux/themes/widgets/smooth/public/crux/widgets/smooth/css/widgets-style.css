@@ -661,55 +661,52 @@ SPAN, DIV, TD, LI, STRONG, UL
 /******************************************************************************
 	RollingPanel - Horizontal
 *******************************************************************************/
-.crux-RollingPanelHPreviousWrapper
+.crux-RollingPanelHPreviousWrapper, .crux-RollingPanelHNextWrapper
 {
-	width:20px;
+	width: 20px;
 	height: 100%;
+	padding: 0px;
 }
-.crux-RollingPanelHPrevious
+.crux-RollingPanelHPrevious, .crux-RollingPanelHNext
 {
-	/*
-	width: 15px;
+	color:#2F567A;
+	font-family:Arial,Helvetica;
+	font-weight: bold;
+	font-size:11px;
+	text-decoration: none;
+	text-shadow: #9FB6EA 1px 1px 0;
+	cursor: default;
+	border: solid 1px #40688b;
+	border-top: solid 1px #598ab2;
+	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
+	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
 	height: 100%;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-left.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	padding: 1px;
-	*/
+	width: 100%;
+	padding: 0px;
+	margin: 0px; 
 }
-.crux-RollingPanelHNextWrapper
+.crux-RollingPanelHPrevious:active, .crux-RollingPanelHNext:active
 {
-	
-	width:20px;
-	height: 100%;
-	text-align: right;
-}
-.crux-RollingPanelHNext
-{
-	/*
-	width: 15px;
-	height: 100%;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-right.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	padding: 1px;
-	*/
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
+	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
 }
 .crux-RollingPanelHPreviousWrapper-disabled, .crux-RollingPanelHNextWrapper-disabled
 {
-	width:1px;
 	border: solid 0px;
 }
-.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext
+.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext,
+.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious:active, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext:active
 {
-	width:1px;
-	border: solid 0px;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
+	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	color: #AAAAAA;
+	text-shadow: #FFFFFF 1px 1px 0;
+	border: solid 1px #BBBBBB;
+	border-top: solid 1px #CCCCCC;
 }
 
 /******************************************************************************
@@ -780,6 +777,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/dyna-tabs-roll-left.gif);
 	cursor: pointer;
 	border:none;
+	border-top:none;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
 }
 .crux-TabBar .crux-RollingPanelHNext
 {
@@ -974,15 +976,15 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width: 50px;
 	height: 20px;
 	border:	solid 2px #0157A9;
-	background: url(../img/transfer-list-button.gif) repeat-x top left;
 	font-size:12px;
 	font-weight:bold !important;	
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	background-color: url(../img/transfer-list-button.gif) repeat-x top left;	
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
-	background: -moz-linear-gradient(top, #6b9bc2,#3f668a);	
+	background: -moz-linear-gradient(top, #6b9bc2,#3f668a);
 }
 .crux-TransferList .moveToRight:active, .crux-TransferList .moveToLeft:active
 {
