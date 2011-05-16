@@ -31,13 +31,19 @@
 		<c:screen useController="mainController,contextInitializerController" onLoad="contextInitializerController.onLoad" />
 
 		<b:dockPanel id="centeringPanel" width="100%" height="100%" spacing="0">
-			<b:cell direction="north" height="68" verticalAlignment="top">
+			<b:cell direction="north" height="82" verticalAlignment="top">
 				<b:dockPanel id="titlePanel" width="100%" height="68" styleName="MainHeader" verticalAlignment="top" spacing="0">
 					<b:cell direction="west" verticalAlignment="top">
-						<b:image id="logoImg" url="style/img/crux-logo.gif" width="240" height="68"/>
+						<b:image id="logoImg" url="style/img/crux-logo.png" width="429" height="82"/>
 					</b:cell>
 					<b:cell direction="center" horizontalAlignment="right" verticalAlignment="top">
-						<b:anchor id="projectHome" href="http://crux-framework.googlecode.com/" text="Project Home" styleName="MainHeaderLink"/>
+						<b:horizontalPanel id="linksHztlPanel">
+							<b:anchor id="siteLink" href="http://www.cruxframework.org/" text="Crux Site" styleName="MainHeaderLink" target="_blank"/>
+							<b:label id="linkSeparator1" text="|" styleName="MainLinkSeparator"/>
+							<b:anchor id="projectHomeLink" href="http://crux-framework.googlecode.com/" text="Project Home" styleName="MainHeaderLink" target="_blank"/>
+							<b:label id="linkSeparator2" text="|" styleName="MainLinkSeparator"/>
+							<b:anchor id="blogLink" href="http://blog.cruxframework.org/" text="Crux Blog" styleName="MainHeaderLink" target="_blank"/>
+						</b:horizontalPanel>
 					</b:cell>
 					<b:cell direction="east" width="5">
 						<b:image id="headerRightCorner" url="style/img/main-header-right.gif"/>
@@ -45,9 +51,14 @@
 				</b:dockPanel>
 			</b:cell>
 			<b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
-				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
-					<b:cell direction="west" width="160">
-						<a:stackMenu id="menu" height="400" onSelection="mainController.openExample">
+				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="0">
+					<b:cell direction="west" width="13">
+						<b:simplePanel id="leftBg" width="13" height="100%" styleName="MainLeftBorder">
+							<b:label id="leftBgSpace"/>
+						</b:simplePanel>						
+					</b:cell>
+					<b:cell direction="west" width="170">
+						<a:stackMenu id="menu" height="400" onSelection="mainController.openExample" width="163">
 							<a:item key="widgets" label="Widgets" open="true">
 								<a:item key="decoratedButton" label="Decorated Button" />
 								<a:item key="timer" label="Timer" />
@@ -107,8 +118,13 @@
 							</a:item>
 						</a:stackMenu>
 					</b:cell>
-					<b:cell direction="east">
+					<b:cell direction="west">
 						<a:dynaTabs id="tabs" height="100%" width="100%"/>
+					</b:cell>
+					<b:cell direction="east" width="13">
+						<b:simplePanel id="rightBg" width="13" height="100%" styleName="MainRightBorder">
+							<b:label id="rightBgSpace"/>
+						</b:simplePanel>						
 					</b:cell>
 				</b:dockPanel>
 			</b:cell>
