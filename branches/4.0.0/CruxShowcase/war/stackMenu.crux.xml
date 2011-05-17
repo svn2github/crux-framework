@@ -16,27 +16,46 @@
 
 		<c:screen useController="stackMenuController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="130" spacing="15">
-			<b:cell direction="west" horizontalAlignment="right" verticalAlignment="top" width="50%">
-				<a:stackMenu id="menu" width="50">
-					<a:item id="item_1" label="Item 1">
-						<a:item id="item_1_1" label="Item 1.1" onClick="stackMenuController.onClickItem_1_1"/>
-						<a:item id="item_1_2" label="Item 1.2">
-							<a:item id="item_1_2_1" label="Item 1.2.1" onClick="stackMenuController.onClickItem_1_2_1"/>
-							<a:item id="item_1_2_2" label="Item 1.2.2" onClick="stackMenuController.onClickItem_1_2_2"/>
-							<a:item id="item_1_2_3" label="Item 1.2.3" onClick="stackMenuController.onClickItem_1_2_3"/>
-						</a:item>
+		<center>
+			<a:stackMenu id="menu" width="170" onSelection="stackMenuController.onSelectItem">
+				<a:item key="classicMusic" label="Classic Music">
+					<a:item key="concerts" label="Concerts"/>
+					<a:item key="composers" label="Composers">
+						<a:item key="bach" label="Johann Sebastian Bach"/>
+						<a:item key="beethoven" label="Ludwig van Beethoven"/>
+						<a:item key="mozart" label="Wolfgang Amadeus Mozart"/>
 					</a:item>
-					<a:item id="item_2" label="Item 2" onClick="stackMenuController.onClickItem_2"/>
-					<a:item id="item_3" label="Item 3" onClick="stackMenuController.onClickItem_3"/>			
-				</a:stackMenu>
-			</b:cell>
-			<b:cell direction="east" width="50%" horizontalAlignment="left" verticalAlignment="top">
-				<b:label id="message"/>
-			</b:cell>
-		</b:dockPanel>
+				</a:item>
+				<a:item key="rock" label="Rock and Roll">
+					<a:item key="artists" label="Artists">
+						<a:item key="elvis" label="Elvis Presley"/>
+						<a:item key="inkSpots" label="The Ink Spots"/>
+						<a:item key="jerryLewis" label="Jerry Lee Lewis"/>
+					</a:item>
+				</a:item>
+				<a:item key="samba" label="Samba">
+					<a:item key="instruments" label="Instruments">
+						<a:item key="pandeiro" label="Pandeiro"/>
+						<a:item key="cavaco" label="Cavaco"/>
+					</a:item>
+					<a:item key="tracks" label="Tracks">
+						<a:item key="peito" label="Peito Vazio"/>
+						<a:item key="chorar" label="Sei Chorar"/>
+						<a:item key="preciso" label="Preciso Me Encontrar"/>
+					</a:item>
+				</a:item>			
+			</a:stackMenu>
+		</center>		
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				The StackMenu is a simple vertical hierarchical menu. Each item in a StackMenu can have child items.
+				When an item has no children, it can fire selection events.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				we capture the selection event and show a simple message.
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

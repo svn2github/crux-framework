@@ -16,35 +16,65 @@
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
 		<b:dockPanel id="centeringPanel" width="100%" spacing="5">
-			<b:cell horizontalAlignment="center" direction="north">
-				<a:decoratedPanel id="scrollerBorder" horizontalAlignment="center">
+			<b:cell horizontalAlignment="center" direction="west">
+				<a:decoratedPanel id="scrollerHBorder" horizontalAlignment="center">
 					<a:widget>
-						<a:rollingPanel id="rollingPanel" width="350" spacing="0">
-							<b:image id="image6" url="style/img/climb6.png"/>
-							<b:image id="image5" url="style/img/climb5.png"/>
-							<b:image id="image4" url="style/img/climb4.png"/>
-							<b:image id="image3" url="style/img/climb3.png"/>
-							<b:image id="image2" url="style/img/climb2.png"/>
-							<b:image id="image1" url="style/img/climb1.png"/>
+						<a:rollingPanel id="horizontalRollingPanel" width="350" spacing="0" >
+							<b:image id="image1" url="style/img/climb6.png"/>
+							<b:image id="image2" url="style/img/climb5.png"/>
+							<b:image id="image3" url="style/img/climb4.png"/>
+							<b:image id="image4" url="style/img/climb3.png"/>
+							<b:image id="image5" url="style/img/climb2.png"/>
+							<b:image id="image6" url="style/img/climb1.png"/>
 							<b:image id="image7" url="style/img/climb7.png"/>
 							<b:image id="image8" url="style/img/climb8.png"/>
 							<b:image id="image9" url="style/img/climb9.png"/>
 							<b:image id="image10" url="style/img/climb10.png"/>
-							<b:image id="image11" url="style/img/climb11.png"/>
+							<b:image id="image11" url="style/img/climb11.png"/>							
+							<b:image id="image12" url="style/img/climb6.png"/>
+							<b:image id="image13" url="style/img/climb5.png"/>
+							<b:image id="image14" url="style/img/climb4.png"/>
+							<b:image id="image15" url="style/img/climb3.png"/>
+							<b:image id="image16" url="style/img/climb2.png"/>
+							<b:image id="image17" url="style/img/climb1.png"/>
+							<b:image id="image18" url="style/img/climb7.png"/>
+							<b:image id="image19" url="style/img/climb8.png"/>
+							<b:image id="image20" url="style/img/climb9.png"/>
+							<b:image id="image21" url="style/img/climb10.png"/>
+							<b:image id="image22" url="style/img/climb11.png"/>
+						</a:rollingPanel>
+					</a:widget>
+				</a:decoratedPanel>
+			</b:cell>
+			<b:cell horizontalAlignment="center" direction="east">
+				<a:decoratedPanel id="scrollerHBorder" horizontalAlignment="center">
+					<a:widget>
+						<a:rollingPanel id="verticalRollingPanel" height="200" spacing="0" vertical="true">
+							<b:image id="image23" url="style/img/climb9.png"/>
+							<b:image id="image24" url="style/img/climb10.png"/>
+							<b:image id="image22" url="style/img/climb11.png"/>
+							<b:image id="image25" url="style/img/climb6.png"/>
+							<b:image id="image26" url="style/img/climb5.png"/>
+							<b:image id="image27" url="style/img/climb4.png"/>
+							<b:image id="image28" url="style/img/climb3.png"/>
+							<b:image id="image29" url="style/img/climb2.png"/>
+							<b:image id="image30" url="style/img/climb1.png"/>
+							<b:image id="image31" url="style/img/climb7.png"/>
+							<b:image id="image32" url="style/img/climb8.png"/>
 						</a:rollingPanel>
 					</a:widget>
 				</a:decoratedPanel>
 			</b:cell>
 		</b:dockPanel>
-		<s:info sourcesController="baseSourcesController">
+		<s:info sourcesController="noJavaSourcesController">
 			<s:widgetInfo>
-				The RollingPanel is a kind of panel with horizontal or vertical rollover into which you can insert elements beyond of destinated area's limit.
-				The DynaTabs for example can explode in tabs number the screen area limit.
+				RollingPanels are just scrollable panels that do not have scroll bars provided by the browser. Instead, these panels have 
+				customizable navigation buttons. The scrolling engine has an acceleration factor, which makes the scrolling faster as 
+				long as we keep	a scroll button pressed.
 			</s:widgetInfo>
 			<s:exampleInfo>
-				if you click in the side buttons, the elements of the list will be displayed. 
-				Looking at the example's source, you can see that we handle the rolling events, in order to roll
-				the elements being shown in the list. 
+				we can see the RollingPanel in two flavors: horizontal and vertical. Try keeping any scroll button pressed to fell the 
+				acceleration. 
 			</s:exampleInfo>
 		</s:info>
 	</body>

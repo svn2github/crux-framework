@@ -25,7 +25,6 @@ public class TransferListController {
 		items.add(new TransferList.Item("Item 2 ", "Item2Value", ItemLocation.left));
 		items.add(new TransferList.Item("Item 3 ", "Item3Value", ItemLocation.right));
 		items.add(new TransferList.Item("Item 4 ", "Item4Value", ItemLocation.left));
-		
 		transferList.setCollection(items);
 	}
 	

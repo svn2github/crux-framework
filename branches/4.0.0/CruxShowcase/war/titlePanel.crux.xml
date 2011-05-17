@@ -17,47 +17,57 @@
 		<c:screen />
 	
 		<center>
-			<b:dockPanel id="centeringPanel" spacing="10">
-				<b:cell direction="south">
-					<a:titlePanel id="widgetTitlePanel" width="100%" height="120">
-						<a:title>
-							<a:widget><b:checkBox id="checkboxWidget" text="You can put widgets inside the title." checked="true"/></a:widget>
-						</a:title>
-						<a:body>
-							<a:text>You can put pure text in the body.</a:text>
-						</a:body>
-					</a:titlePanel>
-				</b:cell>
-				<b:cell direction="west">
-					<a:titlePanel id="textTitlePanel" width="250" height="120">
-						<a:title>
-							<a:text>You Can Use a Textual Title</a:text>
-						</a:title>
-						<a:body>
-							<a:html>
-								<li>and use HTML inside the body.</li>
-							</a:html>
-						</a:body>
-					</a:titlePanel>
-				</b:cell>
-				<b:cell direction="east">		
-					<a:titlePanel id="htmlTitlePanel" width="250" height="120">
-						<a:title>
-							<a:html>
-								<li><strong style="color:#4F7FA7"><u>You can use HTML in the title.</u></strong></li>
-							</a:html>
-						</a:title>
-						<a:body>
-							<a:widget>
-								<b:verticalPanel id="vPanel" spacing="10">
-									<b:label id="panelLabel" text="...and use widgets inside the body."/>
-									<a:decoratedButton id="panelBtn" text="Ok" width="80"/>
-								</b:verticalPanel>
-							</a:widget>						
-						</a:body>
-					</a:titlePanel>
-				</b:cell>
-			</b:dockPanel>
+			<b:flexTable id="centeringPanel" cellSpacing="10">
+				<b:row>
+					<b:cell horizontalAlignment="left">
+						<b:widget>
+							<a:titlePanel id="textTitlePanel" width="250" height="120">
+								<a:title>
+									<a:text>You Can Use a Textual Title</a:text>
+								</a:title>
+								<a:body>
+									<a:html>
+										<li>and use HTML inside the body.</li>
+									</a:html>
+								</a:body>
+							</a:titlePanel>
+						</b:widget>
+					</b:cell>
+					<b:cell horizontalAlignment="right">
+						<b:widget>
+							<a:titlePanel id="htmlTitlePanel" width="250" height="120">
+								<a:title>
+									<a:html>
+										<li><strong style="color:#4F7FA7"><u>You can use HTML in the title.</u></strong></li>
+									</a:html>
+								</a:title>
+								<a:body>
+									<a:widget>
+										<b:verticalPanel id="vPanel" spacing="10">
+											<b:label id="panelLabel" text="...and use widgets inside the body."/>
+											<a:decoratedButton id="panelBtn" text="Ok" width="80"/>
+										</b:verticalPanel>
+									</a:widget>						
+								</a:body>
+							</a:titlePanel>
+						</b:widget>
+					</b:cell>
+				</b:row>
+				<b:row>
+					<b:cell colSpan="2" horizontalAlignment="center">
+						<b:widget>
+							<a:titlePanel id="widgetTitlePanel" width="100%" height="120">
+								<a:title>
+									<a:widget><b:checkBox id="checkboxWidget" text="You can put widgets inside the title." checked="true"/></a:widget>
+								</a:title>
+								<a:body>
+									<a:text>You can put pure text in the body.</a:text>
+								</a:body>
+							</a:titlePanel>
+						</b:widget>
+					</b:cell>
+				</b:row>
+			</b:flexTable>
 		</center>
 	
 		<s:info sourcesController="noJavaSourcesController">
