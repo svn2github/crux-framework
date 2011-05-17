@@ -191,7 +191,7 @@ public class StackMenuItem extends Composite
 	 */
 	public boolean hasChildren()
 	{
-		return subItems.size() == 0;
+		return subItems.size() > 0;
 	}
 
 	/**
