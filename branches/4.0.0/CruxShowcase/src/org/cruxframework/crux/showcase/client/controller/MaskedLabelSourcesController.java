@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.cruxframework.crux.core.client.controller.Controller;
 
 @Controller("maskedLabelSourcesController")
-public class MaskedLabelSourcesController extends BaseSourcesController implements MaskedLabelSourceControllerCrossDoc {
+public class MaskedLabelSourcesController extends BaseSourcesController implements MaskedLabelSourcesControllerCrossDoc {
 
 	/**
 	 * @see org.cruxframework.crux.showcase.client.controller.BaseSourcesController#getAdditionalSources()

@@ -37,7 +37,7 @@
 								<tr>
 									<td align="center">
 										<b:horizontalPanel id="controls" spacing="3">
-											<b:textBox id="maxLength" width="70"></b:textBox>
+											<b:textBox id="maxLength" width="70" value="200"></b:textBox>
 											<a:decoratedButton id="btn" text="Apply!" onClick="textAreaController.applyMaxLength" width="70"/>
 										</b:horizontalPanel>									
 									</td>
@@ -51,7 +51,16 @@
 
 		</center>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				Crux TextArea is almost a standard GWT TextArea widget. The only difference is that you can control
+				the maximum length of the text it can contain.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				the text area starts with the maximum length of 200 characters. To see it in action, try changing that 
+				value to, lets say, 10 characters. Then, try editing the text area contents.  
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

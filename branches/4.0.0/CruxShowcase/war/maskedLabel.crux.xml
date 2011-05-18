@@ -46,7 +46,7 @@
 			
 		</center>
 		
-		<s:info sourcesController="baseSourcesController">
+		<s:info sourcesController="maskedLabelSourcesController">
 			<s:widgetInfo>
 				MaskedLabels are output widgets which can format their values before displaying them to the user.
 				The formatting process, itself, is made by a formatter (see the Formaters example fore more details) which 
@@ -57,7 +57,7 @@
 				other to show the height and one more to show the weight of the fighter. If you take 
 				a look at the controller code, you will notice that we provide raw objects for each masked label.
 				To the first, we provide a Date, to the second, a Double and the third one receives an Integer.
-				As result, we can see a fine-decorated output text for each data field shown in screen.
+				As result, we can see a fine-decorated output text for each data field shown on screen.
 			</s:exampleInfo>
 		</s:info>
 		

@@ -18,29 +18,36 @@
 
 		<center>
 		
-		<b:horizontalPanel id="hPanel" spacing="15">
-			<b:cell>
-				<b:textBox id="url" text="http://www.google.com" width="200"/>
-			</b:cell>
-			<b:cell>
-				<a:decoratedButton id="btn" text="Open New Tab" onClick="dynaTabsController.openNewTab"/>
-			</b:cell>
-		</b:horizontalPanel>
-		
-		<a:decoratedPanel id="border" width="80%" height="300">
-			<a:widget>
-				<a:dynaTabs id="dynaTabs" width="100%" height="100%">
-					<a:tab url="http://crux-framework.googlecode.com/" id="crux" label="Crux"/>
-					<a:tab url="http://www.cruxframework.org/english/" id="sysmap" label="Sysmap" closeable="false"/>
-				</a:dynaTabs>
-			</a:widget>
-		</a:decoratedPanel>
-		
-		<br/>
+			<b:horizontalPanel id="hPanel" spacing="15">
+				<b:cell>
+					<b:textBox id="url" text="http://www.google.com" width="200"/>
+				</b:cell>
+				<b:cell>
+					<a:decoratedButton id="btn" text="Open New Tab" onClick="dynaTabsController.openNewTab"/>
+				</b:cell>
+			</b:horizontalPanel>
+			
+			<a:dynaTabs id="dynaTabs" width="80%" height="300">
+				<a:tab url="http://crux-framework.googlecode.com/" id="crux" label="Crux Project"/>
+				<a:tab url="http://blog.cruxframework.org/" id="cruxblog" label="Crux Blog" closeable="false"/>
+			</a:dynaTabs>
 		
 		</center>
 		
-		<s:sources/>
-		
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				DynaTabs are components able to display multiple web pages using a tabbed layout. Each tab can be assigned to 
+				a different URL, which can point to any page of your application or even to external web pages. Tabs can also 
+				be individually configured to fire events when they gain or loose focus or just before being closed by users. 
+				Furthermore, tabs may allow or disallow users to close them. Crux also provides an elegant mechanism, named 
+				CrossDoc, that allows the communication between the multiple tabs' controllers (see Screen Communication Example 
+				for more details). 
+			</s:widgetInfo>
+			<s:exampleInfo>
+				we show you that is possible opening tabs declaratively, on the crux.xml file, or programmatically, from the 
+				page controller.  
+			</s:exampleInfo>
+		</s:info>
+				
 	</body>
 </html>
