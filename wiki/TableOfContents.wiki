@@ -1,7 +1,7 @@
 ==Contents==
 <table>
 <tr>
-<td>*[Quickstart Quickstart]*</td>
+<td>*[VideoLessons Video Lessons]*</td>
 </tr>
 <tr>
 <td>*[UserManual User Manual]*</td>
