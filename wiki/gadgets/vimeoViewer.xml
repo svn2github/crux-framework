@@ -2,18 +2,16 @@
 <Module>
  <ModulePrefs
     title="Video Player"
-    author="Project Hosting Team"
-    author_affiliation="Google Inc."
-    author_location="Chicago, IL"
-    author_email="gadgets.feedback@gmail.com"
-    width="425"
-    height="344">
+    author="Thiago da Rosa de Bustamante"
+    author_affiliation="Crux Framework"
+    author_location="Belo Horizonte, Brasil"
+    author_email="thiago@cruxframework.org"
+    width="700"
+    height="600">
    <Require feature="flash"/>
  </ModulePrefs>
- <UserPref name="video" datatype="string" />
  <Content type="html">
  <![CDATA[
-<!-- START Vimeo Badge ... info at http://vimeo.com/widget -->
 <style type="text/css">
 <!-- 
 /* You can modify these CSS styles */
@@ -21,17 +19,16 @@
 .vimeoBadge img { border: 0; }
 .vimeoBadge a, .vimeoBadge a:link, .vimeoBadge a:visited, .vimeoBadge a:active { color: #3A75C4; text-decoration: none; cursor: pointer; }
 .vimeoBadge a:hover { color:#00CCFF; }
-.vimeoBadge #vimeo_badge_logo { margin-top:10px; width: 57px; height: 16px; }
+.vimeoBadge #vimeo_badge_logo { display: none; }
 .vimeoBadge .credit { font: normal 11px verdana,sans-serif; }
 .vimeoBadge .clip { padding:0; float:left; margin:0 10px 10px 0; width:100px; line-height:0; }
-.vimeoBadge .caption { font: normal 11px verdana,sans-serif; overflow:hidden; width:100px; height: 30px; }
+.vimeoBadge .caption { font: normal 11px verdana,sans-serif; overflow:hidden; width:100px; height: 45px; }
 .vimeoBadge .clear { display: block; clear: both; visibility: hidden; } 
 -->
 </style>
 <div class="vimeoBadge">
-			<script type="text/javascript" src="http://vimeo.com/user7119949/badgeo/?stream=uploaded&amp;stream_id=&amp;count=9&amp;thumbnail_width=100&amp;show_titles=yes"></script>
-	</div>
-<!-- END Vimeo Badge -->
+	<script type="text/javascript" src="http://vimeo.com/user7119949/badgeo/?stream=uploaded&amp;stream_id=&amp;count=9&amp;thumbnail_width=100&amp;show_titles=yes"></script>
+</div>
  ]]>
  </Content>
 </Module>
