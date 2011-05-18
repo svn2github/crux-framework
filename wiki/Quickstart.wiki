@@ -1,6 +1,7 @@
-#summary One-sentence summary of this page.
+#summary Videos about Crux development.
+#labels Featured
 
-= Introduction =
+= Quickstart =
 
 Here you can find some videos about Crux development:
 
