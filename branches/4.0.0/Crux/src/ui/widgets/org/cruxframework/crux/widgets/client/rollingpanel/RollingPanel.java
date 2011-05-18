@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CellPanel;
 import com.google.gwt.user.client.ui.Composite;
@@ -497,13 +498,15 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	 */
 	protected void maybeShowNavigationButtons()
     {
-		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		new Timer()
 		{
-			public void execute()
+			
+			@Override
+			public void run()
 			{
 				checkNavigationButtons();
 			}
-		});
+		}.schedule(30);
     }
 
 	/**
