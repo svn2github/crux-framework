@@ -6,13 +6,13 @@
     author_affiliation="Crux Framework"
     author_location="Belo Horizonte, Brasil"
     author_email="thiago@cruxframework.org"
-    width="700"
-    height="600">
+    width="400"
+    height="300">
    <Require feature="flash"/>
  </ModulePrefs>
  <Content type="html">
  <![CDATA[
-<object type="application/x-shockwave-flash" width="700" height="600" data="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com">	<param name="quality" value="best" />		<param name="allowfullscreen" value="true" />		<param name="allowscriptaccess" value="always" />	<param name="scale" value="showAll" />	<param name="movie" value="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com" /></object> 
+<object type="application/x-shockwave-flash" width="400" height="300" data="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com">	<param name="quality" value="best" />		<param name="allowfullscreen" value="true" />		<param name="allowscriptaccess" value="always" />	<param name="scale" value="showAll" />	<param name="movie" value="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com" /></object> 
 ]]>
  </Content>
 </Module>
