@@ -46,7 +46,15 @@ class StackMenuItemCaption extends Composite
 		canvas.setCellPadding(0);
 		canvas.setCellSpacing(0);
 		canvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
-
+		canvas.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				event.preventDefault();
+				event.stopPropagation();		
+			}
+		});
+		
 		ClickHandler clickHandler = createBaseClickHandler();
 		
 		createTopBorders();
