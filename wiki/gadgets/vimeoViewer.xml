@@ -21,8 +21,8 @@
 .vimeoBadge a:hover { color:#00CCFF; }
 .vimeoBadge #vimeo_badge_logo { display: none; }
 .vimeoBadge .credit { font: normal 11px verdana,sans-serif; }
-.vimeoBadge .clip { padding:0; float:left; margin:0 10px 10px 0; width:100px; line-height:0; }
-.vimeoBadge .caption { font: normal 11px verdana,sans-serif; overflow:hidden; width:100px; height: 45px; }
+.vimeoBadge .clip { padding:0; float:left; margin:0 10px 10px 0; width:130px; line-height:0; }
+.vimeoBadge .caption { font: normal 11px verdana,sans-serif; overflow:hidden; width:130px; height: 45px; }
 .vimeoBadge .clear { display: block; clear: both; visibility: hidden; } 
 -->
 </style>
