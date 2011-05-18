@@ -7,7 +7,7 @@ _*Crux*_ distribution includes a set of jar files:
   # crux-gadgets.jar - Support for Gadgets creation with _*Crux*_
   # crux-widgets.jar - The _*Crux*_ widget library.
   
-This files can be generated using ant. All you need is download the _*Crux*_ project from its repository [http://code.google.com/p/crux-framework/source/checkout repository]:
+These files can be generated using ant. All you need is download the _*Crux*_ project from its repository [http://code.google.com/p/crux-framework/source/checkout repository]:
   # /Crux
   
 In addition of _*Crux*_ project, we have two projects that you need to download to build the _*Crux*_ distribution:
