@@ -6,8 +6,8 @@
     author_affiliation="Crux Framework"
     author_location="Belo Horizonte, Brasil"
     author_email="thiago@cruxframework.org"
-    width="400"
-    height="300">
+    width="700"
+    height="600">
    <Require feature="flash"/>
  </ModulePrefs>
  <Content type="html">
