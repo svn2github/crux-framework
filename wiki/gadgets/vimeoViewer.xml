@@ -12,23 +12,7 @@
  </ModulePrefs>
  <Content type="html">
  <![CDATA[
-<style type="text/css">
-<!-- 
-/* You can modify these CSS styles */
-.vimeoBadge { margin: 0; padding: 0; font: normal 11px verdana,sans-serif; }
-.vimeoBadge img { border: 0; }
-.vimeoBadge a, .vimeoBadge a:link, .vimeoBadge a:visited, .vimeoBadge a:active { color: #3A75C4; text-decoration: none; cursor: pointer; }
-.vimeoBadge a:hover { color:#00CCFF; }
-.vimeoBadge #vimeo_badge_logo { display: none; }
-.vimeoBadge .credit { font: normal 11px verdana,sans-serif; }
-.vimeoBadge .clip { padding:0; float:left; margin:0 10px 10px 0; width:200px; line-height:0; }
-.vimeoBadge .caption { font: normal 11px verdana,sans-serif; overflow:hidden; width:200px; height: 30px; }
-.vimeoBadge .clear { display: block; clear: both; visibility: hidden; } 
--->
-</style>
-<div class="vimeoBadge">
-	<script type="text/javascript" src="http://vimeo.com/user7119949/badgeo/?stream=uploaded&amp;stream_id=&amp;count=9&amp;thumbnail_width=200&amp;show_titles=yes"></script>
-</div>
- ]]>
+<object type="application/x-shockwave-flash" width="700" height="600" data="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com">	<param name="quality" value="best" />		<param name="allowfullscreen" value="true" />		<param name="allowscriptaccess" value="always" />	<param name="scale" value="showAll" />	<param name="movie" value="http://vimeo.com/hubnut/?user_id=user7119949&amp;color=00adef&amp;background=000000&amp;fullscreen=1&amp;slideshow=0&amp;stream=uploaded_videos&amp;id=&amp;server=vimeo.com" /></object> 
+]]>
  </Content>
 </Module>
