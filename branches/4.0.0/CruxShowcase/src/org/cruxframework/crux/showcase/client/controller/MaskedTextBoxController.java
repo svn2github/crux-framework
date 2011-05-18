@@ -1,7 +1,5 @@
 package org.cruxframework.crux.showcase.client.controller;
 
-import java.util.Date;
-
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
@@ -13,7 +11,6 @@ import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 import org.cruxframework.crux.widgets.client.maskedtextbox.MaskedTextBox;
 import org.cruxframework.crux.widgets.client.maskedtextbox.MaskedTextBoxBaseFormatter;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Label;
 
 @Controller("maskedTextBoxController")
@@ -61,35 +58,6 @@ public class MaskedTextBoxController {
 			String inputStr = (String)input;
 			inputStr = inputStr.substring(1,4)+inputStr.substring(5,8)+inputStr.substring(9,13);
 			return inputStr;
-		}
-	}
-
-	@FormatterName("date")
-	public static class DateFormatter extends MaskedTextBoxBaseFormatter{
-
-		DateTimeFormat format = DateTimeFormat.getFormat("MM/dd/yyyy");
-
-		public String getMask(){
-			return "99/99/9999";
-		}
-
-		public Object unformat(String input){
-			if (input == null || input.length() != 10){
-				return null;
-			}
-			
-			return format.parse(input);
-		}
-
-		public String format(Object input) throws InvalidFormatException {
-			if(input == null){
-				return "";
-			}
-			if (!(input instanceof Date)){
-				throw new InvalidFormatException();
-			}
-			
-			return format.format((Date) input);
 		}
 	}
 
