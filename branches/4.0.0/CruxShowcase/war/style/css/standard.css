@@ -79,6 +79,13 @@ TEXTAREA
 	color: #606060;
 	font-family: Verdana, Arial, Helvetica;
 }
+.CommentsTitle
+{
+	font-family:Arial, Helvetica;
+	font-weight:bold;
+	font-size:12px;
+	color:#5385AE;
+}
 .CommentsTable TH
 {
 	font-family:Arial, Helvetica;

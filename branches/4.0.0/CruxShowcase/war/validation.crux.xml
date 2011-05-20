@@ -14,7 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="validationController" useFormatter="phone,date"/>
+		<c:screen useController="validationController"/>
 		
 		<center>
 

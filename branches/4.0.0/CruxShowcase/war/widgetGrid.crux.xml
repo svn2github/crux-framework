@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
 		<c:screen onLoad="widgetGridController.onLoad" useController="widgetGridController" 
-			useDataSource="simpleGridDataSource" useFormatter="birthday" fragment="grids"/>
+			useDataSource="simpleGridDataSource" fragment="grids"/>
 		
 		<b:simplePanel id="testeSimpleInvisible" visible="false"/>		
 		

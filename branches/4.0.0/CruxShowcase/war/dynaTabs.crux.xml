@@ -20,7 +20,7 @@
 		
 			<b:horizontalPanel id="hPanel" spacing="15">
 				<b:cell>
-					<b:textBox id="url" text="http://www.google.com" width="200"/>
+					<b:textBox id="url" text="http://blog.cruxframework.org" width="200"/>
 				</b:cell>
 				<b:cell>
 					<a:decoratedButton id="btn" text="Open New Tab" onClick="dynaTabsController.openNewTab"/>

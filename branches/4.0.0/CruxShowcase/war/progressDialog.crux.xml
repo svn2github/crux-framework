@@ -16,13 +16,23 @@
 
 		<c:screen useController="progressDialogController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="150" spacing="5">
-			<b:cell direction="center" verticalAlignment="middle" horizontalAlignment="center" width="50%">
-				<a:decoratedButton id="progressButton" text="Show Progress Dialog" onClick="progressDialogController.showProgress"/>
-			</b:cell>
-		</b:dockPanel>
+		<center>
+			<a:decoratedButton id="progressButton" text="Show Progress Dialog" onClick="progressDialogController.showProgress"/>
+		</center>		
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				ProgressDialogs are widgets which tells users that some slow process is in progress.
+				They can prevent users to interact with other widgets present on screen, avoiding eventual 
+				undesired concurrence.  
+			</s:widgetInfo>
+			<s:exampleInfo>
+				when you click the button, a ProgressDialog is shown and, after three seconds, a Timer closes 
+				it, unblocking the screen. If you take a look at the source code, you will note that you don't
+				need to know how long your process will take in order to close the dialog. You can just keep it
+				visible while needed and force it to close just when you want. 
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

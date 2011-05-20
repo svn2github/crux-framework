@@ -22,7 +22,14 @@
 		
 		<br/>
 		
-		<s:sources/>
+		<s:info sourcesController="parameterBindSourcesController">
+			<s:widgetInfo>
+				A DecoratedButton is a push button that can be flexibly styled. Using pure CSS (or CSS plus images, for browser without support for CSS3), you can easily define a sophisticated appearance to it.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				you can enable or disable the 'Click Me!' button and see how its style is affected.  
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

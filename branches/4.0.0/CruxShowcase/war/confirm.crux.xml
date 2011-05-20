@@ -16,16 +16,23 @@
 
 		<c:screen useController="confirmController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="150" spacing="5">
-			<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right" width="50%">
-				<a:decoratedButton id="showConfirmButton" text="Show Confirm" onClick="confirmController.showConfirm"/>
-			</b:cell>
-			<b:cell direction="east" verticalAlignment="middle" horizontalAlignment="left" width="50%">
-				<b:label id="message"/>
-			</b:cell>
-		</b:dockPanel>
+		<center>
+			<a:decoratedButton id="showConfirmButton" text="Ask me a Question!" onClick="confirmController.showConfirm"/>
+		</center>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				Confirms are useful to ask 'yes or no' questions to users. Unlike the native confirm-box 
+				provided natively by the browser, Crux Confirms trigger events, more specifically, they 
+				fire an OkEvent or a CancelEvent, according to the user's decision. You can capture those
+				events by providing handlers for them.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click the button, a confirm will be shown. We attach two handlers on it you, one for 
+				a positive answer and other for a negative one. As result, we just show a message reflecting 
+				the option you choose. Note that we use arbitrary labels even in the buttons' captions. 
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

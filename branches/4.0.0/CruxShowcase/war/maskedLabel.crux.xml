@@ -14,7 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useFormatter="birthDate,height,weight" useController="maskedLabelController" onLoad="maskedLabelController.onLoad"/>
+		<c:screen useController="maskedLabelController" onLoad="maskedLabelController.onLoad"/>
 
 		<center>
 		

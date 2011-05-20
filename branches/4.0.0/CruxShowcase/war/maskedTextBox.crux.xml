@@ -14,7 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="maskedTextBoxController" useFormatter="phone,date"/>
+		<c:screen useController="maskedTextBoxController"/>
 
 		<b:dockPanel id="centeringPanel" width="100%" height="130">
 			<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
