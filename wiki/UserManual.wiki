@@ -140,7 +140,7 @@ You must attempt to:
 
 The *.crux.xml* files are used to make development easier. When you generate the final application distribution file, the _*Crux*_ compiler translate those pages into *.html* pages. See [UserManual#5.3_Crux_Compiler Crux Compiler] for more information.
 
-It means that you can, for example, create a page called {{{index.crux.xml}}}, but the url you must pass to the browser will refer to {{{index.html}}}. 
+It means that you can, for example, create a page named {{{index.crux.xml}}}, but the url you must pass to the browser will refer to {{{index.html}}}. 
 
 === 3.1.2 Instantiating Widgets Programmatically===
 
@@ -159,7 +159,7 @@ You can instantiate widgets exactly as you do using pure GWT.
 
 == 3.2 Screen ==
 
-_*Crux*_ creates an abstraction over the page that is called *_Screen_*. Declaratively, you can refer to it using a `<screen>` tag:
+_*Crux*_ creates an abstraction over the page that is named *_Screen_*. Declaratively, you can refer to it using a `<screen>` tag:
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -355,7 +355,7 @@ You can block and unblock the user interaction with the page using the static me
 
 === 3.2.6 Fragmenting the Code===
 
-Screen tag has an attribute called {{{fragment}}}, that can be used to help you to fragment your code into different javascript files.
+Screen tag has an attribute named {{{fragment}}}, that can be used to help you to fragment your code into different javascript files.
 
 {{{
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -639,7 +639,7 @@ public class Person
 </html>
 }}}
 
-You can also control which fields of a value object must be bound to some widget screen. {{{@ValueObject}}} annotation has a boolean property called {{{bindWidgetByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} make _*Crux*_ to does not bind all value object fields to widgets automatically. If you set this, you must specify for each field, the name of the widget that it will be bound (through {{{@ScreenBind}}} annotation).
+You can also control which fields of a value object must be bound to some widget screen. {{{@ValueObject}}} annotation has a boolean property named {{{bindWidgetByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} make _*Crux*_ to does not bind all value object fields to widgets automatically. If you set this, you must specify for each field, the name of the widget that it will be bound (through {{{@ScreenBind}}} annotation).
 
 See the following example:
 {{{
@@ -952,7 +952,7 @@ public class MyController
 }
 }}}
 
-If no value is passed to the {{{@Validate}}} annotation, _*Crux*_ tries to find a method called {{{validate<methodName>}}}. 
+If no value is passed to the {{{@Validate}}} annotation, _*Crux*_ tries to find a method named {{{validate<methodName>}}}. 
 
 {{{
 @Controller("clientHandler")
@@ -1088,7 +1088,7 @@ public class Parameters
 }
 }}}
 
-You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property called {{{bindParameterByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} makes _*Crux*_ do not bind all parameters automatically. If you set this, you must specify, for each field, the name of the parameter that will be bound to it (through {{{@Parameter}}} annotation).
+You can also control which fields of a parameter object must be bound to some window parameter. {{{@ParameterObject}}} annotation has a boolean property named {{{bindParameterByFieldName}}} (default to {{{true}}}). Setting this value to {{{false}}} makes _*Crux*_ do not bind all parameters automatically. If you set this, you must specify, for each field, the name of the parameter that will be bound to it (through {{{@Parameter}}} annotation).
 
 See the following example:
 {{{
@@ -1727,7 +1727,7 @@ public MyServerClass
 }
 }}}
 
-You can create a resource file called {{{ServerMessages}}} and put it under your application classpath to change messages for a specific locale. Example:
+You can create a resource file named {{{ServerMessages}}} and put it under your application classpath to change messages for a specific locale. Example:
 
 {{{
 (file: ServerMessages_pt_BR.properties)
@@ -1815,7 +1815,7 @@ This filter is used to transform your _.crux.xml_ files in pure _html_ files. Th
 
 The two above filters should not be used in a production environment. Still, they are removed by an Ant task generated to deploy your project (if you are using the [UserManual#2.1_Install *Crux* Project Generator]).
 
-You can add an optional listener called InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
+You can add an optional listener named InitializerListener to initialize some _*Crux*_ resources to turn the first call to application faster.
 
 {{{
    <listener>
@@ -1843,7 +1843,7 @@ _*Crux*_ provides some configuration options that can modify behaviors on the fr
 
 Those options can be informed through:
   # A command line argument to JVM, adding a System property like: {{{-DCrux.<propertyName>=<propertyValue>}}}. {{{e.g.: -DCrux.enableChildrenWindowsDebug=false}}}.
-  # A file called {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
+  # A file named {{{Crux.properties}}} that can be put (optionally) in any place under your classpath.
 
 If you use both ways shown, the command line has precedence. 
 
