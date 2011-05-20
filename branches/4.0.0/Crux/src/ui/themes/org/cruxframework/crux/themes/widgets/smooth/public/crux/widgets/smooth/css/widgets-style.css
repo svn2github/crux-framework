@@ -92,6 +92,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #4E4E4E;
 	padding: 5px;
 }
+.crux-MessageBox .crux-DecoratedButtonCSS3, .crux-MessageBox .crux-DecoratedButton
+{
+	min-width: 60px;
+	overflow: visible;
+	white-space: nowrap;
+}	
 
 /******************************************************************************
 	Progress Dialog
@@ -289,60 +295,74 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-Confirm .dialogTopLeft 
 {
-	height:40px;
-	width:15px;
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top left;
+	height:41px;
+	width:19px;
+	font-size: 19px;
+	font-family: monospace;
+	background: url(../img/dialogs-nw.png) no-repeat top left;
 	cursor: move;
 }
 .crux-Confirm .dialogTopCenter 
 {
-	font-size: 12px;
-	font-weight: bold;
-	color: #5385AE;
 	text-align: left;
 	font-family: Arial, Helvetica;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top center;
+	background: url(../img/dialogs-n.png) repeat-x top center;
 	cursor: move;
 	padding-top: 8px;
 	padding-left: 2px;
 }
+.crux-Confirm .dialogTopCenter  .Caption
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: #EEEEEE;
+	text-shadow: -1px -1px #2f5578;
+}
 .crux-Confirm .dialogTopRight
 {
-	width:15px;
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat top right;
+	width:20px;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-ne.png) no-repeat top right;
+	padding-right: 5px;
 	cursor: move;
 }
 .crux-Confirm .dialogMiddleLeft
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat center left;
+	width:19px;
+	font-size: 19px;
+	font-family: monospace;
+	background: url(../img/dialogs-w.png) repeat-y center left;
 }
 .crux-Confirm .dialogMiddleCenter
 {
-	background: url(../img/dialogs-blue-bg.png) no-repeat center center;
+	background-color: #FFFFFF;
 }
 .crux-Confirm .dialogMiddleRight
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat center right;
+	width:20px;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-e.png) repeat-y center right;
 }
 .crux-Confirm .dialogBottomLeft
 {
-	font-size: 0px;
-	height:15px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom left;
+	font-size: 19px;
+	font-family: monospace;
+	height:20px;
+	background: url(../img/dialogs-sw.png) no-repeat top left;
 }
 .crux-Confirm .dialogBottomCenter
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom center;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-s.png) repeat-x top center;
 }
 .crux-Confirm .dialogBottomRight
 {
-	font-size: 0px;
-	background: url(../img/dialogs-blue-bg.png) no-repeat bottom right;
+	font-size: 20px;
+	font-family: monospace;
+	background: url(../img/dialogs-se.png) no-repeat top right;
 }
 .crux-Confirm .message
 {
@@ -351,6 +371,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-weight: bold;
 	color: #4E4E4E;
 	padding: 5px;
+}
+.crux-Confirm .crux-DecoratedButtonCSS3, .crux-Confirm .crux-DecoratedButton  
+{
+	min-width: 60px;
+	overflow: visible;
+	white-space: nowrap;
 }
 
 /******************************************************************************
