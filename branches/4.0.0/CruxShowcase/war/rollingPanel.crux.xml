@@ -19,7 +19,7 @@
 			<b:cell horizontalAlignment="center" direction="west">
 				<a:decoratedPanel id="scrollerHBorder" horizontalAlignment="center">
 					<a:widget>
-						<a:rollingPanel id="horizontalRollingPanel" width="350" spacing="0" >
+						<a:rollingPanel id="horizontalRollingPanel" width="450" spacing="0" >
 							<b:image id="image1" url="style/img/climb6.png"/>
 							<b:image id="image2" url="style/img/climb5.png"/>
 							<b:image id="image3" url="style/img/climb4.png"/>
@@ -46,25 +46,6 @@
 					</a:widget>
 				</a:decoratedPanel>
 			</b:cell>
-			<b:cell horizontalAlignment="center" direction="east">
-				<a:decoratedPanel id="scrollerHBorder" horizontalAlignment="center">
-					<a:widget>
-						<a:rollingPanel id="verticalRollingPanel" height="200" spacing="0" vertical="true">
-							<b:image id="image23" url="style/img/climb9.png"/>
-							<b:image id="image24" url="style/img/climb10.png"/>
-							<b:image id="image22" url="style/img/climb11.png"/>
-							<b:image id="image25" url="style/img/climb6.png"/>
-							<b:image id="image26" url="style/img/climb5.png"/>
-							<b:image id="image27" url="style/img/climb4.png"/>
-							<b:image id="image28" url="style/img/climb3.png"/>
-							<b:image id="image29" url="style/img/climb2.png"/>
-							<b:image id="image30" url="style/img/climb1.png"/>
-							<b:image id="image31" url="style/img/climb7.png"/>
-							<b:image id="image32" url="style/img/climb8.png"/>
-						</a:rollingPanel>
-					</a:widget>
-				</a:decoratedPanel>
-			</b:cell>
 		</b:dockPanel>
 		<s:info sourcesController="noJavaSourcesController">
 			<s:widgetInfo>
@@ -73,7 +54,7 @@
 				long as we keep	a scroll button pressed.
 			</s:widgetInfo>
 			<s:exampleInfo>
-				we can see the RollingPanel in two flavors: horizontal and vertical. Try keeping any scroll button pressed to fell the 
+				we can see the RollingPanel working. Try keeping any scroll button pressed to fell the 
 				acceleration. 
 			</s:exampleInfo>
 		</s:info>
