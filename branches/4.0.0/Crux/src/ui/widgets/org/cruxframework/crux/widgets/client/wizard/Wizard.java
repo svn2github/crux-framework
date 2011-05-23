@@ -30,7 +30,6 @@ import org.cruxframework.crux.widgets.client.event.FinishHandler;
 import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
 import org.cruxframework.crux.widgets.client.event.HasFinishHandlers;
 
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -500,9 +499,9 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	 * @param position
 	 * @param horizontalAlign
 	 */
-	public void setControlBar(boolean vertical, ControlPosition position, ControlHorizontalAlign horizontalAlign)
+	public void setControlBar(ControlPosition position, ControlHorizontalAlign horizontalAlign)
     {
-		setControlBar(new WizardControlBar<T>(vertical), position, horizontalAlign);
+		setControlBar(new WizardControlBar<T>(), position, horizontalAlign);
     }
 
 	/**
@@ -510,9 +509,9 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	 * @param position
 	 * @param verticalAlign
 	 */
-	public void setControlBar(boolean vertical, ControlPosition position, ControlVerticalAlign verticalAlign)
+	public void setControlBar(ControlPosition position, ControlVerticalAlign verticalAlign)
     {
-		setControlBar(new WizardControlBar<T>(vertical), position, verticalAlign);
+		setControlBar(new WizardControlBar<T>(), position, verticalAlign);
     }
 
 	/**
@@ -551,9 +550,9 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	 * @param position
 	 * @param horizontalAlign
 	 */
-	public void setNavigationBar(boolean vertical, boolean showAllSteps, ControlPosition position, ControlHorizontalAlign horizontalAlign)
+	public void setNavigationBar(boolean showAllSteps, ControlPosition position, ControlHorizontalAlign horizontalAlign)
     {
-		setNavigationBar(new WizardNavigationBar<T>(vertical, showAllSteps), position, horizontalAlign);
+		setNavigationBar(new WizardNavigationBar<T>(showAllSteps), position, horizontalAlign);
     }
 
 	/**
@@ -562,9 +561,9 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	 * @param position
 	 * @param verticalAlign
 	 */
-	public void setNavigationBar(boolean vertical, boolean showAllSteps, ControlPosition position, ControlVerticalAlign verticalAlign)
+	public void setNavigationBar(boolean showAllSteps, ControlPosition position, ControlVerticalAlign verticalAlign)
     {
-		setNavigationBar(new WizardNavigationBar<T>(vertical, showAllSteps), position, verticalAlign);
+		setNavigationBar(new WizardNavigationBar<T>(showAllSteps), position, verticalAlign);
     }
 	
 
@@ -769,10 +768,6 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
         		return DockPanel.NORTH;
         	case south:
     	        return DockPanel.SOUTH;
-        	case east:
-    	        return DockPanel.EAST;
-        	case west:
-    	        return DockPanel.WEST;
         }
 	    return DockPanel.SOUTH;
     }
@@ -918,7 +913,7 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 
 	public static enum ControlHorizontalAlign{center, left, right}
 
-	public static enum ControlPosition{east, north, south, west}	
+	public static enum ControlPosition{north, south}	
 	
 	public static enum ControlVerticalAlign{bottom, middle, top}
 	

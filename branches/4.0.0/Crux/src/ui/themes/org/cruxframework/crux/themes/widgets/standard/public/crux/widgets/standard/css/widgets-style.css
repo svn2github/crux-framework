@@ -626,7 +626,7 @@
 	font-weight:bold;
 }
 
-.crux-Wizard .crux-WizardNavigationHorizontalSeparator
+.crux-Wizard .crux-WizardNavigationSeparator
 {
 	width: 20px;
 	height: 11px;
@@ -634,10 +634,7 @@
 	font-family: monospace;
 	font-size: 1px;
 }
-.crux-Wizard .crux-WizardNavigationVerticalSeparator
-{
-	
-}
+
 .crux-Wizard .crux-WizardControlBarSouthWrapper, .crux-Wizard .crux-WizardControlBarNorthWrapper
 {
 	height: 32px;
@@ -662,12 +659,12 @@
 /******************************************************************************
 	RollingPanel - Horizontal
 *******************************************************************************/
-.crux-RollingPanelHPreviousWrapper
+.crux-RollingPanelPreviousWrapper
 {
 	width:20px;
 	height: 100%;
 }
-.crux-RollingPanelHPrevious
+.crux-RollingPanelPrevious
 {
 	width: 15px;
 	height: 100%;
@@ -679,13 +676,13 @@
 	cursor: pointer;
 	padding: 1px;
 }
-.crux-RollingPanelHNextWrapper
+.crux-RollingPanelNextWrapper
 {
 	width:20px;
 	height: 100%;
 	text-align: right;
 }
-.crux-RollingPanelHNext
+.crux-RollingPanelNext
 {
 	width: 15px;
 	height: 100%;
@@ -697,69 +694,16 @@
 	cursor: pointer;
 	padding: 1px;
 }
-.crux-RollingPanelHPreviousWrapper-disabled, .crux-RollingPanelHNextWrapper-disabled
+.crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 }
-.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext
+.crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext
 {
 	width:1px;
 	border: solid 0px;
 	visibility: hidden;
-}
-
-/******************************************************************************
-	RollingPanel - Vertical
-*******************************************************************************/
-.crux-RollingPanelVPreviousWrapper
-{
-	vertical-align:top !important;
-	text-align: center;
-	height: 15px;
-}
-.crux-RollingPanelVNextWrapper
-{
-	vertical-align:bottom !important;
-	text-align: center;
-	height:15px;
-}
-.crux-RollingPanelVPrevious
-{
-	height: 12px;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-up.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	font-family: monospace;
-	font-size: 0px;
-	padding: 1px;
-}
-.crux-RollingPanelVNext
-{
-	height: 12px;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-down.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	font-family: monospace;
-	font-size: 0px;
-	padding: 1px;
-}
-.crux-RollingPanelVPreviousWrapper-disabled, .crux-RollingPanelVNextWrapper-disabled
-{
-	width:1px;
-	border: solid 0px;
-}
-.crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious, .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext
-{
-	width:1px;
-	border: solid 0px;
-	display: none;
 }
 
 /******************************************************************************
@@ -769,7 +713,7 @@
 {
 	height: 28px;
 }
-.crux-TabBar .crux-RollingPanelHPrevious
+.crux-TabBar .crux-RollingPanelPrevious
 {
 	height: 23px;
 	width: 17px;
@@ -777,7 +721,7 @@
 	background-image: url(../img/dyna-tabs-roll-left.gif);
 	cursor: pointer;
 }
-.crux-TabBar .crux-RollingPanelHNext
+.crux-TabBar .crux-RollingPanelNext
 {
 	height: 23px;
 	width: 17px;
@@ -785,34 +729,34 @@
 	background-image: url(../img/dyna-tabs-roll-right.gif);
 	cursor: pointer;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper
+.crux-TabBar .crux-RollingPanelPreviousWrapper
 {
 	vertical-align:bottom !important;
 	width:20px;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper
+.crux-TabBar .crux-RollingPanelNextWrapper
 {
 	vertical-align:bottom !important;
 	width:20px;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper-disabled
+.crux-TabBar .crux-RollingPanelPreviousWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 	opacity:0;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper-disabled
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 	opacity:0;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext
 {
 	width:1px;
 	height: 1px;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious
+.crux-TabBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious
 {
 	width:1px;
 	height: 1px;

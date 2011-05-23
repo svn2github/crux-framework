@@ -57,9 +57,6 @@ class RollingPanelContext extends WidgetCreatorContext
  *
  */
 @DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=RollingPanel.class)
-@TagAttributesDeclaration({
-	@TagAttributeDeclaration(value="vertical", type=Boolean.class, defaultValue="false")
-})
 @TagAttributes({
 	@TagAttribute("nextButtonStyleName"),
 	@TagAttribute("previousButtonStyleName"),
@@ -74,18 +71,6 @@ public class RollingPanelFactory extends WidgetCreator<RollingPanelContext>
        implements HasHorizontalAlignmentFactory<RollingPanelContext>, 
                   HasVerticalAlignmentFactory<RollingPanelContext>
 {
-	@Override
-	public void instantiateWidget(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException
-	{
-		String className = getWidgetClassName();
-		String verticalAttr = context.readWidgetProperty("vertical");
-		boolean vertical = false;
-		if (!StringUtils.isEmpty(verticalAttr))
-		{
-			vertical = Boolean.parseBoolean(verticalAttr);
-		}
-		out.println(className + " " + context.getWidget()+" = new "+className+"("+vertical+");");
-	}
 	
 	@Override
 	public void processChildren(SourcePrinter out, RollingPanelContext context) throws CruxGeneratorException {}

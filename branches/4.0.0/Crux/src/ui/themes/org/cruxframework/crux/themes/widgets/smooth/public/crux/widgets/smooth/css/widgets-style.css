@@ -663,27 +663,19 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border: solid 0px !important;
 	height: 99.0% !important;
 }
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelHPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelHNextWrapper-disabled, 
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelVPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelVNextWrapper-disabled,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelHPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelHNextWrapper-disabled, 
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelVPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelVNextWrapper-disabled
+.crux-Wizard .crux-WizardControlBar .crux-RollingPanelPreviousWrapper-disabled,
+.crux-Wizard .crux-WizardControlBar .crux-RollingPanelNextWrapper-disabled, 
+.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelPreviousWrapper-disabled,
+.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelNextWrapper-disabled 
 {
 	width: 1px;
 	height: 1px;
 	overflow: hidden;
 }
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext
+.crux-Wizard .crux-WizardControlBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious,
+.crux-Wizard .crux-WizardControlBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext,
+.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious,
+.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext
 {
 	display: none;
 }
@@ -706,7 +698,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: default;
 }
 
-.crux-Wizard .crux-WizardNavigationHorizontalSeparator
+.crux-Wizard .crux-WizardNavigationSeparator
 {
 	width: 20px;
 	height: 11px;
@@ -714,10 +706,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	font-size: 1px;
 }
-.crux-Wizard .crux-WizardNavigationVerticalSeparator
-{
-	
-}
+
 .crux-Wizard .crux-WizardControlBarSouthWrapper, .crux-Wizard .crux-WizardControlBarNorthWrapper
 {
 	height: 32px;
@@ -742,7 +731,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 /******************************************************************************
 	RollingPanel - Horizontal
 *******************************************************************************/
-.crux-RollingPanelHPreviousWrapper, .crux-RollingPanelHNextWrapper
+.crux-RollingPanelPreviousWrapper, .crux-RollingPanelNextWrapper
 {
 	width: 22px;
 	height: 100%;
@@ -750,7 +739,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-right: 1px;
 	border: solid 0px;
 }
-.crux-RollingPanelHPrevious, .crux-RollingPanelHNext
+.crux-RollingPanelPrevious, .crux-RollingPanelNext
 {
 	color:#2F567A;
 	font-family:Arial,Helvetica;
@@ -771,16 +760,16 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding: 0px;
 	margin: 0px;
 }
-.crux-RollingPanelHPrevious:active, .crux-RollingPanelHNext:active
+.crux-RollingPanelPrevious:active, .crux-RollingPanelNext:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
 }
-.crux-RollingPanelHPreviousWrapper-disabled, .crux-RollingPanelHNextWrapper-disabled
+.crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
 {	
 }
-.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext,
-.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious:active, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext:active
+.crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext,
+.crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious:active, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
 	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
@@ -791,64 +780,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 
 /******************************************************************************
-	RollingPanel - Vertical
-*******************************************************************************/
-.crux-RollingPanelVPreviousWrapper, .crux-RollingPanelVNextWrapper
-{
-	height: 20px;
-	width: 100%;
-	padding: 0px;
-}
-.crux-RollingPanelVPrevious, .crux-RollingPanelVNext
-{
-	color:#2F567A;
-	font-family:Arial,Helvetica;
-	font-weight: bold;
-	font-size:11px;
-	text-decoration: none;
-	text-shadow: #9FB6EA 1px 1px 0;
-	cursor: default;
-	border: solid 1px #40688b;
-	border-top: solid 1px #598ab2;
-	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
-	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
-	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
-	height: 100%;
-	width: 100%;
-	padding: 0px;
-	margin: 0px; 
-}
-.crux-RollingPanelVPrevious:active, .crux-RollingPanelVNext:active
-{
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
-	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
-}
-.crux-RollingPanelVPreviousWrapper-disabled, .crux-RollingPanelVNextWrapper-disabled
-{
-	border: solid 0px;
-}
-.crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious, .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext,
-.crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious:active, .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext:active
-{
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
-	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
-	color: #AAAAAA;
-	text-shadow: #FFFFFF 1px 1px 0;
-	border: solid 1px #BBBBBB;
-	border-top: solid 1px #CCCCCC;
-}
-
-/******************************************************************************
 	TabBar
 *******************************************************************************/
 .crux-TabBar
 {
 	height: 36px;
 }
-.crux-TabBar .crux-RollingPanelHPrevious, .crux-TabBar .crux-RollingPanelHPrevious:active  
+.crux-TabBar .crux-RollingPanelPrevious, .crux-TabBar .crux-RollingPanelPrevious:active  
 {
 	height: 24px;
 	width: 22px;
@@ -864,7 +802,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-size: 1px;
 	color: transparent;
 }
-.crux-TabBar .crux-RollingPanelHNext, .crux-TabBar .crux-RollingPanelHNext:active
+.crux-TabBar .crux-RollingPanelNext, .crux-TabBar .crux-RollingPanelNext:active
 {
 	height: 24px;
 	width: 22px;
@@ -880,12 +818,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: transparent;
 }
 
-.crux-TabBar .crux-RollingPanelHPrevious:active, .crux-TabBar .crux-RollingPanelHNext:active
+.crux-TabBar .crux-RollingPanelPrevious:active, .crux-TabBar .crux-RollingPanelNext:active
 {
 	opacity:0.7;
 	filter:alpha(opacity=70);	
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper
+.crux-TabBar .crux-RollingPanelPreviousWrapper
 {
 	background-image: url(../img/dyna-tabs-roll-left-wrapper.gif);
 	vertical-align:bottom !important;
@@ -893,7 +831,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-left: 3px;
 	padding-bottom: 4px;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper
+.crux-TabBar .crux-RollingPanelNextWrapper
 {
 	background-image: url(../img/dyna-tabs-roll-right-wrapper.gif);
 	background-position: right;
@@ -903,15 +841,15 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-bottom: 4px;
 }
 
-.crux-TabBar .crux-RollingPanelHBody
+.crux-TabBar .crux-RollingPanelBody
 {
 	background-image: url(../img/dyna-tabs-roll-bg.gif);
 	background-repeat: repeat-x;
 	background-position: top;
 }
 
-.crux-TabBar .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext, 
-.crux-TabBar .crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext, 
+.crux-TabBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious
 {
 	opacity:0.2;
 	filter:alpha(opacity=20);	

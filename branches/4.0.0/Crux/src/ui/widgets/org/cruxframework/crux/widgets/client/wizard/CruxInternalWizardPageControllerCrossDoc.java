@@ -42,7 +42,6 @@ public interface CruxInternalWizardPageControllerCrossDoc extends CrossDocument
 	String getNextLabel(String wizardId);
 	String getBackLabel(String wizardId);
 	int getSpacing(String wizardId);
-	boolean isVertical(String wizardId);
 	void setButtonsHeight(String wizardId, String buttonHeight);
 	void setButtonsStyle(String wizardId, String buttonStyle);
 	void setButtonsWidth(String wizardId, String buttonWidth);

@@ -67,7 +67,7 @@ public class RollingTabBar extends Composite implements HasBeforeSelectionHandle
 	 */
 	RollingTabBar()
 	{
-		panel = new RollingPanel(false);
+		panel = new RollingPanel();
 
 		initWidget(panel);
 		sinkEvents(Event.ONCLICK);

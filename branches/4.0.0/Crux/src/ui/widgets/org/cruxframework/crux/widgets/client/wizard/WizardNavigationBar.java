@@ -29,8 +29,7 @@ import com.google.gwt.user.client.ui.Label;
 public class WizardNavigationBar<T extends Serializable> extends AbstractWizardNavigationBar<T>
 {
 	public static final String DEFAULT_LABEL_STYLE_NAME = "crux-WizardNavigationLabel";
-	public static final String DEFAULT_SEPARATOR_HORIZONTAL_STYLE_NAME = "crux-WizardNavigationHorizontalSeparator";
-	public static final String DEFAULT_SEPARATOR_VERTICAL_STYLE_NAME = "crux-WizardNavigationVerticalSeparator";
+	public static final String DEFAULT_SEPARATOR_STYLE_NAME = "crux-WizardNavigationSeparator";
 	public static final String DEFAULT_STYLE_NAME = "crux-WizardNavigationBar";
 	
 	
@@ -38,17 +37,15 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 	private String horizontalSeparatorStyleName;
 	private String labelStyleName;
 	private final boolean showAllSteps;
-	private String verticalSeparatorStyleName;
 	
 	/**
 	 * @param vertical
 	 */
-	public WizardNavigationBar(boolean vertical, boolean showAllSteps)
+	public WizardNavigationBar(boolean showAllSteps)
     {
-	    super(vertical, DEFAULT_STYLE_NAME);
+	    super(DEFAULT_STYLE_NAME);
 	    setLabelStyleName(DEFAULT_LABEL_STYLE_NAME);
-	    setHorizontalSeparatorStyleName(DEFAULT_SEPARATOR_HORIZONTAL_STYLE_NAME);
-	    setVerticalSeparatorStyleName(DEFAULT_SEPARATOR_VERTICAL_STYLE_NAME);
+	    setSeparatorStyleName(DEFAULT_SEPARATOR_STYLE_NAME);
 	    this.showAllSteps = showAllSteps;
     }
 
@@ -71,14 +68,6 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 	/**
 	 * @return
 	 */
-	public String getVerticalSeparatorStyleName()
-    {
-    	return verticalSeparatorStyleName;
-    }
-
-	/**
-	 * @return
-	 */
 	public boolean isAllowSelectStep()
     {
     	return allowSelectStep;
@@ -95,7 +84,7 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 	/**
 	 * @param horizontalSeparatorStyleName
 	 */
-	public void setHorizontalSeparatorStyleName(String horizontalSeparatorStyleName)
+	public void setSeparatorStyleName(String horizontalSeparatorStyleName)
     {
     	this.horizontalSeparatorStyleName = horizontalSeparatorStyleName;
     }
@@ -106,14 +95,6 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 	public void setLabelStyleName(String labelStyleName)
     {
     	this.labelStyleName = labelStyleName;
-    }
-
-	/**
-	 * @param verticalSeparatorStyleName
-	 */
-	public void setVerticalSeparatorStyleName(String verticalSeparatorStyleName)
-    {
-    	this.verticalSeparatorStyleName = verticalSeparatorStyleName;
     }
 
 	/**
@@ -140,7 +121,7 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 	private void updateNavigationBar(int currentStep)
     {
 		rollingPanel.clear();
-		int originalScrollPosition = (rollingPanel.isVertical()?rollingPanel.getVerticalScrollPosition():rollingPanel.getHorizontalScrollPosition());
+		int originalScrollPosition = (rollingPanel.getScrollPosition());
 		boolean needsSeparator = false;
 		for (int i=0; i<wizard.getStepCount() && (showAllSteps || i<= currentStep); i++)
 		{
@@ -150,7 +131,7 @@ public class WizardNavigationBar<T extends Serializable> extends AbstractWizardN
 				if (needsSeparator)
 				{
 					Label separator = new Label();
-					separator.setStyleName(isVertical()?verticalSeparatorStyleName:horizontalSeparatorStyleName);
+					separator.setStyleName(horizontalSeparatorStyleName);
 					rollingPanel.add(separator);
 				}
 				needsSeparator = true;

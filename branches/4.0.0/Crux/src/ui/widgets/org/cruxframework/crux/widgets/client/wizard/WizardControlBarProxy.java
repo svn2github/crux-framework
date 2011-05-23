@@ -27,7 +27,6 @@ interface WizardControlBarProxy
 	void back();
 	void setSpacing(int spacing);
 	int getSpacing();
-	boolean isVertical();
 	String getBackLabel();
 	String getNextLabel();
 	String getCancelLabel();
