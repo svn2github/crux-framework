@@ -7,9 +7,8 @@ import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.showcase.client.controller.ContextInitializerController.SharedContext;
+import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 
-
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 
 @Controller("contextFrameController")
@@ -29,12 +28,12 @@ public class ContextFrameController {
 			long messageAge = (new Date().getTime() - msgDate.getTime()) / 1000;
 			
 			Screen.get("label", Label.class).setText(
-				"Message read from context: '" + message + "'.\nMessage age: " + messageAge + " seconds."
+				"Message read from context: '" + message + "'. Message age: " + messageAge + " seconds."
 			);
 		}
 		else
 		{
-			Window.alert("Type a message and press 'Save in Context', before clicking here.");
+			MessageBox.show("", "Type a message and press 'Save in Context', before clicking here.", null);
 		}
 	}
 }

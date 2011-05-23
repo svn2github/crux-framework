@@ -1,11 +1,13 @@
 package org.cruxframework.crux.showcase.client.controller;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.controller.ValueObject;
 
 @ValueObject
-public class Person
+@SuppressWarnings("serial")
+public class Person implements Serializable
 {
 	private String name;
 	private Long phone;

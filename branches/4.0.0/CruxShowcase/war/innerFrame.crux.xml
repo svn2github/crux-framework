@@ -16,9 +16,32 @@
 
 		<c:screen useController="frameController"/>
 
-		<center>
-			<b:label id="label"/>
-		</center>
- 
+		<b:grid id="grid" cellSpacing="5" style="margin:5px;">
+			<b:row>
+				<b:cell>
+					<b:text>Name:</b:text>
+				</b:cell>
+				<b:cell>
+					<b:widget><b:textBox id="name" width="200"/></b:widget>
+				</b:cell>
+			</b:row>
+			<b:row>
+				<b:cell>
+					<b:text>Phone:</b:text>
+				</b:cell>
+				<b:cell>
+					<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100"/></b:widget>
+				</b:cell>
+			</b:row>
+			<b:row>
+				<b:cell>
+					<b:text>Date of Birth:</b:text>
+				</b:cell>
+				<b:cell>
+					<b:widget><b:dateBox id="dateOfBirth" pattern="MM/dd/yyyy" width="100"/></b:widget>
+				</b:cell>
+			</b:row>
+		</b:grid>
+			
 	</body>
 </html>

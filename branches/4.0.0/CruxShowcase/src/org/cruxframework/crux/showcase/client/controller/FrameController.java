@@ -1,15 +1,19 @@
 package org.cruxframework.crux.showcase.client.controller;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.Screen;
-
-import com.google.gwt.user.client.ui.Label;
+import org.cruxframework.crux.core.client.controller.Create;
 
 @Controller("frameController")
 public class FrameController implements FrameControllerCrossDoc
 {
-	public void setMyLabel(String text)
+	@Create
+	protected Person person;
+	
+	/**
+	 * @see org.cruxframework.crux.showcase.client.controller.FrameControllerCrossDoc#setPerson(org.cruxframework.crux.showcase.client.controller.Person)
+	 */
+	public void setPerson(Person person)
 	{
-		Screen.get("label", Label.class).setText(text);
+		this.person = person;
 	}
 }

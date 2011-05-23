@@ -35,7 +35,7 @@ public class PhoneFormatter extends MaskedTextBoxBaseFormatter{
 	public Object unformat(String input) throws InvalidFormatException{
 		
 		if (input == null || !(input instanceof String) || ((String)input).length() != 13){
-			return "";
+			return null;
 		}
 		
 		String inputStr = (String)input;
