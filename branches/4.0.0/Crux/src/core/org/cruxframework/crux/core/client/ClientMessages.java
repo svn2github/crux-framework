@@ -40,8 +40,8 @@ public interface ClientMessages extends Messages
 	String crossDocumentInvocationError();
 	@DefaultMessage("[event 008] - Error on cross document call. Invalid Target.")
 	String crossDocumentInvalidTarget();
-	@DefaultMessage("[event 009] - Error on cross document call: {0}.")
-	String crossDocumentInvocationGeneralError(String errorMessage);
+	@DefaultMessage("[event 009] - Error on cross document call: Screen [{0}]. Error Message: [{1}].")
+	String crossDocumentInvocationGeneralError(String screenId, String errorMessage);
 	@DefaultMessage("[event 010] - Can not identify the method to be called.")
 	String crossDocumentCanNotIdentifyMethod();
 	@DefaultMessage("[event 011] - Can not find the method to be called.")
