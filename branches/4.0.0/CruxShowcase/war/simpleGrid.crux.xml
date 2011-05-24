@@ -38,37 +38,32 @@
 							<a:widget>
 								<a:grid id="simpleGrid" height="200" width="100%" dataSource="simpleGridDataSource" 
 									stretchColumns="true" pageSize="7">
-									<a:dataColumn key="name" label="Name"/>
+									<a:dataColumn key="name" label="Nickname"/>
 									<a:dataColumn key="phone" label="Phone"/>
 									<a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
-									<a:dataColumn key="address.street" label="Street"/>
+									<a:dataColumn key="address.street" label="Address"/>
 								</a:grid>
 							</a:widget>				
 						</a:body>
 					</a:titlePanel>
 				</b:cell>
-				<b:cell verticalAlignment="top">
-					<a:decoratedPanel id="textPanel" width="270" height="235">
-						<a:html>
-							<table cellspacing="5" class="CommentsTable">
-								<tr>
-									<th>This grid uses a local data source.</th>
-								</tr>
-								<tr>
-									<td>
-										It means that all data records are fetched in a single invocation on the server.
-										Since all data is cached in browser memory, the paging is made entirely on 
-										the client side of the application.
-									</td>
-								</tr>								  
-							</table>
-						</a:html>
-					</a:decoratedPanel>
-				</b:cell>
 			</b:horizontalPanel>
-	
-			<s:gridSources pageName="simpleGrid"/>
-	
+			
+			<s:info sourcesController="simpleGridSourcesController">
+				<s:widgetInfo>
+					Grids are widgets used to present tabular data. They can automatically fetch, sort, format, 
+					and page data for you. 				 
+				</s:widgetInfo>
+				<s:exampleInfo>
+					we show a grid linked with a local data source. It means that all data records are fetched 
+					in a single invocation to the server. Since all data is cached in browser memory, the paging 
+					is made entirely on the client side of the application. You can change the page being displayed
+					by clicking the arrows beside the title. The Pager itself is not part of the grid, it is another
+					widget, so you can put it where you want. It's also possible to sort the records by clicking 
+					the column headers.
+				</s:exampleInfo>
+			</s:info>
+
 		</center>						
 	</body>	
 </html>

@@ -12,7 +12,7 @@ public class ServerCommunicationSourcesController  extends BaseSourcesController
 	 */
 	protected ArrayList<SourceTab> getAdditionalSources() {
 		ArrayList<SourceTab> aditionalTabs = new ArrayList<SourceTab>();
-		aditionalTabs.add(new SourceTab("client/remote/SensitiveServerService.java", "Business Interface", true));
+		aditionalTabs.add(new SourceTab("client/remote/ServerCommunicationService.java", "Business Interface", true));
 		aditionalTabs.add(new SourceTab("client/remote/ServerCommunicationServiceAsync.java", "Async Interface", true));
 		aditionalTabs.add(new SourceTab("server/ServerCommunicationServiceImpl.java", "Service Implementation", true));
 		aditionalTabs.add(new SourceTab("client/remote/PleaseTypeYourNameException.java", "Business Exception", true));
