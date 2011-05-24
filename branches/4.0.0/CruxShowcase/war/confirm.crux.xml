@@ -24,7 +24,7 @@
 			<s:widgetInfo>
 				Confirms are useful to ask 'yes or no' questions to users. Unlike the native confirm-box 
 				provided natively by the browser, Crux Confirms trigger events, more specifically, they 
-				fire an OkEvent or a CancelEvent, according with the user's decision. You can capture those
+				fire an OkEvent or a CancelEvent, according to the user's decision. You can capture those
 				events by providing handlers for them.
 			</s:widgetInfo>
 			<s:exampleInfo>
