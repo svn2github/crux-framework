@@ -314,7 +314,7 @@ class HTMLBuilder
 			String innerHTML = getHTMLFromNode(cruxPageInnerTag);
 			if (innerHTML.length() > 0)
 			{
-				cruxArrayMetaData.append(",\"_html\":\""+HTMLUtils.escapeJavascriptString(innerHTML, escapeXML)+"\"");
+				cruxArrayMetaData.append(",\"_html\":\""+innerHTML+"\"");
 			}
 		}
 		else
@@ -322,7 +322,7 @@ class HTMLBuilder
 			String innerText = getTextFromNode(cruxPageInnerTag);
 			if (innerText.length() > 0)
 			{
-				cruxArrayMetaData.append(",\"_text\":\""+HTMLUtils.escapeJavascriptString(innerText, escapeXML)+"\"");
+				cruxArrayMetaData.append(",\"_text\":\""+innerText+"\"");
 			}
 		}
 		generateCruxMetaDataAttributes(cruxPageInnerTag, cruxArrayMetaData);
@@ -629,7 +629,7 @@ class HTMLBuilder
 			}
 		}
 		
-		return text.toString().trim();
+		return HTMLUtils.escapeJavascriptString(text.toString().trim(), escapeXML);
 	}
 	
 	/**
@@ -644,12 +644,15 @@ class HTMLBuilder
 			StringWriter innerHTML = new StringWriter(); 
 			NodeList children = elem.getChildNodes();
 			
-			for (int i=0; i<children.getLength(); i++)
+			if (children != null)
 			{
-				Node child = children.item(i);
-				HTMLUtils.write(child, innerHTML);
+				for (int i=0; i<children.getLength(); i++)
+				{
+					Node child = children.item(i);
+					HTMLUtils.write(child, innerHTML);
+				}
 			}
-	        return innerHTML.toString();
+	        return HTMLUtils.escapeJavascriptString(innerHTML.toString(), escapeXML);
 		}
 		catch (IOException e)
 		{

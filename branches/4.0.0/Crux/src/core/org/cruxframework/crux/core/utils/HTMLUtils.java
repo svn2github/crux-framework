@@ -305,6 +305,7 @@ public class HTMLUtils
 				default: sb.append(c); break;
 			}
 		}
-		return (sb.toString());
+		s = sb.toString().replace("&quot;", "\\\"");
+		return s;
 	}
 }
