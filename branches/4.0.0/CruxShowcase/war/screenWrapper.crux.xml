@@ -28,7 +28,7 @@
 										<b:text>Name:</b:text>
 									</b:cell>
 									<b:cell>
-										<b:widget><b:textBox id="name" width="300"/></b:widget>
+										<b:widget><b:textBox id="name" width="300" readOnly="true"/></b:widget>
 									</b:cell>
 								</b:row>
 								<b:row>
@@ -36,7 +36,7 @@
 										<b:text>Phone:</b:text>
 									</b:cell>
 									<b:cell>
-										<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100"/></b:widget>
+										<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100" readOnly="true"/></b:widget>
 									</b:cell>
 								</b:row>
 								<b:row>
@@ -44,13 +44,17 @@
 										<b:text>Date of Birth:</b:text>
 									</b:cell>
 									<b:cell>
-										<b:widget><b:dateBox id="dateOfBirth" pattern="MM/dd/yyyy" width="100"/></b:widget>
+										<b:widget><b:dateBox id="dateOfBirth" pattern="MM/dd/yyyy" width="100" enabled="false"/></b:widget>
 									</b:cell>
 								</b:row>
 								<b:row>
 									<b:cell colSpan="2" horizontalAlignment="center">
 										<b:widget>
-											<a:decoratedButton id="button" text="Populate Form Using Screen Wrapper" onClick="screenWrapperController.onClick" style="margin-top:10px"/>
+											<b:horizontalPanel id="buttonsHPanel">
+												<a:decoratedButton id="button" text="Populate Form Using Screen Wrapper" onClick="screenWrapperController.onClick" style="margin-top:10px"/>
+												<a:decoratedButton id="clearButton" text="Clear fields" onClick="screenWrapperController.onClearClick" style="margin-top:10px"/>
+											</b:horizontalPanel>
+											
 										</b:widget>
 									</b:cell>
 								</b:row>

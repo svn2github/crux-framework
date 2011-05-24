@@ -28,6 +28,14 @@ public class ScreenWrapperController {
 
 	}
 	
+	@Expose
+	public void onClearClick()
+	{
+		screen.getDateOfBirth().setValue(null);
+		screen.getName().setValue("");
+		screen.getPhone().setUnformattedValue(null);
+	}
+	
 	/**
 	 * Wrapper for the most used screen's widgets.
 	 */
