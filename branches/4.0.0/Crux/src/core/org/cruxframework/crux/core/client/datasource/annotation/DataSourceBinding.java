@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author Thiago da Rosa de Bustamante
- * @deprecated Use DataSourceIdentifier instead.
+ * @deprecated Use @DataSourceRecordIdentifier instead.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

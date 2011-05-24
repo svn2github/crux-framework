@@ -1113,8 +1113,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-TitlePanel .middleLeftCell
 {
-	width: 8px;
-	font-size: 8px;
+	width: 3px;
+	font-size: 3px;
 	font-family: monospace;
 	background: url(../img/collapse-panel-w.gif) repeat-y left;
 }
@@ -1125,8 +1125,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-TitlePanel .middleRightCell
 {
-	width: 8px;
-	font-size: 8px;
+	width: 3px;
+	font-size: 3px;
 	font-family: monospace;
 	background: url(../img/collapse-panel-e.gif) repeat-y right;
 }
@@ -1181,8 +1181,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-CollapsePanel .middleLeftCell
 {
-	width: 8px;
-	font-size: 8px;
+	width: 3px;
+	font-size: 3px;
 	font-family: monospace;
 	background: url(../img/collapse-panel-w.gif) repeat-y left;
 }
@@ -1193,8 +1193,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-CollapsePanel .middleRightCell
 {
-	width: 8px;
-	font-size: 8px;
+	width: 3px;
+	font-size: 3px;
 	font-family: monospace;	
 	background: url(../img/collapse-panel-e.gif) repeat-y right;
 }
@@ -1267,8 +1267,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .middleLeftCell
 {
-	width:6px;
-	font-size: 6px;
+	width:3px;
+	font-size: 3px;
 	font-family: monospace;
 	background: url(../img/decorated-panel-w.gif) repeat-y left;
 }
@@ -1279,8 +1279,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .middleRightCell
 {
-	width:6px;
-	font-size: 6px;
+	width:3px;
+	font-size: 3px;
 	font-family: monospace;
 	background: url(../img/decorated-panel-e.gif) repeat-y center right;
 }
@@ -1306,7 +1306,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 *******************************************************************************/
 .crux-Grid
 {
-	border: solid 2px #D0E4F6 !important;
 }
 .crux-Grid .row
 {
@@ -1354,15 +1353,16 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-Grid .columnHeadersRow
 {
-	background-color: #DFE6F0;
+	background-color: #DEDEDE;
 }
 .crux-Grid .columnHeadersRow .cellWrapper
 {
-	background-image: url(../img/grid-header.gif);
-	border-bottom: solid 2px #C5E0F0;
-	border-right: solid 1px #D0E4F6;
+	background: url(../img/grid-header.gif) repeat-x top;
+	border-bottom: solid 1px #C9C9C9;
+	border-right: solid 1px #D7D7D7;
 	height: 28px;
 	text-align: center;
+	background-color: #DEDEDE;
 }
 .crux-Grid .columnHeadersRow .cellWrapper-rowSelectionColumn
 {
@@ -1376,12 +1376,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-Grid .columnHeader .label
 {
-	color:#5385AE;
+	color:#707585;
 	font-family: Arial Unicode MS, Arial, sans-serif;
 	font-size:11px;
 	font-weight:bold;
 	padding-left: 3px;
-	text-align: center;
+	text-align:center;
+	text-shadow: #F5F5F5 1px 1px 0;
 }
 .crux-Grid .columnSorter
 {
@@ -1395,11 +1396,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/grid-sorting-arrow-down.gif);
 	background-repeat: no-repeat;
 	background-position: left;
-	width: 7px;
-	height: 4px;
+	width: 8px;
+	height: 5px;
 	font-size: 4px;
 	font-family: monospace;
-	margin-left: 2px;
+	margin-left: 5px;
+	margin-top: 5px;
 	margin-right: 2px;
 }
 .crux-Grid .columnSorter-asc .arrow
@@ -1407,11 +1409,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/grid-sorting-arrow-up.gif);
 	background-repeat: no-repeat;
 	background-position: left;
-	width: 7px;
-	height: 4px;
+	width: 8px;
+	height: 5px;
 	font-size: 4px;
 	font-family: monospace;
-	margin-left: 2px;
+	margin-left: 5px;
+	margin-top: 5px;
 	margin-right: 2px; 
 }
 .crux-Grid .columnSorter-asc .label
