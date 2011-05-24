@@ -66,7 +66,7 @@
 								<tr>
 									<td>
 										<li>
-											<b>RowRenderEvent:</b><span> When each row is rendered, its contact's picture URL is changed, according to the person's gender.</span>
+											<b>RowRenderEvent:</b><span> When each row is rendered, its contact's picture URL is changed, according with the person's gender.</span>
 										</li>
 									</td>
 								</tr>

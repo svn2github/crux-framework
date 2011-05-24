@@ -10,8 +10,7 @@ import org.cruxframework.crux.showcase.client.remote.StreamingGridServiceAsync;
 
 
 /**
- * @author Thiago da Rosa de Bustamante
- *
+ * Grid Streaming DataSouce
  */
 @DataSource("streamingGridDataSource")
 @DataSourceRecordIdentifier("address.street, name")
@@ -20,8 +19,10 @@ public class StreamingGridDataSource extends RemoteStreamingDataSource<Contact> 
 	@Create
 	protected StreamingGridServiceAsync service;
 
-	public void fetch(int startRecord, int endRecord)
-	{
+	/**
+	 * @see org.cruxframework.crux.core.client.datasource.RemoteDataSource#fetch(int, int)
+	 */
+	public void fetch(int startRecord, int endRecord) {
 		service.fetchContacts(startRecord, endRecord, new DataSourceAsyncCallbackAdapter<Contact>(this));			
 	}				
 }

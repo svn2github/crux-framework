@@ -3,8 +3,14 @@ package org.cruxframework.crux.showcase.server;
 import org.cruxframework.crux.showcase.client.dto.Contact;
 import org.cruxframework.crux.showcase.client.remote.StreamingGridService;
 
+/**
+ * Service Implementation
+ */
 public class StreamingGridServiceImpl implements StreamingGridService {
 	
+	/**
+	 * @see org.cruxframework.crux.showcase.client.remote.StreamingGridService#fetchContacts(int, int)
+	 */
 	public Contact[] fetchContacts(int first, int last) {
 		
 		int count = SimpleGridServiceImpl.CONTACTS.length;

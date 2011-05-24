@@ -47,7 +47,7 @@ public class SimpleGridServiceImpl implements SimpleGridService {
 	private static String generatePhone(int i) {
 		int m = (i % 9) + 1;
 		int n = (i % 9);
-		return "" +  m + n + m + " - " + n + m + n + m;
+		return "(" + m + n + m + ")" +  n + m + n + "-" + m + n + m;
 	}
 
 	@SuppressWarnings("deprecation")
