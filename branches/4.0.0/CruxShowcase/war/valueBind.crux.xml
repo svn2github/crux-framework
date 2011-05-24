@@ -54,9 +54,9 @@
 		
 		<s:info sourcesController="baseSourcesController" width="600">
 			<s:widgetInfo>
-				Crux has a mechanism that provides the automatic binding between values from the user interface and your code. 
+				Crux has a mechanism that provides automatic binding between values from the user interface and your code. 
 				By annotating the variables on your controller, Crux ensures they will always be up to date in relation
-				to the user interface values. The binding is made in both ways: if the user changes any value in the UI, your 
+				to the user interface values. The binding is made in both ways: if the user changes any value on the UI, your 
 				controller is updated; if you change a variable on your controller, the UI is updated.  
 			</s:widgetInfo>
 			<s:exampleInfo>

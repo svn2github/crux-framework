@@ -22,7 +22,7 @@
 				<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
 					<a:decoratedPanel id="borders">
 						<a:widget>
-							<b:grid id="grid" cellSpacing="5">
+							<b:flexTable id="grid" cellSpacing="5">
 								<b:row>
 									<b:cell>
 										<b:text>Name:</b:text>
@@ -47,13 +47,18 @@
 										<b:widget><b:dateBox id="dateOfBirth" pattern="MM/dd/yyyy" width="100"/></b:widget>
 									</b:cell>
 								</b:row>
-							</b:grid>
+								<b:row>
+									<b:cell colSpan="2" horizontalAlignment="center">
+										<b:widget>
+											<a:decoratedButton id="button" text="Populate Form Using Screen Wrapper" onClick="screenWrapperController.onClick" style="margin-top:10px"/>
+										</b:widget>
+									</b:cell>
+								</b:row>
+							</b:flexTable>
 						</a:widget>
 					</a:decoratedPanel>
 				</b:cell>
 			</b:dockPanel>
-			
-			<a:decoratedButton id="button" text="Populate Form Using Screen Wrapper" onClick="screenWrapperController.onClick"/>
 		
 		</center>
 				

@@ -7,16 +7,19 @@ import com.google.gwt.i18n.client.Messages;
 @MessageName("myMessages")
 public interface MyMessages extends Messages
 {
-	@DefaultMessage("I18N on page Declaratively")
-	String message1();
+	@DefaultMessage("This form contains internationalized labels. Current locale: default (en_US)")
+	String currentLocaleTitle();
+
+	@DefaultMessage("Name:")
+	String name();
+
+	@DefaultMessage("Phone: ")
+	String phone();
+	
+	@DefaultMessage("Date of Birth: ")
+	String birthDate();
 
 	@DefaultMessage("Change Locale")
-	String myButton();
-
-	@DefaultMessage("Current Locale: ")
-	String currentLocaleLabel();
-
-	@DefaultMessage("teste Hot Deploy")
-	String testeHotDeploy();
+	String changeLocaleButton();
 }
 

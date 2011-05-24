@@ -4,7 +4,9 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.themes.widgets.smooth.Smooth'/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
-    <!-- extend-property name="locale" values="pt_BR"/-->
+	
+    <extend-property name="locale" values="pt_BR"/>
+    
     <!-- set-property name="user.agent" value="ie8" /-->
     
 	<set-property name="gwt.logging.enabled" value="TRUE"/>
@@ -19,6 +21,10 @@
 	
 	<replace-with class="org.cruxframework.crux.showcase.client.common.ShowcaseErrorHandler">
 		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ErrorHandler" />
-	</replace-with>	
-         
+	</replace-with>
+	
+	<replace-with class="org.cruxframework.crux.showcase.client.common.ShowcaseErrorHandler">
+		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ValidationErrorHandler" />
+	</replace-with>
+	         
 </module>

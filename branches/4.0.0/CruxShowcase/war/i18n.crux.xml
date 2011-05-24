@@ -13,26 +13,77 @@
 	<body>
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="i18nController" onLoad="i18nController.onLoad">
-			<b:dockPanel id="centeringPanel" width="100%" height="130">
-				<b:cell direction="north" horizontalAlignment="center" verticalAlignment="middle">
-					<b:label id="localeLabel" />
-				</b:cell>
-				<b:cell direction="north" horizontalAlignment="center" verticalAlignment="middle">
-					<b:listBox id="locales" >
-						<b:item label="English" value=" "/>
-						<b:item label="Portuguese" value="pt_BR"/>
-					</b:listBox>
-				</b:cell>
-				<b:cell direction="north" horizontalAlignment="center" verticalAlignment="middle">
-					<a:decoratedButton id="button" text="${myMessages.myButton}" onClick="i18nController.clickButton"/>
-				</b:cell>
-				<b:cell direction="center" horizontalAlignment="center" verticalAlignment="middle">
-					<b:label id="i18nLabel" text="${myMessages.message1}" />
-				</b:cell>
-			</b:dockPanel>
+		<c:screen useController="i18nController" onLoad="i18nController.onLoad"/>
+
+		<center>
+			<a:titlePanel id="borders" style="margin:15px">
+				<a:title>
+					<a:text>${myMessages.currentLocaleTitle}</a:text>
+				</a:title>
+				<a:body>
+					<a:widget>
+						<b:grid id="grid" cellSpacing="5">
+							<b:row>
+								<b:cell>
+									<b:widget>
+										<b:label id="nameLabel" text="${myMessages.name}"/>
+									</b:widget>
+								</b:cell>
+								<b:cell>
+									<b:widget><b:textBox id="name" width="200" value="Robin Banks"/></b:widget>
+								</b:cell>
+							</b:row>
+							<b:row>
+								<b:cell>
+									<b:widget>
+										<b:label id="phoneLabel" text="${myMessages.phone}"/>
+									</b:widget>
+								</b:cell>
+								<b:cell>
+									<b:widget><a:maskedTextBox id="phone" formatter="phone" width="100" value="(123)456-7890"/></b:widget>
+								</b:cell>
+							</b:row>
+							<b:row>
+								<b:cell>
+									<b:widget>
+										<b:label id="birthDateLabel" text="${myMessages.birthDate}"/>
+									</b:widget>
+								</b:cell>
+								<b:cell>
+									<b:widget><b:dateBox id="dateOfBirth" pattern="MM/dd/yyyy" width="100" value="10/05/1975"/></b:widget>
+								</b:cell>
+							</b:row>
+						</b:grid>
+					</a:widget>
+				</a:body>			
+			</a:titlePanel>
 			
-			<s:i18nSources/>
-		</c:screen>
+			<a:decoratedPanel id="changeLocalePanel">
+				<a:widget>
+					<b:horizontalPanel id="hPanel" spacing="10">
+						<b:listBox id="localesListBox" width="150">
+							<b:item label="English" value=""/>
+							<b:item label="Português" value="pt_BR"/>
+						</b:listBox>
+						<a:decoratedButton id="button" text="${myMessages.changeLocaleButton}" onClick="i18nController.changeLocale"/>											
+					</b:horizontalPanel>
+				</a:widget>			
+			</a:decoratedPanel>
+
+		</center>
+		
+		<s:info sourcesController="i18nSourcesController">
+			<s:widgetInfo>
+				With Crux you can use declarative internationalized messages in your pages.
+				You just need to create a Messages interface and annotate it with @MessageName.
+				This simple steps enables it to be visible to the screens of your application and
+				be accessible via the usual '${bundle.key}' syntax.  
+			</s:widgetInfo>
+			<s:exampleInfo>
+				select a Locale at the ListBox and click the button. The page will reload 
+				and each message present on it will be translated for the selected language.
+			</s:exampleInfo>
+		</s:info>
+			
 	</body>
 </html>
