@@ -14,8 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
-		<c:screen onLoad="streamingGridController.onLoad" useController="streamingGridController,streamingGridSourcesController" 
-			useDataSource="streamingGridDataSource" useFormatter="birthday" fragment="grids"/>
+		<c:screen onLoad="streamingGridController.onLoad" useController="streamingGridController,streamingGridSourcesController"/>
 		
 		<center>
 		
@@ -48,7 +47,7 @@
 				</b:cell>
 			</b:horizontalPanel>
 			
-			<s:info sourcesController="streamingGridSourcesController" width="700">
+			<s:info sourcesController="streamingGridSourcesController" width="720">
 				<s:widgetInfo>
 					Grids can incrementally fetch data from server. It can be done by using a Remote DataSource.
 					The main goal of a Remote DataSource is to ensure that each record page is fetched from the 

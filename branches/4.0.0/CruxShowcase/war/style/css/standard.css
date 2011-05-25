@@ -7,7 +7,7 @@ CODE
 
 CENTER
 {
-	padding-top: 35px;
+	padding-top: 15px;
 }
 
 TEXTAREA
@@ -27,7 +27,7 @@ TEXTAREA
 {
 	background: url(../img/bg-top-right.gif) repeat-y top;
 }
-.MainHeaderLink
+.MainHeaderLink, .MainHeaderLink:visited
 {
 	font-size: 12px;
 	color: #6585A1;
@@ -249,11 +249,12 @@ TEXTAREA
 {
 	background: url(../img/info-w.gif) repeat-y left;
 }
-.Info-text, .Info-text SPAN 
+.Info-text, .Info-text SPAN, .Info-text LI,  .Info-text B  
 {
 	color: #FFFFFF;
 	font-family: arial;
 	font-size: 12px;
+	margin-right: 5px;
 }
 .Info-e
 {

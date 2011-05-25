@@ -5,6 +5,8 @@
 	<inherits name='org.cruxframework.crux.themes.widgets.smooth.Smooth'/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	
+	<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
+	
     <extend-property name="locale" values="pt_BR"/>
     
     <!-- set-property name="user.agent" value="ie8" /-->

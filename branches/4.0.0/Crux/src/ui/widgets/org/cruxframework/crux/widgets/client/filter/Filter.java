@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 @SuppressWarnings("unchecked")
 public class Filter extends SuggestBox
 {
+	private static final String SUGEST_POPUP_STYLE_NAME = "crux-SuggestPopup";
 	private static final String DEFAULT_STYLE_NAME = "crux-Filter";
 	private String initialText = null;
 
@@ -43,6 +44,8 @@ public class Filter extends SuggestBox
 		super (new FilterSuggestOracle());
 		addSelectionHandler(createSelectionHandler());
 		setStyleName(DEFAULT_STYLE_NAME);
+		DefaultSuggestionDisplay suggestionDisplay = (DefaultSuggestionDisplay) getSuggestionDisplay();
+		suggestionDisplay.setPopupStyleName(SUGEST_POPUP_STYLE_NAME);
 		addFocusHandler(createFocusHandler());
 		addBlurHandler(createBlurHandler());
 	}

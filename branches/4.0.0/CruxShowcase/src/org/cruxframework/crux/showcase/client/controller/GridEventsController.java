@@ -5,6 +5,7 @@ import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.showcase.client.dto.Contact;
 import org.cruxframework.crux.showcase.client.dto.Contact.Gender;
+import org.cruxframework.crux.showcase.client.formatter.BirthDateFormatter;
 import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 import org.cruxframework.crux.widgets.client.event.row.RowClickEvent;
 import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
@@ -16,6 +17,8 @@ import com.google.gwt.user.client.ui.Image;
 
 @Controller("gridEventsController")
 public class GridEventsController {
+	
+	private BirthDateFormatter birthDateFormatter = new BirthDateFormatter();
 	
 	@Expose
 	public void onLoad() {
@@ -45,7 +48,7 @@ public class GridEventsController {
 		String detail =
 			"name: " + contact.getName() + ", " +
 			"\nphone: " + contact.getPhone() + ", " +
-			"\nbirthday: " + Screen.getFormatter("birthday").format(contact.getBirthday());
+			"\nbirthday: " + birthDateFormatter.format(contact.getBirthday());
 		MessageBox.show("Contact Details", detail, null);
 	}
 }

@@ -448,7 +448,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #505050;
 }
 
-.gwt-SuggestBoxPopup
+.crux-SuggestPopup
 {
 	background-color: #F4F4F3;
 	border: solid 1px #C9C9C9;
@@ -460,7 +460,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: -moz-linear-gradient(top, #f8f8f8,#e5e5e5);	
 }
 
-.gwt-SuggestBoxPopup .item
+.crux-SuggestPopup .item
 {
 	font-family: arial;
 	font-size: 12px;
@@ -470,7 +470,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	-moz-border-radius: 2px;
 }
 
-.gwt-SuggestBoxPopup .item-selected
+.crux-SuggestPopup .item-selected
 {
 	background-color: #40688D;
 	color: #FFFFFF;

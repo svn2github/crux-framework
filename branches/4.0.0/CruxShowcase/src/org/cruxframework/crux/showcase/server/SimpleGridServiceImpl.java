@@ -47,11 +47,11 @@ public class SimpleGridServiceImpl implements SimpleGridService {
 	private static String generatePhone(int i) {
 		int m = (i % 9) + 1;
 		int n = (i % 9);
-		return "(" + m + n + m + ")" +  n + m + n + "-" + m + n + m;
+		return "(" + m + n + m + ") " +  n + m + n + "-" + m + n + m + n;
 	}
 
 	@SuppressWarnings("deprecation")
 	private static Date generateDate(int i) {
-		return new Date(2009, i % 12, (i % 28) + 1);
+		return new Date(109, i % 12, (i % 28) + 1);
 	}
 }
