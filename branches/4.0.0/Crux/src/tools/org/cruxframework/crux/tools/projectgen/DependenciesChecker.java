@@ -245,6 +245,7 @@ public class DependenciesChecker
 	        	{
 	        		System.out.println("\t1) To download from the web.");
 	        		System.out.println("\t2) To copy from a folder on your disk.");
+	        		System.out.println("\t3) To abort the installation.");
 
 	        		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	        		option = reader.readLine();
@@ -257,6 +258,11 @@ public class DependenciesChecker
 	        		{
 		        		System.out.println("\tType the gwt folder and press enter:");
 		        		gwtFolder = reader.readLine();
+	        		}
+	        		else if (option.equals("3"))
+	        		{
+		        		System.out.println("\tAborting installation...");
+		        		System.exit(1);
 	        		}
 	        	}
 	        	
