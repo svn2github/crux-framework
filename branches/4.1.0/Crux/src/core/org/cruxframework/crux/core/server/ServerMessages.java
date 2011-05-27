@@ -162,4 +162,7 @@ public interface ServerMessages
 	
 	@DefaultServerMessage("[listener 001] - Missing required parameter for {0} in web.xml: {1}.")
 	String initializerListenerRequiredParameterMissing(String filterName, String parameterName);
+
+	@DefaultServerMessage("[ioc 001] - Error initializing ioc container.")
+	Object iocContainerManagerError();
 }

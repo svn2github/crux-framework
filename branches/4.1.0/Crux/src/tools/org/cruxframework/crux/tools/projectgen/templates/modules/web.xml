@@ -34,7 +34,7 @@
 	===========================================================================			
 	-->
 	<listener>
-        <listener-class>org.cruxframework.crux.core.rebind.DevModeInitializerListener</listener-class>
+        <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
     </listener>
 	<filter>
 		<display-name>ModulesDeclarativeUIFilter</display-name>
