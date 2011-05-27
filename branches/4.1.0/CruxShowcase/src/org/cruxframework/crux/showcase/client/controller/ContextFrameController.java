@@ -2,12 +2,15 @@ package org.cruxframework.crux.showcase.client.controller;
 
 import java.util.Date;
 
+import org.cruxframework.crux.core.client.context.ContextManager;
+import org.cruxframework.crux.core.client.context.HasContextChangeHandlers;
+import org.cruxframework.crux.core.client.context.HasContextChangeHandlers.ContextEvent;
+import org.cruxframework.crux.core.client.context.HasContextChangeHandlers.Handler;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.showcase.client.controller.ContextInitializerController.SharedContext;
-
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
@@ -17,6 +20,20 @@ public class ContextFrameController {
 	
 	@Create
 	protected SharedContext context;
+	
+	@Expose
+	public void onLoad(){
+		
+		((HasContextChangeHandlers)ContextManager.getContextHandler()).addContextChangeHandler(new Handler()
+		{
+			public void onContextChange(ContextEvent event)
+			{
+				Window.alert("Screen: "+Screen.getId()+", Key:"+event.getKey()+", newValue:"+event.getNewValue()+", changed by: "+event.getUrl());
+			}
+		});
+	}	
+	
+	
 	
 	@Expose
 	public void readContext(){
