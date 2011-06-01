@@ -47,6 +47,12 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Gadget Information")
 	String gadgetInfo();
 
+	@DefaultMessage("Gadget Features")
+	String gadgetFeatures();
+
+	@DefaultMessage("Author Information")
+	String gadgetAuthorInfo();
+	
 	@DefaultMessage("Project Name:")
 	String projectName();
 
@@ -146,43 +152,43 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Author:")
 	String author();
 	
-	@DefaultMessage("The Author property of this gadget.")
+	@DefaultMessage("The name of the gadget''s author.")
 	String authorHelpText();
 
 	@DefaultMessage("About Me:")
 	String authorAboutMe();
 	
-	@DefaultMessage("The Author About-Me property of this gadget.")
+	@DefaultMessage("A little description about the author.")
 	String authorAboutMeHelpText();
 	
 	@DefaultMessage("Affiliation:")
 	String authorAffiliation();
 	
-	@DefaultMessage("The Author Affiliation property of this gadget.")
+	@DefaultMessage("The company or organization where author works.")
 	String authorAffiliationHelpText();
 	
 	@DefaultMessage("Email:")
 	String authorEmail();
 	
-	@DefaultMessage("The Author Email property of this gadget.")
+	@DefaultMessage("The author''s email.")
 	String authorEmailHelpText();
 	
 	@DefaultMessage("Link:")
 	String authorLink();
 	
-	@DefaultMessage("The Author Link property of this gadget.")
+	@DefaultMessage("A link to the author''s page.")
 	String authorLinkHelpText();
 
 	@DefaultMessage("Location:")
 	String authorLocation();
 	
-	@DefaultMessage("The Author Location property of this gadget.")
+	@DefaultMessage("The location where author lives.")
 	String authorLocationHelpText();
 	
 	@DefaultMessage("Photo:")
 	String authorPhoto();
 	
-	@DefaultMessage("The Author Photo property of this gadget.")
+	@DefaultMessage("An URL pointing to an author''s photo.")
 	String authorPhotoHelpText();
 	
 	@DefaultMessage("Quote:")
@@ -194,43 +200,43 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Description:")
 	String description();
 	
-	@DefaultMessage("The Description property of this gadget.")
+	@DefaultMessage("A description for this gadget.")
 	String descriptionHelpText();
 	
 	@DefaultMessage("Directory Title:")
 	String directoryTitle();
 	
-	@DefaultMessage("The Directory Title property of this gadget.")
+	@DefaultMessage("The title associated with this gadget when published on a gadget directory.")
 	String directoryTitleHelpText();
 
 	@DefaultMessage("Height:")
 	String height();
 	
-	@DefaultMessage("The Height property of this gadget.")
+	@DefaultMessage("The Height of this gadget.")
 	String heightHelpText();
 
 	@DefaultMessage("Width:")
 	String width();
 	
-	@DefaultMessage("The Width property of this gadget.")
+	@DefaultMessage("The Width of this gadget.")
 	String widthHelpText();
 	
 	@DefaultMessage("Screenshot:")
 	String screenshot();
 	
-	@DefaultMessage("The Screenshot property of this gadget.")
+	@DefaultMessage("An URL pointing to an image showing the gadget screen.")
 	String screenshotHelpText();
 
 	@DefaultMessage("Thumbnail:")
 	String thumbnail();
 	
-	@DefaultMessage("The Thumbnail property of this gadget.")
+	@DefaultMessage("An URL pointing to an image that will be used as icon for this gadget on a gadget directory.")
 	String thumbnailHelpText();
 
 	@DefaultMessage("Title:")
 	String title();
 	
-	@DefaultMessage("The Title property of this gadget.")
+	@DefaultMessage("The Title of this gadget.")
 	String titleHelpText();
 
 	@DefaultMessage("Title URL:")
@@ -242,13 +248,13 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Scrolling:")
 	String scrolling();
 	
-	@DefaultMessage("The Scrolling property of this gadget.")
+	@DefaultMessage("If checked, gadget will enable scroll feature.")
 	String scrollingHelpText();
 
 	@DefaultMessage("Singleton:")
 	String singleton();
 	
-	@DefaultMessage("The Singleton property of this gadget.")
+	@DefaultMessage("If checked, inform the gadget container that only one instance of this gadget can be insert on a page.")
 	String singletonHelpText();
 
 	@DefaultMessage("Scaling:")
@@ -260,7 +266,7 @@ public interface QuickStartMessages extends Messages
 	@DefaultMessage("Locales:")
 	String locales();
 	
-	@DefaultMessage("The Locales property of this gadget. The locales must be inserted separeted by commas. Eg: pt_BR,en_US")
+	@DefaultMessage("The Locales supported by this gadget. The locales must be inserted separeted by commas. Eg: pt_BR,en_US")
 	String localesHelpText();
 	
 	@DefaultMessage("Features:")
