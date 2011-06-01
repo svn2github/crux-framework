@@ -1,0 +1,7 @@
+${customUserPreferencesPackage}
+
+import com.google.gwt.gadgets.client.UserPreferences;
+
+public interface ${customUserPreferencesClass} extends UserPreferences
+{
+}

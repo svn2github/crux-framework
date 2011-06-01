@@ -324,4 +324,7 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[dataObjects 003] - DataObject {0}, referenced by widget {1} not found.")
 	String dataObjectNotFound(String dataObject, String widgetId);
+
+	@DefaultServerMessage("[attributeProcessor 001] - Error parsing attribute value [{0}], of widget [{2}], on screen [{1}].")
+	String rowCountProcessorErrorInvalidValue(String attributeValue, String id, String widgetId);
 }

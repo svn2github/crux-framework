@@ -95,8 +95,9 @@ public class UserPreferencesGenerator extends Generator
 
 				// private final FooProperty __propName = new FooProperty()
 				// {...}
-				sw.println("private final " + extendsPreferenceType.getParameterizedQualifiedSourceName() + " __" + m.getName() + " = new "+
-						extendsPreferenceType.getQualifiedSourceName()+"();");
+				sw.print("private final " + extendsPreferenceType.getParameterizedQualifiedSourceName() + " __" + m.getName() + " = ");
+						writeInstantiation(logger, sw, extendsPreferenceType, m);
+				sw.println(";");
 
 				// public FooProperty property() { return __property; }
 				sw.print("public ");
@@ -121,5 +122,15 @@ public class UserPreferencesGenerator extends Generator
 			logger.log(TreeLogger.ERROR, "UserPreferences type must be interfaces", null);
 			throw new UnableToCompleteException();
 		}
+	}
+
+	/**
+	 * Write an instantiation expression for a given Preference subtype.
+	 */
+	protected void writeInstantiation(TreeLogger logger, SourceWriter sw, JClassType extendsPreferenceType, JMethod prefMethod) throws UnableToCompleteException
+	{
+
+		PreferenceGenerator prefGenerator = GadgetUtils.getPreferenceGenerator(logger, extendsPreferenceType);
+		prefGenerator.writeInstantiation(logger, sw, extendsPreferenceType, prefMethod);
 	}
 }

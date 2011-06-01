@@ -20,6 +20,8 @@ import com.google.gwt.gadgets.client.impl.PreferencesUtil;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -31,6 +33,7 @@ public interface UserPreferences {
   /**
    * Used to declare the container data type for a Preference.
    */
+  @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface DataType {
     String value();
@@ -73,6 +76,7 @@ public interface UserPreferences {
    * name of the getter method will be used as the name of the preference.
    */
   @Documented
+  @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface PreferenceAttributes {
     /**

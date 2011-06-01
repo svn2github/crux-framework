@@ -34,6 +34,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.gadgets.client.UserPreferences;
+import com.google.gwt.gadgets.rebind.GadgetUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -119,14 +120,14 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
     {
 		srcWriter.println("public " + getProxySimpleName() + "(){");
 		srcWriter.indent();
-		srcWriter.println("this.userPreferences = GWT.create("+UserPreferences.class.getSimpleName()+".class);");
+		srcWriter.println("this.userPreferences = GWT.create("+GadgetUtils.getUserPrefsType(logger, moduleMetaClass).getCanonicalName()+".class);");
 		
 		generateFeatureInitialization(srcWriter);
 		
 		srcWriter.outdent();
 		srcWriter.println("}");
     }
-
+	
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
 	 */
