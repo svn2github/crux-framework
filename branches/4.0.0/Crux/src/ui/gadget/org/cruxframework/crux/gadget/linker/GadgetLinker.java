@@ -15,12 +15,18 @@
  */
 package org.cruxframework.crux.gadget.linker;
 
+import java.util.Iterator;
+
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.linker.Artifact;
 import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
+import com.google.gwt.core.ext.linker.LinkerOrder;
+import com.google.gwt.core.ext.linker.Shardable;
+import com.google.gwt.core.ext.linker.LinkerOrder.Order;
 import com.google.gwt.core.linker.CrossSiteIframeLinker;
 
 /**
@@ -32,6 +38,8 @@ import com.google.gwt.core.linker.CrossSiteIframeLinker;
  * method). 
  * @author Thiago da Rosa de Bustamante
  */
+@LinkerOrder(Order.PRIMARY)
+@Shardable
 public final class GadgetLinker extends CrossSiteIframeLinker
 {
 	private static final String GADGET_LINKER_TEMPLATE_JS = "org/cruxframework/crux/gadget/linker/GadgetTemplate.js";
@@ -80,6 +88,13 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	{
 		permutationsUtil.setupPermutationsMap(toLink);
 		ArtifactSet toReturn = new ArtifactSet(toLink);
+		
+		Iterator<Artifact<?>> iterator = newArtifacts.iterator();
+		while (iterator.hasNext())
+		{
+			toReturn.add(iterator.next());
+		}
+		
 		EmittedArtifact art = emitSelectionScript(logger, context, toLink);
 		if (art != null) {
 			toReturn.add(art);
