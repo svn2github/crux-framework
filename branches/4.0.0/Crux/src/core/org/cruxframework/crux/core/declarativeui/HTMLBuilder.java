@@ -100,6 +100,7 @@ class HTMLBuilder
 	private final boolean generateWidgetsMetadata;
 
 	private int jsIndentationLvl;
+	private String screenId;
 	
 	
 	/**
@@ -442,7 +443,7 @@ class HTMLBuilder
 	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxMetaDataElement(String screenId, Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
+	private void generateCruxMetaDataElement(Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
     {
 		ScreenFactory factory = ScreenFactory.getInstance();
 		String screenModule = null;
@@ -462,7 +463,7 @@ class HTMLBuilder
 		}
 		try
 		{
-			screenId = factory.getRelativeScreenId(screenId, screenModule);
+			String screenId = factory.getRelativeScreenId(this.screenId, screenModule);
 
 			Element cruxMetaData = htmlDocument.createElement("script");
 			cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
@@ -676,6 +677,10 @@ class HTMLBuilder
 	{
 		Node parentNode = node.getParentNode();
 		String namespaceURI = parentNode.getNamespaceURI();
+		if (namespaceURI == null)
+		{
+			log.warn(messages.htmlBuilderElementWithoutNamespace(this.screenId));
+		}
 		if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode))
 		{
 			return true;
@@ -760,6 +765,23 @@ class HTMLBuilder
 	}
 
 	/**
+	 * 
+	 * @param screenId
+	 */
+	private void setCurrentScreenId(String screenId)
+	{
+		this.screenId = screenId;
+	}
+	
+	/**
+	 * 
+	 */
+	private void clearScreenId()
+	{
+		this.screenId = null;
+	}
+	
+	/**
 	 * @param cruxPageElement
 	 * @param htmlElement
 	 * @param htmlDocument
@@ -806,12 +828,16 @@ class HTMLBuilder
 	 */
 	private void translateDocument(String screenId, Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
     {
+		setCurrentScreenId(screenId);
+
 		Element cruxPageElement = cruxPageDocument.getDocumentElement();
 		Node htmlElement = htmlDocument.getDocumentElement();
 		clearCurrentWidget();
 		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
 		clearCurrentWidget();
-		generateCruxMetaDataElement(screenId, getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+		generateCruxMetaDataElement(getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+		
+		clearScreenId();
     }
 
 	/**
