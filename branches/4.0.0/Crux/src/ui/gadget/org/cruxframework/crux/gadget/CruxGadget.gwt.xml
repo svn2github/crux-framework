@@ -24,4 +24,9 @@
 	<generate-with class="org.cruxframework.crux.gadget.rebind.gadget.GadgetInfoGenerator">
 		<when-type-assignable class="org.cruxframework.crux.gadget.client.meta.GadgetInfo"/>
 	</generate-with>
+
+	<!-- Specify the implementation to URLRewriter.-->
+	<replace-with class="org.cruxframework.crux.gadget.client.screen.GadgetURLRewriter">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.URLRewriter" />
+	</replace-with>
 </module>

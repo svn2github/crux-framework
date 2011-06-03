@@ -140,7 +140,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 			if (StringUtils.isEmpty(visibleRect))
 			{
 				out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
-						"("+EscapeUtils.quote(context.readChildProperty("url"))+"));");
+						"(Screen.rewriteUrl("+EscapeUtils.quote(context.readChildProperty("url"))+")));");
 			}
 			else
 			{
@@ -149,7 +149,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 				if (coord != null && coord.length == 4)
 				{
 					out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
-							"("+EscapeUtils.quote(context.readChildProperty("url"))+", "+
+							"(Screen.rewriteUrl("+EscapeUtils.quote(context.readChildProperty("url"))+"), "+
 							Integer.parseInt(coord[0].trim())+","+Integer.parseInt(coord[1].trim())+","+ 
 							Integer.parseInt(coord[2].trim())+","+Integer.parseInt(coord[3].trim())+"));");
 				}

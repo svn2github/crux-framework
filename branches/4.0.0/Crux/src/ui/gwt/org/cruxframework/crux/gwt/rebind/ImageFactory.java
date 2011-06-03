@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.ui.Image;
  */
 @DeclarativeFactory(id="image", library="gwt", targetWidget=Image.class)
 @TagAttributes({
-	@TagAttribute(value="url", required=true),
+	@TagAttribute(value="url", processor=ImageFactory.URLAttributeParser.class),
 	@TagAttribute(value="altText"),
 	@TagAttribute(value="visibleRect", processor=ImageFactory.VisibleRectAttributeParser.class)
 })	
@@ -51,6 +52,20 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	   			  HasAllMouseHandlersFactory<WidgetCreatorContext>, 
 	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>
 {
+	public static class URLAttributeParser extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public URLAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		@Override
+        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        {
+	        out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+EscapeUtils.quote(context.readWidgetProperty("url"))+"));");
+        }
+	}
+	
 	/**
 	 * @author Thiago da Rosa de Bustamante
 	 *
