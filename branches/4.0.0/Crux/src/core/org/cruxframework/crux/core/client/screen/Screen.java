@@ -130,32 +130,26 @@ public class Screen
 	 * 
 	 * @param url
 	 */
+	@Deprecated
 	public static String appendDebugParameters(String url)
 	{
-		if (Crux.getConfig().enableDebugForURL(url))
+		return rewriteUrl(url);
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String rewriteUrl(String url)
+	{
+		try
 		{
-			try
-			{
-				if (!StringUtils.isEmpty(url) && !url.contains("gwt.codesvr="))
-				{
-					String debugSvr = Window.Location.getParameter("gwt.codesvr");
-					if (!StringUtils.isEmpty(debugSvr))
-					{
-						if (url.contains("?"))
-						{
-							url += "&gwt.codesvr="+URL.encode(debugSvr); 
-						}
-						else
-						{
-							url += "?gwt.codesvr="+URL.encode(debugSvr); 
-						}
-					}
-				}
-			}
-			catch(Throwable e)
-			{
-				logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-			}
+			return Screen.get().rewriteURL(url);
+		}
+		catch(Throwable e)
+		{
+			logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
 		}
 		return url;
 	}
@@ -761,6 +755,8 @@ public class Screen
 	
 	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	
+	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
+	
 	@Deprecated
 	protected ModuleComunicationSerializer serializer = null;
 
@@ -1256,6 +1252,11 @@ public class Screen
 		{
 			widget.removeFromParent();
 		}
+	}
+	
+	protected String rewriteURL(String url)
+	{
+		return urlRewriter.rewrite(url);
 	}
 	
 	/**
