@@ -621,5 +621,11 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 				setStyleName(this.controlBar.buttonStyle);;
 			}
 		}
+		
+		@Override
+		public void setStyleName(String style) 
+		{
+			button.setStyleName(style);
+		}
 	}
 }

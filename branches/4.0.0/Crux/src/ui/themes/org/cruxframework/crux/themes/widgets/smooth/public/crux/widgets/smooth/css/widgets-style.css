@@ -679,7 +679,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	display: none;
 }
-.crux-Wizard .crux-WizardControlBar .crux-DecoratedButton-finish
+.crux-Wizard .crux-WizardControlBar .crux-DecoratedButton, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3 
+{
+	min-width: 60px;
+}
+.crux-Wizard .crux-WizardControlBar .crux-DecoratedButton-finish, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3-finish
 {
 	margin-right: 15px;
 }
@@ -689,7 +693,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family:Arial,Helvetica;
 	font-size:12px;
 	text-decoration:none;
-	cursor: pointer;
+	cursor: default;
 }
 
 .crux-Wizard .crux-WizardNavigationLabel-selected
@@ -709,11 +713,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 
 .crux-Wizard .crux-WizardControlBarSouthWrapper, .crux-Wizard .crux-WizardControlBarNorthWrapper
 {
-	height: 32px;
+	height: 25px;
 }
 .crux-Wizard .crux-WizardNavigationBarSouthWrapper, .crux-Wizard .crux-WizardNavigationBarNorthWrapper
 {
-	height: 32px;
+	height: 25px;
 }
 .crux-Wizard .crux-WizardControlBarWestWrapper, .crux-Wizard .crux-WizardControlBarEastWrapper
 {
