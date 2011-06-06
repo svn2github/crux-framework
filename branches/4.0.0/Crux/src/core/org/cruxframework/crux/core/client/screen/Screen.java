@@ -32,19 +32,15 @@ import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.dom.client.MetaElement;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
@@ -444,27 +440,8 @@ public class Screen
 	 */
 	public static String getLocale()
 	{
-		String locale = Window.Location.getParameter("locale");
-		if (locale == null || locale.length() == 0)
-		{
-			NodeList<Element> metas = Document.get().getElementsByTagName("meta");
-			if (metas != null)
-			{
-				for (int i=0; i< metas.getLength(); i++)
-				{
-					MetaElement meta = MetaElement.as(metas.getItem(i));
-					if ("gwt:property".equals(meta.getName()) && meta.getContent() != null && meta.getContent().startsWith("locale="))
-					{
-						locale = meta.getContent().replace("locale=", "").trim();
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			locale = locale.trim();
-		}
+		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+		
 		if ("".equals(locale))
 		{
 			locale = null;
