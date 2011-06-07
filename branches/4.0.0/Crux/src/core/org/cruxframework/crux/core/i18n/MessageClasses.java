@@ -31,7 +31,7 @@ import com.google.gwt.i18n.client.LocalizableResource;
 
 /**
  * Class for retrieve the messages interface, based on the annotation MessageName or on the class SimpleName, if annotation not present
- * @author Thiago Bustamante
+ * @author Thiago da Rosa de Bustamante
  */
 public class MessageClasses 
 {
