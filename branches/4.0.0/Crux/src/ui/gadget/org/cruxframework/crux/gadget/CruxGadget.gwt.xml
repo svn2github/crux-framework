@@ -29,4 +29,10 @@
 	<replace-with class="org.cruxframework.crux.gadget.client.screen.GadgetURLRewriter">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.URLRewriter" />
 	</replace-with>
+	
+  <!-- Implementations of the features -->
+  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.PubsubFeatureImpl">
+    <when-type-is class="org.cruxframework.crux.gadget.client.features.PubsubFeature"/>
+  </replace-with>
+	
 </module>

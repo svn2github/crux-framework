@@ -18,6 +18,8 @@
  */
 package org.cruxframework.crux.gadget.client;
 
+import org.cruxframework.crux.gadget.client.features.PubsubFeature;
+
 import com.google.gwt.gadgets.client.AdsFeature;
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
 import com.google.gwt.gadgets.client.GoogleAnalyticsFeature;
@@ -58,6 +60,12 @@ public interface Gadget
 	 * @return OsapiFeature
 	 */
 	OsapiFeature getOsapiFeature();
+
+	/**
+	 * Returns the PubsubFeature. Your class must implement NeedsPubsubFeatureFeature to retrieve this value. If does not, null will be returned
+	 * @return PubsubFeature
+	 */
+	PubsubFeature getPubsubFeature();
 
 	/**
 	 * Returns the RpcFeature. Your class must implement NeedsRpc to retrieve this value. If does not, null will be returned

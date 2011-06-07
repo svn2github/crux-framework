@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.gadget.client.features.PubsubFeature;
+
 import com.google.gwt.gadgets.client.AdsFeature;
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
 import com.google.gwt.gadgets.client.GoogleAnalyticsFeature;
@@ -56,6 +58,7 @@ public interface GadgetFeature
 		googleAnalytics("com.google.gadgets.analytics", GoogleAnalyticsFeature.class),
 		lockedDomain("locked-domain", null),
 		osapi("osapi", OsapiFeature.class),
+		pubsub("pubsub", PubsubFeature.class),
 		rpc("rpc", RpcFeature.class),
 		setPrefs("setprefs", SetPrefsFeature.class),
 		setTitle("settitle", SetTitleFeature.class),
@@ -133,6 +136,18 @@ public interface GadgetFeature
 		 * @return OsapiFeature
 		 */
 		OsapiFeature getOsapiFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.pubsub)
+	})
+	public interface NeedsPubsubFeature
+	{
+		/**
+		 * Returns the PubsubFeature. 
+		 * @return PubsubFeature
+		 */
+		PubsubFeature getPubsubFeature();
 	}
 
 	@NeedsFeatures({
