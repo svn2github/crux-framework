@@ -52,8 +52,8 @@ public class GadgetURLRewriter extends URLRewriter
 	    		{
 	    			urlGadget = urlGadget.substring(0, index);
 	    		}
-	    		urlRewrite = urlGadget+"/"+urlRewrite;
 	    	}
+	    	urlRewrite = urlGadget+"/"+urlRewrite;
 	    }
 		return getGadgetProxyURL(urlRewrite);
 	}
@@ -61,4 +61,31 @@ public class GadgetURLRewriter extends URLRewriter
 	private native String getGadgetProxyURL(String url)/*-{
 		return $wnd.gadgets.io.getProxyUrl(url);
 	}-*/;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static String getGadgetUrl()
+	{
+    	String urlGadget = Window.Location.getParameter("url");
+    	if (urlGadget == null)
+    	{
+    		urlGadget = Window.Location.getHost()+"/"+Window.Location.getPath();
+    	}
+    	else
+    	{
+    		int index = urlGadget.indexOf('?');
+    		if (index > 0)
+    		{
+    			urlGadget = urlGadget.substring(0, index);
+    		}
+    		index = urlGadget.lastIndexOf('/');
+    		if (index > 0)
+    		{
+    			urlGadget = urlGadget.substring(0, index);
+    		}
+    	}
+    	return urlGadget;
+	}
 }
