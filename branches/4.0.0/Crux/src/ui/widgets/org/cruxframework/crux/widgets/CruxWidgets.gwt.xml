@@ -97,17 +97,17 @@
     </replace-with>
 
 	<replace-with
-		class="br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerSafariImpl">
+		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerSafariImpl">
 		<when-type-assignable
-			class="br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
+			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
 		<any>
 			<when-property-is name="user.agent" value="safari" />
 		</any>
 	</replace-with>
 	<replace-with
-		class="br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerImpl">
+		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerImpl">
 		<when-type-assignable
-			class="br.com.sysmap.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
+			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
 		<none>
 			<when-property-is name="user.agent" value="safari" />
 		</none>
