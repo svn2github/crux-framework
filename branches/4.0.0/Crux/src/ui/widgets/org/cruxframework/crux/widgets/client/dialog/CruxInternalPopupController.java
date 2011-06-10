@@ -358,7 +358,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		protected abstract void unblockPopupClosing(Element popupFrame, Widget closeBtn);
 
 		/**
-		 * @see br.com.sysmap.crux.widgets.client.util.FrameStateCallback#onComplete()
+		 * @see org.cruxframework.crux.widgets.client.util.FrameStateCallback#onComplete()
 		 */
 		public void onComplete()
 		{

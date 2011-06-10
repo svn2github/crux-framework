@@ -53,7 +53,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	private int numProgressDialogOnDocument = 0;
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
 	 */
 	public void disableEventsOnOpener()
 	{
@@ -72,7 +72,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
 	 */
 	public void enableEventsOnOpener()
 	{
