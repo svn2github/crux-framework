@@ -154,20 +154,23 @@ public class FileUtils
 		}
 		
 		File[] files = sourceDir.listFiles();
-		for (File file : files)
+		if (files != null)
 		{
-			if (handler == null || handler.isValidEntry(getEntryName(file, inputDirNameLength)))
+			for (File file : files)
 			{
-				if(!file.isDirectory())
+				if (handler == null || handler.isValidEntry(getEntryName(file, inputDirNameLength)))
 				{
-					File destFile = new File(destDir, file.getName());
-					FileInputStream stream = new FileInputStream(file);
-					write(stream, destFile);
-				}
-				else
-				{
-					File dir = new File(destDir, file.getName());
-					copyFilesFromDir(file, dir, handler, inputDirNameLength);
+					if(!file.isDirectory())
+					{
+						File destFile = new File(destDir, file.getName());
+						FileInputStream stream = new FileInputStream(file);
+						write(stream, destFile);
+					}
+					else
+					{
+						File dir = new File(destDir, file.getName());
+						copyFilesFromDir(file, dir, handler, inputDirNameLength);
+					}
 				}
 			}
 		}
@@ -232,9 +235,12 @@ public class FileUtils
 			}
 
 			String[] children = sourceLocation.list();
-			for (int i=0; i<children.length; i++) 
+			if (children != null)
 			{
-				copyDirectory(new File(sourceLocation, children[i]), new File(targetLocation, children[i]));
+				for (int i=0; i<children.length; i++) 
+				{
+					copyDirectory(new File(sourceLocation, children[i]), new File(targetLocation, children[i]));
+				}
 			}
 		} 
 		else 
@@ -261,9 +267,12 @@ public class FileUtils
 				}
 			});
 			
-			for (File file : found)
+			if (found != null)
 			{
-				scanFiles(file, extension, result);
+				for (File file : found)
+				{
+					scanFiles(file, extension, result);
+				}
 			}
 		}
 		else
