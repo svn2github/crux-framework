@@ -809,9 +809,19 @@ class HTMLBuilder
 		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
 		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && isHTMLChild(cruxPageElement)))
 		{
-			Element widgetHolder = htmlDocument.createElement("div");
+			Element widgetHolder;
+			boolean hasSiblings = hasSiblingElements(cruxPageElement);
+			if (hasSiblings)
+			{
+				widgetHolder = htmlDocument.createElement("div");
+				htmlElement.appendChild(widgetHolder);
+			}
+			else
+			{
+				widgetHolder = htmlElement;
+			}
+			
 			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
-			htmlElement.appendChild(widgetHolder);
 			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
 		}
 		else
@@ -820,6 +830,57 @@ class HTMLBuilder
 		}
     }
 
+	/**
+	 * 
+	 * @param cruxPageElement
+	 * @return
+	 */
+	private boolean hasSiblingElements(Element cruxPageElement)
+	{
+		Node sibling = cruxPageElement.getPreviousSibling();
+		
+		while (sibling != null)
+		{
+			if (isValidSibling(sibling))
+			{
+				return true;
+			}
+			
+			sibling = sibling.getPreviousSibling();
+		}
+
+		sibling = cruxPageElement.getNextSibling();
+		while (sibling != null)
+		{
+			if (isValidSibling(sibling))
+			{
+				return true;
+			}
+			
+			sibling = sibling.getNextSibling();
+		}
+		return false;
+    }
+
+	/**
+	 * 
+	 * @param sibling
+	 * @return
+	 */
+	private boolean isValidSibling(Node sibling)
+    {
+	    short nodeType = sibling.getNodeType();
+		if (nodeType == Node.ELEMENT_NODE)
+	    {
+	    	return true;
+	    }
+	    else if (nodeType == Node.CDATA_SECTION_NODE || nodeType == Node.TEXT_NODE || nodeType == Node.ENTITY_NODE)
+	    {
+	    	return sibling.getNodeValue().replaceAll("\\s+", "").length() > 0;
+	    }
+	    return false;
+    }
+	
 	/**
 	 * @param screenId 
 	 * @param cruxPageDocument
