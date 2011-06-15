@@ -422,110 +422,179 @@
 =====================*/
 .crux-StackMenu .item
 {
-	width: 141px;
 	height: 23px;
-	background-image: url(../img/menu-lv1-off.gif);
-	background-repeat: no-repeat;
 	cursor:pointer;
+	background: url(../img/menu-lv1-off-bg.gif) repeat-x top;
+	background-color: #DDE9F4;
+	width: 100%;
 	margin-bottom: 1px;
 }
-.crux-StackMenu .itemLabel
+.crux-StackMenu .item .item-border-nw
+{
+	width: 3px;
+	height: 3px;
+	background: url(../img/menu-lv1-nw.gif) no-repeat top left;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .item-border-n
+{
+	font-size: 3px;
+	font-family: monospace;
+	background: url(../img/menu-lv1-n.gif) repeat-x top;
+}
+.crux-StackMenu .item .item-border-ne
+{
+	width: 10px;
+	background: url(../img/menu-lv1-ne.gif) no-repeat top right;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .item-border-w
+{
+	background: url(../img/menu-lv1-w.gif) repeat-y left;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .item-border-e
+{
+	background: url(../img/menu-lv1-e.gif) repeat-y right;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .item-border-sw
+{
+	height: 3px;
+	background: url(../img/menu-lv1-sw.gif) no-repeat bottom left;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .item-border-s
+{
+	font-size: 3px;
+	font-family: monospace;
+	background: url(../img/menu-lv1-s.gif) repeat-x bottom;
+}
+.crux-StackMenu .item .item-border-se
+{
+	background: url(../img/menu-lv1-se.gif) no-repeat bottom right;
+	font-size: 3px;
+	font-family: monospace; 
+}
+.crux-StackMenu .item .itemLabel
 {
 	color:#6C83C3;
-	font-family:Verdana,Arial,Helvetica;
+	font-family:Arial,Helvetica;
 	font-size:11px;
 	font-weight:bold;
 	text-decoration:none;
-	padding:4px 0 2px 10px;
+	padding:0px 4px 3px 4px;
 }
-.crux-StackMenu .hasSubItems
+.crux-StackMenu .item .hasSubItems
 {
-	width: 3px;
+	width: 5px;
 	height: 5px;
-	background-image: url(../img/menu-lv1-has-sub.gif);
-	background-repeat: no-repeat;
-	padding-right: 5px;
+	background: url(../img/menu-lv1-has-sub.gif) no-repeat left;
+}
+.crux-StackMenu .item-open .hasSubItems
+{
+	background: url(../img/menu-lv1-has-sub-open.gif) no-repeat left;
 }
 .crux-StackMenu .item-over
 {
-	background-image: url(../img/menu-lv1-on.gif);
+	background-image: url(../img/menu-lv1-on-bg.gif);
+	background-color: #447db2;
 }
 .crux-StackMenu .item-over .itemLabel
 {
-	color: #FFFFFF;
+	color:#FFFFFF;
 }
-.crux-StackMenu .item-over .hasSubItems
-{
-	background-image: url(../img/menu-lv1-has-sub_on.gif) !important;
-}
+
+
 /*=====================
     second level 
 =====================*/
+.crux-StackMenu .subItemsWrapper .itemWrapper
+{
+	padding-left: 6px;
+}
 .crux-StackMenu .subItemsWrapper .item
 {
-	width:135px;
-	height:19px;
-	background-image: url(../img/menu-lv2-off.gif);
-	background-repeat: repeat-x;
-	background-position: top center;
-	cursor:pointer;
-	border-bottom:1px solid #CFCFCF;
-	border-left:1px solid #CFCFCF;
-	border-right:1px solid #CFCFCF;
-	margin-left:6px;
+	background: url(../img/menu-lv2-off-bg.gif) repeat-x top;
+	background-color: #FBFBFB;
+	border: solid 1px #CFCFCF;
+	border-top: 0px;
 }
-.crux-StackMenu .subItemsWrapper .itemLabel
+.crux-StackMenu .subItemsWrapper .item .item-border-nw
 {
-	color:#787878;
-	font-family:Verdana,Arial,Helvetica;
-	font-size:11px;
-	font-weight:bold;
-	text-decoration:none;
-	padding:4px 0 6px 10px;
+	width: 3px;
+	height: 0px;
+	background: none;
+	font-size: 0px;
 }
-.crux-StackMenu .subItemsWrapper .hasSubItems, 
+.crux-StackMenu .subItemsWrapper .item .item-border-n
+{
+	font-size: 0px;
+	background: none;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-ne
+{
+	width: 10px;
+	background: none;
+	font-size: 0px;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-w
+{
+	background: url(../img/menu-lv2-w.gif) repeat-y left;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-e
+{
+	background: url(../img/menu-lv2-e.gif) repeat-y right;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-sw
+{
+	height: 1px;
+	background: url(../img/menu-lv2-sw.gif) no-repeat bottom left;
+	font-size: 1px;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-s
+{
+	background: url(../img/menu-lv2-s.gif) repeat-x bottom;
+	background: none;
+}
+.crux-StackMenu .subItemsWrapper .item .item-border-se
+{
+	height: 1px;
+	background: url(../img/menu-lv2-se.gif) no-repeat bottom right;
+	font-size: 1px;
+}
+.crux-StackMenu .subItemsWrapper .item .itemLabel
+{
+	color:#797979;
+	padding: 0px 0px 0px 5px;
+}
+.crux-StackMenu .subItemsWrapper .item .hasSubItems
 {
 	width: 5px;
-	height: 3px;
-	background-image: url(../img/menu-lv2-has-sub-off.gif);
-	background-repeat: no-repeat;
-	padding-right: 5px;
-}
-.crux-StackMenu .subItemsWrapper .item-over
-{
-	background-image: url(../img/menu-lv2-on.gif);
-	background-repeat: repeat-x;
-	background-position: top center;
-}
-.crux-StackMenu .subItemsWrapper .item-over .hasSubItems
-{
-	background-image: url(../img/menu-lv2-has-sub-off.gif);
+	height: 5px;
+	background: url(../img/menu-lv2-has-sub.gif) no-repeat left;
 }
 .crux-StackMenu .subItemsWrapper .item-open .hasSubItems
 {
-	background-image: url(../img/menu-lv2-has-sub-on.gif);
+	background: url(../img/menu-lv2-has-sub-open.gif) no-repeat left;
 }
-.crux-StackMenu .subItemsWrapper .item-open .itemLabel
+.crux-StackMenu .subItemsWrapper .item-over
 {
-	color:#9FABEC;
+	background-image: none;
+	background: url(../img/menu-lv2-on-bg.gif) repeat-x top;
 }
+
 /*=====================
     third level 
 =====================*/
-.crux-StackMenu .subItemsWrapper .subItemsWrapper .item
+.crux-StackMenu .subItemsWrapper .subItemsWrapper .item .itemLabel
 {
-	width:128px;
-	height:30px;
-	background-image: url();
-	background-color: #FAFAFA;
-	border-bottom:1px solid #DEDEDE;
-	border-left:1px solid #DEDEDE;
-	border-right:1px solid #DEDEDE;
-	margin-left:9px;
-}
-.crux-StackMenu .subItemsWrapper .subItemsWrapper .itemLabel
-{
-	font-weight: normal;
+	font-weight:normal;
 }
 
 /******************************************************************************
@@ -557,7 +626,7 @@
 	font-weight:bold;
 }
 
-.crux-Wizard .crux-WizardNavigationHorizontalSeparator
+.crux-Wizard .crux-WizardNavigationSeparator
 {
 	width: 20px;
 	height: 11px;
@@ -565,10 +634,7 @@
 	font-family: monospace;
 	font-size: 1px;
 }
-.crux-Wizard .crux-WizardNavigationVerticalSeparator
-{
-	
-}
+
 .crux-Wizard .crux-WizardControlBarSouthWrapper, .crux-Wizard .crux-WizardControlBarNorthWrapper
 {
 	height: 32px;
@@ -593,12 +659,12 @@
 /******************************************************************************
 	RollingPanel - Horizontal
 *******************************************************************************/
-.crux-RollingPanelHPreviousWrapper
+.crux-RollingPanelPreviousWrapper
 {
 	width:20px;
 	height: 100%;
 }
-.crux-RollingPanelHPrevious
+.crux-RollingPanelPrevious
 {
 	width: 15px;
 	height: 100%;
@@ -610,13 +676,13 @@
 	cursor: pointer;
 	padding: 1px;
 }
-.crux-RollingPanelHNextWrapper
+.crux-RollingPanelNextWrapper
 {
 	width:20px;
 	height: 100%;
 	text-align: right;
 }
-.crux-RollingPanelHNext
+.crux-RollingPanelNext
 {
 	width: 15px;
 	height: 100%;
@@ -628,69 +694,16 @@
 	cursor: pointer;
 	padding: 1px;
 }
-.crux-RollingPanelHPreviousWrapper-disabled, .crux-RollingPanelHNextWrapper-disabled
+.crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 }
-.crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious, .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext
+.crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext
 {
 	width:1px;
 	border: solid 0px;
 	visibility: hidden;
-}
-
-/******************************************************************************
-	RollingPanel - Vertical
-*******************************************************************************/
-.crux-RollingPanelVPreviousWrapper
-{
-	vertical-align:top !important;
-	text-align: center;
-	height: 15px;
-}
-.crux-RollingPanelVNextWrapper
-{
-	vertical-align:bottom !important;
-	text-align: center;
-	height:15px;
-}
-.crux-RollingPanelVPrevious
-{
-	height: 12px;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-up.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	font-family: monospace;
-	font-size: 0px;
-	padding: 1px;
-}
-.crux-RollingPanelVNext
-{
-	height: 12px;
-	border: solid 1px #8cbae7;
-	background-color: #f1f6fc;
-	background-image: url(../img/rolling-panel-down.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-	font-family: monospace;
-	font-size: 0px;
-	padding: 1px;
-}
-.crux-RollingPanelVPreviousWrapper-disabled, .crux-RollingPanelVNextWrapper-disabled
-{
-	width:1px;
-	border: solid 0px;
-}
-.crux-RollingPanelVPreviousWrapper-disabled .crux-RollingPanelVPrevious, .crux-RollingPanelVNextWrapper-disabled .crux-RollingPanelVNext
-{
-	width:1px;
-	border: solid 0px;
-	display: none;
 }
 
 /******************************************************************************
@@ -700,7 +713,7 @@
 {
 	height: 28px;
 }
-.crux-TabBar .crux-RollingPanelHPrevious
+.crux-TabBar .crux-RollingPanelPrevious
 {
 	height: 23px;
 	width: 17px;
@@ -708,7 +721,7 @@
 	background-image: url(../img/dyna-tabs-roll-left.gif);
 	cursor: pointer;
 }
-.crux-TabBar .crux-RollingPanelHNext
+.crux-TabBar .crux-RollingPanelNext
 {
 	height: 23px;
 	width: 17px;
@@ -716,34 +729,34 @@
 	background-image: url(../img/dyna-tabs-roll-right.gif);
 	cursor: pointer;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper
+.crux-TabBar .crux-RollingPanelPreviousWrapper
 {
 	vertical-align:bottom !important;
 	width:20px;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper
+.crux-TabBar .crux-RollingPanelNextWrapper
 {
 	vertical-align:bottom !important;
 	width:20px;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper-disabled
+.crux-TabBar .crux-RollingPanelPreviousWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 	opacity:0;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper-disabled
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled
 {
 	width:1px;
 	border: solid 0px;
 	opacity:0;
 }
-.crux-TabBar .crux-RollingPanelHNextWrapper-disabled .crux-RollingPanelHNext
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext
 {
 	width:1px;
 	height: 1px;
 }
-.crux-TabBar .crux-RollingPanelHPreviousWrapper-disabled .crux-RollingPanelHPrevious
+.crux-TabBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious
 {
 	width:1px;
 	height: 1px;
@@ -1444,4 +1457,36 @@
 	filter:alpha(opacity=80);
 	-moz-opacity: 0.80;
 	opacity: .80;
+}
+
+/******************************************************************************
+	Decorated Button
+*******************************************************************************/
+.crux-DecoratedButtonCSS3
+{
+	color:#FFFFFF;
+	font-family:Arial,Helvetica;
+	font-weight: bold;
+	font-size:11px;
+	text-decoration: none;
+	cursor: default;
+	border: solid 2px #0157a9;
+	padding: 3px; 
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#89b4dc),color-stop(0.99,#447db2));
+	background-image: -moz-linear-gradient(top, #89b4dc,#447db2);
+}
+
+.crux-DecoratedButtonCSS3:active
+{
+	background-image: #447db2;
+}
+
+.crux-DecoratedButtonCSS3-disabled, .crux-DecoratedButtonCSS3-disabled:active
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#d7d7d7),color-stop(0.99,#bbbbbb));
+	background-image: -moz-linear-gradient(top, #d7d7d7,#bbbbbb);
+	color: #FFFFFF;
+	border: solid 2px #a8a8a8;	
 }
