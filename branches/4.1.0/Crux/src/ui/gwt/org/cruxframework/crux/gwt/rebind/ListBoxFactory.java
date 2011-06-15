@@ -50,12 +50,12 @@ public class ListBoxFactory extends AbstractListBoxFactory
 		String multiple = context.readWidgetProperty("multiple");
 		if (multiple != null && multiple.trim().length() > 0)
 		{
-			out.println(className + " " + context.getWidget()+" = new "+className+"("+Boolean.parseBoolean(multiple)+");");
+			out.println("final " + className + " " + context.getWidget()+" = new "+className+"("+Boolean.parseBoolean(multiple)+");");
 
 		}
 		else
 		{
-			out.println(className + " " + context.getWidget()+" = new "+className+"();");
+			out.println("final " + className + " " + context.getWidget()+" = new "+className+"();");
 		}
 	}
 }
