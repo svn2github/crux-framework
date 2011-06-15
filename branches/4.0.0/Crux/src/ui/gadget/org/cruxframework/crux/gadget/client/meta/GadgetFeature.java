@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.gadget.client.features.MiniMessageFeature;
 import org.cruxframework.crux.gadget.client.features.PubsubFeature;
 
 import com.google.gwt.gadgets.client.AdsFeature;
@@ -57,6 +58,7 @@ public interface GadgetFeature
 		dynamicHeight("dynamic-height", DynamicHeightFeature.class),
 		googleAnalytics("com.google.gadgets.analytics", GoogleAnalyticsFeature.class),
 		lockedDomain("locked-domain", null),
+		minimessage("minimessage", MiniMessageFeature.class),
 		osapi("osapi", OsapiFeature.class),
 		pubsub("pubsub", PubsubFeature.class),
 		rpc("rpc", RpcFeature.class),
@@ -126,6 +128,19 @@ public interface GadgetFeature
 	{
 	}
 
+	@NeedsFeatures({
+		@Feature(ContainerFeature.minimessage)
+	})
+	public interface NeedsMinimessageFeature
+	{
+		/**
+		 * Returns the MiniMessageFeature. 
+		 * @return MiniMessageFeature
+		 */
+		MiniMessageFeature getMinimessageFeature();
+	}
+	
+	
 	@NeedsFeatures({
 		@Feature(ContainerFeature.osapi)
 	})
