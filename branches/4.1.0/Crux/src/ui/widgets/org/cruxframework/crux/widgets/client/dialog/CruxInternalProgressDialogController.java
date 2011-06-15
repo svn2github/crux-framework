@@ -50,31 +50,40 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	
 	private FastList<String> stack = new FastList<String>(); 
 	private HandlerRegistration previewHandler = null; 
+	private int numProgressDialogOnDocument = 0;
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#disableEventsOnOpener()
 	 */
 	public void disableEventsOnOpener()
 	{
-		previewHandler = Event.addNativePreviewHandler(new NativePreviewHandler()
+		numProgressDialogOnDocument++;
+		if (numProgressDialogOnDocument == 1)
 		{
-			public void onPreviewNativeEvent(NativePreviewEvent event)
+			previewHandler = Event.addNativePreviewHandler(new NativePreviewHandler()
 			{
-				event.cancel();
-				return;
-			}
-		});
+				public void onPreviewNativeEvent(NativePreviewEvent event)
+				{
+					event.cancel();
+					return;
+				}
+			});
+		}
 	}
 	
 	/**
-	 * @see br.com.sysmap.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
+	 * @see org.cruxframework.crux.widgets.client.dialog.CruxInternalProgressDialogControllerCrossDoc#enableEventsOnOpener()
 	 */
 	public void enableEventsOnOpener()
 	{
-		if (previewHandler != null)
+		numProgressDialogOnDocument--;
+		if (numProgressDialogOnDocument == 0)
 		{
-			previewHandler.removeHandler();
-			previewHandler = null;
+			if (previewHandler != null)
+			{
+				previewHandler.removeHandler();
+				previewHandler = null;
+			}
 		}
 	}
 
@@ -97,11 +106,15 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	 */
 	public void hideProgressDialog()
 	{
-		((TargetDocument)crossDoc).setTargetWindow(getOpener());
-		crossDoc.enableEventsOnOpener();
-		((TargetDocument)crossDoc).setTarget(Target.TOP);
-		crossDoc.hideProgressDialogBox();
-		popProgressDialogFromStack();
+		JSWindow opener = getOpener();
+		if (opener != null)
+		{
+			((TargetDocument)crossDoc).setTargetWindow(opener);
+			crossDoc.enableEventsOnOpener();
+			((TargetDocument)crossDoc).setTarget(Target.TOP);
+			crossDoc.hideProgressDialogBox();
+			popProgressDialogFromStack();
+		}
 	}
 	
 	/**
@@ -136,11 +149,7 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 				dialog = dialogBox;
 				
 				dialogBox.center();
-				dialogBox.show();
-				
-				// TODO - Gesse - find out a better solution to avoid focus on blocked screen widgets 
-				iconPanel.setFocus(true);
-				iconPanel.setFocus(false);
+				dialogBox.show();				
 			}
 			else
 			{
