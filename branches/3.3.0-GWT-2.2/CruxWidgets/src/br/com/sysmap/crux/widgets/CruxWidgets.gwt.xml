@@ -115,7 +115,14 @@
       		<when-property-is name="user.agent" value="gecko1_8" />
     	</any>
     </replace-with>
-    
+	<replace-with
+		class="br.com.sysmap.crux.widgets.client.paging.NavigationButtonsPager.MobileButtonPanelCreator">
+		<when-type-assignable
+			class="br.com.sysmap.crux.widgets.client.paging.NavigationButtonsPager.ButtonPanelCreator" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>    
     
     
 </module>
