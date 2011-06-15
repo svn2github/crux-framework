@@ -112,6 +112,14 @@
 			<when-property-is name="user.agent" value="safari" />
 		</none>
 	</replace-with>
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.paging.NavigationButtonsPager.MobileButtonPanelCreator">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.paging.NavigationButtonsPager.ButtonPanelCreator" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
 
     
 </module>
