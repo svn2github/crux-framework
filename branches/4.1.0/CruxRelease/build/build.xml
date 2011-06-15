@@ -122,7 +122,7 @@
 			<fileset dir="${quickstart.dist.dir}/quickstart.war" excludes="**/*.jar"/>
 		</copy>	
 
-		<!--zip basedir="${expanded.dir}" destfile="${distdir}/crux-${version}.zip" /-->
+		<!--zip basedir="${expanded.dir}" destfile="${dist.dir}/crux-${version}.zip" /-->
 	</target>
 	
 	<!-- 
