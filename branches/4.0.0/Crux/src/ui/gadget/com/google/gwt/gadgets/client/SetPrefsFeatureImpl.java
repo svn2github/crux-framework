@@ -15,16 +15,12 @@
  */
 package com.google.gwt.gadgets.client;
 
-import org.cruxframework.crux.gadget.client.meta.GadgetFeature;
-
 import com.google.gwt.gadgets.client.UserPreferences.Preference;
-
-
 
 /**
  * Provides access to the preference-saving API.
  */
-public class SetPrefsFeatureImpl implements GadgetFeature, SetPrefsFeature {
+public class SetPrefsFeatureImpl implements SetPrefsFeature {
   private SetPrefsFeatureImpl() {
   }
 

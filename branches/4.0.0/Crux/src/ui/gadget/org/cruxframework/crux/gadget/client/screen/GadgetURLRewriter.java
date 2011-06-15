@@ -17,6 +17,7 @@ package org.cruxframework.crux.gadget.client.screen;
 
 import org.cruxframework.crux.core.client.screen.URLRewriter;
 
+import com.google.gwt.gadgets.client.io.IoProvider;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -55,12 +56,8 @@ public class GadgetURLRewriter extends URLRewriter
 	    	}
 	    	urlRewrite = urlGadget+"/"+urlRewrite;
 	    }
-		return getGadgetProxyURL(urlRewrite);
+	    return IoProvider.get().getProxyUrl(urlRewrite);
 	}
-	
-	private native String getGadgetProxyURL(String url)/*-{
-		return $wnd.gadgets.io.getProxyUrl(url);
-	}-*/;
 	
 	/**
 	 * 
