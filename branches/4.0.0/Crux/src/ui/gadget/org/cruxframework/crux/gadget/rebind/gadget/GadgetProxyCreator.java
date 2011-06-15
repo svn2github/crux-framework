@@ -23,18 +23,18 @@ import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.gadget.client.Gadget;
+import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import org.cruxframework.crux.gadget.linker.GadgetManifestGenerator;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
+import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
 
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.gadgets.client.UserPreferences;
-import com.google.gwt.gadgets.rebind.GadgetUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.rebind.SourceWriter;
 

@@ -21,6 +21,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
@@ -31,7 +32,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.gadgets.client.UserPreferences;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.rebind.SourceWriter;
 
