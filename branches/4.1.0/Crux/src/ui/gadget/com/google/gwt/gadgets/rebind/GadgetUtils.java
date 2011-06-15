@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.gadgets.client.impl.PreferenceGeneratorName;
 
 
@@ -122,20 +123,48 @@ public class GadgetUtils
 	/**
 	 * Returns the subtype of UserPreferences accepted by a Gadget.
 	 */
-	public static Class<?> getUserPrefsType(TreeLogger logger, Class<?> extendsGadget) throws UnableToCompleteException
+	public static Class<?> getUserPrefsType(TreeLogger logger, Class<?> extendsGadget)
 	{
 		UserPreferences annotation = extendsGadget.getAnnotation(UserPreferences.class);
-		if (annotation == null)
+		String gadgetClassName = extendsGadget.getName();
+		return getUserPrefsType(logger, annotation, gadgetClassName);
+	}
+
+	/**
+	 * Returns the subtype of UserPreferences accepted by a Gadget.
+	 */
+	public static Class<?> getUserPrefsType(TreeLogger logger, JClassType extendsGadget)
+	{
+		UserPreferences annotation = extendsGadget.getAnnotation(UserPreferences.class);
+		String gadgetClassName = extendsGadget.getName();
+		return getUserPrefsType(logger, annotation, gadgetClassName);
+	}
+
+	private static Class<?> getUserPrefsType(TreeLogger logger, UserPreferences annotation, String gadgetClassName)
+    {
+	    if (annotation == null)
 		{
-			logger.log(TreeLogger.INFO, "Gadget class " + extendsGadget.getName() + " is missing @UserPreferences annotation.  " + 
+			logger.log(TreeLogger.INFO, "Gadget class " + gadgetClassName + " is missing @UserPreferences annotation.  " + 
 					"Using default value.");
 			return com.google.gwt.gadgets.client.UserPreferences.class;
 		}
 		Class<? extends com.google.gwt.gadgets.client.UserPreferences> value = annotation.value();
 		return value;
+    }	
+	
+	/**
+	 * Return an instance of a PreferenceGenerator that can be used for a
+	 * subtype of Preference.
+	 */
+	public static PreferenceGenerator getPreferenceGenerator(TreeLogger logger, JClassType extendsPreferenceType) throws UnableToCompleteException
+	{
+
+		PreferenceGeneratorName generator = extendsPreferenceType.getAnnotation(PreferenceGeneratorName.class);
+		String preferenceTypeName = extendsPreferenceType.getQualifiedSourceName();
+
+		return getPreferenceGenerator(logger, generator, preferenceTypeName);
 	}
-	
-	
+
 	/**
 	 * Return an instance of a PreferenceGenerator that can be used for a
 	 * subtype of Preference.
@@ -144,10 +173,16 @@ public class GadgetUtils
 	{
 
 		PreferenceGeneratorName generator = extendsPreferenceType.getAnnotation(PreferenceGeneratorName.class);
+		String preferenceTypeName = extendsPreferenceType.getCanonicalName();
 
-		if (generator == null)
+		return getPreferenceGenerator(logger, generator, preferenceTypeName);
+	}
+	
+	private static PreferenceGenerator getPreferenceGenerator(TreeLogger logger, PreferenceGeneratorName generator, String preferenceTypeName) throws UnableToCompleteException
+    {
+	    if (generator == null)
 		{
-			logger.log(TreeLogger.ERROR, "No PreferenceGenerator defined for type " + extendsPreferenceType.getCanonicalName(), null);
+			logger.log(TreeLogger.ERROR, "No PreferenceGenerator defined for type " + preferenceTypeName, null);
 			throw new UnableToCompleteException();
 		}
 
@@ -168,5 +203,5 @@ public class GadgetUtils
 			logger.log(TreeLogger.ERROR, "Unable to create PreferenceGenerator", e);
 			throw new UnableToCompleteException();
 		}
-	}
+    }
 }

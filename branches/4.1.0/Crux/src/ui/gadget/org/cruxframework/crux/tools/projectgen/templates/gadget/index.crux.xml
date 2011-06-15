@@ -21,9 +21,9 @@
 			<crux:decoratedPanel id="border">
 				<crux:widget>
 					<gwt:HTMLPanel id="tablePanel">
-						<table cellspacing="10" width="400">
+						<table cellspacing="10" width="300">
 							<tr>
-								<td width="300">
+								<td width="200">
 									<gwt:textBox id="nameTextBox" width="100%"/>
 								</td>
 								<td>

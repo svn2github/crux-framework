@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.cruxframework.crux.core.utils.FileUtils;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsAdsFeature;
@@ -34,6 +35,7 @@ import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsSetTitleFeat
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsViewFeature;
 import org.cruxframework.crux.tools.projectgen.AbstractLayoutProjectGenerator;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
+import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions.GeneratorOption;
 import org.cruxframework.crux.tools.projectgen.LayoutProjectGeneratorException;
 
 import com.google.gwt.gadgets.client.UserPreferences;
@@ -71,6 +73,33 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 		createFile(sourceDir, "Crux.properties", "gadget/crux.properties.txt");
 		createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "gadget/module.xml");
 		createFile(clientPackage,  this.options.getProjectName()+".java", "gadget/GadgetDescriptor.java.txt");
+		
+		String userPreferencesClass = getCruxProjectGeneratorOptions().getOption("gadgetUserPreferences").getValue();
+		
+		if (userPreferencesClass != null && !userPreferencesClass.equals(UserPreferences.class.getCanonicalName()))
+		{
+			int dotIndex = userPreferencesClass.lastIndexOf('.');
+			File preferencesPackageDir;
+			String simpleClassName;
+			
+			if (dotIndex > 0 && dotIndex < userPreferencesClass.length() -1)
+			{
+				simpleClassName = userPreferencesClass.substring(dotIndex + 1);
+				String packageName = userPreferencesClass.substring(0, dotIndex);
+				preferencesPackageDir = createDir(sourceDir, packageName.replaceAll("\\.", "/"));
+				getReplacements().add(new String[]{"customUserPreferencesPackage", "package "+packageName+";"});
+			}
+			else
+			{
+				simpleClassName = userPreferencesClass;
+				preferencesPackageDir = sourceDir;
+				getReplacements().add(new String[]{"customUserPreferencesPackage", ""});
+			}
+			getReplacements().add(new String[]{"customUserPreferencesClass", simpleClassName});
+			
+			createFile(preferencesPackageDir, simpleClassName+".java", "gadget/customUserPreferences.java.txt");
+		}
+		
     }
 
 	@Override
@@ -102,7 +131,57 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	    return "GADGET_APP";
     }
 
-	@Override
+    @Override
+    public void loadGeneratorOptions(Properties config)
+    {
+    	super.loadGeneratorOptions(config);
+    	CruxProjectGeneratorOptions options = getCruxProjectGeneratorOptions();
+    	
+        loadOption(config, options, "gadgetUserPreferences");
+        loadOption(config, options, "gadgetUseLongManifestName");
+        loadOption(config, options, "gadgetAuthor");
+        loadOption(config, options, "gadgetAuthorAboutMe");
+        loadOption(config, options, "gadgetAuthorAffiliation");
+        loadOption(config, options, "gadgetAuthorEmail");
+        loadOption(config, options, "gadgetAuthorLink");
+        loadOption(config, options, "gadgetAuthorLocation");
+        loadOption(config, options, "gadgetAuthorPhoto");
+        loadOption(config, options, "gadgetAuthorQuote");
+        loadOption(config, options, "gadgetDescription");
+        loadOption(config, options, "gadgetDirectoryTitle");
+        loadOption(config, options, "gadgetHeight");
+        loadOption(config, options, "gadgetWidth");
+        loadOption(config, options, "gadgetScreenshot");
+        loadOption(config, options, "gadgetThumbnail");
+        loadOption(config, options, "gadgetTitle");
+        loadOption(config, options, "gadgetTitleUrl");
+        loadOption(config, options, "gadgetScrolling");
+        loadOption(config, options, "gadgetSingleton");
+        loadOption(config, options, "gadgetScaling");
+        loadOption(config, options, "gadgetLocales");
+        loadOption(config, options, "gadgetFeatures");
+    }
+
+    /**
+     * 
+     * @param config
+     * @param options
+     * @param option
+     */
+	private void loadOption(Properties config, CruxProjectGeneratorOptions options, String option)
+    {
+	    String value = config.getProperty(option);
+    	if (value != null && value.length() > 0)
+    	{
+    		GeneratorOption opt = options.getOption(option);
+    		if (opt != null)
+    		{
+    			opt.setValue(value);
+    		}
+    	}
+    }
+
+    @Override
     protected CruxProjectGeneratorOptions getCruxProjectGeneratorOptions(File workspaceDir, String projectName, String hostedModeStartupModule)
     {
 	    try
@@ -111,7 +190,7 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	    	{
 	    		generatorOptions = new CruxProjectGeneratorOptions(workspaceDir, projectName, hostedModeStartupModule);
 
-	    		generatorOptions.addOption("gadgetUserPreferences", UserPreferences.class.getCanonicalName()+".class", String.class);
+	    		generatorOptions.addOption("gadgetUserPreferences", UserPreferences.class.getCanonicalName(), String.class);
 	    		generatorOptions.addOption("gadgetUseLongManifestName", "false", Boolean.class);
 	    		generatorOptions.addOption("gadgetAuthor", "", String.class);
 	    		generatorOptions.addOption("gadgetAuthorAboutMe", "", String.class);
@@ -254,4 +333,5 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
     {
 		createFile(options.getProjectDir(), ".classpath", "classpath.xml");
     }
+	
 }

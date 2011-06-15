@@ -20,6 +20,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.gadget.client.features.MiniMessageFeature;
+import org.cruxframework.crux.gadget.client.features.PubsubFeature;
+import org.cruxframework.crux.gadget.client.features.TabsFeature;
+
 import com.google.gwt.gadgets.client.AdsFeature;
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
 import com.google.gwt.gadgets.client.GoogleAnalyticsFeature;
@@ -55,10 +59,13 @@ public interface GadgetFeature
 		dynamicHeight("dynamic-height", DynamicHeightFeature.class),
 		googleAnalytics("com.google.gadgets.analytics", GoogleAnalyticsFeature.class),
 		lockedDomain("locked-domain", null),
+		minimessage("minimessage", MiniMessageFeature.class),
 		osapi("osapi", OsapiFeature.class),
+		pubsub("pubsub", PubsubFeature.class),
 		rpc("rpc", RpcFeature.class),
 		setPrefs("setprefs", SetPrefsFeature.class),
 		setTitle("settitle", SetTitleFeature.class),
+		tabs("tabs", TabsFeature.class),
 		views("views", ViewFeature.class);
 		
 		String featureName;
@@ -124,6 +131,19 @@ public interface GadgetFeature
 	}
 
 	@NeedsFeatures({
+		@Feature(ContainerFeature.minimessage)
+	})
+	public interface NeedsMinimessageFeature
+	{
+		/**
+		 * Returns the MiniMessageFeature. 
+		 * @return MiniMessageFeature
+		 */
+		MiniMessageFeature getMinimessageFeature();
+	}
+	
+	
+	@NeedsFeatures({
 		@Feature(ContainerFeature.osapi)
 	})
 	public interface NeedsOsapiFeature
@@ -133,6 +153,18 @@ public interface GadgetFeature
 		 * @return OsapiFeature
 		 */
 		OsapiFeature getOsapiFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.pubsub)
+	})
+	public interface NeedsPubsubFeature
+	{
+		/**
+		 * Returns the PubsubFeature. 
+		 * @return PubsubFeature
+		 */
+		PubsubFeature getPubsubFeature();
 	}
 
 	@NeedsFeatures({
@@ -169,6 +201,18 @@ public interface GadgetFeature
 		 * @return SetTitleFeature
 		 */
 		SetTitleFeature getSetTitleFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.tabs)
+	})
+	public interface NeedsTabsFeature
+	{
+		/**
+		 * Returns the TabsFeature.
+		 * @return TabsFeature
+		 */
+		TabsFeature getTabsFeature();
 	}
 
 	@NeedsFeatures({

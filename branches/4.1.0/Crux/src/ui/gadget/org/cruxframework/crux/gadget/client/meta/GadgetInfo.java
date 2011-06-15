@@ -18,6 +18,8 @@ package org.cruxframework.crux.gadget.client.meta;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -32,6 +34,7 @@ public interface GadgetInfo
 	/**
 	 * Specifies the type of content and the list of views.
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface ContentType
 	{
@@ -45,6 +48,7 @@ public interface GadgetInfo
 	 * specification.
 	 */
 	@Documented
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(value = {})
 	public @interface GadgetLocale
 	{
@@ -91,6 +95,7 @@ public interface GadgetInfo
 	/**
 	 * Defines the preferences associated with the gadget.
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface ModulePrefs
 	{
@@ -274,6 +279,7 @@ public interface GadgetInfo
 	 * to not require this annotation.
 	 * 
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface UseLongManifestName
 	{
@@ -286,6 +292,7 @@ public interface GadgetInfo
 	/**
 	 * Annotation to define custom UserPreferences.
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public @interface UserPreferences
 	{

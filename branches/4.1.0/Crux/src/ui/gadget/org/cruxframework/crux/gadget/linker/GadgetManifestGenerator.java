@@ -37,11 +37,10 @@ import org.cruxframework.crux.core.rebind.screen.Widget;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.core.utils.HTMLUtils;
 import org.cruxframework.crux.core.utils.XMLUtils;
-import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
-import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsDynamicHeightFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import org.cruxframework.crux.gadget.client.widget.GadgetView.View;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
@@ -56,7 +55,6 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
-
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -360,12 +358,6 @@ public class GadgetManifestGenerator
     {
 	    NodeList bodyChildren = element.getChildNodes();
 	    
-	    boolean hasDynamicFeature = NeedsDynamicHeightFeature.class.isAssignableFrom(this.moduleMetaClass);
-	    
-	    if (hasDynamicFeature)
-	    {
-	    	out.write("<div id=\"__gwt_gadget_content_div\">");
-	    }
 	    for(int j=0; j<bodyChildren.getLength(); j++)
 	    {
 	    	Node child = bodyChildren.item(j);
@@ -373,10 +365,6 @@ public class GadgetManifestGenerator
 	    	{
 	    		HTMLUtils.write(child, out);
 	    	}
-	    }
-	    if (hasDynamicFeature)
-	    {
-	    	out.write("</div>");
 	    }
     }
 	

@@ -24,4 +24,21 @@
 	<generate-with class="org.cruxframework.crux.gadget.rebind.gadget.GadgetInfoGenerator">
 		<when-type-assignable class="org.cruxframework.crux.gadget.client.meta.GadgetInfo"/>
 	</generate-with>
+
+	<!-- Specify the implementation to URLRewriter.-->
+	<replace-with class="org.cruxframework.crux.gadget.client.screen.GadgetURLRewriter">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.URLRewriter" />
+	</replace-with>
+	
+  <!-- Implementations of the features -->
+  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.PubsubFeatureImpl">
+    <when-type-is class="org.cruxframework.crux.gadget.client.features.PubsubFeature"/>
+  </replace-with>
+  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.MiniMessageFeatureImpl">
+    <when-type-is class="org.cruxframework.crux.gadget.client.features.MiniMessageFeature"/>
+  </replace-with>
+  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.TabsFeatureImpl">
+    <when-type-is class="org.cruxframework.crux.gadget.client.features.TabsFeature"/>
+  </replace-with>
+	
 </module>
