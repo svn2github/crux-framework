@@ -427,6 +427,10 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	private void generateHandleHasFormatterWidgets(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
 			boolean populateScreen, JType type, String valueVariable, boolean allowProtected)
 	{
+		String valueVariableName = "__valueVariable";
+		JPrimitiveType isPrimitiveType = type.isPrimitive();
+		
+		
 		if (populateScreen)
 		{
 			sourceWriter.println("((HasFormatter)"+valueVariable+").setUnformattedValue("
@@ -434,8 +438,16 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		else
 		{
+			sourceWriter.println("Object "+valueVariableName+" = ((HasFormatter)"+valueVariable+").getUnformattedValue();");
+			if (isPrimitiveType != null)
+			{
+				sourceWriter.println("if ("+valueVariableName+" == null){");
+				sourceWriter.println(valueVariableName+" = (" +isPrimitiveType.getQualifiedBoxedSourceName()+ ")" +(isPrimitiveType == JPrimitiveType.BOOLEAN?"false":"0")+ ";");
+				sourceWriter.println("}");
+			}
+			
 			generateFieldValueSet(voClass, field, parentVariable, "("+getGenericDeclForType(type)+")"
-					            + "((HasFormatter)"+valueVariable+").getUnformattedValue()", sourceWriter, allowProtected);
+					            + valueVariableName, sourceWriter, allowProtected);
 		}
 	}	
 	

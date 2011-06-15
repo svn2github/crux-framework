@@ -47,7 +47,6 @@ import org.cruxframework.crux.core.utils.ClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -56,11 +55,14 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
+import com.google.gwt.dev.shell.log.SwingLoggerPanel.CloseHandler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -574,8 +576,8 @@ public class ViewFactoryCreator
 	    Event onClose = screen.getEvent("onClose");
 		if (onClose != null)
 		{
-			printer.println(screenVariable+".addWindowCloseHandler(new CloseHandler<Window>(){");
-			printer.println("public void onClose(CloseEvent<Window> event){"); 
+			printer.println(screenVariable+".addWindowCloseHandler(new "+CloseHandler.class.getCanonicalName()+"<Window>(){");
+			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){"); 
 
 			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event", context, screen.getId());
 			
@@ -595,7 +597,7 @@ public class ViewFactoryCreator
 		if (onClosing != null)
 		{
 			printer.println(screenVariable+".addWindowClosingHandler(new Window.ClosingHandler(){");
-			printer.println("public void onWindowClosing(ClosingEvent event){"); 
+			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){"); 
 
 			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event", context, screen.getId());
 			
@@ -614,8 +616,8 @@ public class ViewFactoryCreator
 	    Event onHistoryChanged = screen.getEvent("onHistoryChanged");
 		if (onHistoryChanged != null)
 		{
-			printer.println(screenVariable+".addWindowHistoryChangedHandler(new ValueChangeHandler<String>(){");
-			printer.println("public void onValueChange(ValueChangeEvent<String> event){");
+			printer.println(screenVariable+".addWindowHistoryChangedHandler(new "+ValueChangeHandler.class.getCanonicalName()+"<String>(){");
+			printer.println("public void onValueChange("+ValueChangeEvent.class.getCanonicalName()+"<String> event){");
 
 			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
 					"onHistoryChanged", ValueChangeEvent.class, "event", context, screen.getId());
@@ -725,8 +727,8 @@ public class ViewFactoryCreator
 	    Event onResized = screen.getEvent("onResized");
 		if (onResized != null)
 		{
-			printer.println("screen.addWindowResizeHandler(new ResizeHandler(){");
-			printer.println("public void onResize(ResizeEvent event){"); 
+			printer.println("screen.addWindowResizeHandler(new "+ResizeHandler.class.getCanonicalName()+"(){");
+			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){"); 
 
 			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event", context, screen.getId());
 			

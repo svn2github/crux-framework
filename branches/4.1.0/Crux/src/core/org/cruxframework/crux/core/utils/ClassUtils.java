@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.utils;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -431,6 +432,10 @@ public class ClassUtils
 		else if (expectedType == JPrimitiveType.CHAR || Character.class.getCanonicalName().equals(expectedType.getQualifiedSourceName()))
 		{
 			return valueVariable+".charAt(0)";
+		}
+		else if (Date.class.getCanonicalName().equals(expectedType.getQualifiedSourceName()))
+		{
+			return "new "+Date.class.getCanonicalName()+"(Long.parseLong("+valueVariable+"))";
 		}
 		else if (expectedType.isEnum() != null)
 		{

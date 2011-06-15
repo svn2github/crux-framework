@@ -113,6 +113,13 @@ public interface DeclarativeUIMessages
 	@DefaultServerMessage("[declarativeui 031] - Error scanning dir: {0}.")
 	String templatesHotDeploymentScannerErrorScanningDir(String name);
 
-	@DefaultServerMessage("[declarativeui 033] - No module declared on screen {0}.")
+	@DefaultServerMessage("[declarativeui 032] - No module declared on screen {0}.")
 	String htmlBuilderNoModulesOnPage(String screenId);
+
+	@DefaultServerMessage("[declarativeui 033] - Outputcharset is undefined. Check your web.xml file to ensure that DevModeInitializerListener is correctly configured.")
+	String transformerErrorOutputCharsetUndefined();
+	
+	@DefaultServerMessage("[declarativeui 034] - The screen {0} contains elements that is not bound to any namespace. It can cause errors while translating to an HTML page.")
+	String htmlBuilderElementWithoutNamespace(String screenId);
+
 }

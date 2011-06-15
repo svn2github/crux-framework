@@ -77,7 +77,12 @@ public class CruxToHtmlTransformer
 			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
 			htmlBuilder.build(screenId, source, buff);
 			String result = buff.toString();
-			StreamUtils.write(new ByteArrayInputStream(result.getBytes(getOutputCharset())), out, false);
+			String outCharset = getOutputCharset();
+			if (outCharset == null || outCharset.length() == 0)
+			{
+				throw new DeclarativeUITransformerException(messages.transformerErrorOutputCharsetUndefined());
+			}
+			StreamUtils.write(new ByteArrayInputStream(result.getBytes(outCharset)), out, false);
 		}
 		catch (Exception e)
 		{

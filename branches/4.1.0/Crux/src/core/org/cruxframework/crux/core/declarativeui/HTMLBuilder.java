@@ -100,6 +100,7 @@ class HTMLBuilder
 	private final boolean generateWidgetsMetadata;
 
 	private int jsIndentationLvl;
+	private String screenId;
 	
 	
 	/**
@@ -314,7 +315,7 @@ class HTMLBuilder
 			String innerHTML = getHTMLFromNode(cruxPageInnerTag);
 			if (innerHTML.length() > 0)
 			{
-				cruxArrayMetaData.append(",\"_html\":\""+HTMLUtils.escapeJavascriptString(innerHTML, escapeXML)+"\"");
+				cruxArrayMetaData.append(",\"_html\":\""+innerHTML+"\"");
 			}
 		}
 		else
@@ -322,7 +323,7 @@ class HTMLBuilder
 			String innerText = getTextFromNode(cruxPageInnerTag);
 			if (innerText.length() > 0)
 			{
-				cruxArrayMetaData.append(",\"_text\":\""+HTMLUtils.escapeJavascriptString(innerText, escapeXML)+"\"");
+				cruxArrayMetaData.append(",\"_text\":\""+innerText+"\"");
 			}
 		}
 		generateCruxMetaDataAttributes(cruxPageInnerTag, cruxArrayMetaData);
@@ -442,7 +443,7 @@ class HTMLBuilder
 	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxMetaDataElement(String screenId, Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
+	private void generateCruxMetaDataElement(Element cruxPageBodyElement, Element htmlElement, Document htmlDocument) throws HTMLBuilderException
     {
 		ScreenFactory factory = ScreenFactory.getInstance();
 		String screenModule = null;
@@ -462,7 +463,7 @@ class HTMLBuilder
 		}
 		try
 		{
-			screenId = factory.getRelativeScreenId(screenId, screenModule);
+			String screenId = factory.getRelativeScreenId(this.screenId, screenModule);
 
 			Element cruxMetaData = htmlDocument.createElement("script");
 			cruxMetaData.setAttribute("id", "__CruxMetaDataTag_");		
@@ -629,7 +630,7 @@ class HTMLBuilder
 			}
 		}
 		
-		return text.toString().trim();
+		return HTMLUtils.escapeJavascriptString(text.toString().trim(), escapeXML);
 	}
 	
 	/**
@@ -644,12 +645,15 @@ class HTMLBuilder
 			StringWriter innerHTML = new StringWriter(); 
 			NodeList children = elem.getChildNodes();
 			
-			for (int i=0; i<children.getLength(); i++)
+			if (children != null)
 			{
-				Node child = children.item(i);
-				HTMLUtils.write(child, innerHTML);
+				for (int i=0; i<children.getLength(); i++)
+				{
+					Node child = children.item(i);
+					HTMLUtils.write(child, innerHTML);
+				}
 			}
-	        return innerHTML.toString();
+	        return HTMLUtils.escapeJavascriptString(innerHTML.toString(), escapeXML);
 		}
 		catch (IOException e)
 		{
@@ -673,6 +677,10 @@ class HTMLBuilder
 	{
 		Node parentNode = node.getParentNode();
 		String namespaceURI = parentNode.getNamespaceURI();
+		if (namespaceURI == null)
+		{
+			log.warn(messages.htmlBuilderElementWithoutNamespace(this.screenId));
+		}
 		if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode))
 		{
 			return true;
@@ -757,6 +765,23 @@ class HTMLBuilder
 	}
 
 	/**
+	 * 
+	 * @param screenId
+	 */
+	private void setCurrentScreenId(String screenId)
+	{
+		this.screenId = screenId;
+	}
+	
+	/**
+	 * 
+	 */
+	private void clearScreenId()
+	{
+		this.screenId = null;
+	}
+	
+	/**
 	 * @param cruxPageElement
 	 * @param htmlElement
 	 * @param htmlDocument
@@ -784,9 +809,19 @@ class HTMLBuilder
 		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
 		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && isHTMLChild(cruxPageElement)))
 		{
-			Element widgetHolder = htmlDocument.createElement("div");
+			Element widgetHolder;
+			boolean hasSiblings = hasSiblingElements(cruxPageElement);
+			if (hasSiblings)
+			{
+				widgetHolder = htmlDocument.createElement("div");
+				htmlElement.appendChild(widgetHolder);
+			}
+			else
+			{
+				widgetHolder = htmlElement;
+			}
+			
 			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
-			htmlElement.appendChild(widgetHolder);
 			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
 		}
 		else
@@ -796,6 +831,57 @@ class HTMLBuilder
     }
 
 	/**
+	 * 
+	 * @param cruxPageElement
+	 * @return
+	 */
+	private boolean hasSiblingElements(Element cruxPageElement)
+	{
+		Node sibling = cruxPageElement.getPreviousSibling();
+		
+		while (sibling != null)
+		{
+			if (isValidSibling(sibling))
+			{
+				return true;
+			}
+			
+			sibling = sibling.getPreviousSibling();
+		}
+
+		sibling = cruxPageElement.getNextSibling();
+		while (sibling != null)
+		{
+			if (isValidSibling(sibling))
+			{
+				return true;
+			}
+			
+			sibling = sibling.getNextSibling();
+		}
+		return false;
+    }
+
+	/**
+	 * 
+	 * @param sibling
+	 * @return
+	 */
+	private boolean isValidSibling(Node sibling)
+    {
+	    short nodeType = sibling.getNodeType();
+		if (nodeType == Node.ELEMENT_NODE)
+	    {
+	    	return true;
+	    }
+	    else if (nodeType == Node.CDATA_SECTION_NODE || nodeType == Node.TEXT_NODE || nodeType == Node.ENTITY_NODE)
+	    {
+	    	return sibling.getNodeValue().replaceAll("\\s+", "").length() > 0;
+	    }
+	    return false;
+    }
+	
+	/**
 	 * @param screenId 
 	 * @param cruxPageDocument
 	 * @param htmlDocument
@@ -803,12 +889,16 @@ class HTMLBuilder
 	 */
 	private void translateDocument(String screenId, Document cruxPageDocument, Document htmlDocument) throws HTMLBuilderException
     {
+		setCurrentScreenId(screenId);
+
 		Element cruxPageElement = cruxPageDocument.getDocumentElement();
 		Node htmlElement = htmlDocument.getDocumentElement();
 		clearCurrentWidget();
 		translateDocument(cruxPageElement, htmlElement, htmlDocument, true);
 		clearCurrentWidget();
-		generateCruxMetaDataElement(screenId, getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+		generateCruxMetaDataElement(getCruxPageBodyElement(cruxPageDocument), getHtmlHeadElement(htmlDocument), htmlDocument);
+		
+		clearScreenId();
     }
 
 	/**

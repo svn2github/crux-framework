@@ -61,6 +61,31 @@ public class JSWindow extends JavaScriptObject
 	{
 		changeLocation(this, newURL);
 	}
+
+	/**
+	 * Gets the parent of the given window, if it exists. Returns null otherwise.
+	 * @param jsWindow
+	 */
+	public static final native JSWindow getParentWindow(JSWindow jsWindow)/*-{
+		var myParent = null;
+		if(jsWindow != null)
+		{
+			myParent = jsWindow.parent;
+		}
+		return myParent;
+	}-*/;
+	
+	/**
+	 * Gets the URL of the given window.
+	 * @param jsWindow
+	 */
+	public static final native String getLocation(JSWindow jsWindow)/*-{
+		if(jsWindow != null)
+		{
+			return jsWindow.location.href;
+		}
+		return null;
+	}-*/;
 	
 	private native static void changeLocation(JSWindow jsWnd, String newURL)/*-{
 		jsWnd.location.href = newURL;	

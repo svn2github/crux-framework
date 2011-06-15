@@ -380,7 +380,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		sourceWriter.outdent();
 		sourceWriter.println("}catch (Exception ex2){");
 		sourceWriter.indent();
-		sourceWriter.println("return Crux.getMessages().crossDocumentInvocationGeneralError(ex2.getMessage());"); 
+		sourceWriter.println("return Crux.getMessages().crossDocumentInvocationGeneralError(Screen.getId(), ex.getMessage());"); 
 		sourceWriter.outdent();
 		sourceWriter.println("}");
     }

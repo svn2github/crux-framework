@@ -91,7 +91,7 @@ class ChildrenAnnotationScanner
 	 * @param processor
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ChildProcessor createChildProcessor(final boolean isAnyWidget, final String widgetProperty, 
 																	  final WidgetLazyChecker lazyChecker,  final WidgetChildProcessor processor)
     {
