@@ -20,18 +20,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.gadget.client.features.AdsFeature;
+import org.cruxframework.crux.gadget.client.features.DynamicHeightFeature;
+import org.cruxframework.crux.gadget.client.features.GoogleAnalyticsFeature;
 import org.cruxframework.crux.gadget.client.features.MiniMessageFeature;
 import org.cruxframework.crux.gadget.client.features.PubsubFeature;
+import org.cruxframework.crux.gadget.client.features.RpcFeature;
+import org.cruxframework.crux.gadget.client.features.SetPrefsFeature;
+import org.cruxframework.crux.gadget.client.features.SetTitleFeature;
 import org.cruxframework.crux.gadget.client.features.TabsFeature;
+import org.cruxframework.crux.gadget.client.features.ViewFeature;
+import org.cruxframework.crux.gadget.client.features.osapi.OsapiFeature;
 
-import com.google.gwt.gadgets.client.AdsFeature;
-import com.google.gwt.gadgets.client.DynamicHeightFeature;
-import com.google.gwt.gadgets.client.GoogleAnalyticsFeature;
-import com.google.gwt.gadgets.client.SetPrefsFeature;
-import com.google.gwt.gadgets.client.SetTitleFeature;
-import com.google.gwt.gadgets.client.ViewFeature;
-import com.google.gwt.gadgets.client.osapi.OsapiFeature;
-import com.google.gwt.gadgets.client.rpc.RpcFeature;
 
 /**
  * @author Thiago da Rosa de Bustamante

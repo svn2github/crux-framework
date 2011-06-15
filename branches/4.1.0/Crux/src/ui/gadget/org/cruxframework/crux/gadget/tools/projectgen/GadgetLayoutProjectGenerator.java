@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.cruxframework.crux.core.utils.FileUtils;
+import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsAdsFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsDynamicHeightFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsGoogleAnalyticsFeature;
@@ -38,7 +39,6 @@ import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions.GeneratorOption;
 import org.cruxframework.crux.tools.projectgen.LayoutProjectGeneratorException;
 
-import com.google.gwt.gadgets.client.UserPreferences;
 
 /**
  * @author Thiago da Rosa de Bustamante

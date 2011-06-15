@@ -37,6 +37,9 @@ import org.cruxframework.crux.core.rebind.screen.Widget;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.core.utils.HTMLUtils;
 import org.cruxframework.crux.core.utils.XMLUtils;
+import org.cruxframework.crux.gadget.client.features.UserPreferences.DataType;
+import org.cruxframework.crux.gadget.client.features.UserPreferences.Preference;
+import org.cruxframework.crux.gadget.client.features.UserPreferences.PreferenceAttributes;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
@@ -44,6 +47,8 @@ import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import org.cruxframework.crux.gadget.client.widget.GadgetView.View;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
+import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
+import org.cruxframework.crux.gadget.rebind.gwt.PreferenceGenerator;
 import org.cruxframework.crux.gadget.rebind.scanner.GadgetScreenResolver;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -58,11 +63,6 @@ import org.w3c.dom.ls.LSSerializer;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.gadgets.client.UserPreferences.DataType;
-import com.google.gwt.gadgets.client.UserPreferences.Preference;
-import com.google.gwt.gadgets.client.UserPreferences.PreferenceAttributes;
-import com.google.gwt.gadgets.rebind.GadgetUtils;
-import com.google.gwt.gadgets.rebind.PreferenceGenerator;
 
 /**
  * Generate the manifest file for the Gadget ({@code .gadget.xml} file).

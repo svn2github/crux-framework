@@ -1,6 +1,6 @@
 ${customUserPreferencesPackage}
 
-import com.google.gwt.gadgets.client.UserPreferences;
+import org.cruxframework.crux.gadget.client.features.UserPreferences;
 
 public interface ${customUserPreferencesClass} extends UserPreferences
 {

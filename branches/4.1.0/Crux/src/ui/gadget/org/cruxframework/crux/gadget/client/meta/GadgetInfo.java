@@ -296,12 +296,12 @@ public interface GadgetInfo
 	@Target(ElementType.TYPE)
 	public @interface UserPreferences
 	{
-		Class<? extends com.google.gwt.gadgets.client.UserPreferences> value() 
-		        default com.google.gwt.gadgets.client.UserPreferences.class;
+		Class<? extends org.cruxframework.crux.gadget.client.features.UserPreferences> value() 
+		        default org.cruxframework.crux.gadget.client.features.UserPreferences.class;
 	}
 	
 	/**
 	 * @return the UserPreferences object
 	 */
-	com.google.gwt.gadgets.client.UserPreferences getUserPreferences();	
+	org.cruxframework.crux.gadget.client.features.UserPreferences getUserPreferences();	
 }

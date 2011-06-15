@@ -2,6 +2,16 @@
 	<!-- Inherit the Crux Core and GWT Gadget stuff  .          -->
 	<inherits name='org.cruxframework.crux.core.Crux'/>
 	<inherits name='com.google.gwt.gadgets.Gadgets' />
+	<inherits name='com.google.gwt.ajaxloader.AjaxLoader' />
+	
+	<!-- Automatically write Gadget property accessor implementations -->
+	<generate-with class="org.cruxframework.crux.gadget.rebind.gwt.UserPreferencesGenerator">
+	  <when-type-assignable class="org.cruxframework.crux.gadget.client.features.UserPreferences"/>
+	</generate-with>
+	<define-property name="gadget_view" values="home"/>
+	<property-provider name="gadget_view"><![CDATA[
+	    return $wnd.gadgetViewName || "home";
+	  ]]></property-provider>
 
 	<!-- Produces the final Gadget manifest -->
 	<define-linker name="gadget" class="org.cruxframework.crux.gadget.linker.GadgetLinker"/>
@@ -30,15 +40,36 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.URLRewriter" />
 	</replace-with>
 	
-  <!-- Implementations of the features -->
-  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.PubsubFeatureImpl">
-    <when-type-is class="org.cruxframework.crux.gadget.client.features.PubsubFeature"/>
-  </replace-with>
-  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.MiniMessageFeatureImpl">
-    <when-type-is class="org.cruxframework.crux.gadget.client.features.MiniMessageFeature"/>
-  </replace-with>
-  <replace-with class="org.cruxframework.crux.gadget.client.features.impl.TabsFeatureImpl">
-    <when-type-is class="org.cruxframework.crux.gadget.client.features.TabsFeature"/>
-  </replace-with>
+	<!-- Implementations of the features -->
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.PubsubFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.PubsubFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.MiniMessageFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.MiniMessageFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.TabsFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.TabsFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.AdsFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.AdsFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.DynamicHeightFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.DynamicHeightFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.GoogleAnalyticsFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.GoogleAnalyticsFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.SetTitleFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.SetTitleFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.ViewFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.ViewFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.SetPrefsFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.SetPrefsFeature"/>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.gadget.client.features.impl.RpcFeatureImpl">
+	  <when-type-is class="org.cruxframework.crux.gadget.client.features.RpcFeature"/>
+	</replace-with>  
 	
 </module>
