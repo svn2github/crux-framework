@@ -37,9 +37,9 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	/**
 	 * @param vertical
 	 */
-	public AbstractWizardNavigationBar(boolean vertical, String styleName)
+	public AbstractWizardNavigationBar(String styleName)
 	{
-		this.rollingPanel = new RollingPanel(vertical);
+		this.rollingPanel = new RollingPanel();
 		this.rollingPanel.setStyleName(styleName);
 		initWidget(this.rollingPanel);
     }
@@ -75,14 +75,6 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
     {
     	return wizard;
     }
-
-	/**
-	 * @return
-	 */
-	public boolean isVertical()
-	{
-		return this.rollingPanel.isVertical();
-	}
 
 	/**
 	 * @param nextButtonStyleName
@@ -148,13 +140,6 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 	 */
 	protected void updateScrollPosition(int originalScrollPosition)
     {
-	    if (rollingPanel.isVertical())
-		{
-			rollingPanel.setVerticalScrollPosition(originalScrollPosition);
-		}
-		else
-		{
-			rollingPanel.setHorizontalScrollPosition(originalScrollPosition);
-		}
+		rollingPanel.setScrollPosition(originalScrollPosition);
     }
 }

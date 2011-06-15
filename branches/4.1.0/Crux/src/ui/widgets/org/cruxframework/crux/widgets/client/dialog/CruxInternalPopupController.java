@@ -281,7 +281,6 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			{
 				final FocusPanel focusPanel = new FocusPanel();
 				focusPanel.setStyleName("closeButton");
-				focusPanel.addStyleDependentName("disabled");
 				
 				focusPanel.addClickHandler(new ClickHandler()
 				{
@@ -295,11 +294,10 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 					}
 				});
 				
-				PopupLoadListener listener = new PopupLoadListener(frameElement, focusPanel);
+				PopupLoadListener listener = GWT.create(PopupLoadListener.class);
+				listener.setup(frameElement, focusPanel);
 				FrameUtils.registerStateCallback(frameElement, listener);
 				
-				frameElement.setAttribute("canClose", "false");
-
 				Label label = new Label(" ");
 				label.getElement().getStyle().setProperty("fontSize", "0px");
 				label.getElement().getStyle().setProperty("fontFamily", "monospace");
@@ -330,19 +328,35 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 	
 	/**
 	 * CallBack for Popup frame loading 
-	 * @author Gessé S. F. Dafé - <code>gessedafe@gmail.com</code>
+	 * @author Gesse Dafe
 	 */
-	public static class PopupLoadListener implements FrameStateCallback
+	public static abstract class PopupLoadListener implements FrameStateCallback
 	{
 		private Widget closeBtn;
 		private Element popupFrame;
 
-		public PopupLoadListener(Element popupFrame, FocusPanel closeBtn)
+		/**
+		 * @param popupFrame
+		 * @param closeBtn
+		 */
+		public void setup(Element popupFrame, Widget closeBtn)
 		{
 			this.popupFrame = popupFrame;
-			this.closeBtn = closeBtn;			
+			this.closeBtn = closeBtn;
+			blockPopupClosing(popupFrame, closeBtn);		
 		}
+
+		/**
+		 * @param popupFrame 
+		 */
+		protected abstract void blockPopupClosing(Element popupFrame, Widget closeBtn);
 		
+		/**
+		 * @param popupFrame 
+		 * @param closeBtn 
+		 */
+		protected abstract void unblockPopupClosing(Element popupFrame, Widget closeBtn);
+
 		/**
 		 * @see org.cruxframework.crux.widgets.client.util.FrameStateCallback#onComplete()
 		 */
@@ -350,10 +364,48 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 		{
 			if(this.closeBtn != null)
 			{
-				this.closeBtn.removeStyleDependentName("disabled");
-				this.popupFrame.setAttribute("canClose", "true");
+				unblockPopupClosing(this.popupFrame, this.closeBtn);
 			}
 		}
+	}
+	
+	/**
+	 * CallBack for Popup frame loading 
+	 * @author Gesse Dafe
+	 */
+	public static class PopupLoadListenerImpl extends PopupLoadListener
+	{
+		@Override
+		protected void blockPopupClosing(Element popupFrame, Widget closeBtn)
+		{
+			popupFrame.setAttribute("canClose", "false");
+			closeBtn.addStyleDependentName("disabled");
+		}
+
+		@Override
+		protected void unblockPopupClosing(Element popupFrame, Widget closeBtn)
+		{
+			closeBtn.removeStyleDependentName("disabled");
+			popupFrame.setAttribute("canClose", "true");			
+		}		
+	}
+	
+	/**
+	 * CallBack for Popup frame loading 
+	 * @author Gesse Dafe
+	 */
+	public static class PopupLoadListenerSafariImpl extends PopupLoadListener
+	{
+		@Override
+		protected void blockPopupClosing(Element popupFrame, Widget closeBtn)
+		{
+			popupFrame.setAttribute("canClose", "true");
+		}
+
+		@Override
+		protected void unblockPopupClosing(Element popupFrame, Widget closeBtn)
+		{
+		}		
 	}
 	
 	/**

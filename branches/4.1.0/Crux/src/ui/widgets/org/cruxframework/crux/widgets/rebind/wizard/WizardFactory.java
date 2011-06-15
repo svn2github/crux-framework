@@ -120,35 +120,20 @@ public class WizardFactory extends AbstractWizardFactory
 				position = ControlPosition.valueOf(positionAttr);
 			}
 			
-			boolean vertical = position.equals(ControlPosition.east) || position.equals(ControlPosition.west);
 			boolean showAllSteps = true;
 			String showAllStepsAttr = context.readChildProperty("showAllSteps");
 			if (!StringUtils.isEmpty(showAllStepsAttr ))
 			{
 				showAllSteps = Boolean.parseBoolean(showAllStepsAttr);
 			}
-			if (vertical)
+			ControlHorizontalAlign horizontalAlign = ControlHorizontalAlign.left;
+			String horizontalAlignmentAttr = context.readChildProperty("horizontalAlignment");
+			if (!StringUtils.isEmpty(horizontalAlignmentAttr))
 			{
-				ControlVerticalAlign verticalAlign = ControlVerticalAlign.top;
-				String verticalAlignmentAttr = context.readChildProperty("verticalAlignment");
-				if (!StringUtils.isEmpty(verticalAlignmentAttr))
-				{
-					verticalAlign = ControlVerticalAlign.valueOf(verticalAlignmentAttr);
-				}
-				out.println(widget+".setNavigationBar("+vertical+", "+showAllSteps+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
-						ControlVerticalAlign.class.getCanonicalName()+"."+verticalAlign.toString()+");");
+				horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
 			}
-			else
-			{
-				ControlHorizontalAlign horizontalAlign = ControlHorizontalAlign.left;
-				String horizontalAlignmentAttr = context.readChildProperty("horizontalAlignment");
-				if (!StringUtils.isEmpty(horizontalAlignmentAttr))
-				{
-					horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
-				}
-				out.println(widget+".setNavigationBar("+vertical+", "+showAllSteps+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
-						ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
-			}
+			out.println(widget+".setNavigationBar("+showAllSteps+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
+					ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
 			
 			processNavigationBarAttributes(out, context);
 		}
@@ -404,29 +389,14 @@ public class WizardFactory extends AbstractWizardFactory
 				position = ControlPosition.valueOf(positionAttr);
 			}
 			
-			boolean vertical = position.equals(ControlPosition.east) || position.equals(ControlPosition.west);
-			if (vertical)
+			ControlHorizontalAlign horizontalAlign = ControlHorizontalAlign.right;
+			String horizontalAlignmentAttr = context.readChildProperty("horizontalAlignment");
+			if (!StringUtils.isEmpty(horizontalAlignmentAttr))
 			{
-				ControlVerticalAlign verticalAlign = ControlVerticalAlign.top;
-				String verticalAlignmentAttr = context.readChildProperty("verticalAlignment");
-				if (!StringUtils.isEmpty(verticalAlignmentAttr))
-				{
-					verticalAlign = ControlVerticalAlign.valueOf(verticalAlignmentAttr);
-				}
-				out.println(widget+".setControlBar("+vertical+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()
-						+", "+ControlVerticalAlign.class.getCanonicalName()+"."+verticalAlign.toString()+");");
+				horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
 			}
-			else
-			{
-				ControlHorizontalAlign horizontalAlign = ControlHorizontalAlign.right;
-				String horizontalAlignmentAttr = context.readChildProperty("horizontalAlignment");
-				if (!StringUtils.isEmpty(horizontalAlignmentAttr))
-				{
-					horizontalAlign = ControlHorizontalAlign.valueOf(horizontalAlignmentAttr);
-				}
-				out.println(widget+".setControlBar("+vertical+", "+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
-						ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
-			}
+			out.println(widget+".setControlBar("+ControlPosition.class.getCanonicalName()+"."+position.toString()+", "+
+					ControlHorizontalAlign.class.getCanonicalName()+"."+horizontalAlign.toString()+");");
 			
 			String controlBar = getWidgetCreator().createVariableName("controlBar");
 			

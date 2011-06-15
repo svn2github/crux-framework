@@ -291,11 +291,6 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
 	        return wizardController.getSpacing(wizardId);
         }
 
-		public boolean isVertical()
-        {
-	        return wizardController.isVertical(wizardId);
-        }
-
 		public void next()
         {
 			wizardController.next(wizardId);

@@ -15,35 +15,63 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Accessibility;
-import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.GestureChangeHandler;
+import com.google.gwt.event.dom.client.GestureEndHandler;
+import com.google.gwt.event.dom.client.GestureStartHandler;
+import com.google.gwt.event.dom.client.HasAllFocusHandlers;
+import com.google.gwt.event.dom.client.HasAllGestureHandlers;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasAllTouchHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * PushButton, based on a 3 X 1 table, useful to build rounded corners.
  * 
  * @author Gesse S. F. Dafe
  */
-public class DecoratedButton extends FocusWidget implements HasText
+public class DecoratedButton extends Composite implements HasText, 
+									HasClickHandlers, HasDoubleClickHandlers, HasEnabled,
+									HasAllFocusHandlers, HasAllGestureHandlers, HasAllKeyHandlers, 
+									HasAllMouseHandlers, HasAllTouchHandlers, Focusable
 {
-	static final String DEFAULT_STYLE_NAME = "crux-DecoratedButton";
+	public static final String DEFAULT_STYLE_NAME = "crux-DecoratedButton";
 	
-	private DecoratedButtonFace face;
-	private boolean allowClick;
+	private DecoratedButtonIntf impl; 
 
 	/**
 	 * Default constructor
 	 */
 	public DecoratedButton()
 	{
-		this.face = new DecoratedButtonFace();
-		this.setElement(this.face.getElement());
-		sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.FOCUSEVENTS | Event.KEYEVENTS);
-		Accessibility.setRole(getElement(), Accessibility.ROLE_BUTTON);
+		impl = GWT.create(DecoratedButtonIntf.class);
+		initWidget((Widget)impl);
+		setStyleName(DEFAULT_STYLE_NAME);
 	}
 
 	/**
@@ -51,7 +79,7 @@ public class DecoratedButton extends FocusWidget implements HasText
 	 */
 	public void setText(String text)
 	{
-		this.face.setText(text);
+		this.impl.setText(text);
 	}
 
 	/**
@@ -59,91 +87,142 @@ public class DecoratedButton extends FocusWidget implements HasText
 	 */
 	public String getText()
 	{
-		return this.face.getText();
-	}
-
-	@Override
-	public void onBrowserEvent(Event event)
-	{
-		if (!isEnabled())
-		{
-			return;
-		}
-
-		int type = DOM.eventGetType(event);
-		
-		if(type == Event.ONCLICK)
-		{
-			if(!this.allowClick)
-			{
-				event.stopPropagation();
-				return;
-			}
-		}
-		else if(type == Event.ONMOUSEUP)
-		{
-//			this.face.removeStyleDependentName("down");
-			onClick();
-		}		
-		else if (type == Event.ONMOUSEDOWN)
-		{
-//			this.face.addStyleDependentName("down");
-			this.setFocus(true);
-		}
-		else if (type == Event.ONMOUSEOUT)
-		{
-			this.face.removeStyleDependentName("down");
-		}
-		else if (wasClickByKeyEvent(event))
-		{
-			onClick();
-		}
-
-		super.onBrowserEvent(event);
-	}
-
-	/**
-	 * Fires the click event
-	 */
-	protected void onClick()
-	{
-		this.allowClick = true;
-
-		NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false, false, false, false);
-		getElement().dispatchEvent(evt);
-
-		this.allowClick = false;
-	}
-
-	/**
-	 * @return true if the click was done by using the ENTER or SPACE keys
-	 */
-	private boolean wasClickByKeyEvent(Event event)
-	{
-		int eventType = DOM.eventGetType(event);
-
-		if ((event.getTypeInt() & Event.KEYEVENTS) != 0)
-		{
-			char keyCode = (char) DOM.eventGetKeyCode(event);
-
-			return (eventType == Event.ONKEYUP && keyCode == ' ') || (eventType == Event.ONKEYPRESS && (keyCode == '\n' || keyCode == '\r'));
-		}
-
-		return false;
+		return this.impl.getText();
 	}
 	
-	@Override
 	public void setEnabled(boolean enabled)
 	{
-		if(enabled)
-		{
-			this.face.removeStyleDependentName("disabled");
-		}
-		else
-		{
-			this.face.addStyleDependentName("disabled");
-		}
-		
-		super.setEnabled(enabled);
+		this.impl.setEnabled(enabled);
+	}
+
+	public int getTabIndex()
+    {
+	    return this.impl.getTabIndex();
+    }
+
+	public void setAccessKey(char key)
+    {
+		this.impl.setAccessKey(key);
+    }
+
+	public void setFocus(boolean focused)
+    {
+		this.impl.setFocus(focused);
+    }
+
+	public void setTabIndex(int index)
+    {
+		this.impl.setTabIndex(index);
+    }
+
+	public HandlerRegistration addFocusHandler(FocusHandler handler)
+    {
+	    return this.impl.addFocusHandler(handler);
+    }
+
+	public HandlerRegistration addBlurHandler(BlurHandler handler)
+    {
+	    return this.impl.addBlurHandler(handler);
+    }
+
+	public HandlerRegistration addGestureStartHandler(GestureStartHandler handler)
+    {
+	    return this.impl.addGestureStartHandler(handler);
+    }
+
+	public HandlerRegistration addGestureChangeHandler(GestureChangeHandler handler)
+    {
+	    return this.impl.addGestureChangeHandler(handler);
+    }
+
+	public HandlerRegistration addGestureEndHandler(GestureEndHandler handler)
+    {
+	    return this.impl.addGestureEndHandler(handler);
+    }
+
+	public HandlerRegistration addKeyUpHandler(KeyUpHandler handler)
+    {
+	    return this.impl.addKeyUpHandler(handler);
+    }
+
+	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler)
+    {
+	    return this.impl.addKeyDownHandler(handler);
+    }
+
+	public HandlerRegistration addKeyPressHandler(KeyPressHandler handler)
+    {
+	    return this.impl.addKeyPressHandler(handler);
+    }
+
+	public HandlerRegistration addMouseDownHandler(MouseDownHandler handler)
+    {
+	    return this.impl.addMouseDownHandler(handler);
+    }
+
+	public HandlerRegistration addMouseUpHandler(MouseUpHandler handler)
+    {
+	    return this.impl.addMouseUpHandler(handler);
+    }
+
+	public HandlerRegistration addMouseOutHandler(MouseOutHandler handler)
+    {
+	    return this.impl.addMouseOutHandler(handler);
+    }
+
+	public HandlerRegistration addMouseOverHandler(MouseOverHandler handler)
+    {
+	    return this.impl.addMouseOverHandler(handler);
+    }
+
+	public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler)
+    {
+	    return this.impl.addMouseMoveHandler(handler);
+    }
+
+	public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler)
+    {
+	    return this.impl.addMouseWheelHandler(handler);
+    }
+
+	public HandlerRegistration addTouchStartHandler(TouchStartHandler handler)
+    {
+	    return this.impl.addTouchStartHandler(handler);
+    }
+
+	public HandlerRegistration addTouchMoveHandler(TouchMoveHandler handler)
+    {
+	    return this.impl.addTouchMoveHandler(handler);
+    }
+
+	public HandlerRegistration addTouchEndHandler(TouchEndHandler handler)
+    {
+	    return this.impl.addTouchEndHandler(handler);
+    }
+
+	public HandlerRegistration addTouchCancelHandler(TouchCancelHandler handler)
+    {
+	    return this.impl.addTouchCancelHandler(handler);
+    }
+
+	public boolean isEnabled()
+    {
+	    return this.impl.isEnabled();
+    }
+
+	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
+    {
+	    return this.impl.addDoubleClickHandler(handler);
+    }
+
+	public HandlerRegistration addClickHandler(ClickHandler handler)
+    {
+	    return this.impl.addClickHandler(handler);
+    }
+	
+	@Override
+	public void setStyleName(String style)
+	{
+		super.setStyleName(impl.getSpecificStyleName(style));
 	}
 }

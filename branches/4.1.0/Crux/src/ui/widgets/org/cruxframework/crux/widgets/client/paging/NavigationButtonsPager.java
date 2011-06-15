@@ -2,9 +2,13 @@ package org.cruxframework.crux.widgets.client.paging;
 
 import org.cruxframework.crux.widgets.client.event.paging.PageEvent;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base implementation for navigation-buttons-based pager
@@ -12,10 +16,11 @@ import com.google.gwt.user.client.ui.FocusPanel;
  */
 public abstract class NavigationButtonsPager extends AbstractPager implements Pager
 {
-	private FocusPanel previousButton;
-	private FocusPanel nextButton;
-	private FocusPanel firstButton;
-	private FocusPanel lastButton;
+	private Widget previousButton;
+	private Widget nextButton;
+	private Widget firstButton;
+	private Widget lastButton;
+	private ButtonPanelCreator panelCreator = GWT.create(ButtonPanelCreator.class);
 	
 	/**
 	 * @see org.cruxframework.crux.widgets.client.paging.AbstractPager#update(int, boolean)
@@ -78,11 +83,11 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	 * Creates the "previous page" navigation button
 	 * @return
 	 */
-	protected FocusPanel createPreviousButton()
+	protected Widget createPreviousButton()
 	{
 		final NavigationButtonsPager pager = this;
 		
-		FocusPanel panel = createNavigationButton("previousButton", 
+		Widget panel = createNavigationButton("previousButton", 
 			new ClickHandler() 
 			{
 				public void onClick(ClickEvent event)
@@ -111,11 +116,11 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	 * Creates the "next page" navigation button
 	 * @return
 	 */
-	protected FocusPanel createNextButton()
+	protected Widget createNextButton()
 	{
 		final NavigationButtonsPager pager = this;
 		
-		FocusPanel panel = createNavigationButton("nextButton", 
+		Widget panel = createNavigationButton("nextButton", 
 			new ClickHandler()
 			{			
 				public void onClick(ClickEvent event)
@@ -144,11 +149,11 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	 * Creates the "first page" navigation button
 	 * @return
 	 */
-	protected FocusPanel createFirstPageButton()
+	protected Widget createFirstPageButton()
 	{
 		final NavigationButtonsPager pager = this;
 		
-		FocusPanel panel = createNavigationButton("firstButton", 
+		Widget panel = createNavigationButton("firstButton", 
 			new ClickHandler()
 			{			
 				public void onClick(ClickEvent event)
@@ -174,11 +179,11 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	 * Creates the "last page" navigation button
 	 * @return
 	 */
-	protected FocusPanel createLastPageButton()
+	protected Widget createLastPageButton()
 	{
 		final NavigationButtonsPager pager = this;
 		
-		FocusPanel panel = createNavigationButton("lastButton", 
+		Widget panel = createNavigationButton("lastButton", 
 			new ClickHandler()
 			{			
 				public void onClick(ClickEvent event)
@@ -206,12 +211,30 @@ public abstract class NavigationButtonsPager extends AbstractPager implements Pa
 	 * @param clickHandler
 	 * @return
 	 */
-	private FocusPanel createNavigationButton(String styleName, ClickHandler clickHandler)
+	private Widget createNavigationButton(String styleName, ClickHandler clickHandler)
 	{
-		FocusPanel panel = new FocusPanel();
+		Widget panel = panelCreator.createPanel();
 		panel.setStyleName(styleName);
 		panel.addStyleDependentName("disabled");
-		panel.addClickHandler(clickHandler);
+		((HasClickHandlers)panel).addClickHandler(clickHandler);
 		return panel;
+	}
+	
+	
+	protected static class ButtonPanelCreator
+	{
+		protected Widget createPanel()
+		{
+			return new FocusPanel();
+		}
+	}
+	
+	protected static class MobileButtonPanelCreator extends ButtonPanelCreator
+	{
+		@Override
+		protected Widget createPanel()
+		{
+			return new Label();
+		}
 	}
 }

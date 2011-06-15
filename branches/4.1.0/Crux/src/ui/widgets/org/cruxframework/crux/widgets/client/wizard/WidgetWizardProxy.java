@@ -275,11 +275,6 @@ class WidgetWizardProxy<T extends Serializable> implements WizardProxy<T>
 	        return controlBar.getSpacing();
         }
 
-		public boolean isVertical()
-        {
-	        return controlBar.isVertical();
-        }
-
 		public void next()
         {
 	        controlBar.next();

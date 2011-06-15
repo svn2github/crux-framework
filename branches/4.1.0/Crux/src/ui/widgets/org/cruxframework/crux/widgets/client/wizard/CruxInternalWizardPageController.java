@@ -272,20 +272,6 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 	 * @param event
 	 * @return
 	 */
-	public boolean isVertical(String wizardId)
-	{
-		WizardControlBar<?> controlBar = Screen.get(wizardId, Wizard.class).getControlBar();
-		if (controlBar != null)
-		{
-			return controlBar.isVertical();
-		}
-		return false;
-	}
-
-	/**
-	 * @param event
-	 * @return
-	 */
 	public void setButtonsHeight(String wizardId, String buttonHeight)
 	{
 		WizardControlBar<?> controlBar = Screen.get(wizardId, Wizard.class).getControlBar();

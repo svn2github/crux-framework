@@ -51,7 +51,6 @@ public class DecoratedButtonFace extends Widget
 		TableElement table = DOM.createTable().cast();
 		table.setCellSpacing(0);
 		table.setCellPadding(0);
-		table.setClassName(DecoratedButton.DEFAULT_STYLE_NAME);
 
 		Element tableBody = DOM.createTBody();
 		table.appendChild(tableBody);

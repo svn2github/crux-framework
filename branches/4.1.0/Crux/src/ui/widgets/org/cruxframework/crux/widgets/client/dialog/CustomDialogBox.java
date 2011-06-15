@@ -355,14 +355,56 @@ public class CustomDialogBox extends CustomPopupPanel implements HasHTML, HasTex
 	{
 		NativeEvent nativeEvent = event.getNativeEvent();
 
-		if (!event.isCanceled() && (event.getTypeInt() == Event.ONMOUSEDOWN) && isCaptionEvent(nativeEvent))
+	    int type = event.getTypeInt();
+		
+		if (!event.isCanceled() && (type == Event.ONMOUSEDOWN) && isCaptionEvent(nativeEvent))
 		{
 			nativeEvent.preventDefault();
 		}
-
+		
+		switch (type)
+        {
+	        case Event.ONTOUCHSTART:
+	        	// Don't eat events if event capture is enabled, as this can
+	        	// interfere with dialog dragging, for example.
+	        	if (DOM.getCaptureElement() != null) 
+	        	{
+	        		event.consume();
+	        		return;
+	        	}
+	
+	        	if (!eventTargetsPopup(nativeEvent) && isAutoHideEnabled()) 
+	        	{
+	        		hide(true);
+	        		return;
+	        	}
+	        	break;
+	        case Event.ONTOUCHEND:
+	        case Event.ONTOUCHMOVE:
+	        {
+	        	// Don't eat events if event capture is enabled, as this can
+	        	// interfere with dialog dragging, for example.
+	        	if (DOM.getCaptureElement() != null) {
+	        		event.consume();
+	        		return;
+	        	}
+	        	break;
+	        }
+        }
+		
 		super.onPreviewNativeEvent(event);
 	}
 
+	private boolean eventTargetsPopup(NativeEvent event) 
+	{
+		EventTarget target = event.getEventTarget();
+		if (Element.is(target)) 
+		{
+			return getElement().isOrHasChild(Element.as(target));
+		}
+		return false;
+	}
+	
 	/**
 	 * @param event
 	 * @return true when the event was fired by the caption

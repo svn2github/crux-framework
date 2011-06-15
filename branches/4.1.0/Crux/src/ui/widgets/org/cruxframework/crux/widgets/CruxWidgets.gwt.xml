@@ -63,4 +63,63 @@
     		<when-property-is name="user.agent" value="ie8" />
     	</any>
     </replace-with>
+	<replace-with
+    	class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonCSS2Impl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf" />
+    	<any>
+      		<when-property-is name="user.agent" value="ie6" />
+    		<when-property-is name="user.agent" value="ie8" />
+    	</any>
+    </replace-with>
+	<replace-with
+    	class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonCSS3Impl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButtonIntf" />
+    	<none>
+      		<when-property-is name="user.agent" value="ie6" />
+    		<when-property-is name="user.agent" value="ie8" />
+    	</none>
+    </replace-with>
+    <replace-with
+    	class="org.cruxframework.crux.widgets.client.util.TextSelectionUtils.UnselectableIEImpl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.util.TextSelectionUtils.Unselectable" />
+    	<any>
+      		<when-property-is name="user.agent" value="ie6" />
+    		<when-property-is name="user.agent" value="ie8" />
+    	</any>
+    </replace-with>
+    <replace-with
+    	class="org.cruxframework.crux.widgets.client.util.TextSelectionUtils.UnselectableMozImpl">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.util.TextSelectionUtils.Unselectable" />
+    	<any>
+      		<when-property-is name="user.agent" value="gecko" />
+      		<when-property-is name="user.agent" value="gecko1_8" />
+    	</any>
+    </replace-with>
+
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerSafariImpl">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerImpl">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
+		<none>
+			<when-property-is name="user.agent" value="safari" />
+		</none>
+	</replace-with>
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.paging.NavigationButtonsPager.MobileButtonPanelCreator">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.paging.NavigationButtonsPager.ButtonPanelCreator" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+
+    
 </module>

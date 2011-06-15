@@ -83,14 +83,6 @@ public class WizardControlBarAccessor
 	/**
 	 * @return
 	 */
-	public boolean isVertical()
-	{
-		return proxy.isVertical();
-	}
-
-	/**
-	 * @return
-	 */
 	public String getBackLabel()
     {
     	return proxy.getBackLabel();

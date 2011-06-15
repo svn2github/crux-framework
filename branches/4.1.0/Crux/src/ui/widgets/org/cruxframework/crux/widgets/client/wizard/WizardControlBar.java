@@ -62,19 +62,11 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 	
 	
 	/**
-	 * @param wizard
-	 */
-	public WizardControlBar()
-    {
-		this(false);
-    }
-	
-	/**
 	 * @param vertical
 	 */
-	public WizardControlBar(boolean vertical)
+	public WizardControlBar()
 	{
-		super(vertical, DEFAULT_STYLE_NAME);
+		super(DEFAULT_STYLE_NAME);
 		
 		this.backLabel = WidgetMsgFactory.getMessages().wizardBackCommand();
 		this.nextLabel = WidgetMsgFactory.getMessages().wizardNextCommand();
@@ -483,7 +475,7 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 
 		Collections.sort(sortedCommands);
 		
-		int originalScrollPosition = (rollingPanel.isVertical()?rollingPanel.getVerticalScrollPosition():rollingPanel.getHorizontalScrollPosition());
+		int originalScrollPosition = (rollingPanel.getScrollPosition());
 		rollingPanel.clear();
 		
 		for (final WizardCommand<T> command: sortedCommands)
@@ -628,6 +620,12 @@ public class WizardControlBar<T extends Serializable> extends AbstractWizardNavi
 			{
 				setStyleName(this.controlBar.buttonStyle);;
 			}
+		}
+		
+		@Override
+		public void setStyleName(String style) 
+		{
+			button.setStyleName(style);
 		}
 	}
 }

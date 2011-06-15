@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.rollingtabs;
 
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.event.logical.shared.HasBeforeSelectionHandlers;
@@ -82,6 +83,7 @@ public class RollingTabPanel extends Composite implements HasAnimation, HasBefor
 
 		setStyleName("crux-TabPanel");
 		deck.setStyleName("crux-TabPanelBottom");
+		deck.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		// Add a11y role "TabPanel"
 		Accessibility.setRole(deck.getElement(), Accessibility.ROLE_TABPANEL);
 	}

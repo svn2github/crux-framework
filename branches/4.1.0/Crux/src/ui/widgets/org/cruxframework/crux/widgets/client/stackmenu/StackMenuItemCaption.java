@@ -46,18 +46,21 @@ class StackMenuItemCaption extends Composite
 		canvas.setCellPadding(0);
 		canvas.setCellSpacing(0);
 		canvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
+
+		ClickHandler clickHandler = createBaseClickHandler();
 		
 		createTopBorders();
-		createBody(label);
+		createBody(label, clickHandler);
 		createBottomBorders();
 		
 		widget = new FocusPanel(canvas);
-		widget.addClickHandler(createBaseClickHandler());
+		widget.addClickHandler(clickHandler);
 		widget.addMouseOverHandler(createMouseOverHandler());
 		widget.addMouseOutHandler(createMouseOutHandler());
 		widget.addKeyUpHandler(createKeyUpHandler());
 	
 		initWidget(widget);
+		
 	}
 	
 	/**
@@ -93,9 +96,10 @@ class StackMenuItemCaption extends Composite
 	/**
 	 * Creates the label of the item
 	 * @param label
+	 * @param clickHandler 
 	 * @return
 	 */
-	private Label createBody(String label)
+	private Label createBody(String label, ClickHandler clickHandler)
 	{
 		canvas.setHTML(1, 0, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(1, 0, "item-border-w");
@@ -103,6 +107,7 @@ class StackMenuItemCaption extends Composite
 		Label menuItemLabel = new Label(label);
 		menuItemLabel.setStyleName("itemLabel");
 		TextSelectionUtils.makeUnselectable(menuItemLabel.getElement());
+		menuItemLabel.addClickHandler(clickHandler);
 		canvas.setWidget(1, 1, menuItemLabel);
 		canvas.getCellFormatter().setVerticalAlignment(1, 1, HasVerticalAlignment.ALIGN_MIDDLE);
 
@@ -208,6 +213,7 @@ class StackMenuItemCaption extends Composite
 			}
 		};
 	}
+	
 	
 	/**
 	 * Fires the action associated with the selection of the item when user presses enter.
