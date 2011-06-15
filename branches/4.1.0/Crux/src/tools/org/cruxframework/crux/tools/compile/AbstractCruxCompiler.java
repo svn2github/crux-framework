@@ -420,6 +420,10 @@ public abstract class AbstractCruxCompiler
 		parameter.addParameterOption(new ConsoleParameterOption("numberOfWorkers", "Number of Workers"));
 		parametersProcessor.addSupportedParameter(parameter);
 
+		parameter = new ConsoleParameter("-logLevel", "Level of Logging", false, true);
+		parameter.addParameterOption(new ConsoleParameterOption("level", "Level"));
+		parametersProcessor.addSupportedParameter(parameter);
+
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-validateOnly", " Validate all source code, but do not compile.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-compileReport", "Create a compile report that tells the Story of Your Compile.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-draftCompile", "Disable compiler optimizations and run faster.", false, true));
@@ -624,7 +628,8 @@ public abstract class AbstractCruxCompiler
 	{
 		for (ConsoleParameter parameter : parameters)
         {
-	        if (parameter.getName().equals("-gen") || parameter.getName().equals("-style") || parameter.getName().equals("-extra") || parameter.getName().equals("-localWorkers"))
+	        if (parameter.getName().equals("-gen") || parameter.getName().equals("-style") || parameter.getName().equals("-extra") || parameter.getName().equals("-localWorkers")
+	        		|| parameter.getName().equals("-logLevel"))
 	        {
 	        	gwtCompilerArgs.add(parameter.getName());
 	        	gwtCompilerArgs.add(parameter.getValue());

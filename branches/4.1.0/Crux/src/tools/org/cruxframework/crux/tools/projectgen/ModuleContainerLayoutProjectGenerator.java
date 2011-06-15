@@ -24,30 +24,8 @@ import org.cruxframework.crux.core.utils.FileUtils;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ModuleContainerLayoutProjectGenerator extends AbstractLayoutProjectGenerator
+public class ModuleContainerLayoutProjectGenerator extends ModuleLayoutProjectGenerator
 {
-	private CruxProjectGeneratorOptions generatorOptions;
-
-	@Override
-    public void createProjectRootFiles() throws IOException
-    {
-		super.createProjectRootFiles();
-		createFile(options.getProjectDir(), options.getProjectName() + ".launch", "launch.xml");
-    }
-
-	@Override
-    public void createSources() throws IOException
-    {
-		super.createSources();
-
-		File sourceDir = createDir(options.getProjectDir(), "src");
-		String packageDir = this.options.getModulePackage().replaceAll("\\.", "/");
-		File moduleDir = createDir(sourceDir, packageDir);
-		
-		createFile(sourceDir, "Crux.properties", "modules/crux.properties.txt");
-		createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "module.xml");
-    }
-
 	@Override
     public void createdBuildFiles() throws IOException
     {
@@ -56,45 +34,11 @@ public class ModuleContainerLayoutProjectGenerator extends AbstractLayoutProject
 		createFile(buildLibDir.getParentFile(), "build.xml", "modulescontainer/build.xml");
     }
 
-	@Override
-    public void createWebRootFiles() throws IOException
-    {
-		super.createWebRootFiles();
-		
-		String pageName = getPageName();
-		
-		createFile(getWebInfLibDir().getParentFile(), "web.xml", "modules/web.xml");
-		createFile(getWarDir(), pageName, "index.crux.xml");		
-    }
-
     /**
      * @see org.cruxframework.crux.tools.projectgen.LayoutProjectGenerator#getProjectLayout()
      */
     public String getProjectLayout()
     {
 	    return "MODULE_CONTAINER_APP";
-    }
-
-	@Override
-    protected CruxProjectGeneratorOptions getCruxProjectGeneratorOptions(File workspaceDir, String projectName, String hostedModeStartupModule)
-    {
-	    try
-        {
-	    	if (generatorOptions == null)
-	    	{
-	    		generatorOptions = new CruxProjectGeneratorOptions(workspaceDir, projectName, hostedModeStartupModule);
-	    	}
-			return generatorOptions;
-        }
-        catch (Exception e)
-        {
-        	throw new LayoutProjectGeneratorException("Can not create the generator options object.", e);
-        }
-    }
-
-	@Override
-    protected void applyReplacementsToClassPathFileTemplate() throws IOException
-    {
-		createFile(options.getProjectDir(), ".classpath", "modules/classpath.xml");
     }
 }

@@ -33,7 +33,7 @@ public class SchemaGenerator
 	 *  
 	 * @param args
 	 */
-	public static void generateSchemas(File projectBaseDir, File outputDir, File webDir, boolean generateModuleSchema)
+	public static void generateSchemas(File projectBaseDir, File outputDir, File webDir)
 	{
 		CruxSchemaGenerator generator = CruxSchemaGeneratorFactory.createSchemaGenerator(projectBaseDir, outputDir, webDir);
 		generator.generateSchemas();
@@ -44,9 +44,9 @@ public class SchemaGenerator
 	 * 
 	 * @param args
 	 */
-	public static void generateSchemas(String projectBaseDir, String destDir, String webDir, boolean generateModuleSchema)
+	public static void generateSchemas(String projectBaseDir, String destDir, String webDir)
 	{
-		generateSchemas(new File(projectBaseDir), new File(destDir), webDir!=null?new File(webDir):null, generateModuleSchema);
+		generateSchemas(new File(projectBaseDir), new File(destDir), webDir!=null?new File(webDir):null);
 	}
 	
 	/**
@@ -75,9 +75,9 @@ public class SchemaGenerator
 					}
 					SchemaGenerator.generateSchemas(parameters.get("projectBaseDir").getValue(), 
 													parameters.get("outputDir").getValue(), 
-													webDir, 
-													parameters.containsKey("-generateModuleSchema"));
+													webDir);
 				}
+				System.exit(0);
 			}
 			catch (ConsoleParametersProcessingException e)
 			{
@@ -88,6 +88,7 @@ public class SchemaGenerator
 		{
 			e.printStackTrace();
 		}
+		System.exit(1);
 	}
 
 	/**
@@ -99,7 +100,6 @@ public class SchemaGenerator
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("projectBaseDir", "The project folder."));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("outputDir", "The folder where the files will be created."));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("webDir", "The project web root folder.", false, false));
-		parametersProcessor.addSupportedParameter(new ConsoleParameter("-generateModuleSchema", "Generates also the modules.xsd file.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-help", "Display the usage screen.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-h", "Display the usage screen.", false, true));
 		return parametersProcessor;

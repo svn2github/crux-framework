@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.utils.FileUtils;
+import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
 import org.cruxframework.crux.tools.schema.SchemaGenerator;
 
@@ -112,7 +113,35 @@ public abstract class AbstractLayoutProjectGenerator implements LayoutProjectGen
 	 */
 	public void createXSDs()
     {
-		SchemaGenerator.generateSchemas(options.getProjectDir(), new File(options.getProjectDir(),"xsd"), null, false);
+		try
+        {
+	        StringBuilder classpath = new StringBuilder(".");
+	        
+	        String projectDir = options.getProjectDir().getCanonicalPath();
+	        
+	        for (String jar : listJars(getWebInfLibDir()))
+	        {
+	        	classpath.append(File.pathSeparator+projectDir+"/war/WEB-INF/lib/" + jar);
+	        }
+	        
+	        for (String jar : listJars(getBuildLibDir()))
+	        {
+	        	classpath.append(File.pathSeparator+projectDir+"/build/lib/" + jar);
+	        }
+
+	        ProcessBuilder builder = new ProcessBuilder("java", "-cp", classpath.toString(), 
+	        		SchemaGenerator.class.getCanonicalName(), projectDir,  new File(options.getProjectDir(),"xsd").getCanonicalPath());
+
+	        builder.redirectErrorStream(true);
+	        Process process = builder.start();
+	        InputStream processStream = process.getInputStream();
+        	System.out.println(StreamUtils.readAsUTF8(processStream));
+	        process.waitFor();
+        }
+        catch (Exception e)
+        {
+        	throw new RuntimeException("Error creating XSD files",e);
+        }
     }
 
 	/**
