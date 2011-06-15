@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 
 import org.cruxframework.crux.gadget.client.features.MiniMessageFeature;
 import org.cruxframework.crux.gadget.client.features.PubsubFeature;
+import org.cruxframework.crux.gadget.client.features.TabsFeature;
 
 import com.google.gwt.gadgets.client.AdsFeature;
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
@@ -64,6 +65,7 @@ public interface GadgetFeature
 		rpc("rpc", RpcFeature.class),
 		setPrefs("setprefs", SetPrefsFeature.class),
 		setTitle("settitle", SetTitleFeature.class),
+		tabs("tabs", TabsFeature.class),
 		views("views", ViewFeature.class);
 		
 		String featureName;
@@ -199,6 +201,18 @@ public interface GadgetFeature
 		 * @return SetTitleFeature
 		 */
 		SetTitleFeature getSetTitleFeature();
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.tabs)
+	})
+	public interface NeedsTabsFeature
+	{
+		/**
+		 * Returns the TabsFeature.
+		 * @return TabsFeature
+		 */
+		TabsFeature getTabsFeature();
 	}
 
 	@NeedsFeatures({

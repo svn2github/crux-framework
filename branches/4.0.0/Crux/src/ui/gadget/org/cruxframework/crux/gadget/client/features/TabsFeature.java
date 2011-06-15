@@ -17,40 +17,50 @@ package org.cruxframework.crux.gadget.client.features;
 
 import com.google.gwt.user.client.Element;
 
-
 /**
- * Provides access to the minimessage feature.
+ * Provides access to the tabs feature.
+ * 
+ * @author Thiago da Rosa de Bustamante
  */
-public interface MiniMessageFeature 
+public interface TabsFeature
 {
 	/**
-	 * Handler called whe a minimessage is dismessed 
+	 * Handler called when a tab is selected
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
 	interface Callback
 	{
-		void onMessageDismissed();
+		void onTabSelected(String tabId);
 	}
 	
 	/**
-	 * Create a new factory for miniMessages
+	 * Create a new TabSet
 	 * @return
 	 */
-	MiniMessageFactory getMessageFactory();
+	Tabs getTabs();
 
 	/**
-	 * Create a new factory for miniMessages
+	 * Create a new TabSet
 	 * @param moduleId
 	 * @return
 	 */
-	MiniMessageFactory getMessageFactory(String moduleId);
+	Tabs getTabs(String moduleId);
 
 	/**
-	 * Create a new factory for miniMessages
+	 * Create a new TabSet
 	 * @param moduleId
+	 * @param selectedTab
+	 * @return
+	 */
+	Tabs getTabs(String moduleId, String selectedTab);
+
+	/**
+	 * Create a new TabSet
+	 * @param moduleId
+	 * @param selectedTab
 	 * @param htmlContainer
 	 * @return
 	 */
-	MiniMessageFactory getMessageFactory(String moduleId, Element htmlContainer);
+	Tabs getTabs(String moduleId, String selectedTab, Element htmlContainer);
 }

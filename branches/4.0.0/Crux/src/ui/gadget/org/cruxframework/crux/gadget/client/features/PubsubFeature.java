@@ -18,6 +18,7 @@ package org.cruxframework.crux.gadget.client.features;
 
 /**
  * Provides access to the pubsub feature.
+ * @author Thiago da Rosa de Bustamante
  */
 public interface PubsubFeature 
 {
