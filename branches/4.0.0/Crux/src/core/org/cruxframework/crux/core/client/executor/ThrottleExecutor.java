@@ -6,9 +6,10 @@ import com.google.gwt.user.client.Timer;
 
 
 /**
- * Resize Handler que executa no maximo a cada meio segundo.
- * Proporciona um redimensionamento mais suave dos componentes 
- * graficos.
+ * Throttles a chain of incoming tasks in order to
+ * execute only some of them, ensuring that the
+ * max number of tasks executed per second is fixed.
+ *   
  */
 public abstract class ThrottleExecutor
 {
