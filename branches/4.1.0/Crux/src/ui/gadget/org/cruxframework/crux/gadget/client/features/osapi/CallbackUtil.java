@@ -33,7 +33,7 @@ class CallbackUtil {
   static final native <T extends JavaScriptObject> JavaScriptObject getJsFunction(
       Callback<T> callback) /*-{
     return function(object) {
-      @com.google.gwt.gadgets.client.osapi.CallbackUtil::onDone(Lcom/google/gwt/gadgets/client/osapi/Callback;Lcom/google/gwt/core/client/JavaScriptObject;)(callback, object);
+      @org.cruxframework.crux.gadget.client.features.osapi.CallbackUtil::onDone(Lorg/cruxframework/crux/gadget/client/features/osapi/Callback;Lcom/google/gwt/core/client/JavaScriptObject;)(callback, object);
     };
   }-*/;
 

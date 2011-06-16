@@ -133,13 +133,13 @@ public interface GadgetFeature
 	@NeedsFeatures({
 		@Feature(ContainerFeature.minimessage)
 	})
-	public interface NeedsMinimessageFeature
+	public interface NeedsMiniMessageFeature
 	{
 		/**
 		 * Returns the MiniMessageFeature. 
 		 * @return MiniMessageFeature
 		 */
-		MiniMessageFeature getMinimessageFeature();
+		MiniMessageFeature getMiniMessageFeature();
 	}
 	
 	

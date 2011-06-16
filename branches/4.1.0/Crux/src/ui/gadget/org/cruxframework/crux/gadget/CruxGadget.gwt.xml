@@ -2,6 +2,7 @@
 	<!-- Inherit the Crux Core and GWT Gadget stuff  .          -->
 	<inherits name='org.cruxframework.crux.core.Crux'/>
 	<inherits name='com.google.gwt.ajaxloader.AjaxLoader' />
+	<inherits name='com.google.gwt.gadgets.Gadgets' />
 	
 	<!-- Automatically write Gadget property accessor implementations -->
 	<generate-with class="org.cruxframework.crux.gadget.rebind.gwt.UserPreferencesGenerator">
