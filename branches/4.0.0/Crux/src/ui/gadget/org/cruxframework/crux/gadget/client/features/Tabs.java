@@ -114,7 +114,7 @@ public class Tabs extends JavaScriptObject
 	 * 
 	 * @param align
 	 */
-	public void alignTabs(Align align)
+	public final void alignTabs(Align align)
 	{
 		alignTabs(align, "3px");
 	}
@@ -125,7 +125,7 @@ public class Tabs extends JavaScriptObject
 	 * @param align
 	 * @param offset
 	 */
-	public void alignTabs(Align align, String offset)
+	public final void alignTabs(Align align, String offset)
 	{
 		alignTabs(align.toString(), offset);
 	}

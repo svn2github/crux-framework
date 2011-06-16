@@ -49,7 +49,7 @@ public class Person extends JavaScriptObject {
    * @return The name of this Person, suitable for display to end-users.
    */
   public final native String getDisplayName() /*-{
-    return (this[@com.google.gwt.gadgets.client.osapi.people.Person::DISPLAY_NAME] == null) ? null : this[@com.google.gwt.gadgets.client.osapi.people.Person::DISPLAY_NAME];
+    return (this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::DISPLAY_NAME] == null) ? null : this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::DISPLAY_NAME];
   }-*/;
 
   /**
@@ -59,7 +59,7 @@ public class Person extends JavaScriptObject {
    * @return A string Id that can be permanently associated with this person.
    */
   public final native String getId() /*-{
-    return (this[@com.google.gwt.gadgets.client.osapi.people.Person::ID] == null) ? null : this[@com.google.gwt.gadgets.client.osapi.people.Person::ID];
+    return (this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::ID] == null) ? null : this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::ID];
   }-*/;
 
   /**
@@ -69,6 +69,6 @@ public class Person extends JavaScriptObject {
    * @return Person's photo thumbnail URL, specified as a string.
    */
   public final native String getThumbnailUrl() /*-{
-    return (this[@com.google.gwt.gadgets.client.osapi.people.Person::THUMBNAIL_URL] == null) ? null : this[@com.google.gwt.gadgets.client.osapi.people.Person::THUMBNAIL_URL];
+    return (this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::THUMBNAIL_URL] == null) ? null : this[@org.cruxframework.crux.gadget.client.features.osapi.people.Person::THUMBNAIL_URL];
   }-*/;
 }

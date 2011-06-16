@@ -45,7 +45,7 @@ public interface UserPreferences {
    * 
    * @param <T> the type of data encapsulated
    */
-  @PreferenceGeneratorName("com.google.gwt.gadgets.rebind.DefaultPreferenceGenerator")
+  @PreferenceGeneratorName("org.cruxframework.crux.gadget.rebind.gwt.DefaultPreferenceGenerator")
   public abstract class Preference<T> {
     /**
      * Access to the low-level preferences API. Access to this object should

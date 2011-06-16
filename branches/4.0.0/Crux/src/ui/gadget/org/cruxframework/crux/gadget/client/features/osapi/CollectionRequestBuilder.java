@@ -98,7 +98,7 @@ public abstract class CollectionRequestBuilder<T extends CollectionRequestBuilde
    */
   public final native T setSorting(String field, SortOrder order) /*-{
     this.sortBy = field;
-    this.sortOrder = order.@com.google.gwt.gadgets.client.osapi.SortOrder::getOrder()();
+    this.sortOrder = order.@org.cruxframework.crux.gadget.client.features.osapi.SortOrder::getOrder()();
     return this;
   }-*/;
 

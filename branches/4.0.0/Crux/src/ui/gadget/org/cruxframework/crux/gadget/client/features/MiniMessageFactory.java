@@ -38,7 +38,7 @@ public class MiniMessageFactory extends JavaScriptObject
 	    if (callback != null)
 	    {
 	    	miniMessage.element = this.createDismissibleMessage(message, function(){
-	    		callback.@org.cruxframework.crux.gadget.client.features.MinimessageFeature.Callback::onMessageDismissed()();
+	    		callback.@org.cruxframework.crux.gadget.client.features.MiniMessageFeature.Callback::onMessageDismissed()();
 	    	});
 	    }
 	    else
@@ -74,7 +74,7 @@ public class MiniMessageFactory extends JavaScriptObject
 	    if (callback != null)
 	    {
 	    	miniMessage.element = this.createTimerMessage(message, seconds, function(){
-	    		callback.@org.cruxframework.crux.gadget.client.features.MinimessageFeature.Callback::onMessageDismissed()();
+	    		callback.@org.cruxframework.crux.gadget.client.features.MiniMessageFeature.Callback::onMessageDismissed()();
 	    	});
 	    }
 	    else
