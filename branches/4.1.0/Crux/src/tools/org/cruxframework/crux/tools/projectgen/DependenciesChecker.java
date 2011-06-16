@@ -167,7 +167,19 @@ public class DependenciesChecker
 		if (!warFile.exists())
 		{
 			getOptionalDependencies();
-			if (downloadOptionalDependenciesIfNeeded)
+			if (shindigFolder != null && shindigFolder.length() > 0)
+			{
+		    	try
+	            {
+		    	    System.out.println("Copying file: shindig.war");
+		            FileUtils.copyFilesFromDir(new File(shindigFolder), warFile, null, null);
+	            }
+	            catch (IOException e)
+	            {
+	            	throw new RuntimeException("Error copying shindig from shindigFolder.", e);
+	            }
+			}
+			else if (downloadOptionalDependenciesIfNeeded)
 			{
 				downloadDependency(new Dependency("zipedShindig.war", "./shindig", REPO_SHINDIG_WAR, SHINDIG_TOTAL_BYTES));
 				try
