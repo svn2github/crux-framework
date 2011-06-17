@@ -35,7 +35,7 @@ public class DynamicHeightFeatureImpl implements DynamicHeightFeature {
 	 }-*/;
 
     public native ViewPortDimensions getViewportDimensions()/*-{
-        $wnd.gadgets.window.getViewportDimensions();
+       return $wnd.gadgets.window.getViewportDimensions();
 	}-*/;
 
 }
