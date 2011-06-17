@@ -811,7 +811,7 @@ class HTMLBuilder
 		{
 			Element widgetHolder;
 			boolean hasSiblings = hasSiblingElements(cruxPageElement);
-			if (hasSiblings)
+			if (hasSiblings || isCruxWidgetParent(htmlElement))
 			{
 				widgetHolder = htmlDocument.createElement("div");
 				htmlElement.appendChild(widgetHolder);
@@ -830,6 +830,17 @@ class HTMLBuilder
 		}
     }
 
+	/**
+	 * 
+	 * @param htmlElement
+	 * @return
+	 */
+	private boolean isCruxWidgetParent(Element htmlElement)
+    {
+	    String id = htmlElement.getAttribute("id");
+	    return (id != null && id.startsWith("_crux_"));
+    }
+	
 	/**
 	 * 
 	 * @param cruxPageElement
