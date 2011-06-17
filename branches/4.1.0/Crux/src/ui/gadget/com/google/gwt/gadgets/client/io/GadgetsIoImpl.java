@@ -44,7 +44,7 @@ class GadgetsIoImpl implements GadgetsIo {
 
 
   public native String getProxyUrl(String url, int refreshIntervalSeconds) /*-{
-    return $wnd.gadgets.io.getProxyUrl(url, refreshInterval);
+    return $wnd.gadgets.io.getProxyUrl(url, {refreshInterval:refreshIntervalSeconds});
   }-*/;
 
 

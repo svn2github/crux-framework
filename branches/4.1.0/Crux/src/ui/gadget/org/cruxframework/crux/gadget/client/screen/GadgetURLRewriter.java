@@ -17,6 +17,7 @@ package org.cruxframework.crux.gadget.client.screen;
 
 import org.cruxframework.crux.core.client.screen.URLRewriter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.gadgets.client.io.IoProvider;
 import com.google.gwt.user.client.Window;
 
@@ -26,6 +27,17 @@ import com.google.gwt.user.client.Window;
  */
 public class GadgetURLRewriter extends URLRewriter
 {
+	private int cachePeriod = 0;
+	private GadgetConstants constants = GWT.create(GadgetConstants.class);
+	
+	/**
+	 * 
+	 */
+	public GadgetURLRewriter()
+    {
+	    cachePeriod = constants.cachePeriod();
+    }
+	
 	@Override
 	public String rewrite(String url)
 	{
@@ -56,9 +68,25 @@ public class GadgetURLRewriter extends URLRewriter
 	    	}
 	    	urlRewrite = urlGadget+"/"+urlRewrite;
 	    }
+	    
+	    if (isCacheable(urlRewrite))
+	    {
+		    return IoProvider.get().getProxyUrl(urlRewrite, cachePeriod);
+	    }
+	    
 	    return IoProvider.get().getProxyUrl(urlRewrite);
 	}
 	
+	/**
+	 * 
+	 * @param urlRewrite
+	 * @return
+	 */
+	private boolean isCacheable(String urlRewrite)
+    {
+	    return urlRewrite.contains(".cache.");
+    }
+
 	/**
 	 * 
 	 * @return

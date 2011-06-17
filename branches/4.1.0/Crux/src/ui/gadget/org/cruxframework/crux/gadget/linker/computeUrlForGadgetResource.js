@@ -1,7 +1,7 @@
 function computeUrlForResource(resource) {
   var cacheSpec;
   if (resource.match(/\.cache\.(js|html)$/)) {
-        // Allow GWT resources marked named as cachabele to be cached for one year.
+        // Allow GWT resources marked named as cacheable to be cached for one year.
         cacheSpec = {refreshInterval:31536000};
   }
   /* Prepend anything that is not a fully qualified URL with the module base URL */
