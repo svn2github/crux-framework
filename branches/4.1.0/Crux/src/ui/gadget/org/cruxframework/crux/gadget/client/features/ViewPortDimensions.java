@@ -25,11 +25,11 @@ public class ViewPortDimensions extends JavaScriptObject
 {
 	protected ViewPortDimensions(){}
 	
-	public final native String getWidth() /*-{
+	public final native int getWidth() /*-{
 		return this.width;
 	}-*/;
 
-	public final native String getHeight() /*-{
+	public final native int getHeight() /*-{
 		return this.height;
 	}-*/;
 }
