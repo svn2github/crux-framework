@@ -21,10 +21,12 @@ package org.cruxframework.crux.gadget.client;
 import org.cruxframework.crux.gadget.client.features.AdsFeature;
 import org.cruxframework.crux.gadget.client.features.DynamicHeightFeature;
 import org.cruxframework.crux.gadget.client.features.GoogleAnalyticsFeature;
+import org.cruxframework.crux.gadget.client.features.MiniMessageFeature;
 import org.cruxframework.crux.gadget.client.features.PubsubFeature;
 import org.cruxframework.crux.gadget.client.features.RpcFeature;
 import org.cruxframework.crux.gadget.client.features.SetPrefsFeature;
 import org.cruxframework.crux.gadget.client.features.SetTitleFeature;
+import org.cruxframework.crux.gadget.client.features.TabsFeature;
 import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.features.ViewFeature;
 import org.cruxframework.crux.gadget.client.features.osapi.OsapiFeature;
@@ -54,6 +56,12 @@ public interface Gadget
 	 * @return GoogleAnalyticsFeature
 	 */
 	GoogleAnalyticsFeature getGoogleAnalyticsFeature();
+
+	/**
+	 * Returns the MiniMessageFeature. Your class must implement NeedsMiniMessageFeature to retrieve this value. If does not, null will be returned
+	 * @return MiniMessageFeature
+	 */
+	MiniMessageFeature getMiniMessageFeature();	
 
 	/**
 	 * Returns the OsapiFeature. Your class must implement NeedsOsapiFeature to retrieve this value. If does not, null will be returned
@@ -89,6 +97,12 @@ public interface Gadget
 	 * @return the UserPreferences object
 	 */
 	UserPreferences getUserPreferences();
+
+	/**
+	 * Returns the TabsFeature. Your class must implement NeedsTabsFeature to retrieve this value. If does not, null will be returned
+	 * @return TabsFeature
+	 */
+	TabsFeature getTabsFeature();
 
 	/**
 	 * Returns the ViewFeature. Your class must implement NeedsViews to retrieve this value. If does not, null will be returned
