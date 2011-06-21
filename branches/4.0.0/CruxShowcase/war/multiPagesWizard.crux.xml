@@ -47,8 +47,8 @@
 			<s:exampleInfo>
 				we show a multi-pages wizard. Take a look at the source code and note 
 				that each step has its own HTML page and its own controller, making the 
-				code more modular and easy to read.<br/>
-				In this example we are using various features offered by wizards, like 
+				code more modular and easy to read. Here we are using various features 
+				offered by wizards, like 
 				enabling and disabling transition commands, validating forms before 
 				transitions and saving and reading data from wizard's context.	
 			</s:exampleInfo>

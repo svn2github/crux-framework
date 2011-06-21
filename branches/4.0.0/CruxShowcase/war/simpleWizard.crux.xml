@@ -118,8 +118,8 @@
 			<s:exampleInfo>
 				we show a single-page wizard. Take a look at the source code and note 
 				that all steps are contained in the same document. It means you can 
-				directly access and manipulate any widget from any step want. <br/>
-				In this example we are using various features offered by wizards, like 
+				directly access and manipulate any widget from any step want. Here we 
+				are using various features offered by wizards, like 
 				enabling and disabling transition commands, validating forms before 
 				transitions and saving and reading data from wizard's context.				
 			</s:exampleInfo>

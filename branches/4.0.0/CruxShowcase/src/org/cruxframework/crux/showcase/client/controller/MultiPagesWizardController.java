@@ -16,7 +16,7 @@ import org.cruxframework.crux.widgets.client.wizard.Wizard;
 
 
 @Controller("multiWizardController")
-public class MultiWizardController{
+public class MultiPagesWizardController {
 	
 	@Create
 	protected MultiPagesWizardPersonalInfoStepControllerCrossDoc personalInfoStep;
