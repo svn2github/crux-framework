@@ -4,6 +4,7 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar" sourcepath="build/lib/gwt-user.jar"/>
 	<classpathentry kind="lib" path="build/lib/gwt-user.jar"/>
 	<classpathentry kind="lib" path="build/lib/gwt-dev.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwttheme.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet-deps.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/crux-runtime-deps.jar"/>
