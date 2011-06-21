@@ -7,8 +7,8 @@ import org.cruxframework.crux.widgets.client.wizard.EnterEvent;
 import org.cruxframework.crux.widgets.client.wizard.WizardControlBar;
 
 
-@Controller("wizardStep1Controller")
-public class WizardStep1Controller {
+@Controller("multiPagesWizardWelcomeStepController")
+public class MultiPagesWizardWelcomeStepController {
 	
 	@Expose
 	public void onEnter(EnterEvent<Person> event){

@@ -120,10 +120,6 @@ TEXTAREA
 	height: 100%;
 	position: absolute;
 }
-.FirstLeftCustomCommand
-{
-	margin-right: 25px 
-}
 .FormLabel
 {
 	font-weight: bold;
@@ -182,8 +178,8 @@ TEXTAREA
 {
 	border: solid 1px #5d5d5d !important;
 	border-top: solid 1px #747474 !important;
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#737373),color-stop(0.99,#4e4e4e)) !important;
-	background-image: -moz-linear-gradient(top,#737373,#4e4e4e) !important;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#A0A0A0),color-stop(0.99,#4e4e4e)) !important;
+	background-image: -moz-linear-gradient(top,#A0A0A0,#4e4e4e) !important;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(220,220,220,0.15) !important;
 	-moz-box-shadow:0px 0px 2px 2px rgba(220,220,220,0.15) !important;
 }
@@ -198,8 +194,8 @@ TEXTAREA
 {
 	border: solid 1px #5d5d5d !important;
 	border-top: solid 1px #747474 !important;
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#737373),color-stop(0.99,#4e4e4e)) !important;
-	background-image: -moz-linear-gradient(top,#737373,#4e4e4e) !important;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#A0A0A0),color-stop(0.99,#4e4e4e)) !important;
+	background-image: -moz-linear-gradient(top,#A0A0A0,#4e4e4e) !important;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(220,220,220,0.15) !important;
 	-moz-box-shadow:0px 0px 2px 2px rgba(220,220,220,0.15) !important;
 }
@@ -213,6 +209,13 @@ TEXTAREA
 	border: solid 1px #BBBBBB !important;
 }
 
+/***********************************
+  Elements with right-side spacing
+************************************/
+.RightGap, .RightGapCSS3
+{
+	margin-right: 25px 
+}
 
 
 /********************

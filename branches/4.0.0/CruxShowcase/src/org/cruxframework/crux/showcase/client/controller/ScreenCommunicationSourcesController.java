@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.cruxframework.crux.core.client.controller.Controller;
 
 @Controller("screenCommunicationSourcesController")
-public class ScreenCommunicationSourcesController extends BaseSourcesController implements MaskedLabelSourcesControllerCrossDoc {
+public class ScreenCommunicationSourcesController extends BaseSourcesController implements ScreenCommunicationSourcesControllerCrossDoc {
 
 	/**
 	 * @see org.cruxframework.crux.showcase.client.controller.BaseSourcesController#getAdditionalSources()
