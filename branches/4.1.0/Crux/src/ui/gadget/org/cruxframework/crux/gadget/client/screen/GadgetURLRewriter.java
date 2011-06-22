@@ -105,11 +105,6 @@ public class GadgetURLRewriter extends URLRewriter
     		{
     			urlGadget = urlGadget.substring(0, index);
     		}
-    		index = urlGadget.lastIndexOf('/');
-    		if (index > 0)
-    		{
-    			urlGadget = urlGadget.substring(0, index);
-    		}
     	}
     	return urlGadget;
 	}
