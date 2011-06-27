@@ -29,9 +29,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  */
 public class GadgetView extends HTMLPanel
 {
-	public static enum View{canvas, home, noViews, profile}
-
-	private View view = View.noViews;
+	private String view;
 	
 	private static Gadget gadget = null;
 	
@@ -71,7 +69,7 @@ public class GadgetView extends HTMLPanel
 	/**
 	 * @return
 	 */
-	public View getView()
+	public String getView()
 	{
 		return view;
 	}
@@ -79,7 +77,7 @@ public class GadgetView extends HTMLPanel
 	/**
 	 * @param view
 	 */
-	public void setView(View view)
+	public void setView(String view)
 	{
 		this.view = view;
 	}
