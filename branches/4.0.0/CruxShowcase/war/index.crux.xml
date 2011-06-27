@@ -50,7 +50,7 @@
 					</b:cell>
 				</b:dockPanel>
 			</b:cell>
-			<b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
+			<b:cell direction="center" verticalAlignment="top" horizontalAlignment="center" height="100%">
 				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="0">
 					<b:cell direction="west" width="13" height="100%">
 						<b:simplePanel id="leftBg" width="13" height="100%" styleName="MainLeftBorder">

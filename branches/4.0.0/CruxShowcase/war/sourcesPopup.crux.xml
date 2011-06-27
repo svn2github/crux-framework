@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="style/css/standard.css" />
 	</head>
 
-	<body>
+	<body style="overflow:hidden; margin:0px; padding:0px">
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
