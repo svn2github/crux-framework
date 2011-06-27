@@ -74,10 +74,16 @@ public class SimpleWizardController {
 		}
 		
 		else {
+			
+			String name = screen.getName().getValue();
+			Long phone = (Long) screen.getPhone().getUnformattedValue();
+			Date birth =  (Date) screen.getDateOfBirth().getUnformattedValue();
+			
 			Person person = new Person();
-			person.setName(screen.getName().getValue());
-			person.setPhone((String) screen.getPhone().getUnformattedValue());
-			person.setDateOfBirth((Date) screen.getDateOfBirth().getUnformattedValue());
+			person.setName(name);
+			person.setPhone(phone != null ? phone.toString() : null);
+			person.setDateOfBirth(birth);
+			
 			event.getWizardAccessor().updateData(person);
 		}
 	}
