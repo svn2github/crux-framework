@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -27,6 +28,7 @@ import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import org.cruxframework.crux.gadget.client.meta.GadgetFeature.WantsFeatures;
 import org.cruxframework.crux.gadget.linker.GadgetManifestGenerator;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
 import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
@@ -71,21 +73,28 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
     }
 	
+	/**
+	 * @param srcWriter
+	 */
+	private void generateOptionalFeatureInitialization(SourceWriter srcWriter)
+	{
+		generateOptionalFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
+	}
 
 
 	/**
 	 * @param srcWriter
 	 */
-	private void generateFeatureInitialization(SourceWriter srcWriter)
+	private void generateRequiredFeatureInitialization(SourceWriter srcWriter)
 	{
-		generateFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
+		generateRequiredFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
 	}
 
 	/**
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	private void generateFeaturesInitialization(SourceWriter srcWriter, Class<?> moduleMetaClass, Set<String> added)
+	private void generateRequiredFeaturesInitialization(SourceWriter srcWriter, Class<?> moduleMetaClass, Set<String> added)
 	{
 		NeedsFeatures needsFeatures = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		if (needsFeatures != null)
@@ -109,10 +118,42 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		{
 			for (Class<?> interfaceType : interfaces)
             {
-				generateFeaturesInitialization(srcWriter, interfaceType, added);
+				generateRequiredFeaturesInitialization(srcWriter, interfaceType, added);
             }
 		}
+	}
+
+	/**
+	 * @param srcWriter
+	 * @param moduleMetaClass
+	 */
+	private void generateOptionalFeaturesInitialization(SourceWriter srcWriter, Class<?> moduleMetaClass, Set<String> added)
+	{
+		WantsFeatures needsFeatures = moduleMetaClass.getAnnotation(WantsFeatures.class);
+		if (needsFeatures != null)
+		{
+			Feature[] features = needsFeatures.value();
+			for (Feature feature : features)
+			{
+				if (!added.contains(feature.value().getFeatureName()))
+				{
+					if (feature.value().getFeatureClass() != null)
+					{
+						initializeOptionalFeature(srcWriter, feature.value());
+					}
+					added.add(feature.value().getFeatureName());
+				}
+			}
+		}
 		
+		Class<?>[] interfaces = moduleMetaClass.getInterfaces();
+		if (interfaces != null)
+		{
+			for (Class<?> interfaceType : interfaces)
+            {
+				generateOptionalFeaturesInitialization(srcWriter, interfaceType, added);
+            }
+		}
 	}
 
 	/**
@@ -125,7 +166,8 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		srcWriter.indent();
 		srcWriter.println("this.userPreferences = GWT.create("+GadgetUtils.getUserPrefsType(logger, moduleMetaClass).getCanonicalName()+".class);");
 		
-		generateFeatureInitialization(srcWriter);
+		generateRequiredFeatureInitialization(srcWriter);
+		generateOptionalFeatureInitialization(srcWriter);
 		
 		srcWriter.outdent();
 		srcWriter.println("}");
@@ -173,6 +215,12 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println("}");
 			}
 		}
+		
+		srcWriter.println("public native boolean hasFeature(String featureName)/*-{");
+		srcWriter.indent();
+		srcWriter.println("return $wnd.gadgets.util.hasFeature(featureName);");
+		srcWriter.outdent();
+		srcWriter.println("}-*/;");
 	}
 
 	/**
@@ -205,6 +253,20 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private void initializeFeature(SourceWriter srcWriter, ContainerFeature feature)
 	{
 		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
+		neededFeatures.add(feature.getFeatureName());
+	}
+	
+	/**
+	 * @param srcWriter
+	 * @param feature
+	 */
+	private void initializeOptionalFeature(SourceWriter srcWriter, ContainerFeature feature)
+	{
+		srcWriter.println("if (hasFeature("+EscapeUtils.quote(feature.getFeatureName())+")){");
+		srcWriter.indent();
+		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
+		srcWriter.outdent();
+		srcWriter.println("}");
 		neededFeatures.add(feature.getFeatureName());
 	}
 }

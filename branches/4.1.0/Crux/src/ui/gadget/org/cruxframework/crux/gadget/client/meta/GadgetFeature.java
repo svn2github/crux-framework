@@ -49,6 +49,13 @@ public interface GadgetFeature
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
+	public @interface WantsFeatures
+	{
+		Feature[] value();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
 	public @interface Feature
 	{
 		ContainerFeature value();
@@ -273,4 +280,185 @@ public interface GadgetFeature
 		 */
 		ViewFeature getViewFeature();	
 	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.ads)
+	})
+	public interface WantsAdsFeature
+	{
+		/**
+		 * Returns the AdsFeature. 
+		 * @return AdsFeature
+		 */
+		AdsFeature getAdsFeature();		
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.dynamicHeight)
+	})
+	public interface WantsDynamicHeightFeature
+	{
+		/**
+		 * Returns the DynamicHeightFeature. 
+		 * @return DynamicHeightFeature
+		 */
+		DynamicHeightFeature getDynamicHeightFeature();	
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.googleAnalytics)
+	})
+	public interface WantsGoogleAnalyticsFeature
+	{
+		/**
+		 * Returns the GoogleAnalyticsFeature. 
+		 * @return GoogleAnalyticsFeature
+		 */
+		GoogleAnalyticsFeature getGoogleAnalyticsFeature();
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.lockedDomain)
+	})
+	public interface WantsLockedDomain
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.minimessage)
+	})
+	public interface WantsMiniMessageFeature
+	{
+		/**
+		 * Returns the MiniMessageFeature. 
+		 * @return MiniMessageFeature
+		 */
+		MiniMessageFeature getMiniMessageFeature();
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocial08)
+	})
+	public interface WantsOpenSocial08
+	{
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocial09)
+	})
+	public interface WantsOpenSocial09
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocial10)
+	})
+	public interface WantsOpenSocial10
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocial11)
+	})
+	public interface WantsOpenSocial11
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocialTemplates)
+	})
+	public interface WantsOpenSocialTemplates
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.opensocialData)
+	})
+	public interface WantsOpenSocialData
+	{
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.osapi)
+	})
+	public interface WantsOsapiFeature
+	{
+		/**
+		 * Returns the OsapiFeature. 
+		 * @return OsapiFeature
+		 */
+		OsapiFeature getOsapiFeature();
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.pubsub)
+	})
+	public interface WantsPubsubFeature
+	{
+		/**
+		 * Returns the PubsubFeature. 
+		 * @return PubsubFeature
+		 */
+		PubsubFeature getPubsubFeature();
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.rpc)
+	})
+	public interface WantsRpcFeature
+	{
+		/**
+		 * Returns the RpcFeature.
+		 * @return RpcFeature
+		 */
+		RpcFeature getRpcFeature();
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.setPrefs)
+	})
+	public interface WantsSetPrefsFeature
+	{
+		/**
+		 * Returns the SetPrefsFeature.
+		 * @return SetPrefsFeature
+		 */
+		SetPrefsFeature getSetPrefsFeature();
+	}
+	
+	@WantsFeatures({
+		@Feature(ContainerFeature.setTitle)
+	})
+	public interface WantsSetTitleFeature
+	{
+		/**
+		 * Returns the SetTitleFeature.
+		 * @return SetTitleFeature
+		 */
+		SetTitleFeature getSetTitleFeature();
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.tabs)
+	})
+	public interface WantsTabsFeature
+	{
+		/**
+		 * Returns the TabsFeature.
+		 * @return TabsFeature
+		 */
+		TabsFeature getTabsFeature();
+	}
+
+	@WantsFeatures({
+		@Feature(ContainerFeature.views)
+	})
+	public interface WantsViewFeature
+	{
+		/**
+		 * Returns the ViewFeature. 
+		 * @return ViewFeature
+		 */
+		ViewFeature getViewFeature();	
+	}	
 }

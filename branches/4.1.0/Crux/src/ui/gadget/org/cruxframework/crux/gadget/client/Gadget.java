@@ -109,4 +109,11 @@ public interface Gadget
 	 * @return ViewFeature
 	 */
 	ViewFeature getViewFeature();
+	
+	/**
+	 * 
+	 * @param feature
+	 * @return
+	 */
+	boolean hasFeature(String feature);
 }
