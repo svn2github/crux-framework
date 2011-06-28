@@ -429,7 +429,7 @@ public class GadgetManifestGenerator
 	 * @param screen
 	 * @return
 	 */
-	private List<Widget> getGadgetViewWidget(Screen screen)
+	public static List<Widget> getGadgetViewWidget(Screen screen)
     {
 		List<Widget> result = new ArrayList<Widget>();
 		
