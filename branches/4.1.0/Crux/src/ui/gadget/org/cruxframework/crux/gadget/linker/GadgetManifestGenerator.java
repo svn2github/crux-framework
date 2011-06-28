@@ -45,7 +45,6 @@ import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
-import org.cruxframework.crux.gadget.client.widget.GadgetView.View;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
 import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
 import org.cruxframework.crux.gadget.rebind.gwt.PreferenceGenerator;
@@ -409,7 +408,7 @@ public class GadgetManifestGenerator
 		content.setAttribute("type", "html");
 
 		String viewName = gadgetViewWidget.getMetadata().optString("view");
-		if (!StringUtils.isEmpty(viewName) && !viewName.equals(View.noViews.toString())) 
+		if (!StringUtils.isEmpty(viewName) && !viewName.equals("noViews")) 
 		{
 			content.setAttribute("view", viewName);
 			/*
@@ -430,7 +429,7 @@ public class GadgetManifestGenerator
 	 * @param screen
 	 * @return
 	 */
-	private List<Widget> getGadgetViewWidget(Screen screen)
+	public static List<Widget> getGadgetViewWidget(Screen screen)
     {
 		List<Widget> result = new ArrayList<Widget>();
 		

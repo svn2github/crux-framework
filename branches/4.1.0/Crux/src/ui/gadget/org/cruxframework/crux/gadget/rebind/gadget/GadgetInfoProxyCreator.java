@@ -75,7 +75,10 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			{
 				if (!added.contains(feature.value().getFeatureName()))
 				{
-					generateFeatureMethod(srcWriter, feature.value());
+					if (feature.value().getFeatureClass() != null)
+					{
+						generateFeatureMethod(srcWriter, feature.value());
+					}
 					added.add(feature.value().getFeatureName());
 				}
 			}

@@ -104,7 +104,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param sourceWriter
 	 * @param screens
 	 */
-	private void generateViewCreationForAllScreens(SourceWriter sourceWriter) 
+	protected void generateViewCreationForAllScreens(SourceWriter sourceWriter) 
 	{
 		List<Screen> screens = getScreens();
 		
@@ -148,7 +148,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param controller
 	 * @param controllerAnnot
 	 */
-	private void generateFragmentedViewFactoryCreation(SourceWriter sourceWriter)
+	protected void generateFragmentedViewFactoryCreation(SourceWriter sourceWriter)
     {
 		for (String screenFragment : fragmentedScreens.keySet())
         {

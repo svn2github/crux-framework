@@ -20,8 +20,8 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
-import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyTag;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -32,7 +32,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.gadget.client.widget.CruxGadgetView;
 import org.cruxframework.crux.gadget.client.widget.GadgetView;
-import org.cruxframework.crux.gadget.client.widget.GadgetView.View;
 import org.cruxframework.crux.gwt.rebind.AbstractHTMLPanelFactory;
 
 
@@ -42,7 +41,7 @@ import org.cruxframework.crux.gwt.rebind.AbstractHTMLPanelFactory;
  */
 @DeclarativeFactory(id="gadgetView", library="gadget", targetWidget=GadgetView.class, htmlContainer=true)
 @TagAttributes({
-	@TagAttribute(value="view", type=View.class, required=true)
+	@TagAttribute("view")
 })
 @TagChildren({
 	@TagChild(value=GadgetViewFactory.ContentProcessor.class, autoProcess=false)

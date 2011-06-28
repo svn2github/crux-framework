@@ -17,6 +17,11 @@
 	<define-linker name="gadget" class="org.cruxframework.crux.gadget.linker.GadgetLinker"/>
 	<add-linker name="gadget"/>
 
+	<!-- Specify the generator for registered widgets.     -->
+	<generate-with class="org.cruxframework.crux.gadget.rebind.GadgetViewFactoryGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ViewFactory" />
+	</generate-with>
+
 	<!-- Servlet used to handle RPC event calls.                -->
 	<servlet path="/crux.rpc" class="org.cruxframework.crux.gadget.server.dispatch.GadgetRemoteServiceServlet"/>
 

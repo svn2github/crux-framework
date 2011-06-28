@@ -66,7 +66,13 @@ public interface GadgetFeature
 		setPrefs("setprefs", SetPrefsFeature.class),
 		setTitle("settitle", SetTitleFeature.class),
 		tabs("tabs", TabsFeature.class),
-		views("views", ViewFeature.class);
+		views("views", ViewFeature.class),
+		opensocial08("opensocial-0.8", null),
+		opensocial09("opensocial-0.9", null),
+		opensocial10("opensocial-1.0", null),
+		opensocial11("opensocial-1.1", null),
+		opensocialData("opensocial-data", null),
+		opensocialTemplates("opensocial-templates", null);
 		
 		String featureName;
 		Class<?> featureClass;
@@ -142,7 +148,48 @@ public interface GadgetFeature
 		MiniMessageFeature getMiniMessageFeature();
 	}
 	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocial08)
+	})
+	public interface NeedsOpenSocial08
+	{
+	}
 	
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocial09)
+	})
+	public interface NeedsOpenSocial09
+	{
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocial10)
+	})
+	public interface NeedsOpenSocial10
+	{
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocial11)
+	})
+	public interface NeedsOpenSocial11
+	{
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocialTemplates)
+	})
+	public interface NeedsOpenSocialTemplates
+	{
+	}
+
+	@NeedsFeatures({
+		@Feature(ContainerFeature.opensocialData)
+	})
+	public interface NeedsOpenSocialData
+	{
+	}
+
 	@NeedsFeatures({
 		@Feature(ContainerFeature.osapi)
 	})
