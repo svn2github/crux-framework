@@ -25,8 +25,8 @@ import org.cruxframework.crux.gadget.client.features.UserPreferences;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import org.cruxframework.crux.gadget.client.meta.GadgetFeature.WantsFeatures;
 import org.cruxframework.crux.gadget.client.widget.GadgetView;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -58,14 +58,16 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 */
 	protected void generateFeatureMethods(SourceWriter srcWriter)
 	{
-		generateFeaturesMethods(srcWriter, baseIntf, new HashSet<String>());
+		HashSet<String> added = new HashSet<String>();
+		generateRequiredFeaturesMethods(srcWriter, baseIntf, added);
+		generateOptionalFeaturesMethods(srcWriter, baseIntf, added);
 	}
 
 	/**
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	protected void generateFeaturesMethods(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
+	protected void generateRequiredFeaturesMethods(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
 	{
 		NeedsFeatures needsFeatures = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		if (needsFeatures != null)
@@ -89,10 +91,42 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		{
 			for (JClassType interfaceType : interfaces)
             {
-				generateFeaturesMethods(srcWriter, interfaceType, added);
+				generateRequiredFeaturesMethods(srcWriter, interfaceType, added);
             }
 		}
+	}
+
+	/**
+	 * @param srcWriter
+	 * @param moduleMetaClass
+	 */
+	protected void generateOptionalFeaturesMethods(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
+	{
+		WantsFeatures needsFeatures = moduleMetaClass.getAnnotation(WantsFeatures.class);
+		if (needsFeatures != null)
+		{
+			Feature[] features = needsFeatures.value();
+			for (Feature feature : features)
+			{
+				if (!added.contains(feature.value().getFeatureName()))
+				{
+					if (feature.value().getFeatureClass() != null)
+					{
+						generateFeatureMethod(srcWriter, feature.value());
+					}
+					added.add(feature.value().getFeatureName());
+				}
+			}
+		}
 		
+		JClassType[] interfaces = moduleMetaClass.getImplementedInterfaces();
+		if (interfaces != null)
+		{
+			for (JClassType interfaceType : interfaces)
+            {
+				generateOptionalFeaturesMethods(srcWriter, interfaceType, added);
+            }
+		}
 	}
 
 	/**

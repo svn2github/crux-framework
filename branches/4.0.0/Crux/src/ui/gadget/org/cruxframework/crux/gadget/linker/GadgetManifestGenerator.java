@@ -43,6 +43,7 @@ import org.cruxframework.crux.gadget.client.features.UserPreferences.PreferenceA
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.ContainerFeature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.Feature;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
+import org.cruxframework.crux.gadget.client.meta.GadgetFeature.WantsFeatures;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
@@ -145,7 +146,9 @@ public class GadgetManifestGenerator
 	    
 	    generateModulePreferences(d, modulePrefs);
 		generateUserPreferences(d, module);
-		generateFeaturesList(d, modulePrefs, moduleMetaClass, new HashSet<String>());
+		HashSet<String> added = new HashSet<String>();
+		generateRequiredFeaturesList(d, modulePrefs, moduleMetaClass, added);
+		generateOptionalFeaturesList(d, modulePrefs, moduleMetaClass, added);
 		generateContentSections(d, module);
 		
 	    serializer.write(d, output);
@@ -284,7 +287,7 @@ public class GadgetManifestGenerator
 	 * @param d
 	 * @param modulePrefs
 	 */
-	private void generateFeaturesList(Document d, Element modulePrefs, Class<?> moduleMetaClass, Set<String> added)
+	private void generateRequiredFeaturesList(Document d, Element modulePrefs, Class<?> moduleMetaClass, Set<String> added)
     {
 		NeedsFeatures needsFeature = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		
@@ -312,7 +315,46 @@ public class GadgetManifestGenerator
 		{
 			for (Class<?> interfaceType : interfaces)
             {
-				generateFeaturesList(d, modulePrefs, interfaceType, added);
+				generateRequiredFeaturesList(d, modulePrefs, interfaceType, added);
+            }
+		}
+    }
+
+	/**
+	 * Add required features to the manifest
+	 * {@code <require feature="someFeature" />}
+	 * @param d
+	 * @param modulePrefs
+	 */
+	private void generateOptionalFeaturesList(Document d, Element modulePrefs, Class<?> moduleMetaClass, Set<String> added)
+    {
+		WantsFeatures needsFeature = moduleMetaClass.getAnnotation(WantsFeatures.class);
+		
+		if (needsFeature != null)
+		{
+			Feature[] features = needsFeature.value();
+			if (features != null)
+			{
+				for (Feature feature : features)
+                {
+	                ContainerFeature containerFeature = feature.value();
+	                if (!added.contains(containerFeature.getFeatureName()))
+	                {
+	                	Element require = (Element) modulePrefs.appendChild(d.createElement("Optional"));
+	                	require.setAttribute("feature", containerFeature.getFeatureName());
+
+	                	added.add(containerFeature.getFeatureName());
+	                }
+                }
+			}
+		}
+		
+		Class<?>[] interfaces = moduleMetaClass.getInterfaces();
+		if (interfaces != null)
+		{
+			for (Class<?> interfaceType : interfaces)
+            {
+				generateOptionalFeaturesList(d, modulePrefs, interfaceType, added);
             }
 		}
     }
