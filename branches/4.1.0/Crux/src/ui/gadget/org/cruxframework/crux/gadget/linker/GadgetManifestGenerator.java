@@ -453,14 +453,6 @@ public class GadgetManifestGenerator
 		if (!StringUtils.isEmpty(viewName) && !viewName.equals("noViews")) 
 		{
 			content.setAttribute("view", viewName);
-			/*
-			 * Add a piece of JS code that sets the name of this view. We use this to
-			 * select the right code. Thus we don't have to rely on the views feature
-			 * being present. We could use gadget.views.* functionality, but we
-			 * shouldn't enforce the "views" feature to be present, as it adds API
-			 * that the gadget doesn't use.
-			 */
-			out.write("<script>window.gadgetViewName = '"+ viewName.replace("\'", "\\\'") + "';</script>");
 		}
 
 	    content.appendChild(d.createCDATASection(out.toString() + "__BOOTSTRAP__"));

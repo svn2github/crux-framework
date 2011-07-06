@@ -8,10 +8,6 @@
 	<generate-with class="org.cruxframework.crux.gadget.rebind.gwt.UserPreferencesGenerator">
 	  <when-type-assignable class="org.cruxframework.crux.gadget.client.features.UserPreferences"/>
 	</generate-with>
-	<define-property name="gadget_view" values="home"/>
-	<property-provider name="gadget_view"><![CDATA[
-	    return $wnd.gadgetViewName || "home";
-	  ]]></property-provider>
 
 	<!-- Produces the final Gadget manifest -->
 	<define-linker name="gadget" class="org.cruxframework.crux.gadget.linker.GadgetLinker"/>
