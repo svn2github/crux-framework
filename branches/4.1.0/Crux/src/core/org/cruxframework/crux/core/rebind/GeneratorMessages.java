@@ -153,6 +153,12 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[generator 042] - The controller found for the interface {0} does not have the annotation @Controller.")
 	String crossDocumentInvalidController(String crossDocInterfaceName);
+	
+	@DefaultServerMessage("[screenWrapper 001] - The method {0} from ScreenWrapper {1} must have no parameters.")
+	String screenWrapperMethodWithParameters(String methodName, String screenWrpperName);
+	
+	@DefaultServerMessage("[screenWrapper 002] - The method {0} from ScreenWrapper {1} must return a subclass of com.google.gwt.user.client.ui.Widget.")
+	String screenWrapperMethodReturningNonWidget(String methodName, String screenWrpperName);
 
 	@DefaultServerMessage("[parameter 001] - Required parameter {0} is missing.")
 	String requiredParameterMissing(String name);
@@ -327,4 +333,5 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[attributeProcessor 001] - Error parsing attribute value [{0}], of widget [{2}], on screen [{1}].")
 	String rowCountProcessorErrorInvalidValue(String attributeValue, String id, String widgetId);
+
 }

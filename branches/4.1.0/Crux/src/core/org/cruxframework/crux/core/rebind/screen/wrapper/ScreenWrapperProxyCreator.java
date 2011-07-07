@@ -104,22 +104,33 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 		
 		JClassType returnTypeClass = returnType.isClass();
 		String name = method.getName();
-		if (widgetType.isAssignableFrom(returnTypeClass) && method.getParameters().length == 0)
+		if (widgetType.isAssignableFrom(returnTypeClass))
 		{
-			String widgetName;
-			if (returnTypeClass != null && name.startsWith("get"))
+			if(method.getParameters().length == 0)
 			{
-				widgetName = name.substring(3);
-				if (widgetName.length() > 0)
+				String widgetName;
+				if (returnTypeClass != null && name.startsWith("get"))
 				{
-					generateWrapperMethodForGetter(sourceWriter, returnType, name, widgetName);
+					widgetName = name.substring(3);
+					if (widgetName.length() > 0)
+					{
+						generateWrapperMethodForGetter(sourceWriter, returnType, name, widgetName);
+					}
+				}
+				else
+				{
+					widgetName = name;
+					generateWrapperMethod(sourceWriter, returnType, name, widgetName);
 				}
 			}
 			else
 			{
-				widgetName = name;
-				generateWrapperMethod(sourceWriter, returnType, name, widgetName);
+				throw new CruxGeneratorException(messages.screenWrapperMethodWithParameters(method.getName(), method.getEnclosingType().getQualifiedSourceName()));
 			}
+		}
+		else
+		{
+			throw new CruxGeneratorException(messages.screenWrapperMethodReturningNonWidget(method.getName(), method.getEnclosingType().getQualifiedSourceName()));
 		}
 	}
 
