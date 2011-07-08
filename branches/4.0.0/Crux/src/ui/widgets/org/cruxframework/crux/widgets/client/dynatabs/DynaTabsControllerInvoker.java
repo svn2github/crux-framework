@@ -16,10 +16,8 @@
 package org.cruxframework.crux.widgets.client.dynatabs;
 
 import org.cruxframework.crux.core.client.screen.JSWindow;
-import org.cruxframework.crux.core.client.screen.ModuleComunicationException;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -31,6 +29,8 @@ import com.google.gwt.user.client.DOM;
  */
 public class DynaTabsControllerInvoker 
 {
+	private static final String TAB_FRAME_SUFFIX = ".window";
+
 	/**
 	 * @param tabId the tab identifier
 	 * @return the tab window object
@@ -149,7 +149,7 @@ public class DynaTabsControllerInvoker
 	 */
 	protected static Element getTabInternalFrameElement(String tabId)
 	{
-		return DOM.getElementById(tabId + ".window");
+		return DOM.getElementById(tabId + TAB_FRAME_SUFFIX);
 	}
 	
 	protected static JSWindow retrieveTabWindow(Element tabIFrame)
@@ -176,7 +176,7 @@ public class DynaTabsControllerInvoker
 	 * @param string 
 	 * @return
 	 */
-	private static native Element getSiblingTabInternalFrameElement(String tabId)/*-{
+	public static native Element getSiblingTabInternalFrameElement(String tabId)/*-{
 		try
 		{
 			return $wnd.parent.document.getElementById(tabId + '.window');

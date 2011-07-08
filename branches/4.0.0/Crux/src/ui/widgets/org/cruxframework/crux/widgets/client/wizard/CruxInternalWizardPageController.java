@@ -566,6 +566,4 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 	private static native boolean existsAccessorFunction(JSWindow tabWindow)/*-{
 		return typeof tabWindow['_cruxCrossDocumentAccessor'] == 'function';
 	}-*/;
-	
-	
 }

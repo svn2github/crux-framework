@@ -59,7 +59,7 @@ public class FilterSuggestOracle extends SuggestOracle
 		{
 			for (FilterResult<?> result : results)
 			{
-				FilterSuggestion suggestion = new FilterSuggestion(result.getValue(), result.getLabel());
+				FilterSuggestion suggestion = new FilterSuggestion(result.getValue(), result.getLabel(), result.getShortLabel());
 				suggestions.add(suggestion);
 			}
 		}	

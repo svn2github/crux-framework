@@ -17,6 +17,8 @@ package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
+import org.cruxframework.crux.core.client.screen.JSWindow;
+
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -35,4 +37,5 @@ interface WizardProxy<T extends Serializable>
 	void updateData(T data);
     T readData();
     T getResource();
+	JSWindow getStepWindow(String stepId);
 }

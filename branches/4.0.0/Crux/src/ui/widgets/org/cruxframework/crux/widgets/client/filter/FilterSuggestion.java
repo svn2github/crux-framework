@@ -26,15 +26,17 @@ public class FilterSuggestion implements Suggestion
 {
 	private String label;
 	private Object value;
+	private String replacementString;
 
 	/**
 	 * @param value
 	 * @param label
 	 */
-	public FilterSuggestion(Object value, String label)
+	public FilterSuggestion(Object value, String label, String replacementString)
 	{
 		this.value = value;
 		this.label = label;
+		this.replacementString = replacementString;
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class FilterSuggestion implements Suggestion
 	 */
 	public String getReplacementString()
 	{
-		return label;
+		return replacementString;
 	}
 
 	/**

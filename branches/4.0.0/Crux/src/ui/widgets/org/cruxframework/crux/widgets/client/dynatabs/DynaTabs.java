@@ -27,7 +27,6 @@ import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
 
-
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.user.client.Command;
@@ -305,6 +304,16 @@ public class DynaTabs extends Composite
 	 */
 	void doCloseTab(String tabId)
 	{
+		try
+		{
+			Tab removed = getTab(tabId);
+			removed.changeURL("about:blank");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		int index = getTabIndex(tabId);
 		this.tabPanel.remove(index);
 		this.tabs.remove(tabId);
