@@ -278,7 +278,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			
 			if (data.isCloseable())
 			{
-				final Button focusPanel = new Button("Close");
+				final Button focusPanel = new Button(" ");
 				focusPanel.setStyleName("closeButton");
 				
 				focusPanel.addClickHandler(new ClickHandler()
