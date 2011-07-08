@@ -78,7 +78,7 @@
 			<s:exampleInfo>
 				we send a DTO named Person from the main screen to the internal frame. The serialization process is entirely
 				handled by Crux. Note that our Person DTO is annotated with @ValueObject that automatically links it to 
-				screens fields.   
+				screen fields.   
 			</s:exampleInfo>
 		</s:info>
 	</body>
