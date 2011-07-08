@@ -17,9 +17,9 @@
 
 		<center>
 		
-		<a:decoratedPanel id="borders">
+		<a:decoratedPanel id="borders" width="370">
 			<a:widget>
-				<b:horizontalPanel id="cells" spacing="10" style="margin:5px">
+				<b:horizontalPanel id="cells" spacing="5" style="margin:5px">
 					<b:label id="label" text="Type your name:"/>
 					<b:textBox id="name" />
 					<a:decoratedButton id="button" onClick="serverCommunicationController.callService" text="Say Hello!"/>

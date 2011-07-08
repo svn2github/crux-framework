@@ -20,9 +20,9 @@
 			<b:dockPanel id="centeringPanel" spacing="25">
 				<b:cell direction="west" horizontalAlignment="center" verticalAlignment="middle" >
 					<b:verticalPanel id="vPanelForm" spacing="10">
-						<a:decoratedPanel id="borders">
+						<a:decoratedPanel id="borders" width="350">
 							<a:widget>
-								<b:grid id="grid" cellSpacing="5">
+								<b:grid id="grid" cellSpacing="5" styleName="FormGrid">
 									<b:row>
 										<b:cell>
 											<b:text>Name:</b:text>
@@ -54,13 +54,13 @@
 					</b:verticalPanel>
 				</b:cell>
 				<b:cell direction="east" horizontalAlignment="center" verticalAlignment="middle">
-					<a:titlePanel id="bordersEast">
+					<a:titlePanel id="bordersEast" width="400">
 						<a:title>
 							<a:text>Internal Frame (horrible borders intentionally set)</a:text>
 						</a:title>
 						<a:body>
 							<a:widget>
-								<b:namedFrame id="frame" name="myFrame" url="innerFrame.html" width="350" height="150" style="margin:15px"/>
+								<b:namedFrame id="frame" name="myFrame" url="innerFrame.html" width="350" height="120" style="margin:15px"/>
 							</a:widget>
 						</a:body>
 					</a:titlePanel>

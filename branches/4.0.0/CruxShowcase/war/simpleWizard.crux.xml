@@ -17,9 +17,9 @@
 
 		<center>
 
-			<w:decoratedPanel id="border" >
+			<w:decoratedPanel id="border"  width="600">
 				<w:widget>
-					<w:wizard id="wizard" wizardContextObject="person" width="600" height="300" onCancel="simpleWizardController.onCancel" 
+					<w:wizard id="wizard" wizardContextObject="person" width="100%" height="300" onCancel="simpleWizardController.onCancel" 
 							onFinish="simpleWizardController.onFinish"  style="margin:5px">
 						<w:steps>
 							<w:widget label="Welcome" id="welcomeStep" onEnter="simpleWizardController.onEnterWelcomeStep">
@@ -34,7 +34,7 @@
 							</w:widget>
 							<w:widget label="Enter your Personal Info" id="personalInfoStep" onEnter="simpleWizardController.onEnterPersonalInfoStep" onLeave="simpleWizardController.onLeavePersonalInfoStep">
 								<b:verticalPanel id="centeringPanel2" width="100%" height="100%">
-									<b:flexTable id="grid" cellSpacing="5">
+									<b:flexTable id="grid" cellSpacing="5" styleName="FormGrid">
 										<b:row>
 											<b:cell colSpan="2" horizontalAlignment="center">
 												<b:widget>

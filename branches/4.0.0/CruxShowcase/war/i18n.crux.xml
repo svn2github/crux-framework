@@ -16,13 +16,13 @@
 		<c:screen useController="i18nController" onLoad="i18nController.onLoad"/>
 
 		<center>
-			<a:titlePanel id="borders" style="margin:15px">
+			<a:titlePanel id="borders" style="margin:15px" width="500">
 				<a:title>
 					<a:text>${myMessages.currentLocaleTitle}</a:text>
 				</a:title>
 				<a:body>
 					<a:widget>
-						<b:grid id="grid" cellSpacing="5">
+						<b:grid id="grid" cellSpacing="5" styleName="FormGrid">
 							<b:row>
 								<b:cell>
 									<b:widget>
@@ -58,7 +58,7 @@
 				</a:body>			
 			</a:titlePanel>
 			
-			<a:decoratedPanel id="changeLocalePanel">
+			<a:decoratedPanel id="changeLocalePanel" width="300">
 				<a:widget>
 					<b:horizontalPanel id="hPanel" spacing="10">
 						<b:listBox id="localesListBox" width="150">

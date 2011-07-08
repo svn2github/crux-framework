@@ -17,7 +17,7 @@
 		<c:screen useController="sourcesController"/>
 	
 		<center>
-			<b:flexTable id="centeringPanel" cellSpacing="10">
+			<b:flexTable id="centeringPanel" cellSpacing="10" width="520">
 				<b:row>
 					<b:cell horizontalAlignment="left">
 						<b:widget>

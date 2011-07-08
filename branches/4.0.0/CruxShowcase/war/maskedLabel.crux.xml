@@ -18,11 +18,11 @@
 
 		<center>
 		
-			<a:decoratedPanel id="border">
+			<a:decoratedPanel id="border" width="500">
 				<a:widget>
 					<b:horizontalPanel id="imgAndData">
 						<b:image url="style/img/guile.png" id="img" tooltip="Super funny Guile image from http://didierahkoon.free.fr/blog/?p=56"/>
-						<b:flexTable id="cells" styleName="DataForm" cellSpacing="1" height="150" width="260">
+						<b:flexTable id="cells" styleName="DataForm" cellSpacing="1" height="150" width="300">
 							<b:row>
 								<b:cell styleName="FormLabel FormLabelFirst"><b:text>Fighter Name:</b:text></b:cell>
 								<b:cell styleName="FormValue FormvalueFirst"><b:widget><b:label id="nameLabel" text="Guile"/></b:widget></b:cell>
@@ -55,7 +55,7 @@
 			<s:exampleInfo>
 				we have three MaskedLabels, each one using a different formatter: one for showing the birth date,
 				other to show the height and one more to show the weight of the fighter. If you take 
-				a look at the controller code, you will notice that we provide raw objects for each masked label.
+				a look at the controller code, you will note that we provide raw objects for each masked label.
 				To the first, we provide a Date, to the second, a Double and the third one receives an Integer.
 				As result, we can see a fine-decorated output text for each data field shown on screen.
 			</s:exampleInfo>

@@ -17,10 +17,10 @@
 		<c:screen useController="valueBindController"/>
 
 		<center>
-			<a:decoratedPanel id="borders">
+			<a:decoratedPanel id="borders" width="450">
 				<a:widget>
 					<b:verticalPanel id="formAndButtonPanel" width="100%" spacing="10">
-						<b:grid id="grid" cellSpacing="5">
+						<b:grid id="grid" cellSpacing="5" styleName="FormGrid">
 							<b:row>
 								<b:cell>
 									<b:text>Name:</b:text>

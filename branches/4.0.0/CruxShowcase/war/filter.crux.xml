@@ -55,15 +55,15 @@
 		
 		<s:info sourcesController="baseSourcesController">
 			<s:widgetInfo>
-				Filters are widgets that can filter the items provided by other widgets. They allows
-				the user to execute textual queries about a set of items and fetch the results in a 
-				suggest-box. Users are allowed to select a resulting item directly from the suggest-box.
+				Filters are widgets that can filter the items provided by other widgets. They allow
+				the users to execute textual queries through a text-box and fetch the results on a 
+				suggest-panel.
 			</s:widgetInfo>
 			<s:exampleInfo>
 				we are filtering a StackMenu. To see it in action, just type any query inside the 
 				text box. As you type your text, the suggest-box will show you the available items 
 				from the menu that match your query. You can navigate through the items using the 
-				keyboard arrows and select the one you want using the ENTER key. Yes, you can also 
+				keyboard arrows and select the one you want using ENTER or TAB keys. Yes, you can also 
 				use the mouse. Finally, you will note that only leaf items are shown by the suggest-box.
 				This occurs because the intermediary items act just like folders and fire no 
 				events when selected.

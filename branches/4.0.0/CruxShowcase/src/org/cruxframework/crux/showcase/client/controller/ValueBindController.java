@@ -23,22 +23,30 @@ public class ValueBindController {
 	
 	@Expose
 	public void onClick() {
-		VerticalPanel formValues = new VerticalPanel();
-		formValues.add(new Label(person.getName()));
-		formValues.add(new Label(person.getPhone().toString()));
-		formValues.add(new Label(person.getDateOfBirth().toString()));
-		showDialog(formValues);
+		showDialog(
+			person.getName(), 
+			person.getPhone().toString(), 
+			person.getDateOfBirth().toString()
+		);
 	}
 	
-	private void showDialog(VerticalPanel formValues) {
+	private void showDialog(String name, String phone, String dateOfBirth) {
 		
 		final PopupPanel popupPanel = new PopupPanel(true);
+		popupPanel.setStyleName("");
+		popupPanel.setWidth("300px");
 		
-		formValues.setSpacing(8);
-		
+		VerticalPanel formValues = createValuesTable(name, phone, dateOfBirth, popupPanel);
+
 		TitlePanel messagePanel = new TitlePanel("", "", "crux-Popup help-Popup");
 		messagePanel.setContentWidget(formValues);
+		messagePanel.setTitleText("The values entered by the user are:");
 		
+		popupPanel.add(messagePanel);
+		popupPanel.showRelativeTo(Screen.get("button"));
+	}
+
+	private DecoratedButton createCloseButton(final PopupPanel popupPanel) {
 		DecoratedButton ok = new DecoratedButton();
 		ok.setText("Ok");
 		ok.setWidth("80px");
@@ -50,11 +58,18 @@ public class ValueBindController {
 				}
 			}
 		);
-		
-		formValues.add(ok);
+		return ok;
+	}
+
+	private VerticalPanel createValuesTable(String name, String phone, String dateOfBirth, PopupPanel popupPanel) {
+		VerticalPanel formValues = new VerticalPanel();
+		formValues.add(new Label(name));
+		formValues.add(new Label(phone));
+		formValues.add(new Label(dateOfBirth));
+		formValues.setSpacing(8);
+		DecoratedButton ok = createCloseButton(popupPanel);
 		formValues.setCellHorizontalAlignment(ok, HasHorizontalAlignment.ALIGN_CENTER);
-		messagePanel.setTitleText("The values entered by the user are:");
-		popupPanel.add(messagePanel);
-		popupPanel.showRelativeTo(Screen.get("button"));
+		formValues.add(ok);
+		return formValues;
 	}
 }

@@ -16,7 +16,7 @@
 
 		<c:screen useController="frameController"/>
 
-		<b:grid id="grid" cellSpacing="5" style="margin:5px;">
+		<b:grid id="grid" cellSpacing="5" style="margin:5px;" styleName="FormGrid">
 			<b:row>
 				<b:cell>
 					<b:text>Name:</b:text>

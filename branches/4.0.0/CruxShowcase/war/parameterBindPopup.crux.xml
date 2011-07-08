@@ -29,13 +29,13 @@
 				</a:widget>
 			</a:decoratedPanel>
 			
-			<a:titlePanel id="bordersForm" style="marginTop:10px">
+			<a:titlePanel id="bordersForm" style="marginTop:10px" width="350">
 				<a:title>
 					<a:text>Values Automatically Extracted from URL Parameters:</a:text>
 				</a:title>
 				<a:body>
 					<a:widget>
-						<b:flexTable id="cells" styleName="DataForm" cellSpacing="1" height="120" width="260">
+						<b:flexTable id="cells" styleName="DataForm" cellSpacing="1" height="120" width="300">
 							<b:row>
 								<b:cell styleName="FormLabel FormLabelFirst"><b:text>Name:</b:text></b:cell>
 								<b:cell styleName="FormValue FormvalueFirst"><b:widget><b:label id="name"/></b:widget></b:cell>

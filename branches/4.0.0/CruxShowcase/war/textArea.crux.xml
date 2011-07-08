@@ -18,18 +18,18 @@
 
 		<center>
 		
-		<a:decoratedPanel id="borders">
+		<a:decoratedPanel id="borders" width="450">
 			<a:widget>
 				<b:verticalPanel id="mainPanel" spacing="5" style="margin:5px">
 					<b:cell>
 						<b:label id="messageLabel" text="Type some maxLength below and test the behavior of the text area..." styleName="CommentsTitle"/>
 					</b:cell>
 					<b:cell>
-						<a:textArea id="niceTextArea" width="100%" visibleLines="8" maxLength="200">This is a simple TextArea that obeys the maxLength attribute.</a:textArea>
+						<a:textArea id="niceTextArea" width="100%" visibleLines="8" maxLength="60">This is a simple TextArea that obeys the maxLength attribute</a:textArea>
 					</b:cell>
 					<b:cell horizontalAlignment="right">
 						<b:horizontalPanel id="controls" spacing="3">
-							<b:textBox id="maxLength" width="70" value="200"/>
+							<b:textBox id="maxLength" width="70" value="60"/>
 							<a:decoratedButton id="btn" text="Apply!" onClick="textAreaController.applyMaxLength" width="70"/>
 						</b:horizontalPanel>
 					</b:cell>

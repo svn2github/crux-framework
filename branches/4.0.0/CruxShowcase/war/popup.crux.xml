@@ -17,9 +17,9 @@
 		<c:screen useController="popupController"/>
 
 		<center>
-			<a:decoratedPanel id="border">
+			<a:decoratedPanel id="border" width="400">
 				<a:widget>
-					<b:horizontalPanel id="cells" style="margin:5px">
+					<b:horizontalPanel id="cells" spacing="5">
 						<b:textBox id="url" text="http://blog.cruxframework.org" width="300"/>
 						<a:decoratedButton id="browseButton" text="Browse" onClick="popupController.browse"/>
 					</b:horizontalPanel>
@@ -31,10 +31,10 @@
 			<s:widgetInfo>
 				Crux Popup is an elegant way of displaying a modal dialog. Its content is always 
 				another web page, which can be a screen of your application or even come from an external
-				site. Like as in DynaTabs, there is quite simple to exchange information between the 
+				site. Like in DynaTabs, there is quite simple way to exchange information between the 
 				controller of the opener page and the popup's internal controller (see more about 
-				cross page communication in the Screen Communication example). Popups can be configured 
-				to fire events when they are opened or closed.
+				cross-page communication in the Screen Communication example). Popups can also be 
+				configured to fire events when they are opened or closed.
 			</s:widgetInfo>
 			<s:exampleInfo>
 				you can type any valid URL and browse it using a popup. When you close the popup, we show

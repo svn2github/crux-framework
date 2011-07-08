@@ -18,7 +18,7 @@
 		
 		<center>
 		
-		<a:decoratedPanel id="borders">
+		<a:decoratedPanel id="borders" width="200">
 			<a:widget>
 				<b:verticalPanel id="vPanel" verticalAlignment="middle" horizontalAlignment="center" spacing="15">
 					<b:cell>

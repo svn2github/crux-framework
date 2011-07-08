@@ -24,11 +24,9 @@
 		<center>
 		
 		<br/>
-		
-		
 		<br/>
 		
-		<a:titlePanel id="borders">
+		<a:titlePanel id="borders" width="550">
 			<a:title>
 				<a:text>
 					The default Crux distribution supports all GWT widgets with its declarative engine.
@@ -70,7 +68,7 @@
 								<b:tab>
 									<b:tabText>Tab 1</b:tabText>
 									<b:panelContent>
-										<b:textArea id="textArea1" text="GWT TextArea"></b:textArea>
+										<b:textArea id="textArea1" text="GWT TextArea" style="height:90px"/>
 									</b:panelContent>
 								</b:tab>
 								<b:tab>

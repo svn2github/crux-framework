@@ -23,7 +23,7 @@
 		</w:wizardPage>
 		
 		<center>
-			<g:flexTable id="grid" cellSpacing="5">
+			<g:flexTable id="grid" cellSpacing="5" styleName="FormGrid">
 				<g:row>
 					<g:cell colSpan="2" horizontalAlignment="center">
 						<g:widget>

@@ -17,14 +17,18 @@
 	
 		<center>
 
-		<b:dockPanel id="centeringPanel" height="150" spacing="5">
-			<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right">
-				<a:decoratedButton id="button" text="Try to click me twice!" onClick="sensitiveMethodController.onClick"/>
-			</b:cell>
-			<b:cell direction="east" verticalAlignment="middle" horizontalAlignment="right">
-				<b:checkBox id="block" text="Block user's interface while processing" checked="false"/>		
-			</b:cell>
-		</b:dockPanel>
+		<a:decoratedPanel id="borders" width="450">
+			<a:widget>
+				<b:dockPanel id="centeringPanel" spacing="10">
+					<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right">
+						<a:decoratedButton id="button" text="Try to click me twice!" onClick="sensitiveMethodController.onClick"/>
+					</b:cell>
+					<b:cell direction="east" verticalAlignment="middle" horizontalAlignment="right">
+						<b:checkBox id="block" text="Block user's interface while processing" checked="false"/>		
+					</b:cell>
+				</b:dockPanel>
+			</a:widget>
+		</a:decoratedPanel>
 		
 		</center>
 

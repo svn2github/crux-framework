@@ -29,7 +29,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<a:titlePanel id="bordersEast">
+						<a:titlePanel id="bordersEast" width="400">
 							<a:title>
 								<a:text>Internal Frame (horrible borders intentionally set)</a:text>
 							</a:title>

@@ -16,9 +16,9 @@
 		<c:screen useController="multiWizardController" fragment="wizards"/>
 
 		<center>
-			<w:decoratedPanel id="border">
+			<w:decoratedPanel id="border" width="600">
 				<w:widget>
-					<w:wizard id="wizard" width="600" height="300" onCancel="multiWizardController.onCancel" 
+					<w:wizard id="wizard" width="580" height="300" onCancel="multiWizardController.onCancel" 
 					          onFinish="multiWizardController.onFinish" wizardContextObject="person" style="margin:5px">
 						<w:steps>
 							<w:page url="multiPagesWizardWelcomeStep.html" label="Welcome" id="welcomeStep" />
