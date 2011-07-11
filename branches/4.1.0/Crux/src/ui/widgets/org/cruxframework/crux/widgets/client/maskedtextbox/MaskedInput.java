@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,7 +19,6 @@ import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.widgets.client.event.paste.PasteEvent;
 import org.cruxframework.crux.widgets.client.event.paste.PasteHandler;
-
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -37,7 +36,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * Masks an TextBox
- * 
+ *
  * @author Thiago da Rosa de Bustamante
  */
 class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, BlurHandler, PasteHandler
@@ -49,7 +48,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		definitions.put("a", "[A-Za-z]");
 		definitions.put("*", "[A-Za-z0-9]");
 	}
-	
+
 	private TextBox textBox;
 	private int firstNonMaskPos = -1;
 	private boolean ignore = false;
@@ -66,7 +65,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	private HandlerRegistration blurHandlerRegistration;
 	private HandlerRegistration pasteHandlerRegistration;
 	private MaskedTextBox maskedTextBox;
-	
+
 	/**
 	 * Constructor
 	 * @param textBox
@@ -90,7 +89,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 				this.partialPosition = i;
 			}
 			else
-			{					
+			{
 				String key = c+"";
 				this.tests.add(definitions.containsKey(key)?definitions.get(key):null);
 				if (this.tests.get(this.tests.size()-1) != null && this.firstNonMaskPos == -1)
@@ -107,11 +106,11 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		focusHandlerRegistration = this.textBox.addFocusHandler(this);
 		blurHandlerRegistration = this.textBox.addBlurHandler(this);
 		pasteHandlerRegistration = this.maskedTextBox.addPasteHandler(this);
-		
-		
+
+
 		this.checkVal(false);
 	}
-	
+
 	TextBox getTextBox()
 	{
 		return textBox;
@@ -130,7 +129,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		this.textBox = null;
 		this.maskedTextBox = null;
 	}
-	
+
 	/**
 	 * keyDown event handler
 	 */
@@ -146,12 +145,12 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			int code = event.getNativeKeyCode();
 			ignore = (code < 16 || (code > 16 && code < 32) || (code > 32 && code < 41));
 
-			if ((pos[0] - pos[1]) != 0 && (!ignore || code == KeyCodes.KEY_BACKSPACE || code == KeyCodes.KEY_DELETE)) 
+			if ((pos[0] - pos[1]) != 0 && (!ignore || code == KeyCodes.KEY_BACKSPACE || code == KeyCodes.KEY_DELETE))
 			{
 				clearBuffer(pos[0], pos[1]);
 			}
 
-			if (code == KeyCodes.KEY_BACKSPACE || code == KeyCodes.KEY_DELETE ) // || (iPhone && k==127) 
+			if (code == KeyCodes.KEY_BACKSPACE || code == KeyCodes.KEY_DELETE ) // || (iPhone && k==127)
 			{
 				if (pos[0] < this.length  || code != KeyCodes.KEY_DELETE)
 				{
@@ -232,7 +231,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	public void onBlur(BlurEvent event)
 	{
 		checkVal(false);
-		if (textBox.getText() != focusText)
+		if (textBox.getText().equals(focusText))
 		{
 			ValueChangeEvent.fire(textBox, textBox.getText());
 		}
@@ -264,7 +263,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	}
 
 	/**
-	 * 
+	 *
 	 * @param start
 	 * @param end
 	 */
@@ -280,7 +279,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private String writeBuffer()
@@ -290,7 +289,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pos
 	 * @return
 	 */
@@ -311,12 +310,12 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pos
 	 */
 	private void shiftL(int pos)
 	{
-		if (pos >= tests.size()) 
+		if (pos >= tests.size())
 		{
 			pos = tests.size()-1;
 		}
@@ -324,7 +323,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		{
 			pos--;
 		}
-		if (pos < 0) 
+		if (pos < 0)
 		{
 			pos = 0;
 		}
@@ -349,7 +348,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pos
 	 */
 	private void shiftR(int pos)
@@ -372,10 +371,10 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 				}
 			}
 		}
-	}		
+	}
 
 	/**
-	 * 
+	 *
 	 * @param allow
 	 * @return
 	 */
