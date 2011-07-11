@@ -85,7 +85,7 @@
 								</w:commands>
 							</w:widget>
 							<w:widget label="Thank You!" id="thankYouStep" onEnter="simpleWizardController.onEnterThankYouStep">
-								<b:verticalPanel id="centeringPanel2" width="100%" height="100%" spacing="20">
+								<b:verticalPanel id="centeringPanel3" width="100%" height="100%" spacing="20">
 									<b:cell verticalAlignment="bottom" horizontalAlignment="center">
 										<b:label id="finishMessage1" styleName="SpecialSecondaryLabel"/>
 									</b:cell>
