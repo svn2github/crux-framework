@@ -187,12 +187,13 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			}
 		}
 
-		if (event.isControlKeyDown() || event.isAltKeyDown())
+		if (event.isControlKeyDown() || event.isAltKeyDown()  || KeyCodes.KEY_TAB == event.getCharCode())
 		{
 			return;
 		}
 
 		char code = event.getCharCode();
+
 		if ((code >= 41 && code <= 122) || code == 32 || code > 186) //typeable characters
 		{
 			int[] pos = caret(-1, -1);
@@ -231,7 +232,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	public void onBlur(BlurEvent event)
 	{
 		checkVal(false);
-		if (textBox.getText().equals(focusText))
+		if (!textBox.getText().equals(focusText))
 		{
 			ValueChangeEvent.fire(textBox, textBox.getText());
 		}
