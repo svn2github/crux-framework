@@ -187,7 +187,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			}
 		}
 
-		if (event.isControlKeyDown() || event.isAltKeyDown()  || KeyCodes.KEY_TAB == event.getCharCode())
+		if (event.isControlKeyDown() || event.isAltKeyDown())
 		{
 			return;
 		}
@@ -210,6 +210,16 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 					caret(next, -1);
 				}
 			}
+
+		}
+		else
+		{
+			// WORKAROUND TO FIX KEYPRESS ON FIREFOX
+			if (event.getNativeEvent() != null && KeyCodes.KEY_TAB == event.getNativeEvent().getKeyCode())
+			{
+				return;
+			}
+
 
 		}
 		event.preventDefault();
