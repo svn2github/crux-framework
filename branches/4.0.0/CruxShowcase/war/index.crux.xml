@@ -38,8 +38,8 @@
 					</b:cell>
 					<b:cell direction="center" horizontalAlignment="right" verticalAlignment="top">
 						<b:horizontalPanel id="linksHztlPanel">
-							<b:anchor id="siteLink" href="http://www.cruxframework.org/" text="Crux Site" styleName="MainHeaderLink" target="_blank"/>
-							<b:label id="linkSeparator1" text="|" styleName="MainLinkSeparator"/>
+							<!-- b:anchor id="siteLink" href="http://www.cruxframework.org/" text="Crux Site" styleName="MainHeaderLink" target="_blank"/>
+							<b:label id="linkSeparator1" text="|" styleName="MainLinkSeparator"/ -->
 							<b:anchor id="projectHomeLink" href="http://crux-framework.googlecode.com/" text="Project Home" styleName="MainHeaderLink" target="_blank"/>
 							<b:label id="linkSeparator2" text="|" styleName="MainLinkSeparator"/>
 							<b:anchor id="blogLink" href="http://blog.cruxframework.org/" text="Crux Blog" styleName="MainHeaderLink" target="_blank"/>
