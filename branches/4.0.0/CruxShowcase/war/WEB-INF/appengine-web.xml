@@ -21,4 +21,6 @@
         <handler file="over_quota.html" error-code="over_quota"/>
     </static-error-handlers>
      -->
+     
+     <sessions-enabled>true</sessions-enabled>
 </appengine-web-app>

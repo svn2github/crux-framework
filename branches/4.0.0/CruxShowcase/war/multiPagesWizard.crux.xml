@@ -13,7 +13,7 @@
 	<body>
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="multiWizardController" fragment="wizards"/>
+		<c:screen useController="multiWizardController"/>
 
 		<center>
 			<w:decoratedPanel id="border" width="600">
