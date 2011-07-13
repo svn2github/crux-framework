@@ -274,6 +274,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: pointer;
 	opacity: 0.9;
 	filter: alpha(opacity=90);
+	border: solid 0px;
 }
 .crux-Popup .closeButton-disabled
 {
@@ -284,11 +285,37 @@ SPAN, DIV, TD, LI, STRONG, UL
 	opacity:0.7;
 	filter:alpha(opacity=70);
 }
-
-.crux-Popup-dragging .topLeftCell,		.crux-Popup-dragging .topCenterCell, 	.crux-Popup-dragging .topRightCell, 
-.crux-Popup-dragging .middleLeftCell, 	.crux-Popup-dragging .middleCenterCell,	.crux-Popup-dragging .middleRightCell,
-.crux-Popup-dragging .bottomLeftCell,	.crux-Popup-dragging .bottomCenterCell,	.crux-Popup-dragging .bottomRightCell
+.crux-Popup-dragging .topLeftCell
 {
+	background-image: url(../img/dialogs-nw-drag.png);
+}
+.crux-Popup-dragging .topCenterCell
+{
+	background-image: url(../img/dialogs-n-drag.png);
+}
+.crux-Popup-dragging .topRightCell
+{
+	background-image: url(../img/dialogs-ne-drag.png);
+}
+.crux-Popup-dragging .middleLeftCell
+{
+	background-image: url(../img/dialogs-w-drag.png);
+}
+.crux-Popup-dragging .middleRightCell
+{
+	background-image: url(../img/dialogs-e-drag.png);
+}
+.crux-Popup-dragging .bottomLeftCell
+{
+	background-image: url(../img/dialogs-sw-drag.png);
+}
+.crux-Popup-dragging .bottomCenterCell
+{
+	background-image: url(../img/dialogs-s-drag.png);
+}
+.crux-Popup-dragging .bottomRightCell
+{
+	background-image: url(../img/dialogs-se-drag.png);
 }
 
 /******************************************************************************
