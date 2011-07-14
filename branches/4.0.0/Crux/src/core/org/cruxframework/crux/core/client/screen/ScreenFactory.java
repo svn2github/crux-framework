@@ -25,7 +25,6 @@ import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.RegisteredClientFormatters;
 import org.cruxframework.crux.core.client.screen.parser.CruxMetaData;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 

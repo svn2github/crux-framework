@@ -24,6 +24,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
+import org.cruxframework.crux.core.client.screen.ScreenFactory;
 import org.cruxframework.crux.core.client.screen.ViewFactory;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -206,6 +207,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		try
 		{
 			sourceWriter.println("new "+ factoryCreator.create()+"().create();");
+			sourceWriter.println(org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName()+".createCrossDocumentAccessor("+ScreenFactory.class.getCanonicalName()+".getInstance().getScreen());");
 		}
 		finally
 		{
