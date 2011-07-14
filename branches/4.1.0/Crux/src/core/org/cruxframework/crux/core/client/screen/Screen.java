@@ -765,7 +765,6 @@ public class Screen
 			});
 		}
 
-		createCrossDocumentAccessor(this);
 		this.addWindowCloseHandler(new CloseHandler<Window>()
 		{
 			public void onClose(CloseEvent<Window> event)
@@ -884,7 +883,7 @@ public class Screen
 	 * Create a hook javascript function, called outside of module.
 	 * @param handler
 	 */
-	private native void createCrossDocumentAccessor(Screen handler)/*-{
+	native void createCrossDocumentAccessor(Screen handler)/*-{
 		$wnd._cruxCrossDocumentAccessor = function(serializedData){
 			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
 			return a?a:null;

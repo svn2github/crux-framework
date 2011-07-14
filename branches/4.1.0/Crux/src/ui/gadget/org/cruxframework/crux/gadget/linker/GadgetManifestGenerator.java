@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gadget.linker;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -26,6 +27,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
@@ -46,6 +51,7 @@ import org.cruxframework.crux.gadget.client.meta.GadgetFeature.NeedsFeatures;
 import org.cruxframework.crux.gadget.client.meta.GadgetFeature.WantsFeatures;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
+import org.cruxframework.crux.gadget.config.GadgetsConfigurationFactory;
 import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
 import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
 import org.cruxframework.crux.gadget.rebind.gwt.PreferenceGenerator;
@@ -81,6 +87,59 @@ public class GadgetManifestGenerator
 	private final TreeLogger logger;
 	private Class<?> moduleMetaClass;
 	private String moduleName;
+
+	private static Document manifestTemplate = null;
+	
+	private static DocumentBuilder getDocumentBuilder()
+	{
+		DocumentBuilder documentBuilder = null;
+		try
+		{
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			documentBuilderFactory.setNamespaceAware(true);
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		}
+		catch (ParserConfigurationException e)
+		{
+			throw new CruxGeneratorException(messages.gadgetManifestGeneratorCanNotCreateDocumentBuilder(), e);
+		}
+		return documentBuilder;
+	}
+	
+	/**
+	 * 
+	 * @param library
+	 * @param id
+	 * @return
+	 */
+	private static Document getManifestTemplate()
+	{
+		try
+        {
+	        if (manifestTemplate == null)
+	        {
+	        	DocumentBuilder documentBuilder = getDocumentBuilder();
+	        	String gadgetTemplateFile = GadgetsConfigurationFactory.getConfigurations().gadgetTemplateFile();
+	        	InputStream is = null;
+	        	if (gadgetTemplateFile.startsWith("/META-INF"))
+	        	{
+	        		is = GadgetManifestGenerator.class.getResourceAsStream(gadgetTemplateFile);
+	        	}
+	        	else
+	        	{
+	        		is = new FileInputStream(gadgetTemplateFile);
+	        	}
+	        	
+	        	manifestTemplate = documentBuilder.parse(is);
+	        }
+	        
+	        return (Document) manifestTemplate.cloneNode(true);
+        }
+        catch (Exception e)
+        {
+        	throw new CruxGeneratorException(messages.gadgetManifestGeneratorCanNotCreateDocument(), e);
+        }
+	}
 	
 	/**
 	 * @param logger
@@ -129,7 +188,8 @@ public class GadgetManifestGenerator
 		{
 			DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
 			DOMImplementation impl = registry.getDOMImplementation("Core 3.0");
-			d = impl.createDocument(null, "Module", null);
+//			d = impl.createDocument(null, "Module", null);
+			d = getManifestTemplate();
 			DOMImplementationLS implLS = (DOMImplementationLS) impl.getFeature("LS", "3.0");
 			output = implLS.createLSOutput();
 			output.setCharacterStream(out);
@@ -142,7 +202,7 @@ public class GadgetManifestGenerator
 		}
 
 		Element module = d.getDocumentElement();
-		Element modulePrefs = (Element) module.appendChild(d.createElement("ModulePrefs"));	    
+		Element modulePrefs = getModulePrefsElement(d, module);    
 	    
 	    generateModulePreferences(d, modulePrefs);
 		generateUserPreferences(d, module);
@@ -153,7 +213,7 @@ public class GadgetManifestGenerator
 		
 	    serializer.write(d, output);
     }
-
+	
 	/**
 	 * @throws UnableToCompleteException
 	 */
@@ -189,6 +249,41 @@ public class GadgetManifestGenerator
     	return moduleMetaClass;
     }
 	
+	/**
+	 * 
+	 * @param d
+	 * @param module
+	 * @return
+	 */
+	private Element getModulePrefsElement(Document d, Element module)
+	{
+		NodeList children = module.getChildNodes();
+		Element firstElement = null;
+		for (int i=0; i< children.getLength(); i++)
+		{
+			Node item = children.item(i);
+			if (item.getNodeType() == Node.ELEMENT_NODE)
+			{
+				firstElement = (Element) item;
+				break;
+			}
+			
+		}
+		if (firstElement == null)
+		{
+			return (Element) module.appendChild(d.createElement("ModulePrefs"));	    
+		}
+		
+		if (firstElement.getLocalName().equals("ModulePrefs"))
+		{
+			return firstElement;
+		}
+		
+		Element modulePrefsElement = d.createElement("ModulePrefs");
+		
+		return (Element) module.insertBefore(modulePrefsElement, firstElement);
+	}
+
 	/**
 	 * @param d
 	 * @param userPref
@@ -366,12 +461,18 @@ public class GadgetManifestGenerator
 	 */
 	private void generateModulePreferences(Document d, Element modulePrefs) throws UnableToCompleteException
     {
-	    ModulePrefs prefs = moduleMetaClass.getAnnotation(ModulePrefs.class);
-	    if (prefs != null) 
-	    {
-	      GadgetUtils.writeAnnotationToElement(logger, prefs, modulePrefs, "requirements", "locales");
-	      GadgetUtils.writeLocalesToElement(logger, d, modulePrefs, prefs.locales());
-	    }
+		ModulePrefs prefs = moduleMetaClass.getAnnotation(ModulePrefs.class);
+		if (prefs != null) 
+		{
+			GadgetUtils.writeAnnotationToElement(logger, prefs, modulePrefs, "requirements", "locales", "icon");
+			GadgetUtils.writeLocalesToElement(logger, d, modulePrefs, prefs.locales());
+
+			if (!StringUtils.isEmpty(prefs.icon()))
+			{
+				Element require = (Element) modulePrefs.appendChild(d.createElement("Icon"));
+				require.setTextContent(prefs.icon());
+			}
+		}
     }
 
 	/**

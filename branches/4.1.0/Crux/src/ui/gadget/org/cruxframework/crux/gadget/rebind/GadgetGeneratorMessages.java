@@ -41,9 +41,12 @@ public interface GadgetGeneratorMessages
 	@DefaultServerMessage("[gadget-gen 006] - Could not create manifest document.")
 	String gadgetManifestGeneratorCanNotCreateDocument();
 	
-	@DefaultServerMessage("[gadget-gen 007] - Gadget Descriptor must be an interface.")
+	@DefaultServerMessage("[gadget-gen 007] - Could not create manifest document builder.")
+	String gadgetManifestGeneratorCanNotCreateDocumentBuilder();
+
+	@DefaultServerMessage("[gadget-gen 008] - Gadget Descriptor must be an interface.")
 	String gadgetManifestGeneratorDescriptorMustBeInterface();
 	
-	@DefaultServerMessage("[gadget-gen 008] - Error generating gadget proxy.")
+	@DefaultServerMessage("[gadget-gen 009] - Error generating gadget proxy.")
 	String gadgetProxyCreatorError();
 }

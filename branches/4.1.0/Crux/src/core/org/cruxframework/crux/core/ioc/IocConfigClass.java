@@ -26,7 +26,7 @@ public class IocConfigClass<T> implements IocConfig
 	private final Class<T> boundClass;
 	private Class<? extends InjectionProvider<? extends T>> providerClass = null;
 	private Class<? extends T> toClass;
-	private IocScope scope = new IocScope.LocalScope();
+	private IocScope scope = new LocalScope();
 	
 	public IocConfigClass(Class<T> clazz)
     {
@@ -55,12 +55,12 @@ public class IocConfigClass<T> implements IocConfig
 
 	public void inLocalScope()
 	{
-		this.scope = new IocScope.LocalScope();
+		this.scope = new LocalScope();
 	}
 	
 	public void inDocumentScope()
 	{
-		this.scope = new IocScope.DocumentScope();
+		this.scope = new DocumentScope();
 	}
 	
 	public IocShareableScope inScreenScope()

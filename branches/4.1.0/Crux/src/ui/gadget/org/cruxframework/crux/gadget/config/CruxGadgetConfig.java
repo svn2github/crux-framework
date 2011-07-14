@@ -13,12 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.ioc;
+package org.cruxframework.crux.gadget.config;
+
+import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface IocScope
+public interface CruxGadgetConfig
 {
+	@DefaultServerMessage("/META-INF/defaultGadgetTemplate.xml")
+	String gadgetTemplateFile();
+
 }

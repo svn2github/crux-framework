@@ -156,6 +156,16 @@ public interface GadgetInfo
 		String author_quote() default "";
 
 		/**
+		 * Optional string that tells the gadget category.
+		 */
+		String category() default "";
+
+		/**
+		 * Optional string that tells the gadget secondary category.
+		 */
+		String category2() default "";
+
+		/**
 		 * Optional string that describes the gadget.
 		 */
 		String description() default "";
@@ -181,6 +191,15 @@ public interface GadgetInfo
 		 */
 		int height() default 200;
 
+		/**
+		 * The icon property specifies a 16px x 16px image that containers can associate 
+		 * with a particular gadget (for example, the container might display the icon 
+		 * next to the gadget's name in the left nav bar).
+		 * @return
+		 */
+		String icon() default "";
+		
+		
 		/**
 		 * Specify gadget locale support
 		 * 

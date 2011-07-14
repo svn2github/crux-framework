@@ -19,6 +19,7 @@ package org.cruxframework.crux.core.ioc;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface IocScope
+public class DocumentScope implements IocScope
 {
+
 }

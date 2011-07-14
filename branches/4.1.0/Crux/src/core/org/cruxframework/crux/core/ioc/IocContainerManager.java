@@ -51,7 +51,10 @@ public class IocContainerManager
 						if (!Modifier.isAbstract(configurationClass.getModifiers()) && IoCContainerConfiguration.class.isAssignableFrom(configurationClass))
 						{
 							IoCContainerConfiguration configuration = (IoCContainerConfiguration)configurationClass.newInstance();
-							configuration.configure();
+							if (configuration.isEnabled())
+							{
+								configuration.configure();
+							}
 						}
 					}
 				}
@@ -61,5 +64,15 @@ public class IocContainerManager
 				logger.error(messages.iocContainerManagerError(), e);
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 */
+	public static IocConfig getConfigurationForType(String className)
+	{
+		return IoCContainerConfiguration.getConfigurationForType(className);
 	}
 }

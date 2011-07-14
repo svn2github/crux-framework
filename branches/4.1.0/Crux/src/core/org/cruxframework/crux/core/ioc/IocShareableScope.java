@@ -19,7 +19,7 @@ package org.cruxframework.crux.core.ioc;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IocShareableScope implements IocScope
+public abstract class IocShareableScope implements IocScope
 {
 	private boolean containerManaged = false;
 

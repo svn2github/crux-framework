@@ -16,7 +16,9 @@
 package org.cruxframework.crux.core.ioc;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -25,7 +27,14 @@ import java.util.Map;
 public abstract class IoCContainerConfiguration implements IocConfiguration
 {
 	private static Map<String, IocConfig> configurations = new HashMap<String, IocConfig>();
+	private static Set<IocConfigList> groupConfigurations = new HashSet<IocConfigList>();
 	
+	/**
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @return
+	 */
 	protected <T> IocConfigClass<T> bindType(Class<T> clazz)
 	{
 		IocConfigClass<T> iocConfig = new IocConfigClass<T>(clazz);
@@ -37,24 +46,93 @@ public abstract class IoCContainerConfiguration implements IocConfiguration
 		configurations.put(className, iocConfig);
 		return iocConfig;
 	}
-	
+
+	/**
+	 * 
+	 * @param clazz
+	 * @return
+	 */
 	protected IocConfigList bindAssignableTo(Class<?> clazz)
 	{
-		//TODO implementar suporte a list...usado para bindAssignableTo, bindAnnotatedWith, bindIncludingName, bindExcludingName
-		IocConfigList iocConfig = new IocConfigList(clazz);
-		
+		IocConfigList iocConfig = new IocConfigList(clazz, null, null, null);
+		groupConfigurations.add(iocConfig);
 		return iocConfig;
 	}
 	
+	/**
+	 * 
+	 * @param annotation
+	 * @return
+	 */
+	protected IocConfigList bindAnnotatedWith(Class<?> annotation)
+	{
+		IocConfigList iocConfig = new IocConfigList(null, annotation, null, null);
+		groupConfigurations.add(iocConfig);
+		return iocConfig;
+	}
+
+	/**
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	protected IocConfigList bindIncludingName(String expression)
+	{
+		IocConfigList iocConfig = new IocConfigList(null, null, expression, null);
+		groupConfigurations.add(iocConfig);
+		return iocConfig;
+	}
+
+	/**
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	protected IocConfigList bindExcludingName(String expression)
+	{
+		IocConfigList iocConfig = new IocConfigList(null, null, null, expression);
+		groupConfigurations.add(iocConfig);
+		return iocConfig;
+	}
+
+	/**
+	 * Override this method if you need to specify some conditions that enables your configuration.
+	 * Eg: You can enable a configuration for all client classes only when running on 
+	 * development environment.
+	 * @return
+	 */
+	protected boolean isEnabled()
+	{
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 */
 	static IocConfig getConfigurationForType(String className)
 	{
-		return configurations.get(className);
+		IocConfig iocConfig = configurations.get(className);
+		if (iocConfig == null)
+		{
+			for (IocConfigList iocConfigList : groupConfigurations)
+            {
+	            if (iocConfigList.apliesTo(className))
+	            {
+	            	configurations.put(className, iocConfigList);
+	            	return iocConfigList;
+	            }
+            }
+		}
+		return iocConfig;
 	}
 }
 
 
 /*
 bindType(MyDTO.class).inLocalScope(); //Default is LocalSope
+bindType(MyDTO.class).toClass(Class.class).inLocalScope(); //Default is LocalSope
 bindType(MyDTO2.class).toProvider(MyProvider.class).inDocumentScope(); // inScreenScope()??? //userScope seria um dos tipos de scope "Shareable"
 bindType(MyDTO3.class).inUserScope("myScope").managedByContainer();//autualizacoes feitas antes e depois de cada metodo
 bindType(MyDTO4.class).inUserScope("myScope").managedByApplication();//DEFAULT. autualizacoes devem ser commitadas e lidas de forma explÃ­cita, 

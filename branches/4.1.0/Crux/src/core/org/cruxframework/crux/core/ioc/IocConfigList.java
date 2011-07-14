@@ -21,12 +21,23 @@ package org.cruxframework.crux.core.ioc;
  */
 public class IocConfigList implements IocConfig
 {
-
+	private final Class<?> classAnnotatedWith;
 	private final Class<?> classAssinableTo;
+	private final String includingName;
+	private final String excludingName;
 
-	public IocConfigList(Class<?> clazz)
+	public IocConfigList(Class<?> classAssinableTo, Class<?> classAnnotatedWith, String includingName, String excludingName) 
     {
-		this.classAssinableTo = clazz;
+		this.classAssinableTo = classAssinableTo;
+		this.classAnnotatedWith = classAnnotatedWith;
+		this.includingName = includingName;
+		this.excludingName = excludingName;
+    }
+
+	public boolean apliesTo(String className)
+    {
+	    // TODO Auto-generated method stub
+	    return false;
     }
 
 }
