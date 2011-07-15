@@ -883,7 +883,7 @@ public class Screen
 	 * Create a hook javascript function, called outside of module.
 	 * @param handler
 	 */
-	native void createCrossDocumentAccessor(Screen handler)/*-{
+	native static void createCrossDocumentAccessor(Screen handler)/*-{
 		$wnd._cruxCrossDocumentAccessor = function(serializedData){
 			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
 			return a?a:null;
