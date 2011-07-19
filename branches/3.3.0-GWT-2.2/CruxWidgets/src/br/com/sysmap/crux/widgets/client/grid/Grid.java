@@ -17,6 +17,7 @@ package br.com.sysmap.crux.widgets.client.grid;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,10 +40,13 @@ import br.com.sysmap.crux.core.client.utils.StringUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectEvent;
 import br.com.sysmap.crux.widgets.client.event.row.BeforeRowSelectHandler;
+import br.com.sysmap.crux.widgets.client.event.row.BeforeShowDetailsEvent;
 import br.com.sysmap.crux.widgets.client.event.row.HasBeforeRowSelectHandlers;
+import br.com.sysmap.crux.widgets.client.event.row.LoadRowDetailsEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
+import br.com.sysmap.crux.widgets.client.event.row.ShowRowDetailsEvent;
 import br.com.sysmap.crux.widgets.client.paging.Pageable;
 import br.com.sysmap.crux.widgets.client.paging.Pager;
 
@@ -64,7 +68,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A paged sortable data grid
  * @author Gesse S. F. Dafe
  */
-public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSource<PagedDataSource<?>>, HasBeforeRowSelectHandlers 
+public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSource<PagedDataSource<?>>, HasBeforeRowSelectHandlers
 {	
 	private int pageSize;
 	private PagedDataSource<?> dataSource;
@@ -79,9 +83,9 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	private String emptyDataFilling;
 	private String defaultSortingColumn;
 	private SortingType defaultSortingType;
+	private RowDetailsManager rowDetailsManager;
 	
 	/**
-	 * Full constructor
 	 * @param columnDefinitions the columns to be rendered
 	 * @param pageSize the number of rows per page
 	 * @param rowSelection the behavior of the grid about line selection
@@ -96,7 +100,28 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 */
 	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType)
 	{
-		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize);
+		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling, fixedCellSize, defaultSortingColumn, defaultSortingType, null, false);
+	}
+	
+	/**
+	 * Full constructor
+	 * @param columnDefinitions the columns to be rendered
+	 * @param pageSize the number of rows per page
+	 * @param rowSelection the behavior of the grid about line selection
+	 * @param cellSpacing the space between the cells
+	 * @param autoLoadData if <code>true</code>, when a data source is set, its first page records are fetched and rendered.
+	 * @param stretchColumns if <code>true</code>, the width of the columns are auto adjusted to fit the grid width. Prevents horizontal scrolling.   
+	 * @param highlightRowOnMouseOver if <code>true</code>, rows change their styles when mouse passed over them
+	 * @param emptyDataFilling an alternative text to be shown when there is no data for some data cell
+	 * @param fixedCellSize equivalent of setting CSS attribute <code>table-layout</code> to <code>fixed</code>
+	 * @param defaultSortingColumn the column to be used to automatically sort the grid's data when it is rendered for the first time 
+	 * @param defaultSortingType tells the grid if <code>defaultSortingColumn</code> should be used ascending or descending
+	 * @param rowDetailsDefinition the template HTML element used to create on-demand row details
+	 * @param showRowDetailsIcon if <code>true</code>, the second column of the grid will contain icons for expanding or collapsing the row's details 
+	 */
+	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon)
+	{
+		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, rowDetailsDefinition, showRowDetailsIcon);
 		getColumnDefinitions().setGrid(this);
 		this.emptyDataFilling = emptyDataFilling != null ? emptyDataFilling : " ";
 		this.pageSize = pageSize;
@@ -104,6 +129,10 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		this.autoLoadData = autoLoadData;
 		this.defaultSortingColumn = defaultSortingColumn;
 		this.defaultSortingType = defaultSortingType;
+		if(hasRowDetails())
+		{
+			this.rowDetailsManager = new RowDetailsManager(rowDetailsDefinition);
+		}
 		super.render();
 	}
 	
@@ -115,6 +144,11 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	{
 		this.dataSource = dataSource;
 		this.dataSource.setPageSize(this.pageSize);
+		
+		if(hasRowDetails())
+		{
+			this.rowDetailsManager.reset();
+		}
 		
 		if(this.dataSource instanceof RemoteDataSource<?>)
 		{
@@ -165,7 +199,6 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void loadData()
 	{
 		if(!this.loaded)
@@ -174,7 +207,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 			{
 				if(this.dataSource instanceof MeasurableDataSource)
 				{
-					((MeasurableRemoteDataSource) this.dataSource).load();
+					((MeasurableRemoteDataSource<?>) this.dataSource).load();
 				}
 				else
 				{
@@ -192,7 +225,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	@Override
 	protected DataRow createRow(int index, Element element)
 	{	
-		return new DataRow(index, element, this, hasSelectionColumn());
+		return new DataRow(index, element, this, hasSelectionColumn(), hasRowDetails(), hasRowDetailsIconColumn());
 	}
 
 	@Override
@@ -236,6 +269,84 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		{
 			this.pager.update(0, false);
 		}
+		
+		if(hasRowDetails())
+		{
+			this.rowDetailsManager.reset();
+		}
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.AbstractGrid#onShowDetails(boolean, br.com.sysmap.crux.widgets.client.grid.Row, boolean)
+	 */
+	protected void onShowDetails(boolean show, Row row, boolean fireEvents)
+	{
+		if (hasRowDetails()) 
+		{
+			boolean proceed = true;
+			DataRow dataRow = (DataRow) row;
+
+			if(show)
+			{
+				if(fireEvents)
+				{
+					BeforeShowDetailsEvent event = BeforeShowDetailsEvent.fire(this, dataRow);
+					proceed = !event.isCanceled();
+				}
+			}
+			
+			if(proceed)
+			{
+				dataRow.showDetailsArea(show);
+				
+				if(show)
+				{	
+					boolean detailsPanelCreated = dataRow.getDetailsPanel() != null;
+					
+					if(!detailsPanelCreated)
+					{
+						DataSourceRecord<?> record = dataRow.getDataSourceRecord();
+						boolean detailLoaded = this.rowDetailsManager.isDetailLoaded(record);
+						createAndAttachDetails(dataRow, record);
+	
+						if(fireEvents)
+						{
+							if(detailLoaded)
+							{
+								ShowRowDetailsEvent.fire(this, dataRow);
+							}
+							else
+							{
+								LoadRowDetailsEvent.fire(this, dataRow);
+							}
+						}
+					}
+					else
+					{
+						if(fireEvents)
+						{
+							ShowRowDetailsEvent.fire(this, dataRow);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates and attaches the details widget to the row
+	 * @param dataRow
+	 * @param record
+	 */
+	private void createAndAttachDetails(DataRow dataRow, DataSourceRecord<?> record) 
+	{
+		HashMap<String, Widget> widgetsByOriginalId = new HashMap<String, Widget>();
+		Widget w = this.rowDetailsManager.createWidget(widgetsByOriginalId);
+		RowDetailsPanel details = new RowDetailsPanel(dataRow, widgetsByOriginalId);
+		details.add(w);
+		dataRow.attachDetails(details);
+		ensureVisible(dataRow.getDetailsPanel());
+		this.rowDetailsManager.setDetailLoaded(record);
 	}
 
 	@Override
@@ -306,7 +417,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 				{
 					wrapLine = false;
 					truncate = true;
-					widget = createWidget((WidgetColumnDefinition) column, row);
+					widget = createWidgetForColumn((WidgetColumnDefinition) column);
 				}
 				
 				row.setCell(createCell(widget, wrapLine, truncate), key);
@@ -323,27 +434,35 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	}
 
 	/**
-	 * Creates a widget
+	 * Creates the widget to be hosted by a WidgetColumn
 	 * @param column
-	 * @param row
 	 * @return
-	 * @throws InterfaceConfigException 
 	 */
-	private Widget createWidget(WidgetColumnDefinition column, DataRow row)
+	private Widget createWidgetForColumn(WidgetColumnDefinition column)
 	{
 		try
 		{
-			Element template = column.getWidgetTemplate();
-			Element clone = (Element) template.cloneNode(true);
-			setRandomId(clone);
-			ScreenFactory factory = ScreenFactory.getInstance();
-			return factory.newWidget(clone, clone.getId(), factory.getMetaElementType(clone), false);
+			return createWidget(column.getWidgetTemplate());
 		}
 		catch (InterfaceConfigException e)
 		{
 			GWT.log(e.getMessage(), e);
 			throw new RuntimeException(WidgetMsgFactory.getMessages().errorCreatingWidgetForColumn(column.getKey()));
 		}
+	}
+	
+	/**
+	 * Creates a widget
+	 * @param column
+	 * @return
+	 * @throws InterfaceConfigException 
+	 */
+	private Widget createWidget(Element template) throws InterfaceConfigException
+	{
+		Element clone = (Element) template.cloneNode(true);
+		setRandomId(clone);
+		ScreenFactory factory = ScreenFactory.getInstance();
+		return factory.newWidget(clone, clone.getId(), factory.getMetaElementType(clone), false);
 	}
 
 	/**
@@ -522,7 +641,11 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	@Override
 	protected void onClearRendering()
 	{
-		this.headers = new FastList<ColumnHeader>();		
+		this.headers = new FastList<ColumnHeader>();
+		if(hasRowDetails())
+		{
+			this.rowDetailsManager.clearRendering();
+		}
 	}
 	
 	/**
@@ -587,7 +710,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","rawtypes"})
 	public Object[] getSelectedDataRows()
 	{
 		if(this.dataSource != null)
@@ -687,6 +810,27 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		}
 		
 		return sort;
+	}
+	
+	@Override
+	public DataRow getRow(Widget w)
+	{
+		DataRow row = super.getRow(w);
+		
+		if (row == null && hasRowDetails()) 
+		{
+			while(!(w instanceof RowDetailsPanel))
+			{
+				w = w.getParent();
+			}
+			
+			if(w instanceof RowDetailsPanel)
+			{
+				row = (DataRow) ((RowDetailsPanel) w).getRow();
+			}
+		}
+		
+		return row;
 	}
 	
 	/**

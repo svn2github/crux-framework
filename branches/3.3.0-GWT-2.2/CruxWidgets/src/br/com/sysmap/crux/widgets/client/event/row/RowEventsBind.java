@@ -89,4 +89,49 @@ public class RowEventsBind extends EvtBind
 			});
 		}
 	}
+	
+	public static void bindBeforeShowRowDetailsEvent(Element element, HasBeforeShowDetailsHandlers widget)
+	{
+		final Event evt = getWidgetEvent(element, Events.BEFORE_SHOW_DETAILS);
+		if (evt != null)
+		{
+			widget.addBeforeShowRowDetailsHandler(new BeforeShowDetailsHandler() 
+			{
+				public void onBeforeShowRowDetails(BeforeShowDetailsEvent event) 
+				{
+					br.com.sysmap.crux.core.client.event.Events.callEvent(evt, event);				
+				}
+			});
+		}
+	}
+	
+	public static void bindShowRowDetailsEvent(Element element, HasShowRowDetailsHandlers widget)
+	{
+		final Event evt = getWidgetEvent(element, Events.SHOW_DETAILS);
+		if (evt != null)
+		{
+			widget.addShowRowDetailsHandler(new ShowRowDetailsHandler() 
+			{
+				public void onShowRowDetails(ShowRowDetailsEvent event) 
+				{
+					br.com.sysmap.crux.core.client.event.Events.callEvent(evt, event);				
+				}
+			});
+		}
+	}
+	
+	public static void bindLoadRowDetailsEvent(Element element, HasLoadRowDetailsHandlers widget)
+	{
+		final Event evt = getWidgetEvent(element, Events.LOAD_DETAILS);
+		if (evt != null)
+		{
+			widget.addLoadRowDetailsHandler(new LoadRowDetailsHandler() 
+			{
+				public void onLoadRowDetails(LoadRowDetailsEvent event) 
+				{
+					br.com.sysmap.crux.core.client.event.Events.callEvent(evt, event);				
+				}
+			});
+		}
+	}
 }

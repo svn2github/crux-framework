@@ -61,10 +61,25 @@ public class GridFactory extends WidgetFactory<Grid>
 		Grid grid = new Grid(getColumnDefinitions(gridElem), getPageSize(gridElem), 
 				                               getRowSelectionModel(gridElem), getCellSpacing(gridElem), 
 				                               getAutoLoad(gridElem), getStretchColumns(gridElem), getHighlightRowOnMouseOver(gridElem),
-				                               getEmptyDataFilling(gridElem), isFixedCellSize(gridElem), getSortingColumn(gridElem), getSortingType(gridElem));
+				                               getEmptyDataFilling(gridElem), isFixedCellSize(gridElem), getSortingColumn(gridElem), 
+				                               getSortingType(gridElem), getRowDetailsDefinition(gridElem), getShowRowDetailsIcon(gridElem));
 		return grid;
 	}
 	
+	private boolean getShowRowDetailsIcon(Element gridElem) 
+	{	
+		String showRowDetailsIcon = getProperty(gridElem,"showRowDetailsIcon");
+		
+		if(showRowDetailsIcon != null && showRowDetailsIcon.trim().length() > 0)
+		{
+			return Boolean.parseBoolean(showRowDetailsIcon);
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	private SortingType getSortingType(Element gridElem)
 	{
 		String sortingType = getProperty(gridElem,"defaultSortingType");
@@ -239,50 +254,54 @@ public class GridFactory extends WidgetFactory<Grid>
 		{
 			for (int i=0; i<colElems.size(); i++)
 			{
-				Element colElem = colElems.get(i);
-				String width = getProperty(colElem,"width");
-				String strVisible = getProperty(colElem,"visible");
-				String strSortable = getProperty(colElem,"sortable");
-				String strWrapLine = getProperty(colElem,"wrapLine");
-				String label = getProperty(colElem,"label");
-				String key = getProperty(colElem,"key");
-				String strFormatter = getProperty(colElem,"formatter");
-				String hAlign = getProperty(colElem,"horizontalAlignment");
-				String vAlign = getProperty(colElem,"verticalAlignment");
-				
-				boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
-				boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
-				boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
-				String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
-				label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
-				
-				ColumnDefinition def = null;
-				
-				String columnType = getChildName(colElem);
-				if("dataColumn".equals(columnType))
+				Element childElem = colElems.get(i);
+				String childType = getChildName(childElem);
+
+				if(!childType.equals("rowDetails"))
 				{
-					def = new DataColumnDefinition(
-							label, 
-							width, 
-							formatter, 
-							visible,
-							sortable,
-							wrapLine,
-							AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-							AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
-				}
-				else if("widgetColumn".equals(columnType))
-				{
-					def = new WidgetColumnDefinition(
-							label, 
-							width, 
-							ensureFirstChildSpan(colElem, false),
-							visible, 
-							AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
-							AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
-				}
+					String width = getProperty(childElem,"width");
+					String strVisible = getProperty(childElem,"visible");
+					String strSortable = getProperty(childElem,"sortable");
+					String strWrapLine = getProperty(childElem,"wrapLine");
+					String label = getProperty(childElem,"label");
+					String key = getProperty(childElem,"key");
+					String strFormatter = getProperty(childElem,"formatter");
+					String hAlign = getProperty(childElem,"horizontalAlignment");
+					String vAlign = getProperty(childElem,"verticalAlignment");
 					
-				defs.add(key, def);
+					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
+					boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
+					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
+					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
+					label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
+					
+					ColumnDefinition def = null;
+					
+					if("dataColumn".equals(childType))
+					{
+						def = new DataColumnDefinition(
+								label, 
+								width, 
+								formatter, 
+								visible,
+								sortable,
+								wrapLine,
+								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+					}
+					else if("widgetColumn".equals(childType))
+					{
+						def = new WidgetColumnDefinition(
+								label, 
+								width, 
+								ensureFirstChildSpan(childElem, false),
+								visible, 
+								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
+								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
+					}
+					
+					defs.add(key, def);
+				}
 			}
 		}
 		else
@@ -291,6 +310,39 @@ public class GridFactory extends WidgetFactory<Grid>
 		}
 				
 		return defs;
+	}
+	
+	/**
+	 * @param gridElem
+	 * @return
+	 * @throws InterfaceConfigException
+	 */
+	private RowDetailsDefinition getRowDetailsDefinition(Element gridElem) throws InterfaceConfigException
+	{
+		FastList<Element> colElems = ensureChildrenSpans(gridElem, false);
+		if(colElems != null && colElems.size() > 0)
+		{
+			for (int i=0; i<colElems.size(); i++)
+			{
+				Element childElem = colElems.get(i);
+				String childType = getChildName(childElem);
+				if(childType.equals("rowDetails"))
+				{
+					Element detailElement = childElem.getFirstChildElement();
+					if(detailElement != null)
+					{
+						RowDetailsDefinition def = new RowDetailsDefinition(detailElement);
+						return def;
+					}
+				}
+			}
+		}
+		else
+		{
+			throw new InterfaceConfigException(WidgetMsgFactory.getMessages().gridDoesNotHaveColumns(gridElem.getId()));
+		}
+				
+		return null;
 	}
 	
 	@Override
@@ -305,7 +357,8 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagAttributeDeclaration(value="fixedCellSize", type=Boolean.class, defaultValue="false"),
 		@TagAttributeDeclaration(value="emptyDataFilling", type=String.class, defaultValue=" "),
 		@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
-		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
+		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending"),
+		@TagAttributeDeclaration(value="showRowDetailsIcon", type=Boolean.class, defaultValue="true")
 	})
 	public void processAttributes(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
 	{
@@ -318,7 +371,10 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagEventDeclaration("onRowClick"),
 		@TagEventDeclaration("onRowDoubleClick"),
 		@TagEventDeclaration("onRowRender"),
-		@TagEventDeclaration("onBeforeRowSelect")
+		@TagEventDeclaration("onBeforeRowSelect"),
+		@TagEventDeclaration("onBeforeShowRowDetails"),
+		@TagEventDeclaration("onShowRowDetails"),
+		@TagEventDeclaration("onLoadRowDetails")
 	})
 	public void processEvents(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
 	{
@@ -329,13 +385,17 @@ public class GridFactory extends WidgetFactory<Grid>
 		RowEventsBind.bindDoubleClickRowEvent(element, widget);
 		RowEventsBind.bindRenderRowEvent(element, widget);
 		RowEventsBind.bindBeforeSelectRowEvent(element, widget);
+		RowEventsBind.bindBeforeShowRowDetailsEvent(element, widget);
+		RowEventsBind.bindShowRowDetailsEvent(element, widget);
+		RowEventsBind.bindLoadRowDetailsEvent(element, widget);
 		
 		super.processEvents(context);
 	}
 	
 	@Override
 	@TagChildren({
-		@TagChild(value=ColumnProcessor.class, autoProcess=false)
+		@TagChild(value=ColumnProcessor.class, autoProcess=false),
+		@TagChild(value=RowDetailsProcessor.class, autoProcess=false)
 	})
 	public void processChildren(WidgetFactoryContext<Grid> context) throws InterfaceConfigException {}
 	
@@ -350,7 +410,15 @@ public class GridFactory extends WidgetFactory<Grid>
 		})
 		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
 	}
-
+	
+	@TagChildAttributes(tagName="rowDetails", maxOccurs="1", minOccurs="0")
+	public static class RowDetailsProcessor extends WidgetChildProcessor<Grid>
+	{
+		@TagChildren({
+			@TagChild(WidgetProcessor.class)
+		})
+		public void processChildren(WidgetChildProcessorContext<Grid> context) throws InterfaceConfigException {}
+	}
 	
 	@TagChildAttributes(tagName="dataColumn", minOccurs="0", maxOccurs="unbounded")
 	public static class DataColumnProcessor extends WidgetChildProcessor<Grid>

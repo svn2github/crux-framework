@@ -24,38 +24,50 @@ import java.util.Map;
 import br.com.sysmap.crux.core.client.collection.FastList;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
+import br.com.sysmap.crux.widgets.client.event.row.BeforeShowDetailsEvent;
+import br.com.sysmap.crux.widgets.client.event.row.BeforeShowDetailsHandler;
+import br.com.sysmap.crux.widgets.client.event.row.HasBeforeShowDetailsHandlers;
+import br.com.sysmap.crux.widgets.client.event.row.HasLoadRowDetailsHandlers;
 import br.com.sysmap.crux.widgets.client.event.row.HasRowClickHandlers;
 import br.com.sysmap.crux.widgets.client.event.row.HasRowDoubleClickHandlers;
 import br.com.sysmap.crux.widgets.client.event.row.HasRowRenderHandlers;
+import br.com.sysmap.crux.widgets.client.event.row.HasShowRowDetailsHandlers;
+import br.com.sysmap.crux.widgets.client.event.row.LoadRowDetailsEvent;
+import br.com.sysmap.crux.widgets.client.event.row.LoadRowDetailsHandler;
 import br.com.sysmap.crux.widgets.client.event.row.RowClickEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowClickHandler;
 import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowDoubleClickHandler;
 import br.com.sysmap.crux.widgets.client.event.row.RowRenderEvent;
 import br.com.sysmap.crux.widgets.client.event.row.RowRenderHandler;
+import br.com.sysmap.crux.widgets.client.event.row.ShowRowDetailsEvent;
+import br.com.sysmap.crux.widgets.client.event.row.ShowRowDetailsHandler;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base class for implementing grids. 
  * All subclasses must invoke the method <code>render()</code> in their constructors.
- * @author Gesse S. F. Dafe
+ * @author Gesse Dafe
  */
-public abstract class AbstractGrid<R extends Row> extends Composite implements HasRowClickHandlers, HasRowDoubleClickHandlers, HasRowRenderHandlers {	
+public abstract class AbstractGrid<R extends Row> extends Composite implements HasRowClickHandlers, HasRowDoubleClickHandlers, HasRowRenderHandlers, HasBeforeShowDetailsHandlers, HasShowRowDetailsHandlers, HasLoadRowDetailsHandlers  {	
 	
 	private static final String DEFAULT_STYLE_NAME = "crux-Grid";
 	
-	private GridHtmlTable table;
+	private GridBaseTable table;
 	private ColumnDefinitions definitions;
 	private String generatedId =  "cruxGrid_" + new Date().getTime();
 	private FastList<R> rows = new FastList<R>();
@@ -64,6 +76,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	private ScrollPanel scrollingArea;
 	private boolean stretchColumns;
 	private boolean highlightRowOnMouseOver;
+	private RowDetailsDefinition rowDetailsDefinition;
+	private boolean showRowDetailsIcon;
 	
 	@SuppressWarnings("unchecked")
 	static class RowSelectionHandler<R extends Row> implements ClickHandler
@@ -91,6 +105,45 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 	
 	/**
+	 * Handles the event fired when the details of some row gets shown.
+	 * @author Gesse Dafe
+	 */
+	static class RowDetailsCommandHandler<R extends Row> implements ClickHandler
+	{
+		private AbstractGrid<R> grid;
+		private R row;
+		
+		public RowDetailsCommandHandler(AbstractGrid<R> grid, R row)
+		{
+			this.grid = grid;
+			this.row = row;
+		}
+		
+		public void onClick(ClickEvent event)
+		{
+			boolean show = !row.isDetailsShown();
+			grid.onShowDetails(show, row, true);
+			event.stopPropagation();
+		}	
+	}
+	
+	/**
+	 * Executes the implementation-specific logic of showing the details of a row. 
+	 * @param show
+	 * @param row
+	 * @param fireEvents
+	 */
+	protected abstract void onShowDetails(boolean show, Row row, boolean fireEvents);
+	
+	/**
+	 * @return The row's details definitions
+	 */
+	protected RowDetailsDefinition getRowDetailsDefinition()
+	{
+		return rowDetailsDefinition;
+	}
+	
+	/**
 	 * Full constructor
 	 * @param columnDefinitions the columns to be rendered
 	 * @param rowSelection the behavior of the grid about line selection 
@@ -100,16 +153,33 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	public AbstractGrid(ColumnDefinitions columnDefinitions, RowSelectionModel rowSelection, int cellSpacing, boolean stretchColumns, boolean highlightRowOnMouseOver, boolean fixedCellSize)
 	{
+		this(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, null, false);
+	}
+	
+	/**
+	 * Full constructor
+	 * @param columnDefinitions the columns to be rendered
+	 * @param rowSelection the behavior of the grid about line selection 
+	 * @param cellSpacing the space between the cells
+	 * @param stretchColumns 
+	 * @param fixedCellSize 
+	 * @param rowDetailsDefinition
+	 * @param showRowDetailsIcon
+	 */
+	public AbstractGrid(ColumnDefinitions columnDefinitions, RowSelectionModel rowSelection, int cellSpacing, boolean stretchColumns, boolean highlightRowOnMouseOver, boolean fixedCellSize, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon)
+	{
 		this.definitions = columnDefinitions;
 		this.rowSelection = rowSelection;
 		this.stretchColumns = stretchColumns;
 		this.highlightRowOnMouseOver = highlightRowOnMouseOver;
+		this.rowDetailsDefinition = rowDetailsDefinition;
+		this.showRowDetailsIcon = this.rowDetailsDefinition != null && showRowDetailsIcon;
 		
 		scrollingArea = new ScrollPanel();
 		scrollingArea.setStyleName(DEFAULT_STYLE_NAME);
 		initWidget(scrollingArea);
 		
-		table = new GridHtmlTable();
+		table = this.hasRowDetails() ? new GridFlexTable() : new GridHtmlTable();
 		table.setCellSpacing(cellSpacing);
 		table.setCellPadding(0);
 		StyleUtils.addStyleProperty(table.getBodyElement(), "width", "100%");
@@ -125,7 +195,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 			table.getElement().getStyle().setProperty("tableLayout", "fixed");
 		}
 		
-		scrollingArea.add(table);
+		scrollingArea.add(table.asWidget());
 	}
 	
 	/**
@@ -145,6 +215,30 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 	
 	/**
+	 * @see br.com.sysmap.crux.widgets.client.event.row.HasBeforeShowDetailsHandlers#addBeforeShowRowDetailsHandler(br.com.sysmap.crux.widgets.client.event.row.BeforeShowDetailsHandler)
+	 */
+	public HandlerRegistration addBeforeShowRowDetailsHandler(BeforeShowDetailsHandler handler) 
+	{
+		return addHandler(handler, BeforeShowDetailsEvent.getType());
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.event.row.HasShowRowDetailsHandlers#addShowRowDetailsHandler(br.com.sysmap.crux.widgets.client.event.row.ShowRowDetailsHandler)
+	 */
+	public HandlerRegistration addShowRowDetailsHandler(ShowRowDetailsHandler handler) 
+	{
+		return addHandler(handler, ShowRowDetailsEvent.getType());
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.event.row.HasLoadRowDetailsHandlers#addLoadRowDetailsHandler(br.com.sysmap.crux.widgets.client.event.row.LoadRowDetailsHandler)
+	 */
+	public HandlerRegistration addLoadRowDetailsHandler(LoadRowDetailsHandler handler) 
+	{
+		return addHandler(handler, LoadRowDetailsEvent.getType());
+	}
+	
+	/**
 	 * @see br.com.sysmap.crux.widgets.client.event.row.HasRowRenderHandlers#addRowRenderHandler(br.com.sysmap.crux.widgets.client.event.row.RowRenderHandler)
 	 */
 	public HandlerRegistration addRowRenderHandler(RowRenderHandler handler)
@@ -157,7 +251,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	public void clear()
 	{
-		table.resizeRows(0);
+		table.removeAllRows();
 		rows = new FastList<R>();
 		this.widgetsPerRow = new HashMap<Widget, R>();
 		onClear();
@@ -373,15 +467,24 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	protected void render()
 	{
 		this.definitions.reset();
-		int rowCount = getRowsToBeRendered() + 1;
+		
+		int rowCount = (hasRowDetails() ? 2 * getRowsToBeRendered() : getRowsToBeRendered()) + 1;
 		
 		clearRendering();
 			
 		for (int i = 0; i < rowCount; i++)
 		{
-			R row = createRow(i, table.getRowElement(i));
-			row.setStyle("row");
-			rows.add(row);
+			if(!hasRowDetails() || i == 0 || i % 2 == 1)
+			{
+				R row = createRow(i, table.getRowElement(i));
+				row.setStyle("row");
+				rows.add(row);
+			}
+			else
+			{
+				((GridFlexTable) table).joinCells(i);
+				table.getRowElement(i).getStyle().setDisplay(Display.NONE);
+			}
 		}
 		
 		renderHeaders(rowCount);
@@ -416,7 +519,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 * Access for the grid table element
 	 * @return
 	 */
-	GridHtmlTable getTable()
+	GridBaseTable getTable()
 	{
 		return table;
 	}
@@ -432,8 +535,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	private void clearRendering()
 	{
-		int rowCount = getRowsToBeRendered() + 1;
-		table.resize(rowCount, definitions.getVisibleColumnCount() + (hasSelectionColumn() ? 1 : 0));
+		int rowCount = (hasRowDetails() ? 2 * getRowsToBeRendered() : getRowsToBeRendered()) + 1;
+		table.resize(rowCount, definitions.getVisibleColumnCount() + (hasSelectionColumn() ? 1 : 0) + (hasRowDetailsIconColumn() ? 1 : 0));
 		this.rows = new FastList<R>();
 		this.widgetsPerRow = new HashMap<Widget, R>();
 		onClearRendering();
@@ -466,6 +569,22 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 		
 		return cell;
 	}
+	
+	
+	/**
+	 * Creates the cell that contains the button for showing or hiding the row's details.
+	 * @param row
+	 * @return the created cell
+	 */
+	private Cell createRowDetailsCommandCell(R row)
+	{
+		Button button = new Button(" ");
+		button.addClickHandler(new RowDetailsCommandHandler<R>(this, row));
+		Cell cell = createCell(button, false, false);
+		cell.addStyleName("rowDetailsCommandCell");		
+		return cell;
+	}
+	
 	
 	/**
 	 * Creates a cell to be used as first header cell. 
@@ -539,6 +658,13 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 		{
 			StyleUtils.removeStyleDependentName(table.getCellElement(0, 0), "rowSelectionColumn");
 		}
+		
+		if(hasRowDetailsIconColumn())
+		{
+			int detailsCommandColIndex = hasSelectionColumn() ? 1 : 0;
+			row.setCell(createHeaderCell(new Label(" ")), detailsCommandColIndex);
+			StyleUtils.addStyleDependentName(table.getCellElement(0, 0), "detailsCommandColumnHeader");
+		}
 				
 		FastList<ColumnDefinition> columns = definitions.getDefinitions();
 		for (int i=0; i<columns.size(); i++)
@@ -551,7 +677,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 			}
 		}
 	}
-	
+
 	/**
 	 * Renders the grid rows
 	 */
@@ -568,6 +694,11 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 			if(hasSelectionColumn())
 			{
 				row.setCell(createSelectionCell(row), 0);
+			}
+			
+			if(hasRowDetailsIconColumn())
+			{
+				row.setCell(createRowDetailsCommandCell(row), hasSelectionColumn() ? 1 : 0);
 			}
 			
 			renderRow(row);
@@ -610,5 +741,31 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	private boolean selectRowOnClickCell()
 	{
 		return RowSelectionModel.single.equals(rowSelection) || RowSelectionModel.multiple.equals(rowSelection);
+	}
+	
+	/**
+	 * Returns true if the grid has the row-details feature
+	 * @return
+	 */
+	protected boolean hasRowDetails()
+	{
+		return this.rowDetailsDefinition != null;
+	}
+	
+	/**
+	 * Returns <code>true</code> if the grid has a column containing icons that expand or collapse row's details
+	 * @return
+	 */
+	protected boolean hasRowDetailsIconColumn()
+	{
+		return this.showRowDetailsIcon;
+	}
+	
+	/**
+	 * @param uiObject
+	 */
+	protected void ensureVisible(UIObject uiObject)
+	{
+		this.scrollingArea.ensureVisible(uiObject);
 	}
 }

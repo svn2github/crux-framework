@@ -15,9 +15,13 @@
  */
 package br.com.sysmap.crux.widgets.client.grid;
 
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.FlexTable;
 
-public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements GridBaseTable
+public class GridFlexTable extends FlexTable implements GridBaseTable
 {	
 	public Element getCellElement(int row, int col)
 	{
@@ -29,13 +33,36 @@ public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements
 		return getRowElement(this.getElement(), row);
 	}
 	
+	public void joinCells(int row)
+	{
+		TableRowElement tr =  this.getRowElement(row).cast();
+		NodeList<TableCellElement> cells = tr.getCells();
+		int numTds = cells.getLength();
+		
+		if(numTds > 1)
+		{
+			for (int i = 1; i < numTds; i++) 
+			{
+				// We always remove the second cell. 
+				// This is because we want to keep the first one 
+				//    and the cell indexes are in movement due 
+				//    to the removing process.
+				tr.removeChild(cells.getItem(1)); 
+			}
+			
+			TableCellElement td = this.getCellElement(row, 0).cast();
+			td.setAttribute("colspan", ""+ numTds);
+			td.setInnerHTML("sdasdasas");
+		}
+	}
+	
     private native Element getCellElement(Element table, int row, int col) /*-{
 		return table.rows[row].cells[col];
     }-*/;
     
     private native Element getRowElement(Element table, int row) /*-{
     	return table.rows[row];
-  	}-*/;
+  	}-*/;  
     
     @Override
     public Element getBodyElement()
@@ -43,7 +70,15 @@ public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements
     	return super.getBodyElement();
     }
 
-	public void removeAllRows() {
-		resizeRows(0);
+	public void resize(int rowCount, int columnCount) 
+	{
+		int lastRow = rowCount - 1;
+		int lastCell = columnCount - 1;
+		removeAllRows();
+		prepareRow(lastRow);
+		for(int i = 0; i <= lastRow; i++)
+		{
+			prepareCell(i, lastCell);
+		}
 	}
 }

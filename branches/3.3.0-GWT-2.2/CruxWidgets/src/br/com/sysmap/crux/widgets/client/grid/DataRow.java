@@ -25,28 +25,27 @@ public class DataRow extends Row
 {
 	private DataSourceRecord<?> dataSourceRecord;
 	
+	protected DataRow(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell, boolean hasRowDetails, boolean showRowDetailsIcon)
+	{
+		super(index, elem, grid, hasSelectionCell, hasRowDetails, showRowDetailsIcon);
+	}
+	
 	protected DataRow(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell)
 	{
-		super(index, elem, grid, hasSelectionCell);
+		super(index, elem, grid, hasSelectionCell, false, false);
 	}
-
-	/**
-	 * @return the dataSourceRowId
-	 */
+	
 	public DataSourceRecord<?> getDataSourceRecord()
 	{
 		return dataSourceRecord;
 	}
 
-	/**
-	 * @param dataSourceRowId the dataSourceRowId to set
-	 */
 	void setDataSourceRecord(DataSourceRecord<?> dataSourceRowId)
 	{
 		this.dataSourceRecord = dataSourceRowId;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Object getValue(String column)
 	{
 		PagedDataSource dataSource = ((Grid) getGrid()).getDataSource();
@@ -55,7 +54,7 @@ public class DataRow extends Row
 	
 	/**
 	 * @return
-	 * @deprecated Use getBound() instead
+	 * @deprecated Use getBoundObject() instead
 	 */
 	@Deprecated
 	public Object getBindedObject()
@@ -63,11 +62,10 @@ public class DataRow extends Row
 		return getBoundObject();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Object getBoundObject()
 	{
 		Grid grid = (Grid) getGrid();
-		
 		DataSource dataSource = grid.getDataSource();
 		return dataSource.getBoundObject(getDataSourceRecord());
 	}

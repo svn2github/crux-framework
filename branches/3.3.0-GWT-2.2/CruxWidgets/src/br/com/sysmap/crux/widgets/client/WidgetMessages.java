@@ -60,6 +60,9 @@ public interface WidgetMessages extends Messages
 
 	@DefaultMessage("[crux-widgets 017] - Grid {0} has no column.")
 	String gridDoesNotHaveColumns(String gridId);
+	
+	@DefaultMessage("[crux-widgets 018] - Could not create row details.")
+	String errorCreatingWidgetForRowDetails();
 
 	@DefaultMessage("< Back")
 	String wizardBackCommand();	

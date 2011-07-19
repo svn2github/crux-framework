@@ -12,6 +12,9 @@ public class Events
 	public static final String ROW_DOUBLE_CLICK = "onrowdoubleclick";
 	public static final String ROW_RENDER = "onrowrender";
 	public static final String BEFORE_ROW_SELECT = "onbeforerowselect";
+	public static final String BEFORE_SHOW_DETAILS = "onbeforeshowrowdetails";
+	public static final String SHOW_DETAILS = "onshowrowdetails";
+	public static final String LOAD_DETAILS = "onloadrowdetails";
 	
 	public static final String PAGE = "onpage";
 	//TODO - Gesse - Remover esta classe inteira
