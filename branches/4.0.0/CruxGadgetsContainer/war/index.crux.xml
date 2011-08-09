@@ -1,0 +1,22 @@
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:container="http://www.cruxframework.org/templates/gadgetContainer"
+>
+	<head>
+		<title>My Page</title>
+	</head>
+
+	<body>
+		<script type="text/javascript" src="container/container.nocache.js"></script>
+		<container:gadgetsConfig/>
+
+		<center>
+			<container:tabLayoutManager homeTabTitle="${tabLayoutMsg.homeTitle}"/>
+			<!-- container:gridLayoutManager /-->
+		</center>
+	</body>
+</html>
+
