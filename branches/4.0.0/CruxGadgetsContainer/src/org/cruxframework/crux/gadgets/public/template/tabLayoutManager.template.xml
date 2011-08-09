@@ -1,0 +1,15 @@
+<t:template xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:c="http://www.cruxframework.org/crux"  
+			xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+			xmlns:crux="http://www.cruxframework.org/crux/widgets"
+            xmlns:t="http://www.cruxframework.org/templates" library="gadgetContainer"
+            useController="tabLayoutController"> 
+	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" onLoadWidget="tabLayoutController.onLoad">
+		<crux:tab>
+			<crux:tabText>#{homeTabTitle}</crux:tabText>
+			<crux:panelContent>
+				<gwt:HTML id="gridContainer" />
+			</crux:panelContent>
+		</crux:tab>
+	</crux:rollingTabPanel>
+</t:template>
