@@ -27,7 +27,11 @@ public class GadgetsConfiguration
 	private JsArray<JsArray<GadgetMetadata>> metadata;
 	private boolean caja = false;
 	private String containerParentUrl = "http://localhost:8080/";
-
+	private String country;
+	private String language;
+	private String currentView;
+	private String gadgetUrl;
+	
 	public JsArray<JsArray<GadgetMetadata>> getMetadata()
     {
     	return metadata;
@@ -66,5 +70,45 @@ public class GadgetsConfiguration
 	public void setContainerParentUrl(String containerParentUrl)
     {
     	this.containerParentUrl = containerParentUrl;
+    }
+
+	public String getCountry()
+    {
+    	return country;
+    }
+
+	public void setCountry(String country)
+    {
+    	this.country = country;
+    }
+
+	public String getLanguage()
+    {
+    	return language;
+    }
+
+	public void setLanguage(String language)
+    {
+    	this.language = language;
+    }
+
+	public String getCurrentView()
+    {
+    	return currentView;
+    }
+
+	public void setCurrentView(String currentView)
+    {
+    	this.currentView = currentView;
+    }
+
+	public String getGadgetUrl()
+    {
+    	return gadgetUrl;
+    }
+
+	public void setGadgetUrl(String gadgetUrl)
+    {
+    	this.gadgetUrl = gadgetUrl;
     }
 }

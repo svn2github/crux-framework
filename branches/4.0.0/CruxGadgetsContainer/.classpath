@@ -50,10 +50,10 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-provider-20100527.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/rome-1.0.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/sanselan-0.97-incubator.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-common-2.0.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-common-2.0.0.jar" sourcepath="/Users/thiago/desenvolvimento/java/server/shindig-2.0.0-source/java/common/src/main/java"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-extras-2.0.0.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-features-2.0.0.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-gadgets-2.0.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-gadgets-2.0.0.jar" sourcepath="/Users/thiago/desenvolvimento/java/server/shindig-2.0.0-source/java/gadgets/src/main/java"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/shindig-social-api-2.0.0.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/shiro-core-1.0.0-incubating.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/shiro-web-1.0.0-incubating.jar"/>

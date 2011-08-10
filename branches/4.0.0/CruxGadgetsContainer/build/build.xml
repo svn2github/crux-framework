@@ -81,6 +81,8 @@
 			</manifest>
 		</war>
 		<move file="${temp.dir}/${final.name}.war" tofile="${dist.dir}/${final.name}.war" />
+		<delete dir="${dist.dir}/${final.name}" failonerror="no" includeemptydirs="yes" />
+		<unzip dest="${dist.dir}/${final.name}" src="${dist.dir}/${final.name}.war"></unzip>
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" />
 	</target>
 

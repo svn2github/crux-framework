@@ -7,11 +7,81 @@
 >
 	<head>
 		<title>My Page</title>
+		<style>
+			.gadgets-gadget-chrome {
+			  float: left;
+			  margin: 4px;
+			  border: 1px solid #7aa5d6;
+			  width: 97%;
+			  border-radius: 10px;
+			}
+			
+			.gadgets-gadget {
+			  border: none;
+			}
+			
+			.gadgets-gadget-title-bar {
+			  padding: 2px 4px;
+			  background-color: #e5ecf9;
+			  cursor: move;
+			  border-top-left-radius: 10px;
+			  border-top-right-radius: 10px;
+			}
+			
+			.gadgets-gadget-title {
+			  font-weight: bold;
+			  color: #3366cc;
+			}
+			
+			.gadgets-gadget-title-button-bar {
+			  font-size: smaller;
+			}
+			
+			.gadgets-gadget-user-prefs-dialog {
+			  background-color: #e5ecf9;
+			}
+			
+			.gadgets-gadget-user-prefs-dialog-action-bar {
+			  text-align: center;
+			  padding-bottom: 4px;
+			}
+			
+			.gadgets-gadget-title-button-full-screen {
+			      background-image: url("img/full_screen_icon.png");
+   				  border: 1px solid #3366CC;
+				  border-radius: 3px 3px 3px 3px;
+				  float: right;
+				  height: 16px;
+				  overflow: hidden;
+				  position: relative;
+				  top: -17px;
+				  width: 16px;
+			}
+			
+			.gadgets-gadget-title-button-toogle {
+			      background-image: url("img/full_screen_icon.png");
+   				  border: 1px solid #3366CC;
+				  border-radius: 3px 3px 3px 3px;
+				  float: right;
+				  height: 16px;
+				  overflow: hidden;
+				  position: relative;
+				  top: -17px;
+				  width: 16px;
+			}
+
+			.gadgets-gadget-content {
+			  padding: 4px;
+			}
+			
+			.ui-sortable-placeholder { border: 2px dashed #7aa5d6; }
+					
+		</style>
 	</head>
 
 	<body>
 		<script type="text/javascript" src="container/container.nocache.js"></script>
-		<container:gadgetsConfig/>
+		<container:gadgetsConfigDebug/>
 
 		<center>
 			<container:tabLayoutManager homeTabTitle="${tabLayoutMsg.homeTitle}"/>

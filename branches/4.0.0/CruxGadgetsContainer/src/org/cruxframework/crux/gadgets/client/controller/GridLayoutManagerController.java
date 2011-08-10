@@ -139,26 +139,43 @@ public class GridLayoutManagerController
 		var CruxGadgetClass = function(opt_params) {
     		$wnd.shindig.Gadget.call(this, opt_params);
 			this.serverBase_ = '/gadgets/'; // default gadget server
-
-			var requiresPubSub2 = false;
-			var arr = this.features;
-			if (arr) {
-				for(var i = 0; i < arr.length; i++) {
-					if (arr[i] === "pubsub-2") {
-						requiresPubSub2 = true;
-						break;
-					}
-				}
+			if (!this.view) {
+				this.view = $wnd.shindig.container.view_;
 			}
-			var subClass = requiresPubSub2 ? $wnd.shindig.OAAIfrGadget : $wnd.shindig.IfrGadget;
+
+			if (!this.width) {
+				this.width = '100%';
+			}
+			var subClass = this.requiresPubSub2 ? $wnd.shindig.OAAIfrGadget : $wnd.shindig.IfrGadget;
 			for (var name in subClass) {
-			    if (subClass.hasOwnProperty(name)) {
+			    if (subClass.hasOwnProperty(name) && name !== "getIframeUrl") {
 				    this[name] = subClass[name];
 				}
 			}     		
   		};
 
   		CruxGadgetClass.inherits($wnd.shindig.BaseIfrGadget);
+
+  		CruxGadgetClass.prototype.getIframeUrl = function() {
+			return this.serverBase_ + 'ifr?' +
+				'container=' + this.CONTAINER +
+				'&mid=' + this.id +
+				'&nocache=' + $wnd.shindig.container.nocache_ +
+				'&country=' + $wnd.shindig.container.country_ +
+				'&lang=' + $wnd.shindig.container.language_ +
+				'&view=' + this.view +
+				(this.specVersion ? '&v=' + this.specVersion : '') +
+				((!this.requiresPubSub2 && $wnd.shindig.container.parentUrl_) ? '&parent=' + encodeURIComponent($wnd.shindig.container.parentUrl_) : '') +
+				(this.debug ? '&debug=1' : '') +
+				this.getAdditionalParams() +
+				this.getUserPrefsParams() +
+				(this.secureToken ? '&st=' + this.secureToken : '') +
+				'&url=' + encodeURIComponent(this.specUrl) +
+				(!this.requiresPubSub2? '#rpctoken=' + this.rpcToken:'') +
+				(this.viewParams ?
+				'&view-params=' + encodeURIComponent(gadgets.json.stringify(this.viewParams)) : '') +
+				(this.hashData ? (!this.requiresPubSub2?'&':'#') + this.hashData : '');
+  		};
 
   		CruxGadgetClass.prototype.getAdditionalParams = function() {
     		var params = '';
@@ -172,6 +189,10 @@ public class GridLayoutManagerController
     		return params;
   		};
 
+  		CruxGadgetClass.prototype.isHomeView = function() {
+  			return this.view === "home" || this.view === "profile" || this.view === "default";
+  		};
+  		
 		CruxGadgetClass.prototype.getTitleBarContent = function(continuation) {
 			var settingsButton = this.hasViewablePrefs_() ?
 									'<a href="#" onclick="shindig.container.getGadget(' + this.id +
@@ -181,9 +202,9 @@ public class GridLayoutManagerController
 			var toogleButton = '<a href="#" onclick="shindig.container.getGadget(' + this.id +
 						 ').handleToggle();return false;" class="' + this.cssClassTitleButtonToogle +
 						 '"></a>';						
-			var fullScreenButton = '<a href="#" onclick="shindig.container.getGadget(' + this.id +
+			var fullScreenButton = this.isHomeView()?'<a href="#" onclick="shindig.container.getGadget(' + this.id +
 						 ').openInCanvas();return false;" class="' + this.cssClassTitleButtonFullScreen +
-						 '"></a>';						
+						 '"></a>':'';						
 									
 			continuation('<div id="' + this.cssClassTitleBar + '-' + this.id +
 						 '" class="' + this.cssClassTitleBar + '"><span id="' +
@@ -203,6 +224,7 @@ public class GridLayoutManagerController
 		 
   		$wnd.shindig.container.gadgetClass = CruxGadgetClass;
 	}-*/;//TODO: adicionar botao para permissoes opensocial
+	//TODO: adicionar controle para informar se deve adicionar botao de navegacao na view canvas
 	
 	/**
 	 * 
@@ -227,6 +249,21 @@ public class GridLayoutManagerController
 	 * @param isDebug
 	 */
 	protected native void renderGadgets(JsArray<JsArray<GadgetMetadata>> gadgetConfigs, boolean isDebug)/*-{
+		
+		function isRequiresSubPub2(gadget)
+		{
+			var requiresPubSub2 = false;
+			var arr = gadget.features;
+			if (arr) {
+				for(var i = 0; i < arr.length; i++) {
+					if (arr[i] === "pubsub-2") {
+						requiresPubSub2 = true;
+						break;
+					}
+				}
+			}
+			return requiresPubSub2;
+		}
 		for (var i = 0; i < gadgetConfigs.length; i++) {
 			var gadgetConfig = gadgetConfigs[i];
 			for (var j = 0; j < gadgetConfig.length; j++) {
@@ -234,7 +271,7 @@ public class GridLayoutManagerController
 						{debug: (isDebug?1:0), 'specUrl': gadgetConfig[j].url, 
 						'title': gadgetConfig[j].title, 'userPrefs': gadgetConfig[j].userPrefs, 
 						'height': gadgetConfig[j].height, 'width': gadgetConfig[j].width, 
-						'features': gadgetConfig[j].features});
+						'requiresPubSub2': isRequiresSubPub2(gadgetConfig[j])});
 						//'secureToken': escape(generateSecureToken())});
 				$wnd.shindig.container.addGadget(gadget);
 				$wnd.shindig.container.renderGadget(gadget);
@@ -306,12 +343,24 @@ public class GridLayoutManagerController
 	 */
 	protected native void makeDashboardSortable(GridLayoutManagerController controller)/*-{
 		$wnd.$(function() {
+			var draggingFrame;
 			$wnd.$( ".LayoutColumn" ).sortable({
 				connectWith: ".LayoutColumn",
-				deactivate: function(event, ui){
+				start: function(event, ui){
 					var gadgetId = controller.@org.cruxframework.crux.gadgets.client.controller.GridLayoutManagerController::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+					
+					var framePrefix = $wnd.shindig.container.gadgetClass.prototype.GADGET_IFRAME_PREFIX_;
+					draggingFrame = $doc.getElementById( framePrefix+gadgetId );
+					draggingFrame.style.display = 'none';
+				},
+				stop: function(event, ui){
+					var gadgetId = controller.@org.cruxframework.crux.gadgets.client.controller.GridLayoutManagerController::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+					if (draggingFrame) {
+						draggingFrame.style.display = '';
+						draggingFrame = null;
+					}
 					var gadget = $wnd.shindig.container.getGadget(gadgetId);
-  				    gadget.refresh();
+  			    	gadget.refresh();
 				}
 			}).disableSelection();
 		});	

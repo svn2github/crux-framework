@@ -27,12 +27,12 @@
 	  "views" : {
 	    "profile" : {
 	      "isOnlyVisible" : false,
-	      "urlTemplate" : "http://localhost/gadgets/profile?{var}",
+	      "urlTemplate" : "http://localhost:8888/gadgets/profile?{var}",
 	      "aliases": ["DASHBOARD", "default"]
 	    },
 	    "canvas" : {
 	      "isOnlyVisible" : true,
-	      "urlTemplate" : "http://localhost/gadgets/canvas?{var}",
+	      "urlTemplate" : "http://localhost:8888/gadgets/canvas?{var}",
 	      "aliases" : ["FULL_PAGE"]
 	    }
 	  },

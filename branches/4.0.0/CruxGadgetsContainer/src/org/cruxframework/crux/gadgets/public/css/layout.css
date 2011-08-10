@@ -1,3 +1,2 @@
-.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; margin:7px;}
+.ui-sortable-placeholder { visibility: visible !important; }
 .ui-sortable-placeholder * { visibility: hidden; }
-.LayoutCell { margin:7px; }
