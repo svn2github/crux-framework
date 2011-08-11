@@ -23,13 +23,33 @@ import com.google.gwt.core.client.JsArray;
  */
 public class GadgetsConfiguration
 {
-	private boolean debug = true;
+	public static enum ContainerView
+	{
+		profile("profile"),
+		canvas("canvas");
+		
+		private String viewName;
+		ContainerView(String viewName)
+		{
+			this.viewName = viewName;
+		}
+		
+		@Override
+		public String toString()
+		{
+		    return viewName;
+		}
+	}
+	
+	private boolean cacheEnabled = true;
+	private boolean debug = false;
 	private JsArray<JsArray<GadgetMetadata>> metadata;
-	private boolean caja = false;
+	private boolean cajaEnabled = false;
 	private String containerParentUrl = "http://localhost:8080/";
+	private String containerUrl;
 	private String country;
 	private String language;
-	private String currentView;
+	private ContainerView currentView;
 	private String gadgetUrl;
 	
 	public JsArray<JsArray<GadgetMetadata>> getMetadata()
@@ -52,14 +72,14 @@ public class GadgetsConfiguration
 	    return debug;
     }
 
-	public void setUseCaja(boolean caja)
+	public void setCajaEnabled(boolean cajaEnable)
 	{
-		this.caja = caja;
+		this.cajaEnabled = cajaEnable;
 	}
 	
-	public boolean useCaja()
+	public boolean isCajaEnabled()
     {
-	    return caja;
+	    return cajaEnabled;
     }
 
 	public String getContainerParentUrl()
@@ -92,12 +112,12 @@ public class GadgetsConfiguration
     	this.language = language;
     }
 
-	public String getCurrentView()
+	public ContainerView getCurrentView()
     {
     	return currentView;
     }
 
-	public void setCurrentView(String currentView)
+	public void setCurrentView(ContainerView currentView)
     {
     	this.currentView = currentView;
     }
@@ -111,4 +131,26 @@ public class GadgetsConfiguration
     {
     	this.gadgetUrl = gadgetUrl;
     }
+
+	public void setContainerUrl(String containerUrl)
+    {
+	   this.containerUrl = containerUrl;
+    }
+
+	public String getContainerUrl()
+	{
+		return containerUrl;
+	}
+
+	public boolean isCacheEnabled()
+    {
+    	return cacheEnabled;
+    }
+
+	public void setCacheEnabled(boolean cacheEnabled)
+    {
+    	this.cacheEnabled = cacheEnabled;
+    }
+	
+	
 }

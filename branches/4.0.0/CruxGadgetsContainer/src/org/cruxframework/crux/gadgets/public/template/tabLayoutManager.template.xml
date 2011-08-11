@@ -4,11 +4,14 @@
 			xmlns:crux="http://www.cruxframework.org/crux/widgets"
             xmlns:t="http://www.cruxframework.org/templates" library="gadgetContainer"
             useController="tabLayoutController"> 
-	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" onLoadWidget="tabLayoutController.onLoad">
+    <script type="text/javascript">
+    	_containerHeight = "#{height}";
+    </script>
+	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" onLoadWidget="tabLayoutController.onLoad" style="overflow: hidden">
 		<crux:tab>
-			<crux:tabText>#{homeTabTitle}</crux:tabText>
+			<crux:tabText>#{profileTabTitle}</crux:tabText>
 			<crux:panelContent>
-				<gwt:HTML id="gridContainer" />
+				<gwt:HTML id="gridContainer" height="100%"/>
 			</crux:panelContent>
 		</crux:tab>
 	</crux:rollingTabPanel>

@@ -27,11 +27,14 @@ import com.google.gwt.i18n.client.Messages;
 public interface TabLayoutMsg extends Messages
 {
 	@DefaultMessage("Dashboard")
-	String homeTitle();
+	String profileTitle();
 	
 	@DefaultMessage("LayoutManager is not configured. Insert one of the crux layoutManager templates on your container page.")
 	String layoutManagerNotFound();
 
 	@DefaultMessage("LayoutManager is already configured. Do not insert more than one layoutManager on your container page.")
 	String duplicatedLayoutManager();
+
+	@DefaultMessage("gadget {0} is not contained on your page.")
+	String gadgetNotFound(int gadgetId);
 }

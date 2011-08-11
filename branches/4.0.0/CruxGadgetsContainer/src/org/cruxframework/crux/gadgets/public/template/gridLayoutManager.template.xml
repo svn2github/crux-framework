@@ -4,5 +4,8 @@
 			xmlns:crux="http://www.cruxframework.org/crux/widgets"
             xmlns:t="http://www.cruxframework.org/templates" library="gadgetContainer"
             useController="gridLayoutController"> 
+    <script type="text/javascript">
+    	_containerHeight = "#{height}";
+    </script>
 	<gwt:HTML id="gridContainer" width="100%" height="100%" onLoadWidget="gridLayoutController.onLoad"/>
 </t:template>

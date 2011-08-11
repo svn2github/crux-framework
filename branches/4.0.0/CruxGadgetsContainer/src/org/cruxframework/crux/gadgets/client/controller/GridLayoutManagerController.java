@@ -5,15 +5,19 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.ScreenWrapper;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.gadgets.client.TabLayoutMsg;
 import org.cruxframework.crux.gadgets.client.dto.GadgetMetadata;
 import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration;
+import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration.ContainerView;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -29,6 +33,8 @@ public class GridLayoutManagerController
 	
 	@Create
 	protected LayoutScreen screen;
+
+	private GadgetsConfiguration configuration;
 	
 	@Expose
 	public void onLoad()
@@ -42,8 +48,16 @@ public class GridLayoutManagerController
 	 */
 	public void configure(GadgetsConfiguration configuration)
 	{
-		configureContainer(configuration);
-		renderGadgets(configuration.getMetadata(), configuration.isDebug());
+		this.configuration = configuration;
+		configureContainer();
+		String canvasHeight = null;
+		String canvasWidth = null;
+		if (configuration.getCurrentView() == ContainerView.canvas)
+		{
+			canvasHeight = getContainerHeight();
+			canvasWidth = "100%";
+		}
+		renderGadgets(configuration.getMetadata(), configuration.isDebug(), canvasHeight, canvasWidth);
 		
 		Scheduler.get().scheduleDeferred(new ScheduledCommand()
 		{
@@ -54,6 +68,14 @@ public class GridLayoutManagerController
 			}
 		});
 	}
+
+	/**
+	 * Retrieve the height to be used for gadgets when rendering on canvas view.
+	 * @return
+	 */
+	protected native String getContainerHeight()/*-{
+	    return $wnd._containerHeight || null;
+    }-*/;
 
 	/**
 	 * Create a hook function, called by GadgetConfigController to start the container configuration 
@@ -81,19 +103,37 @@ public class GridLayoutManagerController
 	}
 	
 	/**
-	 * Create the container grid for gadgets and the layoutManager to control that grid.
-	 * @param configuration
+	 * Configure the container.
 	 */
-	protected void configureContainer(GadgetsConfiguration configuration)
+	protected void configureContainer()
     {
-	    Element gridContainer = screen.getGridContainer().getElement();
-		StringBuilder tableHtml = new StringBuilder();
-		generateGridDashboard(tableHtml, configuration.getMetadata());
-		gridContainer.setInnerHTML(tableHtml.toString());
+	    createdGridDashboard();
 		createInheritsFunction();
 		createNativeLayoutManager(this);
-		createNativeGadgetClass(this, configuration.useCaja(), configuration.isDebug());
-		setContainerParentURL(configuration.getContainerParentUrl());
+		createNativeGadgetClass();
+		configureGadgetClass();
+    }
+
+	/**
+	 * Create the native javascript class used by shindig to render a gadget
+	 */
+	protected void createNativeGadgetClass()
+    {
+		createGadgetClass();
+		createGadgetClassGetIframeUrlFunction();
+		createGadgetClassGetAditionalParamsFunction(configuration.isCajaEnabled(), configuration.isDebug());
+		createGadgetClassIsHomeViewFunction();
+		createGadgetClassGetTitleBarContentFunction();
+		createGadgetClassChangeViewFunction(this);
+    }
+
+	/**
+	 * Create the container grid for gadgets.
+	 */
+	protected void createdGridDashboard()
+    {
+	    Element gridContainer = screen.getGridContainer().getElement();
+		gridContainer.setInnerHTML(generateGridDashboard());
     }
 	
 	/**
@@ -110,7 +150,7 @@ public class GridLayoutManagerController
 	}-*/;
 	
 	/**
-	 * Create the gadget Layout Manager and associate it with gadget.container.layoutManager
+	 * Create the gadget Layout Manager and associate it with gadget.container.layoutManager.
 	 * @param controller
 	 */
 	protected native void createNativeLayoutManager(GridLayoutManagerController controller)/*-{
@@ -130,13 +170,10 @@ public class GridLayoutManagerController
 	}-*/;
 
 	/**
-	 * Create the javascript class used by shindig to render a gadget and associate it with 
-	 * shindig.container.gadgetClass
-	 * @param useCaja
-	 * @param isDebug
+	 * Create the javascript class used by shindig to render a gadget.
 	 */
-	protected native void createNativeGadgetClass(GridLayoutManagerController controller, boolean useCaja, boolean isDebug)/*-{
-		var CruxGadgetClass = function(opt_params) {
+	protected native void createGadgetClass()/*-{
+		$wnd.CruxGadgetClass = function(opt_params) {
     		$wnd.shindig.Gadget.call(this, opt_params);
 			this.serverBase_ = '/gadgets/'; // default gadget server
 			if (!this.view) {
@@ -154,9 +191,14 @@ public class GridLayoutManagerController
 			}     		
   		};
 
-  		CruxGadgetClass.inherits($wnd.shindig.BaseIfrGadget);
-
-  		CruxGadgetClass.prototype.getIframeUrl = function() {
+		$wnd.CruxGadgetClass.inherits($wnd.shindig.BaseIfrGadget);
+	}-*/;
+	
+	/**
+	 * Create the getIframeUrl function for the gadget class. 
+	 */
+	protected native void createGadgetClassGetIframeUrlFunction()/*-{
+  		$wnd.CruxGadgetClass.prototype.getIframeUrl = function() {
 			return this.serverBase_ + 'ifr?' +
 				'container=' + this.CONTAINER +
 				'&mid=' + this.id +
@@ -166,18 +208,26 @@ public class GridLayoutManagerController
 				'&view=' + this.view +
 				(this.specVersion ? '&v=' + this.specVersion : '') +
 				((!this.requiresPubSub2 && $wnd.shindig.container.parentUrl_) ? '&parent=' + encodeURIComponent($wnd.shindig.container.parentUrl_) : '') +
-				(this.debug ? '&debug=1' : '') +
+				//(this.debug ? '&debug=1' : '') +
 				this.getAdditionalParams() +
 				this.getUserPrefsParams() +
 				(this.secureToken ? '&st=' + this.secureToken : '') +
 				'&url=' + encodeURIComponent(this.specUrl) +
 				(!this.requiresPubSub2? '#rpctoken=' + this.rpcToken:'') +
 				(this.viewParams ?
-				'&view-params=' + encodeURIComponent(gadgets.json.stringify(this.viewParams)) : '') +
+				'&view-params=' + encodeURIComponent($wnd.gadgets.json.stringify(this.viewParams)) : '') +
 				(this.hashData ? (!this.requiresPubSub2?'&':'#') + this.hashData : '');
   		};
-
-  		CruxGadgetClass.prototype.getAdditionalParams = function() {
+	}-*/;
+	
+	/**
+	 * Create the getAdditionalParams function for the gadget class. 
+	 * 
+	 * @param useCaja
+	 * @param isDebug
+	 */
+	protected native void createGadgetClassGetAditionalParamsFunction(boolean useCaja, boolean isDebug)/*-{
+  		$wnd.CruxGadgetClass.prototype.getAdditionalParams = function() {
     		var params = '';
 
     		if (useCaja) {
@@ -188,12 +238,23 @@ public class GridLayoutManagerController
     		}
     		return params;
   		};
-
-  		CruxGadgetClass.prototype.isHomeView = function() {
+	}-*/;
+	
+	/**
+	 * Create the isHomeView function for the gadget class. 
+	 */
+	protected native void createGadgetClassIsHomeViewFunction()/*-{
+  		$wnd.CruxGadgetClass.prototype.isHomeView = function() {
   			return this.view === "home" || this.view === "profile" || this.view === "default";
   		};
+  	}-*/;
   		
-		CruxGadgetClass.prototype.getTitleBarContent = function(continuation) {
+	/**
+	 * Create the getTitleBarContent function for the gadget class. 
+	 */
+	protected native void createGadgetClassGetTitleBarContentFunction()/*-{
+		$wnd.CruxGadgetClass.prototype.getTitleBarContent = function(continuation) {
+			
 			var settingsButton = this.hasViewablePrefs_() ?
 									'<a href="#" onclick="shindig.container.getGadget(' + this.id +
 									').handleOpenUserPrefsDialog();return false;" class="' + this.cssClassTitleButtonSettings +
@@ -201,54 +262,93 @@ public class GridLayoutManagerController
 									: '';
 			var toogleButton = '<a href="#" onclick="shindig.container.getGadget(' + this.id +
 						 ').handleToggle();return false;" class="' + this.cssClassTitleButtonToogle +
+						 '"></a>';
+
+			var fullScreenButton = '<a href="#" onclick="shindig.container.getGadget(' + this.id +
+						 ').changeView();return false;" class="' + 
+						 (this.isHomeView()?this.cssClassTitleButtonFullScreen:this.cssClassTitleButtonRestoreScreen) +
 						 '"></a>';						
-			var fullScreenButton = this.isHomeView()?'<a href="#" onclick="shindig.container.getGadget(' + this.id +
-						 ').openInCanvas();return false;" class="' + this.cssClassTitleButtonFullScreen +
-						 '"></a>':'';						
 									
+			var menuButton = '<a href="#" onclick="shindig.container.getGadget(' + this.id +
+						 ').changeView();return false;" class="' + this.cssClassTitleButtonMenu + '"></a>';						
+
 			continuation('<div id="' + this.cssClassTitleBar + '-' + this.id +
 						 '" class="' + this.cssClassTitleBar + '"><span id="' +
 						 this.getIframeId() + '_title" class="' +
 						 this.cssClassTitle + '">' + (this.title ? this.title : 'Title') + '</span><div class="' +
-						 this.cssClassTitleButtonBar + '">' + settingsButton + toogleButton + fullScreenButton +
+						 this.cssClassTitleButtonBar + '">' + settingsButton + fullScreenButton + toogleButton + menuButton + 
 						 '</div></div>');
 		}; 
 
-  		CruxGadgetClass.prototype.openInCanvas = function() {
-			controller.@org.cruxframework.crux.gadgets.client.controller.GridLayoutManagerController::goToCanvas(I)(gadget.id);  		
-  		};
 
-		CruxGadgetClass.prototype.cssClassTitleButtonSettings = 'gadgets-gadget-title-button-settings';
-		CruxGadgetClass.prototype.cssClassTitleButtonToogle = 'gadgets-gadget-title-button-toogle';
-		CruxGadgetClass.prototype.cssClassTitleButtonFullScreen = 'gadgets-gadget-title-button-full-screen';
-		 
-  		$wnd.shindig.container.gadgetClass = CruxGadgetClass;
-	}-*/;//TODO: adicionar botao para permissoes opensocial
+		$wnd.CruxGadgetClass.prototype.cssClassTitleButtonMenu = 'gadgets-gadget-title-button-menu';
+		$wnd.CruxGadgetClass.prototype.cssClassTitleButtonSettings = 'gadgets-gadget-title-button-settings';
+		$wnd.CruxGadgetClass.prototype.cssClassTitleButtonToogle = 'gadgets-gadget-title-button-toogle';
+		$wnd.CruxGadgetClass.prototype.cssClassTitleButtonFullScreen = 'gadgets-gadget-title-button-full-screen';
+		$wnd.CruxGadgetClass.prototype.cssClassTitleButtonRestoreScreen = 'gadgets-gadget-title-button-restore-screen';
+	}-*/;
+	//TODO: adicionar botao para permissoes opensocial
 	//TODO: adicionar controle para informar se deve adicionar botao de navegacao na view canvas
+	
+	/**
+	 * Create the openInCanvas function for the gadget class. 
+	 */
+	protected native void createGadgetClassChangeViewFunction(GridLayoutManagerController controller)/*-{
+  		$wnd.CruxGadgetClass.prototype.changeView = function() {
+			controller.@org.cruxframework.crux.gadgets.client.controller.GridLayoutManagerController::changeGadgetView(IZ)(this.id, this.isHomeView());  		
+  		};
+	}-*/;
+	
+	
+	/**
+	 * Create the openInCanvas function for the gadget class. 
+	 */
+	protected native void configureGadgetClass()/*-{
+  		$wnd.shindig.container.gadgetClass = $wnd.CruxGadgetClass;
+	}-*/;
 	
 	/**
 	 * 
 	 * @param gadgetId
+	 * @param homeView
 	 */
-	protected void goToCanvas(int gadgetId)
+	protected void changeGadgetView(int gadgetId, boolean homeView)
 	{
-		
+		UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+		if (homeView)
+		{
+			String gadgetUrl = getGadgetUrl(gadgetId);
+			if (StringUtils.isEmpty(gadgetUrl))
+			{
+				Crux.getErrorHandler().handleError(messages.gadgetNotFound(gadgetId));
+			}
+			urlBuilder.setParameter("url", gadgetUrl);
+		}
+		else
+		{
+			urlBuilder.removeParameter("url");
+		}
+		Window.Location.assign(urlBuilder.buildString());
 	}
 	
 	/**
-	 * Set the parentUrl property of the shindig container.
-	 * @param parentURL
+	 * 
+	 * @param gadgetId
+	 * @return
 	 */
-	protected native void setContainerParentURL(String parentURL)/*-{
-		$wnd.shindig.container.setParentUrl(parentURL);
+	protected native String getGadgetUrl(int gadgetId)/*-{
+		var gadget = $wnd.shindig.container.getGadget(gadgetId)
+		return (gadget?gadget.specUrl:'');
 	}-*/;
 	
 	/**
 	 * Render the gadgets on the page.
 	 * @param gadgetConfigs
 	 * @param isDebug
+	 * @param canvasHeight 
+	 * @param canvasWidth 
 	 */
-	protected native void renderGadgets(JsArray<JsArray<GadgetMetadata>> gadgetConfigs, boolean isDebug)/*-{
+	protected native void renderGadgets(JsArray<JsArray<GadgetMetadata>> gadgetConfigs, boolean isDebug, String canvasHeight, String canvasWidth)/*-{
 		
 		function isRequiresSubPub2(gadget)
 		{
@@ -270,7 +370,7 @@ public class GridLayoutManagerController
 				var gadget = $wnd.shindig.container.createGadget(
 						{debug: (isDebug?1:0), 'specUrl': gadgetConfig[j].url, 
 						'title': gadgetConfig[j].title, 'userPrefs': gadgetConfig[j].userPrefs, 
-						'height': gadgetConfig[j].height, 'width': gadgetConfig[j].width, 
+						'height': (canvasHeight!=null?canvasHeight:gadgetConfig[j].height), 'width': (canvasWidth!=null?canvasWidth:gadgetConfig[j].width), 
 						'requiresPubSub2': isRequiresSubPub2(gadgetConfig[j])});
 						//'secureToken': escape(generateSecureToken())});
 				$wnd.shindig.container.addGadget(gadget);
@@ -314,11 +414,13 @@ public class GridLayoutManagerController
 
 	/**
 	 * Generate the HTML structure for the Gadgets dashboard.
-	 * @param tableHtml
+	 * @return
 	 */
-	protected void generateGridDashboard(StringBuilder tableHtml, JsArray<JsArray<GadgetMetadata>> gadgetConfigs)
+	protected String generateGridDashboard()
 	{
-		tableHtml.append("<div class='LayoutGrid' style='width:100%;'>"); 
+		StringBuilder tableHtml = new StringBuilder();
+		JsArray<JsArray<GadgetMetadata>> gadgetConfigs = configuration.getMetadata();
+		tableHtml.append("<div class='LayoutGrid' style='width:100%;height:"+getContainerHeight()+";'>"); 
 		
 		int numColumns = gadgetConfigs.length();
 		int colWidth = 100 / numColumns;
@@ -335,11 +437,13 @@ public class GridLayoutManagerController
 			tableHtml.append("</div>");
 		}
 		tableHtml.append("</div>");
+		return tableHtml.toString();
 	}
 	
 	/**
 	 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
 	 * columns with sortable dragable elements.
+	 * @param controller
 	 */
 	protected native void makeDashboardSortable(GridLayoutManagerController controller)/*-{
 		$wnd.$(function() {

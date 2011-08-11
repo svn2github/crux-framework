@@ -23,8 +23,8 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.gadgets.client.TabLayoutMsg;
 import org.cruxframework.crux.gadgets.client.dto.GadgetMetadata;
 import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration;
+import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration.ContainerView;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
@@ -145,10 +145,12 @@ public class GadgetConfigController
     {
 		configuration = new GadgetsConfiguration();
 		configuration.setDebug(debug);
-		String containerURL = getContainerURL();
 		String url = Window.Location.getParameter("url");
-		configureLocale(configuration);
-		configureCurrentView(configuration, url);
+		configureContainerURL();
+		configureLocale();
+		configureCache();
+		configureCurrentView(url);
+		configureContainerParentURL(configuration.getContainerParentUrl());
 		
 		JsArrayString gadgets;
 		if (StringUtils.isEmpty(url))
@@ -162,10 +164,16 @@ public class GadgetConfigController
 		}
 		getGadgetsMetadata(configuration.getCountry(), 
 						   configuration.getLanguage(), 
-						   configuration.getCurrentView(), 
+						   configuration.getCurrentView().toString(), 
 						   "john.doe:john.doe:appid:cont:url:0:default", 
 						   gadgets, this);
 	    
+    }
+
+	protected void configureContainerURL()
+    {
+	    String containerURL = getContainerURL();
+		configuration.setContainerUrl(containerURL);
     }
 
 	protected native JsArray<JsArray<GadgetMetadata>> createMetadataGrid()/*-{
@@ -184,16 +192,25 @@ public class GadgetConfigController
 	{
 		//TODO: carregar configuracoes de urlbase, parentcontainerurl, currentView, userId, groupId
 		configuration.setMetadata(getGadgetsMetadata(metadata));
-		nativeConfigure(configuration);
+		notifyListeners(configuration);
 	}
 
-	private void configureCurrentView(GadgetsConfiguration configuration, String url)
+	protected void configureCurrentView(String url)
     {
-	    String currentView = (StringUtils.isEmpty(url)?"profile":"canvas");
+		ContainerView currentView = (StringUtils.isEmpty(url)?ContainerView.profile:ContainerView.canvas);
 		configuration.setCurrentView(currentView);
+		configureNativeCurrentView(currentView.toString());
     }
 
-	private void configureLocale(GadgetsConfiguration configuration)
+	protected void configureCache()
+    {
+		String nocache = Window.Location.getParameter("nocache");
+		boolean cacheEnabled = (nocache==null || !nocache.equals("1"));
+		configuration.setCacheEnabled(cacheEnabled);
+		configureNativeCacheUse(cacheEnabled);
+    }	
+	
+	protected void configureLocale()
     {
 	    String country = Window.Location.getParameter("country");
 		String language = Window.Location.getParameter("lang");
@@ -220,6 +237,7 @@ public class GadgetConfigController
 		}
 		configuration.setLanguage(language);
 		configuration.setCountry(country);
+		configureNativeLocale(language, country);
     }
 
 	/**
@@ -230,7 +248,14 @@ public class GadgetConfigController
 		return ($doc.location + '')
 	}-*/;
 	
-	
+	/**
+	 * Set the parentUrl property of the shindig container.
+	 * @param parentURL
+	 */
+	protected native void configureContainerParentURL(String parentURL)/*-{
+		$wnd.shindig.container.setParentUrl(parentURL);
+	}-*/;
+		
 	/**
 	 * 
 	 * @param metadata
@@ -245,14 +270,28 @@ public class GadgetConfigController
 	    return array;
     }
 	
-	private native void nativeConfigure(GadgetsConfiguration config)/*-{
+	private native void notifyListeners(GadgetsConfiguration config)/*-{
 		$wnd.__configureLayoutManager(config);
 	}-*/;
 
-	protected native boolean checkLayoutManager()/*-{
+	private native boolean checkLayoutManager()/*-{
 	    if (!$wnd.__configureLayoutManager){
 	    	false;
 	    }
 	    return true;
     }-*/;
+	
+	private native void configureNativeCurrentView(String viewName)/*-{
+	    $wnd.shindig.container.view_ = viewName;
+    }-*/;
+	
+	private native void configureNativeCacheUse(boolean cache)/*-{
+		$wnd.shindig.container.nocache_ = (cache?0:1);
+	}-*/;
+	
+	private native void configureNativeLocale(String language, String country)/*-{
+    	$wnd.shindig.container.language_ = language;
+    	$wnd.shindig.container.country_ = country;
+    }-*/;
+	
 }
