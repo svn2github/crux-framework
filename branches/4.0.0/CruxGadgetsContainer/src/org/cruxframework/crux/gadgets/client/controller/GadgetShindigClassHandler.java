@@ -187,20 +187,20 @@ public class GadgetShindigClassHandler
 	/**
 	 * Create the getTitleBarContent function for the gadget class. 
 	 */
-	protected native void createGadgetClassGetTitleBarContentFunction(boolean showRestoreScreenButton)/*-{
+	protected native void createGadgetClassGetTitleBarContentFunction(boolean showControlButtons)/*-{
 		$wnd.CruxGadgetClass.prototype.getTitleBarContent = function(continuation) {
 
 			var toogleButton = (this.isProfileView()?'<a href="#" id="gadgets_gadget_toogle_' + this.id + '" onclick="shindig.container.getGadget(' + this.id +
 						 ').handleToggle();return false;" class="' + this.cssClassTitleButtonToogle +
 						 '"></a>':'');
 
-			var fullScreenButton = ((this.isProfileView() || showRestoreScreenButton)?'<a id="gadgets_gadget_full_screen_' + this.id + 
+			var fullScreenButton = ((this.isProfileView() || showControlButtons)?'<a id="gadgets_gadget_full_screen_' + this.id + 
 			             '"href="#" onclick="shindig.container.getGadget(' + this.id +
 						 ').changeView();return false;" class="' + 
 						 (this.isProfileView()?this.cssClassTitleButtonFullScreen:this.cssClassTitleButtonRestoreScreen) +
 						 '"></a>':'');						
 									
-			var menuButton = ((this.isProfileView() || showRestoreScreenButton)?'<a href="#" id="gadgets_gadget_menu_' + this.id + 
+			var menuButton = ((this.isProfileView() || showControlButtons)?'<a href="#" id="gadgets_gadget_menu_' + this.id + 
 						 '" onclick="shindig.container.getGadget(' + this.id +
 						 ').openMenuOptions(this);return false;" class="' + this.cssClassTitleButtonMenu + '"></a>':'');						
 
