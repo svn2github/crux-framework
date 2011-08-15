@@ -154,8 +154,8 @@ public class GadgetContainer extends JavaScriptObject
 		this.addGadget(gadget);
 	}-*/;
 
-	public final native void removeGadget(Gadget gadget)/*-{
-		delete this.gadgets_[this.getGadgetKey_(gadget.id)];
+	public final native void removeGadget(int gadgetId)/*-{
+		delete this.gadgets_[this.getGadgetKey_(gadgetId)];
 	}-*/;
 		
 	public final native void renderGadget(Gadget gadget)/*-{

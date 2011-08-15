@@ -247,13 +247,16 @@ public class GridLayoutManagerController
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				removeGadget(gadgetId);
+				configuration.getContainer().removeGadget(gadgetId);
+				removeDom(gadgetId);
 				optionsDialog.hide();
 			}
 
-			private native void removeGadget(int gadgetId)/*-{
-	            $wnd.shindig.container.getGadget(gadgetId).handleOpenUserPrefsDialog();
-            }-*/;
+			private void removeDom(int gadgetId)
+            {
+				Element gadgetChrome = DOM.getElementById(getGadgetChromeId(gadgetId));
+				gadgetChrome.removeFromParent();
+            }
 		});
 	    return delete;
     }

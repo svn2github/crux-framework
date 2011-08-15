@@ -129,6 +129,6 @@ public class Gadget extends JavaScriptObject
 	
 	public final void remove()
 	{
-		GadgetContainer.get().removeGadget(this);
+		GadgetContainer.get().removeGadget(this.getId());
 	}
 }
