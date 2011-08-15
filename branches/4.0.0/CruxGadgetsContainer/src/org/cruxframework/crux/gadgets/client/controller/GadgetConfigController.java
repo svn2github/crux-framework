@@ -20,10 +20,10 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.gadgets.client.TabLayoutMsg;
+import org.cruxframework.crux.gadgets.client.GadgetContainerMsg;
+import org.cruxframework.crux.gadgets.client.dto.ContainerView;
 import org.cruxframework.crux.gadgets.client.dto.GadgetMetadata;
 import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration;
-import org.cruxframework.crux.gadgets.client.dto.GadgetsConfiguration.ContainerView;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.Window;
 public class GadgetConfigController
 {
 	@Create
-	protected TabLayoutMsg messages;
+	protected GadgetContainerMsg messages;
 	private GadgetsConfiguration configuration;
 	
 	@Expose
@@ -144,13 +144,14 @@ public class GadgetConfigController
 	protected void configure(boolean debug)
     {
 		configuration = new GadgetsConfiguration();
-		configuration.setDebug(debug);
+		configuration.getContainer().setDebug(debug);
 		String url = Window.Location.getParameter("url");
 		configureContainerURL();
 		configureLocale();
 		configureCache();
 		configureCurrentView(url);
-		configureContainerParentURL(configuration.getContainerParentUrl());
+		configureGadgetCanvasHeight();
+		configuration.getContainer().setParentUrl(getContainerURL());
 		
 		JsArrayString gadgets;
 		if (StringUtils.isEmpty(url))
@@ -162,12 +163,18 @@ public class GadgetConfigController
 			gadgets = createStringArray();
 			gadgets.push(url);
 		}
-		getGadgetsMetadata(configuration.getCountry(), 
-						   configuration.getLanguage(), 
-						   configuration.getCurrentView().toString(), 
+		getGadgetsMetadata(configuration.getContainer().getCountry(), 
+						   configuration.getContainer().getLanguage(), 
+						   configuration.getContainer().getCurrentView().toString(), 
 						   "john.doe:john.doe:appid:cont:url:0:default", 
 						   gadgets, this);
 	    
+    }
+
+	protected void configureGadgetCanvasHeight()
+    {
+		configuration.getContainer().setGadgetCanvasHeight(getGadgetCanvasHeight());
+		configuration.getContainer().setGadgetCanvasWidth("100%");
     }
 
 	protected void configureContainerURL()
@@ -198,16 +205,14 @@ public class GadgetConfigController
 	protected void configureCurrentView(String url)
     {
 		ContainerView currentView = (StringUtils.isEmpty(url)?ContainerView.profile:ContainerView.canvas);
-		configuration.setCurrentView(currentView);
-		configureNativeCurrentView(currentView.toString());
+		configuration.getContainer().setCurrentView(currentView);
     }
 
 	protected void configureCache()
     {
 		String nocache = Window.Location.getParameter("nocache");
 		boolean cacheEnabled = (nocache==null || !nocache.equals("1"));
-		configuration.setCacheEnabled(cacheEnabled);
-		configureNativeCacheUse(cacheEnabled);
+		configuration.getContainer().setCacheEnabled(cacheEnabled);
     }	
 	
 	protected void configureLocale()
@@ -235,10 +240,17 @@ public class GadgetConfigController
 		{
 			country = "default";
 		}
-		configuration.setLanguage(language);
-		configuration.setCountry(country);
-		configureNativeLocale(language, country);
+		configuration.getContainer().setLanguage(language);
+		configuration.getContainer().setCountry(country);
     }
+
+	/**
+	 * Retrieve the height to be used for gadgets when rendering on canvas view.
+	 * @return
+	 */
+	protected native String getGadgetCanvasHeight()/*-{
+	    return $wnd._gadgetCanvasHeight || null;
+    }-*/;
 
 	/**
 	 * 
@@ -246,14 +258,6 @@ public class GadgetConfigController
 	 */
 	protected native String getContainerURL()/*-{
 		return ($doc.location + '')
-	}-*/;
-	
-	/**
-	 * Set the parentUrl property of the shindig container.
-	 * @param parentURL
-	 */
-	protected native void configureContainerParentURL(String parentURL)/*-{
-		$wnd.shindig.container.setParentUrl(parentURL);
 	}-*/;
 		
 	/**
@@ -280,18 +284,4 @@ public class GadgetConfigController
 	    }
 	    return true;
     }-*/;
-	
-	private native void configureNativeCurrentView(String viewName)/*-{
-	    $wnd.shindig.container.view_ = viewName;
-    }-*/;
-	
-	private native void configureNativeCacheUse(boolean cache)/*-{
-		$wnd.shindig.container.nocache_ = (cache?0:1);
-	}-*/;
-	
-	private native void configureNativeLocale(String language, String country)/*-{
-    	$wnd.shindig.container.language_ = language;
-    	$wnd.shindig.container.country_ = country;
-    }-*/;
-	
 }

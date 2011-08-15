@@ -23,34 +23,9 @@ import com.google.gwt.core.client.JsArray;
  */
 public class GadgetsConfiguration
 {
-	public static enum ContainerView
-	{
-		profile("profile"),
-		canvas("canvas");
-		
-		private String viewName;
-		ContainerView(String viewName)
-		{
-			this.viewName = viewName;
-		}
-		
-		@Override
-		public String toString()
-		{
-		    return viewName;
-		}
-	}
-	
-	private boolean cacheEnabled = true;
-	private boolean debug = false;
 	private JsArray<JsArray<GadgetMetadata>> metadata;
 	private boolean cajaEnabled = false;
-	private String containerParentUrl = "http://localhost:8080/";
 	private String containerUrl;
-	private String country;
-	private String language;
-	private ContainerView currentView;
-	private String gadgetUrl;
 	
 	public JsArray<JsArray<GadgetMetadata>> getMetadata()
     {
@@ -60,16 +35,6 @@ public class GadgetsConfiguration
 	public void setMetadata(JsArray<JsArray<GadgetMetadata>> metadata)
     {
     	this.metadata = metadata;
-    }
-
-	public void setDebug(boolean debug)
-	{
-		this.debug = debug;
-	}
-	
-	public boolean isDebug()
-    {
-	    return debug;
     }
 
 	public void setCajaEnabled(boolean cajaEnable)
@@ -82,56 +47,6 @@ public class GadgetsConfiguration
 	    return cajaEnabled;
     }
 
-	public String getContainerParentUrl()
-    {
-	    return containerParentUrl;
-    }
-
-	public void setContainerParentUrl(String containerParentUrl)
-    {
-    	this.containerParentUrl = containerParentUrl;
-    }
-
-	public String getCountry()
-    {
-    	return country;
-    }
-
-	public void setCountry(String country)
-    {
-    	this.country = country;
-    }
-
-	public String getLanguage()
-    {
-    	return language;
-    }
-
-	public void setLanguage(String language)
-    {
-    	this.language = language;
-    }
-
-	public ContainerView getCurrentView()
-    {
-    	return currentView;
-    }
-
-	public void setCurrentView(ContainerView currentView)
-    {
-    	this.currentView = currentView;
-    }
-
-	public String getGadgetUrl()
-    {
-    	return gadgetUrl;
-    }
-
-	public void setGadgetUrl(String gadgetUrl)
-    {
-    	this.gadgetUrl = gadgetUrl;
-    }
-
 	public void setContainerUrl(String containerUrl)
     {
 	   this.containerUrl = containerUrl;
@@ -142,15 +57,8 @@ public class GadgetsConfiguration
 		return containerUrl;
 	}
 
-	public boolean isCacheEnabled()
-    {
-    	return cacheEnabled;
-    }
-
-	public void setCacheEnabled(boolean cacheEnabled)
-    {
-    	this.cacheEnabled = cacheEnabled;
-    }
-	
-	
+	public GadgetContainer getContainer()
+	{
+		return GadgetContainer.get();
+	}
 }

@@ -4,6 +4,9 @@
 			xmlns:crux="http://www.cruxframework.org/crux/widgets"
             xmlns:t="http://www.cruxframework.org/templates" library="gadgetContainer"
             useController="gadgetConfigController"> 
-		<script type="text/javascript" src="/gadgets/js/shindig-container:pubsub.js?c=1"></script>
-		<gwt:hidden id="containerConfigLoader_" onLoadWidget="gadgetConfigController.onLoadProduction"/>
+	<script type="text/javascript" src="/gadgets/js/shindig-container:pubsub.js?c=1"></script>
+    <script type="text/javascript">
+    	_gadgetCanvasHeight = "#{gadgetCanvasHeight}";
+    </script>
+	<gwt:hidden id="containerConfigLoader_" onLoadWidget="gadgetConfigController.onLoadProduction"/>
 </t:template>

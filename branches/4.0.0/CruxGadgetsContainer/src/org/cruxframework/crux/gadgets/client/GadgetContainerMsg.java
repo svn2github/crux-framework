@@ -18,13 +18,14 @@ package org.cruxframework.crux.gadgets.client;
 import org.cruxframework.crux.core.client.i18n.MessageName;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@MessageName("tabLayoutMsg")
-public interface TabLayoutMsg extends Messages
+@MessageName("_containerMsg")
+public interface GadgetContainerMsg extends Messages
 {
 	@DefaultMessage("Dashboard")
 	String profileTitle();
@@ -37,4 +38,13 @@ public interface TabLayoutMsg extends Messages
 
 	@DefaultMessage("gadget {0} is not contained on your page.")
 	String gadgetNotFound(int gadgetId);
+
+	@DefaultMessage("Delete this gadget")
+	SafeHtml deleteGadgetLink();
+
+	@DefaultMessage("Configure this gadget")
+	SafeHtml settingsGadgetLink();
+
+	@DefaultMessage("About this gadget")
+	SafeHtml aboutGadgetLink();
 }

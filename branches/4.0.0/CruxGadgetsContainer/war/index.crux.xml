@@ -8,6 +8,9 @@
 	<head>
 		<title>My Page</title>
 		<style>
+			.LayoutGrid {
+			   height: 100%;
+			}
 			.gadgets-gadget-chrome {
 			 	width: auto;
 				height: auto;
@@ -64,7 +67,7 @@
 			}
 			
 			
-			.gadgets-gadget-title-button-full-screen, .gadgets-gadget-title-button-restore-screen {
+			.gadgets-gadget-title-button-full-screen {
 			      background-image: url("img/full_screen_icon.png") center no-repeat;
 				  background-image: url("img/full_screen_icon.png") center no-repeat;
 				  background: url("img/full_screen_icon.png") center 5px no-repeat, -webkit-gradient(linear,left top,left bottom, color-stop(0, #FBFBFB), color-stop(1, #dcdcdc));
@@ -87,6 +90,29 @@
 				cursor: pointer;
 			}
 			
+			.gadgets-gadget-title-button-restore-screen {
+			      background-image: url("img/restore_screen_icon.png") center no-repeat;
+				  background-image: url("img/restore_screen_icon.png") center no-repeat;
+				  background: url("img/restore_screen_icon.png") center 5px no-repeat, -webkit-gradient(linear,left top,left bottom, color-stop(0, #FBFBFB), color-stop(1, #dcdcdc));
+				  background: url("img/restore_screen_icon.png") center 5px no-repeat, -moz-linear-gradient(center top, #FBFBFB 0%, #dcdcdc 100%);
+				  background: url("img/restore_screen_icon.png") center 5px no-repeat, -o-linear-gradient(270deg, #FBFBFB, #dcdcdc);
+   				  border: 1px solid #3366CC;
+				  border-radius: 3px 3px 3px 3px;
+				  float: right;
+				  height: 16px;
+				  overflow: hidden;
+				  position: relative;
+				  top: -17px;
+				  width: 16px;
+				  width: 29px;
+				height: 25px;
+				border: 1px solid #A7A7A7;
+				border-radius: 4px;
+				box-shadow: 0 1px 0 #f7f7f7;
+				margin-right: 6px;
+				cursor: pointer;
+			}
+
 			.gadgets-gadget-title-button-toogle {
 			      background-image: url("img/toggle_icon.png") center 8px no-repeat;
 				  background: url("img/toggle_icon.png") center 8px no-repeat, -webkit-gradient(linear,left top,left bottom, color-stop(0, #FBFBFB), color-stop(1, #dcdcdc));
@@ -108,28 +134,6 @@
 				cursor: pointer;
 
 			}
-			 /*botao que atribui permissão para receber dados do user*/
-			.gadgets-gadget-title-button-permission {
-			      background-image: url("img/perm_icon.png") center 8px no-repeat;
-				  background: url("img/perm_icon.png") center 8px no-repeat, -webkit-gradient(linear,left top,left bottom, color-stop(0, #FBFBFB), color-stop(1, #dcdcdc));
-				  background: url("img/perm_icon.png") center 8px no-repeat, -moz-linear-gradient(center top, #FBFBFB 0%, #dcdcdc 100%);
-				  background: url("img/perm_icon.png") center 8px no-repeat, -o-linear-gradient(270deg, #FBFBFB, #dcdcdc);
-   				  border: 1px solid #3366CC;
-				  border-radius: 3px 3px 3px 3px;
-				  float: right;
-				  height: 16px;
-				  overflow: hidden;
-				  position: relative;
-				  top: -17px;
-				  width: 29px;
-				height: 25px;
-				border: 1px solid #A7A7A7;
-				border-radius: 4px;
-				box-shadow:0 1px 0 #f7f7f7, 0 0 4px orange inset;
-				margin-right: 6px;
-				cursor: pointer;
-			}
-			
 			
 			/*botao que abre o menu*/
 			.gadgets-gadget-title-button-menu {
@@ -154,27 +158,23 @@
 			}
 			
 			/*CSS do menu drop down dos widgets*/
-			.menu-widget{
-				background:#e5e5e5;
-				background:-webkit-gradient(linear,left top,left bottom, color-stop(0, #e5e5e5), color-stop(1, #d4d4d4));
-				background:-moz-linear-gradient(center top, #e5e5e5 0%, #d4d4d4 100%);
-				background:-o-linear-gradient(270deg, #e5e5e5, #d4d4d4);
+			.gadgets-gadget-title-options-menu{
+				background:#ffffff;
+				background:-webkit-gradient(linear,left top,left bottom, color-stop(0, #ffffff), color-stop(1, #e5e5e5));
+				background:-moz-linear-gradient(center top, #ffffff 0%, #e5e5e5 100%);
+				background:-o-linear-gradient(270deg, #ffffff, #e5e5e5);
 				border-radius:0 0 5px 5px;
 				border-left:1px solid #c7c7c7;
 				border-right:1px solid #c7c7c7;
 				border-bottom:1px solid #c7c7c7;
 				box-shadow:0 3px 4px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.5) inset;
 				padding:8px 5px;
+				width: 100px;
 					
 			}
-			.menu-widget ul{
-				padding:0;
-				margin:0;	
-			}
-			.menu-widget ul li{
-				padding:8px 0;
-				color:#4a6f9e;
-				font-size:13px;	
+			.gadgets-gadget-title-options-menu .gwt-Anchor{
+				font-size:12px;
+				color:#333333;	
 			}
 			/*************/
 			
@@ -200,7 +200,7 @@
 				background:#ccc;
 			}	
 				
-			.crux-TabBar
+			/*.crux-TabBar
 			{
 				height: 28px;
 			}
@@ -321,7 +321,7 @@
 				padding: 0px;
 				overflow:auto;
 			}
-			
+			*/
 			.gwt-HTML {
 				background-image: url(img/bg.png);
 			}				
@@ -330,11 +330,11 @@
 
 	<body>
 		<script type="text/javascript" src="container/container.nocache.js"></script>
-		<container:gadgetsConfigDebug/>
+		<container:gadgetsConfigDebug gadgetCanvasHeight="700px"/>
 
 		<center>
-			<!--  container:tabLayoutManager profileTabTitle="${tabLayoutMsg.profileTitle}" height="700px" /-->
-			<container:gridLayoutManager height="700px"/>
+			<container:tabLayoutManager profileTabTitle="${_containerMsg.profileTitle}" />
+			<!-- container:gridLayoutManager /-->
 		</center>
 	</body>
 </html>
