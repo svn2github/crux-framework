@@ -204,8 +204,9 @@ public class GadgetShindigClassHandler
 						 '" onclick="shindig.container.getGadget(' + this.id +
 						 ').openMenuOptions(this);return false;" class="' + this.cssClassTitleButtonMenu + '"></a>':'');						
 
+			var cssTitleBar = this.cssClassTitleBar +(this.isProfileView()?'':'-canvas');
 			continuation('<div id="' + this.cssClassTitleBar + '-' + this.id +
-						 '" class="' + this.cssClassTitleBar + '"><span id="' +
+						 '" class="' + cssTitleBar + '"><span id="' +
 						 this.getIframeId() + '_title" class="' +
 						 this.cssClassTitle + '">' + (this.title ? this.title : 'Title') + '</span><div class="' +
 						 this.cssClassTitleButtonBar + '">' + fullScreenButton + toogleButton + menuButton + 

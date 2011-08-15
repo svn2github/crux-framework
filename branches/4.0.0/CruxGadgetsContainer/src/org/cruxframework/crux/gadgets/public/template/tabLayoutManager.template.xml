@@ -4,7 +4,7 @@
 			xmlns:crux="http://www.cruxframework.org/crux/widgets"
             xmlns:t="http://www.cruxframework.org/templates" library="gadgetContainer"
             useController="tabLayoutController"> 
-	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" style="overflow: hidden" onLoadWidget="tabLayoutController.onLoad">
+	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" style="overflow: hidden" onLoadWidget="tabLayoutController.onLoad" >
 		<crux:tab>
 			<crux:tabText>#{profileTabTitle}</crux:tabText>
 			<crux:panelContent>

@@ -24,7 +24,7 @@
 			  border: none;
 			}
 			
-			.gadgets-gadget-title-bar {
+			.gadgets-gadget-title-bar, .gadgets-gadget-title-bar-canvas {
 			 	width: auto;
 				height: 38px;
 				background: -webkit-gradient(linear,left top,left bottom, color-stop(0, #FAFAFA), color-stop(1, #E5E5E5));
@@ -42,9 +42,12 @@
 				-moz-user-select: none;
 				-o-user-select: none;
 				user-select: none;
-				cursor: move;
 				position: relative;
 				color:#111;
+			}
+
+			.gadgets-gadget-title-bar {
+				cursor: move;
 			}
 			
 			.gadgets-gadget-title {
@@ -199,6 +202,15 @@
 				border-right:1px solid rgba(255,255,255,0.3);
 				background:#ccc;
 			}	
+				
+				
+			.tabCloseButton
+			{
+				background-image: url(img/tabs-close.gif);
+				height: 16px;
+				width: 16px;
+			}	
+				
 				
 			/*.crux-TabBar
 			{

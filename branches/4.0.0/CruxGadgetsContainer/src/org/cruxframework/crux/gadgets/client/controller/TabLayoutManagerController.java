@@ -9,6 +9,14 @@ import org.cruxframework.crux.gadgets.client.dto.Gadget;
 import org.cruxframework.crux.gadgets.client.dto.GadgetContainer;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,39 +39,115 @@ public class TabLayoutManagerController extends GridLayoutManagerController
 	{
 		if (profileView)
 		{
-			RollingTabPanel tabManager = tabScreen.getLayoutTabManager();
 			String gadgetKey = Integer.toString(gadgetId);
-			GadgetContainer container = getConfiguration().getContainer();
-			Gadget profileGadget = container.getGadget(gadgetId);
 			if (!openedCanvasGadgetIds.containsKey(gadgetKey))
 			{
-				profileGadget.deactivate();
-				Gadget canvasGadget = container.createGadget(profileGadget, ContainerView.canvas);
-				container.addGadget(canvasGadget);
-				SimplePanel newGadgetChrome = new SimplePanel();
-				newGadgetChrome.setHeight("100%");
-				newGadgetChrome.setWidth("100%");
-				newGadgetChrome.getElement().setId(getGadgetChromeId(canvasGadget.getId()));
-				tabManager.add(newGadgetChrome, canvasGadget.getTitle());
-				container.renderGadget(canvasGadget);
-				int widgetIndex = tabManager.getWidgetIndex(newGadgetChrome);
-				tabManager.selectTab(widgetIndex);
-
-				openedCanvasGadgetIds.put(gadgetKey, canvasGadget.getId());
-				openedCanvasGadgetTabs.put(gadgetKey, newGadgetChrome);
+				openCanvasView(gadgetId);
 			}
 			else
 			{
-				int canvasGadgetId = openedCanvasGadgetIds.remove(gadgetKey);
-				Widget canvasGadgetChrome = openedCanvasGadgetTabs.remove(gadgetKey);
-				
-				container.getGadget(canvasGadgetId).remove();
-				tabManager.remove(canvasGadgetChrome);
-				profileGadget.activate();
+				closeCanvasView(gadgetId);
 			}
 		}
 	}
+
+	/**
+	 * 
+	 * @param gadgetId
+	 */
+	private void openCanvasView(int gadgetId)
+    {
+		String gadgetKey = Integer.toString(gadgetId);
+	    RollingTabPanel tabManager = tabScreen.getLayoutTabManager();
+	    GadgetContainer container = getConfiguration().getContainer();
+	    Gadget profileGadget = container.getGadget(gadgetId);
+
+	    profileGadget.deactivate();
+	    Gadget canvasGadget = container.createGadget(profileGadget, ContainerView.canvas);
+	    container.addGadget(canvasGadget);
+	    SimplePanel newGadgetChrome = new SimplePanel();
+	    newGadgetChrome.setHeight("100%");
+	    newGadgetChrome.setWidth("100%");
+	    newGadgetChrome.getElement().setId(getGadgetChromeId(canvasGadget.getId()));
+	    tabManager.add(newGadgetChrome, getTabWidget(gadgetId, canvasGadget.getTitle()));
+	    container.renderGadget(canvasGadget);
+	    int widgetIndex = tabManager.getWidgetIndex(newGadgetChrome);
+	    tabManager.selectTab(widgetIndex);
+
+	    openedCanvasGadgetIds.put(gadgetKey, canvasGadget.getId());
+	    openedCanvasGadgetTabs.put(gadgetKey, newGadgetChrome);
+    }
+
+	/**
+	 * 
+	 * @param gadgetId
+	 */
+	private void closeCanvasView(int gadgetId)
+    {
+		String gadgetKey = Integer.toString(gadgetId);
+	    RollingTabPanel tabManager = tabScreen.getLayoutTabManager();
+	    GadgetContainer container = getConfiguration().getContainer();
+	    Gadget profileGadget = container.getGadget(gadgetId);
+
+	    int canvasGadgetId = openedCanvasGadgetIds.remove(gadgetKey);
+	    Widget canvasGadgetChrome = openedCanvasGadgetTabs.remove(gadgetKey);
+	    
+	    container.getGadget(canvasGadgetId).remove();
+	    int widgetIndex = tabManager.getWidgetIndex(canvasGadgetChrome);
+		if (widgetIndex == tabManager.getSelectedTab())
+	    {
+	    	tabManager.selectTab(0);
+	    }
+
+	    tabManager.remove(widgetIndex);
+	    profileGadget.activate();
+    }
 	
+	/**
+	 * 
+	 * @param profileGadgetId
+	 * @param gadgetTitle
+	 * @return
+	 */
+	public HorizontalPanel getTabWidget(final int profileGadgetId, String gadgetTitle)
+	{
+		HorizontalPanel flap = new HorizontalPanel();
+		flap.setSpacing(0);
+
+		Label title = new Label(gadgetTitle);
+		title.setStyleName("tabLabel");
+		flap.add(title);
+
+		FocusWidget closeButton = new FocusWidget(new Label(" ").getElement()) {};
+		closeButton.setStyleName("tabCloseButton");
+		closeButton.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				event.stopPropagation();
+				closeCanvasView(profileGadgetId);
+			}
+		});
+
+		closeButton.addKeyDownHandler(new KeyDownHandler()
+		{
+			public void onKeyDown(KeyDownEvent event)
+			{
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+				{
+					event.stopPropagation();
+					closeCanvasView(profileGadgetId);
+				}
+			}
+		});
+		closeButton.setVisible(true);
+		flap.add(closeButton);
+		return flap;
+	}
+
+	/**
+	 * 
+	 */
 	@Override
 	protected GadgetShindigClassHandler createShindigClassHandler()
 	{
