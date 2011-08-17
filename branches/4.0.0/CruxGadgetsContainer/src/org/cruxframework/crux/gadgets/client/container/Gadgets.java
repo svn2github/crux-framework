@@ -13,14 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.gadgets.client;
+package org.cruxframework.crux.gadgets.client.container;
 
 import java.util.HashMap;
 
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.CollectionFactory;
-import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
-import org.cruxframework.crux.gadgets.client.container.GadgetMetadata;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,12 +34,32 @@ public class Gadgets
 	 */
 	public static void loadGadgetsMetadata(Array<String> gadgets, final MetadataCallback callback)
     {
+		GadgetContainer container = GadgetContainer.get();
+		loadGadgetsMetadata(container.getCountry(), container.getLanguage(), container.getCurrentView(), container.getSecureToken(), gadgets, callback);
+    }
+	
+	/**
+	 * 
+	 * @param userCountry
+	 * @param userLanguage
+	 * @param containerView
+	 * @param secureToken
+	 * @param gadgetUrls
+	 * @param callback
+	 */
+	public static void loadGadgetsMetadata(String userCountry, 
+				 	String userLanguage, 
+					 ContainerView containerView, 
+					 String secureToken, 
+					 Array<String> gadgetUrls,
+					 final MetadataCallback callback)
+    {
 		final Array<GadgetMetadata> alreadyLoadedGadgets = CollectionFactory.createArray();
 		Array<String> toLoadGadgets = CollectionFactory.createArray();
 		
-		for (int i=0; i < gadgets.size(); i++)
+		for (int i=0; i < gadgetUrls.size(); i++)
         {
-			String gadgetUrl = gadgets.get(i);
+			String gadgetUrl = gadgetUrls.get(i);
 	        if (loadedGadgetsMetadata.containsKey(gadgetUrl))
 	        {
 	        	alreadyLoadedGadgets.add(loadedGadgetsMetadata.get(gadgetUrl));
@@ -54,10 +72,10 @@ public class Gadgets
 		
 		if (toLoadGadgets.size() > 0)
 		{
-			loadGadgetsMetadata(GadgetContainer.get().getCountry(), 
-					GadgetContainer.get().getLanguage(), 
-					GadgetContainer.get().getCurrentView().toString(), 
-					"john.doe:john.doe:appid:cont:url:0:default", //TODO passar a secureToken aki
+			loadGadgetsMetadataNative(userCountry, 
+					userLanguage, 
+					containerView.toString(), 
+					secureToken, 
 					toLoadGadgets, new MetadataCallback()
 					{
 						@Override
@@ -89,7 +107,7 @@ public class Gadgets
 	 * @param gadgetUrls
 	 * @param controller
 	 */
-	public static native void loadGadgetsMetadata(String userCountry, 
+	private static native void loadGadgetsMetadataNative(String userCountry, 
 			       							 String userLanguage, 
 			       							 String containerView, 
 			       							 String secureToken, 
@@ -124,7 +142,7 @@ public class Gadgets
 					var gadgetMetadata = obj.data.gadgets[i];
 					result[result.length] = gadgetMetadata;
 				}
-				callback.@org.cruxframework.crux.gadgets.client.Gadgets.MetadataCallback::onMetadataLoaded(Lorg/cruxframework/crux/core/client/collection/Array;)(result);
+				callback.@org.cruxframework.crux.gadgets.client.container.Gadgets.MetadataCallback::onMetadataLoaded(Lorg/cruxframework/crux/core/client/collection/Array;)(result);
 			},
 			makeRequestParams,
 			"application/javascript"
@@ -132,6 +150,31 @@ public class Gadgets
 	
 	}-*/;
 
+	/**
+	 * Add a new gadget and open it on the specified view.
+	 * @param gadgetUrl url for the gadget
+	 * @param view target view where gadget will be opened
+	 */
+	public final void openGadget(String gadgetUrl, final ContainerView view)
+	{
+		Array<String> gadgets = CollectionFactory.createArray();
+		gadgets.add(gadgetUrl);
+		loadGadgetsMetadata(gadgets, new MetadataCallback()
+		{
+			@Override
+			public void onMetadataLoaded(Array<GadgetMetadata> metadata)
+			{
+				if (metadata.size() > 0)
+				{
+					GadgetMetadata gadgetMetadata = metadata.get(0);
+					GadgetContainer container = GadgetContainer.get();
+					container.getLayoutManager().openGadget(gadgetMetadata, view);
+					//TODO: persist the profile's gadgets state, if we are on profile view
+				}
+			}
+		});
+	}
+	
 	/**
 	 * 
 	 * @author Thiago da Rosa de Bustamante

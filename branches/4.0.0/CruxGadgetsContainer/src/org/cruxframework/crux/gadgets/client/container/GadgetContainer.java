@@ -17,6 +17,7 @@ package org.cruxframework.crux.gadgets.client.container;
 
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.gadgets.client.GadgetContainerMsg;
+import org.cruxframework.crux.gadgets.client.layout.LayoutManager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -27,7 +28,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class GadgetContainer extends JavaScriptObject
 {
-	private static boolean loaded = false;
+	private static boolean configured = false;
 	
 	protected GadgetContainer() {}
 	
@@ -35,14 +36,23 @@ public class GadgetContainer extends JavaScriptObject
 		return $wnd.shindig.container;
 	}-*/;
 
-	static void setLoaded()
+	static void configure()
 	{
-		loaded = true;
+		configured = true;
+		LayoutManager layoutManager = LayoutManagerFactory.getLayoutManager();
+		layoutManager.configure();
+		get().configureGadgets();
+		get().renderGadgets();
+	}
+
+	static GadgetContainer getUnconfigured()
+	{
+		return getNative();
 	}
 
 	public static GadgetContainer get()
 	{
-		assert (loaded) : ((GadgetContainerMsg)GWT.create(GadgetContainerMsg.class)).configurationNotLoaded();
+		assert (configured) : ((GadgetContainerMsg)GWT.create(GadgetContainerMsg.class)).containerNotConfigured();
 		return getNative();
 	}
 
@@ -177,7 +187,7 @@ public class GadgetContainer extends JavaScriptObject
 						//'secureToken': escape(generateSecureToken())});
 	}-*/;
 	//TODO gerar a secureToken
-
+	
 	public final native void addGadget(Gadget gadget)/*-{
 		this.addGadget(gadget);
 	}-*/;
@@ -188,6 +198,10 @@ public class GadgetContainer extends JavaScriptObject
 		
 	public final native void renderGadget(Gadget gadget)/*-{
 		this.renderGadget(gadget);
+	}-*/;
+	
+	public final native void renderGadgets()/*-{
+		this.renderGadgets();
 	}-*/;
 	
 	public final native void setCajaEnabled(boolean cajaEnabled)/*-{
@@ -202,7 +216,49 @@ public class GadgetContainer extends JavaScriptObject
     	return this.gadgetsMetadata_;
     }-*/;
 
-	public final native void setMetadata(Array<Array<GadgetMetadata>> metadata)/*-{
+	final native void setMetadata(Array<Array<GadgetMetadata>> metadata)/*-{
     	this.gadgetsMetadata_ = metadata;
     }-*/;
+	
+	/**
+	 * 
+	 * @param metadata
+	 */
+	final void configureGadgets()
+	{
+		Array<Array<GadgetMetadata>> metadata = getMetadata();
+		assert(metadata != null):((GadgetContainerMsg)GWT.create(GadgetContainerMsg.class)).containerNotConfigured();
+		int numCols = metadata.size();
+		for (int i=0; i < numCols; i++)
+		{
+			Array<GadgetMetadata> columns = metadata.get(i);
+			int numRows = columns.size();
+			for (int j=0; j < numRows; j++)
+			{
+				Gadget gadget = createGadget(columns.get(j));
+				addGadget(gadget);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public final LayoutManager getLayoutManager()
+	{
+		return LayoutManagerFactory.getLayoutManager();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public final String getSecureToken()
+    {
+		//TODO passar a secureToken aki
+		return "john.doe:john.doe:appid:cont:url:0:default";
+    }
+	
+	//TODO: criar propriedades userId e groupId
 }

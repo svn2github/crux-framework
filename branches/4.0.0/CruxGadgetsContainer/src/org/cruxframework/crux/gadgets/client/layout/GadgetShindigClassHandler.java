@@ -23,15 +23,15 @@ import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
  */
 public class GadgetShindigClassHandler
 {
-	private final GridLayoutManagerController controller;
+	private final LayoutManager manager;
 
 	/**
 	 * 
-	 * @param controller
+	 * @param manager
 	 */
-	public GadgetShindigClassHandler(GridLayoutManagerController controller)
+	public GadgetShindigClassHandler(LayoutManager manager)
     {
-		this.controller = controller;
+		this.manager = manager;
 		createInheritsFunction();
     }
 	
@@ -45,8 +45,8 @@ public class GadgetShindigClassHandler
 		createGadgetClassGetAditionalParamsFunction(GadgetContainer.get().isCajaEnabled(), GadgetContainer.get().isDebug());
 		createGadgetClassIsProfileViewFunction();
 		createGadgetClassGetTitleBarContentFunction();
-		createGadgetClassChangeViewFunction(controller);
-		createGadgetClassOpenMenuOptionsFunction(controller);
+		createGadgetClassChangeViewFunction(manager);
+		createGadgetClassOpenMenuOptionsFunction(manager);
 		createGadgetClassRefreshFunction();
 		configureGadgetClass();
     }
@@ -56,7 +56,7 @@ public class GadgetShindigClassHandler
 	 */
 	public void createNativeLayoutManager()
 	{
-		createNativeLayoutManager(controller);
+		createNativeLayoutManager(manager);
 		configureLayoutManager();
 	}
 	
@@ -78,9 +78,9 @@ public class GadgetShindigClassHandler
 	
 	/**
 	 * Create the gadget Layout Manager and associate it with gadget.container.layoutManager.
-	 * @param controller
+	 * @param manager
 	 */
-	protected native void createNativeLayoutManager(GridLayoutManagerController controller)/*-{
+	protected native void createNativeLayoutManager(LayoutManager manager)/*-{
 		$wnd.CruxLayoutManager = {};
 		
 		$wnd.CruxLayoutManager = function() {
@@ -90,7 +90,7 @@ public class GadgetShindigClassHandler
 		$wnd.CruxLayoutManager.inherits($wnd.shindig.LayoutManager);
 		
 		$wnd.CruxLayoutManager.prototype.getGadgetChrome = function(gadget) {
-		    return controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::getGadgetChrome(I)(gadget.id);
+		    return manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetChrome(I)(gadget.id);
 		};
 	}-*/;
 	
@@ -226,18 +226,27 @@ public class GadgetShindigClassHandler
 	/**
 	 * Create the chanveView function for the gadget class. 
 	 */
-	protected native void createGadgetClassChangeViewFunction(GridLayoutManagerController controller)/*-{
+	protected native void createGadgetClassChangeViewFunction(LayoutManager manager)/*-{
   		$wnd.CruxGadgetClass.prototype.changeView = function() {
-			controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::changeGadgetView(IZ)(this.id, this.isProfileView());  		
+  			var view;
+  			if (this.isProfileView())
+  			{
+  				view = @org.cruxframework.crux.gadgets.client.layout.LayoutManager::profile;
+  			}
+  			else
+  			{
+  				view = @org.cruxframework.crux.gadgets.client.layout.LayoutManager::canvas;
+  			}
+			manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::changeGadgetView(ILorg/cruxframework/crux/gadgets/client/container/ContainerView;)(this.id, view);  		
   		};
 	}-*/;
 	
 	/**
 	 * Create the openMenuOptions function for the gadget class. 
 	 */
-	protected native void createGadgetClassOpenMenuOptionsFunction(GridLayoutManagerController controller)/*-{
+	protected native void createGadgetClassOpenMenuOptionsFunction(LayoutManager manager)/*-{
   		$wnd.CruxGadgetClass.prototype.openMenuOptions = function(menuOptionsButton) {
-			controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::openMenuOptions(ILjava/lang/String;Lcom/google/gwt/user/client/Element;Z)(this.id, this.cssClassTitleOptionsMenu, menuOptionsButton, this.hasViewablePrefs_());  		
+			manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::openMenuOptions(Lorg/cruxframework/crux/gadgets/client/container/Gadget;Lcom/google/gwt/user/client/Element;)(this, menuOptionsButton);  		
   		};
 	}-*/;
 	

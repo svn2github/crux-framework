@@ -48,6 +48,6 @@ public interface GadgetContainerMsg extends Messages
 	@DefaultMessage("About this gadget")
 	SafeHtml aboutGadgetLink();
 
-	@DefaultMessage("Gadget configuration is not loaded. Load it before call this method.")
-	String configurationNotLoaded();
+	@DefaultMessage("Gadget container is not correctly configured. Configure it before call this method.")
+	String containerNotConfigured();
 }

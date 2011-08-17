@@ -342,6 +342,10 @@
 
 	<body>
 		<script type="text/javascript" src="container/container.nocache.js"></script>
+		<script type="text/javascript">
+				currentGadgets = ['http://rssgadget.livewaresystems.com/gen/futebolbr/rssgadget/flamengo.xml', 
+	            'http://rssgadget.livewaresystems.com/gen/futebolbr/rssgadget/corinthians.xml'];	
+		</script>
 		<container:gadgetsConfigDebug gadgetCanvasHeight="700px"/>
 
 		<center>

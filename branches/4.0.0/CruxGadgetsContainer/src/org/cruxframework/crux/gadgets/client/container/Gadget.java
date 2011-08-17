@@ -103,12 +103,16 @@ public class Gadget extends JavaScriptObject
 		fullScreenButton.setClassName(visible?getCssFullScreenButton():getCssRestoreScreenButton());
 	}
 
-	private final native String getCssFullScreenButton()/*-{
+	public final native String getCssFullScreenButton()/*-{
 		return this.cssClassTitleButtonFullScreen
 	}-*/;
 
-	private final native String getCssRestoreScreenButton()/*-{
+	public final native String getCssRestoreScreenButton()/*-{
 		return this.cssClassTitleButtonRestoreScreen
+	}-*/;
+	
+	public final native String getCssOptionsMenu()/*-{
+		return this.cssClassTitleOptionsMenu
 	}-*/;
 	
 	public final native void collapse()/*-{
@@ -126,6 +130,12 @@ public class Gadget extends JavaScriptObject
 	public final native boolean isProfileView()/*-{
 		return this.isProfileView();
 	}-*/;
+	
+	public final native boolean hasViewablePrefs()/*-{
+		var ret = this.hasViewablePrefs_();
+		return (ret?true:false); // avoid error converting 'undefined' to boolean
+	}-*/;
+	
 	
 	public final void remove()
 	{

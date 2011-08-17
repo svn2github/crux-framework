@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.gadgets.client.container;
 
-import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.CollectionFactory;
 import org.cruxframework.crux.core.client.controller.Controller;
@@ -23,11 +22,9 @@ import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.gadgets.client.GadgetContainerMsg;
-import org.cruxframework.crux.gadgets.client.Gadgets;
-import org.cruxframework.crux.gadgets.client.Gadgets.MetadataCallback;
+import org.cruxframework.crux.gadgets.client.container.Gadgets.MetadataCallback;
+import org.cruxframework.crux.gadgets.client.layout.LayoutManager;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 
@@ -40,6 +37,15 @@ public class GadgetConfigController
 {
 	@Create
 	protected GadgetContainerMsg messages;
+	private LayoutManager layoutManager;
+
+	/**
+	 * Constructor
+	 */
+	public GadgetConfigController()
+	{
+		layoutManager = LayoutManagerFactory.getLayoutManager();
+	}
 
 	@Expose
 	public void onLoadProduction()
@@ -52,7 +58,6 @@ public class GadgetConfigController
 	{
 		load(true, "", ""); //TODO: resolver autenticacao
 	}
-
 	
 	/**
 	 * Load container configuration
@@ -60,25 +65,7 @@ public class GadgetConfigController
 	 */
 	public void load(final boolean debug, final String userId, final String groupId)
 	{
-		Scheduler.get().scheduleFixedDelay(new RepeatingCommand()
-		{
-			private int numTries = 0;
-			@Override
-			public boolean execute()
-			{
-				boolean ret = !checkLayoutManager();
-				if (ret && numTries > 10)
-				{
-					Crux.getErrorHandler().handleError(messages.layoutManagerNotFound());
-					return false;
-				}
-				if (!ret)
-				{
-					configure(debug, userId, groupId);
-				}
-				return ret;
-			}
-		}, 100);
+		configure(debug, userId, groupId);
 	}
 	
 	//TODO: receber esses dados
@@ -95,8 +82,8 @@ public class GadgetConfigController
 	 */
 	protected void configure(boolean debug, String userId, String groupId)
     {
-		GadgetContainer.setLoaded();
-		GadgetContainer.get().setDebug(debug);
+		GadgetContainer container = GadgetContainer.getUnconfigured();
+		container.setDebug(debug);
 		String url = Window.Location.getParameter("url");
 //		configureContainerURL();
 		configureLocale();
@@ -115,7 +102,8 @@ public class GadgetConfigController
 			gadgets = CollectionFactory.createArray();
 			gadgets.add(url);
 		}
-		Gadgets.loadGadgetsMetadata(gadgets, new MetadataCallback()
+		Gadgets.loadGadgetsMetadata(container.getCountry(), container.getLanguage(), container.getCurrentView(), 
+				container.getSecureToken(), gadgets, new MetadataCallback()
 		{
 			@Override
 			public void onMetadataLoaded(Array<GadgetMetadata> metadata)
@@ -130,8 +118,8 @@ public class GadgetConfigController
 	 */
 	protected void configureGadgetCanvasHeight()
     {
-		GadgetContainer.get().setGadgetCanvasHeight(getGadgetCanvasHeight());
-		GadgetContainer.get().setGadgetCanvasWidth("100%");
+		GadgetContainer.getUnconfigured().setGadgetCanvasHeight(getGadgetCanvasHeight());
+		GadgetContainer.getUnconfigured().setGadgetCanvasWidth("100%");
     }
 
 	/*
@@ -140,7 +128,7 @@ public class GadgetConfigController
 	protected void configureContainerURL()
     {
 	    String containerURL = getContainerURL();
-	    GadgetContainer.get().setContainerUrl(containerURL);
+	    GadgetContainer.getUnconfigured().setContainerUrl(containerURL);
     }*/
 	
 	/**
@@ -148,27 +136,27 @@ public class GadgetConfigController
 	 */
 	protected void configureContainerParentUrl()
     {   //TODO: checar isso aki.... ta setando duas propriedades com o mesmo valor
-		GadgetContainer.get().setParentUrl(getContainerURL());
+		GadgetContainer.getUnconfigured().setParentUrl(getContainerURL());
     }
 
 	protected void onGadgetsMetadataLoaded(Array<GadgetMetadata> metadata) //TODO: ajustar isso aki
 	{
 		//TODO: carregar configuracoes de urlbase, parentcontainerurl, currentView, userId, groupId
-		GadgetContainer.get().setMetadata(getGadgetsMetadata(metadata));
-		notifyListeners();
+		GadgetContainer.getUnconfigured().setMetadata(getGadgetsMetadata(metadata));
+		GadgetContainer.configure();
 	}
 
 	protected void configureCurrentView(String url)
     {
 		ContainerView currentView = (StringUtils.isEmpty(url)?ContainerView.profile:ContainerView.canvas);
-		GadgetContainer.get().setCurrentView(currentView);
+		GadgetContainer.getUnconfigured().setCurrentView(currentView);
     }
 
 	protected void configureCache()
     {
 		String nocache = Window.Location.getParameter("nocache");
 		boolean cacheEnabled = (nocache==null || !nocache.equals("1"));
-		GadgetContainer.get().setCacheEnabled(cacheEnabled);
+		GadgetContainer.getUnconfigured().setCacheEnabled(cacheEnabled);
     }	
 	
 	protected void configureLocale()
@@ -196,8 +184,8 @@ public class GadgetConfigController
 		{
 			country = "default";
 		}
-		GadgetContainer.get().setLanguage(language);
-		GadgetContainer.get().setCountry(country);
+		GadgetContainer.getUnconfigured().setLanguage(language);
+		GadgetContainer.getUnconfigured().setCountry(country);
     }
 
 	/**
@@ -231,15 +219,4 @@ public class GadgetConfigController
 		array.add(column2);
 	    return array;
     }
-	
-	private native void notifyListeners()/*-{
-		$wnd.__configureLayoutManager();
-	}-*/;
-
-	private native boolean checkLayoutManager()/*-{
-	    if (!$wnd.__configureLayoutManager){
-	    	false;
-	    }
-	    return true;
-    }-*/;
 }

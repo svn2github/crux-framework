@@ -1,14 +1,13 @@
 package org.cruxframework.crux.gadgets.client.layout;
 
 import org.cruxframework.crux.core.client.collection.FastMap;
-import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 import org.cruxframework.crux.gadgets.client.container.ContainerView;
 import org.cruxframework.crux.gadgets.client.container.Gadget;
 import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -25,21 +24,24 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Controller("tabLayoutController")
-public class TabLayoutManagerController extends GridLayoutManagerController
+public class TabLayoutManager extends GridLayoutManager
 {
 	private FastMap<Integer> openedCanvasGadgetIds = new FastMap<Integer>();
 	private FastMap<Widget> openedCanvasGadgetTabs = new FastMap<Widget>();
-	
-	@Create
 	protected TabLayoutScreen tabScreen;
+
+	public TabLayoutManager()
+    {
+	    super();
+	    tabScreen = GWT.create(TabLayoutScreen.class);
+    }
 	
 	@Override
-	public void changeGadgetView(int gadgetId, boolean profileView)
+	public void changeGadgetView(int gadgetId, ContainerView view)
 	{
-		if (profileView)
+		String gadgetKey = Integer.toString(gadgetId);
+		if ((view.equals(ContainerView.profile)))
 		{
-			String gadgetKey = Integer.toString(gadgetId);
 			if (!openedCanvasGadgetIds.containsKey(gadgetKey))
 			{
 				openCanvasView(gadgetId);
@@ -47,6 +49,19 @@ public class TabLayoutManagerController extends GridLayoutManagerController
 			else
 			{
 				closeCanvasView(gadgetId);
+			}
+		}
+		else
+		{
+			if (openedCanvasGadgetIds.containsKey(gadgetKey))
+			{
+				closeCanvasView(gadgetId);
+			}
+			else
+			{
+				// There is no profile gadget associated with the gadget on canvas view... so just change 
+				// the tab to point to Profile
+				tabScreen.getLayoutTabManager().selectTab(0);
 			}
 		}
 	}

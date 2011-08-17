@@ -16,25 +16,34 @@
 package org.cruxframework.crux.gadgets.client.layout;
 
 /**
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class TabGadgetShindigClassHandler extends GadgetShindigClassHandler
+public class LayoutManagerException extends RuntimeException
 {
 	/**
-	 * 
-	 * @param manager
-	 */
-	public TabGadgetShindigClassHandler(LayoutManager manager)
+     * 
+     */
+    private static final long serialVersionUID = 9190902880176487595L;
+
+	public LayoutManagerException()
     {
-		super(manager);
+	    super();
     }
-	
-	/**
-	 * Create the getTitleBarContent function for the gadget class. 
-	 */
-	protected void createGadgetClassGetTitleBarContentFunction()
-	{
-		createGadgetClassGetTitleBarContentFunction(false);
-	}	
+
+	public LayoutManagerException(String arg0, Throwable arg1)
+    {
+	    super(arg0, arg1);
+    }
+
+	public LayoutManagerException(String arg0)
+    {
+	    super(arg0);
+    }
+
+	public LayoutManagerException(Throwable arg0)
+    {
+	    super(arg0);
+    }
 }

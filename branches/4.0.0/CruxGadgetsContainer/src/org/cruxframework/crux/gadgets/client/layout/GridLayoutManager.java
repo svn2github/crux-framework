@@ -2,16 +2,15 @@ package org.cruxframework.crux.gadgets.client.layout;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.Array;
-import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
-import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.gadgets.client.GadgetContainerMsg;
+import org.cruxframework.crux.gadgets.client.container.ContainerView;
 import org.cruxframework.crux.gadgets.client.container.Gadget;
 import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
 import org.cruxframework.crux.gadgets.client.container.GadgetMetadata;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,67 +30,61 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Controller("gridLayoutController")
-public class GridLayoutManagerController
+public class GridLayoutManager implements LayoutManager
 {
-	@Create
 	protected GadgetContainerMsg messages;
-	
-	@Create
 	protected LayoutScreen screen;
 
-	private GadgetShindigClassHandler shindigClassHandler;
-	
-	@Expose
-	public void onLoad()
-	{
-		createNativeConfigureFunction(this);
-	}
-	
+	public GridLayoutManager()
+    {
+	    messages = GWT.create(GadgetContainerMsg.class);
+	    screen = GWT.create(LayoutScreen.class);
+    }
+		
 	/**
 	 * Configure the Gadgets Dashboard. Called once, when the container page is loaded.
 	 * @param configuration
 	 */
 	public void configure()
 	{
-		this.shindigClassHandler = createShindigClassHandler();
-		configureContainer();
-		renderGadgets();
+		GadgetShindigClassHandler shindigClassHandler = createShindigClassHandler();
+		shindigClassHandler.createNativeLayoutManager();
+		shindigClassHandler.createNativeGadgetClass();
+	    createdGridDashboard();
+		makeDashboardSortable();
 	}
 
 	/**
 	 * 
-	 * @param gadgetId
-	 * @param styleName
-	 * @param menuOptionsButtonElement
-	 * @param hasSetting
+	 * @param gadget
+	 * @param referenceElement
 	 */
-	public void openMenuOptions(int gadgetId, String styleName, final Element menuOptionsButtonElement, boolean hasSetting)
+	public void openMenuOptions(Gadget gadget, final Element referenceElement)
 	{
 		class Wrapper extends UIObject
 		{
 			public Wrapper()
             {
-	            setElement(menuOptionsButtonElement);
+	            setElement(referenceElement);
             }
 		};
-		
+
 		DialogBox optionsDialog = new DialogBox(true);
 		VerticalPanel optionsFlowPanel = new VerticalPanel();
 		optionsDialog.setWidget(optionsFlowPanel);
 		
-		Anchor delete = createDeleteGadgetButton(gadgetId, optionsDialog);
+		Anchor delete = createDeleteGadgetButton(gadget.getId(), optionsDialog);
 		optionsFlowPanel.add(delete);
 		
-		if (hasSetting)
+		if (gadget.hasViewablePrefs())
 		{
-			Anchor settings = createSettingsGadgetButton(gadgetId, optionsDialog);
+			Anchor settings = createSettingsGadgetButton(gadget.getId(), optionsDialog);
 			optionsFlowPanel.add(settings);
 		}
 		Anchor about = new Anchor(messages.aboutGadgetLink());
 		optionsFlowPanel.add(about);
 
-		optionsDialog.setStyleName(styleName);
+		optionsDialog.setStyleName(gadget.getCssOptionsMenu());
 		optionsDialog.showRelativeTo(new Wrapper());
 	}
 	
@@ -100,10 +93,10 @@ public class GridLayoutManagerController
 	 * @param gadgetId
 	 * @param profileView
 	 */
-	public void changeGadgetView(int gadgetId, boolean profileView)
+	public void changeGadgetView(int gadgetId, ContainerView view)
 	{
 		UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-		if (profileView)
+		if (view.equals(ContainerView.profile))
 		{
 			String gadgetUrl = GadgetContainer.get().getGadget(gadgetId).getUrl();
 			if (StringUtils.isEmpty(gadgetUrl))
@@ -131,13 +124,63 @@ public class GridLayoutManagerController
 	}
 	
 	/**
-	 * Render all gadgets
+	 * Retrieve the identifier of the element used as wrapper to render the requested gadget
+	 * @param gadgetId
+	 * @return
 	 */
-	protected void renderGadgets()
+	public String getGadgetChromeId(int gadgetId)
+	{
+		return "gadget-chrome-"+gadgetId;
+	}
+	
+	/**
+	 * Retrieve the identifier of the element used as wrapper to render the requested gadget
+	 * @param gadgetId
+	 * @return
+	 */
+	public String getGadgetId(Element gadgetChrome)
+	{
+		return gadgetChrome.getId().substring(14);
+	}
+	
+	@Override
+    public void openGadget(GadgetMetadata gadgetMetadata, ContainerView view)
     {
-		renderGadgets(GadgetContainer.get().getMetadata());
+		if (view.equals(ContainerView.profile))
+		{
+			GadgetContainer container = GadgetContainer.get();
+			if (container.getCurrentView().equals(ContainerView.profile))
+			{
+				Gadget gadget = container.createGadget(gadgetMetadata, view);
+				container.addGadget(gadget);
+				addGadgetChrome(gadget.getId());
+				container.renderGadget(gadget);
+			}
+			else
+			{
+				// Defer the refresh...to allow container to save state first
+				Scheduler.get().scheduleDeferred(new ScheduledCommand()
+				{
+					@Override
+					public void execute()
+					{
+						UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+						urlBuilder.removeParameter("url");
+						Window.Location.assign(urlBuilder.buildString());
+					}
+				});
+			}
+		}
+		else
+		{
+			// Canvas view 
+			UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+			String gadgetUrl = gadgetMetadata.getUrl();
+			urlBuilder.setParameter("url", gadgetUrl);
+			Window.Location.assign(urlBuilder.buildString());
+		}
     }
-
+	
 	/**
 	 * 
 	 * @return
@@ -146,23 +189,6 @@ public class GridLayoutManagerController
 	{
 		return new GadgetShindigClassHandler(this);
 	}
-	
-	/**
-	 * Create a hook function, called by GadgetConfigController to start the container configuration 
-	 * @param controller
-	 */
-	protected native void createNativeConfigureFunction(GridLayoutManagerController controller)/*-{
-		if ($wnd.__configureLayoutManager)
-		{
-			controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::reportNativeConfigureFunctionError()();
-		}
-		else
-		{
-			$wnd.__configureLayoutManager = function(){
-				controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::configure()();
-			};
-		}
-    }-*/;
 
 	/**
 	 * Report error caused by a duplicated layoutManager.
@@ -171,24 +197,6 @@ public class GridLayoutManagerController
 	{
 		Crux.getErrorHandler().handleError(messages.duplicatedLayoutManager());
 	}
-	
-	/**
-	 * Configure the container.
-	 */
-	protected void configureContainer()
-    {
-	    createdGridDashboard();
-		shindigClassHandler.createNativeLayoutManager();
-		shindigClassHandler.createNativeGadgetClass();
-		Scheduler.get().scheduleDeferred(new ScheduledCommand()
-		{
-			@Override
-			public void execute()
-			{
-				makeDashboardSortable(GridLayoutManagerController.this);
-			}
-		});
-    }
 
 	/**
 	 * Create the container grid for gadgets.
@@ -247,53 +255,7 @@ public class GridLayoutManagerController
 		});
 	    return delete;
     }
-	
-	
-	/**
-	 * Render the gadgets on the page.
-	 * @param gadgetConfigs
-	 * @param isDebug
-	 * @param canvasHeight 
-	 * @param canvasWidth 
-	 */
-	protected void renderGadgets(Array<Array<GadgetMetadata>> gadgetConfigs)
-	{
-		GadgetContainer container = GadgetContainer.get();
-
-		int numCols = gadgetConfigs.size();
-		for (int i=0; i < numCols; i++)
-		{
-			Array<GadgetMetadata> columns = gadgetConfigs.get(i);
-			int numRows = columns.size();
-			for (int j=0; j < numRows; j++)
-			{
-				Gadget gadget = container.createGadget(columns.get(j));
-				container.addGadget(gadget);
-				container.renderGadget(gadget);
-			}
-		}
-	}
 		
-	/**
-	 * Retrieve the identifier of the element used as wrapper to render the requested gadget
-	 * @param gadgetId
-	 * @return
-	 */
-	protected String getGadgetChromeId(int gadgetId)
-	{
-		return "gadget-chrome-"+gadgetId;
-	}
-	
-	/**
-	 * Retrieve the identifier of the element used as wrapper to render the requested gadget
-	 * @param gadgetId
-	 * @return
-	 */
-	protected String getGadgetId(Element gadgetChrome)
-	{
-		return gadgetChrome.getId().substring(14);
-	}
-
 	/**
 	 * Generate the HTML structure for the Gadgets dashboard.
 	 * @return
@@ -311,7 +273,7 @@ public class GridLayoutManagerController
 		{
 			Array<GadgetMetadata> column = gadgetConfigs.get(i);
 			int numRows = column.size();
-			tableHtml.append("<div class='LayoutColumn' style='width:"+colWidth+"%;float:left;padding-bottom:100px;'>"); 
+			tableHtml.append("<div id='gadgets-grid-column-"+i+"' class='LayoutColumn' style='width:"+colWidth+"%;float:left;padding-bottom:100px;'>"); 
 			for (int j=0; j< numRows; j++)
 			{
 				tableHtml.append("<div id='"+getGadgetChromeId(gadgetId++)+"' class='gadgets-gadget-chrome'></div>"); 
@@ -323,24 +285,54 @@ public class GridLayoutManagerController
 	}
 	
 	/**
+	 * Create a new wrapper for the given gadget
+	 * @param gadgetId
+	 */
+	protected void addGadgetChrome(int gadgetId)
+	{
+		Element column = DOM.getElementById("gadgets-grid-column-0");
+		Element gadgetChrome = DOM.createDiv();
+		gadgetChrome.setId(getGadgetChromeId(gadgetId));
+		gadgetChrome.setClassName("gadgets-gadget-chrome");
+		column.insertFirst(gadgetChrome);
+		makeDashboardSortable();
+	}
+	
+	/**
 	 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
 	 * columns with sortable dragable elements.
-	 * @param controller
 	 */
-	protected native void makeDashboardSortable(GridLayoutManagerController controller)/*-{
+	protected void makeDashboardSortable()
+    {
+	    Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				makeDashboardSortable(GridLayoutManager.this);
+			}
+		});
+    }
+	
+	/**
+	 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
+	 * columns with sortable dragable elements.
+	 * @param manager
+	 */
+	protected native void makeDashboardSortable(LayoutManager manager)/*-{
 		$wnd.$(function() {
 			var draggingFrame;
 			$wnd.$( ".LayoutColumn" ).sortable({
 				connectWith: ".LayoutColumn",
 				start: function(event, ui){
-					var gadgetId = controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+					var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
 					
 					var framePrefix = $wnd.shindig.container.gadgetClass.prototype.GADGET_IFRAME_PREFIX_;
 					draggingFrame = $doc.getElementById( framePrefix+gadgetId );
 					draggingFrame.style.display = 'none';
 				},
 				stop: function(event, ui){
-					var gadgetId = controller.@org.cruxframework.crux.gadgets.client.layout.GridLayoutManagerController::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+					var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
 					if (draggingFrame) {
 						draggingFrame.style.display = '';
 						draggingFrame = null;
