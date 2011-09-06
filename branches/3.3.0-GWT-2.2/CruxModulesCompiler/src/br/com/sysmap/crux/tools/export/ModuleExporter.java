@@ -99,6 +99,7 @@ public class ModuleExporter
 	private String scanIgnoredPackages;
 	private File sourceDir;
 	private boolean unpackaged = false;
+	private int localWorkers = 1;
 	
 	
 	/**
@@ -359,6 +360,9 @@ public class ModuleExporter
 		parameter.addParameterOption(new ConsoleParameterOption("fileExtension", "File Extension"));
 		parametersProcessor.addSupportedParameter(parameter);
 		
+		parameter = new ConsoleParameter("-localWorkers", "Number of threads used to compile the permutations in parallel.", false, true);
+		parameter.addParameterOption(new ConsoleParameterOption("numberOfWorkers", "Number of Workers"));
+		parametersProcessor.addSupportedParameter(parameter);		
 
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-h", "Display the usage screen.", false, true));
 		parametersProcessor.addSupportedParameter(new ConsoleParameter("-help", "Display the usage screen.", false, true));
@@ -411,6 +415,10 @@ public class ModuleExporter
 	        if (!StringUtils.isEmpty(moduleName))
 	        {
 	        	cruxCompiler.setModuleName(moduleName);
+	        }
+	        if (localWorkers > 1)
+	        {
+	        	cruxCompiler.setLocalWorkers(localWorkers);
 	        }
         }
         catch (Exception e)
@@ -562,6 +570,11 @@ public class ModuleExporter
 	        {
 	    	    this.scanIgnoredPackages = parameter.getValue();
 	        }
+	        else if (parameter.getName().equals("-localWorkers"))
+	        {
+	    	    this.localWorkers = Integer.parseInt(parameter.getValue());
+	        }
+	        
         }
 	    
 	    String defaultExcludes = Arrays.toString(DEFAULT_EXCLUDES);

@@ -786,5 +786,11 @@ public abstract class AbstractCruxCompiler
 	{
         private static final long serialVersionUID = -5285052847615664828L;
 	}
+
+	public void setLocalWorkers(int localWorkers) 
+	{
+		gwtCompilerArgs.add("-localWorkers");
+    	gwtCompilerArgs.add("" + localWorkers);
+	}
 	
 }
