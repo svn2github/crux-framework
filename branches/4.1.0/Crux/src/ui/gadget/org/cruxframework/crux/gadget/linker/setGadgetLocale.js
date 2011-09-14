@@ -10,7 +10,7 @@
       function extractFromQueryStr(args, argName) {
         var start = args.indexOf(argName + "=");
         if (start < 0) {
-          return undefined;
+          return null;
         }
         var value = args.substring(start);
         var valueBegin = value.indexOf("=") + 1;
@@ -23,9 +23,25 @@
 
     var lang = extractFromQueryStr(args, "lang");
     if (lang != null) {
+      var idx = lang.indexOf("-");
+      var langCountry = null;
+      if (idx>0)
+      {
+      	  langCountry = lang.substring(idx+1, lang.length);
+      	  lang = lang.substring(0, idx);
+      }
+      idx = lang.indexOf("_");
+      if (idx>0)
+      {
+      	  langCountry = lang.substring(idx+1, lang.length);
+      	  lang = lang.substring(0, idx); 
+      }
+    
       country = extractFromQueryStr(args, "country");
       if (country != null) {
 	    $wnd.__gwt_Locale = lang + "_" + country;
+      } else if (langCountry != null) {
+	    $wnd.__gwt_Locale = lang + "_" + langCountry;
       } else {
         $wnd.__gwt_Locale = lang;
       }
