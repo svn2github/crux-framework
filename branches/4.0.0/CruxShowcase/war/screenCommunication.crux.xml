@@ -71,7 +71,7 @@
 		
 		<s:info sourcesController="screenCommunicationSourcesController">
 			<s:widgetInfo>
-				Crux allows you to invoke controllers' methods across different windows / documents of your application. 
+				Crux allows you to invoke controllers' methods across different windows or documents of your application. 
 				This can be done by extending a special Crux interface named CrossDocument and implementing it with your 
 				controller. Cross-document methods must have serializable parameters and return type.				
 			</s:widgetInfo>

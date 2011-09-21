@@ -28,7 +28,7 @@
 			</b:horizontalPanel>
 			
 			<a:dynaTabs id="dynaTabs" width="80%" height="300">
-				<a:tab url="http://crux-framework.googlecode.com/" id="crux" label="Crux Project"/>
+				<a:tab url="http://google.com" id="crux" label="Google"/>
 				<a:tab url="http://blog.cruxframework.org/" id="cruxblog" label="Crux Blog" closeable="false"/>
 			</a:dynaTabs>
 		

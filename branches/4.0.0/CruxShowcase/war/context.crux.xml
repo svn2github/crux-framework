@@ -46,7 +46,7 @@
 		<s:info sourcesController="contextSourcesController">
 			<s:widgetInfo>
 				The Crux Context is a common area where you can store and retrieve data. Each data entry is associated
-				 with a key. You can think this mechanism like a web session, but residing on the client side of the
+				 with a key. You can think this mechanism as a web session, but residing on the client side of the
 				  application. It means you can store not only general-use information, but user-related data too.
 			</s:widgetInfo>
 			<s:exampleInfo>

@@ -43,7 +43,7 @@
 			</s:widgetInfo>
 			<s:exampleInfo>
 				you can see the Sensitive Protection working in two flavors: preventively blocking the user's interface or
-				just notifying the user if there is an attempt to repeated a request.
+				just notifying the user if there is an attempt to repeat a request.
 			</s:exampleInfo> 
 		</s:info>
 

@@ -50,11 +50,10 @@
 								<b:row>
 									<b:cell colSpan="2" horizontalAlignment="center">
 										<b:widget>
-											<b:horizontalPanel id="buttonsHPanel">
+											<b:horizontalPanel id="buttonsHPanel" spacing="4">
 												<a:decoratedButton id="button" text="Populate Form Using Screen Wrapper" onClick="screenWrapperController.onClick" style="margin-top:10px"/>
 												<a:decoratedButton id="clearButton" text="Clear fields" onClick="screenWrapperController.onClearClick" style="margin-top:10px"/>
 											</b:horizontalPanel>
-											
 										</b:widget>
 									</b:cell>
 								</b:row>

@@ -22,8 +22,8 @@
 		
 		<s:info sourcesController="baseSourcesController">
 			<s:widgetInfo>
-				ProgressDialogs are widgets which tells users that some slow process is in progress.
-				They can prevent users to interact with other widgets present on screen, avoiding eventual 
+				ProgressDialogs are widgets that tell users that some slow process is in progress.
+				They can prevent users from interacting with other widgets present on screen, avoiding eventual 
 				undesired concurrence.  
 			</s:widgetInfo>
 			<s:exampleInfo>

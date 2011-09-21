@@ -32,8 +32,8 @@
 				if you click the button, we open a Popup passing three parameters on the URL: a name, a phone 
 				number and a date. The popup's controller declares an annotated DTO which automatically grabs 
 				the parameters present on the URL. Those values are then programmatically read from the DTO and 
-				bound to the fields on the screen. You may note that is totally possible combining
-				both techniques presented here and in the previous example (Value Binding) in order to 
+				bound to the fields on the screen. You may note that is totally possible to combine
+				both techniques presented here and on the previous example (Value Binding) in order to 
 				grab the values from the URL (using @ParameterObject annotation) and simultaneously bind 
 				them to the screen fields (using @ValueObject annotation).
 			</s:exampleInfo>

@@ -35,13 +35,13 @@
 		
 		<s:info sourcesController="baseSourcesController">
 			<s:widgetInfo>
-				Crux allows you to protected your controllers' business methods by declaring validation methods for 
-				them. A validation method can be linked to a business method by using the @Validate annotation. The 
+				Crux allows you to protected your controllers' methods by declaring validation methods for 
+				them. A validation method can be linked to a logical method by using the @Validate annotation. The 
 				expected behavior of a validation method is to throw a ValidateException case any requirement
 				was not satisfied by the user's input. If everything is OK, the validation method just does nothing.    
 			</s:widgetInfo>
 			<s:exampleInfo>
-				we show a very simple kind of validation: we prevent the execution of the business method if the 
+				we show a very simple kind of validation: we prevent the execution of the target method if the 
 				checkbox is not checked.  
 			</s:exampleInfo>
 		</s:info>

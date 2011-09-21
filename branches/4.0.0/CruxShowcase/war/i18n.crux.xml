@@ -74,7 +74,7 @@
 		
 		<s:info sourcesController="i18nSourcesController">
 			<s:widgetInfo>
-				With Crux you can use declarative internationalized messages in your pages.
+				With Crux you can use declarative and internationalized messages in your pages.
 				You just need to create a Messages interface and annotate it with @MessageName.
 				This simple steps enables it to be visible to the screens of your application and
 				be accessible via the usual '${bundle.key}' syntax.  

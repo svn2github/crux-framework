@@ -31,13 +31,13 @@
 		
 		<s:info sourcesController="serverCommunicationSourcesController">
 			<s:widgetInfo>
-				Client-server communication with Crux is very like GWT's model. The main difference is that Crux does not 
-				requires you declare your server-side class as a servlet. Instead, with Crux, service implementation classes 
+				The client-server communication model proposed by Crux is very similar to the GWT's model. The main difference is that Crux does not 
+				require you declare your server-side business classes as a Servlets. Instead, with Crux, service implementation classes 
 				are just POJOs, which are bound to their interfaces by an internal front-controller mechanism.
 			</s:widgetInfo>
 			<s:exampleInfo>
 				you can see a simple Hello World example, where you type and submit your name and the server answers 
-				your request with a greeting.  
+				with a greeting.  
 			</s:exampleInfo>
 		</s:info>
 
