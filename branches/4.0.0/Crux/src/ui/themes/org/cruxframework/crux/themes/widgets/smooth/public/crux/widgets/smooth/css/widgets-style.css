@@ -721,6 +721,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-Wizard .crux-WizardControlBar .crux-DecoratedButton, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3 
 {
 	min-width: 60px;
+	margin-left: 4px;
 }
 .crux-Wizard .crux-WizardControlBar .crux-DecoratedButton-finish, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3-finish
 {
@@ -1339,18 +1340,24 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .bottomLeftCell
 {
+	height:6px;
 	font-size: 6px;
-	height:7px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-sw.gif) no-repeat bottom left;
 }
 .crux-DecoratedPanel .bottomCenterCell
 {
-	font-size: 0px;
+	font-size: 6px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-s.gif) repeat-x bottom center;
 }
 .crux-DecoratedPanel .bottomRightCell
 {
 	font-size: 6px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-se.gif) no-repeat bottom right;
 }
 
@@ -1620,9 +1627,9 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-MessageBoxScreenBlocker, .crux-ProgressDialogScreenBlocker, .crux-PopupScreenBlocker, .crux-ConfirmScreenBlocker
 {
 	background-color: #BCC7D2;
-	filter:alpha(opacity=32);
-	-moz-opacity: 0.32;
-	opacity: .32;
+	filter:alpha(opacity=62);
+	-moz-opacity: 0.62;
+	opacity: .62;
 }
 
 
