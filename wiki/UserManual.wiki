@@ -10,14 +10,13 @@ If you are not familiar with GWT, please consult its [http://code.google.com/int
 This documentation will show you, in a detailed and gradual way, how to use the _*Crux*_ framework, by exploring and exemplifying its features. 
 Here you will also learn the concepts behind the code and understand how does _*Crux*_ work internally. 
 In order to easy follow this documentation you will need:
-  * A [http://java.sun.com/javase/downloads/index.jsp Java SE Development Kit (JDK)], version 1.6 or higher;
+  * A [http://www.oracle.com/technetwork/java/javase/downloads/index.html Java SE Development Kit (JDK)], version 1.6 or higher;
   * An [http://www.eclipse.org/downloads/packages/ Eclipse] IDE;
 
-To see an example application using _*Crux*_, take a look at the [http://showcase.cruxframework.org/ Showcase].
+To see a live sample of _*Crux*_ features, take a look at the [http://showcase.cruxframework.org/ Showcase Application].
 == 1.1 _Crux_ and GWT==
 
-_*Crux*_ is built over GWT and support all of its features.
-Current _*Crux*_ version uses GWT 2.2.x
+Current _*Crux*_ version uses GWT 2.2.x and supports all its features.
 
 = 2 Quick Start=
 
@@ -25,11 +24,12 @@ Current _*Crux*_ version uses GWT 2.2.x
 
   * Download the latest _*Crux*_ release [http://code.google.com/p/crux-framework/downloads/list here];
   * Unzip the archive into a folder you want;
-  * Be sure that your default JVM is the version 1.6 or higher;
+  * A folder named {{{crux-x.x.x}}} will be created;
+  * Open a shell command window;
+  * Set {{{crux-x.x.x}}} as your current folder;
+  * Be sure that your default JVM is the version 1.6 or higher (you can do this by running the command {{{java -version}}});
   * Execute the {{{start.cmd}}} or {{{start.sh}}} file, according to your operating system;
-    * The first time you run the script, it will try to locate the GWT jars.
-      * If you already have GWT 2.2 on your machine, pass the argument {{{gwtFolder <folderName>}}} to script, where folderName is the name of the folder containing all gwt jar files.
-      * If you do not have GWT 2.2 on your machine, pass the argument {{{-downloadDependencies}}} to script, to download all dependencies before start the _*Crux QuickStart*_ tool.   
+    * The script will ask you about the location of the GWT jars. You will have two options: 1) Download them from the internet; 2) inform an existing GWT folder in your machine. If you don't have the GWT 2.2 jars, select the first option. The next time you run the installer script, this step will no longer be necessary.
   * The _*Crux QuickStart*_ tool will start, opened in your default web browser:
     
   http://crux-framework.googlecode.com/svn/wiki/images/quickstart-begin.gif
