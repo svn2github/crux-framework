@@ -315,12 +315,15 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 
 		for (int i = 0; i < identifier.length; i++)
 		{
-			JField field = ((JClassType)dtoType).findField(identifier[i]);
-			if (field == null)
+			try
+			{
+				JField field = ClassUtils.getDeclaredField((JClassType)dtoType, identifier[i]);
+				result.append("+"+getFieldValueGet((JClassType)dtoType, field, parentVariable, false));
+			} 
+			catch (Exception e)
 			{
 				throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceCanNotFindIdentifier(dataSourceClass.getName(), identifier[i]));
 			}
-			result.append("+"+getFieldValueGet((JClassType)dtoType, field, parentVariable, false));
 		}
 		return result.toString();
 	}	
