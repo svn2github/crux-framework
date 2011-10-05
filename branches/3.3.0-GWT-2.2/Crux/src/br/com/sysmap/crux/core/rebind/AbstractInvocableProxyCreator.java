@@ -35,7 +35,6 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -399,14 +398,11 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		else
 		{
 			String setterMethodName = "set"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-			try
+			if (ClassUtils.hasValidSetter(voClass, setterMethodName, field.getType()))
 			{
-				if (voClass.getMethod(setterMethodName, new JType[]{field.getType()}) != null)
-				{
-					sourceWriter.println(parentVariable+"."+setterMethodName+"("+valueVariable+");");
-				}
+				sourceWriter.println(parentVariable+"."+setterMethodName+"("+valueVariable+");");
 			}
-			catch (Exception e)
+			else
 			{
 				logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
 			}
@@ -691,13 +687,12 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		else
 		{
-			String getterMethodName = "get"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
 			try
 			{
-				JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
-				if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
+				String getterMethod = ClassUtils.getGetterMethod(field.getName(), voClass);
+				if (getterMethod != null)
 				{
-					return (parentVariable+"."+getterMethodName+"()");
+					return (parentVariable+"."+getterMethod+"()");
 				}
 				else
 				{
@@ -706,23 +701,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			}
 			catch (Exception e)
 			{
-				try
-				{
-					getterMethodName = "is"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-					JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
-					if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
-					{
-						return (parentVariable+"."+getterMethodName+"()");
-					}
-					else
-					{
-						logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
-					}
-				}
-				catch (Exception e1)
-				{
-					logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
-				}
+				logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()), e);
 			}
 		}
 		return null;
