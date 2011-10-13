@@ -374,7 +374,7 @@ public class CruxHttpFetcher implements HttpFetcher
 				String ssoCookie = ((SSOHttpRequest)request).getSsoCookie();
 				if (ssoCookie != null)
 				{
-					httpMethod.addHeader("Cookie", SSOMakeRequestHandler.JOSSO_SINGLE_SIGN_ON_COOKIE+"="+ssoCookie);
+					httpMethod.setHeader("Cookie", SSOMakeRequestHandler.JOSSO_SINGLE_SIGN_ON_COOKIE+"="+ssoCookie);
 				}
 			}
 			
