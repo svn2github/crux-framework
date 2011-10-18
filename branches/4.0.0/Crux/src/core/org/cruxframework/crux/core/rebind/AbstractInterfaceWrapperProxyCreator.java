@@ -91,7 +91,9 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	@Override
 	public String getProxySimpleName()
 	{
-		return baseIntf.getSimpleSourceName() + PROXY_SUFFIX;
+		JClassType enclosingType = baseIntf.getEnclosingType();
+		String enclosingTypeName = (enclosingType==null?"":enclosingType.getSimpleSourceName()+"_");
+		return enclosingTypeName+baseIntf.getSimpleSourceName() + PROXY_SUFFIX;
 	}
 	
 	/**
