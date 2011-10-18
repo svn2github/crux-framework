@@ -14,7 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 
-		<c:screen useController="multiPagesWizardThankYouStepController" fragment="wizards"/>
+		<c:screen useController="multiPagesWizardThankYouStepController"/>
 
 		<w:wizardPage id="wizardPage" onEnter="multiPagesWizardThankYouStepController.onEnter" wizardId="wizard" wizardContextObject="person"/>
 		
