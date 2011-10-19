@@ -86,6 +86,8 @@ public class DependenciesChecker
 				String shindigFolder = parameters.containsKey("shindigFolder")?parameters.get("shindigFolder").getValue():null;
 				new DependenciesChecker(downloadDependenciesIfNeeded, downloadOptionalDependenciesIfNeeded, gwtFolder, shindigFolder).checkDependencies();
 			}
+			
+			System.out.println("\n=================================================================================================================\n");
 		}
 		catch (ConsoleParametersProcessingException e)
 		{
@@ -94,7 +96,12 @@ public class DependenciesChecker
 		}
 		catch (Exception e) 
 		{
-			e.printStackTrace();
+			System.out.flush();
+			System.out.println("\n\n--------------------------------------------------");
+			System.out.println("An error occurred during installation:");
+			System.out.println("--------------------------------------------------\n");
+			System.out.println(e.getMessage());
+			System.out.println("\n--------------------------------------------------");
 			System.exit(1);
 		}
     }
@@ -121,17 +128,17 @@ public class DependenciesChecker
 		List<Dependency> requiredDeps = new ArrayList<Dependency>();
 		
 		File jarFile = new File("./lib/build/gwt-dev.jar");
-		if (!jarFile.exists())
+		if (!jarFile.exists() || jarFile.length() < GWT_DEV_TOTAL_BYTES)
 		{
 			requiredDeps.add(new Dependency("gwt-dev.jar", "./lib/build", REPO_GWT_DEV_JAR, GWT_DEV_TOTAL_BYTES));
 		}
 		jarFile = new File("./lib/build/gwt-user.jar");
-		if (!jarFile.exists())
+		if (!jarFile.exists() || jarFile.length() < GWT_USER_TOTAL_BYTES)
 		{
 			requiredDeps.add(new Dependency("gwt-user.jar", "./lib/build", REPO_GWT_USER_JAR, GWT_USER_TOTAL_BYTES));
 		}
 		jarFile = new File("./lib/web-inf/gwt-servlet.jar");
-		if (!jarFile.exists())
+		if (!jarFile.exists() || jarFile.length() < GWT_SERVLET_TOTAL_BYTES)
 		{
 			requiredDeps.add(new Dependency("gwt-servlet.jar", "./lib/web-inf", REPO_GWT_SERVLET_JAR, GWT_SERVLET_TOTAL_BYTES));
 		}
@@ -173,6 +180,10 @@ public class DependenciesChecker
 	            {
 		    	    System.out.println("Copying file: shindig.war");
 		            FileUtils.copyFilesFromDir(new File(shindigFolder), warFile, null, null);
+		            if(!warFile.exists())
+		            {
+		            	throw new RuntimeException("The folder " + shindigFolder + " does not contain a Shindig Server.");
+		            }
 	            }
 	            catch (IOException e)
 	            {
@@ -187,12 +198,13 @@ public class DependenciesChecker
 	                File zippedFile = new File("./shindig/zipedShindig.war");
 					FileUtils.unzip(zippedFile, warFile);
 					zippedFile.delete();
+					downloadDependency(new Dependency("jsp-api-2.1.jar", "./shindig/shindig.war/WEB-INF/lib", REPO_JSP_API_JAR, JSP_API_TOTAL_BYTES));
                 }
                 catch (IOException e)
                 {
+                	FileUtils.recursiveDelete(warFile);
                 	throw new RuntimeException("Error unzipping shindig file", e);
                 }
-                downloadDependency(new Dependency("jsp-api-2.1.jar", "./shindig/shindig.war/WEB-INF/lib", REPO_JSP_API_JAR, JSP_API_TOTAL_BYTES));
 			}
 		}
     }
@@ -206,14 +218,16 @@ public class DependenciesChecker
         {
 	        if (!downloadOptionalDependenciesIfNeeded && (shindigFolder == null || shindigFolder.length() == 0))
 	        {
-	        	System.out.println("Do you want to install shindig, required to work with gadgets?. Type one of the options and press enter:");
+	        	System.out.println("\n=================================================================================================================\n");
+
+	        	System.out.println("Do you want to install the Shindig Server (required to develop gadgets)? Type one of the options and press enter:\n");
 	        	String option = null;
 	        	
-	        	while (option == null || (!option.equals("1") && option.equals("2") && option.equals("3")))
+	        	while (option == null || (!option.equals("1") && !option.equals("2") && !option.equals("3")))
 	        	{
 	        		System.out.println("\t1) To download from the web.");
 	        		System.out.println("\t2) To copy from a folder on your disk.");
-	        		System.out.println("\t3) To finish the installation.");
+	        		System.out.println("\t3) To finish the installation.\n");
 
 	        		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	        		option = reader.readLine();
@@ -224,12 +238,12 @@ public class DependenciesChecker
 	        		}
 	        		else if (option.equals("2"))
 	        		{
-		        		System.out.println("\tType the shindig folder and press enter:");
+		        		System.out.println("\n\tType the shindig folder and press [ENTER]:\n");
 		        		shindigFolder = reader.readLine();
 	        		}
 	        		else if (option.equals("3"))
 	        		{
-		        		System.out.println("\tIf you want to download the optional dependencies, just run again this program.");
+		        		System.out.println("\n\tIf you want to download the optional dependencies later, just run this program again.");
 	        		}
 	        	}
 	        	
@@ -250,14 +264,15 @@ public class DependenciesChecker
         {
 	        if (!downloadDependenciesIfNeeded && (gwtFolder == null || gwtFolder.length() == 0))
 	        {
-	        	System.out.println("To complete the installation, you need the GWT jars! Type one of the options and press enter:");
+	        	System.out.println("\n=============================================================================================================\n");
+	        	System.out.println("To complete the installation, you need the GWT 2.2 jars. Type one of the following options and press [ENTER]: \n");
 	        	String option = null;
 	        	
-	        	while (option == null || (!option.equals("1") && option.equals("2")))
+	        	while (option == null || (!option.equals("1") && !option.equals("2")))
 	        	{
-	        		System.out.println("\t1) To download from the web.");
-	        		System.out.println("\t2) To copy from a folder on your disk.");
-	        		System.out.println("\t3) To abort the installation.");
+	        		System.out.println("\t1) To download them from the web.");
+	        		System.out.println("\t2) To copy them from a folder on your disk.");
+	        		System.out.println("\t3) To abort the installation.\n");
 
 	        		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	        		option = reader.readLine();
@@ -268,7 +283,7 @@ public class DependenciesChecker
 	        		}
 	        		else if (option.equals("2"))
 	        		{
-		        		System.out.println("\tType the gwt folder and press enter:");
+		        		System.out.println("\n\tType the GWT folder and press [ENTER]:\n");
 		        		gwtFolder = reader.readLine();
 	        		}
 	        		else if (option.equals("3"))
@@ -293,10 +308,12 @@ public class DependenciesChecker
 	 */
 	private void copyCruxDependencies(List<Dependency> requiredDeps, File gwtFolder)
     {
+    	System.out.println("\n-----------------------------------------------------------------------------------\n");
+
 	    System.out.println("Copying required jars from folder "+gwtFolder.getName()+"...");
 		if (!gwtFolder.exists())
 	    {
-	    	throw new RuntimeException("gwtFolder does not exist!");
+	    	throw new RuntimeException("The GWT folder you entered does not exist!");
 	    }
 	    
 	    for (Dependency dependency : requiredDeps)
@@ -305,13 +322,19 @@ public class DependenciesChecker
             {
 	    	    System.out.println("Copying file: "+dependency.getJarName());
 	            FileUtils.copyFilesFromDir(gwtFolder, dependency.getDestFolder(), dependency.getJarName(), null);
+	            File copy = new File(dependency.getDestFolder(), dependency.getJarName());
+	            if(!copy.exists())
+	            {
+	            	throw new RuntimeException("The required file " + dependency.getJarName() + " was not found at the folder " + gwtFolder + ".");
+	            }
             }
             catch (IOException e)
             {
-            	throw new RuntimeException("Error copying required jar from gwtFolder.", e);
+            	throw new RuntimeException("Error copying required jar from GWT folder.", e);
             }
         }
-	    System.out.println("All required jars installed.");
+	    
+	    System.out.println("\n\nAll required jars installed successfully!\n\n\n");
     }
 
 	/**
@@ -320,13 +343,13 @@ public class DependenciesChecker
 	 */
 	private void downloadCruxDependencies(List<Dependency> requiredDeps)
     {
-	    System.out.println("Downloading required jars...");
+	    System.out.println("\nDownloading required jars...");
 	    for (Dependency dependency : requiredDeps)
         {
 	    	downloadDependency(dependency);
         }
 	    
-	    System.out.println("All required jars installed.");
+	    System.out.println("\nAll required jars installed successfully!\n");
     }
 
 	/**
@@ -341,7 +364,7 @@ public class DependenciesChecker
 		{
 			checkDestinationFolder(dependency);
 			
-			System.out.println("Downloading file "+ dependency.getJarName()+"...");
+			System.out.println("\nDownloading file "+ dependency.getJarName()+"...");
 			URL url = new URL(dependency.getResourceURL());
 			URLConnection urlc = url.openConnection();
 

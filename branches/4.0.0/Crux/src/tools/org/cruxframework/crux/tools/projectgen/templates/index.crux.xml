@@ -27,7 +27,7 @@
 								<gwt:textBox id="nameTextBox" width="100%"/>
 							</td>
 							<td>
-								<crux:decoratedButton id="helloButton" onClick="myController.sayHello" text="Say Hello!" />
+								<crux:decoratedButton id="helloButton" onClick="myController.sayHello" text="Say Hello!" width="100px"/>
 							</td>
 						</tr>
 						<tr>
