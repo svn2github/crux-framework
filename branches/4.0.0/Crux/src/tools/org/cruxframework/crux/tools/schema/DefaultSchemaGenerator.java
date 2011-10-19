@@ -22,9 +22,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +61,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDec
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
-import org.cruxframework.crux.core.utils.JClassUtils;
+import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 import org.w3c.dom.Document;
@@ -417,7 +417,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	private void generateChild(PrintStream out, TagChild tagChild, boolean parentIsAnAgregator, String library) throws SecurityException, NoSuchMethodException
 	{
 		Class<? extends WidgetChildProcessor<?>> processorClass = tagChild.value();
-		TagConstraints attributes = JClassUtils.getChildTagConstraintsAnnotation(processorClass);
+		TagConstraints attributes = ClassUtils.getChildTagConstraintsAnnotation(processorClass);
 		TagChildren children = processorClass.getAnnotation(TagChildren.class);
 		
 		if (ChoiceChildProcessor.class.isAssignableFrom(processorClass))
