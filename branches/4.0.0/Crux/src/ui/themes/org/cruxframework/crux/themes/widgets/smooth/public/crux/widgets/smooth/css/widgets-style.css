@@ -489,10 +489,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border: solid 1px #C9C9C9;
 	-webkit-box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
 	-moz-box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
+	box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#f8f8f8),color-stop(0.99,#e5e5e5));
 	background-image: -moz-linear-gradient(top, #f8f8f8,#e5e5e5);	
+	background-image: -o-linear-gradient(top, #f8f8f8,#e5e5e5);	
 }
 
 .crux-SuggestPopup .item
@@ -503,6 +506,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-color: transparent;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
+	border-radius: 2px;
 }
 
 .crux-SuggestPopup .item-selected
@@ -511,6 +515,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #FFFFFF;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#5386af),color-stop(0.99,#40688d));
 	background-image: -moz-linear-gradient(top, #5386af,#40688d);
+	background-image: -o-linear-gradient(top, #5386af,#40688d);
 }
 
 /******************************************************************************
@@ -794,11 +799,14 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border: solid 0px;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-color: #6b9bc2;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 	height: 100%;
 	width: 20px;
 	padding: 0px;
@@ -808,6 +816,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 }
 .crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
 {	
@@ -817,8 +826,10 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
 	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	background-image: -o-linear-gradient(top, #e0e0e0,#c3c3c3);
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
 	color: #B5B5B5;
 	text-shadow: #FFFFFF 1px 1px 0;
 }
@@ -840,9 +851,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border:none;
 	border-top:none;
 	-moz-border-radius: 0px;
+	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
+	box-shadow: none;
 	font-size: 1px;
 	color: transparent;
 }
@@ -855,9 +868,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: pointer;
 	border:none;
 	-moz-border-radius: 0px;
+	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
+	box-shadow: none;
 	font-size: 1px;
 	color: transparent;
 }
@@ -1047,16 +1062,20 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-weight: bold !important;	
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-color: #6b9bc2;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 }
 .crux-TransferList .moveToRight:active, .crux-TransferList .moveToLeft:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);	
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);	
 	background-color: #3f668a !important;
 }
 .crux-TransferList .gwt-Label
@@ -1655,20 +1674,25 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding: 4px; 
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 }
 .crux-DecoratedButtonCSS3:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 }
 .crux-DecoratedButtonCSS3-disabled, .crux-DecoratedButtonCSS3-disabled:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
 	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	background-image: -o-linear-gradient(top, #e0e0e0,#c3c3c3);
 	color: #787878;
 	text-shadow: #FFFFFF 1px 1px 0;
 	border: solid 1px #BBBBBB;	
