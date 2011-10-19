@@ -146,7 +146,7 @@ public class CruxHttpFetcher implements HttpFetcher
 	 */
 	public CruxHttpFetcher(int maxObjSize, int connectionTimeoutMs, int readTimeoutMs,
 			String basicHttpFetcherProxy) {
-		FETCHER = initializeClient(maxObjSize, connectionTimeoutMs, readTimeoutMs, basicHttpFetcherProxy, true);
+		FETCHER = initializeClient(maxObjSize, connectionTimeoutMs, readTimeoutMs, basicHttpFetcherProxy, false);
 	}
 
 	/**
