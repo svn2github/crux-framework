@@ -1,0 +1,7 @@
+
+In DependenciesChecker.java:
+
+	- change the GWT version at the jars URLs
+	- change the GWT version at the user message
+	- change the GWT jars sizes constants
+	
