@@ -30,7 +30,7 @@ import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 
 
@@ -401,7 +401,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 */
 	private JClassType getTypeFromMethodClass(String methodName)
     {
-		JType returnType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, methodName, new JType[]{});
+		JType returnType = JClassUtils.getReturnTypeFromMethodClass(dataSourceClass, methodName, new JType[]{});
 		JClassType returnClassType = returnType.isClassOrInterface();
 		
 		if (returnClassType == null)

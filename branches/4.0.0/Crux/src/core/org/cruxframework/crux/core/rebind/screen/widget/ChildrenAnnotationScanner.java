@@ -42,7 +42,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildLazyConditions;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -147,7 +147,7 @@ class ChildrenAnnotationScanner
 				}
 				else
 				{
-					out.println(context.getWidget()+"."+ClassUtils.getSetterMethod(widgetProperty)+"("+childWidget+");");
+					out.println(context.getWidget()+"."+JClassUtils.getSetterMethod(widgetProperty)+"("+childWidget+");");
 				}
 				if (childPartialSupport)
 				{
@@ -221,7 +221,7 @@ class ChildrenAnnotationScanner
 				{
 					if (!StringUtils.isEmpty(widgetProperty))
 					{
-						out.println(context.getWidget()+"."+ClassUtils.getSetterMethod(widgetProperty)+"("+EscapeUtils.quote(child)+");");
+						out.println(context.getWidget()+"."+JClassUtils.getSetterMethod(widgetProperty)+"("+EscapeUtils.quote(child)+");");
 					}
 					else if (isHasText)
 					{

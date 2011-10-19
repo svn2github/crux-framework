@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
 import org.cruxframework.crux.core.client.rpc.st.CruxSynchronizerTokenService;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.ServerMessages;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 
 import com.google.gwt.user.server.Base64Utils;
@@ -150,7 +150,7 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 	 */
 	public String getMethodDescription(Method method)
 	{
-		return ClassUtils.getMethodDescription(method);
+		return JClassUtils.getMethodDescription(method);
 	}
 
 	/**

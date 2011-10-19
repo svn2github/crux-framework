@@ -30,7 +30,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.Sourc
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.AttributeCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 
 
@@ -205,22 +205,22 @@ class AttributesAnnotationScanner
 				StringBuilder expression = new StringBuilder();
 				for(int i=0; i< properties.length-1;i++)
 				{
-					expression.append(ClassUtils.getGetterMethod(properties[i])+"().");
+					expression.append(JClassUtils.getGetterMethod(properties[i])+"().");
 				}
-				expression.append(ClassUtils.getSetterMethod(properties[properties.length-1]));
+				expression.append(JClassUtils.getSetterMethod(properties[properties.length-1]));
 				setterMethod = expression.toString();
 			}
 			else
 			{
-				setterMethod = ClassUtils.getSetterMethod(attr.property());
+				setterMethod = JClassUtils.getSetterMethod(attr.property());
 			}
 		}
 		else
 		{
-			setterMethod = ClassUtils.getSetterMethod(attrName);
+			setterMethod = JClassUtils.getSetterMethod(attrName);
 		}
 		Class<?> type = attr.type();
-		if (type == null ||  !(nestedProperty || ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type)))
+		if (type == null ||  !(nestedProperty || JClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type)))
 		{//TODO: implement method check for nested property.
 			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
 		}

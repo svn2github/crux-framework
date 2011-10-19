@@ -35,7 +35,7 @@ import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 
 /**
@@ -159,7 +159,7 @@ public class DataObjects
 					}
 					else
 					{
-						ids.add(ClassUtils.getGetterMethod(field.getName(), dtoClass)+"()");
+						ids.add(JClassUtils.getGetterMethod(field.getName(), dtoClass)+"()");
 					}
 				}
 			}

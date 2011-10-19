@@ -29,7 +29,7 @@ import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.ValidateException;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -782,7 +782,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	{
 		try
         {
-	        return ClassUtils.getParsingExpressionForSimpleType(Window.class.getName()+".Location.getParameter(\""+name+"\")", type);
+	        return JClassUtils.getParsingExpressionForSimpleType(Window.class.getName()+".Location.getParameter(\""+name+"\")", type);
         }
         catch (NotFoundException e)
         {

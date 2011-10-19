@@ -43,7 +43,7 @@ import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyC
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -697,7 +697,7 @@ public class ViewFactoryCreator
 			}
 			if (EvtProcessor.getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
 			{
-				if (ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
+				if (JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
 				{
 					throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screen.getId(), controller, event.getMethod()));
 				}

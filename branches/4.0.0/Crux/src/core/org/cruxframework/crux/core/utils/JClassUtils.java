@@ -37,7 +37,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ClassUtils
+public class JClassUtils
 {
 
 	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String colKey, 
@@ -82,13 +82,13 @@ public class ClassUtils
         			checkNullExpression.append(getExpression.toString()+"==null ");
         		}
         		
-        		String getterMethod = ClassUtils.getGetterMethod(prop, baseClassType);
+        		String getterMethod = JClassUtils.getGetterMethod(prop, baseClassType);
         		if (getterMethod == null)
         		{
         			throw new NoSuchFieldException(colKey);
         		}
         		getExpression.append("."+getterMethod+"()");
-        		baseType = ClassUtils.getReturnTypeFromMethodClass(baseClassType, getterMethod, new JType[]{});
+        		baseType = JClassUtils.getReturnTypeFromMethodClass(baseClassType, getterMethod, new JType[]{});
         		baseClassType = baseType.isClassOrInterface();
         	}
         	if (finishCommand)
