@@ -31,7 +31,7 @@ public class ExamplesController
 	@Expose
 	public void openShowcase()
 	{
-		Window.Location.assign("http://crux-showcase.appspot.com/");
+		Window.Location.assign("http://showcase.cruxframework.org");
 	}
 	
 	@Expose
