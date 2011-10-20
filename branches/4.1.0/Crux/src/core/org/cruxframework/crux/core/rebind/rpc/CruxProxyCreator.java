@@ -29,7 +29,7 @@ import org.cruxframework.crux.core.client.rpc.st.UseSynchronizerToken;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -306,7 +306,7 @@ public class CruxProxyCreator extends ProxyCreator
 		boolean blocksScreen = synchronizerTokenAnnot.blocksUserInteraction();
 		JParameter parameter = parameters.get(parameters.size()-1);
 		
-		srcWriter.println("final String methodDesc = \""+ClassUtils.getMethodDescription(syncMethod)+"\";");
+		srcWriter.println("final String methodDesc = \""+JClassUtils.getMethodDescription(syncMethod)+"\";");
 		srcWriter.println("if (__startMethodCall(methodDesc, "+blocksScreen+")){");
 		srcWriter.indent();
 

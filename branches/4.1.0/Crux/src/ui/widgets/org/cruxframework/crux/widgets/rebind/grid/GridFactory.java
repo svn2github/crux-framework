@@ -42,7 +42,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.widgets.client.grid.ColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.ColumnDefinitions;
 import org.cruxframework.crux.widgets.client.grid.DataColumnDefinition;
@@ -248,7 +248,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
 		{
 			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
-			JClassType dtoType = ClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{}).isClassOrInterface();
+			JClassType dtoType = JClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{}).isClassOrInterface();
 
 			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoType.getParameterizedQualifiedSourceName()+">";
 			String dataSource = getWidgetCreator().createVariableName("dataSource");
@@ -284,7 +284,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 							JType propType;
 							try
 							{
-								propType = ClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
+								propType = JClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
 							}
 							catch (Exception e)
 							{

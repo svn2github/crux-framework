@@ -43,7 +43,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeF
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.HTMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -196,7 +196,7 @@ class HTMLBuilder
 				{
 					parentPath = parentWidget;
 					added.add(processorClass.getCanonicalName());
-					TagConstraints childAttributes = ClassUtils.getChildTagConstraintsAnnotation(processorClass);
+					TagConstraints childAttributes = JClassUtils.getChildTagConstraintsAnnotation(processorClass);
 					if (childAttributes!= null)
 					{
 						if (!StringUtils.isEmpty(childAttributes.tagName()))

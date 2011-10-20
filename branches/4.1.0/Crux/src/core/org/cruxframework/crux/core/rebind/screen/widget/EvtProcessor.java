@@ -25,7 +25,7 @@ import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.EventFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -142,7 +142,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass); 
     	if (exposedMethod == null)
     	{
-    		exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
+    		exposedMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
         		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screenId, controller, event.getMethod()));
@@ -206,7 +206,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 		JGenericType genericType = eventClassType.isGenericType();
 		if (genericType == null)
 		{
-			return ClassUtils.getMethod(controllerClass, methodName, new JType[]{eventClassType});
+			return JClassUtils.getMethod(controllerClass, methodName, new JType[]{eventClassType});
 		}
 		else
 		{
@@ -271,7 +271,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass);
 		if (exposedMethod == null)
     	{
-			exposedMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
+			exposedMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
         		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(creator.getScreen().getId(), controller, event.getMethod()));

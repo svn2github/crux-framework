@@ -42,7 +42,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 
 import com.google.gwt.cell.client.FieldUpdater;
@@ -131,7 +131,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
     	Event event = EventFactory.getEvent("loadDataProvider", dataProviderFactoryMethod);
     	String controller = ClientControllers.getController(event.getController());
     	JClassType controllerClass = getContext().getTypeOracle().findType(controller);
-	    JMethod loadDataProviderMethod = ClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
+	    JMethod loadDataProviderMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
 	    if (loadDataProviderMethod == null)
 	    {
 	    	throw new CruxGeneratorException(messages.cellTableDataProviderMethodNotFound(event.getController(), event.getMethod()));
@@ -195,7 +195,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 			StringBuilder getValueExpression = new StringBuilder();			
 			try
             {
-				context.colDataObjectType = ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, 
+				context.colDataObjectType = JClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, 
 						property, "object", true);
 				context.colDataObject = context.colDataObjectType.getParameterizedQualifiedSourceName();
 				context.columnExpression = getValueExpression.toString();
@@ -303,10 +303,10 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 					if (colType != null && colType.isAssignableTo(getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName())))
 					{
 						StringBuilder getValueExpression = new StringBuilder();			
-						ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
+						JClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
 						out.println(Comparable.class.getCanonicalName()+" c1 = "+getValueExpression.toString());
 						getValueExpression = new StringBuilder();			
-						ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
+						JClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
 						out.println(Comparable.class.getCanonicalName()+" c2 = "+getValueExpression.toString());
 						out.println("if (c1 == c2) {");
 						out.println("return 0;");
@@ -322,10 +322,10 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 						if (primitive != null)
 						{
 							StringBuilder getValueExpression = new StringBuilder();			
-							ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
+							JClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o1", true);
 							out.println(primitive.getSimpleSourceName()+" c1 = "+getValueExpression.toString());
 							getValueExpression = new StringBuilder();			
-							ClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
+							JClassUtils.buildGetValueExpression(getValueExpression, context.rowDataObjectType, property, "o2", true);
 							out.println(primitive.getSimpleSourceName()+" c2 = "+getValueExpression.toString());
 							out.println("return (c1==c2) ? 0 : (c1<c2) ? -1 : 1;");
 						}
