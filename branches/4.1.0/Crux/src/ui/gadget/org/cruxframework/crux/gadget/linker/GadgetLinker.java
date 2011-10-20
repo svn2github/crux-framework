@@ -45,7 +45,6 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	private static final String GADGET_LINKER_TEMPLATE_JS = "org/cruxframework/crux/gadget/linker/GadgetTemplate.js";
 	private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "org/cruxframework/crux/gadget/linker/computeScriptBase.js";
 	private static final String GADGET_INSTALL_SCRIPT_JS = "org/cruxframework/crux/gadget/linker/installScriptEarlyDownload.js";
-	private static final String GADGET_LOAD_EXTERNAL_STYLESHHETS_SCRIPT_JS = "org/cruxframework/crux/gadget/linker/loadExternalStylesheets.js";
 	private static final String GADGET_PROCESS_METAS_JS = "org/cruxframework/crux/gadget/linker/processMetas.js";
 	private static final String GADGET_WAIT_FOR_BODY_LOADED_JS = "org/cruxframework/crux/gadget/linker/waitForBodyLoaded.js";
 	private static final String GADGET_SET_LOCALE_JS = "org/cruxframework/crux/gadget/linker/setGadgetLocale.js";
@@ -181,15 +180,6 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	protected String getJsInstallScript(LinkerContext context)
 	{
 		return GADGET_INSTALL_SCRIPT_JS;
-	}
-
-	/**
-	 * @see com.google.gwt.core.linker.CrossSiteIframeLinker#getJsLoadExternalStylesheets(com.google.gwt.core.ext.LinkerContext)
-	 */
-	@Override
-	protected String getJsLoadExternalStylesheets(LinkerContext context)
-	{
-		return GADGET_LOAD_EXTERNAL_STYLESHHETS_SCRIPT_JS;
 	}
 
 	/**
