@@ -41,4 +41,10 @@ public class ModuleContainerLayoutProjectGenerator extends ModuleLayoutProjectGe
     {
 	    return "MODULE_CONTAINER_APP";
     }
+    
+    @Override
+    public void createSources() throws IOException
+    {
+        createModuleSources();
+    }
 }

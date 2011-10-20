@@ -43,15 +43,7 @@ public class ModuleLayoutProjectGenerator extends AbstractLayoutProjectGenerator
     public void createSources() throws IOException
     {
 		super.createSources();
-		
-		File sourceDir = createDir(options.getProjectDir(), "src");
-		String packageDir = this.options.getModulePackage().replaceAll("\\.", "/");
-		File moduleDir = createDir(sourceDir, packageDir);
-
-		createFile(sourceDir, "Crux.properties", "modules/crux.properties.txt");
-		createFile(sourceDir, "CruxModuleConfig.properties", "modules/cruxModuleConfig.properties.txt");
-		createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "modules/module.xml");
-		createFile(moduleDir, this.options.getModuleSimpleName() + ".module.xml", "modules/ModuleInfo.module.xml");
+		createModuleSources();
     }
 
 	@Override
@@ -114,6 +106,18 @@ public class ModuleLayoutProjectGenerator extends AbstractLayoutProjectGenerator
     public String getProjectLayout()
     {
 	    return "MODULE_APP";
+    }
+
+	protected void createModuleSources() throws IOException
+    {
+	    File sourceDir = createDir(options.getProjectDir(), "src");
+		String packageDir = this.options.getModulePackage().replaceAll("\\.", "/");
+		File moduleDir = createDir(sourceDir, packageDir);
+
+		createFile(sourceDir, "Crux.properties", "modules/crux.properties.txt");
+		createFile(sourceDir, "CruxModuleConfig.properties", "modules/cruxModuleConfig.properties.txt");
+		createFile(moduleDir, this.options.getModuleSimpleName() + ".gwt.xml", "modules/module.xml");
+		createFile(moduleDir, this.options.getModuleSimpleName() + ".module.xml", "modules/ModuleInfo.module.xml");
     }
 
 	@Override
