@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Base class for an IoC configuration class. Crux engine search for all subclasses of IoCContainerConfiguration and 
+ * invoke their configure method. 
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -30,7 +33,16 @@ public abstract class IoCContainerConfiguration implements IocConfiguration
 	private static Set<IocConfigList> groupConfigurations = new HashSet<IocConfigList>();
 	
 	/**
-	 * 
+	 * Call this method on your configure method to create a configuration for some Type. Eg: 
+	 * <p>
+	 * You can write something like:
+	 * <p>
+	 * <pre>
+	 * bindType(List.class).toClass(ArrayList.class).inLocalScope();
+	 * </pre>
+	 * <p>
+	 * That would cause Crux to inject a new instance of ArrayList whenever you declare 
+	 * a field of type List annotated with
 	 * @param <T>
 	 * @param clazz
 	 * @return

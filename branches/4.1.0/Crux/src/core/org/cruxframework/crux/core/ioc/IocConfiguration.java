@@ -21,5 +21,8 @@ package org.cruxframework.crux.core.ioc;
  */
 public interface IocConfiguration
 {
+	/**
+	 * Override this method to define a configuration block for the IoC container.
+	 */
 	void configure();
 }
