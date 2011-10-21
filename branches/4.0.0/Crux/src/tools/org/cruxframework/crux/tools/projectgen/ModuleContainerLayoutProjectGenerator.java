@@ -47,4 +47,10 @@ public class ModuleContainerLayoutProjectGenerator extends ModuleLayoutProjectGe
     {
         createModuleSources();
     }
+    
+    @Override
+	protected void createIndexPage(String pageName) throws IOException
+    {
+	    createFile(getModulePublicDir(), pageName, "modulescontainer/index.crux.xml");
+    }
 }

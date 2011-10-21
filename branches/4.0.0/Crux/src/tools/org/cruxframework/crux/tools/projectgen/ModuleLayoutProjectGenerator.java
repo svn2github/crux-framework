@@ -62,7 +62,12 @@ public class ModuleLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 		String pageName = getPageName();
 		
 		createFile(getWebInfLibDir().getParentFile(), "web.xml", "modules/web.xml");
-		createFile(getModulePublicDir(), pageName, "modules/index.crux.xml");
+		createIndexPage(pageName);
+    }
+
+	protected void createIndexPage(String pageName) throws IOException
+    {
+	    createFile(getModulePublicDir(), pageName, "modules/index.crux.xml");
     }
 
 	@Override

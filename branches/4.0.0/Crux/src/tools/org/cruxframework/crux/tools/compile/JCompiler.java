@@ -58,7 +58,8 @@ public class JCompiler
 	 */
 	public boolean compile(File sourceDir) throws IOException
 	{
-		int status = compiler.run(null, null, null, getCompilerOptions(sourceDir));
+		String[] compilerOptions = getCompilerOptions(sourceDir);
+		int status = (compilerOptions==null?0:compiler.run(null, null, null, compilerOptions));
 		if (tempFile != null && tempFile.exists())
 		{
 			tempFile.delete();
@@ -154,17 +155,20 @@ public class JCompiler
 	 */
 	private String createCompilerFileList(File sourceDir) throws IOException
     {
-		tempFile = File.createTempFile("cruxCompiler", "files");
-		PrintWriter out = new PrintWriter(tempFile);
 		List<String> javaFiles = new ArrayList<String>();
-		
 		extractJavaFiles(sourceDir, javaFiles);
-		for (String javaFile : javaFiles)
-        {
-			out.println(javaFile);
-        }
-		out.close();
-		return "@"+tempFile.getCanonicalPath();
+		if (javaFiles.size() > 0)
+		{
+			tempFile = File.createTempFile("cruxCompiler", "files");
+			PrintWriter out = new PrintWriter(tempFile);
+			for (String javaFile : javaFiles)
+			{
+				out.println(javaFile);
+			}
+			out.close();
+			return "@"+tempFile.getCanonicalPath();
+		}
+		return null;
     }
 	
 	/**
@@ -197,34 +201,39 @@ public class JCompiler
 	 */
 	private String[] getCompilerOptions(File sourceDir) throws IOException
 	{
-		List<String> options = new ArrayList<String>();
-		if (!StringUtils.isEmpty(source))
+		String filesToCompile = createCompilerFileList(sourceDir);
+		if (filesToCompile != null)
 		{
-			options.add("-source");
-			options.add(source);
+			List<String> options = new ArrayList<String>();
+			if (!StringUtils.isEmpty(source))
+			{
+				options.add("-source");
+				options.add(source);
+			}
+			if (!StringUtils.isEmpty(target))
+			{
+				options.add("-target");
+				options.add(target);
+			}
+			if (!StringUtils.isEmpty(classpath))
+			{
+				options.add("-classpath");
+				options.add(classpath);
+			}
+			if (!StringUtils.isEmpty(sourcepath))
+			{
+				options.add("-sourcepath");
+				options.add(sourcepath);
+			}
+			if (!StringUtils.isEmpty(outputDirectory))
+			{
+				options.add("-d");
+				options.add(outputDirectory);
+			}
+
+			options.add(filesToCompile);
+			return options.toArray(new String[options.size()]);
 		}
-		if (!StringUtils.isEmpty(target))
-		{
-			options.add("-target");
-			options.add(target);
-		}
-		if (!StringUtils.isEmpty(classpath))
-		{
-			options.add("-classpath");
-			options.add(classpath);
-		}
-		if (!StringUtils.isEmpty(sourcepath))
-		{
-			options.add("-sourcepath");
-			options.add(sourcepath);
-		}
-		if (!StringUtils.isEmpty(outputDirectory))
-		{
-			options.add("-d");
-			options.add(outputDirectory);
-		}
-		
-		options.add(createCompilerFileList(sourceDir));
-		return options.toArray(new String[options.size()]);
+		return null;
 	}
 }
