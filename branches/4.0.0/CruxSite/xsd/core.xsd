@@ -1,0 +1,144 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/crux" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
+xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/crux" >
+<xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
+<xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:element name="splashScreen" type="SplashScreen"/>
+<xs:complexType name="SplashScreen">
+<xs:attribute name="style" type="xs:string"/>
+<xs:attribute name="transactionDelay" type="xs:integer"/>
+</xs:complexType>
+<xs:element name="screen" type="Screen"/>
+<xs:group name="ScreenContent">
+<xs:choice>
+<xs:any minOccurs="0" maxOccurs="unbounded"/>
+</xs:choice>
+</xs:group>
+<xs:complexType name="Screen" mixed="true">
+<xs:group ref="ScreenContent" />
+<xs:attribute name="manageHistory" type="xs:boolean" default="false"/>
+<xs:attribute name="title" type="xs:string"/>
+<xs:attribute name="fragment" type="xs:string"/>
+<xs:attribute name="useController" type="xs:string"/>
+<xs:attribute name="useSerializable" type="xs:string"/>
+<xs:attribute name="useFormatter" type="xs:string"/>
+<xs:attribute name="useDataSource" type="xs:string"/>
+<xs:attribute name="onClosing" type="xs:string"/>
+<xs:attribute name="onClose" type="xs:string"/>
+<xs:attribute name="onResized" type="xs:string"/>
+<xs:attribute name="onLoad" type="xs:string"/>
+<xs:attribute name="onHistoryChanged" type="xs:string"/>
+</xs:complexType>
+<xs:group name="widgets">
+<xs:choice>
+<xs:element ref="_widgets:maskedTextBox" />
+<xs:element ref="_widgets:dynaTabs" />
+<xs:element ref="_widgets:transferList" />
+<xs:element ref="_widgets:scrollBanner" />
+<xs:element ref="_widgets:wizard" />
+<xs:element ref="_widgets:randomPager" />
+<xs:element ref="_widgets:decoratedButton" />
+<xs:element ref="_widgets:decoratedPanel" />
+<xs:element ref="_widgets:wizardPage" />
+<xs:element ref="_widgets:rollingTabPanel" />
+<xs:element ref="_widgets:collapsePanel" />
+<xs:element ref="_widgets:textArea" />
+<xs:element ref="_widgets:sequentialPager" />
+<xs:element ref="_widgets:singleSelect" />
+<xs:element ref="_widgets:popup" />
+<xs:element ref="_widgets:timer" />
+<xs:element ref="_widgets:grid" />
+<xs:element ref="_widgets:stackMenu" />
+<xs:element ref="_widgets:confirm" />
+<xs:element ref="_widgets:titlePanel" />
+<xs:element ref="_widgets:rollingPanel" />
+<xs:element ref="_widgets:maskedLabel" />
+<xs:element ref="_widgets:filter" />
+<xs:element ref="_gwt:datePicker" />
+<xs:element ref="_gwt:deckPanel" />
+<xs:element ref="_gwt:namedFrame" />
+<xs:element ref="_gwt:formPanel" />
+<xs:element ref="_gwt:scrollPanel" />
+<xs:element ref="_gwt:cellTree" />
+<xs:element ref="_gwt:simplePager" />
+<xs:element ref="_gwt:anchor" />
+<xs:element ref="_gwt:decoratedTabPanel" />
+<xs:element ref="_gwt:tree" />
+<xs:element ref="_gwt:button" />
+<xs:element ref="_gwt:verticalSplitPanel" />
+<xs:element ref="_gwt:simpleCheckBox" />
+<xs:element ref="_gwt:dialogBox" />
+<xs:element ref="_gwt:HTML" />
+<xs:element ref="_gwt:hyperlink" />
+<xs:element ref="_gwt:pageSizePager" />
+<xs:element ref="_gwt:pushButton" />
+<xs:element ref="_gwt:video" />
+<xs:element ref="_gwt:splitLayoutPanel" />
+<xs:element ref="_gwt:decoratedPopupPanel" />
+<xs:element ref="_gwt:stackLayoutPanel" />
+<xs:element ref="_gwt:decoratorPanel" />
+<xs:element ref="_gwt:submitButton" />
+<xs:element ref="_gwt:fileUpload" />
+<xs:element ref="_gwt:image" />
+<xs:element ref="_gwt:canvas" />
+<xs:element ref="_gwt:label" />
+<xs:element ref="_gwt:dockPanel" />
+<xs:element ref="_gwt:doubleBox" />
+<xs:element ref="_gwt:layoutPanel" />
+<xs:element ref="_gwt:captionPanel" />
+<xs:element ref="_gwt:inlineHyperlink" />
+<xs:element ref="_gwt:popupPanel" />
+<xs:element ref="_gwt:frame" />
+<xs:element ref="_gwt:toggleButton" />
+<xs:element ref="_gwt:decoratedStackPanel" />
+<xs:element ref="_gwt:radioButton" />
+<xs:element ref="_gwt:inlineHTML" />
+<xs:element ref="_gwt:suggestBox" />
+<xs:element ref="_gwt:dateLabel" />
+<xs:element ref="_gwt:horizontalPanel" />
+<xs:element ref="_gwt:simpleRadioButton" />
+<xs:element ref="_gwt:flexTable" />
+<xs:element ref="_gwt:tabPanel" />
+<xs:element ref="_gwt:cellList" />
+<xs:element ref="_gwt:lazyPanel" />
+<xs:element ref="_gwt:listBox" />
+<xs:element ref="_gwt:simplePanel" />
+<xs:element ref="_gwt:flowPanel" />
+<xs:element ref="_gwt:dockLayoutPanel" />
+<xs:element ref="_gwt:stackPanel" />
+<xs:element ref="_gwt:focusPanel" />
+<xs:element ref="_gwt:richTextArea" />
+<xs:element ref="_gwt:cellWidget" />
+<xs:element ref="_gwt:dateBox" />
+<xs:element ref="_gwt:longBox" />
+<xs:element ref="_gwt:passwordTextBox" />
+<xs:element ref="_gwt:tabLayoutPanel" />
+<xs:element ref="_gwt:absolutePanel" />
+<xs:element ref="_gwt:textArea" />
+<xs:element ref="_gwt:numberLabel" />
+<xs:element ref="_gwt:disclosurePanel" />
+<xs:element ref="_gwt:grid" />
+<xs:element ref="_gwt:notificationMole" />
+<xs:element ref="_gwt:verticalPanel" />
+<xs:element ref="_gwt:menuBar" />
+<xs:element ref="_gwt:integerBox" />
+<xs:element ref="_gwt:horizontalSplitPanel" />
+<xs:element ref="_gwt:audio" />
+<xs:element ref="_gwt:HTMLPanel" />
+<xs:element ref="_gwt:tabBar" />
+<xs:element ref="_gwt:textBox" />
+<xs:element ref="_gwt:cellBrowser" />
+<xs:element ref="_gwt:cellTable" />
+<xs:element ref="_gwt:resetButton" />
+<xs:element ref="_gwt:checkBox" />
+<xs:element ref="_gwt:hidden" />
+<xs:element ref="_gwt:inlineLabel" />
+<xs:element ref="_gwt:decoratedTabBar" />
+</xs:choice>
+</xs:group>
+</xs:schema>
