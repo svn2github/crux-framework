@@ -12,6 +12,8 @@
 	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
 
 	<property name="xsd.dir" value="xsd" />
+	<property file="build/build.properties" />
+	<property file="build/version.properties" />
 
 	<path id="build.classpath">
 		<fileset dir="${web.lib.dir}">
@@ -33,7 +35,7 @@
 		Generates the war for distribution
 	========================================================================================================
 	-->
-	<target name="dist">
+	<target name="export-war">
 
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${temp.dir}" />
@@ -81,6 +83,8 @@
 			</manifest>
 		</war>
 		<move file="${temp.dir}/${final.name}.war" tofile="${dist.dir}/${final.name}.war" />
+		<delete dir="${dist.dir}/${final.name}" failonerror="no" includeemptydirs="yes" />
+		<unzip dest="${dist.dir}/${final.name}" src="${dist.dir}/${final.name}.war"></unzip>
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" />
 	</target>
 
@@ -157,5 +161,58 @@
 		</generateSchemas>
 	</target>
 
+	<!--
+	========================================================================================================
+		Incrementa a versao do build
+	========================================================================================================
+	-->
+	<target name="set-version">
+		<propertyfile file="build/version.properties">
+			<entry key="appengine.version" default="0" type="int" operation="+" value="1" />
+		</propertyfile>
+		<replace dir="${dist.dir}/${final.name}/WEB-INF" includes="appengine-web.xml" propertyFile="build/version.properties">
+			<replacefilter token="#[appengine.version]" property="appengine.version" />
+		</replace>
+	</target>
+
+	<!-- 
+	========================================================================================================
+		Generate Gadget and publish it on appEngine
+	========================================================================================================
+	-->
+	<target name="dist">
+		<delete dir="${dist.dir}" failonerror="yes" includeemptydirs="no" includes="**/*" />
+		<mkdir dir="${dist.dir}" />
+
+		<antcall target="export-war" />
+		<antcall target="set-version" />
+		<antcall target="publish" />
+		
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		Publish on appEngine
+	========================================================================================================
+	-->
+	<target name="publish">
+		<!--
+		<appcfg action="update" war="${dist.dir}/generated/RssGadget.war" >
+		</appcfg>
+		-->
+		<input addproperty="appengine.email" message="Informe o seu email associado à conta do AppEngine:" />
+		<input addproperty="appengine.password" message="Informe a senha da sua conta no AppEngine:" />
+		
+		<java classname="com.google.appengine.tools.admin.AppCfg" inputstring="${appengine.password}">
+		     <sysproperty key="appengine.sdk.root" value="${sdk.dir}" />
+		     <classpath>
+		          <fileset dir="${sdk.dir}/lib" includes="**/*.jar" />
+			 </classpath>
+		     <arg value="--email=${appengine.email}" />
+		     <arg value="--passin" />
+		     <arg value="update" />
+		     <arg value="../${dist.dir}/${final.name}" />
+		 </java>	
+	</target>	
 
 </project>
