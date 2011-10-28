@@ -89,7 +89,7 @@
 			
 			.ContentLeft, .ContentRight
 			{
-				font-family: monostapce;
+				font-family: monospace;
 				color: #CCCCCC;
 			}
 			
