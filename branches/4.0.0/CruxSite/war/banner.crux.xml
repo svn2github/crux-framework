@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+>
+	<head>
+		<title>Crux Framework - Official Site</title>
+	</head>
+
+	<body>
+		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
+		<c:screen onLoad="bannerController.load"></c:screen>
+		<gwt:simplePanel id="canvas" style="height:100%; width:100%"/>
+	</body>
+</html>
+
