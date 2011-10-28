@@ -80,11 +80,11 @@
 	<body>
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
 		
-		<gwt:grid id="dockPanel" styleName="Frame" >
+		<gwt:grid id="dockPanel" styleName="Frame" cellSpacing="0" cellPadding="0" >
 			<gwt:row>
 				<gwt:cell styleName="Header" >
 					<gwt:widget>
-						<gwt:grid id="headerPanel" >
+						<gwt:grid id="headerPanel" cellSpacing="0" cellPadding="0">
 							<gwt:row>
 								<gwt:cell styleName="HeaderMenuLeft">
 									<gwt:html> </gwt:html>
