@@ -14,57 +14,114 @@
 				margin: 0px;
 				padding: 0px;
 			}
-			.Header
+			
+			BODY
 			{
-				background-color: #00242C;;
+				background: url(img/body-texture.png) 0px 224px repeat-x;
+				background-color: #B8BCBD;
+			}
+		
+			.Frame
+			{
+				width: 100%;
+				height: 100%;
 			}
 			
-			.Footer
+			.Header
 			{
-				background-image: url(img/footer-bg.png);
+				height: 224px;
+				background-color: #00242C;
+			}
+			
+			.HeaderAreas
+			{
+				width: 100%;
+				height: 224px;
+			}
+		
+			.HeaderMenuLeft
+			{
+				background: url(img/header-menu-left.jpg) bottom right no-repeat;
+			}
+		
+			.HeaderMenu
+			{
+				width: 870px;
+				background: url(img/header-logo.jpg) top left no-repeat;
+				height: 224px;
 			}
 			
 			.Content
 			{
-				background-image: url(img/body-mountains.png);
-				background-position: bottom;
-				background-repeat: repeat-x;
-				border:solid red 1px;
-				overflow: visible !important;
+				background: url(img/body-mountains.png) bottom repeat-x;
+				padding-top: 10px;
 			}
 			
-			Body
+			.Footer
 			{
-				background-color: #B8BCBD;
-				background-image: url(img/body-texture.png);
-				background-position: 0px 224px;
-				background-repeat: repeat-x;
+				height: 104px;
+				width: 100%;
+				position: relative;
+				margin-top: -104px;
+				clear:both;
+				background-image: url(img/footer-bg.png);
 			}
 			
-			.Layout
+			.FooterContent
 			{
-				min-height: 100% !important;
+				width: 100%;
+				background: url(img/footer-texture.png) bottom no-repeat;
+				height: 104px;
 			}
+			
 		</style>
 	</head>
 
 	<body>
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
-		<gwt:dockPanel id="dockPanel" width="100%" height="100%" styleName="Layout">
-			<gwt:cell direction="north" height="224">
-				<gwt:simplePanel id="headerPanel" styleName="Header" height="100%">
-				</gwt:simplePanel>
-			</gwt:cell>
-			<gwt:cell direction="south" height="104">
-				<gwt:simplePanel id="footerPanel" styleName="Footer" height="100%"></gwt:simplePanel>
-			</gwt:cell>
-			<gwt:cell direction="center" >
-				<gwt:simplePanel id="contentPanel" styleName="Content" >
-					<gwt:HTML id="content" >
-					</gwt:HTML>
-				</gwt:simplePanel>
-			</gwt:cell>
-		</gwt:dockPanel>
+		
+		<gwt:grid id="dockPanel" styleName="Frame" >
+			<gwt:row>
+				<gwt:cell styleName="Header" >
+					<gwt:widget>
+						<gwt:grid id="headerPanel" >
+							<gwt:row>
+								<gwt:cell styleName="HeaderMenuLeft">
+									<gwt:html> </gwt:html>
+								</gwt:cell>
+								<gwt:cell styleName="HeaderMenu">
+									<gwt:html> </gwt:html>
+								</gwt:cell>
+								<gwt:cell styleName="HeaderMenuRight">
+									<gwt:html> </gwt:html>
+								</gwt:cell>
+							</gwt:row>
+						</gwt:grid>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+			<gwt:row>
+				<gwt:cell styleName="Content">
+					<gwt:html>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>
+						sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>sdfsadf<br/>					
+					</gwt:html>
+				</gwt:cell>
+			</gwt:row>
+			<gwt:row>
+				<gwt:cell styleName="Footer" >
+					<gwt:widget>
+						<gwt:simplePanel id="footerPanel" styleName="FooterContent"></gwt:simplePanel>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+		</gwt:grid>
 	</body>
 </html>
 
