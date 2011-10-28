@@ -6,13 +6,14 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 >
 	<head>
-		<title>Crux Framework - Official Site</title>
+		<title>${siteMessages.siteTitle}</title>
 		<link rel="stylesheet" href="css/site.css"/>
 	</head>
 
 	<body>
 	
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
+		<c:screen onLoad="rssController.onLoad" useController="rssController"/>
 		
 		<div id="canvas" style="height:100%">
 			<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
