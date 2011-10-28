@@ -43,7 +43,7 @@
 									<gwt:cell styleName="ContentLeft"><gwt:html>.</gwt:html></gwt:cell>
 									<gwt:cell styleName="ContentCenter">
 										<gwt:widget>
-											<gwt:flexTable id="bannerAndNews" styleName="BannerAndNews">
+											<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="BannerAndNews">
 												<gwt:row>
 													<gwt:cell styleName="BannerArea" colSpan="2">
 														
