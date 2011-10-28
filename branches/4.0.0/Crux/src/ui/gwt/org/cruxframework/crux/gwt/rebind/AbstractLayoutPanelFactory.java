@@ -17,6 +17,7 @@ package org.cruxframework.crux.gwt.rebind;
 
 import java.util.ArrayList;
 
+import org.cruxframework.crux.core.client.screen.RequiresResizeFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
@@ -62,7 +63,7 @@ class AbstractLayoutPanelContext extends WidgetCreatorContext
 	@TagEventDeclaration("onAnimationStep") 
 })
 public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelContext> 
-			    extends ComplexPanelFactory<C>
+			    extends ComplexPanelFactory<C> implements RequiresResizeFactory
 {
 	/**
 	 * @author Thiago da Rosa de Bustamante

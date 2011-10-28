@@ -40,7 +40,7 @@ class DockLayoutPanelContext extends AbstractLayoutPanelContext
  *
  */
 public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelContext> 
-	  extends AbstractLayoutPanelFactory<C>
+	  extends AbstractLayoutPanelFactory<C> 
 {
 	
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="cell")
