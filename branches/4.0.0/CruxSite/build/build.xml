@@ -106,6 +106,8 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<arg value="-gen"/>
+			<arg value="generated"/>
 			<!-- use these parameters if you want to modify GWT output settings
 			<arg value="-style"/>
 			<arg value="DETAILED"/>
