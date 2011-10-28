@@ -93,7 +93,32 @@
 				<gwt:row>
 					<gwt:cell styleName="Footer" >
 						<gwt:widget>
-							<gwt:simplePanel id="footerContent" styleName="FooterContent"></gwt:simplePanel>
+								<gwt:grid id="footerItems" styleName="FooterContent">
+									<gwt:row>
+										<gwt:cell styleName="CruxLabelFooter" verticalAlignment="bottom">
+											<gwt:text>Cruxframework.org</gwt:text>
+										</gwt:cell>
+										<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="bottom">
+											<gwt:text>Powered by:</gwt:text>
+										</gwt:cell>
+									</gwt:row>
+									<gwt:row>
+										<gwt:cell styleName="CruxLabelFooter3">
+											<gwt:widget>
+												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks">
+													<gwt:anchor id="about" href="#" text="About" />
+													<gwt:label id="separator1" styleName="LinkSeparator"/>
+													<gwt:anchor id="services" href="#" text="Services" />
+													<gwt:label id="separator2" styleName="LinkSeparator"/>
+													<gwt:anchor id="contact" href="#" text="Contact" />
+													<gwt:label id="separator3" styleName="LinkSeparator"/>
+													<gwt:anchor id="contribute" href="#" text="Contribute" />
+												</gwt:horizontalPanel>
+											</gwt:widget>
+										</gwt:cell>
+										<gwt:cell></gwt:cell>
+									</gwt:row>
+								</gwt:grid>
 						</gwt:widget>
 					</gwt:cell>
 				</gwt:row>
