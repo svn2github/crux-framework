@@ -94,12 +94,12 @@
 				<gwt:row>
 					<gwt:cell styleName="Footer" >
 						<gwt:widget>
-								<gwt:grid id="footerItems" styleName="FooterContent">
+								<gwt:grid id="footerItems" styleName="FooterContent" cellPadding="0" cellSpacing="0">
 									<gwt:row>
-										<gwt:cell styleName="CruxLabelFooter" verticalAlignment="bottom">
+										<gwt:cell styleName="CruxLabelFooter" verticalAlignment="middle">
 											<gwt:text>Cruxframework.org</gwt:text>
 										</gwt:cell>
-										<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="bottom">
+										<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="middle">
 											<gwt:text>Powered by:</gwt:text>
 										</gwt:cell>
 									</gwt:row>
@@ -117,7 +117,15 @@
 												</gwt:horizontalPanel>
 											</gwt:widget>
 										</gwt:cell>
-										<gwt:cell></gwt:cell>
+										<gwt:cell styleName="CruxLabelFooter4">
+											<gwt:widget>
+												<gwt:horizontalPanel id="rowImgsFooter">
+														<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
+														<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
+														<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
+												</gwt:horizontalPanel>
+											</gwt:widget>
+										</gwt:cell>
 									</gwt:row>
 								</gwt:grid>
 						</gwt:widget>

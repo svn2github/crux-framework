@@ -7,7 +7,7 @@ BODY, HTML
 	height: 100%;
 	margin: 0px;
 	padding: 0px;
-	font-family:Arial, Helvetica, Sans-serif;
+	font-family:Helvetica, Sans-serif;
 }
 
 BODY
@@ -62,7 +62,10 @@ BODY
 {
 	width: 100%;
 	background: url(../../img/footer-texture.png) center 12px no-repeat;
-	height: 94px;
+	height: 97px;
+	padding-top:11px;
+	margin-top:5px;
+	margin-bottom:1px;
 }
 .FooterContent td{
 	width:50%;
@@ -123,15 +126,35 @@ BODY
 	border-right:1px solid #fff;
 	height:20px;
 	margin-right:10px;
-	opacity:0.1;
+	opacity:0.18;
 }
 .FooterLinks{
 	float:right;
 	font-size:13px;
 }
+.CruxLabelFooter, .CruxLabelFooter2{
+	color:#ccc;
+}
 .CruxLabelFooter{
 	text-align:right;
+	border-right:1px solid #001B20;
+	padding-right:10px;
+	padding-top:10px;
+	font-size:12px;
 }
 .CruxLabelFooter3{
 	text-align:right;
+	border-right:1px solid #001B20;
+	padding-right:10px;
+}
+.CruxLabelFooter2{
+	border-left:1px solid #005C6C;
+	padding-left:10px;
+	padding-top:10px;
+	font-size:12px;
+	font-weight:normal;
+}
+.CruxLabelFooter4{
+	border-left:1px solid #005C6C;
+	padding-left:10px;
 }
