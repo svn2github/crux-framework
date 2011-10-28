@@ -8,81 +8,102 @@
 		margin: 0px;
 		padding: 0px;
 	}
+	
+	BODY
+	{
+		background: url(img/body-texture.png) 0px 224px repeat-x;
+		background-color: #B8BCBD;
+	}
 
 	.Frame
 	{
 		width: 100%;
-		height: 100%;	
-		position: relative;
+		height: 100%;
 	}
 	
 	.Header
 	{
 		height: 224px;
-		overflow: hidden;
+		background-color: #00242C;
+	}
+	
+	.HeaderAreas
+	{
 		width: 100%;
-		background-color: #00242C;;
+		height: 224px;
+	}
+
+	.HeaderMenuLeft
+	{
+		background: url(img/header-menu-left.jpg) bottom right no-repeat;
+	}
+
+	.HeaderMenu
+	{
+		width: 870px;
+		background: url(img/header-logo.jpg) top left no-repeat;
+		height: 224px;
+	}
+	
+	.Content
+	{
+		background: url(img/body-mountains.png) bottom repeat-x;
+		padding-top: 10px;
 	}
 	
 	.Footer
 	{
 		height: 104px;
-		overflow: hidden;
 		width: 100%;
-		position:absolute;
-		bottom: 0px;
-		left: 0px;
+		position: relative;
+		margin-top: -104px;
+		clear:both;
 		background-image: url(img/footer-bg.png);
 	}
 	
-	.Content
+	.FooterContent
 	{
-		background-image: url(img/body-mountains.png);
-		background-position: bottom;
-		background-repeat: repeat-x;
 		width: 100%;
-		position: absolute;
-		top: 232px;
-		bottom: 105px;
-		border:solid red 1px;
+		background: url(img/footer-texture.png) bottom no-repeat;
+		height: 104px;
 	}
 	
-	Body
-	{
-		background-color: #B8BCBD;
-		background-image: url(img/body-texture.png);
-		background-position: 0px 224px;
-		background-repeat: repeat-x;
-	}
 </style>
 
 <body>
 
-<div class="Frame">
+<table class="Frame" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="Header">
+			<table class="HeaderAreas" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="HeaderMenuLeft">&nbsp;</td>
+					<td class="HeaderMenu">&nbsp;</td>
+					<td class="HeaderMenuRight">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="Content">
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+			sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="Footer">
+			<div class="FooterContent">
+			</div>
+		</td>
+	</tr>
+</table>
 
-	<div class="Header">
-		wewers
-	
-	</div>
-	
-	<div class="Content">
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>sdfsadf<br>
-		
-	
-	</div>
-	
-	<div class="Footer">
-	asdfasd
-	</div>
-	
-</div>
 
 </body>
 
