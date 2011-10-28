@@ -7,98 +7,7 @@
 >
 	<head>
 		<title>Crux Framework - Official Site</title>
-		<style>
-			BODY, HTML
-			{
-				height: 100%;
-				margin: 0px;
-				padding: 0px;
-			}
-			
-			BODY
-			{
-				background: url(img/body-texture.png) 0px 224px repeat-x;
-				background-color: #B8BCBD;
-			}
-		
-			.Frame
-			{
-				width: 100%;
-				height: 100%;
-			}
-			
-			.Header
-			{
-				height: 224px;
-				background-color: #00242C;
-			}
-			
-			.HeaderAreas
-			{
-				width: 100%;
-				height: 224px;
-			}
-		
-			.HeaderMenuLeft
-			{
-			}
-		
-			.HeaderMenu
-			{
-				width: 900px;
-				background: url(img/header-logo.jpg) top left no-repeat;
-				height: 224px;
-			}
-			
-			.Content
-			{
-				background: url(img/body-mountains.png) bottom repeat-x;
-				padding-top: 10px;
-			}
-			
-			.Footer
-			{
-				height: 104px;
-				width: 100%;
-				background-image: url(img/footer-bg.png);
-			}
-			
-			.FooterContent
-			{
-				width: 100%;
-				background: url(img/footer-texture.png) bottom no-repeat;
-				height: 104px;
-			}
-
-			.BannerAndNews
-			{
-				width: 100%;
-			}						
-			
-			.BannerArea
-			{
-				height: 350;
-				border: solid 1px red;
-			}
-			
-			.ContentAreas
-			{
-				width: 100%;
-				padding-top: 10px;
-			}
-			
-			.ContentLeft, .ContentRight
-			{
-				font-family: monospace;
-				color: #CCCCCC;
-			}
-			
-			.ContentCenter
-			{
-				width: 900px;
-			}
-			
-		</style>
+		<link rel="stylesheet" href="css/site.css"/>
 	</head>
 
 	<body>
@@ -134,18 +43,45 @@
 									<gwt:cell styleName="ContentLeft"><gwt:html>.</gwt:html></gwt:cell>
 									<gwt:cell styleName="ContentCenter">
 										<gwt:widget>
-											<gwt:grid id="BannerAndNews">
+											<gwt:flexTable id="bannerAndNews" styleName="BannerAndNews">
 												<gwt:row>
-													<gwt:cell styleName="BannerArea">
-													
+													<gwt:cell styleName="BannerArea" colSpan="2">
+														
 													</gwt:cell>
 												</gwt:row>
 												<gwt:row>
 													<gwt:cell styleName="NewsArea">
+														<gwt:html>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+															asjdajhsdjahsdjahsjkdhajskhda<br/>
+														</gwt:html>
+													</gwt:cell>
 													
+													<gwt:cell styleName="NewsSeparator">
+														<gwt:html>.</gwt:html>
+													</gwt:cell>
+													
+													<gwt:cell styleName="FeedsArea">
+														
 													</gwt:cell>
 												</gwt:row>
-											</gwt:grid>
+											</gwt:flexTable>
 										</gwt:widget>														
 									</gwt:cell>
 									<gwt:cell styleName="ContentRight"><gwt:html>.</gwt:html></gwt:cell>
