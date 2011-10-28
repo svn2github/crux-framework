@@ -69,7 +69,17 @@
 				background: url(img/footer-texture.png) bottom no-repeat;
 				height: 104px;
 			}
+
+			.BannerAndNews
+			{
+				width: 100%;
+			}						
 			
+			.BannerArea
+			{
+				height: 350;
+				border: solid 1px red;
+			}
 			
 			.ContentAreas
 			{
@@ -92,9 +102,10 @@
 	</head>
 
 	<body>
+	
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
 		
-		<div style="height:100%">
+		<div id="canvas" style="height:100%">
 			<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
 				<gwt:row>
 					<gwt:cell styleName="Header" >
@@ -116,12 +127,27 @@
 					</gwt:cell>
 				</gwt:row>
 				<gwt:row>
-					<gwt:cell styleName="Content">
+					<gwt:cell styleName="Content" verticalAlignment="top">
 						<gwt:widget>
 							<gwt:grid id="contentAreas" styleName="ContentAreas" cellPadding="0" cellSpacing="0">
 								<gwt:row>
 									<gwt:cell styleName="ContentLeft"><gwt:html>.</gwt:html></gwt:cell>
-									<gwt:cell styleName="ContentCenter"><gwt:html></gwt:html></gwt:cell>
+									<gwt:cell styleName="ContentCenter">
+										<gwt:widget>
+											<gwt:grid id="BannerAndNews">
+												<gwt:row>
+													<gwt:cell styleName="BannerArea">
+													
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell styleName="NewsArea">
+													
+													</gwt:cell>
+												</gwt:row>
+											</gwt:grid>
+										</gwt:widget>														
+									</gwt:cell>
 									<gwt:cell styleName="ContentRight"><gwt:html>.</gwt:html></gwt:cell>
 								</gwt:row>
 							</gwt:grid>
