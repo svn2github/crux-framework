@@ -807,11 +807,12 @@ class HTMLBuilder
 	private void translateCruxInnerTags(Element cruxPageElement, Element htmlElement, Document htmlDocument)
     {
 		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
-		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && isHTMLChild(cruxPageElement)))
+		String currentWidgetTag = getCurrentWidgetTag();
+		if (htmlContainerWidget || ((isWidget(currentWidgetTag)) && isHTMLChild(cruxPageElement)))
 		{
 			Element widgetHolder;
 			boolean hasSiblings = hasSiblingElements(cruxPageElement);
-			if (hasSiblings || isCruxWidgetParent(htmlElement))
+			if (!isOrphanRequiresResizeWidget(currentWidgetTag, cruxPageElement) && (hasSiblings || isCruxWidgetParent(htmlElement)))
 			{
 				widgetHolder = htmlDocument.createElement("div");
 				htmlElement.appendChild(widgetHolder);
@@ -830,6 +831,17 @@ class HTMLBuilder
 		}
     }
 
+	/**
+	 * @param localName
+	 * @param libraryName
+	 * @return
+	 */
+	private boolean isOrphanRequiresResizeWidget(String tagName, Element cruxPageElement)
+    {
+	    Node parentNode = cruxPageElement.getParentNode(); 
+		return (WidgetConfig.isRequiresResizeWidget(tagName) && parentNode.getLocalName().equalsIgnoreCase("body") && parentNode.getNamespaceURI().equals(XHTML_NAMESPACE));
+    }
+	
 	/**
 	 * 
 	 * @param htmlElement
