@@ -16,11 +16,9 @@
 package org.cruxframework.cruxsite.rebind;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 import org.cruxframework.cruxsite.client.widget.RssPanel;
 
@@ -29,14 +27,11 @@ import org.cruxframework.cruxsite.client.widget.RssPanel;
  *
  */
 @DeclarativeFactory(id="rssPanel", library="site", targetWidget=RssPanel.class)
-@TagChildren({
-	@TagChild(RssPanelFactory.WidgetContentProcessor.class)
+@TagAttributes({
+	@TagAttribute(value="title", required=true, supportsI18N=true)
 })
 public class RssPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
-    @TagConstraints(minOccurs="0", maxOccurs="unbounded")
-    public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
-
 	@Override
     public WidgetCreatorContext instantiateContext()
     {

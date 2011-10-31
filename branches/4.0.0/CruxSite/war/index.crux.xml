@@ -80,7 +80,7 @@
 													
 													<gwt:cell styleName="FeedsArea">
 														<gwt:widget>
-															<site:rssPanel id="blogFeeds"></site:rssPanel>
+															<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" />
 														</gwt:widget>
 													</gwt:cell>
 												</gwt:row>

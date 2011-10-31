@@ -19,9 +19,12 @@ import org.cruxframework.cruxsite.client.feed.Entry;
 import org.cruxframework.cruxsite.client.feed.Feed;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -48,13 +51,17 @@ public class RssPanel extends Composite
 
 		rssPanel = new VerticalPanel();
 		title = new HTML();
+		title.setStyleName("rssPanelTitle");
+
 		rssPanel.add(title);
 		
 		body = new Grid();
 		body.resizeColumns(2);
+		body.setStyleName("rssPanelBody");
 		
 		rssPanel.add(body);
 		initWidget(rssPanel);
+		
 		setStyleName("rssPanel");
     }
 	
@@ -70,11 +77,25 @@ public class RssPanel extends Composite
 	 * 
 	 * @param entry
 	 */
-	public void addEntry(Entry entry)
+	public void addEntry(final Entry entry)
 	{
 		int row = body.insertRow(body.getRowCount());
-		body.setWidget(row, 0, new HTML(entry.getTitle()));
-		body.setWidget(row, 1, new Label(dateTimeFormat.format(entry.getPublishedDate())));
+		HTML entryTitle = new HTML(entry.getTitle());
+		entryTitle.addClickHandler(new ClickHandler()
+		{
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				Window.open(entry.getLink(), "", null);
+			}
+		});
+		entryTitle.setStyleName("entryTitle");
+
+		Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
+		entryDate.setStyleName("entryDate");
+		
+		body.setWidget(row, 0, entryTitle);
+		body.setWidget(row, 1, entryDate);
 	}
 	
 	/**

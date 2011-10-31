@@ -28,4 +28,8 @@ public interface SiteMessages extends Messages
 {
 	@DefaultMessage("Crux Framework - Official Site")
 	String siteTitle();
+	
+	@DefaultMessage("Blog Latest News")
+	String blogFeedsTitle();
+	
 }
