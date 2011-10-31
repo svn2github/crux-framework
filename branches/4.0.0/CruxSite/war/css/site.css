@@ -45,6 +45,19 @@ BODY
 	height: 224px;
 }
 
+.HeaderMenuLabel
+{
+	padding-left: 430px;
+	font-size: 18px;
+	color: white;
+	opacity: 0.5;
+}
+
+.HeaderMenuItems
+{
+	padding-left: 185px;
+}
+
 .Content
 {
 	background: url(../img/body-mountains.png) bottom repeat-x;

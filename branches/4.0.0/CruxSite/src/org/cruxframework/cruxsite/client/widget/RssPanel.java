@@ -154,7 +154,7 @@ public class RssPanel extends Composite
 	
 	/**
 	 * 
-	 * @param rssEntry
+	 * @param title
 	 * @return
 	 */
 	private String getClipedTitle(String title)

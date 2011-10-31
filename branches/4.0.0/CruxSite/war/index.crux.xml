@@ -25,8 +25,25 @@
 									<gwt:cell styleName="HeaderMenuLeft">
 										<gwt:html>.</gwt:html>
 									</gwt:cell>
-									<gwt:cell styleName="HeaderMenu">
-										<gwt:html>.</gwt:html>
+									<gwt:cell styleName="HeaderMenu" verticalAlignment="bottom">
+										<gwt:widget>
+											<gwt:grid id="headerGrid" width="100%" styleName="HeaderMenuGrid">
+												<gwt:row>
+													<gwt:cell height="50" verticalAlignment="middle" styleName="HeaderMenuLabel">
+														<gwt:text>${siteMessages.headerLabel}</gwt:text>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell height="50" verticalAlignment="middle" styleName="HeaderMenuItems">
+														<gwt:widget>
+															<gwt:horizontalPanel id="menuBar">
+																<gwt:anchor id="downloadMenuItem" text="${siteMessages.downloadMenuItem}"/>
+															</gwt:horizontalPanel>
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+											</gwt:grid>
+										</gwt:widget>
 									</gwt:cell>
 									<gwt:cell styleName="HeaderMenuRight">
 										<gwt:html>.</gwt:html>

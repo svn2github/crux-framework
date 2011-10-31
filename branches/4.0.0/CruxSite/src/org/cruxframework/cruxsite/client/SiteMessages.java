@@ -32,4 +32,9 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Blog Latest News")
 	String blogFeedsTitle();
 	
+	@DefaultMessage("perfomance, maintainability, usability... simpler than ever.")
+	String headerLabel();
+	
+	@DefaultMessage("Download")
+	String downloadMenuItem();
 }
