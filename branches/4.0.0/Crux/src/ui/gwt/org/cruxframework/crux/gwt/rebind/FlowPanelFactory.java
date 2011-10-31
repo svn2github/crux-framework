@@ -16,7 +16,11 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -26,8 +30,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
  *
  */
 @DeclarativeFactory(id="flowPanel", library="gwt", targetWidget=FlowPanel.class)
+@TagChildren({
+	@TagChild(FlowPanelFactory.WidgetContentProcessor.class)
+})
 public class FlowPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
+    @TagConstraints(minOccurs="0", maxOccurs="unbounded")
+    public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
+	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {
