@@ -28,7 +28,8 @@ import org.cruxframework.cruxsite.client.widget.RssPanel;
  */
 @DeclarativeFactory(id="rssPanel", library="site", targetWidget=RssPanel.class)
 @TagAttributes({
-	@TagAttribute(value="title", required=true, supportsI18N=true)
+	@TagAttribute(value="title", required=true, supportsI18N=true), 
+	@TagAttribute(value="maxTitleSize", type=Integer.class) 
 })
 public class RssPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {

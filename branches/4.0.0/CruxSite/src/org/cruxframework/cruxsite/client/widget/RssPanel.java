@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
@@ -41,6 +40,7 @@ public class RssPanel extends Composite
 	private HTML title;
 	private Grid body;
 	private DateTimeFormat dateTimeFormat;
+	private int maxTitleSize = 100;
 	
 	/**
 	 * 
@@ -73,6 +73,24 @@ public class RssPanel extends Composite
 		body.clear();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMaxTitleSize()
+    {
+    	return maxTitleSize;
+    }
+
+	/**
+	 * 
+	 * @param maxTitleSize
+	 */
+	public void setMaxTitleSize(int maxTitleSize)
+    {
+    	this.maxTitleSize = maxTitleSize;
+    }
+
 	/**
 	 * 
 	 * @param entry
@@ -131,15 +149,24 @@ public class RssPanel extends Composite
 	 */
 	public void setTitle(String html)
 	{
-		title.setHTML(html);
+		title.setHTML(getClipedTitle(html));
 	}
 	
 	/**
 	 * 
-	 * @param html
+	 * @param rssEntry
+	 * @return
 	 */
-	public void setTitle(SafeHtml html)
+	private String getClipedTitle(String title)
 	{
-		title.setHTML(html);
-	}
-}
+		if (title==null)
+		{
+			return null;
+		}
+		if (title.length() > maxTitleSize)
+		{
+			title = title.substring(0, maxTitleSize-4) + "...";
+		}
+		
+		return title;
+	}}
