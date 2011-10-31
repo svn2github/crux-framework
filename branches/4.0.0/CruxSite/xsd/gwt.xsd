@@ -2,11 +2,13 @@
 xmlns="http://www.cruxframework.org/crux/gwt" 
 xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 xmlns:c="http://www.cruxframework.org/crux" 
+xmlns:_site="http://www.cruxframework.org/crux/site" 
 xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/crux/gwt" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
+<xs:import schemaLocation="site.xsd" namespace="http://www.cruxframework.org/crux/site"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:element name="datePicker" type="TdatePicker"/>
 <xs:complexType name="TdatePicker">
@@ -1251,6 +1253,9 @@ targetNamespace="http://www.cruxframework.org/crux/gwt" >
 </xs:complexType>
 <xs:element name="flowPanel" type="TflowPanel"/>
 <xs:complexType name="TflowPanel">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />

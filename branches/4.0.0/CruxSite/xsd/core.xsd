@@ -1,11 +1,13 @@
 <xs:schema 
 xmlns="http://www.cruxframework.org/crux" 
 xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:_site="http://www.cruxframework.org/crux/site" 
 xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
 xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/crux" >
+<xs:import schemaLocation="site.xsd" namespace="http://www.cruxframework.org/crux/site"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
 <xs:element name="splashScreen" type="SplashScreen"/>
@@ -36,6 +38,7 @@ targetNamespace="http://www.cruxframework.org/crux" >
 </xs:complexType>
 <xs:group name="widgets">
 <xs:choice>
+<xs:element ref="_site:rssPanel" />
 <xs:element ref="_widgets:maskedTextBox" />
 <xs:element ref="_widgets:dynaTabs" />
 <xs:element ref="_widgets:transferList" />

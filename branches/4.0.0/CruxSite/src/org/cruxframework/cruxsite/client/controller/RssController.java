@@ -23,14 +23,13 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.cruxsite.client.SiteConstants;
+import org.cruxframework.cruxsite.client.feed.Error;
 import org.cruxframework.cruxsite.client.feed.Feed;
 import org.cruxframework.cruxsite.client.feed.FeedApi;
 import org.cruxframework.cruxsite.client.feed.FeedCallback;
 import org.cruxframework.cruxsite.client.feed.Loader;
-import org.cruxframework.cruxsite.client.feed.Error;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -43,6 +42,9 @@ public class RssController
 
 	@Create
 	protected SiteConstants constants;
+	
+	@Create
+	protected MainScreen screen;
 	
 	@Expose
 	public void onLoad()
@@ -64,6 +66,9 @@ public class RssController
 		});
 	}
 	
+	/**
+	 * 
+	 */
 	private void loadBlogFeeds()
 	{
 		FeedApi feedApi = FeedApi.create(constants.blogFeedUrl());
@@ -75,8 +80,7 @@ public class RssController
 			@Override
 			public void onLoad(Feed feed)
 			{
-				Window.alert(feed.getTitle());
-				
+				screen.getBlogFeeds().setFeed(feed);
 			}
 			
 			@Override

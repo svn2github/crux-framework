@@ -4,6 +4,7 @@
 	xmlns:c="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
 >
 	<head>
 		<title>${siteMessages.siteTitle}</title>
@@ -79,7 +80,9 @@
 													</gwt:cell>
 													
 													<gwt:cell styleName="FeedsArea">
-														
+														<gwt:widget>
+															<site:rssPanel id="blogFeeds"></site:rssPanel>
+														</gwt:widget>
 													</gwt:cell>
 												</gwt:row>
 											</gwt:flexTable>
