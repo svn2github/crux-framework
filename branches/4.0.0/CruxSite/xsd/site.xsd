@@ -12,9 +12,8 @@ targetNamespace="http://www.cruxframework.org/crux/site" >
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
 <xs:element name="rssPanel" type="TrssPanel"/>
 <xs:complexType name="TrssPanel">
-<xs:sequence>
-<xs:group ref="c:widgets" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
+<xs:attribute name="title" type="xs:string" use="required" />
+<xs:attribute name="maxTitleSize" type="xs:int" />
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />
