@@ -40,14 +40,20 @@ public class RssPanel extends Composite
 	private HTML title;
 	private Grid body;
 	private DateTimeFormat dateTimeFormat;
-	private int maxTitleSize = 100;
+	private int maxTitleSize;
+	
+	public RssPanel()
+    {
+	    this(100);
+    }
 	
 	/**
 	 * 
 	 */
-	public RssPanel()
+	public RssPanel(int maxTitleSize)
     {
-		dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT);
+		setMaxTitleSize(maxTitleSize);
+		dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
 
 		rssPanel = new VerticalPanel();
 		title = new HTML();
@@ -98,7 +104,7 @@ public class RssPanel extends Composite
 	public void addEntry(final Entry entry)
 	{
 		int row = body.insertRow(body.getRowCount());
-		HTML entryTitle = new HTML(entry.getTitle());
+		HTML entryTitle = new HTML(getClipedTitle(entry.getTitle()));
 		entryTitle.addClickHandler(new ClickHandler()
 		{
 			@Override
@@ -149,7 +155,7 @@ public class RssPanel extends Composite
 	 */
 	public void setTitle(String html)
 	{
-		title.setHTML(getClipedTitle(html));
+		title.setHTML(html);
 	}
 	
 	/**

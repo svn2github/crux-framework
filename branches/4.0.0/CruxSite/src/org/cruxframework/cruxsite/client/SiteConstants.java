@@ -29,6 +29,6 @@ public interface SiteConstants extends Constants
 	@DefaultStringValue("http://feeds.feedburner.com/cruxframework/blog")
 	String blogFeedUrl();
 
-	@DefaultIntValue(5)
+	@DefaultIntValue(4)
 	int numFeedEntries();
 }

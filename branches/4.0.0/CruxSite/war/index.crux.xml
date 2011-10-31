@@ -97,7 +97,7 @@
 													
 													<gwt:cell styleName="FeedsArea">
 														<gwt:widget>
-															<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" />
+															<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
 														</gwt:widget>
 													</gwt:cell>
 												</gwt:row>
