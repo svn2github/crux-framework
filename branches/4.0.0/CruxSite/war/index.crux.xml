@@ -7,14 +7,13 @@
 	xmlns:site="http://www.cruxframework.org/crux/site"
 >
 	<head>
-		<title>${siteMessages.siteTitle}</title>
 		<link rel="stylesheet" href="css/site.css"/>
 	</head>
 
 	<body>
 	
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
-		<c:screen onLoad="rssController.onLoad" useController="rssController"/>
+		<c:screen onLoad="rssController.onLoad" useController="rssController" title="${siteMessages.siteTitle}"/>
 		
 		<div id="canvas" style="height:100%">
 			<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
