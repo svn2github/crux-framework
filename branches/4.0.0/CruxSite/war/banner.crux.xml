@@ -7,11 +7,12 @@
 >
 	<head>
 		<title>Crux Framework - Official Site</title>
+		<link rel="stylesheet" href="css/site.css"/>
 	</head>
 
 	<body>
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
-		<c:screen onLoad="bannerController.load"></c:screen>
+		<c:screen onLoad="bannerController.load" useController="bannerController"></c:screen>
 		<gwt:simplePanel id="canvas" style="height:100%; width:100%"/>
 	</body>
 </html>

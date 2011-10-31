@@ -1,7 +1,9 @@
-a{
+A
+{
 	color:#fff;
 	text-decoration:none;
 }
+
 BODY, HTML
 {
 	height: 100%;
@@ -80,7 +82,8 @@ BODY
 	margin-top:5px;
 	margin-bottom:1px;
 }
-.FooterContent td{
+
+.FooterContent TD{
 	width:50%;
 	/*box-shadow:0 0 0 1px red inset;*/
 }
@@ -134,42 +137,72 @@ BODY
 {
 	width: 900px;
 }
-.LinkSeparator{
+
+.LinkSeparator
+{
 	padding-left:10px;
 	border-right:1px solid #fff;
 	height:20px;
 	margin-right:10px;
 	opacity:0.18;
 }
-.FooterLinks{
+
+.FooterLinks
+{
 	float:right;
 	font-size:13px;
 }
-.CruxLabelFooter, .CruxLabelFooter2{
+
+.CruxLabelFooter, .CruxLabelFooter2
+{
 	color:#ccc;
 }
-.CruxLabelFooter{
+
+.CruxLabelFooter
+{
 	text-align:right;
 	border-right:1px solid #001B20;
 	padding-right:10px;
 	padding-top:10px;
 	font-size:12px;
 }
-.CruxLabelFooter3{
+
+.CruxLabelFooter3
+{
 	text-align:right;
 	border-right:1px solid #001B20;
 	padding-right:10px;
 }
-.CruxLabelFooter2{
+
+.CruxLabelFooter2
+{
 	border-left:1px solid #005C6C;
 	padding-left:10px;
 	padding-top:10px;
 	font-size:12px;
 	font-weight:normal;
 }
-.CruxLabelFooter4{
+
+.CruxLabelFooter4
+{
 	border-left:1px solid #005C6C;
 	padding-left:10px;
+}
+
+.crux-ImageBanner .rightArrow
+{
+	width: 44px;
+	height: 65px;
+	background: url(../img/banner-right-arrow.png) top right no-repeat;
+	cursor: pointer;
+}
+
+.crux-ImageBanner .leftArrow
+{
+	width: 44px;
+	height: 65px;
+	background: url(../img/banner-left-arrow.png) top right no-repeat;
+	cursor: pointer;
 }
 
 .rssPanelTitle

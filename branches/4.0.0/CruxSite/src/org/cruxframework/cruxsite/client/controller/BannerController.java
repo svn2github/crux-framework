@@ -31,5 +31,45 @@ public class BannerController
 				}
 			}
 		);
+		
+		banner.addImage("../img/banner-social.jpg", "Social", "How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Chrome Web Store and many others.", "Learn More!", 
+			new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) 
+				{
+					
+				}
+			}
+		);
+		
+		banner.addImage("../img/banner-java.jpg", "CAFEBABE", "Yes, it's pure Java inside! With Crux you don't ever need to write a single line of Javascript code.", "Learn More!", 
+			new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) 
+				{
+					
+				}
+			}
+		);
+		
+		banner.addImage("../img/banner-cross-device.jpg", "Cross-Devices", "Write once, run everywhere. Smartphones, tablets, SmartTV... Crux fits all.", "Learn More!", 
+			new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) 
+				{
+					
+				}
+			}
+		);
+		
+		banner.addImage("../img/banner-triggo.jpg", "Triggo Labs", "The best webstore to take off your Crux app.", "Visit Now!", 
+			new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) 
+				{
+					
+				}
+			}
+		);
 	}
 }
