@@ -70,24 +70,6 @@
 												<gwt:row>
 													<gwt:cell styleName="NewsArea">
 														<gwt:html>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
-															asjdajhsdjahsdjahsjkdhajskhda<br/>
 														</gwt:html>
 													</gwt:cell>
 													
@@ -139,9 +121,9 @@
 										<gwt:cell styleName="CruxLabelFooter4">
 											<gwt:widget>
 												<gwt:horizontalPanel id="rowImgsFooter">
-														<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
-														<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
-														<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
+													<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
+													<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
+													<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
 												</gwt:horizontalPanel>
 											</gwt:widget>
 										</gwt:cell>

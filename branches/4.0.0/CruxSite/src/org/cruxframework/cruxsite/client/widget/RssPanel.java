@@ -64,6 +64,7 @@ public class RssPanel extends Composite
 		body = new Grid();
 		body.resizeColumns(2);
 		body.setStyleName("rssPanelBody");
+		body.setCellSpacing(0);
 		
 		rssPanel.add(body);
 		initWidget(rssPanel);
