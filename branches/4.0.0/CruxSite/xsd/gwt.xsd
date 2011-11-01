@@ -10,6 +10,7 @@ targetNamespace="http://www.cruxframework.org/crux/gwt" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
 <xs:import schemaLocation="site.xsd" namespace="http://www.cruxframework.org/crux/site"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
+<xs:import schemaLocation="siteTemplates.xsd" namespace="http://www.cruxframework.org/templates/siteTemplates"/>
 <xs:element name="datePicker" type="TdatePicker"/>
 <xs:complexType name="TdatePicker">
 <xs:attribute name="value" type="xs:string" />

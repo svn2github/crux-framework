@@ -10,6 +10,7 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
 <xs:import schemaLocation="site.xsd" namespace="http://www.cruxframework.org/crux/site"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:import schemaLocation="siteTemplates.xsd" namespace="http://www.cruxframework.org/templates/siteTemplates"/>
 <xs:element name="maskedTextBox" type="TmaskedTextBox"/>
 <xs:complexType name="TmaskedTextBox">
 <xs:attribute name="formatter" type="xs:string" use="required" />

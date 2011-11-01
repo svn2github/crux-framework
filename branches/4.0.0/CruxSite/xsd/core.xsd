@@ -4,12 +4,14 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema"
 xmlns:_site="http://www.cruxframework.org/crux/site" 
 xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
 xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
+xmlns:_siteTemplates="http://www.cruxframework.org/templates/siteTemplates" 
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/crux" >
 <xs:import schemaLocation="site.xsd" namespace="http://www.cruxframework.org/crux/site"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:import schemaLocation="siteTemplates.xsd" namespace="http://www.cruxframework.org/templates/siteTemplates"/>
 <xs:element name="splashScreen" type="SplashScreen"/>
 <xs:complexType name="SplashScreen">
 <xs:attribute name="style" type="xs:string"/>

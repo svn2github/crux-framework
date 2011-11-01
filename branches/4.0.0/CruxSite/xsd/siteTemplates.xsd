@@ -1,0 +1,15 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/templates/siteTemplates" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:c="http://www.cruxframework.org/crux" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/templates/siteTemplates" >
+<xs:element name="mainPage" type="TmainPage" />
+<xs:complexType name="TmainPage">
+<xs:all>
+<xs:element type="xs:anyType" name="contentSection" />
+<xs:element type="xs:anyType" name="screenSection" />
+</xs:all>
+</xs:complexType>
+</xs:schema>

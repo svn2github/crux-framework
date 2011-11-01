@@ -10,6 +10,7 @@ targetNamespace="http://www.cruxframework.org/crux/site" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:import schemaLocation="siteTemplates.xsd" namespace="http://www.cruxframework.org/templates/siteTemplates"/>
 <xs:element name="rssPanel" type="TrssPanel"/>
 <xs:complexType name="TrssPanel">
 <xs:attribute name="maxTitleSize" type="xs:int" />
@@ -32,6 +33,7 @@ targetNamespace="http://www.cruxframework.org/crux/site" >
 </xs:sequence>
 <xs:attribute name="bannersHeight" type="xs:string" use="required" />
 <xs:attribute name="transitionDuration" type="xs:int" default="150" />
+<xs:attribute name="autoTransitionInterval" type="xs:int" default="5000" />
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />

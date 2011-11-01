@@ -7,4 +7,5 @@
 	<uri name="http://www.w3.org/1999/xhtml" uri="platform:/resource/CruxSite/xsd/xhtml.xsd"/>
 	<uri name="http://www.cruxframework.org/crux/gwt" uri="platform:/resource/CruxSite/xsd/gwt.xsd"/>
 	<uri name="http://www.cruxframework.org/crux/widgets" uri="platform:/resource/CruxSite/xsd/widgets.xsd"/>
+	<uri name="http://www.cruxframework.org/templates/siteTemplates" uri="platform:/resource/CruxSite/xsd/siteTemplates.xsd"/>
 </catalog>

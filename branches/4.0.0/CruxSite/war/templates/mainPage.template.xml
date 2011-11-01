@@ -1,0 +1,110 @@
+<t:template 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site" 
+	library="siteTemplates">
+	
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="css/site.css"/>
+	</head>
+	
+	<body>
+	
+		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
+		
+		<t:section name="screenSection"/>
+		
+		<div id="canvas" style="height:100%">
+			<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
+				<gwt:row>
+					<gwt:cell styleName="Header" >
+						<gwt:widget>
+							<gwt:grid id="headerAreas" styleName="HeaderAreas" cellSpacing="0" cellPadding="0">
+								<gwt:row>
+									<gwt:cell styleName="HeaderMenuLeft">
+										<gwt:html>.</gwt:html>
+									</gwt:cell>
+									<gwt:cell styleName="HeaderMenu" verticalAlignment="bottom">
+										<gwt:widget>
+											<gwt:grid id="headerGrid" width="100%" styleName="HeaderMenuGrid">
+												<gwt:row>
+													<gwt:cell height="50" verticalAlignment="middle" styleName="HeaderMenuLabel">
+														<gwt:text>${siteMessages.headerLabel}</gwt:text>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell height="50" verticalAlignment="middle" styleName="HeaderMenuItems">
+														<gwt:widget>
+															<gwt:horizontalPanel id="menuBar">
+																<gwt:anchor id="downloadMenuItem" text="${siteMessages.downloadMenuItem}"/>
+															</gwt:horizontalPanel>
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+											</gwt:grid>
+										</gwt:widget>
+									</gwt:cell>
+									<gwt:cell styleName="HeaderMenuRight">
+										<gwt:html>.</gwt:html>
+									</gwt:cell>
+								</gwt:row>
+							</gwt:grid>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
+				<gwt:row>
+					<gwt:cell styleName="Content" verticalAlignment="top">
+						<gwt:widget>
+							<t:section name="contentSection"/>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
+				<gwt:row>
+					<gwt:cell styleName="Footer" >
+						<gwt:widget>
+								<gwt:grid id="footerItems" styleName="FooterContent" cellPadding="0" cellSpacing="0">
+									<gwt:row>
+										<gwt:cell styleName="CruxLabelFooter" verticalAlignment="middle">
+											<gwt:text>Cruxframework.org</gwt:text>
+										</gwt:cell>
+										<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="middle">
+											<gwt:text>Powered by:</gwt:text>
+										</gwt:cell>
+									</gwt:row>
+									<gwt:row>
+										<gwt:cell styleName="CruxLabelFooter3">
+											<gwt:widget>
+												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks">
+													<gwt:anchor id="about" href="#" text="About" />
+													<gwt:label id="separator1" styleName="LinkSeparator"/>
+													<gwt:anchor id="services" href="#" text="Services" />
+													<gwt:label id="separator2" styleName="LinkSeparator"/>
+													<gwt:anchor id="contact" href="#" text="Contact" />
+													<gwt:label id="separator3" styleName="LinkSeparator"/>
+													<gwt:anchor id="contribute" href="#" text="Contribute" />
+												</gwt:horizontalPanel>
+											</gwt:widget>
+										</gwt:cell>
+										<gwt:cell styleName="CruxLabelFooter4">
+											<gwt:widget>
+												<gwt:horizontalPanel id="rowImgsFooter">
+													<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
+													<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
+													<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
+												</gwt:horizontalPanel>
+											</gwt:widget>
+										</gwt:cell>
+									</gwt:row>
+								</gwt:grid>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
+			</gwt:grid>
+		</div>
+	</body>
+	 
+</t:template>
