@@ -110,6 +110,7 @@ public class SlidingDeckPanel extends Composite
 			{
 				Widget newWidget = mainContainer.getWidget(index);
 				newWidget.setVisible(true);
+				newWidget.getElement().getStyle().setLeft(0, Unit.PX);
 				
 				Widget oldWidget = mainContainer.getWidget(visibleWidget);
 				oldWidget.setVisible(false);

@@ -9,30 +9,39 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-public class ImageBanner extends Composite 
+public class PromoBanner extends Composite 
 {
-	
-	private FlowPanel container = new FlowPanel();
+	private VerticalPanel container = new VerticalPanel();
+	private FlowPanel banners = new FlowPanel();
 	private SlidingDeckPanel imagesPanel = new SlidingDeckPanel();
 	private Label leftArrow = new Label();
 	private Label rightArrow = new Label();
 	private HorizontalPanel bullets = new HorizontalPanel();
 	
-	public ImageBanner() 
+	public PromoBanner() 
 	{
 		initWidget(container);
 		
-		container.add(imagesPanel);
-		container.setStyleName("crux-ImageBanner");
-		container.getElement().getStyle().setPosition(Position.RELATIVE);
+		container.setStyleName("crux-PromoBanner");
+		container.add(banners);
+		container.add(bullets);
+		container.setCellHorizontalAlignment(bullets, HasHorizontalAlignment.ALIGN_CENTER);
 		
-		container.add(rightArrow);
-		container.add(leftArrow);
+		bullets.setStyleName("bulletsArea");
+		
+		banners.setStyleName("bannersArea");
+		banners.add(imagesPanel);
+		banners.getElement().getStyle().setPosition(Position.RELATIVE);
+		
+		banners.add(rightArrow);
+		banners.add(leftArrow);
 		
 		rightArrow.addClickHandler(
 			new ClickHandler() {
@@ -80,11 +89,44 @@ public class ImageBanner extends Composite
 		}
 		
 		imagesPanel.showWidget(i, slideToRight);
+		switchActiveBullet(i);
+	}
+
+	private void switchActiveBullet(int i) 
+	{
+		for(int b = 0; b < bullets.getWidgetCount(); b++)
+		{
+			Widget bullet = bullets.getWidget(b);
+			if(b == i)
+			{
+				bullet.addStyleDependentName("active");
+			}
+			else
+			{
+				bullet.removeStyleDependentName("active");
+			}
+		}
+	}
+	
+	protected void showBanner(int i) 
+	{
+		if(i > imagesPanel.getWidgetCount() - 1)
+		{
+			i = 0;
+		}
+		
+		if(i < 0)
+		{
+			i = imagesPanel.getWidgetCount() - 1;
+		}
+		
+		imagesPanel.showWidget(i);
+		switchActiveBullet(i);
 	}
 
 	private void adjustPositions()
 	{
-		int containerHeight = container.getElement().getClientHeight();
+		int containerHeight = banners.getElement().getClientHeight();
 		
 		rightArrow.setStyleName("rightArrow");
 		rightArrow.getElement().getStyle().setPosition(Position.ABSOLUTE);
@@ -98,10 +140,21 @@ public class ImageBanner extends Composite
 	}
 	
 	
-	public void addImage(String URL, String title, String text, String buttonLabel, ClickHandler onclick)
+	public void addBanner(String backgroundImageURL, String title, String text, String buttonLabel, ClickHandler onclick)
+	{
+		addBanner(backgroundImageURL, title, text, buttonLabel, null, onclick);
+	}
+	
+	public void addBanner(String backgroundImageURL, String title, String text, String buttonLabel, String styleName, ClickHandler onclick)
 	{
 		SimplePanel panel = new SimplePanel();
-		panel.getElement().getStyle().setBackgroundImage("url(" + URL + ")");
+		
+		if(styleName != null)
+		{
+			panel.setStyleName(styleName);
+		}
+		
+		panel.getElement().getStyle().setBackgroundImage("url(" + backgroundImageURL + ")");
 		panel.setHeight("100%");
 		panel.setWidth("100%");
 		
@@ -133,5 +186,24 @@ public class ImageBanner extends Composite
 		{
 			imagesPanel.showWidget(0);
 		}
+		
+		Label bullet = new Label();
+		final int targetIndex = imagesPanel.getWidgetCount() - 1;
+		bullet.addClickHandler(
+			new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) 
+				{
+					showBanner(targetIndex);
+				}
+			}
+		);
+		bullet.setStyleName("bullet");
+		bullets.add(bullet);
+	}
+
+	public void setBannerHeight(String height) 
+	{
+		banners.setHeight(height);
 	}
 }

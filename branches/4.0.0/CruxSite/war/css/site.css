@@ -189,7 +189,14 @@ BODY
 	padding-left:10px;
 }
 
-.crux-ImageBanner .rightArrow
+
+.crux-PromoBanner
+{
+	margin-top: 250px;
+	margin-left: 100px;
+}
+
+.crux-PromoBanner .rightArrow
 {
 	width: 44px;
 	height: 65px;
@@ -197,12 +204,99 @@ BODY
 	cursor: pointer;
 }
 
-.crux-ImageBanner .leftArrow
+.crux-PromoBanner .leftArrow
 {
-	width: 44px;
+	width: 40px;
 	height: 65px;
 	background: url(../img/banner-left-arrow.png) top right no-repeat;
 	cursor: pointer;
+}
+
+.crux-PromoBanner .bullet
+{
+	width: 10px;
+	height: 10px;
+	background: rgba(0, 0, 0, 0.5);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.2) inset;
+	border: 1px solid white;
+	border-radius: 10px;
+	margin-right: 15px;
+	float: left;
+	cursor: pointer;
+	margin-top: 40px;
+}
+
+.crux-PromoBanner .bullet-active
+{
+	-webkit-transition: all 0.25s linear;
+	box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
+	background: white !important;
+}
+
+.crux-PromoBanner .messagePanel
+{
+	padding-top: 20px;
+	padding-left: 35px;
+	height: 100%;
+}
+
+.crux-PromoBanner .button
+{
+	cursor: pointer;
+	-webkit-transition: box-shadow 0.3s linear;
+	width: 200px;
+	height: 40px;
+	background: #005266;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset;
+	background: -webkit-linear-gradient(#006778 0%, #004A5D 100%);
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: white;
+	font-size: 17px;
+	float: right;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+
+.crux-PromoBanner .button:active 
+{
+	background: -webkit-linear-gradient(#004A5D 0%, #006778 100%);
+}
+
+.crux-PromoBanner .button:hover 
+{
+	-webkit-transition: all 0.3s linear;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset;
+}
+
+.crux-PromoBanner .title
+{
+	font-size: 43px;
+	color: #222;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	font-family: Helvetica;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+	
+.crux-PromoBanner .text
+{
+	background-attachment: scroll;
+	color: #153A42;
+	font-family: Helvetica;
+	font-size: 28px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 7px;
+	text-align: justify;
+	text-shadow: rgba(255, 255, 255, 0.496094) 0px 1px 0px;
+	width: 360px;
+}
+
+.crux-PromoBanner .longText .text
+{
+	font-size: 23px;
 }
 
 .rssPanelTitle
