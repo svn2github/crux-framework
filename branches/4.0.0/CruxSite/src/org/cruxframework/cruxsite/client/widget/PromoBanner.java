@@ -6,6 +6,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -24,6 +25,8 @@ public class PromoBanner extends Composite
 	private Label leftArrow = new Label();
 	private Label rightArrow = new Label();
 	private HorizontalPanel bullets = new HorizontalPanel();
+	private int autoTransitionInterval = 5000;
+	private AutoTransiteTimer autoTransiteTimer = new AutoTransiteTimer(this); 
 	
 	public PromoBanner() 
 	{
@@ -74,10 +77,13 @@ public class PromoBanner extends Composite
 			}
 		);
 		
+		autoTransiteTimer.reschedule();
 	}
 	
 	protected void showBanner(int i, boolean slideToRight) 
 	{
+		autoTransiteTimer.reschedule();
+		
 		if(i > imagesPanel.getWidgetCount() - 1)
 		{
 			i = 0;
@@ -92,6 +98,24 @@ public class PromoBanner extends Composite
 		switchActiveBullet(i);
 	}
 
+	protected void showBanner(int i) 
+	{
+		autoTransiteTimer.reschedule();
+		
+		if(i > imagesPanel.getWidgetCount() - 1)
+		{
+			i = 0;
+		}
+		
+		if(i < 0)
+		{
+			i = imagesPanel.getWidgetCount() - 1;
+		}
+		
+		imagesPanel.showWidget(i);
+		switchActiveBullet(i);
+	}
+	
 	private void switchActiveBullet(int i) 
 	{
 		for(int b = 0; b < bullets.getWidgetCount(); b++)
@@ -106,22 +130,6 @@ public class PromoBanner extends Composite
 				bullet.removeStyleDependentName("active");
 			}
 		}
-	}
-	
-	protected void showBanner(int i) 
-	{
-		if(i > imagesPanel.getWidgetCount() - 1)
-		{
-			i = 0;
-		}
-		
-		if(i < 0)
-		{
-			i = imagesPanel.getWidgetCount() - 1;
-		}
-		
-		imagesPanel.showWidget(i);
-		switchActiveBullet(i);
 	}
 
 	private void adjustPositions()
@@ -211,4 +219,32 @@ public class PromoBanner extends Composite
 	{
 		this.imagesPanel.setTransitionDuration(transitionDuration);
 	}
+
+	public void setAutoTransitionInterval(int autoTransitionInterval) 
+	{
+		this.autoTransitionInterval = autoTransitionInterval;
+		autoTransiteTimer.reschedule();
+	}
+	
+	private static class AutoTransiteTimer extends Timer 
+	{
+		private PromoBanner promoBanner;
+
+		public AutoTransiteTimer(PromoBanner promoBanner) 
+		{
+			this.promoBanner = promoBanner;
+		}
+		
+		@Override
+		public void run() 
+		{
+			promoBanner.showBanner(promoBanner.imagesPanel.getVisibleWidget() + 1, true);
+		}
+		
+		public void reschedule() 
+		{
+			this.cancel();
+			this.scheduleRepeating(promoBanner.autoTransitionInterval);
+		}
+	};
 }

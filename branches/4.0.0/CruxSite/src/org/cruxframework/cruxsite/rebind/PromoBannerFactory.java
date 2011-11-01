@@ -45,7 +45,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 @DeclarativeFactory(id="promoBanner", library="site", targetWidget=PromoBanner.class)
 @TagAttributes({
 	@TagAttribute(value="bannersHeight", required=true),
-	@TagAttribute(value="transitionDuration", required=false, type=Integer.class, defaultValue="150")
+	@TagAttribute(value="transitionDuration", type=Integer.class, defaultValue="150"),
+	@TagAttribute(value="autoTransitionInterval", type=Integer.class, defaultValue="5000"),
+	
 })
 @TagChildren({
 	@TagChild(PromoBannerFactory.BannerProcessor.class)
