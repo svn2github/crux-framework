@@ -25,4 +25,5 @@ import org.cruxframework.cruxsite.client.widget.RssPanel;
 public interface MainScreen extends ScreenWrapper
 {
 	RssPanel getBlogFeeds();
+	RssPanel getProjectFeeds();
 }

@@ -31,4 +31,7 @@ public interface SiteConstants extends Constants
 
 	@DefaultIntValue(4)
 	int numFeedEntries();
+
+	@DefaultStringValue("http://code.google.com/feeds/p/crux-framework/issueupdates/basic")
+	String projectFeedUrl();
 }

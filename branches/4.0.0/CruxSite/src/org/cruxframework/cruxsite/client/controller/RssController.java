@@ -62,6 +62,7 @@ public class RssController
 			public void onLoad() 
 			{
 				loadBlogFeeds();
+				loadProjectFeeds();
 			}
 		});
 	}
@@ -91,4 +92,25 @@ public class RssController
 		});
 	}
 	
+	private void loadProjectFeeds()
+	{
+		FeedApi feedApi = FeedApi.create(constants.projectFeedUrl());
+		feedApi.includeHistoricalEntries();
+	    feedApi.setNumEntries(constants.numFeedEntries());
+	    
+	    feedApi.load(new FeedCallback()
+		{
+			@Override
+			public void onLoad(Feed feed)
+			{
+				screen.getProjectFeeds().setFeed(feed);
+			}
+			
+			@Override
+			public void onError(Error error)
+			{
+				logger.log(Level.SEVERE, "Error loading Crux Blog Feed API...");
+			}
+		});
+	}
 }

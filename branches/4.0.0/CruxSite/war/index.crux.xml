@@ -88,8 +88,9 @@
 												</gwt:row>
 												<gwt:row>
 													<gwt:cell styleName="NewsArea">
-														<gwt:html>
-														</gwt:html>
+														<gwt:widget>
+															<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
+														</gwt:widget>
 													</gwt:cell>
 													
 													<gwt:cell styleName="NewsSeparator">
@@ -98,7 +99,7 @@
 													
 													<gwt:cell styleName="FeedsArea">
 														<gwt:widget>
-															<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
+															<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" width="100%"/>
 														</gwt:widget>
 													</gwt:cell>
 												</gwt:row>

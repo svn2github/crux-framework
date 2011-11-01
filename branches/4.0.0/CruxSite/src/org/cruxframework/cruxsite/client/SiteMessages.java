@@ -29,8 +29,11 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Crux Framework - Official Site")
 	String siteTitle();
 	
-	@DefaultMessage("Blog Latest News")
+	@DefaultMessage("Blog Activity")
 	String blogFeedsTitle();
+	
+	@DefaultMessage("Project Activity")
+	String projectFeedsTitle();
 	
 	@DefaultMessage("perfomance, maintainability, usability... simpler than ever.")
 	String headerLabel();
