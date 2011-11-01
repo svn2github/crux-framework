@@ -39,6 +39,7 @@ targetNamespace="http://www.cruxframework.org/crux" >
 <xs:group name="widgets">
 <xs:choice>
 <xs:element ref="_site:rssPanel" />
+<xs:element ref="_site:promoBanner" />
 <xs:element ref="_widgets:maskedTextBox" />
 <xs:element ref="_widgets:dynaTabs" />
 <xs:element ref="_widgets:transferList" />

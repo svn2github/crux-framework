@@ -95,8 +95,6 @@ BODY
 
 .BannerArea
 {
-	height: 350;
-	border: solid 1px red;
 }
 
 .NewsArea
@@ -189,13 +187,6 @@ BODY
 	padding-left:10px;
 }
 
-
-.crux-PromoBanner
-{
-	margin-top: 250px;
-	margin-left: 100px;
-}
-
 .crux-PromoBanner .rightArrow
 {
 	width: 44px;
@@ -223,7 +214,7 @@ BODY
 	margin-right: 15px;
 	float: left;
 	cursor: pointer;
-	margin-top: 40px;
+	margin-top: 30px;
 }
 
 .crux-PromoBanner .bullet-active
@@ -276,7 +267,6 @@ BODY
 	color: #222;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 	font-family: Helvetica;
-	text-transform: uppercase;
 	font-weight: bold;
 }
 	
@@ -288,7 +278,6 @@ BODY
 	font-size: 28px;
 	margin-left: 0px;
 	margin-right: 0px;
-	margin-top: 7px;
 	text-align: justify;
 	text-shadow: rgba(255, 255, 255, 0.496094) 0px 1px 0px;
 	width: 360px;
@@ -342,4 +331,14 @@ BODY
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 	float: right;
 	padding: 3px 8px;
+}
+
+.ContentHorizontalSeparator
+{
+	width: 20px;
+	font-family: monospace;
+	color: #CCCCCC;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px rgba(255,255,255,0.4);
+	padding-top: 20px;
 }

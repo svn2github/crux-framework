@@ -17,6 +17,7 @@ public class SlidingDeckPanel extends Composite
 	private FlowPanel mainContainer;
 	private int visibleWidget = -1;
 	private WindowSlideAnimation animation;
+	private int transitionDuration = 150;
 	
 	public SlidingDeckPanel() 
 	{
@@ -90,7 +91,7 @@ public class SlidingDeckPanel extends Composite
 				}
 				
 				animation = new WindowSlideAnimation(mainContainer.getWidget(visibleWidget).getElement(), mainContainer.getWidget(index).getElement());
-				animation.move(slideToRight, 150);
+				animation.move(slideToRight, transitionDuration);
 			}
 		}
 		else
@@ -197,4 +198,8 @@ public class SlidingDeckPanel extends Composite
 		}
 	}
 
+	public void setTransitionDuration(int transitionDuration) 
+	{
+		this.transitionDuration = transitionDuration;
+	}
 }

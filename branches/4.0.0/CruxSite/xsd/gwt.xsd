@@ -1253,9 +1253,6 @@ targetNamespace="http://www.cruxframework.org/crux/gwt" >
 </xs:complexType>
 <xs:element name="flowPanel" type="TflowPanel"/>
 <xs:complexType name="TflowPanel">
-<xs:sequence>
-<xs:group ref="c:widgets" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />

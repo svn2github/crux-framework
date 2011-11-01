@@ -142,10 +142,10 @@ public class PromoBanner extends Composite
 	
 	public void addBanner(String backgroundImageURL, String title, String text, String buttonLabel, ClickHandler onclick)
 	{
-		addBanner(backgroundImageURL, title, text, buttonLabel, null, onclick);
+		addBanner(backgroundImageURL, title, text, null, buttonLabel, onclick);
 	}
 	
-	public void addBanner(String backgroundImageURL, String title, String text, String buttonLabel, String styleName, ClickHandler onclick)
+	public void addBanner(String backgroundImageURL, String title, String text,  String styleName, String buttonLabel, ClickHandler onclick)
 	{
 		SimplePanel panel = new SimplePanel();
 		
@@ -202,8 +202,13 @@ public class PromoBanner extends Composite
 		bullets.add(bullet);
 	}
 
-	public void setBannerHeight(String height) 
+	public void setBannersHeight(String height) 
 	{
 		banners.setHeight(height);
+	}
+	
+	public void setTransitionDuration(int transitionDuration) 
+	{
+		this.imagesPanel.setTransitionDuration(transitionDuration);
 	}
 }

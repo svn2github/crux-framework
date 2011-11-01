@@ -37,4 +37,44 @@ public interface SiteMessages extends Messages
 	
 	@DefaultMessage("Download")
 	String downloadMenuItem();
+	
+	@DefaultMessage("Fast")
+	String bannerFastTitle();
+	
+	@DefaultMessage("Applications running faster than ever. As well as your development process.")
+	String bannerFastText();
+	
+	@DefaultMessage("Social")
+	String bannerSocialTitle();
+	
+	@DefaultMessage("How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Chrome Web Store and many others")
+	String bannerSocialText();
+	
+	@DefaultMessage("CAFEBABE")
+	String bannerJavaTitle();
+	
+	@DefaultMessage("Yes, it's pure Java inside! With Crux you don't ever need to write a single line of Javascript code.")
+	String bannerJavaText();
+	
+	@DefaultMessage("Cross-Device")
+	String bannerCrossDeviceTitle();
+	
+	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, SmartTV... Crux fits all.")
+	String bannerCrossDeviceText();
+	
+	@DefaultMessage("Triggo Labs")
+	String bannerTriggoTitle();
+	
+	@DefaultMessage("The best webstore to take off your Crux app.")
+	String bannerTriggoText();
+	
+	@DefaultMessage("Lear More")
+	String bannerActionLearnMore();
+	
+	@DefaultMessage("Visit Now!")
+	String bannerActionVisitNow();
+	
+	
+	
+	
 }
