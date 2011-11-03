@@ -32,6 +32,19 @@
 										<gwt:widget>
 											<gwt:grid id="headerGrid" width="100%" styleName="HeaderMenuGrid">
 												<gwt:row>
+													<gwt:cell height="100" verticalAlignment="top" horizontalAlignment="right">
+														<gwt:widget>
+															<gwt:horizontalPanel id="shortcutsPanel">
+																<gwt:image id="iconBlog" url="img/icon-blog.gif" />
+																<gwt:label id="labelBlog" text="blog" styleName="MenuShortcut"/>
+																<gwt:label id="iconsSeparator" text="" width="20px"/>
+																<gwt:image id="iconProject" url="img/icon-home.gif" />
+																<gwt:label id="labelProject" text="project" styleName="MenuShortcut"/>
+															</gwt:horizontalPanel>
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
 													<gwt:cell height="50" verticalAlignment="middle" styleName="HeaderMenuLabel">
 														<gwt:text>${siteMessages.headerLabel}</gwt:text>
 													</gwt:cell>
