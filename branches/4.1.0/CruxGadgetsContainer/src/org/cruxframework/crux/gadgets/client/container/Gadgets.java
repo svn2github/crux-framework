@@ -155,7 +155,7 @@ public class Gadgets
 	 * @param gadgetUrl url for the gadget
 	 * @param view target view where gadget will be opened
 	 */
-	public final void openGadget(String gadgetUrl, final ContainerView view)
+	public static final void openGadget(String gadgetUrl, final ContainerView view)
 	{
 		Array<String> gadgets = CollectionFactory.createArray();
 		gadgets.add(gadgetUrl);

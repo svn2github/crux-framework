@@ -5,6 +5,7 @@ import org.cruxframework.crux.core.client.screen.ScreenWrapper;
 import org.cruxframework.crux.gadgets.client.container.ContainerView;
 import org.cruxframework.crux.gadgets.client.container.Gadget;
 import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
+import org.cruxframework.crux.gadgets.client.container.GadgetMetadata;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
 
 import com.google.gwt.core.client.GWT;
@@ -37,6 +38,37 @@ public class TabLayoutManager extends GridLayoutManager
     }
 	
 	@Override
+	public void openGadget(GadgetMetadata gadgetMetadata, ContainerView view)
+	{
+		GadgetContainer container = GadgetContainer.get();
+		if (view.equals(ContainerView.profile))
+		{
+			Gadget gadget = container.createGadget(gadgetMetadata, view);
+			container.addGadget(gadget);
+			addGadgetChrome(gadget.getId());
+			container.renderGadget(gadget);
+		}
+		else
+		{
+		    RollingTabPanel tabManager = tabScreen.getLayoutTabManager();
+		    Gadget canvasGadget = container.createGadget(gadgetMetadata, ContainerView.canvas);
+		    container.addGadget(canvasGadget);
+		    SimplePanel newGadgetChrome = new SimplePanel();
+		    newGadgetChrome.setHeight("100%");
+		    newGadgetChrome.setWidth("100%");
+		    newGadgetChrome.getElement().setId(getGadgetChromeId(canvasGadget.getId()));
+		    tabManager.add(newGadgetChrome, getTabWidget(canvasGadget.getId(), canvasGadget.getTitle(), false));
+		    container.renderGadget(canvasGadget);
+		    int widgetIndex = tabManager.getWidgetIndex(newGadgetChrome);
+		    tabManager.selectTab(widgetIndex);
+		    
+		    String gadgetKey = Integer.toString(canvasGadget.getId());
+		    openedCanvasGadgetIds.put(gadgetKey, canvasGadget.getId());
+		    openedCanvasGadgetTabs.put(gadgetKey, newGadgetChrome);
+		}
+	}
+	
+	@Override
 	public void changeGadgetView(int gadgetId, ContainerView view)
 	{
 		String gadgetKey = Integer.toString(gadgetId);
@@ -48,14 +80,14 @@ public class TabLayoutManager extends GridLayoutManager
 			}
 			else
 			{
-				closeCanvasView(gadgetId);
+				closeCanvasView(gadgetId, true);
 			}
 		}
 		else
 		{
 			if (openedCanvasGadgetIds.containsKey(gadgetKey))
 			{
-				closeCanvasView(gadgetId);
+				closeCanvasView(gadgetId, true);
 			}
 			else
 			{
@@ -84,7 +116,7 @@ public class TabLayoutManager extends GridLayoutManager
 	    newGadgetChrome.setHeight("100%");
 	    newGadgetChrome.setWidth("100%");
 	    newGadgetChrome.getElement().setId(getGadgetChromeId(canvasGadget.getId()));
-	    tabManager.add(newGadgetChrome, getTabWidget(gadgetId, canvasGadget.getTitle()));
+	    tabManager.add(newGadgetChrome, getTabWidget(gadgetId, canvasGadget.getTitle(), true));
 	    container.renderGadget(canvasGadget);
 	    int widgetIndex = tabManager.getWidgetIndex(newGadgetChrome);
 	    tabManager.selectTab(widgetIndex);
@@ -97,12 +129,11 @@ public class TabLayoutManager extends GridLayoutManager
 	 * 
 	 * @param gadgetId
 	 */
-	private void closeCanvasView(int gadgetId)
+	private void closeCanvasView(int gadgetId, boolean activateProfile)
     {
 		String gadgetKey = Integer.toString(gadgetId);
 	    RollingTabPanel tabManager = tabScreen.getLayoutTabManager();
 	    GadgetContainer container = GadgetContainer.get();
-	    Gadget profileGadget = container.getGadget(gadgetId);
 
 	    int canvasGadgetId = openedCanvasGadgetIds.remove(gadgetKey);
 	    Widget canvasGadgetChrome = openedCanvasGadgetTabs.remove(gadgetKey);
@@ -115,7 +146,11 @@ public class TabLayoutManager extends GridLayoutManager
 	    }
 
 	    tabManager.remove(widgetIndex);
-	    profileGadget.activate();
+	    if (activateProfile)
+	    {
+	    	Gadget profileGadget = container.getGadget(gadgetId);
+	    	profileGadget.activate();
+	    }
     }
 	
 	/**
@@ -124,7 +159,7 @@ public class TabLayoutManager extends GridLayoutManager
 	 * @param gadgetTitle
 	 * @return
 	 */
-	public HorizontalPanel getTabWidget(final int profileGadgetId, String gadgetTitle)
+	public HorizontalPanel getTabWidget(final int profileGadgetId, String gadgetTitle, final boolean activateProfile)
 	{
 		HorizontalPanel flap = new HorizontalPanel();
 		flap.setSpacing(0);
@@ -140,7 +175,7 @@ public class TabLayoutManager extends GridLayoutManager
 			public void onClick(ClickEvent event)
 			{
 				event.stopPropagation();
-				closeCanvasView(profileGadgetId);
+				closeCanvasView(profileGadgetId, activateProfile);
 			}
 		});
 
@@ -151,7 +186,7 @@ public class TabLayoutManager extends GridLayoutManager
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
 				{
 					event.stopPropagation();
-					closeCanvasView(profileGadgetId);
+					closeCanvasView(profileGadgetId, activateProfile);
 				}
 			}
 		});
