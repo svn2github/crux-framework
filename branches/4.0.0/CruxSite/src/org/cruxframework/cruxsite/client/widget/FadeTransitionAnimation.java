@@ -1,7 +1,6 @@
 package org.cruxframework.cruxsite.client.widget;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 
@@ -17,7 +16,6 @@ class FadeTransitionAnimation extends TransitionAnimation
 	{
 		leavingElement.getStyle().setOpacity(1);
 		leavingElementStyle.setLeft(0, Unit.PX);
-		leavingElement.getStyle().setDisplay(Display.BLOCK);
 	}
 
 	@Override
@@ -25,7 +23,6 @@ class FadeTransitionAnimation extends TransitionAnimation
 	{
 		enteringElementStyle.setOpacity(0);
 		enteringElementStyle.setLeft(0, Unit.PX);
-		enteringElementStyle.setDisplay(Display.BLOCK);
 	}
 
 	@Override
@@ -49,7 +46,6 @@ class FadeTransitionAnimation extends TransitionAnimation
 	@Override
 	protected void completeTransitionForEnteringElement(Element enteringElement, Style enteringElementStyle) 
 	{
-		enteringElementStyle.setDisplay(Display.BLOCK);
 		enteringElementStyle.setOpacity(1);
 		enteringElementStyle.setLeft(0, Unit.PX);
 	}
@@ -57,8 +53,7 @@ class FadeTransitionAnimation extends TransitionAnimation
 	@Override
 	protected void completeTransitionForLeavingElement(Element leavingElement, Style leavingElementStyle) 
 	{
-		leavingElementStyle.setDisplay(Display.NONE);
-		leavingElementStyle.setOpacity(1);
+		leavingElementStyle.setOpacity(0);
 		leavingElementStyle.setLeft(0, Unit.PX);
 	}
 }

@@ -25,7 +25,7 @@ public class SlidingDeckPanel extends Composite
 	public void add(Widget w) 
 	{
 		SimplePanel panel = new SimplePanel();
-		panel.setVisible(false);
+		panel.getElement().getStyle().setOpacity(0);
 		mainContainer.add(panel);
 
 		panel.setHeight("100%");

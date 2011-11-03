@@ -38,7 +38,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("perfomance, maintainability, usability. simpler than ever.")
 	String headerLabel();
 	
-	@DefaultMessage("Download")
+	@DefaultMessage("Under Construction")
 	String downloadMenuItem();
 	
 	@DefaultMessage("Fast")

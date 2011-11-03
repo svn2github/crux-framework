@@ -1,7 +1,6 @@
 package org.cruxframework.cruxsite.client.widget;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 
@@ -22,13 +21,13 @@ class SlideTransitionAnimation extends TransitionAnimation
 	protected void completeTransitionForEnteringElement(Element enteringElement, Style enteringElementStyle) 
 	{
 		enteringElementStyle.setLeft(0, Unit.PX);
-		enteringElementStyle.setDisplay(Display.BLOCK);
+		enteringElementStyle.setOpacity(1);
 	}
 
 	@Override
 	protected void completeTransitionForLeavingElement(Element leavingElement, Style leavingElementStyle) 
 	{
-		leavingElementStyle.setDisplay(Display.NONE);
+		leavingElementStyle.setOpacity(0);
 		leavingElementStyle.setLeft(0, Unit.PX);
 	}
 
@@ -36,7 +35,7 @@ class SlideTransitionAnimation extends TransitionAnimation
 	protected void startTransitionForLeavingElement(Element leavingElement, Style leavingElementStyle) 
 	{
 		leavingElementStyle.setLeft(0, Unit.PX);
-		leavingElementStyle.setDisplay(Display.BLOCK);
+		leavingElementStyle.setOpacity(1);
 	}
 
 	@Override
@@ -51,7 +50,7 @@ class SlideTransitionAnimation extends TransitionAnimation
 			enteringElementStyle.setLeft(0 - leavingElementWidth - 1, Unit.PX);
 		}
 		
-		enteringElementStyle.setDisplay(Display.BLOCK);
+		enteringElementStyle.setOpacity(1);
 	}
 
 	@Override
