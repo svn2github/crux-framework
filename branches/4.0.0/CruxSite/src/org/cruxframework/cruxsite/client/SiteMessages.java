@@ -35,7 +35,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Project Activity")
 	String projectFeedsTitle();
 	
-	@DefaultMessage("perfomance, maintainability, usability... simpler than ever.")
+	@DefaultMessage("perfomance, maintainability, usability. simpler than ever.")
 	String headerLabel();
 	
 	@DefaultMessage("Download")
@@ -50,7 +50,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Social")
 	String bannerSocialTitle();
 	
-	@DefaultMessage("How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Chrome Web Store and many others")
+	@DefaultMessage("How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Chrome Web Store and many others.")
 	String bannerSocialText();
 	
 	@DefaultMessage("CAFEBABE")
@@ -62,7 +62,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Cross-Device")
 	String bannerCrossDeviceTitle();
 	
-	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, SmartTV... Crux fits all.")
+	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, SmartTVs ... Crux fits all.")
 	String bannerCrossDeviceText();
 	
 	@DefaultMessage("Triggo Labs")

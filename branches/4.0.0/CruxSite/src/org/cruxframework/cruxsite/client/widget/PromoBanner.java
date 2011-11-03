@@ -189,12 +189,6 @@ public class PromoBanner extends Composite
 		panel.add(messagePanel);
 		imagesPanel.add(panel);
 		
-		int index = imagesPanel.getVisibleWidget();
-		if(index < 1)
-		{
-			imagesPanel.showWidget(0);
-		}
-		
 		Label bullet = new Label();
 		final int targetIndex = imagesPanel.getWidgetCount() - 1;
 		bullet.addClickHandler(
@@ -208,6 +202,11 @@ public class PromoBanner extends Composite
 		);
 		bullet.setStyleName("bullet");
 		bullets.add(bullet);
+		
+		if(imagesPanel.getVisibleWidget() < 1)
+		{
+			showBanner(0);
+		}
 	}
 
 	public void setBannersHeight(String height) 

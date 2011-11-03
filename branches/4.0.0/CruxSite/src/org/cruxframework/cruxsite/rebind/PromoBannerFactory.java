@@ -46,7 +46,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 @TagAttributes({
 	@TagAttribute(value="bannersHeight", required=true),
 	@TagAttribute(value="transitionDuration", type=Integer.class, defaultValue="150"),
-	@TagAttribute(value="autoTransitionInterval", type=Integer.class, defaultValue="5000"),
+	@TagAttribute(value="autoTransitionInterval", type=Integer.class, defaultValue="5000")
 	
 })
 @TagChildren({
