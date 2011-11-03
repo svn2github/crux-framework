@@ -62,7 +62,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Cross-Device")
 	String bannerCrossDeviceTitle();
 	
-	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, SmartTVs ... Crux fits all.")
+	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, Smart TVs... Crux fits all.")
 	String bannerCrossDeviceText();
 	
 	@DefaultMessage("Triggo Labs")
