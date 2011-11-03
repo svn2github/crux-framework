@@ -5,6 +5,14 @@ xmlns:c="http://www.cruxframework.org/crux"
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/templates/siteTemplates" >
+<xs:element name="insidePage" type="TinsidePage" />
+<xs:complexType name="TinsidePage">
+<xs:all>
+<xs:element type="xs:anyType" name="contentBody" />
+<xs:element type="xs:anyType" name="contentRightBody" />
+</xs:all>
+<xs:attribute name="contentTitle" type="xs:string" use="required" />
+</xs:complexType>
 <xs:element name="mainPage" type="TmainPage" />
 <xs:complexType name="TmainPage">
 <xs:all>

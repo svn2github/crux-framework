@@ -57,7 +57,7 @@
 					</gwt:cell>
 				</gwt:row>
 				<gwt:row>
-					<gwt:cell styleName="Content" verticalAlignment="top">
+					<gwt:cell styleName="Content" horizontalAlignment="center" verticalAlignment="top">
 						<gwt:widget>
 							<t:section name="contentSection"/>
 						</gwt:widget>

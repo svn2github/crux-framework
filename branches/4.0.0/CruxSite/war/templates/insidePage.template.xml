@@ -1,0 +1,30 @@
+<t:template 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site" 
+	library="siteTemplates">
+
+	<gwt:grid id="tableContent" width="922px" styleName="PagesContent" cellPadding="5">
+		<gwt:row>
+			<gwt:cell width="75%" verticalAlignment="top">
+				<gwt:widget>
+					<gwt:verticalPanel id="verticalContent">
+						<gwt:label id="contentTitle" styleName="PagesContentLeft" text="#{contentTitle}" />
+						<t:section name="contentBody"></t:section>
+					</gwt:verticalPanel>
+				</gwt:widget>
+			</gwt:cell>
+			<gwt:cell width="25%" verticalAlignment="top">
+				<gwt:widget>
+					<gwt:verticalPanel id="verticalContent">
+						<t:section name="contentRightBody"></t:section>
+					</gwt:verticalPanel>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+	</gwt:grid>
+	
+</t:template>

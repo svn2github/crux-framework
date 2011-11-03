@@ -145,6 +145,7 @@ targetNamespace="http://www.cruxframework.org/crux" >
 <xs:element ref="_gwt:hidden" />
 <xs:element ref="_gwt:inlineLabel" />
 <xs:element ref="_gwt:decoratedTabBar" />
+<xs:element ref="_siteTemplates:insidePage" />
 </xs:choice>
 </xs:group>
 </xs:schema>
