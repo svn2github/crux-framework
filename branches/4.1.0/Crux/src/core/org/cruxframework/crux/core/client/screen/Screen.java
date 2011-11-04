@@ -938,8 +938,9 @@ public class Screen
 	 * @param lazyPanelId
 	 * @return
 	 */
-	private Widget getRuntimeDependencyWidget(String id, Widget widget, String lazyPanelId)
+	private Widget getRuntimeDependencyWidget(String id, String lazyPanelId)
     {
+		Widget widget = null;
 	    if (ViewFactoryUtils.isWholeWidgetLazyWrapper(lazyPanelId))  
 	    {
 	    	lazyPanelId = ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(lazyPanelId); 
@@ -951,17 +952,39 @@ public class Screen
 	    		lazyWidgets.put(id, lazyPanelId);
 	    		widget = getWidget(id);
 	    	}
+	    	else
+	    	{
+	    		 /* Check if the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
+	    		  lazy instantiation.*/
+		    	widget = getRuntimeDependencyWidgetFromWholeWidget(id);
+	    	}
 	    }
 	    else
 	    {
-	    	/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
-	    	 lazy instantiation.*/
-	    	lazyPanelId = ViewFactoryUtils.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
-	    	if (widgets.containsKey(lazyPanelId))  
-	    	{
-	    		lazyWidgets.put(id, lazyPanelId);
-	    		widget = getWidget(id);
-	    	}
+	   		 /* Check if the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
+	  		  lazy instantiation.*/
+	    	widget = getRuntimeDependencyWidgetFromWholeWidget(id);
+	    }
+	    return widget;
+    }
+	
+	/**
+	 * When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
+	 * lazy instantiation.
+	 * 
+	 * @param id
+	 * @param widget
+	 * @return
+	 */
+	private Widget getRuntimeDependencyWidgetFromWholeWidget(String id)
+    {
+		Widget widget = null;
+		String lazyPanelId;
+	    lazyPanelId = ViewFactoryUtils.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
+	    if (widgets.containsKey(lazyPanelId))  
+	    {
+	    	lazyWidgets.put(id, lazyPanelId);
+	    	widget = getWidget(id);
 	    }
 	    return widget;
     }
@@ -998,7 +1021,7 @@ public class Screen
 						 * method is called. It means that a new dependency was created during the initialization
 						 * of the first panel. We must check for this situation and add this new dependency here.
 						 */
-						widget = getRuntimeDependencyWidget(id, widget, lazyPanelId);
+						widget = getRuntimeDependencyWidget(id, lazyPanelId);
 					}
 				}
 			}
