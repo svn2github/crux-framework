@@ -115,7 +115,8 @@ public class RssPanel extends Composite
 			}
 		});
 		entryTitle.setStyleName("entryTitle");
-
+		entryTitle.setTitle(entry.getTitle());
+		
 		Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
 		entryDate.setStyleName("entryDate");
 		
