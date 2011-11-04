@@ -7,6 +7,7 @@ import org.cruxframework.crux.gadgets.client.container.Gadget;
 import org.cruxframework.crux.gadgets.client.container.GadgetContainer;
 import org.cruxframework.crux.gadgets.client.container.GadgetMetadata;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
+import org.cruxframework.crux.widgets.client.rollingtabs.SimpleDecoratedPanel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +18,7 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -159,14 +161,16 @@ public class TabLayoutManager extends GridLayoutManager
 	 * @param gadgetTitle
 	 * @return
 	 */
-	public HorizontalPanel getTabWidget(final int profileGadgetId, String gadgetTitle, final boolean activateProfile)
+	public Panel getTabWidget(final int profileGadgetId, String gadgetTitle, final boolean activateProfile)
 	{
-		HorizontalPanel flap = new HorizontalPanel();
-		flap.setSpacing(0);
+		SimpleDecoratedPanel flap = new SimpleDecoratedPanel();
+		
+		HorizontalPanel flapHPanel = new HorizontalPanel();
+		flapHPanel.setSpacing(0);
 
 		Label title = new Label(gadgetTitle);
-		title.setStyleName("tabLabel");
-		flap.add(title);
+		title.setStyleName("flapLabel");
+		flapHPanel.add(title);
 
 		FocusWidget closeButton = new FocusWidget(new Label(" ").getElement()) {};
 		closeButton.setStyleName("tabCloseButton");
@@ -191,7 +195,9 @@ public class TabLayoutManager extends GridLayoutManager
 			}
 		});
 		closeButton.setVisible(true);
-		flap.add(closeButton);
+		flapHPanel.add(closeButton);
+		flap.setContentWidget(flapHPanel);
+		
 		return flap;
 	}
 
