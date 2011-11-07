@@ -21,13 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for an IoC configuration class. Crux engine search for all subclasses of IocContainerConfig and 
+ * Base class for an IoC configuration class. Crux engine search for all subclasses of IocContainerConfiguration and 
  * invoke their configure method. 
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class IocContainerConfig implements IocConfiguration
+public abstract class IocContainerConfiguration implements IocConfiguration
 {
 	private static Map<String, IocConfig> configurations = new HashMap<String, IocConfig>();
 	private static Set<IocConfigList> groupConfigurations = new HashSet<IocConfigList>();
