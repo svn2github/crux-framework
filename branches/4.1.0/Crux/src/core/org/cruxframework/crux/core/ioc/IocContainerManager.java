@@ -48,9 +48,9 @@ public class IocContainerManager
 					for (String configurationClassName : configurations)
 					{
 						Class<?> configurationClass = Class.forName(configurationClassName);
-						if (!Modifier.isAbstract(configurationClass.getModifiers()) && IocContainerConfig.class.isAssignableFrom(configurationClass))
+						if (!Modifier.isAbstract(configurationClass.getModifiers()) && IocContainerConfiguration.class.isAssignableFrom(configurationClass))
 						{
-							IocContainerConfig configuration = (IocContainerConfig)configurationClass.newInstance();
+							IocContainerConfiguration configuration = (IocContainerConfiguration)configurationClass.newInstance();
 							if (configuration.isEnabled())
 							{
 								if (logger.isInfoEnabled())
@@ -77,6 +77,6 @@ public class IocContainerManager
 	 */
 	public static IocConfig getConfigurationForType(String className)
 	{
-		return IocContainerConfig.getConfigurationForType(className);
+		return IocContainerConfiguration.getConfigurationForType(className);
 	}
 }
