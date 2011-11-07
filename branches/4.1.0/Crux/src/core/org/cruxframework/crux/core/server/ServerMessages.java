@@ -164,5 +164,8 @@ public interface ServerMessages
 	String initializerListenerRequiredParameterMissing(String filterName, String parameterName);
 
 	@DefaultServerMessage("[ioc 001] - Error initializing ioc container.")
-	Object iocContainerManagerError();
+	String iocContainerManagerError();
+
+	@DefaultServerMessage("[ioc 002] - Configuring new ioc module [{0}]...")
+	String iocContainerConfiguringModule(String configurationClassName);
 }

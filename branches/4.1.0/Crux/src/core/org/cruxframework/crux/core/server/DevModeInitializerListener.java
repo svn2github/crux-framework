@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.ioc.IocContainerManager;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 
 
@@ -52,6 +53,7 @@ public class DevModeInitializerListener implements ServletContextListener
 		if (!Environment.isProduction())
 		{
 			WidgetConfig.initialize();
+			IocContainerManager.initialize();
 		}
     }
 

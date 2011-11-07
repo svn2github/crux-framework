@@ -934,7 +934,6 @@ public class Screen
 	 * of the first panel. We must check for this situation and add this new dependency here.
 	 * 
 	 * @param id
-	 * @param widget
 	 * @param lazyPanelId
 	 * @return
 	 */
@@ -973,7 +972,6 @@ public class Screen
 	 * lazy instantiation.
 	 * 
 	 * @param id
-	 * @param widget
 	 * @return
 	 */
 	private Widget getRuntimeDependencyWidgetFromWholeWidget(String id)
@@ -988,7 +986,6 @@ public class Screen
 	    }
 	    return widget;
     }
-	
 	
 	/**
 	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if

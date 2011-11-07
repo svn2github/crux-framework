@@ -16,7 +16,7 @@
 package org.cruxframework.crux.core.client.ioc;
 
 /**
- * A provider to CruxIocContainer. An {@codeInjectionProvider<T>} is used to create instances
+ * A provider to CruxIocContainer. An {@code InjectionProvider<T>} is used to create instances
  * of T, when the IocContainer needs to create a new instance.
  * @author Thiago da Rosa de Bustamante
  *

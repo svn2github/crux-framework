@@ -43,6 +43,7 @@ import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 
 
 import com.google.gwt.core.client.GWT;
@@ -141,6 +142,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this");
+		IocContainerRebind.injectFields(srcWriter, "this", controllerClass);
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}
