@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+ 
 /**
  * Base class for an IoC configuration class. Crux engine search for all subclasses of IocContainerConfiguration and 
  * invoke their configure method. 
