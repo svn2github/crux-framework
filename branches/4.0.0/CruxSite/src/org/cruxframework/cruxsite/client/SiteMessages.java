@@ -29,6 +29,12 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Crux Framework - Official Site")
 	String siteTitle();
 	
+	@DefaultMessage("blog")
+	String blogShortcut();
+	
+	@DefaultMessage("project")
+	String projectShortcut();
+	
 	@DefaultMessage("Blog Activity")
 	String blogFeedsTitle();
 	
@@ -38,9 +44,42 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("perfomance, maintainability, usability. simpler than ever.")
 	String headerLabel();
 	
-	@DefaultMessage("Under Construction")
+	@DefaultMessage("demo")
+	String demoMenuItem();
+	
+	@DefaultMessage("Click to see a live example of powers of Crux.")
+	String demoMenuItemTooltip();
+	
+	@DefaultMessage("downoad")
 	String downloadMenuItem();
 	
+	@DefaultMessage("Click to get the newest version of Crux SDK.")
+	String downloadMenuItemTooltip();
+	
+	@DefaultMessage("learn")
+	String learnMenuItem();
+	
+	@DefaultMessage("Here you find tutorials, videos and other technical documentation about Crux.")
+	String learnMenuItemTooltip();
+
+	@DefaultMessage("compare")
+	String whyCruxMenuItem();
+	
+	@DefaultMessage("Compare Crux with other frameworks and discover why you should use it.")
+	String whyCruxMenuItemTooltip();
+	
+	@DefaultMessage("contribute")
+	String contributeMenuItem();
+	
+	@DefaultMessage("Discover how you can join the Crux team and colaborate with this exciting project.")
+	String contributeMenuItemTooltip();
+	
+	@DefaultMessage("add-ons")
+	String addOnsMenuItem();
+	
+	@DefaultMessage("Enhance your Crux application with aditional 3rd party features. (coming soon)")
+	String addOnsMenuItemTooltip();
+
 	@DefaultMessage("Fast")
 	String bannerFastTitle();
 	
