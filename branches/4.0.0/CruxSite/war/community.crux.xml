@@ -14,7 +14,24 @@
 	</tmp:screenSection>
 	
 	<tmp:contentSection>
-		<tmp:insidePage contentTitle=""></tmp:insidePage>
+				<gwt:grid id="insideContent" width="900px">
+					<gwt:row>
+						<gwt:cell>
+							<gwt:html id="htmlContent">
+								<h1>Crux Community</h1>
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
+								<div class="Risk"></div>
+							</gwt:html>
+						</gwt:cell>
+					</gwt:row>
+					<gwt:row>
+						<gwt:cell>
+							<gwt:html id="columnContent">
+								<p>a</p>
+							</gwt:html>
+						</gwt:cell>
+					</gwt:row>
+				</gwt:grid>
 	</tmp:contentSection>
 </tmp:mainPage>
 

@@ -9,20 +9,8 @@
 
 	<gwt:grid id="tableContent" width="922px" styleName="PagesContent" cellPadding="5">
 		<gwt:row>
-			<gwt:cell width="75%" verticalAlignment="top">
-				<gwt:widget>
-					<gwt:verticalPanel id="verticalContent">
-						<gwt:label id="contentTitle" styleName="PagesContentLeft" text="#{contentTitle}" />
-						<t:section name="contentBody"></t:section>
-					</gwt:verticalPanel>
-				</gwt:widget>
-			</gwt:cell>
-			<gwt:cell width="25%" verticalAlignment="top">
-				<gwt:widget>
-					<gwt:verticalPanel id="verticalContent">
-						<t:section name="contentRightBody"></t:section>
-					</gwt:verticalPanel>
-				</gwt:widget>
+			<gwt:cell verticalAlignment="top">
+				<t:section name="contentBody"></t:section>
 			</gwt:cell>
 		</gwt:row>
 	</gwt:grid>
