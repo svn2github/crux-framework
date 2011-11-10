@@ -53,8 +53,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.google.gwt.user.client.ui.HTMLPanel;
+
 
 /**
+ * Create the html page to be sent to browser. This page is created based on the 
+ * equivalent .crux.xml page.
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -101,12 +106,14 @@ class HTMLBuilder
 
 	private int jsIndentationLvl;
 	private String screenId;
-	
-	
+
 	/**
-	 * @param indentOutput 
-	 * @throws HTMLBuilderException 
+	 * Constructor.
 	 * 
+	 * @param escapeXML If true will escape all inner text nodes to ensure that the generated HTML will be parsed correctly by a XML parser.
+	 * @param generateWidgetsMetadata If true generates a JSON metadata that represents the widgets structure on .crux.xml page. 
+	 * @param indentOutput True makes the generated HTML be indented.
+	 * @throws HTMLBuilderException
 	 */
 	public HTMLBuilder(boolean escapeXML, boolean generateWidgetsMetadata, boolean indentOutput) throws HTMLBuilderException
     {
@@ -116,7 +123,9 @@ class HTMLBuilder
     }
 	
 	/**
-	 * 
+	 * Panels that can contain HTML mixed with widgets as contents (like {@link HTMLPanel}) must be handled
+	 * differentially. That method maps all of those widgets that are present into the project.
+	 *    
 	 * @return
 	 * @throws HTMLBuilderException 
 	 */
@@ -147,6 +156,8 @@ class HTMLBuilder
 	}
 
 	/**
+	 * Some widgets can define tags with custom names that has its type as other widget. It can be handled properly
+	 * and those situations are mapped by this method. 
 	 * 
 	 * @return
 	 * @throws HTMLBuilderException 
@@ -237,8 +248,11 @@ class HTMLBuilder
 	}
 	
 	/**
-	 * @param cruxPageDocument
-	 * @param out
+	 * Generates the HTML page form the given .crux.xml page.
+	 *
+	 * @param screenId The id of the screen associated with the .crux.xml page. 
+	 * @param cruxPageDocument a XML Document representing the .crux.xml page.
+	 * @param out Where the generated HTML will be written.
 	 * @throws HTMLBuilderException
 	 */
 	public void build(String screenId, Document cruxPageDocument, Writer out) throws HTMLBuilderException
