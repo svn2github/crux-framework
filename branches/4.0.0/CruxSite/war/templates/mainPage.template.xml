@@ -63,6 +63,8 @@
 																<gwt:anchor id="whyCruxMenuItem" text="${siteMessages.whyCruxMenuItem}" styleName="MenuItem" tooltip="${siteMessages.whyCruxMenuItemTooltip}"/>
 																<gwt:label id="menuSeparator4" styleName="MenuSeparator"/>
 																<gwt:anchor id="learnMenuItem" text="${siteMessages.contributeMenuItem}" styleName="MenuItem" tooltip="${siteMessages.contributeMenuItemTooltip}"/>
+																<gwt:label id="menuSeparator6" styleName="MenuSeparator"/>
+																<gwt:anchor id="communityMenuItem" text="Community" styleName="MenuItem" tooltip="Our community"/>
 																<gwt:label id="menuSeparator5" styleName="MenuSeparator"/>
 																<gwt:anchor id="addOnsMenuItem" text="${siteMessages.addOnsMenuItem}" styleName="MenuItem-disabled" enabled="false" tooltip="${siteMessages.addOnsMenuItemTooltip}"/>
 															</gwt:horizontalPanel>

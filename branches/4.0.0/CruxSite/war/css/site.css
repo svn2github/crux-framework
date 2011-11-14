@@ -13,7 +13,7 @@ BODY
 }
 
 h1{
-	margin-top: 0;
+	margin-top: 10px;
 	color: #004F5E;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
 	font-size: 30px;
@@ -23,6 +23,10 @@ h1{
 p{
 	color:#333;
 	text-shadow:0 1px 0 #fff;
+}
+
+.clear{
+	clear:both;
 }
 
 .Frame
@@ -36,7 +40,6 @@ p{
 	height: 224px;
 	background-color: #00242C;
 }
-
 .HeaderAreas
 {
 	width: 100%;
@@ -277,7 +280,7 @@ p{
 	height: 100%;
 }
 
-.crux-PromoBanner .button
+.crux-PromoBanner button
 {
 	cursor: pointer;
 	-webkit-transition: box-shadow 0.3s linear;
@@ -296,15 +299,15 @@ p{
 	margin-top: 5px;
 }
 
-.crux-PromoBanner .button:active 
+.crux-PromoBanner button:active 
 {
 	background: -webkit-linear-gradient(#004A5D 0%, #006778 100%);
 }
 
-.crux-PromoBanner .button:hover 
+.crux-PromoBanner button:hover 
 {
 	-webkit-transition: all 0.3s linear;
-	box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset !important;
 }
 
 .crux-PromoBanner .title
@@ -421,7 +424,76 @@ p{
  .Risk{
  	height:1px;
  	background:#555;
- 	background:rgba(0,0,0,0.3);
- 	border-bottom:1px solid #fff;
+ 	background:rgba(0,0,0,0.15);
+ 	border-bottom:1px solid #f0f0f0;
+ 	border-bottom:1px solid rgba(255,255,255,0.8);
  	margin:20px 0;
  }
+ 
+ .BlockImg{
+ 	float:left;
+ 	height:94px;
+ 	margin-bottom:8px;
+ }
+ .BlockText{
+ 	float:left;
+ 	width:300px;
+ 	margin-left:10px;
+ }
+.BlockTypes{
+	margin-right:10px;
+	height:200px;
+}
+.b2{
+	margin-right:0;
+	margin-left:10px;
+}
+.BlockTypes button{
+	cursor: pointer;
+	-webkit-transition: box-shadow 0.3s linear;
+	padding:0 25px;
+	height: 40px;
+	background: #005266;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 0 1px rgba(0,0,0,0.2) inset;
+	background: -webkit-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: #444;
+	text-shadow:0 1px 0 #fff;
+	font-size: 17px;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+.BlockTypes button:hover{
+ 	-webkit-transition: box-shadow 0.3s linear;
+ 	box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 1px rgba(0,0,0,0.3) inset;
+}
+.BlockTypes button:active{
+ 	background: -webkit-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+}
+.BlockText h1{
+ 	font-size:23px;
+ 	letter-spacing:-1px;
+ 	margin-top:0;
+}
+.BlockText p{
+ 	font-size:14px;
+ }
+ .divDownTxt{
+ 	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	height:150px;
+ 	padding:10px;
+}
+.divDownTxt h1{
+	font-size:19px;
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.4);	
+}
+.divDownTxt p{
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+}

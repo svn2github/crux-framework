@@ -26,9 +26,79 @@
 					</gwt:row>
 					<gwt:row>
 						<gwt:cell>
-							<gwt:html id="columnContent">
-								<p>a</p>
-							</gwt:html>
+							<gwt:widget>
+								<gwt:grid id="gridCommunitySpots" width="100%">
+									<gwt:row>
+										<gwt:cell width="50%">
+											<gwt:html>
+												<div class="BlockTypes">
+													<div class="BlockImg">
+														<img src="../img/icon_blogger.png" />
+													</div>
+													<div class="BlockText">
+														<h1>Crux's Blog</h1>
+														<p>Visit our blog, there you can find helpful video tutorials, tips and news.</p>
+													</div>
+													<div class="clear"></div>
+													<button>Visit the Blog</button>
+													<div class="Risk"></div>
+												</div>
+											</gwt:html>
+										</gwt:cell>
+										<gwt:cell width="50%">
+										<gwt:html>
+											<div class="BlockTypes b2">
+												<div class="BlockImg">
+													<img src="../img/icon_google.png" />
+												</div>
+												<div class="BlockText">
+													<h1>code.google.com</h1>
+													<p>Wiki,Issues, commit road and much more can be found on our Google Code page, check!.</p>
+												</div>
+												<div class="clear"></div>
+												<button>Visit the Page</button>
+												<div class="Risk"></div>
+											</div>
+										</gwt:html>
+										</gwt:cell>
+									</gwt:row>
+									<gwt:row>
+										<gwt:cell width="50%">
+											<gwt:html>
+												<div class="BlockTypes">
+													<div class="BlockImg">
+														<img src="../img/icon_forum.png" />
+													</div>
+													<div class="BlockText">
+														<h1>Crux's Forum</h1>
+														<p>Visit our blog, there you can find helpful video tutorials, tips and news.</p>
+													</div>
+													<div class="clear"></div>
+													<button>Visit the Forum</button>
+													<div class="Risk"></div>
+												</div>
+											</gwt:html>
+										</gwt:cell>
+										<gwt:cell width="50%">
+										<gwt:html>
+											<div class="BlockTypes b2">
+												<div class="BlockImg">
+													<img src="" />
+												</div>
+												<div class="BlockText">
+													<h1>Crux's Team</h1>
+													<p>Want talk to us?<br /> team@cruxframework.org</p>
+												</div>
+												<div class="clear"></div>
+												<button>Talk to us</button>
+												<div class="Risk"></div>
+											</div>
+										</gwt:html>
+										</gwt:cell>
+									</gwt:row>
+								</gwt:grid>
+							
+							</gwt:widget>
 						</gwt:cell>
 					</gwt:row>
 				</gwt:grid>

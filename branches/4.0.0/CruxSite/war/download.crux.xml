@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
+>
+
+<tmp:mainPage>
+	<tmp:screenSection>
+		<c:screen title="${siteMessages.siteTitle}"/>
+	</tmp:screenSection>
+	
+	<tmp:contentSection>
+		<gwt:flexTable id="insideContentDown" width="900px">
+					<gwt:row>
+						<gwt:cell>
+							<gwt:html id="htmlContentDownload">
+								<h1>Download Crux Framework</h1>
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
+								<div class="Risk"></div>
+							</gwt:html>
+						</gwt:cell>
+					</gwt:row>
+					<gwt:row>
+						<gwt:cell>
+							<gwt:widget>
+								<gwt:grid id="gridCommunityDownload" width="100%">
+									<gwt:row>
+										<gwt:cell width="50%">
+											<gwt:html>
+												<div class="BlockTypes">
+													<div class="BlockImg">
+														<img src="../img/icon_download.png" />
+													</div>
+													<div class="BlockText">
+														<h1>Download Crux Framework 4</h1>
+														<p>Version 4.0.0, All platforms (crux-4.0.0.zip)</p>
+													</div>
+													<div class="clear"></div>
+													<button>Click to download</button>
+													<div class="Risk"></div>
+												</div>
+											</gwt:html>
+										</gwt:cell>
+										<gwt:cell width="50%" verticalAlignment="top">
+											<gwt:html>
+												<div class="divDownTxt">
+													<h1>Things you should know</h1>
+													<p>blablabla lorem ipsum dolor sit amet</p>
+												</div>
+											</gwt:html>
+										</gwt:cell>
+									</gwt:row>
+								</gwt:grid>
+							</gwt:widget>
+						</gwt:cell>
+					</gwt:row>
+					<gwt:row>
+					<gwt:cell>
+											<gwt:html>
+												<div>
+													<div class="clear"></div>
+													<img src="../img/banner_triggo_1.png" />
+												</div>
+											</gwt:html>
+										</gwt:cell>
+					</gwt:row>
+				</gwt:flexTable>
+			</tmp:contentSection>
+</tmp:mainPage>
+
+</html>
