@@ -137,7 +137,7 @@ public abstract class ScreenResourcesScanner
 		Set<String> archives = scanArchives();
 		for (String screenID : archives)
 		{
-			Screen screen = ScreenFactory.getInstance().getScreen(screenID);
+			Screen screen = ScreenFactory.getInstance().getScreen(screenID, null);
 			if(screen != null)
 			{
 				Set<String> pages = modulePages.get(screen.getModule());

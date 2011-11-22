@@ -27,7 +27,9 @@ import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializ
 import org.cruxframework.crux.core.server.CruxBridge;
 
 
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
@@ -115,10 +117,29 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElementInvalidScreenID(),e);
 			throw new CruxGeneratorException();
 		}
-		Screen screen = ScreenFactory.getInstance().getScreen(screenID);
-		return screen;
+		
+        Screen screen = ScreenFactory.getInstance().getScreen(screenID, getUserAgent());
+        return screen;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	protected String getUserAgent()
+	{
+		try
+		{
+			SelectionProperty userAgent = context.getPropertyOracle().getSelectionProperty(logger, "user.agent");
+			return userAgent==null?null:userAgent.getCurrentValue();
+		}
+		catch (BadPropertyValueException e)
+		{
+			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElementCanNotReadUserAgent(),e);
+			throw new CruxGeneratorException();
+		}
+	}
+	
 	/**
 	 * @return
 	 * @throws ScreenConfigException
@@ -169,7 +190,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	        	}
 	        	for (String screenID : screenIDs)
 	        	{
-	        		Screen screen = ScreenFactory.getInstance().getScreen(screenID);
+	        		Screen screen = ScreenFactory.getInstance().getScreen(screenID, getUserAgent());
 	        		if(screen != null)
 	        		{
 	        			screens.add(screen);

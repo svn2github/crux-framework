@@ -185,6 +185,11 @@ public class StringUtils
 		}
 	}
 	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public static double safeParseDouble(String value)
 	{
 		if (!isEmpty(value))
@@ -193,5 +198,31 @@ public class StringUtils
 		}
 		return Double.MIN_VALUE;
 	}
+	
+	/**
+	 * 
+	 * @param multiValuedProperty
+	 * @param value
+	 * @return
+	 */
+	public static boolean containsValue(String multiValuedProperty, String value)
+	{
+		if (isEmpty(value) || isEmpty(multiValuedProperty))
+		{
+			return false;
+		}
+		
+		String[] parts = multiValuedProperty.split(",");
+		for (String part : parts)
+        {
+	        if (part.trim().equals(value))
+	        {
+	        	return true;
+	        }
+        }
+		
+		return false;
+	}
+		
 	
 }

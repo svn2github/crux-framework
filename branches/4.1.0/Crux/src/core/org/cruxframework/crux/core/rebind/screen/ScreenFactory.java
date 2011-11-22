@@ -92,28 +92,24 @@ public class ScreenFactory
 	/**
 	 * Factory method for screens.
 	 * @param id
+	 * @param userAgent user.agent value for this permutation beeing compiled
 	 * @return
 	 * @throws ScreenConfigException
 	 */
-	public Screen getScreen(String id) throws ScreenConfigException
+	public Screen getScreen(String id, String userAgent) throws ScreenConfigException
 	{
 		try 
 		{
 			long lastModified = getScreenLastModified(id);
-			Screen screen = screenCache.get(id);
+			String cacheId = userAgent==null?id:id+userAgent;
+			
+			Screen screen = getFromCache(id, cacheId, lastModified);
 			if (screen != null)
 			{
-				if (mustReprocessScreen(id, lastModified))
-				{
-					screenCache.remove(id);
-				}
-				else
-				{
-					return screen;
-				}
+				return screen;
 			}
 
-			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id);
+			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id, userAgent);
 			if (stream == null)
 			{
 				throw new ScreenConfigException(messages.screenFactoryScreeResourceNotFound(id));
@@ -122,12 +118,12 @@ public class ScreenFactory
 			screenLock.lock();
 			try
 			{
-				if (screenCache.get(id) == null)
+				if (getFromCache(id, cacheId, lastModified) == null)
 				{
 					screen = parseScreen(id, stream);
 					if(screen != null)
 					{
-						screenCache.put(id, screen);
+						screenCache.put(screen.isDeviceAdaptive()?cacheId:id, screen);
 						saveScreenLastModified(id, lastModified);
 					}
 				}
@@ -136,13 +132,39 @@ public class ScreenFactory
 			{
 				screenLock.unlock();
 			}
-			return screenCache.get(id);
+			return getFromCache(id, cacheId, lastModified);
 			
 		} 
 		catch (Throwable e) 
 		{
 			throw new ScreenConfigException(messages.screenFactoryErrorRetrievingScreen(id, e.getLocalizedMessage()), e);
 		}
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param cacheId
+	 * @param lastModified
+	 * @return
+	 */
+	private Screen getFromCache(String id, String cacheId, long lastModified)
+	{
+		Screen screen = screenCache.get(id);
+		if (screen == null)
+		{
+			screen = screenCache.get(cacheId);
+		}
+		if (screen != null)
+		{
+			if (mustReprocessScreen(id, lastModified))
+			{
+				screenCache.remove(id);
+				screenCache.remove(cacheId);
+				screen = null;
+			}
+		}
+		return screen;
 	}
 
 	/**

@@ -253,6 +253,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 055] - Error Generating value binding code for DTO [{0}], Field [{1}]. Circular Reference. ")
 	String errorGeneratingValueBindingCodeCircularReference(String className, String fieldName);
 	
+	@DefaultServerMessage("[generator 056] - Error retrieving screen Identifier.")
+	String errorGeneratingRegisteredElementCanNotReadUserAgent();
+
 	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String viewFactoryMetaElementDoesNotContainsType();
 
@@ -333,5 +336,4 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[attributeProcessor 001] - Error parsing attribute value [{0}], of widget [{2}], on screen [{1}].")
 	String rowCountProcessorErrorInvalidValue(String attributeValue, String id, String widgetId);
-
 }

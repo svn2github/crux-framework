@@ -41,7 +41,7 @@ public interface ScreenResourceResolver
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	InputStream getScreenXMLResource(String screenId) throws CruxGeneratorException;
+	InputStream getScreenXMLResource(String screenId, String userAgent) throws CruxGeneratorException;
 
 	/**
 	 * List all Crux screen IDs

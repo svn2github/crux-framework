@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.declarativeui.template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,8 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	private XPathExpression findTemplatesExpression;
 	private XPathExpression findScreensExpression;
 	private XPathExpression findBodyExpression;
+	private XPathExpression findCrossBrowserExpression;
+	private XPathExpression templateAttributesExpression;
 	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	
@@ -68,6 +71,9 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			findTemplatesExpression = findPath.compile(".//*[contains(namespace-uri(), 'http://www.cruxframework.org/templates/')]");
 			findScreensExpression = findPath.compile("//c:screen");
 			findBodyExpression = htmlPath.compile("//h:body");
+			findCrossBrowserExpression = findPath.compile("//c:crossDevice");
+			templateAttributesExpression = findPath.compile("//@*[contains(., 'X{')] | //text()[contains(., 'X{')]");
+
 		}
 		catch (XPathExpressionException e)
 		{
@@ -81,7 +87,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	public Document preprocess(Document doc)
+	public Document preprocess(Document doc, String userAgent)
 	{
 		if (doc == null)
 		{
@@ -92,7 +98,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		Set<String> formatters = new HashSet<String>();
 		Set<String> serializables = new HashSet<String>();
 		
-		Document result = preprocess(doc, controllers, dataSources, formatters, serializables);
+		Document result = preprocess(doc, userAgent, controllers, dataSources, formatters, serializables);
 		updateScreenProperties(doc, controllers, dataSources, formatters, serializables);
 		return result;
 	}
@@ -170,9 +176,11 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	private Document preprocess(Document doc, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+	private Document preprocess(Document doc, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
 	{
-		preprocess(doc.getDocumentElement(), controllers, dataSources, formatters, serializables, false);
+		Element documentElement = doc.getDocumentElement();
+		preprocessCrossBrowserTags(documentElement, userAgent, controllers, dataSources, formatters, serializables);
+		preprocess(documentElement, userAgent, controllers, dataSources, formatters, serializables, false);
 		return doc;
 	}
 
@@ -181,7 +189,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	private void preprocess(Element root, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables, boolean allowInnerSections)
+	private void preprocess(Element root, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables, boolean allowInnerSections)
 	{
 		try
 		{
@@ -191,7 +199,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 				Element element = (Element)nodes.item(i);
 				if (isAttached(element) && (allowInnerSections || !isAnInnerSection(element)))
 				{
-					preprocessTemplate(element, controllers, dataSources, formatters, serializables);
+					preprocessTemplate(element, userAgent, controllers, dataSources, formatters, serializables);
 				}
 			}
 		}
@@ -200,9 +208,42 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			log.error(messages.templatesPreProcessorError());
 			throw new TemplateException(e.getLocalizedMessage(), e);
 		}
-		
 	}
 
+	/**
+	 * 
+	 * @param documentElement
+	 * @param userAgent
+	 * @param controllers
+	 * @param dataSources
+	 * @param formatters
+	 * @param serializables
+	 */
+	private void preprocessCrossBrowserTags(Element documentElement, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+    {
+		try
+		{
+			NodeList childNodes = (NodeList)findCrossBrowserExpression.evaluate(documentElement, XPathConstants.NODESET);
+			List<Element> elements = new ArrayList<Element>();
+			for (int i = 0; i < childNodes.getLength(); i++)
+			{
+				Element element = (Element)childNodes.item(i);
+				if (isAttached(element))
+				{
+					elements.add(element);
+				}
+			}
+			for (Element element: elements)
+			{
+				preprocessCrossBrowserTag(element, userAgent, controllers, dataSources, formatters, serializables);
+			}
+		}
+		catch (XPathExpressionException e)
+		{
+			log.error(messages.templatesPreProcessorError());
+			throw new TemplateException(e.getLocalizedMessage(), e);
+		}
+    }
 	
 	/**
 	 * 
@@ -235,7 +276,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param serializables
 	 * @param element
 	 */
-	private void preprocessTemplate(Element element, Set<String> controllers, Set<String> dataSources, 
+	private void preprocessTemplate(Element element, String userAgent, Set<String> controllers, Set<String> dataSources, 
 			                Set<String> formatters, Set<String> serializables)
 	{
 		Document doc = element.getOwnerDocument();
@@ -246,16 +287,233 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		{
 			throw new TemplateException(messages.templatesPreProcessorTemplateNotFound(library, element.getLocalName()));
 		}
-		template = preprocess(template, controllers, dataSources, formatters, serializables);
+		template = preprocess(template, userAgent, controllers, dataSources, formatters, serializables);
 
 		updateTemplateAttributes(element, template);
-		updateTemplateChildren(element, template, controllers, dataSources, formatters, serializables);
+		updateTemplateChildren(element, userAgent, template, controllers, dataSources, formatters, serializables);
 
 		Element templateElement = (Element) doc.importNode(template.getDocumentElement(), true);
 		extractScreenPropertiesFromElement(templateElement, controllers, dataSources, formatters, serializables);										
 
 		replaceByChildren(element, templateElement);
 	}
+
+	/**
+	 * 
+	 * @param element
+	 * @param userAgent
+	 * @param controllers
+	 * @param dataSources
+	 * @param formatters
+	 * @param serializables
+	 */
+	private void preprocessCrossBrowserTag(Element element, String userAgent, Set<String> controllers, Set<String> dataSources, 
+            Set<String> formatters, Set<String> serializables)
+	{
+		List<Element> replacements = getCrossBrowserReplacements(element, userAgent);
+		if (replacements.size() == 0)
+		{
+			replacements = getCrossBrowserReplacements(element, "default");
+		}
+		NodeList nodes = element.getChildNodes(); //Do not use getElementsByTagName to avoid problems with nested crossBrowser tags
+		Node parentNode = element.getParentNode();
+		
+		for (int i=0; i< nodes.getLength(); i++)
+		{
+			Node node = nodes.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element child = (Element)node;
+				
+				if (child.getLocalName().equals("widget") && child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+				{
+					String name = child.getAttribute("name");
+					Element widget = getCrossBrowserWidget(name, replacements);
+					//element.removeChild(child);
+					parentNode.insertBefore(widget, element);
+				}
+				else if (!child.getLocalName().equals("conditions") || !child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+ 				{
+					updateCrossBrowserAttributes(child, replacements);
+					element.removeChild(child);
+					parentNode.insertBefore(child, element);
+				}
+			}
+		}
+		parentNode.removeChild(element);
+	}
+
+	/**
+	 * 
+	 * @param element
+	 * @param userAgent
+	 */
+	private List<Element> getCrossBrowserReplacements(Element element, String userAgent)
+    {
+	    List<Element> result = new ArrayList<Element>();
+		NodeList nodes = element.getChildNodes(); //Do not use getElementsByTagName to avoid problems with nested crossBrowser tags
+		for (int i=0; i< nodes.getLength(); i++)
+		{
+			Node node = nodes.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element child = (Element)node;
+				if (child.getLocalName().equals("conditions") && child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+				{
+					NodeList conditions = child.getChildNodes();
+					for (int j=0; j< conditions.getLength(); j++)
+					{
+						node = conditions.item(j);
+						if (node.getNodeType() == Node.ELEMENT_NODE)
+						{
+							Element condition = (Element)node;
+							if (condition.getLocalName().equals("condition") && condition.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+							{
+								String userAgentValue = condition.getAttribute("when");
+								if (StringUtils.containsValue(userAgentValue, userAgent))
+								{
+									NodeList replacements = condition.getChildNodes();
+									for (int k=0; k< replacements.getLength(); k++)
+									{
+										node = replacements.item(k);
+										if (node.getNodeType() == Node.ELEMENT_NODE)
+										{
+											Element replacement = (Element)node;
+											result.add(replacement);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
+    }
+	
+	/**
+	 * 
+	 * @param name
+	 * @param replacements
+	 * @return
+	 */
+	private Element getCrossBrowserWidget(String name, List<Element> replacements)
+    {
+	    for (Element replacement : replacements)
+        {
+	        if (replacement.getLocalName().equals("widget"))
+	        {
+	        	String nameAttribute = replacement.getAttribute("name");
+	        	if (!StringUtils.isEmpty(nameAttribute) && nameAttribute.equals(name))
+	        	{
+	        		NodeList nodes = replacement.getChildNodes();
+	        		for (int i=0; i<nodes.getLength(); i++)
+	        		{
+	        			Node node = nodes.item(i);
+	        			if (node.getNodeType() == Node.ELEMENT_NODE)
+	        			{
+	        				Element element = (Element) node;
+	        				updateCrossBrowserAttributes(element, replacements);
+	        				replacement.removeChild(element);
+							return element;
+	        			}
+	        		}
+	        	}
+	        }
+        }
+		
+		throw new TemplateException(messages.templatesPreProcessorCrossBrowserWidgetNotFound(name));
+    }
+
+	/**
+	 * 
+	 * @param child
+	 * @param replacements
+	 */
+	private void updateCrossBrowserAttributes(Element child, List<Element> replacements)
+    {
+		try
+		{
+			NodeList nodes = (NodeList)templateAttributesExpression.evaluate(child, XPathConstants.NODESET);
+			for (int i = 0; i < nodes.getLength(); i++)
+			{
+				Node attribute = nodes.item(i);
+				String attrValue = attribute.getNodeValue();
+				if (attrValue.contains("X{"))
+				{
+					applyCrossBrowserReplacement(attribute, replacements);
+				}
+			}
+		}
+		catch (XPathExpressionException e)
+		{
+			log.error(messages.templatesPreProcessorError());
+			throw new TemplateException(e.getLocalizedMessage(), e);
+		}
+    }
+	
+	/**
+	 * 
+	 * @param attribute
+	 * @param replacements
+	 */
+	private void applyCrossBrowserReplacement(Node attribute, List<Element> replacements)
+    {
+		String attrValue = attribute.getNodeValue();
+		Map<String, String> replace = new HashMap<String, String>();
+		int indexStarParam = attrValue.indexOf("X{");
+		while (indexStarParam >= 0)
+		{
+			attrValue = attrValue.substring(indexStarParam+2);
+			int indexEndParam = attrValue.indexOf("}");
+			if (indexEndParam >= 0)
+			{
+				String param = attrValue.substring(0, indexEndParam);
+				String paramValue = getCrossBrowserReplacement(param, replacements);
+				replace.put(param, paramValue);
+				attrValue = attrValue.substring(indexEndParam+1);
+				indexStarParam = attrValue.indexOf("X{");
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		Set<String> parameters = replace.keySet();
+		if (parameters.size() > 0)
+		{
+			attrValue = attribute.getNodeValue();
+			for (String key : parameters)
+			{
+				attrValue = attrValue.replace("X{"+key+"}", replace.get(key));
+			}
+			
+			attribute.setNodeValue(attrValue);
+		}
+    }
+
+	/**
+	 * 
+	 * @param name
+	 * @param replacements
+	 */
+	private String getCrossBrowserReplacement(String name, List<Element> replacements)
+    {
+	    for (Element replacement : replacements)
+        {
+	        if (replacement.getLocalName().equals("parameter"))
+	        {
+	        	String nameAttribute = replacement.getAttribute("name");
+	        	if (!StringUtils.isEmpty(nameAttribute) && nameAttribute.equals(name))
+	        	{
+	        		return replacement.getAttribute("value");
+	        	}
+	        }
+        }
+	    return null;
+    }
 
 	/**
 	 * 
@@ -381,7 +639,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param element
 	 * @param template
 	 */
-	private void updateTemplateChildren(Element element, Document template, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+	private void updateTemplateChildren(Element element, String userAgent, Document template, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
 	{
 		Map<String, Node> sections = templateParser.getSectionElements(template);
 		List<Node> children = getChildren(element);
@@ -393,7 +651,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 				String sectionName = section.getLocalName();
 				Node templateNode = sections.get(sectionName);
 				
-				preprocess((Element)section, controllers, dataSources, formatters, serializables, true);
+				preprocess((Element)section, userAgent, controllers, dataSources, formatters, serializables, true);
 				
 				section = template.importNode(section, true);
 				replaceByChildren(templateNode, section);
