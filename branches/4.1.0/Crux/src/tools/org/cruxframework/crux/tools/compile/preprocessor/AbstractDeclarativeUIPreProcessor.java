@@ -99,7 +99,7 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 		CruxToHtmlTransformer.setOutputCharset(outputCharset);
 		FileOutputStream out = new FileOutputStream(preprocessedFile);
 		URLStreamManager manager = new URLStreamManager(url);
-		CruxToHtmlTransformer.generateHTML(url.toString(), manager.open(), out, false, false);
+		CruxToHtmlTransformer.generateHTML(url.toString(), null, manager.open(), out, false, false);
 		manager.close();
 		out.flush();
 		out.close();

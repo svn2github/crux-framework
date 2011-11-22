@@ -598,8 +598,10 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        
 	        generateCoreSchemasImport(libraries, templateLibraries, out);
 	        generateCoreSplashScreenElement(out);
-	        generateCoreScreenElement(out);	
+	        generateCoreScreenElement(out);
+	        generateCoreCrossDeviceElement(out);
 	        generateCoreWidgetsType(out, libraries, templateLibraries);	
+	        generateCoreCrossDevWidgetsType(out, libraries, templateLibraries);
 	        
 	        out.println("</xs:schema>");
 	        out.close();
@@ -676,12 +678,82 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	/**
 	 * 
 	 * @param out
+	 */
+	private void generateCoreCrossDeviceElement(PrintStream out)
+	{
+		out.println("<xs:element name=\"crossDevice\" type=\"CrossDevice\"/>");
+		out.println("<xs:complexType name=\"CrossDevice\">");
+		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
+		out.println("<xs:group ref=\"widgetsCrossDev\" />");
+		out.println("<xs:element name=\"widget\" type=\"CrossDeviceWidget\" />");
+		out.println("<xs:element name=\"conditions\" type=\"CrossDeviceConditions\" />");
+		out.println("</xs:choice>");
+		out.println("</xs:complexType>");
+
+		out.println("<xs:complexType name=\"CrossDeviceWidget\">");
+		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
+		out.println("</xs:complexType>");
+
+		out.println("<xs:complexType name=\"CrossDeviceConditions\">");
+		out.println("<xs:sequence minOccurs=\"1\" maxOccurs=\"unbounded\">");
+		out.println("<xs:element name=\"condition\" type=\"CrossDeviceCondition\" />");
+		out.println("</xs:sequence>");
+		out.println("</xs:complexType>");
+
+		out.println("<xs:complexType name=\"CrossDeviceCondition\">");
+		out.println("<xs:choice minOccurs=\"1\" maxOccurs=\"unbounded\">");
+		out.println("<xs:element name=\"widget\" type=\"CrossDeviceWidgetCondition\" />");
+		out.println("<xs:element name=\"parameter\" type=\"CrossDeviceParameterCondition\" />");
+		out.println("</xs:choice>");
+		out.println("<xs:attribute name=\"when\" type=\"xs:string\" use=\"required\"/>");
+		out.println("</xs:complexType>");
+
+		out.println("<xs:complexType name=\"CrossDeviceWidgetCondition\">");
+		out.println("<xs:sequence>");
+		out.println("<xs:group ref=\"widgetsCrossDev\" />");
+		out.println("</xs:sequence>");
+		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
+		out.println("</xs:complexType>");
+
+		out.println("<xs:complexType name=\"CrossDeviceParameterCondition\">");
+		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
+		out.println("<xs:attribute name=\"value\" type=\"xs:string\" use=\"required\"/>");
+		out.println("</xs:complexType>");
+	}
+	
+	/**
+	 * 
+	 * @param out
 	 * @param libraries
 	 * @param templateLibraries 
 	 */
 	private void generateCoreWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries)
 	{
-		out.println("<xs:group name=\"widgets\">");
+		generateCoreWidgetsType(out, libraries, templateLibraries, "widgets", true);
+	}
+
+	/**
+	 * 
+	 * @param out
+	 * @param libraries
+	 * @param templateLibraries 
+	 */
+	private void generateCoreCrossDevWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries)
+	{
+		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsCrossDev", false);
+	}
+
+	/**
+	 * 
+	 * @param out
+	 * @param libraries
+	 * @param templateLibraries
+	 * @param groupName
+	 * @param supportCrossDevice
+	 */
+	private void generateCoreWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries, String groupName, boolean supportCrossDevice)
+    {
+	    out.println("<xs:group name=\""+groupName+"\">");
 		out.println("<xs:choice>");
 		
 		for (String lib : libraries)
@@ -708,9 +780,13 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			}
 		}
 
+		if (supportCrossDevice)
+		{
+			out.println("<xs:element ref=\"crossDevice\" />");
+		}
 		out.println("</xs:choice>");
 		out.println("</xs:group>");
-	}
+    }
 
 	/**
 	 * 

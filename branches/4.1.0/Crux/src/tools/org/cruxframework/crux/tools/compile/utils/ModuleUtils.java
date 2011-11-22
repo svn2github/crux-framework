@@ -94,7 +94,7 @@ public class ModuleUtils
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		URLStreamManager manager = new URLStreamManager(pageFile);
-		CruxToHtmlTransformer.generateHTML(pageFile.toString(), manager.open(), out, true, false);
+		CruxToHtmlTransformer.generateHTML(pageFile.toString(), null, manager.open(), out, true, false);
 		manager.close();
 		ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
 		Document source = null;
