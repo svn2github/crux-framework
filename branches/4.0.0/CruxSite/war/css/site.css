@@ -220,6 +220,10 @@ p{
 	border-right:1px solid #001B20;
 	padding-right:10px;
 }
+.CruxLabelFooter3 a{
+	color:#fff;
+	text-decoration:none;
+}
 
 .CruxLabelFooter2
 {
@@ -496,4 +500,48 @@ p{
 .divDownTxt p{
 	color:#fff;
 	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+}
+.BgBlack{
+	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	padding:10px;
+ 	color:#fff;
+ 	text-shadow:0 1px 1px rgba(0,0,0,0.5);
+ 	margin-bottom:7px;
+}
+.BgBlack span{
+	font-size:13px;
+}
+.BgBlack img{
+	margin-right:10px;
+}
+.BgBlack h1{
+	margin-top:-4px;
+}
+.MarginRight{
+	margin-right:6px;
+}
+.SilverButton{
+	background:#eee;
+	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
+	padding:7px 10px;
+	font-size:17px;
+	color:green;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.4), 0 0 0 3px rgba(0,0,0,0.1);
+	border-radius:5px;
+	text-align:center;
+}
+.SilverButton2{
+	background:#eee;
+	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
+	padding:7px 10px;
+	font-size:14px;
+	color:#333;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.4), 0 0 0 3px rgba(0,0,0,0.1);
+	border-radius:5px;
+	text-align:center;
+	text-shadow:0 1px 0 #fff;
+	margin:0 5px;
 }
