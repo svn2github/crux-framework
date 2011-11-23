@@ -106,7 +106,7 @@ public class Screen
 			}
 			if (WidgetConfig.isDeviceAdaptiveWidget(widget.getType()))
 			{
-				setDeviceAdaptive(true);
+				setDeviceAdaptive(true); //TODO: rever necessidade disso...
 			}
 		}
 	}

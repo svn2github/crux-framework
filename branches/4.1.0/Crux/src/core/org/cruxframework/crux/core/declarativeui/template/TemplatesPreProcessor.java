@@ -315,7 +315,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		{
 			replacements = getCrossBrowserReplacements(element, "default");
 		}
-		NodeList nodes = element.getChildNodes(); //Do not use getElementsByTagName to avoid problems with nested crossBrowser tags
+		NodeList nodes = element.getChildNodes(); 
 		Node parentNode = element.getParentNode();
 		
 		for (int i=0; i< nodes.getLength(); i++)
@@ -325,14 +325,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			{
 				Element child = (Element)node;
 				
-				if (child.getLocalName().equals("widget") && child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
-				{
-					String name = child.getAttribute("name");
-					Element widget = getCrossBrowserWidget(name, replacements);
-					//element.removeChild(child);
-					parentNode.insertBefore(widget, element);
-				}
-				else if (!child.getLocalName().equals("conditions") || !child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+				if (!child.getLocalName().equals("conditions") || !child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
  				{
 					updateCrossBrowserAttributes(child, replacements);
 					element.removeChild(child);
@@ -345,46 +338,28 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 
 	/**
 	 * 
-	 * @param element
+	 * @param crossBrowserElement
 	 * @param userAgent
 	 */
-	private List<Element> getCrossBrowserReplacements(Element element, String userAgent)
+	private List<Element> getCrossBrowserReplacements(Element crossBrowserElement, String userAgent)
     {
 	    List<Element> result = new ArrayList<Element>();
-		NodeList nodes = element.getChildNodes(); //Do not use getElementsByTagName to avoid problems with nested crossBrowser tags
+		NodeList nodes = crossBrowserElement.getElementsByTagNameNS("http://www.cruxframework.org/crux", "conditions");
 		for (int i=0; i< nodes.getLength(); i++)
 		{
-			Node node = nodes.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
+			Element child = (Element)nodes.item(i);
+			NodeList conditions = child.getElementsByTagNameNS("http://www.cruxframework.org/crux", "condition");
+			for (int j=0; j< conditions.getLength(); j++)
 			{
-				Element child = (Element)node;
-				if (child.getLocalName().equals("conditions") && child.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
+				Element condition = (Element)conditions.item(j);
+				String userAgentValue = condition.getAttribute("when");
+				if (StringUtils.containsValue(userAgentValue, userAgent))
 				{
-					NodeList conditions = child.getChildNodes();
-					for (int j=0; j< conditions.getLength(); j++)
+					NodeList replacements = condition.getElementsByTagNameNS("http://www.cruxframework.org/crux", "parameter");
+					for (int k=0; k< replacements.getLength(); k++)
 					{
-						node = conditions.item(j);
-						if (node.getNodeType() == Node.ELEMENT_NODE)
-						{
-							Element condition = (Element)node;
-							if (condition.getLocalName().equals("condition") && condition.getNamespaceURI().equals("http://www.cruxframework.org/crux"))
-							{
-								String userAgentValue = condition.getAttribute("when");
-								if (StringUtils.containsValue(userAgentValue, userAgent))
-								{
-									NodeList replacements = condition.getChildNodes();
-									for (int k=0; k< replacements.getLength(); k++)
-									{
-										node = replacements.item(k);
-										if (node.getNodeType() == Node.ELEMENT_NODE)
-										{
-											Element replacement = (Element)node;
-											result.add(replacement);
-										}
-									}
-								}
-							}
-						}
+						Element replacement = (Element)replacements.item(k);
+						result.add(replacement);
 					}
 				}
 			}
@@ -392,40 +367,6 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		return result;
     }
 	
-	/**
-	 * 
-	 * @param name
-	 * @param replacements
-	 * @return
-	 */
-	private Element getCrossBrowserWidget(String name, List<Element> replacements)
-    {
-	    for (Element replacement : replacements)
-        {
-	        if (replacement.getLocalName().equals("widget"))
-	        {
-	        	String nameAttribute = replacement.getAttribute("name");
-	        	if (!StringUtils.isEmpty(nameAttribute) && nameAttribute.equals(name))
-	        	{
-	        		NodeList nodes = replacement.getChildNodes();
-	        		for (int i=0; i<nodes.getLength(); i++)
-	        		{
-	        			Node node = nodes.item(i);
-	        			if (node.getNodeType() == Node.ELEMENT_NODE)
-	        			{
-	        				Element element = (Element) node;
-	        				updateCrossBrowserAttributes(element, replacements);
-	        				replacement.removeChild(element);
-							return element;
-	        			}
-	        		}
-	        	}
-	        }
-        }
-		
-		throw new TemplateException(messages.templatesPreProcessorCrossBrowserWidgetNotFound(name));
-    }
-
 	/**
 	 * 
 	 * @param child
@@ -512,7 +453,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	        	}
 	        }
         }
-	    return null;
+		throw new TemplateException(messages.templatesPreProcessorCrossBrowserParameterNotFound(name));
     }
 
 	/**

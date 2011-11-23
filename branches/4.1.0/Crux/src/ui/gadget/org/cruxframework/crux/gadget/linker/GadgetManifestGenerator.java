@@ -353,9 +353,9 @@ public class GadgetManifestGenerator
 			Set<String> screenIDs = screenResourceResolver.getAllScreenIDs(moduleName);
 	        for (String screenId : screenIDs)
             {
-				InputStream stream = screenResourceResolver.getScreenResource(screenId, true, false);
+				InputStream stream = screenResourceResolver.getScreenResource(screenId, null, true, false);
 				Document screenElement = XMLUtils.createNSUnawareDocument(stream);
-				Screen screen = ScreenFactory.getInstance().getScreen(screenId);
+				Screen screen = ScreenFactory.getInstance().getScreen(screenId, null);
 				
 				List<Widget> gadgetViewWidgets = getGadgetViewWidget(screen);
 				for (Widget gadgetViewWidget : gadgetViewWidgets)

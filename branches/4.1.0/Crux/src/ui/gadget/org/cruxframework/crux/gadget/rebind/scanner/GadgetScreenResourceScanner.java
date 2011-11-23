@@ -40,7 +40,7 @@ public class GadgetScreenResourceScanner extends DeclarativeUIScreenResourceScan
 		{
 			try
 			{
-				Screen screen = ScreenFactory.getInstance().getScreen(urlString);
+				Screen screen = ScreenFactory.getInstance().getScreen(urlString, null);
 				isValidGadget = hasGadgetViewWidget(screen);
 			}
 			catch (ScreenConfigException e)

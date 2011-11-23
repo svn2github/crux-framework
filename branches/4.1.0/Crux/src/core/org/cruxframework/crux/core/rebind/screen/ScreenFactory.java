@@ -123,7 +123,7 @@ public class ScreenFactory
 					screen = parseScreen(id, stream);
 					if(screen != null)
 					{
-						screenCache.put(screen.isDeviceAdaptive()?cacheId:id, screen);
+						screenCache.put(cacheId, screen);
 						saveScreenLastModified(id, lastModified);
 					}
 				}
@@ -148,18 +148,13 @@ public class ScreenFactory
 	 * @param lastModified
 	 * @return
 	 */
-	private Screen getFromCache(String id, String cacheId, long lastModified)
+	private Screen getFromCache(String id,String cacheId, long lastModified)
 	{
-		Screen screen = screenCache.get(id);
-		if (screen == null)
-		{
-			screen = screenCache.get(cacheId);
-		}
+		Screen screen = screenCache.get(cacheId);
 		if (screen != null)
 		{
 			if (mustReprocessScreen(id, lastModified))
 			{
-				screenCache.remove(id);
 				screenCache.remove(cacheId);
 				screen = null;
 			}

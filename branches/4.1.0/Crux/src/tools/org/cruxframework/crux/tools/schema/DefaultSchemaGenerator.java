@@ -685,13 +685,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:complexType name=\"CrossDevice\">");
 		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
 		out.println("<xs:group ref=\"widgetsCrossDev\" />");
-		out.println("<xs:element name=\"widget\" type=\"CrossDeviceWidget\" />");
 		out.println("<xs:element name=\"conditions\" type=\"CrossDeviceConditions\" />");
 		out.println("</xs:choice>");
-		out.println("</xs:complexType>");
-
-		out.println("<xs:complexType name=\"CrossDeviceWidget\">");
-		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
 		out.println("</xs:complexType>");
 
 		out.println("<xs:complexType name=\"CrossDeviceConditions\">");
@@ -702,17 +697,9 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 
 		out.println("<xs:complexType name=\"CrossDeviceCondition\">");
 		out.println("<xs:choice minOccurs=\"1\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"widget\" type=\"CrossDeviceWidgetCondition\" />");
 		out.println("<xs:element name=\"parameter\" type=\"CrossDeviceParameterCondition\" />");
 		out.println("</xs:choice>");
 		out.println("<xs:attribute name=\"when\" type=\"xs:string\" use=\"required\"/>");
-		out.println("</xs:complexType>");
-
-		out.println("<xs:complexType name=\"CrossDeviceWidgetCondition\">");
-		out.println("<xs:sequence>");
-		out.println("<xs:group ref=\"widgetsCrossDev\" />");
-		out.println("</xs:sequence>");
-		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
 		out.println("</xs:complexType>");
 
 		out.println("<xs:complexType name=\"CrossDeviceParameterCondition\">");

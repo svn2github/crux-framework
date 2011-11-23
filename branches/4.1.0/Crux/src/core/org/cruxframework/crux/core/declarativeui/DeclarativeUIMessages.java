@@ -122,6 +122,6 @@ public interface DeclarativeUIMessages
 	@DefaultServerMessage("[declarativeui 034] - The screen {0} contains elements that is not bound to any namespace. It can cause errors while translating to an HTML page.")
 	String htmlBuilderElementWithoutNamespace(String screenId);
 
-	@DefaultServerMessage("[declarativeui 035] - CrossBrowser widget {0} not found.")
-	String templatesPreProcessorCrossBrowserWidgetNotFound(String name);
+	@DefaultServerMessage("[declarativeui 035] - CrossDevice paramter {0} not found.")
+	String templatesPreProcessorCrossBrowserParameterNotFound(String name);
 }
