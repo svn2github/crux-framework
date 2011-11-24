@@ -18,11 +18,37 @@ package org.cruxframework.crux.core.client.screen;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Widgets that implements this interface are rendered differently according to the client device type. 
+ * Classes that implement this interface are rendered differently according to the client device type. 
  * @author Thiago da Rosa de Bustamante
  *
  */
 public interface DeviceAdaptive extends IsWidget
 {
-
+	/**
+	 * All devices supported by Crux CrossDevice engine
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static enum Device{pc, androids, androidTV, androidMobile, androidTablet, ios, iosTablet, mobiles, tablets, all}
+	
+	/**
+	 * Used to map the all templates used by the target deviceAdaptive Widget
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static @interface Templates
+	{
+		Template[] value();
+	}
+	
+	/**
+	 * Used to map the template used by a specific device
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static @interface Template
+	{
+		String name();
+		Device device();
+	}
 }

@@ -95,6 +95,7 @@ public class ViewFactoryCreator
 	private final Screen screen;
 	private String screenVariable;
 	private String loggerVariable;
+	private String userAgent;
 	
 	/**
 	 * Constructor
@@ -103,11 +104,12 @@ public class ViewFactoryCreator
 	 * @param logger
 	 * @param screen
 	 */
-	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen)
+	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String userAgent)
     {
 		this.logger = logger;
 		this.context = context;
 		this.screen = screen;
+		this.userAgent = userAgent;
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 		this.loggerVariable = createVariableName("logger");
@@ -474,10 +476,10 @@ public class ViewFactoryCreator
      * @param superClass
      * @param interfaces
      * @param imports
-     * @param makeInterface
+     * @param isInterface
      * @return
      */
-    SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
+    SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
     {
 		String packageName = ViewFactory.class.getPackage().getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, subType);
@@ -488,7 +490,7 @@ public class ViewFactoryCreator
 		}
 
 		ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, subType);
-		if (makeInterface)
+		if (isInterface)
 		{
 			composerFactory.makeInterface();
 		}
@@ -536,14 +538,16 @@ public class ViewFactoryCreator
 	/**
 	 * @param context
 	 * @param logger
+	 * @param userAgent 
 	 */
-	void prepare(GeneratorContextExt context, TreeLogger logger)
+	void prepare(GeneratorContextExt context, TreeLogger logger, String userAgent)
 	{
 		this.context = context;
 		this.logger = logger;
 		this.lazyPanels.clear();
 		this.declaredMessages.clear();
 		this.postProcessingCode.clear();
+		this.userAgent = userAgent;
 	}
 	
 	/**
@@ -552,6 +556,15 @@ public class ViewFactoryCreator
 	Screen getScreen()
 	{
 		return this.screen;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	String getUserAgent()
+	{
+		return this.userAgent;
 	}
 	
 	/**
@@ -924,7 +937,7 @@ public class ViewFactoryCreator
 	 */
 	String getSimpleName()
     {
-		String className = screen.getModule()+"_"+screen.getRelativeId(); 
+		String className = screen.getModule()+"_"+screen.getRelativeId()+"_"+this.userAgent; 
 		className = className.replaceAll("[\\W]", "_");
 		return className;
     }

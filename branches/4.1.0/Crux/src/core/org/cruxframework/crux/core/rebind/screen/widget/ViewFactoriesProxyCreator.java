@@ -210,7 +210,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		}
 		finally
 		{
-			factoryCreator.prepare(null, null);
+			factoryCreator.prepare(null, null, null);
 		}
     }
 
@@ -222,19 +222,19 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	{
 		if (Environment.isProduction())
 		{
-			return new ViewFactoryCreator(context, logger, screen);
+			return new ViewFactoryCreator(context, logger, screen, getUserAgent());
 		}
 		else
 		{
 			ViewFactoryCreator factory = screen.getFactory();
 			if (factory == null)
 			{
-				factory = new ViewFactoryCreator(context, logger, screen);
+				factory = new ViewFactoryCreator(context, logger, screen, getUserAgent());
 				screen.setFactory(factory);
 			}
 			else
 			{
-				factory.prepare(context, logger);
+				factory.prepare(context, logger, getUserAgent());
 			}
 			return factory;
 		}

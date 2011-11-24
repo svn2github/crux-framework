@@ -384,7 +384,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param imports
 	 * @return
 	 */
-	public  SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
+	public SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
 	{
 		return factory.getSubTypeWriter(subType, superClass, interfaces, imports);
 	}
@@ -397,12 +397,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
      * @param superClass
      * @param interfaces
      * @param imports
-     * @param makeInterface
+     * @param isInterface
      * @return 
      */
-    public SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
+    public SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
     {
-    	return factory.getSubTypeWriter(subType, superClass, interfaces, imports, makeInterface);
+    	return factory.getSubTypeWriter(subType, superClass, interfaces, imports, isInterface);
     }
 	
 	
