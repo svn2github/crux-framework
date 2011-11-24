@@ -109,6 +109,13 @@
 							</gwt:widget>
 						</gwt:cell>
 					</gwt:row>
+					<gwt:row>
+						<gwt:cell>
+							<gwt:html>
+								<div class="Risk"></div>
+							</gwt:html>
+						</gwt:cell>
+					</gwt:row>
 				</gwt:flexTable>
 			</tmp:contentSection>
 </tmp:mainPage>

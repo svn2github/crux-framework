@@ -545,3 +545,63 @@ p{
 	text-shadow:0 1px 0 #fff;
 	margin:0 5px;
 }
+.TableCompareHeader{
+	box-shadow:0 0 0 3px rgba(0,0,0,0.1);
+	border-radius:5px;
+	margin-right:10px;
+}
+.TableCompareHeader tr{
+	background:#fff;
+}
+.TableCompareHeader tr.Header{
+	height:30px;
+}
+.TableCompareHeader tr.Header td{
+	background:-webkit-linear-gradient(#fdfdfd 0%, #e6e6e6 100%);
+	border-bottom:1px solid #bcbcbc;
+	color:#444;
+	text-shadow:0 1px 1px rgba(0,0,0,0.1);
+}
+.TableCompareHeader tr.Header td.first{
+	border-radius:5px 0 0 0;
+	background:-webkit-linear-gradient(#dde4e8 0%, #c7ced2 100%);
+	border-bottom:1px solid #647881;
+}
+.TableCompareHeader tr.Header td.last{
+	border-radius:0 5px 0 0;
+}
+.TableCompareHeader tr td{
+	padding:10px 20px;
+	border-right:1px solid #dcdcdc;
+	text-align:center;
+}
+.CellFirst{
+	background:#738c99;
+	border-right:1px solid #fff;
+	font-size:13px;
+	color:#fff;
+	text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+.baloon{
+	width:295px;
+	height:50px;
+	background:url(../img/baloon.png) no-repeat;
+	font-size:12px;
+	padding:10px 10px 5px 13px;
+}
+.features{
+	text-align:left;
+}
+.features h2{
+	margin:0;
+	font-size:15px;
+	font-weight:normal;
+	color:#222;
+	text-shadow:0 1px 0 rgba(255,255,255,0.5);
+}
+.features p{
+	margin:0;
+	color:#fff;
+	text-shadow:0 1px 0 rgba(0,0,0,0.4);
+	font-size:13px;
+}
