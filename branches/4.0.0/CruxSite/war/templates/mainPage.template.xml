@@ -104,7 +104,7 @@
 									<gwt:row>
 										<gwt:cell styleName="CruxLabelFooter3">
 											<gwt:widget>
-												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks">
+												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks" width="250">
 													<gwt:anchor id="about" href="#" text="About" />
 													<gwt:label id="separator1" styleName="LinkSeparator"/>
 													<gwt:anchor id="services" href="#" text="Services" />
@@ -117,7 +117,7 @@
 										</gwt:cell>
 										<gwt:cell styleName="CruxLabelFooter4">
 											<gwt:widget>
-												<gwt:horizontalPanel id="rowImgsFooter">
+												<gwt:horizontalPanel id="rowImgsFooter" width="156" style="width:156px;">
 													<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
 													<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
 													<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
