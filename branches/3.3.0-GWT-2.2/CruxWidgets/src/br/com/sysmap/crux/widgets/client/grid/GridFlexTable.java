@@ -20,6 +20,8 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 public class GridFlexTable extends FlexTable implements GridBaseTable
 {	
@@ -80,5 +82,28 @@ public class GridFlexTable extends FlexTable implements GridBaseTable
 		{
 			prepareCell(i, lastCell);
 		}
+	}
+
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellAlignment(int, int, com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant, com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+	 */
+	public void setCellAlignment(int index, int colIndex,
+			HorizontalAlignmentConstant horizontalAlign,
+			VerticalAlignmentConstant verticalAlign) 
+	{
+		getCellFormatter().setAlignment(index, colIndex, horizontalAlign, verticalAlign);
+	}
+
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellWidth(int, int, java.lang.String)
+	 */
+	public void setCellWidth(int index, int colIndex, String width) 
+	{
+		getCellFormatter().setWidth(index, colIndex, width);
+	}
+	
+	public void onAfterRender() 
+	{
+		// nothing do to
 	}
 }

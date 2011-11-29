@@ -100,7 +100,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 */
 	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType)
 	{
-		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling, fixedCellSize, defaultSortingColumn, defaultSortingType, null, false);
+		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling, fixedCellSize, defaultSortingColumn, defaultSortingType, null, false, false);
 	}
 	
 	/**
@@ -119,9 +119,9 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * @param rowDetailsDefinition the template HTML element used to create on-demand row details
 	 * @param showRowDetailsIcon if <code>true</code>, the second column of the grid will contain icons for expanding or collapsing the row's details 
 	 */
-	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon)
+	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon, boolean freezeHeaders)
 	{
-		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, rowDetailsDefinition, showRowDetailsIcon);
+		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, rowDetailsDefinition, showRowDetailsIcon, freezeHeaders);
 		getColumnDefinitions().setGrid(this);
 		this.emptyDataFilling = emptyDataFilling != null ? emptyDataFilling : " ";
 		this.pageSize = pageSize;
@@ -279,11 +279,12 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	/**
 	 * @see br.com.sysmap.crux.widgets.client.grid.AbstractGrid#onShowDetails(boolean, br.com.sysmap.crux.widgets.client.grid.Row, boolean)
 	 */
-	protected void onShowDetails(boolean show, Row row, boolean fireEvents)
+	protected boolean onShowDetails(boolean show, Row row, boolean fireEvents)
 	{
+		boolean proceed = true;
+
 		if (hasRowDetails()) 
 		{
-			boolean proceed = true;
 			DataRow dataRow = (DataRow) row;
 
 			if(show)
@@ -331,6 +332,8 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 				}
 			}
 		}
+		
+		return proceed;
 	}
 
 	/**

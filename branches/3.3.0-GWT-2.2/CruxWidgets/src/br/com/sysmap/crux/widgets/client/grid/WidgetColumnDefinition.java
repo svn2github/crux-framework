@@ -32,6 +32,12 @@ public class WidgetColumnDefinition extends ColumnDefinition
 		super(label, width, visible, horizontalAlign, verticalAlign);
 		this.widgetTemplate = widgetTemplate;
 	}
+	
+	public WidgetColumnDefinition(String label, String width, Element widgetTemplate, boolean visible, boolean frozen, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	{
+		super(label, width, visible, frozen, horizontalAlign, verticalAlign);
+		this.widgetTemplate = widgetTemplate;
+	}
 
 	public Element getWidgetTemplate()
 	{

@@ -16,6 +16,8 @@
 package br.com.sysmap.crux.widgets.client.grid;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements GridBaseTable
 {	
@@ -43,7 +45,31 @@ public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements
     	return super.getBodyElement();
     }
 
-	public void removeAllRows() {
+	public void removeAllRows() 
+	{
 		resizeRows(0);
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellAlignment(int, int, com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant, com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+	 */
+	public void setCellAlignment(int index, int colIndex,
+			HorizontalAlignmentConstant horizontalAlign,
+			VerticalAlignmentConstant verticalAlign) 
+	{
+		getCellFormatter().setAlignment(index, colIndex, horizontalAlign, verticalAlign);
+	}
+
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellWidth(int, int, java.lang.String)
+	 */
+	public void setCellWidth(int index, int colIndex, String width) 
+	{
+		getCellFormatter().setWidth(index, colIndex, width);
+	}
+
+	public void onAfterRender() 
+	{
+		// nothing do to
 	}
 }

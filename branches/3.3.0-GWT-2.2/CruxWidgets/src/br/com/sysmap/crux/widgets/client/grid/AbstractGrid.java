@@ -45,6 +45,8 @@ import br.com.sysmap.crux.widgets.client.event.row.ShowRowDetailsHandler;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -78,6 +80,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	private boolean highlightRowOnMouseOver;
 	private RowDetailsDefinition rowDetailsDefinition;
 	private boolean showRowDetailsIcon;
+	private boolean freezeHeaders;
+	private Boolean hasFrozenColumns;
 	
 	@SuppressWarnings("unchecked")
 	static class RowSelectionHandler<R extends Row> implements ClickHandler
@@ -106,25 +110,40 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	
 	/**
 	 * Handles the event fired when the details of some row gets shown.
-	 * @author Gesse Dafe
 	 */
 	static class RowDetailsCommandHandler<R extends Row> implements ClickHandler
 	{
 		private AbstractGrid<R> grid;
 		private R row;
+		private Button showDetailsButton;
 		
-		public RowDetailsCommandHandler(AbstractGrid<R> grid, R row)
+		public RowDetailsCommandHandler(AbstractGrid<R> grid, R row, Button showDetailsButton)
 		{
 			this.grid = grid;
 			this.row = row;
+			this.showDetailsButton = showDetailsButton;
 		}
 		
 		public void onClick(ClickEvent event)
 		{
-			boolean show = !row.isDetailsShown();
-			grid.onShowDetails(show, row, true);
 			event.stopPropagation();
+			boolean show = !row.isDetailsShown();
+			grid.showRowDetails(show, row, showDetailsButton);
 		}	
+	}
+	
+	/**
+	 * Shows or hides the row details
+	 * @param show
+	 * @param row
+	 * @param showDetailsButton
+	 */
+	private void showRowDetails(boolean show, Row row, Button showDetailsButton) 
+	{
+		if(onShowDetails(show, row, true))
+		{
+			showDetailsButton.setText(show ? "-" : "+");
+		}
 	}
 	
 	/**
@@ -133,8 +152,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 * @param row
 	 * @param fireEvents
 	 */
-	protected abstract void onShowDetails(boolean show, Row row, boolean fireEvents);
-	
+	protected abstract boolean onShowDetails(boolean show, Row row, boolean fireEvents);
+
 	/**
 	 * @return The row's details definitions
 	 */
@@ -144,7 +163,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	}
 	
 	/**
-	 * Full constructor
+	 * Simple constructor
 	 * @param columnDefinitions the columns to be rendered
 	 * @param rowSelection the behavior of the grid about line selection 
 	 * @param cellSpacing the space between the cells
@@ -153,7 +172,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	public AbstractGrid(ColumnDefinitions columnDefinitions, RowSelectionModel rowSelection, int cellSpacing, boolean stretchColumns, boolean highlightRowOnMouseOver, boolean fixedCellSize)
 	{
-		this(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, null, false);
+		this(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, null, false, false);
 	}
 	
 	/**
@@ -166,20 +185,40 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 * @param rowDetailsDefinition
 	 * @param showRowDetailsIcon
 	 */
-	public AbstractGrid(ColumnDefinitions columnDefinitions, RowSelectionModel rowSelection, int cellSpacing, boolean stretchColumns, boolean highlightRowOnMouseOver, boolean fixedCellSize, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon)
+	public AbstractGrid(ColumnDefinitions columnDefinitions, RowSelectionModel rowSelection, int cellSpacing, boolean stretchColumns, boolean highlightRowOnMouseOver, boolean fixedCellSize, RowDetailsDefinition rowDetailsDefinition, boolean showRowDetailsIcon, boolean freezeHeaders)
 	{
 		this.definitions = columnDefinitions;
 		this.rowSelection = rowSelection;
 		this.stretchColumns = stretchColumns;
 		this.highlightRowOnMouseOver = highlightRowOnMouseOver;
 		this.rowDetailsDefinition = rowDetailsDefinition;
+		this.freezeHeaders = freezeHeaders;
 		this.showRowDetailsIcon = this.rowDetailsDefinition != null && showRowDetailsIcon;
 		
 		scrollingArea = new ScrollPanel();
 		scrollingArea.setStyleName(DEFAULT_STYLE_NAME);
 		initWidget(scrollingArea);
 		
-		table = this.hasRowDetails() ? new GridFlexTable() : new GridHtmlTable();
+		if(hasFrozenCells())
+		{
+			if(hasRowDetails())
+			{
+				table = new FlexTablelessGridStructure(this);
+			}
+			else
+			{
+				table = new TablelessGridStructure(this);
+			}
+		}
+		else if(hasRowDetails())
+		{
+			table = new GridFlexTable();
+		}
+		else
+		{
+			table = new GridHtmlTable();
+		}
+			
 		table.setCellSpacing(cellSpacing);
 		table.setCellPadding(0);
 		StyleUtils.addStyleProperty(table.getBodyElement(), "width", "100%");
@@ -197,7 +236,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 		
 		scrollingArea.add(table.asWidget());
 	}
-	
+
 	/**
 	 * @see br.com.sysmap.crux.widgets.client.event.row.HasRowClickHandlers#addRowClickHandler(br.com.sysmap.crux.widgets.client.event.row.RowClickHandler)
 	 */
@@ -472,9 +511,11 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 		
 		clearRendering();
 			
+		boolean hasRowDetails = hasRowDetails();
+
 		for (int i = 0; i < rowCount; i++)
 		{
-			if(!hasRowDetails() || i == 0 || i % 2 == 1)
+			if(!hasRowDetails || i == 0 || i % 2 == 1)
 			{
 				R row = createRow(i, table.getRowElement(i));
 				row.setStyle("row");
@@ -482,13 +523,16 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 			}
 			else
 			{
-				((GridFlexTable) table).joinCells(i);
-				table.getRowElement(i).getStyle().setDisplay(Display.NONE);
+				((GridBaseFlexTable) table).joinCells(i);
+				table.getRowElement(i).getStyle().setOverflow(Overflow.HIDDEN);
+				table.getRowElement(i).getStyle().setHeight(1, Unit.PX);
+				table.getRowElement(i).getStyle().setOpacity(0.01);
 			}
 		}
 		
 		renderHeaders(rowCount);
 		renderRows();
+		table.onAfterRender();
 	}
 	
 	/**
@@ -578,8 +622,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	private Cell createRowDetailsCommandCell(R row)
 	{
-		Button button = new Button(" ");
-		button.addClickHandler(new RowDetailsCommandHandler<R>(this, row));
+		Button button = new Button("+");
+		button.addClickHandler(new RowDetailsCommandHandler<R>(this, row, button));
 		Cell cell = createCell(button, false, false);
 		cell.addStyleName("rowDetailsCommandCell");		
 		return cell;
@@ -687,6 +731,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 		
 		onBeforeRenderRows();
 		
+		boolean hasRowDetailsIconColumn = hasRowDetailsIconColumn();
+
 		while(it.hasNext())
 		{
 			R row = it.next();
@@ -696,7 +742,7 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 				row.setCell(createSelectionCell(row), 0);
 			}
 			
-			if(hasRowDetailsIconColumn())
+			if(hasRowDetailsIconColumn)
 			{
 				row.setCell(createRowDetailsCommandCell(row), hasSelectionColumn() ? 1 : 0);
 			}
@@ -767,5 +813,40 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	protected void ensureVisible(UIObject uiObject)
 	{
 		this.scrollingArea.ensureVisible(uiObject);
+	}
+	
+	ScrollPanel getScrollingArea()
+	{
+		return this.scrollingArea;
+	}
+
+	public boolean hasFrozenHeaders() 
+	{
+		return freezeHeaders;
+	}
+
+	public boolean hasFrozenColumns() 
+	{
+		if(this.hasFrozenColumns == null)
+		{
+			this.hasFrozenColumns = false;
+			
+			FastList<ColumnDefinition> defs = definitions.getDefinitions();
+			for(int i = 0; i < defs.size(); i++)
+			{
+				if(defs.get(i).isFrozen())
+				{
+					this.hasFrozenColumns = true;
+					break;
+				}
+			}
+		}
+		
+		return this.hasFrozenColumns;
+	}
+	
+	public boolean hasFrozenCells() 
+	{
+		return freezeHeaders || hasFrozenColumns();
 	}
 }

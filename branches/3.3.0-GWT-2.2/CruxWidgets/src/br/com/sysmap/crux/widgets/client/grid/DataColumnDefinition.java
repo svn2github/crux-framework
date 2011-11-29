@@ -24,9 +24,9 @@ public class DataColumnDefinition extends ColumnDefinition
 	private boolean wrapLine;
 	private boolean sortable;
 
-	public DataColumnDefinition(String label, String width, String formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public DataColumnDefinition(String label, String width, String formatter, boolean visible, boolean sortable, boolean wrapLine, boolean frozen, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
-		super(label, width, visible, horizontalAlign, verticalAlign);
+		super(label, width, visible, frozen, horizontalAlign, verticalAlign);
 		this.formatter = formatter;
 		this.wrapLine = wrapLine;
 		this.sortable = sortable;

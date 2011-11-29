@@ -1,7 +1,8 @@
 package br.com.sysmap.crux.widgets.client.grid;
 
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -21,8 +22,10 @@ public interface GridBaseTable {
 	Widget asWidget();
 	void removeAllRows();
 	void resize(int rowCount, int columnCount);
-	CellFormatter getCellFormatter();
 	Widget getWidget(int index, int column);
 	void setWidget(int index, int column, Widget widget);
-	
+	void setCellAlignment(int index, int colIndex, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign);
+	void setCellWidth(int index, int colIndex, String width);
+	void setVisible(boolean visible);
+	void onAfterRender();
 }

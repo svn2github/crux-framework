@@ -25,21 +25,25 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 public class ColumnDefinition
 {
 	String key;
-	
 	Grid grid = null;
-	
 	String width;
 	boolean visible;
 	String label;
-	
 	HorizontalAlignmentConstant horizontalAlign;
 	VerticalAlignmentConstant verticalAlign;
+	boolean frozen;
 
 	public ColumnDefinition(String label, String width, boolean visible, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	{
+		this(label, width, visible, false, horizontalAlign, verticalAlign);
+	}
+	
+	public ColumnDefinition(String label, String width, boolean visible, boolean frozen, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		this.label = label;
 		this.width = width;
 		this.visible = visible;
+		this.frozen = frozen;
 		this.horizontalAlign = horizontalAlign == null ? HasHorizontalAlignment.ALIGN_CENTER : horizontalAlign;
 		this.verticalAlign = verticalAlign == null ? HasVerticalAlignment.ALIGN_MIDDLE : verticalAlign;
 	}
@@ -231,5 +235,10 @@ public class ColumnDefinition
 		{
 			this.grid.refresh();
 		}
+	}
+
+	public boolean isFrozen() 
+	{
+		return this.frozen;
 	}
 }

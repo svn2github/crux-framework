@@ -18,9 +18,10 @@ package br.com.sysmap.crux.widgets.client.grid;
 import br.com.sysmap.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -53,18 +54,16 @@ public class Row
 	
 	protected void setCell(Cell cell, String column)
 	{
-		CellFormatter formatter = grid.getTable().getCellFormatter();
-		
 		ColumnDefinition def = grid.getColumnDefinitions().getDefinition(column);
 		int colIndex = getColumnIndex(column, false);
-		formatter.setAlignment(index, colIndex, def.getHorizontalAlign(), def.getVerticalAlign());
 		
 		if(def.getWidth() != null)
 		{
-			formatter.setWidth(index, colIndex, def.getWidth());
+			grid.getTable().setCellWidth(index, colIndex, def.getWidth());
 		}	
 		
 		setCell(cell, colIndex);	
+		grid.getTable().setCellAlignment(index, colIndex, def.getHorizontalAlign(), def.getVerticalAlign());
 	}
 
 	void setCell(Cell cell, int column)
@@ -208,7 +207,19 @@ public class Row
 	{
 		if(hasRowDetails)
 		{
-			grid.getTable().getRowElement(index + 1).getStyle().setProperty("display", (show ? "" : "none"));
+			if(show)
+			{
+				grid.getTable().getRowElement(index + 1).getStyle().setOverflow(Overflow.VISIBLE);
+				grid.getTable().getRowElement(index + 1).getStyle().setProperty("height", "auto");
+				grid.getTable().getRowElement(index + 1).getStyle().setOpacity(1);
+			}
+			else
+			{
+				grid.getTable().getRowElement(index + 1).getStyle().setOverflow(Overflow.HIDDEN);
+				grid.getTable().getRowElement(index + 1).getStyle().setHeight(1, Unit.PX);
+				grid.getTable().getRowElement(index + 1).getStyle().setOpacity(0.01);
+			}
+			
 			this.detailsShown = show;
 		}
 	}

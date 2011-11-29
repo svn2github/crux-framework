@@ -62,7 +62,7 @@ public class GridFactory extends WidgetFactory<Grid>
 				                               getRowSelectionModel(gridElem), getCellSpacing(gridElem), 
 				                               getAutoLoad(gridElem), getStretchColumns(gridElem), getHighlightRowOnMouseOver(gridElem),
 				                               getEmptyDataFilling(gridElem), isFixedCellSize(gridElem), getSortingColumn(gridElem), 
-				                               getSortingType(gridElem), getRowDetailsDefinition(gridElem), getShowRowDetailsIcon(gridElem));
+				                               getSortingType(gridElem), getRowDetailsDefinition(gridElem), getShowRowDetailsIcon(gridElem), getFreezeHeaders(gridElem));
 		return grid;
 	}
 	
@@ -167,6 +167,18 @@ public class GridFactory extends WidgetFactory<Grid>
 		
 		return 1;
 	}
+	
+	private boolean getFreezeHeaders(Element gridElem)
+	{
+		String freeze = getProperty(gridElem,"freezeHeaders");
+		
+		if(freeze != null && freeze.trim().length() > 0)
+		{
+			return Boolean.parseBoolean(freeze);
+		}
+		
+		return false;
+	}
 
 	/**
 	 * @param grid
@@ -263,6 +275,7 @@ public class GridFactory extends WidgetFactory<Grid>
 					String strVisible = getProperty(childElem,"visible");
 					String strSortable = getProperty(childElem,"sortable");
 					String strWrapLine = getProperty(childElem,"wrapLine");
+					String strFrozen = getProperty(childElem,"frozen");
 					String label = getProperty(childElem,"label");
 					String key = getProperty(childElem,"key");
 					String strFormatter = getProperty(childElem,"formatter");
@@ -272,6 +285,7 @@ public class GridFactory extends WidgetFactory<Grid>
 					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
 					boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
 					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
+					boolean frozen = (strFrozen != null && strFrozen.length() > 0) ? Boolean.parseBoolean(strFrozen) : false;
 					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
 					label = (label != null && label.length() > 0) ? ScreenFactory.getInstance().getDeclaredMessage(label) : "";
 					
@@ -286,6 +300,7 @@ public class GridFactory extends WidgetFactory<Grid>
 								visible,
 								sortable,
 								wrapLine,
+								frozen,
 								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.ALIGN_CENTER),
 								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.ALIGN_MIDDLE));
 					}
@@ -358,7 +373,8 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagAttributeDeclaration(value="emptyDataFilling", type=String.class, defaultValue=" "),
 		@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
 		@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending"),
-		@TagAttributeDeclaration(value="showRowDetailsIcon", type=Boolean.class, defaultValue="true")
+		@TagAttributeDeclaration(value="showRowDetailsIcon", type=Boolean.class, defaultValue="true"),
+		@TagAttributeDeclaration(value="freezeHeaders", type=Boolean.class, defaultValue="false")
 	})
 	public void processAttributes(WidgetFactoryContext<Grid> context) throws InterfaceConfigException
 	{
@@ -429,6 +445,7 @@ public class GridFactory extends WidgetFactory<Grid>
 			@TagAttributeDeclaration(value="visible", type=Boolean.class),
 			@TagAttributeDeclaration(value="sortable", type=Boolean.class, defaultValue="true"),
 			@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
+			@TagAttributeDeclaration(value="frozen", type=Boolean.class, defaultValue="false"),
 			@TagAttributeDeclaration("label"),
 			@TagAttributeDeclaration("key"),
 			@TagAttributeDeclaration("formatter"),
@@ -445,6 +462,7 @@ public class GridFactory extends WidgetFactory<Grid>
 		@TagAttributesDeclaration({
 			@TagAttributeDeclaration("width"),
 			@TagAttributeDeclaration(value="visible", type=Boolean.class),
+			@TagAttributeDeclaration(value="frozen", type=Boolean.class, defaultValue="false"),
 			@TagAttributeDeclaration("label"),
 			@TagAttributeDeclaration("key"),
 			@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
