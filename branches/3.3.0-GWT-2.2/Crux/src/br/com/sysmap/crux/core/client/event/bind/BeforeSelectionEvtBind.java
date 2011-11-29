@@ -35,7 +35,7 @@ public class BeforeSelectionEvtBind implements EvtBinder<HasBeforeSelectionHandl
 	/**
 	 * @see br.com.sysmap.crux.core.client.event.bind.EvtBinder#bindEvent(com.google.gwt.dom.client.Element, com.google.gwt.event.shared.HasHandlers)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void bindEvent(Element element, HasBeforeSelectionHandlers<?> widget)
 	{
 		final Event eventBeforeSelection = EvtBind.getWidgetEvent(element, EVENT_NAME);
