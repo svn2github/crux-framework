@@ -6,7 +6,7 @@
     <script type="text/javascript">
     	_layoutManager = "tabLayoutManager";
     </script>
-	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" style="overflow: hidden" >
+	<crux:rollingTabPanel id="layoutTabManager" visibleTab="0" style="overflow:hidden;" >
 		<crux:tab>
 			<crux:tabText>#{profileTabTitle}</crux:tabText>
 			<crux:panelContent>

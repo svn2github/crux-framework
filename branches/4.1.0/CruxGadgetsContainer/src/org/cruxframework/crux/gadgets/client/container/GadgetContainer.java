@@ -163,6 +163,7 @@ public class GadgetContainer extends JavaScriptObject
 		
 		return this.createGadget(
 						{debug: (this.debug_?1:0), 'specUrl': gadgetConfig.url, 
+						'view': view, 
 						'title': gadgetConfig.title, 'userPrefs': gadgetConfig.userPrefs, 
 						'height': (view==="canvas"?this.canvasHeight_:gadgetConfig.height), 
 						'width': (view==="canvas"?this.canvasWidth_:gadgetConfig.width), 

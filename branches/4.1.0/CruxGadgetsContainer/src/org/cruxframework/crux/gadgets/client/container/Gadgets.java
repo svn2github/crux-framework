@@ -159,7 +159,8 @@ public class Gadgets
 	{
 		Array<String> gadgets = CollectionFactory.createArray();
 		gadgets.add(gadgetUrl);
-		loadGadgetsMetadata(gadgets, new MetadataCallback()
+		GadgetContainer container = GadgetContainer.get();
+		loadGadgetsMetadata(container.getCountry(), container.getLanguage(), view, container.getSecureToken(), gadgets, new MetadataCallback()
 		{
 			@Override
 			public void onMetadataLoaded(Array<GadgetMetadata> metadata)
