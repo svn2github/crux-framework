@@ -14,7 +14,7 @@
 	<property name="dist.dir" value="dist" />
 	<property name="javadoc.dir" value="${dist.dir}/docs" />
 	
-	<property name="cross.device.widgets.name" value="crux-cross-device-widgets.jar" />
+	<property name="cross.device.widgets.name" value="crux-cross-device-widgets" />
 	
 	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
 	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>

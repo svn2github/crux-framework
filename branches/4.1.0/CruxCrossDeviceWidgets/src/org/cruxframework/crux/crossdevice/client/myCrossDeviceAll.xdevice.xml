@@ -1,0 +1,5 @@
+<x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
+           xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+           controller="myWidgetControllerAll">
+     <gwt:button id="button" text="All Button"></gwt:button>      
+</x:xdevice>

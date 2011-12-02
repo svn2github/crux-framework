@@ -11,5 +11,6 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 })
 public interface MyCrossDeviceWidget extends DeviceAdaptive
 {
-
+	String getTestAttribute();
+	void setTestAttribute(String testAttribute);
 }

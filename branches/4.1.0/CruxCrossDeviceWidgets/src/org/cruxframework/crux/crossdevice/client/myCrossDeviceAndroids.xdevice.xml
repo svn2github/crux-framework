@@ -1,0 +1,5 @@
+<x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
+           xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+           controller="myWidgetControllerAndroids">
+     <gwt:anchor id="anchor" text="Androids Button"></gwt:anchor>      
+</x:xdevice>
