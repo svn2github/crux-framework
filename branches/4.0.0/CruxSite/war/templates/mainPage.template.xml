@@ -104,7 +104,7 @@
 									<gwt:row>
 										<gwt:cell styleName="CruxLabelFooter3">
 											<gwt:widget>
-												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks" width="250">
+												<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks" width="250" horizontalAlignment="right">
 													<gwt:anchor id="about" href="#" text="About" />
 													<gwt:label id="separator1" styleName="LinkSeparator"/>
 													<gwt:anchor id="services" href="#" text="Services" />
