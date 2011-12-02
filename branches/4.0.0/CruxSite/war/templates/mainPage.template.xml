@@ -19,6 +19,8 @@
 		
 		<t:section name="screenSection"/>
 		
+		<div class="UnderConstructionTag"/>
+		
 		<div id="canvas" style="height:100%">
 			<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
 				<gwt:row>

@@ -81,7 +81,7 @@ p{
 
 .HeaderMenuItems
 {
-	padding-left: 150px;
+	padding-left: 165px;
 }
 
 .MenuItem, .MenuItem-disabled
@@ -605,3 +605,14 @@ p{
 	text-shadow:0 1px 0 rgba(0,0,0,0.4);
 	font-size:13px;
 }
+
+.UnderConstructionTag
+{
+	width: 115px;
+	height: 115px;
+	position: absolute;
+	z-index: 2;
+	top: 0px;
+	left: 0px;
+	background: url(../img/under-construction.png) top left no-repeat;
+}	
