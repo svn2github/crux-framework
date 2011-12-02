@@ -32,6 +32,11 @@ public abstract class AbstractWrapperProxyCreator extends AbstractInterfaceWrapp
 	    super(logger, context, baseIntf, true);
     }
 
+	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)
+    {
+	    super(logger, context, baseIntf, cacheable);
+    }
+
 	@Override
     protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
     {

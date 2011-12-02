@@ -66,7 +66,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 */
 	public DeviceAdaptiveProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
-	    super(logger, context, baseIntf);
+	    super(logger, context, baseIntf, false);
 
 	    deviceAdaptiveControllerClass = context.getTypeOracle().findType(DeviceAdaptiveController.class.getCanonicalName());
 	    deviceAdaptiveClass = context.getTypeOracle().findType(DeviceAdaptive.class.getCanonicalName());

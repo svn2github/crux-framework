@@ -17,6 +17,8 @@ package org.cruxframework.crux.core.client.controller.crossdevice;
 
 import org.cruxframework.crux.core.client.screen.Screen;
 
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -118,6 +120,11 @@ public abstract class DeviceAdaptiveController
 		return boundWidget.getElement();
 	}
 	
+	public HandlerRegistration addAttachHandler(Handler handler)
+	{
+		return boundWidget.addAttachHandler(handler);
+	}
+
 	public Widget asWidget()
 	{
 		return boundWidget;
