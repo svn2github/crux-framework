@@ -37,7 +37,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 
 /**
@@ -128,8 +128,8 @@ public class ClientControllers
 	    if (widgetControllerAnnot != null)
 	    {
 	    	
-	    	Class<? extends Widget>[] widgets = widgetControllerAnnot.value();
-	    	for (Class<? extends Widget> widgetClass : widgets)
+	    	Class<? extends IsWidget>[] widgets = widgetControllerAnnot.value();
+	    	for (Class<? extends IsWidget> widgetClass : widgets)
 	        {
 	    		String widgetType = WidgetConfig.getWidgetType(widgetClass);
 	    		if (!StringUtils.isEmpty(widgetType))

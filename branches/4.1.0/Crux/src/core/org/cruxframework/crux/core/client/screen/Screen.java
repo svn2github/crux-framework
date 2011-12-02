@@ -46,6 +46,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -65,6 +66,15 @@ public class Screen
 	 * @param widget
 	 */
 	public static void add(String id, Widget widget)
+	{
+		Screen.get().addWidget(id, widget);
+	}
+	/**
+	 * 
+	 * @param id
+	 * @param widget
+	 */
+	public static void add(String id, IsWidget widget)
 	{
 		Screen.get().addWidget(id, widget);
 	}
@@ -347,7 +357,7 @@ public class Screen
 	 * @param clazz
 	 * @return
 	 */
-	public static <T extends Widget> T get(String id, Class<T> clazz)
+	public static <T extends IsWidget> T get(String id, Class<T> clazz)
 	{
 		return Screen.get().getWidget(id, clazz);
 	}
@@ -798,6 +808,11 @@ public class Screen
 		widgets.put(id, widget);
 	}
 
+	protected void addWidget(String id, IsWidget widget)
+	{
+		widgets.put(id, widget.asWidget());
+	}
+
 	/**
 	 * 
 	 * @param handler
@@ -1053,7 +1068,7 @@ public class Screen
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T extends Widget> T getWidget(String id, Class<T> clazz)
+	protected <T extends IsWidget> T getWidget(String id, Class<T> clazz)
 	{
 		Widget w = getWidget(id);
 		return (T) w;

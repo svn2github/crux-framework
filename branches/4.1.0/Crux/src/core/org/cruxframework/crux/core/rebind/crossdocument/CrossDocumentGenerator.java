@@ -52,7 +52,7 @@ public class CrossDocumentGenerator extends GeneratorExt
 		
 		if (crossDocument.isInterface() == null)
 		{
-			logger.log(TreeLogger.ERROR, messages.crossDocumentGeneratorTypeIsNotInterface(crossDocument.getQualifiedSourceName()), null); 
+			logger.log(TreeLogger.ERROR, messages.generatorTypeIsNotInterface(crossDocument.getQualifiedSourceName()), null); 
 			throw new UnableToCompleteException();
 		}
 		

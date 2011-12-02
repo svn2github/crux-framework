@@ -13,22 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.gwt.client;
-
-import org.cruxframework.crux.core.client.event.CruxEvent;
-
-import com.google.gwt.user.client.ui.IsWidget;
-
+package org.cruxframework.crux.core.declarativeui.crossdevice;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ExecuteEvent<T extends IsWidget> extends CruxEvent<T>
+public class CrossDevicesException extends RuntimeException
 {
+    private static final long serialVersionUID = -1082567294239837572L;
 
-	protected ExecuteEvent(T source, String senderId)
+	public CrossDevicesException()
 	{
-		super(source, senderId);
+		super();
+	}
+
+	public CrossDevicesException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	public CrossDevicesException(String message)
+	{
+		super(message);
+	}
+
+	public CrossDevicesException(Throwable cause)
+	{
+		super(cause);
 	}
 }

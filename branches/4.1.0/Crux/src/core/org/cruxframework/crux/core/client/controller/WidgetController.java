@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * This annotation is used to link the import of a {@link Controller} class to the presence 
@@ -52,5 +52,5 @@ public @interface WidgetController
 	 * The list of widget classes that makes the annotated controller automatically imported, 
 	 * if present in screen. 
 	 */
-	Class<? extends Widget>[] value();
+	Class<? extends IsWidget>[] value();
 }

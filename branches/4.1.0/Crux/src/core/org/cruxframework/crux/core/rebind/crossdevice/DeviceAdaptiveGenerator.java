@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.context;
+package org.cruxframework.crux.core.rebind.crossdevice;
 
 import org.cruxframework.crux.core.rebind.AbstractGenerator;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
@@ -24,12 +24,12 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
- * Generator for context access objects.
+ * Generator for DeveiceAdaptive widgets.
  * 
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class ContextGenerator extends AbstractGenerator
+public class DeviceAdaptiveGenerator extends AbstractGenerator
 {
 	@Override
     protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf) throws UnableToCompleteException
@@ -39,6 +39,6 @@ public class ContextGenerator extends AbstractGenerator
 			logger.log(TreeLogger.ERROR, messages.generatorTypeIsNotInterface(baseIntf.getQualifiedSourceName()), null); 
 			throw new UnableToCompleteException();
 		}
-	    return new ContextProxyCreator(logger, ctx, baseIntf);
+	    return new DeviceAdaptiveProxyCreator(logger, ctx, baseIntf);
     }
 }

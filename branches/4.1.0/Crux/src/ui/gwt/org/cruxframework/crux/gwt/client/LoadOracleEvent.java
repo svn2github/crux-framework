@@ -17,14 +17,14 @@ package org.cruxframework.crux.gwt.client;
 
 import org.cruxframework.crux.core.client.event.CruxEvent;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class LoadOracleEvent<T extends Widget> extends CruxEvent<T>
+public class LoadOracleEvent<T extends IsWidget> extends CruxEvent<T>
 {
 
 	protected LoadOracleEvent(String senderId)

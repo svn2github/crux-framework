@@ -343,12 +343,12 @@ public class ModuleExporter
 
 		// Crux Compiler Parameters
 		parameter = new ConsoleParameter("scanAllowedPackages", 
-				"A list of packages (separated by commas) that will be scanned to find Controllers, Modules and Templates", false, true);
+				"A list of packages (separated by commas) that will be scanned to find Controllers, Modules and CrossDevices", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("allowed", "Allowed packages"));
 		parametersProcessor.addSupportedParameter(parameter);
 		
 		parameter =new ConsoleParameter("scanIgnoredPackages", 
-				"A list of packages (separated by commas) that will not be scanned to find Controllers, Modules and Templates", false, true);
+				"A list of packages (separated by commas) that will not be scanned to find Controllers, Modules and CrossDevices", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("ignored", "Ignored packages"));
 		parametersProcessor.addSupportedParameter(parameter);
 		

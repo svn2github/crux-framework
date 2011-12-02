@@ -174,6 +174,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        
 	        logger.info(messages.schemaGeneratorCreatingCoreXSD());
 	        generateCoreSchema(libraries, templateLibraries);
+	        generateXDeviceSchema(libraries, templateLibraries);
 	        
 	        copyXHTMLSchema();
 
@@ -716,7 +717,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries)
 	{
-		generateCoreWidgetsType(out, libraries, templateLibraries, "widgets", true);
+		generateCoreWidgetsType(out, libraries, templateLibraries, "widgets", true, true);
 	}
 
 	/**
@@ -727,7 +728,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreCrossDevWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries)
 	{
-		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsCrossDev", false);
+		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsNoTemplates", false, false);
+		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsCrossDev", false, true);
 	}
 
 	/**
@@ -738,7 +740,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param groupName
 	 * @param supportCrossDevice
 	 */
-	private void generateCoreWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries, String groupName, boolean supportCrossDevice)
+	private void generateCoreWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries, String groupName, boolean supportCrossDevice, boolean supportTemplates)
     {
 	    out.println("<xs:group name=\""+groupName+"\">");
 		out.println("<xs:choice>");
@@ -755,18 +757,21 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			}
 		}
 		
-		for (String lib : templateLibraries)
+		if (supportTemplates)
 		{
-			Set<String> templates = Templates.getRegisteredLibraryWidgetTemplates(lib);
-			if (templates != null)
+			for (String lib : templateLibraries)
 			{
-				for (String templateID : templates)
+				Set<String> templates = Templates.getRegisteredLibraryWidgetTemplates(lib);
+				if (templates != null)
 				{
-					out.println("<xs:element ref=\"_"+lib+":"+templateID+"\" />");
+					for (String templateID : templates)
+					{
+						out.println("<xs:element ref=\"_"+lib+":"+templateID+"\" />");
+					}
 				}
 			}
 		}
-
+		
 		if (supportCrossDevice)
 		{
 			out.println("<xs:element ref=\"crossDevice\" />");
@@ -1085,6 +1090,72 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"useDataSource\" type=\"xs:string\"/>");
 		out.println("</xs:complexType>");
 	}
+	
+	/**
+	 * 
+	 * @param libraries
+	 * @param templateLibraries
+	 */
+	private void generateXDeviceSchema(Set<String> libraries, Set<String> templateLibraries)
+	{
+		try
+        {
+	        File coreFile = new File(destDir, "xdevice.xsd");
+	        if (coreFile.exists())
+	        {
+	        	coreFile.delete();
+	        }
+	        coreFile.createNewFile();
+	        
+	        String targetNS = "http://www.cruxframework.org/xdevice";
+	        registerNamespaceForCatalog(targetNS, coreFile);
+	        
+	        PrintStream out = new PrintStream(coreFile);
+	        out.println("<xs:schema ");
+	        out.println("xmlns=\"http://www.cruxframework.org/xdevice\" ");
+	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
+	        out.println("xmlns:c=\"http://www.cruxframework.org/crux\" ");
+	        out.println("attributeFormDefault=\"unqualified\" ");
+	        out.println("elementFormDefault=\"qualified\" ");
+	        out.println("targetNamespace=\"" + targetNS + "\" >");
+	        
+	        generateXDeviceSchemasImport(libraries, templateLibraries, out);
+
+			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" />");
+			out.println("<xs:complexType name=\"XDevice\">");
+			out.println("<xs:sequence>");
+			out.println("<xs:group ref=\"c:widgetsNoTemplates\" />");
+			out.println("</xs:sequence>");
+			out.println("<xs:attribute name=\"controller\" type=\"xs:string\" use=\"required\"/>");
+			out.println("</xs:complexType>");
+	        
+	        out.println("</xs:schema>");
+	        out.close();
+        }
+        catch (Exception e)
+        {
+        	throw new SchemaGeneratorException(e.getMessage(), e);
+        }
+	}
+	
+	/**
+	 * 
+	 * @param libraries
+	 * @param templateLibraries 
+	 * @param out
+	 */
+	private void generateXDeviceSchemasImport(Set<String> libraries, Set<String> templateLibraries, PrintStream out)
+	{
+		out.println("<xs:import schemaLocation=\"core.xsd\" namespace=\"http://www.cruxframework.org/crux\"/>");
+		for (String lib : libraries)
+		{
+			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/crux/"+lib+"\"/>");
+		}
+		for (String lib : templateLibraries)
+		{
+			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/templates/"+lib+"\"/>");
+		}
+	}		
 
 	/**
 	 * 

@@ -15,6 +15,11 @@
  */
 package org.cruxframework.crux.core.client.screen;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
@@ -36,6 +41,8 @@ public interface DeviceAdaptive extends IsWidget
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
 	public static @interface Templates
 	{
 		Template[] value();
@@ -46,9 +53,21 @@ public interface DeviceAdaptive extends IsWidget
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.ANNOTATION_TYPE)
 	public static @interface Template
 	{
 		String name();
 		Device device();
 	}
+	
+	void setWidth(String width);
+	void setVisible(boolean visible);
+	boolean isVisible();
+	void setStyleName(String style);
+	String getStyleName();
+	void setTitle(String title);
+	String getTitle();
+	void setHeight(String height);
+	com.google.gwt.user.client.Element getElement();
 }

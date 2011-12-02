@@ -124,4 +124,31 @@ public interface DeclarativeUIMessages
 
 	@DefaultServerMessage("[declarativeui 035] - CrossDevice paramter {0} not found.")
 	String templatesPreProcessorCrossBrowserParameterNotFound(String name);
+	
+	@DefaultServerMessage("[declarativeui 036] - Error parsing cross device file: {0}, for DeviceAdaptive interface {1}.")
+	String crossDeviceScannerErrorParsingTemplateFile(String fileName, String deviceAdaptive);
+	
+	@DefaultServerMessage("[declarativeui 037] - Error initializing CrossDevicesScanner.")
+	String crossDeviceScannerInitializationError(String localizedMessage);
+	
+	@DefaultServerMessage("[declarativeui 038] - Searching for cross device files.")
+	String crossDeviceScannerSearchingTemplateFiles();
+	
+	@DefaultServerMessage("[declarativeui 039] - Duplicated cross device file found. Library: {0}. Template: {1}.")
+	String crossDeviceDuplicatedTemplate(String library, String templateId);
+
+	@DefaultServerMessage("[declarativeui 040] - DeviceAdaptive widget {0} not found on classpath.")
+	String crossDeviceScannerDeviceAdaptiveNotFound(String deviceAdaptive);
+
+	@DefaultServerMessage("[declarativeui 041] - DeviceAdaptive widget {0} does not declare any templates. Use the annotation @Templates to add templates to this widget.")
+	String crossDeviceScannerDeviceAdaptiveWithoutTemplates(String deviceAdaptive);
+
+	@DefaultServerMessage("[declarativeui 042] - Can not find the controller attribute for deviceAdaptive widget [{0}]. Device [{1}]")
+	String crossDevicesTemplateParserCanNotFindController(String deviceAdaptive, String device);
+	
+	@DefaultServerMessage("[declarativeui 043] - Error searching for controller associated with the deviceAdaptive widget [{0}]. Device [{1}]")
+	String crossDevicesTemplateParserErrorSearchingForController(String deviceAdaptive, String device);
+
+	@DefaultServerMessage("[declarativeui 043] - Error retrieving metadata from template associated with the deviceAdaptive widget [{0}]. Device [{1}]")
+	Object crossDevicesTemplateParserErrorRetrievingMetadata(String deviceAdaptive, String string);
 }

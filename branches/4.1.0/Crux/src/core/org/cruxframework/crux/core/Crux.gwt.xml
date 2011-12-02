@@ -83,6 +83,11 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.controller.crossdoc.CrossDocument"/>
 	</generate-with>
 	
+	<!-- Specify the generator for Device Adaptive stubs.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.crossdevice.DeviceAdaptiveGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceAdaptive"/>
+	</generate-with>
+	
 	<!-- Specify ie6 implementation for screen blocker -->
 	<replace-with
     	class="org.cruxframework.crux.core.client.screen.ScreenBlockerIE6">

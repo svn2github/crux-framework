@@ -56,9 +56,9 @@ public class CruxToHtmlTransformer
 	private static List<CruxXmlPreProcessor> preProcessors;
 	private static final Lock lock = new ReentrantLock();
 
-
+	//TODO renomear esta classe para CruxPageHandler e renomear o HTMLBuilder
 	/**
-	 * Executes the transformation
+	 * Generate the HTML code from the .crux.xml page.
 	 * 
 	 * @param screenId
 	 * @param userAgent
@@ -92,6 +92,30 @@ public class CruxToHtmlTransformer
 		}
 	}
 
+	/**
+	 * Extract the widgets metadata from the  from the .crux.xml page.
+     *
+	 * @param source
+	 * @param escapeXML
+	 * @param generateWidgetsMetadata
+	 * @return
+	 */
+	public static String extractWidgetsMetadata(Document source, boolean escapeXML, boolean generateWidgetsMetadata)
+	{
+		try
+		{
+			StringBuilder buff = new StringBuilder();
+			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
+			htmlBuilder.generateCruxMetaData(source.getDocumentElement(), buff);
+			return buff.toString();
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+	}	
+	
 	/**
 	 * @param screenId
 	 * @param userAgent

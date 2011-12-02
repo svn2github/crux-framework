@@ -143,7 +143,7 @@ public interface GeneratorMessages
 	String generatorSourceNotFound(String typeName);
 
 	@DefaultServerMessage("[generator 039] - {0} is not an interface.")
-	String crossDocumentGeneratorTypeIsNotInterface(String qualifiedSourceName);
+	String generatorTypeIsNotInterface(String qualifiedSourceName);
 	
 	@DefaultServerMessage("[generator 040] - Cross document interface {0} does not follow the name pattern for cross document objects.")
 	String crossDocumentInvalidCrossDocInterfaceName(String crossDocInterfaceName);
@@ -331,9 +331,18 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[dataObjects 002] - Error initializing DataObjects: {0}.")
 	String dataObjectsInitializeError(String localizedMessage);
 
-	@DefaultServerMessage("[dataObjects 003] - DataObject {0}, referenced by widget {1} not found.")
+	@DefaultServerMessage("[dataObjects 003] - DataObject [{0}], referenced by widget [{1}] not found.")
 	String dataObjectNotFound(String dataObject, String widgetId);
 
 	@DefaultServerMessage("[attributeProcessor 001] - Error parsing attribute value [{0}], of widget [{2}], on screen [{1}].")
 	String rowCountProcessorErrorInvalidValue(String attributeValue, String id, String widgetId);
+
+	@DefaultServerMessage("[deviceAdaptive 001] - DeviceAdaptive widget does not declare any valid template for userAgent [{0}].")
+	String deviceAdaptiveNoMappingForAgent(String userAgent);
+
+	@DefaultServerMessage("[deviceAdaptive 002] - DeviceAdaptive implementation class [{0}] is not a valid Controller. It must be annotated with @Controller annotation.")
+	String deviceAdaptiveImplementationIsNotAController(String controllerClass);
+
+	@DefaultServerMessage("[deviceAdaptive 003] - DeviceAdaptive implementation class [{0}] must externds the base class DeviceAdaptiveController.")
+	String deviceAdaptiveImplementationIsNotADeviceAdaptiveController(String controllerClass);
 }

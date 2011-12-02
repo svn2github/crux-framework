@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -35,7 +35,7 @@ public @interface DeclarativeFactory
 	/**
 	 * The widget class associated with the annotated factory. 
 	 */
-	Class<? extends Widget> targetWidget();
+	Class<? extends IsWidget> targetWidget();
 	
 	/**
 	 * if false, the annotated widgetFactory will not be attached to DOM. It will only be logically attached to the {@code Screen} object

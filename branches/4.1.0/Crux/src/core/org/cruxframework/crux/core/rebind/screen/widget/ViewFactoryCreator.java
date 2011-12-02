@@ -80,8 +80,9 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class ViewFactoryCreator
 {
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static NameFactory nameFactory = new NameFactory();
+	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
+
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private GeneratorContextExt context;
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
@@ -315,7 +316,7 @@ public class ViewFactoryCreator
 	 * 
 	 * @param printer
 	 */
-	void commitPostProcessing(SourcePrinter printer)
+	protected void commitPostProcessing(SourcePrinter printer)
 	{
 		PostProcessingPrinter postProcessingPrinter = this.postProcessingCode.removeLast();
 		String postProcessingCode = postProcessingPrinter.toString();
@@ -331,21 +332,12 @@ public class ViewFactoryCreator
 	}
 	
 	/**
-	 * @param widgetId
-	 * @return
-	 */
-	boolean containsWidget(String widgetId)
-	{
-		return screen.getWidget(widgetId) != null;
-	}
-	
-	/**
 	 * Create a new scope for the post processing commands. All commands added by 
 	 * {@code printlnPostProcessing} method will be added to this same scope, what means 
 	 * that they will be fired together. When {@code commitPostProcessing} method is called, 
 	 * the scope is closed and all scope commands are programmed for execution.
 	 */
-	void createPostProcessingScope()
+	protected void createPostProcessingScope()
 	{
 		this.postProcessingCode.add(new PostProcessingPrinter());
 	} 	
@@ -353,9 +345,35 @@ public class ViewFactoryCreator
 	/**
 	 * @return
 	 */
-	GeneratorContextExt getContext()
+	protected TreeLogger getLogger()
 	{
-		return context;
+		return this.logger;
+	}
+	
+	/**
+	 * Retrieves the screen variable name
+	 * @return
+	 */
+	protected String getScreenVariable()
+	{
+		return screenVariable;
+	}
+	
+	/**
+	 * Retrieves the logger variable name
+	 * @return
+	 */
+	protected String getLoggerVariable()
+	{
+		return loggerVariable;
+	}
+	
+	/**
+	 * @return
+	 */
+	protected Screen getScreen()
+	{
+		return this.screen;
 	}
 	
 	/**
@@ -365,7 +383,7 @@ public class ViewFactoryCreator
 	 * @param title
 	 * @return
 	 */
-	String getDeclaredMessage(String property)
+	protected String getDeclaredMessage(String property)
     {
 	    if (isKeyReference(property))
 	    {
@@ -390,14 +408,41 @@ public class ViewFactoryCreator
 	    	return property==null?null:EscapeUtils.quote(property);
 	    }
     }
-	
+
+    /**
+     * Returns <code>true</code> if the given text is an internationalization key.
+	 * @param text
+	 * @return <code>true</code> if the given text is an internationalization key.
+	 */
+	protected boolean isKeyReference(String text)
+	{
+		return text.matches("\\$\\{\\w+\\.\\w+\\}");
+	}
+
 	/**
 	 * Gets all messages declared on this screen
 	 * @return
 	 */
-	Map<String, String> getDeclaredMessages()
+	protected Map<String, String> getDeclaredMessages()
 	{
 		return declaredMessages;
+	}
+
+	/**
+	 * @param widgetId
+	 * @return
+	 */
+	boolean containsWidget(String widgetId)
+	{
+		return screen.getWidget(widgetId) != null;
+	}
+	
+	/**
+	 * @return
+	 */
+	GeneratorContextExt getContext()
+	{
+		return context;
 	}
 	
     /**
@@ -425,32 +470,6 @@ public class ViewFactoryCreator
     		Crux.class.getCanonicalName()
 		};
 	    return imports;
-	}
-	
-	/**
-	 * @return
-	 */
-	TreeLogger getLogger()
-	{
-		return this.logger;
-	}
-	
-	/**
-	 * Retrieves the screen variable name
-	 * @return
-	 */
-	String getScreenVariable()
-	{
-		return screenVariable;
-	}
-	
-	/**
-	 * Retrieves the logger variable name
-	 * @return
-	 */
-	String getLoggerVariable()
-	{
-		return loggerVariable;
 	}
 	
 	/**
@@ -548,14 +567,6 @@ public class ViewFactoryCreator
 		this.declaredMessages.clear();
 		this.postProcessingCode.clear();
 		this.userAgent = userAgent;
-	}
-	
-	/**
-	 * @return
-	 */
-	Screen getScreen()
-	{
-		return this.screen;
 	}
 	
 	/**
@@ -997,16 +1008,6 @@ public class ViewFactoryCreator
 		return htmlContainersfactories.get(widgetType);
 	}
     
-    /**
-     * Returns <code>true</code> if the given text is an internationalization key.
-	 * @param text
-	 * @return <code>true</code> if the given text is an internationalization key.
-	 */
-	private boolean isKeyReference(String text)
-	{
-		return text.matches("\\$\\{\\w+\\.\\w+\\}");
-	}
-
 	/**
 	 * Returns <code>true</code> if the given widget should be rendered lazily  
 	 * @param widgetType

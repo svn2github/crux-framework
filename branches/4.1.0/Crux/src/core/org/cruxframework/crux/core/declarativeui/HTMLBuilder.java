@@ -303,10 +303,9 @@ class HTMLBuilder
 	/**
 	 * @param cruxPageInnerTag
 	 * @param cruxArrayMetaData
-	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxInnerMetaData(Element cruxPageInnerTag, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
+	private void generateCruxInnerMetaData(Element cruxPageInnerTag, StringBuilder cruxArrayMetaData) throws HTMLBuilderException
     {
 		if (indentOutput)
 		{
@@ -346,7 +345,7 @@ class HTMLBuilder
 		{
 			cruxArrayMetaData.append(",\"_children\":[");
 			indent();
-			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData, htmlDocument);
+			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData);
 			outdent();
 			cruxArrayMetaData.append("]");
 		}
@@ -367,10 +366,9 @@ class HTMLBuilder
 	/**
 	 * @param cruxPageBodyElement
 	 * @param cruxArrayMetaData
-	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxMetaData(Node cruxPageBodyElement, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
+	public void generateCruxMetaData(Node cruxPageBodyElement, StringBuilder cruxArrayMetaData) throws HTMLBuilderException
     {
 		NodeList childNodes = cruxPageBodyElement.getChildNodes();
 		if (childNodes != null)
@@ -388,7 +386,7 @@ class HTMLBuilder
 					{
 						cruxArrayMetaData.append(",");
 					}
-					generateCruxScreenMetaData((Element)child, cruxArrayMetaData, htmlDocument);
+					generateCruxScreenMetaData((Element)child, cruxArrayMetaData);
 					needsComma = true;
 				}
 				else if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
@@ -399,14 +397,14 @@ class HTMLBuilder
 					}
 					String widgetType = getCurrentWidgetTag(); 
 					updateCurrentWidgetTag((Element)child);
-					generateCruxInnerMetaData((Element)child, cruxArrayMetaData, htmlDocument);
+					generateCruxInnerMetaData((Element)child, cruxArrayMetaData);
 					setCurrentWidgetTag(widgetType);
 					needsComma = true;
 				}
 				else
 				{
 					StringBuilder childrenMetaData = new StringBuilder();
-					generateCruxMetaData(child, childrenMetaData, htmlDocument);
+					generateCruxMetaData(child, childrenMetaData);
 					if (childrenMetaData.length() > 0)
 					{
 						if (needsComma)
@@ -485,7 +483,7 @@ class HTMLBuilder
 
 			StringBuilder cruxArrayMetaData = new StringBuilder();
 			cruxArrayMetaData.append("[");
-			generateCruxMetaData(cruxPageBodyElement, cruxArrayMetaData, htmlDocument);
+			generateCruxMetaData(cruxPageBodyElement, cruxArrayMetaData);
 			cruxArrayMetaData.append("]");
 
 			Text textNode = htmlDocument.createTextNode("function __CruxMetaData_(){return {");
@@ -515,10 +513,9 @@ class HTMLBuilder
 	/**
 	 * @param cruxPageScreen
 	 * @param cruxArrayMetaData
-	 * @param htmlDocument
 	 * @throws HTMLBuilderException 
 	 */
-	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData, Document htmlDocument) throws HTMLBuilderException
+	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData) throws HTMLBuilderException
     {
 		if (indentOutput)
 		{
@@ -531,7 +528,7 @@ class HTMLBuilder
 		
 		cruxArrayMetaData.append("}");
 		StringBuilder childrenMetaData = new StringBuilder();
-		generateCruxMetaData(cruxPageScreen, childrenMetaData, htmlDocument);
+		generateCruxMetaData(cruxPageScreen, childrenMetaData);
 		
 		if (childrenMetaData.length() > 0)
 		{
