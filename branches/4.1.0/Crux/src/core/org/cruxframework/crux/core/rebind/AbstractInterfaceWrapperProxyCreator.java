@@ -33,6 +33,7 @@ import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
+import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.dev.javac.rebind.CachedRebindResult;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -256,7 +257,11 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 
 		try
 		{
-			long lastModified = context.getSourceLastModifiedTime(baseIntf);
+			long lastModified = 0L;
+			if (baseIntf instanceof JRealClassType)
+			{
+				lastModified = ((JRealClassType)baseIntf).getLastModifiedTime();
+			}
 
 			if (lastModified != 0L && lastModified < lastResult.getTimeGenerated())
 			{
