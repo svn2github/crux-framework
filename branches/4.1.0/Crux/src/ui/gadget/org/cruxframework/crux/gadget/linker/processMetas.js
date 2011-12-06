@@ -10,7 +10,7 @@ function processMetas() {
   var meta;
   var prefs = new $wnd.gadgets.Prefs();
 
-  if (meta = prefs.getString('gwt:onLoadErrorFn')) {
+  if (meta = prefs.getString('__MODULE_NAME__::gwt:onLoadErrorFn')) {
     try {
       onLoadErrorFunc = eval(meta);
     } catch (e) {
@@ -18,7 +18,7 @@ function processMetas() {
     }
   }
 
-  if (meta = prefs.getString('gwt:onPropertyErrorFn')) {
+  if (meta = prefs.getString('__MODULE_NAME__::gwt:onPropertyErrorFn')) {
     try {
       propertyErrorFunc = eval(meta);
     } catch (e) {
@@ -27,7 +27,7 @@ function processMetas() {
     }
   }
 
-  if (meta = prefs.getArray('gwt:property')) {
+  if (meta = prefs.getArray('__MODULE_NAME__::gwt:property')) {
     for (var i = 0; i < meta.length; i++) {
       var content = meta[i];
       if (content) {

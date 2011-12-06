@@ -13,28 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+ __BEGIN_TRY_BLOCK__
 function __MODULE_FUNC__() {
-  var $wnd = window;
-  var $doc = document;
+  var $wnd = __WINDOW_DEF__;
+  var $doc = __DOCUMENT_DEF__;
   sendStats('bootstrap', 'begin');
 
   /****************************************************************************
    * Internal Helper Functions
    ***************************************************************************/
 
-  function isBodyLoaded() {
-    if (typeof $doc.readyState == "undefined") {
-      // FF 3.5 and below does not have readyState, but it does allow us to
-      // append to the body before it has finished loading, so we return whether
-      // the body element exists.
-      return (typeof $doc.body != "undefined" && $doc.body != null);
-    }
-    return (/loaded|complete/.test($doc.readyState));
-  }
-
   function isHostedMode() {
     var query = $wnd.location.search;
-    return (query.indexOf('gwt.codesvr=') != -1);
+    return ((query.indexOf('gwt.codesvr.__MODULE_NAME__=') != -1) ||
+            (query.indexOf('gwt.codesvr=') != -1));
   }
 
   // Helper function to send statistics to the __gwtStatsEvent function if it
@@ -133,3 +125,6 @@ function __MODULE_FUNC__() {
 }
 __MODULE_FUNC__();
 
+__END_TRY_BLOCK_AND_START_CATCH__
+  __MODULE_FUNC_ERROR_CATCH__
+__END_CATCH_BLOCK__

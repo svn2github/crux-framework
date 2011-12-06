@@ -19,9 +19,11 @@ function installScript(filename) {
     script.text = code;
     docbody.appendChild(script);
 
-    // Remove the tags to shrink the DOM a little.
+    // Unless we're in pretty mode, remove the tags to shrink the DOM a little.
     // It should have installed its code immediately after being added.
+    __START_OBFUSCATED_ONLY__
     docbody.removeChild(script);
+    __END_OBFUSCATED_ONLY__
   }
   
   // Set up a script tag to start downloading immediately, as well as a
@@ -32,17 +34,7 @@ function installScript(filename) {
     });
   };
   sendStats('moduleStartup', 'moduleRequested');
-  if (isBodyLoaded()) {
-    // if the body is loaded, then the tag to download the script can be added
-    // in a non-destructive manner
-    var script = $doc.createElement('script');
-    script.src = filename;
-    $doc.getElementsByTagName('head')[0].appendChild(script);
-  } else {
-    // if the doc has not yet loaded, go ahead and do a destructive
-    // document.write since we want to immediately start the download.
-    // Note that we cannot append an element to the doc if it is still loading
-    // since this would cause problems in IE.
-    $doc.write("<script src='" + filename + "'></scr" + "ipt>");
-  }
+  var script = $doc.createElement('script');
+  script.src = filename;
+  $doc.getElementsByTagName('head')[0].appendChild(script);
 }
