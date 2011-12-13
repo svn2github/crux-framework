@@ -11,6 +11,14 @@
 	<stylesheet src="css/layout.css"/>
 	<script src ="js/sortable.js" />
 
+	<replace-with class="org.cruxframework.crux.gadgets.client.layout.GridLayoutManager.DashboardConfigIE">
+		<when-type-assignable class="org.cruxframework.crux.gadgets.client.layout.GridLayoutManager.DashboardConfig" />
+		<any>
+			<when-property-is name="user.agent" value="ie6" />
+			<when-property-is name="user.agent" value="ie8" />
+		</any>
+	</replace-with>
+
 	<!-- To enable logging -->
 	<!-- 
 	<inherits name="com.google.gwt.logging.Logging"/>

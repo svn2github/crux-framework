@@ -309,44 +309,97 @@ public class GridLayoutManager implements LayoutManager
 			@Override
 			public void execute()
 			{
-				makeDashboardSortable(GridLayoutManager.this);
+				DashboardConfig dashboardConfig = GWT.create(DashboardConfig.class);
+				dashboardConfig.makeDashboardSortable(GridLayoutManager.this);
 			}
 		});
     }
 	
-	/**
-	 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
-	 * columns with sortable dragable elements.
-	 * @param manager
-	 */
-	protected native void makeDashboardSortable(LayoutManager manager)/*-{
-		$wnd.$(function() {
-			var draggingFrame;
-			$wnd.$( ".LayoutColumn" ).sortable({
-				connectWith: ".LayoutColumn",
-				appendTo: '#LayoutGrid',
-				containment: '#LayoutGrid',
-				forcePlaceholderSize: true,
-				helper: 'clone',
-				start: function(event, ui){
-					var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
-					
-					var framePrefix = $wnd.shindig.container.gadgetClass.prototype.GADGET_IFRAME_PREFIX_;
-					draggingFrame = $doc.getElementById( framePrefix+gadgetId );
-					draggingFrame.style.display = 'none';
-				},
-				stop: function(event, ui){
-					var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
-					if (draggingFrame) {
-						draggingFrame.style.display = '';
-						draggingFrame = null;
+	public static class DashboardConfig
+	{
+		/**
+		 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
+		 * columns with sortable dragable elements.
+		 * @param manager
+		 */
+		public void makeDashboardSortable(LayoutManager manager)
+		{
+			makeDashboardSortableNative(manager);
+		}
+		
+		private native void makeDashboardSortableNative(LayoutManager manager)/*-{
+			$wnd.$(function() {
+				var draggingFrame;
+				$wnd.$( ".LayoutColumn" ).sortable({
+					connectWith: ".LayoutColumn",
+					appendTo: '#LayoutGrid',
+					containment: '#LayoutGrid',
+					forcePlaceholderSize: true,
+					helper: 'original',
+					start: function(event, ui){
+						var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+						
+						var framePrefix = $wnd.shindig.container.gadgetClass.prototype.GADGET_IFRAME_PREFIX_;
+						draggingFrame = $doc.getElementById( framePrefix+gadgetId );
+						draggingFrame.style.display = 'none';
+					},
+					stop: function(event, ui){
+						var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+						if (draggingFrame) {
+							draggingFrame.style.display = '';
+							draggingFrame = null;
+						}
+						var gadget = $wnd.shindig.container.getGadget(gadgetId);
+	  			    	gadget.refresh();
 					}
-					var gadget = $wnd.shindig.container.getGadget(gadgetId);
-  			    	gadget.refresh();
-				}
-			}).disableSelection();
-		});	
-	}-*/;
+				}).disableSelection();
+			});	
+		}-*/;
+	}
+
+	public static class DashboardConfigIE extends DashboardConfig
+	{
+		/**
+		 * Transform the Gadgets dashboard's HTML structure into a dragable container. It will consist in a collection of 
+		 * columns with sortable dragable elements.
+		 * @param manager
+		 */
+		@Override
+		public void makeDashboardSortable(LayoutManager manager)
+		{
+			makeDashboardSortableNative(manager);
+		}
+		
+		private native void makeDashboardSortableNative(LayoutManager manager)/*-{
+			$wnd.$(function() {
+				var draggingFrame;
+				$wnd.$( ".LayoutColumn" ).sortable({
+					connectWith: ".LayoutColumn",
+					appendTo: '#LayoutGrid',
+					containment: '#LayoutGrid',
+					forcePlaceholderSize: true,
+					helper: 'clone',
+					placeholder: 'ui-sortable-placeholder-ie',
+					start: function(event, ui){
+						var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+						
+						var framePrefix = $wnd.shindig.container.gadgetClass.prototype.GADGET_IFRAME_PREFIX_;
+						draggingFrame = $doc.getElementById( framePrefix+gadgetId );
+						draggingFrame.style.display = 'none';
+					},
+					stop: function(event, ui){
+						var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
+						if (draggingFrame) {
+							draggingFrame.style.display = '';
+							draggingFrame = null;
+						}
+						var gadget = $wnd.shindig.container.getGadget(gadgetId);
+	  			    	gadget.refresh();
+					}
+				}).disableSelection();
+			});	
+		}-*/;
+	}
 	
 	/**
 	 * Screen wrapper for template widgets.
