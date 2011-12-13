@@ -2,14 +2,14 @@
 	"gadgets.container" : ["default", "accel"],
 	"gadgets.parent" : null,
 	"gadgets.lockedDomainRequired" : false,
-	"gadgets.lockedDomainSuffix" : "-a.localhost:8888",
+	"gadgets.lockedDomainSuffix" : "-a.ssghml.sysmap.com.br:8888",
 	"gadgets.parentOrigins" : ["*"],
 	"gadgets.iframeBaseUri" : "/gadgets/ifr",
 	"gadgets.uri.iframe.basePath" : "/gadgets/ifr",
 	"gadgets.jsUriTemplate" : "http://%host%/gadgets/js/%js%",
-	"gadgets.uri.iframe.lockedDomainSuffix" :  "-a.localhost:8888",
-	"gadgets.uri.iframe.unlockedDomain" : "localhost:8888",
-	"gadgets.uri.js.host" : "http://localhost:8888/",
+	"gadgets.uri.iframe.lockedDomainSuffix" :  "-a.ssghml.sysmap.com.br:8888",
+	"gadgets.uri.iframe.unlockedDomain" : "ssghml.sysmap.com.br:8888",
+	"gadgets.uri.js.host" : "http://ssghml.sysmap.com.br:8888/",
 	"gadgets.uri.js.path" : "/gadgets/js",
 	"gadgets.uri.oauth.callbackTemplate" : "//%host%/gadgets/oauthcallback",
 	"gadgets.securityTokenType" : "insecure",
@@ -27,12 +27,12 @@
 	  "views" : {
 	    "profile" : {
 	      "isOnlyVisible" : false,
-	      "urlTemplate" : "http://localhost:8888/gadgets/profile?{var}",
+	      "urlTemplate" : "http://%host%/gadgets/profile?{var}",
 	      "aliases": ["DASHBOARD", "default"]
 	    },
 	    "canvas" : {
 	      "isOnlyVisible" : true,
-	      "urlTemplate" : "http://localhost:8888/gadgets/canvas?{var}",
+	      "urlTemplate" : "http://%host%/gadgets/canvas?{var}",
 	      "aliases" : ["FULL_PAGE"]
 	    }
 	  },

@@ -264,7 +264,7 @@ public class GridLayoutManager implements LayoutManager
 	{
 		StringBuilder tableHtml = new StringBuilder();
 		Array<Array<GadgetMetadata>> gadgetConfigs = GadgetContainer.get().getMetadata();
-		tableHtml.append("<div class='LayoutGrid' style='width:100%;'>"); 
+		tableHtml.append("<div class='LayoutGrid' id ='LayoutGrid' style='width:100%;float:left;position:relative;'>"); 
 		
 		int numColumns = gadgetConfigs.size();
 		int colWidth = 100 / numColumns;
@@ -273,7 +273,7 @@ public class GridLayoutManager implements LayoutManager
 		{
 			Array<GadgetMetadata> column = gadgetConfigs.get(i);
 			int numRows = column.size();
-			tableHtml.append("<div id='gadgets-grid-column-"+i+"' class='LayoutColumn' style='width:"+colWidth+"%;float:left;padding-bottom:100px;'>"); 
+			tableHtml.append("<div id='gadgets-grid-column-"+i+"' class='LayoutColumn' style='width:"+colWidth+"%;float:left;padding-bottom:100px;vertical-align:top'>"); 
 			for (int j=0; j< numRows; j++)
 			{
 				tableHtml.append("<div id='"+getGadgetChromeId(gadgetId++)+"' class='gadgets-gadget-chrome'></div>"); 
@@ -324,6 +324,10 @@ public class GridLayoutManager implements LayoutManager
 			var draggingFrame;
 			$wnd.$( ".LayoutColumn" ).sortable({
 				connectWith: ".LayoutColumn",
+				appendTo: '#LayoutGrid',
+				containment: '#LayoutGrid',
+				forcePlaceholderSize: true,
+				helper: 'clone',
 				start: function(event, ui){
 					var gadgetId = manager.@org.cruxframework.crux.gadgets.client.layout.LayoutManager::getGadgetId(Lcom/google/gwt/user/client/Element;)(ui.item[0]);
 					
