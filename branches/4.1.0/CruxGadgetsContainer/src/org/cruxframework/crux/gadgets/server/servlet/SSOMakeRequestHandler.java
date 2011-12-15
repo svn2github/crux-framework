@@ -141,7 +141,7 @@ public class SSOMakeRequestHandler extends MakeRequestHandler{
 		return req;
 	}
 
-	private void setSsoCookie(HttpServletRequest request, SSOHttpRequest req)
+	public static void setSsoCookie(HttpServletRequest request, SSOHttpRequest req)
     {
 	    // TODO create a white list for this
         Cookie cookie = null;
