@@ -28,6 +28,7 @@ import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
 import org.cruxframework.crux.core.declarativeui.template.TemplateParser;
@@ -700,13 +701,24 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:choice minOccurs=\"1\" maxOccurs=\"unbounded\">");
 		out.println("<xs:element name=\"parameter\" type=\"CrossDeviceParameterCondition\" />");
 		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"when\" type=\"xs:string\" use=\"required\"/>");
+		out.println("<xs:attribute name=\"when\" type=\"DeviceType\" use=\"required\"/>");
 		out.println("</xs:complexType>");
 
 		out.println("<xs:complexType name=\"CrossDeviceParameterCondition\">");
 		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
 		out.println("<xs:attribute name=\"value\" type=\"xs:string\" use=\"required\"/>");
 		out.println("</xs:complexType>");
+		
+		
+		out.println("<xs:simpleType name=\"DeviceType\">");
+		out.println("<xs:restriction base=\"xs:string\">");
+		Device[] values = Device.values();
+		for (Device device : values)
+        {
+			out.println("<xs:enumeration value=\""+device.toString()+"\" />");
+        }
+		out.println("</xs:restriction>");
+		out.println("</xs:simpleType>");
 	}
 	
 	/**

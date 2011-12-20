@@ -29,12 +29,14 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
 import org.cruxframework.crux.core.declarativeui.CruxXmlPreProcessor;
 import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
 import org.cruxframework.crux.core.declarativeui.XPathUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.rebind.crossdevice.Devices;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,7 +89,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	public Document preprocess(Document doc, String userAgent)
+	public Document preprocess(Document doc, String device)
 	{
 		if (doc == null)
 		{
@@ -98,7 +100,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		Set<String> formatters = new HashSet<String>();
 		Set<String> serializables = new HashSet<String>();
 		
-		Document result = preprocess(doc, userAgent, controllers, dataSources, formatters, serializables);
+		Document result = preprocess(doc, device, controllers, dataSources, formatters, serializables);
 		updateScreenProperties(doc, controllers, dataSources, formatters, serializables);
 		return result;
 	}
@@ -176,11 +178,11 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	private Document preprocess(Document doc, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+	private Document preprocess(Document doc, String device, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
 	{
 		Element documentElement = doc.getDocumentElement();
-		preprocessCrossBrowserTags(documentElement, userAgent, controllers, dataSources, formatters, serializables);
-		preprocess(documentElement, userAgent, controllers, dataSources, formatters, serializables, false);
+		preprocessCrossBrowserTags(documentElement, device, controllers, dataSources, formatters, serializables);
+		preprocess(documentElement, device, controllers, dataSources, formatters, serializables, false);
 		return doc;
 	}
 
@@ -189,7 +191,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param doc
 	 * @return
 	 */
-	private void preprocess(Element root, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables, boolean allowInnerSections)
+	private void preprocess(Element root, String device, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables, boolean allowInnerSections)
 	{
 		try
 		{
@@ -199,7 +201,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 				Element element = (Element)nodes.item(i);
 				if (isAttached(element) && (allowInnerSections || !isAnInnerSection(element)))
 				{
-					preprocessTemplate(element, userAgent, controllers, dataSources, formatters, serializables);
+					preprocessTemplate(element, device, controllers, dataSources, formatters, serializables);
 				}
 			}
 		}
@@ -213,13 +215,13 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	/**
 	 * 
 	 * @param documentElement
-	 * @param userAgent
+	 * @param device
 	 * @param controllers
 	 * @param dataSources
 	 * @param formatters
 	 * @param serializables
 	 */
-	private void preprocessCrossBrowserTags(Element documentElement, String userAgent, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+	private void preprocessCrossBrowserTags(Element documentElement, String device, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
     {
 		try
 		{
@@ -235,7 +237,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			}
 			for (Element element: elements)
 			{
-				preprocessCrossBrowserTag(element, userAgent, controllers, dataSources, formatters, serializables);
+				preprocessCrossBrowserTag(element, device, controllers, dataSources, formatters, serializables);
 			}
 		}
 		catch (XPathExpressionException e)
@@ -276,7 +278,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param serializables
 	 * @param element
 	 */
-	private void preprocessTemplate(Element element, String userAgent, Set<String> controllers, Set<String> dataSources, 
+	private void preprocessTemplate(Element element, String device, Set<String> controllers, Set<String> dataSources, 
 			                Set<String> formatters, Set<String> serializables)
 	{
 		Document doc = element.getOwnerDocument();
@@ -287,10 +289,10 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		{
 			throw new TemplateException(messages.templatesPreProcessorTemplateNotFound(library, element.getLocalName()));
 		}
-		template = preprocess(template, userAgent, controllers, dataSources, formatters, serializables);
+		template = preprocess(template, device, controllers, dataSources, formatters, serializables);
 
 		updateTemplateAttributes(element, template);
-		updateTemplateChildren(element, userAgent, template, controllers, dataSources, formatters, serializables);
+		updateTemplateChildren(element, device, template, controllers, dataSources, formatters, serializables);
 
 		Element templateElement = (Element) doc.importNode(template.getDocumentElement(), true);
 		extractScreenPropertiesFromElement(templateElement, controllers, dataSources, formatters, serializables);										
@@ -301,19 +303,19 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	/**
 	 * 
 	 * @param element
-	 * @param userAgent
+	 * @param device
 	 * @param controllers
 	 * @param dataSources
 	 * @param formatters
 	 * @param serializables
 	 */
-	private void preprocessCrossBrowserTag(Element element, String userAgent, Set<String> controllers, Set<String> dataSources, 
+	private void preprocessCrossBrowserTag(Element element, String device, Set<String> controllers, Set<String> dataSources, 
             Set<String> formatters, Set<String> serializables)
 	{
-		List<Element> replacements = getCrossBrowserReplacements(element, userAgent);
+		List<Element> replacements = getCrossBrowserReplacements(element, device);
 		if (replacements.size() == 0)
 		{
-			replacements = getCrossBrowserReplacements(element, "default");
+			throw new TemplateException(messages.crossDevicesTemplateParserErrorNoConditionForAgent(device));
 		}
 		NodeList nodes = element.getChildNodes(); 
 		Node parentNode = element.getParentNode();
@@ -339,31 +341,39 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	/**
 	 * 
 	 * @param crossBrowserElement
-	 * @param userAgent
+	 * @param device
 	 */
-	private List<Element> getCrossBrowserReplacements(Element crossBrowserElement, String userAgent)
+	private List<Element> getCrossBrowserReplacements(Element crossBrowserElement, String device)
     {
 	    List<Element> result = new ArrayList<Element>();
 		NodeList nodes = crossBrowserElement.getElementsByTagNameNS("http://www.cruxframework.org/crux", "conditions");
-		for (int i=0; i< nodes.getLength(); i++)
-		{
-			Element child = (Element)nodes.item(i);
-			NodeList conditions = child.getElementsByTagNameNS("http://www.cruxframework.org/crux", "condition");
-			for (int j=0; j< conditions.getLength(); j++)
+		
+		Device[] supportedDevices = Devices.getDevicesForDevice(device);
+		for (Device supportedDevice : supportedDevices)
+        {
+			for (int i=0; i< nodes.getLength(); i++)
 			{
-				Element condition = (Element)conditions.item(j);
-				String userAgentValue = condition.getAttribute("when");
-				if (StringUtils.containsValue(userAgentValue, userAgent))
+				Element child = (Element)nodes.item(i);
+				NodeList conditions = child.getElementsByTagNameNS("http://www.cruxframework.org/crux", "condition");
+				for (int j=0; j< conditions.getLength(); j++)
 				{
-					NodeList replacements = condition.getElementsByTagNameNS("http://www.cruxframework.org/crux", "parameter");
-					for (int k=0; k< replacements.getLength(); k++)
+					Element condition = (Element)conditions.item(j);
+					String userAgentValue = condition.getAttribute("when");
+					Device templateDevice = Device.valueOf(userAgentValue);
+					if (templateDevice.equals(supportedDevice))
 					{
-						Element replacement = (Element)replacements.item(k);
-						result.add(replacement);
+						NodeList replacements = condition.getElementsByTagNameNS("http://www.cruxframework.org/crux", "parameter");
+						for (int k=0; k< replacements.getLength(); k++)
+						{
+							Element replacement = (Element)replacements.item(k);
+							result.add(replacement);
+						}
+						return result;
 					}
 				}
 			}
-		}
+        }
+		
 		return result;
     }
 	
@@ -580,7 +590,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	 * @param element
 	 * @param template
 	 */
-	private void updateTemplateChildren(Element element, String userAgent, Document template, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
+	private void updateTemplateChildren(Element element, String device, Document template, Set<String> controllers, Set<String> dataSources, Set<String> formatters, Set<String> serializables)
 	{
 		Map<String, Node> sections = templateParser.getSectionElements(template);
 		List<Node> children = getChildren(element);
@@ -592,7 +602,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 				String sectionName = section.getLocalName();
 				Node templateNode = sections.get(sectionName);
 				
-				preprocess((Element)section, userAgent, controllers, dataSources, formatters, serializables, true);
+				preprocess((Element)section, device, controllers, dataSources, formatters, serializables, true);
 				
 				section = template.importNode(section, true);
 				replaceByChildren(templateNode, section);

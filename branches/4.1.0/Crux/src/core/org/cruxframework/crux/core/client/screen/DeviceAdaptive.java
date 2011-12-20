@@ -36,7 +36,7 @@ public interface DeviceAdaptive extends IsWidget
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static enum Device{pc, androids, androidTV, androidMobile, androidTablet, ios, iosTablet, mobiles, tablets, all}
+	public static enum Device{largeDisplayMouse, largeDisplayTouch, largeDisplayArrows, smallDisplayTouch, smallDisplayArrows, all}
 	
 	/**
 	 * Used to map the all templates used by the target deviceAdaptive Widget

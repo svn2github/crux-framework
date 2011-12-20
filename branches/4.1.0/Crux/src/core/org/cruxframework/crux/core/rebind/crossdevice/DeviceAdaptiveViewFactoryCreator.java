@@ -39,11 +39,11 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * @param context
 	 * @param logger
 	 * @param screen
-	 * @param userAgent
+	 * @param device
 	 */
-	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String userAgent)
+	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device)
     {
-	    super(context, logger, screen, userAgent);
+	    super(context, logger, screen, device);
     }
 
 	/**

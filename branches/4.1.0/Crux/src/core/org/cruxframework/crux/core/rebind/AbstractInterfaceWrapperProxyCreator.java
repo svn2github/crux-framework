@@ -119,7 +119,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 			throw new CruxGeneratorException();
 		}
 		
-        Screen screen = ScreenFactory.getInstance().getScreen(screenID, getUserAgent());
+        Screen screen = ScreenFactory.getInstance().getScreen(screenID, getDeviceFeatures());
         return screen;
 	}
 
@@ -141,6 +141,23 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	protected String getDeviceFeatures()
+	{
+		try
+		{
+			SelectionProperty device = context.getPropertyOracle().getSelectionProperty(logger, "device.features");
+			return device==null?null:device.getCurrentValue();
+		}
+		catch (BadPropertyValueException e)
+		{
+			throw new CruxGeneratorException(messages.errorGeneratingRegisteredElementCanNotReadDeviceFeatures(), e);
+		}
+	}
+
 	/**
 	 * @return
 	 * @throws ScreenConfigException
@@ -191,7 +208,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	        	}
 	        	for (String screenID : screenIDs)
 	        	{
-	        		Screen screen = ScreenFactory.getInstance().getScreen(screenID, getUserAgent());
+	        		Screen screen = ScreenFactory.getInstance().getScreen(screenID, getDeviceFeatures());
 	        		if(screen != null)
 	        		{
 	        			screens.add(screen);

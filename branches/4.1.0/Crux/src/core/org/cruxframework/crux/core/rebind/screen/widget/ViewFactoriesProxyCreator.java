@@ -222,19 +222,19 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	{
 		if (Environment.isProduction())
 		{
-			return new ViewFactoryCreator(context, logger, screen, getUserAgent());
+			return new ViewFactoryCreator(context, logger, screen, getDeviceFeatures());
 		}
 		else
 		{
 			ViewFactoryCreator factory = screen.getFactory();
 			if (factory == null)
 			{
-				factory = new ViewFactoryCreator(context, logger, screen, getUserAgent());
+				factory = new ViewFactoryCreator(context, logger, screen, getDeviceFeatures());
 				screen.setFactory(factory);
 			}
 			else
 			{
-				factory.prepare(context, logger, getUserAgent());
+				factory.prepare(context, logger, getDeviceFeatures());
 			}
 			return factory;
 		}

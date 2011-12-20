@@ -73,7 +73,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    
 	    initializeTemplateParser();
 	    initializeController();
-		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getUserAgent());
+		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures());
     }
 
 	/**
@@ -81,7 +81,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 */
 	protected void initializeTemplateParser()
     {
-	    Device[] devices = Devices.getDevicesForAgent(getUserAgent());
+	    Device[] devices = Devices.getDevicesForDevice(getDeviceFeatures());
 	    for (Device device : devices)
         {
 	    	template = CrossDevices.getDeviceAdaptiveTemplate(baseIntf.getQualifiedSourceName(), device);//TODO: clone ==true???
@@ -92,7 +92,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    		return;
 	    	}
         }
-	    throw new CruxGeneratorException(messages.deviceAdaptiveNoMappingForAgent(getUserAgent()));
+	    throw new CruxGeneratorException(messages.deviceAdaptiveNoMappingForDevice(getDeviceFeatures()));
     }
 	
 	/**
@@ -208,7 +208,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	public String getProxySimpleName()
 	{
 		String name = super.getProxySimpleName();
-		return name+"_"+getUserAgent();
+		return name+"_"+getDeviceFeatures();
 	}
 	
 	@Override

@@ -149,6 +149,9 @@ public interface DeclarativeUIMessages
 	@DefaultServerMessage("[declarativeui 043] - Error searching for controller associated with the deviceAdaptive widget [{0}]. Device [{1}]")
 	String crossDevicesTemplateParserErrorSearchingForController(String deviceAdaptive, String device);
 
-	@DefaultServerMessage("[declarativeui 043] - Error retrieving metadata from template associated with the deviceAdaptive widget [{0}]. Device [{1}]")
-	Object crossDevicesTemplateParserErrorRetrievingMetadata(String deviceAdaptive, String string);
+	@DefaultServerMessage("[declarativeui 044] - Error retrieving metadata from template associated with the deviceAdaptive widget [{0}]. Device [{1}]")
+	String crossDevicesTemplateParserErrorRetrievingMetadata(String deviceAdaptive, String string);
+
+	@DefaultServerMessage("[declarativeui 045] - No condition associated with userAgent {0}")
+	String crossDevicesTemplateParserErrorNoConditionForAgent(String userAgent);
 }

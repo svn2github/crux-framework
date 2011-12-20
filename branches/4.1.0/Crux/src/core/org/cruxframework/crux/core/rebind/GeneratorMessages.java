@@ -253,8 +253,11 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 055] - Error Generating value binding code for DTO [{0}], Field [{1}]. Circular Reference. ")
 	String errorGeneratingValueBindingCodeCircularReference(String className, String fieldName);
 	
-	@DefaultServerMessage("[generator 056] - Error retrieving screen Identifier.")
+	@DefaultServerMessage("[generator 056] - Can not read user.agent property.")
 	String errorGeneratingRegisteredElementCanNotReadUserAgent();
+
+	@DefaultServerMessage("[generator 057] -Can not read device.features property.")
+	String errorGeneratingRegisteredElementCanNotReadDeviceFeatures();
 
 	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String viewFactoryMetaElementDoesNotContainsType();
@@ -337,12 +340,15 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[attributeProcessor 001] - Error parsing attribute value [{0}], of widget [{2}], on screen [{1}].")
 	String rowCountProcessorErrorInvalidValue(String attributeValue, String id, String widgetId);
 
-	@DefaultServerMessage("[deviceAdaptive 001] - DeviceAdaptive widget does not declare any valid template for userAgent [{0}].")
-	String deviceAdaptiveNoMappingForAgent(String userAgent);
+	@DefaultServerMessage("[deviceAdaptive 001] - DeviceAdaptive widget does not declare any valid template for device [{0}].")
+	String deviceAdaptiveNoMappingForDevice(String device);
 
 	@DefaultServerMessage("[deviceAdaptive 002] - DeviceAdaptive implementation class [{0}] is not a valid Controller. It must be annotated with @Controller annotation.")
 	String deviceAdaptiveImplementationIsNotAController(String controllerClass);
 
 	@DefaultServerMessage("[deviceAdaptive 003] - DeviceAdaptive implementation class [{0}] must externds the base class DeviceAdaptiveController.")
 	String deviceAdaptiveImplementationIsNotADeviceAdaptiveController(String controllerClass);
+
+	@DefaultServerMessage("[deviceFeatures 001] - Property device.features can not be assigned to value [{0}].")
+	String deviceFeaturesInvalidOption(String value);
 }

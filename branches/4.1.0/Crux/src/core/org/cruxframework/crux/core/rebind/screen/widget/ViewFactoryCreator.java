@@ -96,7 +96,7 @@ public class ViewFactoryCreator
 	private final Screen screen;
 	private String screenVariable;
 	private String loggerVariable;
-	private String userAgent;
+	private String device;
 	
 	/**
 	 * Constructor
@@ -105,12 +105,12 @@ public class ViewFactoryCreator
 	 * @param logger
 	 * @param screen
 	 */
-	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String userAgent)
+	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device)
     {
 		this.logger = logger;
 		this.context = context;
 		this.screen = screen;
-		this.userAgent = userAgent;
+		this.device = device;
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 		this.loggerVariable = createVariableName("logger");
@@ -557,25 +557,25 @@ public class ViewFactoryCreator
 	/**
 	 * @param context
 	 * @param logger
-	 * @param userAgent 
+	 * @param device 
 	 */
-	void prepare(GeneratorContextExt context, TreeLogger logger, String userAgent)
+	void prepare(GeneratorContextExt context, TreeLogger logger, String device)
 	{
 		this.context = context;
 		this.logger = logger;
 		this.lazyPanels.clear();
 		this.declaredMessages.clear();
 		this.postProcessingCode.clear();
-		this.userAgent = userAgent;
+		this.device = device;
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	String getUserAgent()
+	String getDevice()
 	{
-		return this.userAgent;
+		return this.device;
 	}
 	
 	/**
@@ -948,7 +948,7 @@ public class ViewFactoryCreator
 	 */
 	String getSimpleName()
     {
-		String className = screen.getModule()+"_"+screen.getRelativeId()+"_"+this.userAgent; 
+		String className = screen.getModule()+"_"+screen.getRelativeId()+"_"+this.device; 
 		className = className.replaceAll("[\\W]", "_");
 		return className;
     }

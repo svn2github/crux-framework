@@ -30,24 +30,22 @@ public class Devices
 	
 	static
 	{
-		DEVICES_MAP.put("safari", new Device[]{Device.pc, Device.all});
-		DEVICES_MAP.put("ie6", new Device[]{Device.pc, Device.all});
-		DEVICES_MAP.put("ie8", new Device[]{Device.pc, Device.all});
-		DEVICES_MAP.put("ie9", new Device[]{Device.pc, Device.all});
-		DEVICES_MAP.put("opera", new Device[]{Device.pc, Device.all});
-		DEVICES_MAP.put("gecko", new Device[]{Device.pc, Device.all});
-		//TODO: mapear dispositivos aki
+		DEVICES_MAP.put(Device.largeDisplayMouse.toString(), new Device[]{Device.largeDisplayMouse, Device.all});
+		DEVICES_MAP.put(Device.largeDisplayArrows.toString(), new Device[]{Device.largeDisplayArrows, Device.largeDisplayMouse, Device.all});
+		DEVICES_MAP.put(Device.largeDisplayTouch.toString(), new Device[]{Device.largeDisplayTouch, Device.largeDisplayArrows, Device.largeDisplayMouse, Device.all});
+		DEVICES_MAP.put(Device.smallDisplayArrows.toString(), new Device[]{Device.smallDisplayArrows, Device.largeDisplayMouse, Device.all});
+		DEVICES_MAP.put(Device.smallDisplayTouch.toString(), new Device[]{Device.smallDisplayTouch, Device.smallDisplayArrows, Device.largeDisplayMouse, Device.all});
 	}
 	
 	/**
-	 * Return a list of devices that support the target userAgent. That list is ordered by 
-	 * relevance (Eg. {Device.androidMobile, Device.mobiles, Device.android, Device.all})
-	 * @param userAgent
+	 * Return a list of devices that support the target device. That list is ordered by 
+	 * relevance (Eg. {Device.smallDisplayArrows, Device.largeDisplayMouse, Device.all}})
+	 * @param device
 	 * @return
 	 */
-	public static Device[] getDevicesForAgent(String userAgent)
+	public static Device[] getDevicesForDevice(String device)
 	{
-		Device[] devices = DEVICES_MAP.get(userAgent);
+		Device[] devices = DEVICES_MAP.get(device);
 		if (devices == null)
 		{
 			return new Device[]{Device.all};

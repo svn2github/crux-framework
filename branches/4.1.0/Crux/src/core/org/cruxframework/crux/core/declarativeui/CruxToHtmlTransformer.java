@@ -61,20 +61,20 @@ public class CruxToHtmlTransformer
 	 * Generate the HTML code from the .crux.xml page.
 	 * 
 	 * @param screenId
-	 * @param userAgent
+	 * @param device
 	 * @param file
 	 * @param out
 	 * @param escapeXML
 	 * @param generateWidgetsMetadata
 	 */
-	public static void generateHTML(String screenId, String userAgent, InputStream file, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
+	public static void generateHTML(String screenId, String device, InputStream file, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
 	{
 		init();
 		
 		try
 		{
 			StringWriter buff = new StringWriter();
-			Document source = loadCruxPage(file, userAgent);
+			Document source = loadCruxPage(file, device);
 			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
 			htmlBuilder.build(screenId, source, buff);
 			String result = buff.toString();
@@ -118,17 +118,17 @@ public class CruxToHtmlTransformer
 	
 	/**
 	 * @param screenId
-	 * @param userAgent
+	 * @param device
 	 * @param filePath
 	 * @param out
 	 * @param escapeXML
 	 * @param generateWidgetsMetadata
 	 */
-	public static void generateHTML(String screenId, String userAgent, String filePath, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
+	public static void generateHTML(String screenId, String device, String filePath, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
 	{
 		try
 		{
-			generateHTML(screenId, userAgent, new FileInputStream(filePath), out, escapeXML, generateWidgetsMetadata);
+			generateHTML(screenId, device, new FileInputStream(filePath), out, escapeXML, generateWidgetsMetadata);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -222,12 +222,12 @@ public class CruxToHtmlTransformer
 	 * @return
 	 * @throws HTMLBuilderException
 	 */
-	private static Document loadCruxPage(InputStream file, String userAgent) throws HTMLBuilderException
+	private static Document loadCruxPage(InputStream file, String device) throws HTMLBuilderException
 	{
 		try
 		{
 			Document document = documentBuilder.parse(file);
-			return preprocess(document, userAgent);
+			return preprocess(document, device);
 		}
 		catch (Exception e)
 		{
@@ -240,16 +240,11 @@ public class CruxToHtmlTransformer
 	 * @param doc
 	 * @return
 	 */
-	private static Document preprocess(Document doc, String userAgent)
+	private static Document preprocess(Document doc, String device)
 	{
-		if (userAgent == null || userAgent.length() == 0)
-		{
-			userAgent = "default";
-		}
-		
 		for (CruxXmlPreProcessor preProcessor : preProcessors)
 		{
-			doc = preProcessor.preprocess(doc, userAgent);
+			doc = preProcessor.preprocess(doc, device);
 		}
 		
 		return doc;

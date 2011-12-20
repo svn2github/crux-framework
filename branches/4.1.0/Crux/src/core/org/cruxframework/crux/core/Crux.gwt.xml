@@ -8,6 +8,17 @@
 	<inherits name="com.google.gwt.logging.Logging"/>
     <set-property name="gwt.logging.enabled" value="FALSE"/>    
 		
+	<!-- Cross-dDevice support -->
+	<!-- Property to identify the device screen features -->
+    <define-property name="device.features" values="large_display_mouse" />
+	<extend-property name="device.features" values="large_display_touch" fallback-value="large_display_mouse" />
+	<extend-property name="device.features" values="large_display_arrows" fallback-value="large_display_mouse" />
+	<extend-property name="device.features" values="small_display_arrows" fallback-value="large_display_mouse" />
+	<extend-property name="device.features" values="small_display_touch" fallback-value="small_display_arrows" />
+	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
+
+<!-- 	<set-property name="device.features" value="large_display_mouse" /> -->
+
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='org.cruxframework.crux.core.client.Crux'/>
 

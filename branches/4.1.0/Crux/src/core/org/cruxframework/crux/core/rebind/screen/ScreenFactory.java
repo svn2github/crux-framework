@@ -92,16 +92,16 @@ public class ScreenFactory
 	/**
 	 * Factory method for screens.
 	 * @param id
-	 * @param userAgent user.agent value for this permutation beeing compiled
+	 * @param device device property for this permutation being compiled
 	 * @return
 	 * @throws ScreenConfigException
 	 */
-	public Screen getScreen(String id, String userAgent) throws ScreenConfigException
+	public Screen getScreen(String id, String device) throws ScreenConfigException
 	{
 		try 
 		{
 			long lastModified = getScreenLastModified(id);
-			String cacheId = userAgent==null?id:id+userAgent;
+			String cacheId = device==null?id:id+device;
 			
 			Screen screen = getFromCache(id, cacheId, lastModified);
 			if (screen != null)
@@ -109,7 +109,7 @@ public class ScreenFactory
 				return screen;
 			}
 
-			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id, userAgent);
+			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id, device);
 			if (stream == null)
 			{
 				throw new ScreenConfigException(messages.screenFactoryScreeResourceNotFound(id));

@@ -53,7 +53,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	/**
 	 * 
 	 */
-	public InputStream getScreenResource(String screenId, String userAgent, boolean escapeXML, boolean generateWidgetsMetadata) throws CruxGeneratorException
+	public InputStream getScreenResource(String screenId, String device, boolean escapeXML, boolean generateWidgetsMetadata) throws CruxGeneratorException
 	{
 		try
 		{
@@ -111,7 +111,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 				return null;
 			}
 			
-			InputStream result = performTransformation(screenId, userAgent, inputStream, escapeXML, generateWidgetsMetadata);
+			InputStream result = performTransformation(screenId, device, inputStream, escapeXML, generateWidgetsMetadata);
 			
 			if(manager != null)
 			{
@@ -134,17 +134,17 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	 * @return
 	 * @throws IOException
 	 */
-	protected InputStream performTransformation(String screenId, String userAgent, InputStream inputStream, boolean escapeXML, boolean generateWidgetsMetadata) 
+	protected InputStream performTransformation(String screenId, String device, InputStream inputStream, boolean escapeXML, boolean generateWidgetsMetadata) 
 				throws IOException
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		CruxToHtmlTransformer.generateHTML(screenId, userAgent, inputStream, out, escapeXML, generateWidgetsMetadata);			
+		CruxToHtmlTransformer.generateHTML(screenId, device, inputStream, out, escapeXML, generateWidgetsMetadata);			
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	public InputStream getScreenXMLResource(String screenId, String userAgent) throws CruxGeneratorException
+	public InputStream getScreenXMLResource(String screenId, String device) throws CruxGeneratorException
     {
-	    return getScreenResource(screenId, userAgent, true, true);
+	    return getScreenResource(screenId, device, true, true);
     }
 
 	public InputStream getScreenResource(String screenId) throws CruxGeneratorException
