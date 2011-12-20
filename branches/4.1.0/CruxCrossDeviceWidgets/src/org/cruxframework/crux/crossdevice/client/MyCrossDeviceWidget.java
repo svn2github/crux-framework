@@ -7,7 +7,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 
 @Templates({
 	@Template(name="myCrossDeviceAll", device=Device.all),
-	@Template(name="myCrossDeviceAndroids", device=Device.androids)
+	@Template(name="myCrossDeviceAndroids", device=Device.smallDisplayArrows)
 })
 public interface MyCrossDeviceWidget extends DeviceAdaptive
 {
