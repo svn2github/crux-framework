@@ -15,9 +15,8 @@
 	<extend-property name="device.features" values="large_display_arrows" fallback-value="large_display_mouse" />
 	<extend-property name="device.features" values="small_display_arrows" fallback-value="large_display_mouse" />
 	<extend-property name="device.features" values="small_display_touch" fallback-value="small_display_arrows" />
-	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
 
-<!-- 	<set-property name="device.features" value="large_display_mouse" /> -->
+	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
 
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='org.cruxframework.crux.core.client.Crux'/>
