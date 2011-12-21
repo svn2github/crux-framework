@@ -11,6 +11,7 @@
     	<any>
       		<when-property-is name="user.agent" value="ie6" />
     		<when-property-is name="user.agent" value="ie8" />
+    		<when-property-is name="user.agent" value="ie9" />
     	</any>
     </replace-with>
     <generate-with class="org.cruxframework.crux.widgets.rebind.PopupOpenerInvokerGenerator">
@@ -42,6 +43,7 @@
     	<any>
       		<when-property-is name="user.agent" value="ie6" />
     		<when-property-is name="user.agent" value="ie8" />
+    		<when-property-is name="user.agent" value="ie9" />
     	</any>
     </replace-with>
     <replace-with
@@ -61,6 +63,7 @@
     	<any>
       		<when-property-is name="user.agent" value="ie6" />
     		<when-property-is name="user.agent" value="ie8" />
+    		<when-property-is name="user.agent" value="ie9" />
     	</any>
     </replace-with>
 	<replace-with
@@ -85,6 +88,7 @@
     	<any>
       		<when-property-is name="user.agent" value="ie6" />
     		<when-property-is name="user.agent" value="ie8" />
+    		<when-property-is name="user.agent" value="ie9" />
     	</any>
     </replace-with>
     <replace-with
