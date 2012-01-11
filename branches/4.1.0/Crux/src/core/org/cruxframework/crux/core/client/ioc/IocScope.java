@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.ioc;
+package org.cruxframework.crux.core.client.ioc;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DocumentScope implements IocScope
+abstract class IocScope
 {
-
+	public abstract <T> T getValue(IocProvider<T> provider, String className);	
 }

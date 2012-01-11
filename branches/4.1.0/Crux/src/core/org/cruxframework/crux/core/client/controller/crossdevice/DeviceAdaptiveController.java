@@ -43,6 +43,24 @@ public abstract class DeviceAdaptiveController
     }
 
 	/**
+	 * Override this method to define default stylename for the widget
+	 */
+	protected abstract void initWidgetDefaultStyleName();
+	
+	/**
+	 * Override this method to apply dependent stylenames for the widget
+	 */
+	protected abstract void applyWidgetDependentStyleNames();
+
+	/**
+	 * Override this method if you need to add some startup code for component
+	 */
+	protected void init()
+	{
+		
+	}
+	
+	/**
 	 * 
 	 * @param id
 	 * @return
@@ -93,6 +111,7 @@ public abstract class DeviceAdaptiveController
 	public void setStyleName(String style)
 	{
 		boundWidget.setStyleName(style);
+		applyWidgetDependentStyleNames();
 	}
 	
 	public String getStyleName()

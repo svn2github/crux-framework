@@ -39,7 +39,7 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 	private static GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
 	
 	private static final List<String> VALID_VALUES = Arrays.asList(new String[]{
-			"large_display_mouse", "large_display_touch", "large_display_arrows", "small_display_arrows", "small_display_touch"});
+			"largeDisplayMouse", "largeDisplayTouch", "largeDisplayArrows", "smallDisplayArrows", "smallDisplayTouch"});
 
 	static void writeDeviceFeaturesPropertyJavaScript(SourceWriter body) 
 	{
@@ -53,15 +53,15 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		body.indent();
 		body.println("if (supportsTouch) {");
 		body.indent();
-		body.println("return 'large_display_touch';");
+		body.println("return 'largeDisplayTouch';");
 		body.outdent();
 		body.println("} else if (isNotPCDevice) {");
 		body.indent();
-		body.println("return 'large_display_arrows';");
+		body.println("return 'largeDisplayArrows';");
 		body.outdent();
 		body.println("} else {");
 		body.indent();
-		body.println("return 'large_display_mouse';");
+		body.println("return 'largeDisplayMouse';");
 		body.outdent();
 		body.println("}");
 		body.outdent();
@@ -69,17 +69,17 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		body.indent();
 		body.println("if (supportsTouch) {");
 		body.indent();
-		body.println("return 'small_display_touch';");
+		body.println("return 'smallDisplayTouch';");
 		body.outdent();
 		body.println("} else {");
 		body.indent();
-		body.println("return 'small_display_arrows';");
+		body.println("return 'smallDisplayArrows';");
 		body.outdent();
 		body.println("}");
 		body.outdent();
 		body.println("} else {");
 		body.indent();
-		body.println("return 'large_display_mouse';");
+		body.println("return 'largeDisplayMouse';");
 		body.outdent();
 		body.println("}");
 	}
@@ -101,6 +101,5 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		body.println("}");
 
 		return body.toString();
-
 	}
 }

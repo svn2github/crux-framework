@@ -10,11 +10,11 @@
 		
 	<!-- Cross-dDevice support -->
 	<!-- Property to identify the device screen features -->
-    <define-property name="device.features" values="large_display_mouse" />
-	<extend-property name="device.features" values="large_display_touch" fallback-value="large_display_mouse" />
-	<extend-property name="device.features" values="large_display_arrows" fallback-value="large_display_mouse" />
-	<extend-property name="device.features" values="small_display_arrows" fallback-value="large_display_mouse" />
-	<extend-property name="device.features" values="small_display_touch" fallback-value="small_display_arrows" />
+    <define-property name="device.features" values="largeDisplayMouse" />
+	<extend-property name="device.features" values="largeDisplayTouch" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="largeDisplayArrows" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="smallDisplayArrows" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="smallDisplayTouch" fallback-value="smallDisplayArrows" />
 
 	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
 

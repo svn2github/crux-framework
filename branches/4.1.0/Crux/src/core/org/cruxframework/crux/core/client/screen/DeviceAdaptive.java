@@ -32,6 +32,19 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface DeviceAdaptive extends IsWidget
 {
 	/**
+	 * The screen sizes supported by crux
+	 * @author Thiago da Rosa de Bustamante
+	 */
+	public static enum Size{small, large}
+	
+	/**
+	 * The supported features for cross device widgets
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static enum Feature{touch, mouse}
+
+	/**
 	 * All devices supported by Crux CrossDevice engine
 	 * @author Thiago da Rosa de Bustamante
 	 *

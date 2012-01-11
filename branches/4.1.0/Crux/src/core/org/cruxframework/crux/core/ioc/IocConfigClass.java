@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.ioc;
 
-import org.cruxframework.crux.core.client.ioc.InjectionProvider;
+import org.cruxframework.crux.core.client.ioc.IocProvider;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -24,7 +24,7 @@ import org.cruxframework.crux.core.client.ioc.InjectionProvider;
 public class IocConfigClass<T> implements IocConfig
 {
 	private final Class<T> boundClass;
-	private Class<? extends InjectionProvider<? extends T>> providerClass = null;
+	private Class<? extends IocProvider<? extends T>> providerClass = null;
 	private Class<? extends T> toClass;
 	private IocScope scope = new LocalScope();
 	
@@ -33,7 +33,7 @@ public class IocConfigClass<T> implements IocConfig
 		this.boundClass = clazz;
     }
 
-	public IocConfigClass<T> toProvider(Class<? extends InjectionProvider<? extends T>> providerClass)
+	public IocConfigClass<T> toProvider(Class<? extends IocProvider<? extends T>> providerClass)
 	{
 		if (this.toClass != null)
 		{
@@ -60,7 +60,7 @@ public class IocConfigClass<T> implements IocConfig
 	
 	public void inDocumentScope()
 	{
-		this.scope = new DocumentScope();
+		this.scope = new IocDocumentScope();
 	}
 	
 	public IocShareableScope inScreenScope()
@@ -80,7 +80,7 @@ public class IocConfigClass<T> implements IocConfig
     	return boundClass;
     }
 
-	Class<? extends InjectionProvider<? extends T>> getProviderClass()
+	Class<? extends IocProvider<? extends T>> getProviderClass()
     {
     	return providerClass;
     }

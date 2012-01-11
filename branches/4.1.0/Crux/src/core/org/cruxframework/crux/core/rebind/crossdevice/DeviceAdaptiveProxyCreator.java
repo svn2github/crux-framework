@@ -84,7 +84,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    Device[] devices = Devices.getDevicesForDevice(getDeviceFeatures());
 	    for (Device device : devices)
         {
-	    	template = CrossDevices.getDeviceAdaptiveTemplate(baseIntf.getQualifiedSourceName(), device);//TODO: clone ==true???
+	    	template = CrossDevices.getDeviceAdaptiveTemplate(baseIntf.getQualifiedSourceName(), device, true);
 	    	if (template != null)
 	    	{
 	    		this.device = device;
@@ -172,6 +172,8 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		String widget = viewFactoryCreator.generateWidgetsCreation(srcWriter, metaData);
 		
 		srcWriter.println("initWidget("+widget+");");
+		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
+		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).initWidgetDefaultStyleName();");
 		srcWriter.outdent();
 		srcWriter.println("}");
     }

@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.json.JSONArray;
 
 import com.google.gwt.dev.util.collect.HashSet;
@@ -47,7 +46,6 @@ public class Screen
 	protected List<String> formatters = new ArrayList<String>();
 	protected List<String> dataSources = new ArrayList<String>();
 	protected String title;
-	protected boolean deviceAdaptive = false;
 	
 	private ViewFactoryCreator factory = null;
 	
@@ -103,10 +101,6 @@ public class Screen
 			if (!widgetTypes.contains(widget.getType()))
 			{
 				widgetTypes.add(widget.getType());
-			}
-			if (WidgetConfig.isDeviceAdaptiveWidget(widget.getType()))
-			{
-				setDeviceAdaptive(true); //TODO: rever necessidade disso...
 			}
 		}
 	}
@@ -279,18 +273,9 @@ public class Screen
 	    return this.fragment;
     }
 
-	public boolean isDeviceAdaptive()
-	{
-		return this.deviceAdaptive;
-	}
-	
 	protected void setFragment(String fragment)
     {
     	this.fragment = fragment;
     }
 	
-	protected void setDeviceAdaptive(boolean deviceAdaptive)
-	{
-		this.deviceAdaptive = deviceAdaptive;
-	}
 }

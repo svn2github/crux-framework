@@ -31,10 +31,10 @@ public class Devices
 	static
 	{
 		DEVICES_MAP.put(Device.largeDisplayMouse.toString(), new Device[]{Device.largeDisplayMouse, Device.all});
-		DEVICES_MAP.put(Device.largeDisplayArrows.toString(), new Device[]{Device.largeDisplayArrows, Device.largeDisplayMouse, Device.all});
-		DEVICES_MAP.put(Device.largeDisplayTouch.toString(), new Device[]{Device.largeDisplayTouch, Device.largeDisplayArrows, Device.largeDisplayMouse, Device.all});
-		DEVICES_MAP.put(Device.smallDisplayArrows.toString(), new Device[]{Device.smallDisplayArrows, Device.largeDisplayMouse, Device.all});
-		DEVICES_MAP.put(Device.smallDisplayTouch.toString(), new Device[]{Device.smallDisplayTouch, Device.smallDisplayArrows, Device.largeDisplayMouse, Device.all});
+		DEVICES_MAP.put(Device.largeDisplayArrows.toString(), new Device[]{Device.largeDisplayArrows, Device.all});
+		DEVICES_MAP.put(Device.largeDisplayTouch.toString(), new Device[]{Device.largeDisplayTouch, Device.all});
+		DEVICES_MAP.put(Device.smallDisplayArrows.toString(), new Device[]{Device.smallDisplayArrows, Device.all});
+		DEVICES_MAP.put(Device.smallDisplayTouch.toString(), new Device[]{Device.smallDisplayTouch, Device.smallDisplayArrows, Device.all});
 	}
 	
 	/**
