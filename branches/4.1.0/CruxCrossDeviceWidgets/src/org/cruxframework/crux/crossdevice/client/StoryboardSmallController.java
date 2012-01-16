@@ -1,5 +1,8 @@
 package org.cruxframework.crux.crossdevice.client;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
@@ -10,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -33,6 +35,58 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	{
 		storyboard.add(createFocusPanelForCell(widget));
 	}
+	
+	@Override
+    public void clear()
+    {
+		storyboard.clear();	    
+    }
+
+	@Override
+    public Iterator<Widget> iterator()
+    {
+	    return new Iterator<Widget>()
+		{
+	    	private int index = -1;
+	    	
+			@Override
+            public boolean hasNext()
+            {
+			      return index < (getWidgetCount() - 1);
+            }
+
+			@Override
+            public Widget next()
+			{
+				if (index >= getWidgetCount()) 
+				{
+					throw new NoSuchElementException();
+				}
+				return getWidget(++index);
+            }
+
+			@Override
+            public void remove()
+            {
+				if ((index < 0) || (index >= getWidgetCount())) 
+				{
+					throw new IllegalStateException();
+				}
+				StoryboardSmallController.this.remove(index--);
+            }
+		};
+    }
+
+	@Override
+    public boolean remove(Widget w)
+    {
+	    int index = getWidgetIndex(w);
+	    if (index >= 0)
+	    {
+	    	return remove(index);
+	    }
+	    return false;
+    }
 
 	@Override
 	public int getWidgetCount()
@@ -63,14 +117,8 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	@Override
     public HandlerRegistration addSelectionHandler(SelectionHandler<Integer> handler)
     {
-		 return storyboard.addHandler(handler, SelectionEvent.getType());
+		 return addHandler(handler, SelectionEvent.getType());
 	}
-
-	@Override
-    public void fireEvent(GwtEvent<?> event)
-    {
-		storyboard.fireEvent(event);
-    }
 
 	protected FocusPanel createFocusPanelForCell(Widget widget)
 	{

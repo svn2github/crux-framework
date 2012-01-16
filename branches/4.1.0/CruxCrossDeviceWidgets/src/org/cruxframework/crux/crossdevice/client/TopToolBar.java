@@ -19,26 +19,35 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
+import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeOpenAndBeforeCloseHandlers;
 
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @Templates({
-	@Template(name="storyboardLarge", device=Device.all),
-	@Template(name="storyboardLargeMouse", device=Device.largeDisplayMouse),
-	@Template(name="storyboardSmall", device=Device.smallDisplayArrows)
+//	@Template(name="topToolBarLarge", device=Device.all),
+//	@Template(name="topToolBarLargeMouse", device=Device.largeDisplayMouse),
+//	@Template(name="topToolBarLargeTouch", device=Device.largeDisplayTouch),
+//	@Template(name="topToolBarSmallArrows", device=Device.smallDisplayArrows),
+//	@Template(name="topToolBarSmallTouch", device=Device.smallDisplayTouch)
+	@Template(name="topToolBarSmallArrows", device=Device.all)
 })
-public interface Storyboard extends DeviceAdaptive, IndexedPanel, HasSelectionHandlers<Integer>, HasWidgets
+public interface TopToolBar extends DeviceAdaptive, IndexedPanel, HasWidgets,
+								    HasBeforeOpenAndBeforeCloseHandlers, 
+								    HasOpenHandlers<TopToolBar>, HasCloseHandlers<TopToolBar>
 {
-	String getLargeDeviceItemWidth();
-	void setLargeDeviceItemWidth(String width);
-	String getSmallDeviceItemHeight();
-	void setSmallDeviceItemHeight(String height);
-	String getLargeDeviceItemHeight();
-	void setLargeDeviceItemHeight(String height);
+	void setGripWidget(Widget widget);
+	Widget getGripWidget();
+	void close();
+	void open();
+	void toggle();
+	void setGripHeight(int height);
+	int getGripHeight();
 }
