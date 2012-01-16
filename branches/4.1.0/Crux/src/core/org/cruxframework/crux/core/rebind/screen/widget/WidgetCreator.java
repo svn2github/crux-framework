@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.PartialSupport;
 
 /**
@@ -635,7 +636,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			if (styleAttributes.length > 0)
 			{
 				String element = ViewFactoryCreator.createVariableName("elem");
-				out.println("Element "+element+" = "+context.getWidget()+".getElement();");
+				out.println(Element.class.getCanonicalName() +" "+element+" = "+context.getWidget()+".getElement();");
 				for (int i=0; i<styleAttributes.length; i++)
 				{
 					String[] attr = styleAttributes[i].split(":");

@@ -21,6 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -86,4 +88,5 @@ public interface DeviceAdaptive extends IsWidget
 	void setHeight(String height);
 	com.google.gwt.user.client.Element getElement();
 	HandlerRegistration addAttachHandler(Handler handler);
+	<H extends EventHandler> HandlerRegistration addHandler(final H handler, GwtEvent.Type<H> type);
 }

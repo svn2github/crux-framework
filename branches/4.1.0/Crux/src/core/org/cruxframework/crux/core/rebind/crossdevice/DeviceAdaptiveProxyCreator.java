@@ -40,6 +40,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -57,6 +58,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	private DeviceAdaptiveViewFactoryCreator viewFactoryCreator;
 	private JClassType deviceAdaptiveControllerClass;
 	private JClassType deviceAdaptiveClass;
+	private JClassType hasHandlersClass;
 
 	/**
 	 * 
@@ -70,6 +72,8 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 
 	    deviceAdaptiveControllerClass = context.getTypeOracle().findType(DeviceAdaptiveController.class.getCanonicalName());
 	    deviceAdaptiveClass = context.getTypeOracle().findType(DeviceAdaptive.class.getCanonicalName());
+	    hasHandlersClass = context.getTypeOracle().findType(HasHandlers.class.getCanonicalName());
+	    
 	    
 	    initializeTemplateParser();
 	    initializeController();
@@ -123,7 +127,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	@Override
     protected void generateWrapperMethod(JMethod method, SourceWriter srcWriter)
     {
-		if (!method.getEnclosingType().equals(deviceAdaptiveClass))
+		if (mustDelegateToController(method))
 		{
 			JType returnType = method.getReturnType().getErasedType();
 
@@ -151,6 +155,12 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		}
     }
 
+	protected boolean mustDelegateToController(JMethod method)
+    {
+	    JClassType enclosingType = method.getEnclosingType();
+		return (!enclosingType.equals(deviceAdaptiveClass) && !enclosingType.equals(hasHandlersClass));
+    }
+
 	@Override
     protected String[] getImports()
     {
@@ -170,6 +180,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		
 		JSONObject metaData = templateParser.getTemplateMetadata(template,  baseIntf.getQualifiedSourceName(), device);
 		String widget = viewFactoryCreator.generateWidgetsCreation(srcWriter, metaData);
+		//TODO alterar a chamada de eventos impressa pelo EvtProcessor para referenciar o controller do objeto proxy criado aki
 		
 		srcWriter.println("initWidget("+widget+");");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");

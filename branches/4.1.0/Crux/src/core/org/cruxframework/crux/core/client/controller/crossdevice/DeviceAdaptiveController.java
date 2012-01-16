@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.client.controller.crossdevice;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -144,6 +146,16 @@ public abstract class DeviceAdaptiveController
 		return boundWidget.addAttachHandler(handler);
 	}
 
+	public <H extends EventHandler> HandlerRegistration addHandler(final H handler, GwtEvent.Type<H> type)
+	{
+		return boundWidget.addHandler(handler, type);
+	}
+
+	public void fireEvent(GwtEvent<?> event)
+	{
+		boundWidget.fireEvent(event);
+	}
+	
 	public Widget asWidget()
 	{
 		return boundWidget;

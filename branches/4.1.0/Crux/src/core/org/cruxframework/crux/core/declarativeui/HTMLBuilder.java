@@ -76,6 +76,7 @@ class HTMLBuilder
 	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.cruxframework.org/crux/";
 	private static Set<String> widgetsSubTags;
 	private static Set<String> hasInnerHTMLWidgetTags;
+	private static Set<String> orphanWidgets;
 	private static final String XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
 	
 	static 
@@ -88,7 +89,7 @@ class HTMLBuilder
 	        
 	        documentBuilder = builderFactory.newDocumentBuilder();
 	        generateReferenceWidgetsList();
-	        generateHtmlPanelWidgetsList();
+	        generateSpecialWidgetsList();
 
 	        XPath htmlPath = XPathUtils.getHtmlXPath();
 			findCruxPagesBodyExpression = htmlPath.compile("//h:body");
@@ -123,15 +124,17 @@ class HTMLBuilder
     }
 	
 	/**
-	 * Panels that can contain HTML mixed with widgets as contents (like {@link HTMLPanel}) must be handled
-	 * differentially. That method maps all of those widgets that are present into the project.
+	 * That method maps all widgets that needs special handling from Crux.
+	 * Panels that can contain HTML mixed with widgets as contents (like {@link HTMLPanel}) and widgets 
+	 * that must not be attached to DOM must be handled	differentially. 
 	 *    
 	 * @return
 	 * @throws HTMLBuilderException 
 	 */
-	private static void generateHtmlPanelWidgetsList() throws HTMLBuilderException
+	private static void generateSpecialWidgetsList() throws HTMLBuilderException
 	{
 		htmlPanelContainers = new HashSet<String>();
+		orphanWidgets = new HashSet<String>();
 		Set<String> registeredLibraries = WidgetConfig.getRegisteredLibraries();
 		for (String library : registeredLibraries)
 		{
@@ -145,6 +148,10 @@ class HTMLBuilder
 					if (factory.htmlContainer())
 					{
 						htmlPanelContainers.add(library+"_"+widget);				
+					}
+					if (!factory.attachToDOM())
+					{
+						orphanWidgets.add(library+"_"+widget);				
 					}
 				}
 				catch (Exception e)
@@ -728,6 +735,30 @@ class HTMLBuilder
 	}
 	
 	/**
+	 * @param node
+	 * @return
+	 */
+	private boolean isOrphanWidget(Node node)
+	{
+		if (node instanceof Element)
+		{
+			return isOrphanWidget(node.getLocalName(), getLibraryName(node));
+		}
+		return false;
+	}
+
+	/**
+	 * @param localName
+	 * @param libraryName
+	 * @return
+	 */
+	private boolean isOrphanWidget(String localName, String libraryName)
+	{
+	    return orphanWidgets.contains(libraryName+"_"+localName);
+	}
+	
+	
+	/**
 	 * @param tagName
 	 * @return
 	 */
@@ -818,7 +849,8 @@ class HTMLBuilder
 	private void translateCruxInnerTags(Element cruxPageElement, Element htmlElement, Document htmlDocument)
     {
 		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
-		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && isHTMLChild(cruxPageElement)))
+		boolean notOrphanWidget = !isOrphanWidget(cruxPageElement);
+		if (htmlContainerWidget || ((isWidget(getCurrentWidgetTag())) && notOrphanWidget && isHTMLChild(cruxPageElement)))
 		{
 			Element widgetHolder;
 			boolean hasSiblings = hasSiblingElements(cruxPageElement);
