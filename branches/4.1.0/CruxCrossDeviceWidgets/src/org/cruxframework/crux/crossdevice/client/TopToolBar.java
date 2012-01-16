@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 //	@Template(name="topToolBarLargeMouse", device=Device.largeDisplayMouse),
 //	@Template(name="topToolBarLargeTouch", device=Device.largeDisplayTouch),
 //	@Template(name="topToolBarSmallArrows", device=Device.smallDisplayArrows),
-//	@Template(name="topToolBarSmallTouch", device=Device.smallDisplayTouch)
+	@Template(name="topToolBarSmallTouch", device=Device.smallDisplayTouch),
 	@Template(name="topToolBarSmallArrows", device=Device.all)
 })
 public interface TopToolBar extends DeviceAdaptive, IndexedPanel, HasWidgets,

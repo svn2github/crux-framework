@@ -2,4 +2,26 @@
 	<inherits name='org.cruxframework.crux.core.Crux'/>
 	<inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
+
+    <!-- TopToolBar panel animation handler -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController.WebkitPanelAnimation">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController.PanelAnimation" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController.JSPanelAnimation">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController.PanelAnimation" />
+    	<none>
+      		<when-property-is name="user.agent" value="safari" />
+    	</none>
+	</replace-with>
+
+    <!-- TopToolBar panel touch handler -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.TopToolBarTouchSmallController.WebkitGripHandler">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.TopToolBarTouchSmallController.GripHandler" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
 </module>

@@ -18,6 +18,7 @@ package org.cruxframework.crux.crossdevice.client;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
@@ -27,10 +28,12 @@ import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeOpenEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeOpenHandler;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,15 +55,18 @@ import com.google.gwt.user.client.ui.Widget;
 @Controller("topToolBarArrowsSmallController")
 public class TopToolBarArrowsSmallController extends DeviceAdaptiveController implements TopToolBar
 {
-	private FlowPanel canvas;
-	private FlowPanel floatPanel;
-	private boolean opened;
-	private Element placeHolder;
-	private FocusPanel grip;
-	private int gripHeight;
-	private boolean alreadySettingPanelPosition = false;
-	private int pos;
-	private int openedPosition;
+	protected FlowPanel canvas;
+	protected FlowPanel floatPanel;
+	protected boolean opened;
+	protected Element placeHolder;
+	protected FocusPanel grip;
+	protected int gripHeight;
+	protected boolean alreadySettingPanelPosition = false;
+	protected int pos;
+	protected int canvasHeight;
+	
+	@Create
+	protected PanelAnimation panelAnimation;
 
 	@Override
     public Widget getWidget(int index)
@@ -218,8 +224,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			}
 		});
 		floatPanel = (FlowPanel) getChildWidget("topToolBarFloatingPanel");
-		setStyleTransition(floatPanel.getElement());
-		setStyleTransitionDuration(floatPanel.getElement(), 400);
+		panelAnimation.prepareElement(floatPanel.getElement());
 		createPlaceHolderPanel();
 	}
 
@@ -244,7 +249,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							placeHolder.getStyle().setHeight(gripHeight, Unit.PX);
 							floatPanel.getElement().getStyle().setTop(closedPosition + gripHeight , Unit.PX);
 							alreadySettingPanelPosition = false;
-							openedPosition = (-closedPosition) - gripHeight;
+							canvasHeight = (-closedPosition) - gripHeight;
 						}
 					});
 				}
@@ -277,7 +282,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 
 	protected void doOpen()
     {
-		setPosition(this.openedPosition);
+		setPosition(this.canvasHeight);
     }
 	
 	protected void doClose()
@@ -288,8 +293,8 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	protected void setPosition(int pos)
 	{
 		this.pos = pos;
-		setStyleTransformPosition(floatPanel.getElement(), pos);
-		if (this.pos == this.openedPosition) 
+		panelAnimation.changePosition(floatPanel.getElement(), pos, this.canvasHeight);
+		if (this.pos == this.canvasHeight) 
 		{
 			this.opened = true;
 		}
@@ -299,16 +304,81 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		}
 	}
 	
-	protected native void setStyleTransformPosition(Element elem, int pos)/*-{
-		elem.style.webkitTransform = 'translate3d(0,' + pos + 'px,0)';
-	}-*/;
+	static interface PanelAnimation
+	{
+		void changePosition(Element elem, int pos, int openedPosition);
+		void prepareElement(Element elem);
+	}
 	
-	protected native void setStyleTransition(Element elem)/*-{
-		elem.style.webkitTransitionProperty = '-webkit-transform';
-	}-*/;
 	
-	protected native void setStyleTransitionDuration(Element elem, int duration)/*-{
-		elem.style.webkitTransitionDuration = duration+'ms';
-	}-*/;
+	static class WebkitPanelAnimation implements PanelAnimation
+	{
+		public native void changePosition(Element elem, int pos, int openedPosition)/*-{
+			elem.style.webkitTransform = 'translate3d(0,' + pos + 'px,0)';
+		}-*/;
+			
+		@Override
+        public void prepareElement(Element elem)
+        {
+	        setStyleTransition(elem);
+	        setStyleTransitionDuration(elem, 400);
+        }
+
+		protected native void setStyleTransition(Element elem)/*-{
+			elem.style.webkitTransitionProperty = '-webkit-transform';
+		}-*/;
+		
+		protected native void setStyleTransitionDuration(Element elem, int duration)/*-{
+			elem.style.webkitTransitionDuration = duration+'ms';
+		}-*/;
+	}
 	
+	static class JSPanelAnimation implements PanelAnimation
+	{
+
+		public void changePosition(Element elem, int pos, int canvasHeight)
+		{
+			JSAnimation animation;
+			if (pos == canvasHeight)
+			{
+				animation = new JSAnimation(elem, pos);
+			}
+			else
+			{
+				animation = new JSAnimation(elem, -canvasHeight);
+			}
+			animation.run(400);
+		}
+			
+		@Override
+        public void prepareElement(Element elem)
+        {
+        }
+
+		private static class JSAnimation extends Animation
+		{
+			private int delta;
+			private int initialPos;
+			private Style style;
+
+			public JSAnimation(Element elem, int delta)
+            {
+				this.initialPos = elem.getAbsoluteTop();
+				this.delta = delta;
+				this.style = elem.getStyle();
+            }
+			
+			@Override
+			protected void onUpdate(double progress)
+			{
+				style.setTop(initialPos+(delta*progress), Unit.PX);
+			}
+			
+			@Override
+			protected void onComplete()
+			{
+			    onUpdate(1);
+			}
+		}
+	}
 }
