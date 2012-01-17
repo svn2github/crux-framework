@@ -42,8 +42,12 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -55,6 +59,8 @@ import com.google.gwt.user.client.ui.Widget;
 @Controller("topToolBarArrowsSmallController")
 public class TopToolBarArrowsSmallController extends DeviceAdaptiveController implements TopToolBar
 {
+	static final int ANIMATION_DURATION = 400;
+
 	protected FlowPanel canvas;
 	protected FlowPanel floatPanel;
 	protected boolean opened;
@@ -214,8 +220,16 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	{
 		canvas = (FlowPanel) getChildWidget("canvas");
 		grip = (FocusPanel) getChildWidget("grip");
-		//TODO remover isso aki e colocar a declaracao do evento no template
-		grip.addClickHandler(new ClickHandler()
+		prepareGripPanel();
+		floatPanel = (FlowPanel) getChildWidget("topToolBarFloatingPanel");
+		panelAnimation.prepareElement(floatPanel.getElement());
+		createPlaceHolderPanel();
+		checkScreenResize();
+	}
+
+	protected void prepareGripPanel()
+    {
+	    grip.addClickHandler(new ClickHandler()
 		{
 			@Override
 			public void onClick(ClickEvent event)
@@ -223,11 +237,46 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 				toggle();
 			}
 		});
-		floatPanel = (FlowPanel) getChildWidget("topToolBarFloatingPanel");
-		panelAnimation.prepareElement(floatPanel.getElement());
-		createPlaceHolderPanel();
-	}
+    }
 
+	protected void checkScreenResize()
+    {
+	    checkOrientationChanges(this);
+		Window.addResizeHandler(new ResizeHandler()
+		{
+			@Override
+			public void onResize(ResizeEvent event)
+			{
+				new Timer()
+				{
+					@Override
+					public void run()
+					{
+						setFloatPanelPosition();
+					}
+				}.schedule(50);
+			}
+		});
+    }
+
+	protected native void checkOrientationChanges(TopToolBarArrowsSmallController controller)/*-{
+		var supportsOrientationChange = 'onorientationchange' in $wnd;
+		if (supportsOrientationChange)
+		{	
+			$wnd.previousOrientation = $wnd.orientation;
+			var checkOrientation = function(){
+			    if($wnd.orientation !== $wnd.previousOrientation){
+			        $wnd.previousOrientation = $wnd.orientation;
+			        setTimeout(new function(){
+			        	controller.@org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController::setFloatPanelPosition()();
+			        }, 50);
+			    }
+			};
+		
+			$wnd.addEventListener("orientationchange", checkOrientation, false);
+		}
+	}-*/;
+	
 	protected void setFloatPanelPosition()
     {
 		if (!alreadySettingPanelPosition)
@@ -250,6 +299,9 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							floatPanel.getElement().getStyle().setTop(closedPosition + gripHeight , Unit.PX);
 							alreadySettingPanelPosition = false;
 							canvasHeight = (-closedPosition) - gripHeight;
+//							Window.alert("closedPosition=["+closedPosition+"] gripHeight=["+gripHeight+"] canvasHeight=["+canvasHeight+"]");
+
+							ensurePreviousState();
 						}
 					});
 				}
@@ -290,8 +342,19 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	    setPosition(0);
     }
 	
+	protected void ensurePreviousState()
+	{
+		if (this.opened)
+		{
+//			Window.alert("this.pos=["+this.pos+"] this.canvasHeight=["+this.canvasHeight+"]");
+			this.pos = this.canvasHeight;
+			panelAnimation.setPosition(floatPanel.getElement(), pos, this.canvasHeight);
+		}
+	}
+	
 	protected void setPosition(int pos)
 	{
+//		Window.alert("this.pos=["+this.pos+"] this.canvasHeight=["+this.canvasHeight+"] pos=["+pos+"]");
 		this.pos = pos;
 		panelAnimation.changePosition(floatPanel.getElement(), pos, this.canvasHeight);
 		if (this.pos == this.canvasHeight) 
@@ -306,22 +369,31 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	
 	static interface PanelAnimation
 	{
-		void changePosition(Element elem, int pos, int openedPosition);
+		void changePosition(Element elem, int pos, int canvasHeight);
+		void setPosition(Element element, int pos, int canvasHeight);
 		void prepareElement(Element elem);
 	}
 	
 	
 	static class WebkitPanelAnimation implements PanelAnimation
 	{
-		public native void changePosition(Element elem, int pos, int openedPosition)/*-{
+		public native void changePosition(Element elem, int pos, int canvasHeight)/*-{
 			elem.style.webkitTransform = 'translate3d(0,' + pos + 'px,0)';
 		}-*/;
 			
 		@Override
+        public void setPosition(Element elem, int pos, int canvasHeight)
+        {
+	        setStyleTransitionDuration(elem, 0);
+	        changePosition(elem, pos, canvasHeight);
+	        setStyleTransitionDuration(elem, ANIMATION_DURATION);
+        }
+
+		@Override
         public void prepareElement(Element elem)
         {
 	        setStyleTransition(elem);
-	        setStyleTransitionDuration(elem, 400);
+	        setStyleTransitionDuration(elem, ANIMATION_DURATION);
         }
 
 		protected native void setStyleTransition(Element elem)/*-{
@@ -335,10 +407,27 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	
 	static class JSPanelAnimation implements PanelAnimation
 	{
+		@Override
+        public void setPosition(Element elem, int pos, int canvasHeight)
+        {
+			JSAnimation animation = getAnimation(elem, pos, canvasHeight);
+			animation.onComplete();
+        }
 
 		public void changePosition(Element elem, int pos, int canvasHeight)
 		{
-			JSAnimation animation;
+			JSAnimation animation = getAnimation(elem, pos, canvasHeight);
+			animation.run(ANIMATION_DURATION);
+		}
+			
+		@Override
+        public void prepareElement(Element elem)
+        {
+        }
+
+		private JSAnimation getAnimation(Element elem, int pos, int canvasHeight)
+        {
+	        JSAnimation animation;
 			if (pos == canvasHeight)
 			{
 				animation = new JSAnimation(elem, pos);
@@ -347,12 +436,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			{
 				animation = new JSAnimation(elem, -canvasHeight);
 			}
-			animation.run(400);
-		}
-			
-		@Override
-        public void prepareElement(Element elem)
-        {
+	        return animation;
         }
 
 		private static class JSAnimation extends Animation

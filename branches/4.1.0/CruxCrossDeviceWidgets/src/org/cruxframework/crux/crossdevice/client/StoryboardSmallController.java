@@ -157,6 +157,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
     {
 		storyboard = getStoryboard();
 		this.itemHeight = "75px";
+		this.itemHeight = "100%";
     }
 	
 	@Override

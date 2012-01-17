@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 
 /**
@@ -44,23 +43,13 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 	protected GripHandler gripHandler;
 	
 	@Override
-	protected void init()
-	{
-		canvas = (FlowPanel) getChildWidget("canvas");
-		grip = (FocusPanel) getChildWidget("grip");
-		prepareGripPanel();
-		floatPanel = (FlowPanel) getChildWidget("topToolBarFloatingPanel");
-		panelAnimation.prepareElement(floatPanel.getElement());
-		createPlaceHolderPanel();
-	}
-
-	@Override
     protected void applyWidgetDependentStyleNames()
     {
 		super.applyWidgetDependentStyleNames();
 		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.touch.toString());
     }
 
+	@Override
 	protected void prepareGripPanel()
 	{
 		gripHandler.prepare(grip, this);
@@ -145,7 +134,7 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 			} 
 			else 
 			{
-				setStyleTransitionDuration(controller.floatPanel.getElement(), 400);
+				setStyleTransitionDuration(controller.floatPanel.getElement(), ANIMATION_DURATION);
 				controller.setPosition(!controller.opened ? controller.canvasHeight : 0);
 			}
 

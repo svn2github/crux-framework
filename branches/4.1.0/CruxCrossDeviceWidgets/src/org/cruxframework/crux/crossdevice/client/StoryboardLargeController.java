@@ -24,14 +24,6 @@ public class StoryboardLargeController extends StoryboardSmallController
 	{
 	    final FocusPanel panel = super.createFocusPanelForCell(widget);
 	    panel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-	    
-//   Para o IE, testar
-//	    display:-moz-inline-stack;
-//	    display:inline-block;
-//	    zoom:1;
-//	    *display:inline;
-
-
 		return panel;
 	}
 
