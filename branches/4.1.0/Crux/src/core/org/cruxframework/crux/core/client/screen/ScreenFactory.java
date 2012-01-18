@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.RegisteredClientFormatters;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.parser.CruxMetaData;
 
 
@@ -44,7 +45,8 @@ public class ScreenFactory
 	private RegisteredControllers registeredControllers = null;
 	private RegisteredDataSources registeredDataSources = null;
 	private Screen screen = null;
-	private ViewFactory viewFactory = null;	
+	private ViewFactory viewFactory = null;
+	private Device currentDevice = null;	
 	
 	/**
 	 * Constructor
@@ -126,6 +128,15 @@ public class ScreenFactory
 	}
 	
 	/**
+	 * Retrieve the device type for the client running the application
+	 * @return
+	 */
+	public Device getCurrentDevice()
+	{
+		return currentDevice;
+	}
+	
+	/**
 	 * Called by ViewFactory to initialize the screen controllers 
 	 * @param registeredControllers
 	 */
@@ -151,6 +162,7 @@ public class ScreenFactory
 		CruxMetaData metaData = CruxMetaData.loadMetaData();
 		screen = new Screen(metaData.getScreenId(), metaData.getLazyDependencies());
 		this.viewFactory = (ViewFactory) GWT.create(ViewFactory.class);
+		currentDevice = this.viewFactory.getCurrentDevice();
 		
 		if (LogConfiguration.loggingIsEnabled())
 		{

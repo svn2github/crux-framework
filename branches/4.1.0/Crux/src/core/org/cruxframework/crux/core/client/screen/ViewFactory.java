@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.screen;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+
 
 /**
  * Create the view, based on the {@code .crux.xml} page.  
@@ -29,4 +31,10 @@ public interface ViewFactory
 	 * @param screenId - the page 
 	 */
 	void createView(String screenId) throws InterfaceConfigException;
+
+	/**
+	 * Retrieve the device that runs the application
+	 * @return
+	 */
+	Device getCurrentDevice();
 }

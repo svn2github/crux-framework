@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.ScreenFactory;
 import org.cruxframework.crux.core.client.screen.ViewFactory;
@@ -70,7 +71,17 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
-		sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
+		generateCreateViewMethod(sourceWriter);
+		generateGetCurrentDeviceMethod(sourceWriter);
+    }
+
+	/**
+	 * 
+	 * @param sourceWriter
+	 */
+	protected void generateCreateViewMethod(SourceWriter sourceWriter)
+    {
+	    sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
 		sourceWriter.indent();
 
 		if (Environment.isProduction())
@@ -89,6 +100,21 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		{
 			generateFragmentedViewFactoryCreation(sourceWriter);
 		}
+    }
+
+	/**
+	 * 
+	 * @param sourceWriter
+	 */
+	protected void generateGetCurrentDeviceMethod(SourceWriter sourceWriter)
+    {
+	    sourceWriter.println("public "+Device.class.getCanonicalName()+" getCurrentDevice(){ ");
+		sourceWriter.indent();
+
+		sourceWriter.println("return "+Device.class.getCanonicalName()+"."+getDeviceFeatures()+";");
+
+		sourceWriter.outdent();
+		sourceWriter.println("}");
     }
 
 	/**

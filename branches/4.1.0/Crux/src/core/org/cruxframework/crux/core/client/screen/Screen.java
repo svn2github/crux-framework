@@ -30,6 +30,7 @@ import org.cruxframework.crux.core.client.context.ContextManager;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -435,6 +436,15 @@ public class Screen
 		return ScreenFactory.getInstance().getClientFormatter(formatter);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public static Device getCurrentDevice()
+	{
+		return ScreenFactory.getInstance().getCurrentDevice();
+	}
+	
 	/**
 	 * 
 	 * @return
