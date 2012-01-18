@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 
 
@@ -39,4 +40,5 @@ public @interface TagAttribute
 	boolean supportsI18N() default false;
 	Class<?> processor() default AttributeProcessor.NoParser.class;
 	boolean xsdIgnore() default false;
+	Device[] supportedDevices() default {Device.all};
 }

@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
@@ -137,7 +138,7 @@ class AttributesAnnotationScanner
 	        throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingAttributeProcessor(), e);
         }
 		
-		return doCreateAttributeProcessorWithParser(attrName, method, processor);
+		return doCreateAttributeProcessorWithParser(attrName, method, processor, attr.supportedDevices());
     }
 
 	/**
@@ -146,25 +147,28 @@ class AttributesAnnotationScanner
 	 * @param processor
 	 * @return
 	 */
-	private AttributeCreator doCreateAttributeProcessorWithParser(final String attrName, final Method method, final AttributeProcessor<?> processor)
+	private AttributeCreator doCreateAttributeProcessorWithParser(final String attrName, final Method method, final AttributeProcessor<?> processor, final Device[] supportedDevices)
     {
 	    return new AttributeCreator()
 		{
 			public void createAttribute(SourcePrinter out, WidgetCreatorContext context)
 			{
-				String attrValue = context.readWidgetProperty(attrName);
-				if (!StringUtils.isEmpty(attrValue))
+				if (widgetCreator.isCurrentDeviceSupported(supportedDevices))
 				{
-					try
-                    {
-	                    method.invoke(processor, out, context, attrValue);
-                    }
-                    catch (Exception e)
-                    {
-                    	
-            	        throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName, 
-            	        		context.getWidgetId(), widgetCreator.getScreen().getId()), e);
-                    }
+					String attrValue = context.readWidgetProperty(attrName);
+					if (!StringUtils.isEmpty(attrValue))
+					{
+						try
+						{
+							method.invoke(processor, out, context, attrValue);
+						}
+						catch (Exception e)
+						{
+
+							throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName, 
+									context.getWidgetId(), widgetCreator.getScreen().getId()), e);
+						}
+					}
 				}
 			}
 		};
@@ -231,7 +235,7 @@ class AttributesAnnotationScanner
 			
 		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, type.getCanonicalName(), 
 												   isStringExpression, supportsI18N, isEnumExpression, 
-												   isPrimitiveExpression);
+												   isPrimitiveExpression, attr.supportedDevices());
     }
 
 	/**
@@ -247,18 +251,21 @@ class AttributesAnnotationScanner
 	private AttributeCreator doCreateAutomaticAttributeProcessor(final String attrName, final String setterMethod, 
 																 final String typeName, final boolean isStringExpression, 
 																 final boolean supportsI18N, final boolean isEnumExpression, 
-																 final boolean isPrimitiveExpression)
+																 final boolean isPrimitiveExpression, final Device[] supportedDevices)
     {
 	    return new AttributeCreator()
 		{
 			public void createAttribute(SourcePrinter out, WidgetCreatorContext context)
 			{
+				if (widgetCreator.isCurrentDeviceSupported(supportedDevices))
+				{
 					String attrValue = context.readWidgetProperty(attrName);
 					String expression = getExpression(typeName, isStringExpression, isEnumExpression, isPrimitiveExpression, attrValue);
 					if (expression != null)
 					{
 						out.println(context.getWidget()+"."+setterMethod+"("+expression+");");
 					}
+				}
 			}
 
 			private String getExpression(String typeName, 

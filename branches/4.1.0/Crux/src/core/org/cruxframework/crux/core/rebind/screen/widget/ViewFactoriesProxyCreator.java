@@ -260,4 +260,10 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		};
 		return imports;
 	}
+	
+	@Override
+	public String getProxySimpleName()
+	{
+	    return super.getProxySimpleName()+"_"+this.getDeviceFeatures();
+	}
 }

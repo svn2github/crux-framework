@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
@@ -576,6 +577,27 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		return context;
 	}
 
+	/**
+	 * 
+	 * @param supported
+	 * @return
+	 */
+	protected boolean isCurrentDeviceSupported(Device[] supported)
+	{
+		for (Device device : supported)
+        {
+			if (device.equals(Device.all))
+			{
+				return true;
+			}
+			if (factory.getDevice().equals(device.toString()))
+			{
+				return true;
+			}
+        }
+		return false;
+	}
+	
 	/**
 	 * Create a new post-processing scope
 	 */

@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind.screen.widget;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
@@ -92,28 +93,31 @@ class ChildrenAnnotationScanner
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ChildProcessor createChildProcessor(final boolean isAnyWidget, final String widgetProperty, 
-																	  final WidgetLazyChecker lazyChecker,  final WidgetChildProcessor processor)
+																	  final WidgetLazyChecker lazyChecker,  final WidgetChildProcessor processor, final Device[] supportedDevices)
     {
         final boolean isHasPostProcessor = processor instanceof HasPostProcessor;
 	    return new ChildProcessor()
 		{
             public void processChild(SourcePrinter out, WidgetCreatorContext context)
 			{
-				if (isAnyWidget)
-				{
-					processAnyWidgetChild(out, context);
-				}
-				else
-				{
-					try
-					{
-						processor.processChildren(out, context);
-					}
-					catch (Exception e)
-					{
-						throw new CruxGeneratorException(messages.widgetCreatorErrorRunningChildProcessor(e.getMessage()),e);
-					}
-					processChildren(out, context);
+            	if (widgetCreator.isCurrentDeviceSupported(supportedDevices))
+            	{
+            		if (isAnyWidget)
+            		{
+            			processAnyWidgetChild(out, context);
+            		}
+            		else
+            		{
+            			try
+            			{
+            				processor.processChildren(out, context);
+            			}
+            			catch (Exception e)
+            			{
+            				throw new CruxGeneratorException(messages.widgetCreatorErrorRunningChildProcessor(e.getMessage()),e);
+            			}
+            			processChildren(out, context);
+            		}
 				}
 			}
 
@@ -174,7 +178,7 @@ class ChildrenAnnotationScanner
 	 */
 	private void createChildProcessorForMultipleChildrenProcessor(boolean acceptNoChildren, ChildrenProcessor childrenProcessor, 
 																  Class<?> childProcessorClass, boolean isAgregator,
-																  WidgetChildProcessor<?> processor)
+																  WidgetChildProcessor<?> processor, Device[] supportedDevices)
     {
 	    TagConstraints processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 	    final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
@@ -189,7 +193,7 @@ class ChildrenAnnotationScanner
 	    
 	    final String childName = getChildTagName(tagName, isAgregator, (isAnyWidget || isAnyWidgetType));
 
-	    ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor);
+	    ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, supportedDevices);
 	    if (!isAnyWidget && !isAnyWidgetType)
 	    {
 	    	childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));
@@ -278,7 +282,7 @@ class ChildrenAnnotationScanner
 
 					createChildProcessorForMultipleChildrenProcessor(acceptNoChildren, childrenProcessor, 
 							childProcessorClass, isAgregator, 
-							processor);
+							processor, child.supportedDevices());
 				}
             }
 			return childrenProcessor;
@@ -314,8 +318,9 @@ class ChildrenAnnotationScanner
 			processor = child.value().newInstance();
 			processor.setWidgetCreator(widgetCreator);
 
+			Device[] supportedDevices = child.supportedDevices();
 			ChildrenProcessor childrenProcessor = doCreateChildrenProcessorForSingleChild(processorClass, 
-					acceptNoChildren, processor, childProcessor);
+					acceptNoChildren, processor, childProcessor, supportedDevices);
 
 			return childrenProcessor;
 		}
@@ -395,7 +400,7 @@ class ChildrenAnnotationScanner
 	 * @return
 	 */
 	private ChildrenProcessor doCreateChildrenProcessorForSingleChild(Class<?> processorClass, final boolean acceptNoChildren, 
-											WidgetChildProcessor<?> processor, Class<?> childProcessorClass)
+											WidgetChildProcessor<?> processor, Class<?> childProcessorClass, Device[] supportedDevices)
     {
 		TagConstraints processorAttributes = this.factoryHelper.getChildtrenAttributesAnnotation(childProcessorClass);
 		final String widgetProperty = (processorAttributes!=null?processorAttributes.widgetProperty():"");
@@ -425,7 +430,7 @@ class ChildrenAnnotationScanner
 		};
 		scannedProcessors.put(processorClass.getCanonicalName(), childrenProcessor);
 		
-		ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor);
+		ChildProcessor childProcessor = createChildProcessor(isAnyWidget, widgetProperty, lazyChecker, processor, supportedDevices);
 		if (!isAnyWidget && !isAnyWidgetType)
 		{
 			childProcessor.setChildrenProcessor(scanChildren(childProcessorClass, isAgregator));

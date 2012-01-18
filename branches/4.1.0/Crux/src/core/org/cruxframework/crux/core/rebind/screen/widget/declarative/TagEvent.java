@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 
 
@@ -32,4 +33,5 @@ import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 public @interface TagEvent
 {
 	Class<? extends EvtProcessor> value();	
+	Device[] supportedDevices() default {Device.all};
 }

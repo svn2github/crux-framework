@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 
 
@@ -33,4 +34,5 @@ public @interface TagChild
 {
 	Class<? extends WidgetChildProcessor<?>> value();
 	boolean autoProcess() default true;
+	Device[] supportedDevices() default {Device.all};
 }

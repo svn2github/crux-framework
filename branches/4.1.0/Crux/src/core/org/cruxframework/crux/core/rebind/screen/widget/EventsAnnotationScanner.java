@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -115,15 +116,18 @@ class EventsAnnotationScanner
         {
         	throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingEvtBinder());
         }
-		
+		final Device[] supportedDevices = evt.supportedDevices();
 		return new EventCreator()
 		{
 			public void createEvent(SourcePrinter out, WidgetCreatorContext context)
 			{
-				String eventValue = context.readWidgetProperty(evtBinder.getEventName());
-				if (!StringUtils.isEmpty(eventValue))
+				if (widgetCreator.isCurrentDeviceSupported(supportedDevices))
 				{
-					evtBinder.processEvent(out, context, eventValue);
+					String eventValue = context.readWidgetProperty(evtBinder.getEventName());
+					if (!StringUtils.isEmpty(eventValue))
+					{
+						evtBinder.processEvent(out, context, eventValue);
+					}
 				}
 			}
 		};
