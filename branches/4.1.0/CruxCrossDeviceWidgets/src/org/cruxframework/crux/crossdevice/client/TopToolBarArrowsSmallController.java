@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
@@ -46,7 +47,6 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -73,6 +73,8 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	
 	@Create
 	protected PanelAnimation panelAnimation;
+
+	private ResizeAndRotateExecutor resizeAndRotateExecutor;
 
 	@Override
     public Widget getWidget(int index)
@@ -218,6 +220,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	@Override
 	protected void init()
 	{
+		resizeAndRotateExecutor = new ResizeAndRotateExecutor(this, 100);
 		canvas = (FlowPanel) getChildWidget("canvas");
 		grip = (FocusPanel) getChildWidget("grip");
 		prepareGripPanel();
@@ -247,14 +250,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			@Override
 			public void onResize(ResizeEvent event)
 			{
-				new Timer()
-				{
-					@Override
-					public void run()
-					{
-						setFloatPanelPosition();
-					}
-				}.schedule(50);
+				resizeOrRotateDevice();
 			}
 		});
     }
@@ -267,15 +263,18 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			var checkOrientation = function(){
 			    if($wnd.orientation !== $wnd.previousOrientation){
 			        $wnd.previousOrientation = $wnd.orientation;
-			        setTimeout(new function(){
-			        	controller.@org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController::setFloatPanelPosition()();
-			        }, 50);
+		        	controller.@org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController::resizeOrRotateDevice()();
 			    }
 			};
 		
 			$wnd.addEventListener("orientationchange", checkOrientation, false);
 		}
 	}-*/;
+	
+	protected void resizeOrRotateDevice()
+	{
+		resizeAndRotateExecutor.execute();
+	}
 	
 	protected void setFloatPanelPosition()
     {
@@ -299,9 +298,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							floatPanel.getElement().getStyle().setTop(closedPosition + gripHeight , Unit.PX);
 							alreadySettingPanelPosition = false;
 							canvasHeight = (-closedPosition) - gripHeight;
-//							Window.alert("closedPosition=["+closedPosition+"] gripHeight=["+gripHeight+"] canvasHeight=["+canvasHeight+"]");
-
-							ensurePreviousState();
 						}
 					});
 				}
@@ -342,19 +338,18 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	    setPosition(0);
     }
 	
-	protected void ensurePreviousState()
+	protected void setPanelDefaultPosition()
 	{
 		if (this.opened)
 		{
-//			Window.alert("this.pos=["+this.pos+"] this.canvasHeight=["+this.canvasHeight+"]");
-			this.pos = this.canvasHeight;
-			panelAnimation.setPosition(floatPanel.getElement(), pos, this.canvasHeight);
+			this.pos = 0;
+			panelAnimation.setDefaultPosition(floatPanel.getElement(), this.canvasHeight);
+			this.opened = false;
 		}
 	}
 	
 	protected void setPosition(int pos)
 	{
-//		Window.alert("this.pos=["+this.pos+"] this.canvasHeight=["+this.canvasHeight+"] pos=["+pos+"]");
 		this.pos = pos;
 		panelAnimation.changePosition(floatPanel.getElement(), pos, this.canvasHeight);
 		if (this.pos == this.canvasHeight) 
@@ -370,7 +365,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	static interface PanelAnimation
 	{
 		void changePosition(Element elem, int pos, int canvasHeight);
-		void setPosition(Element element, int pos, int canvasHeight);
+		void setDefaultPosition(Element element, int canvasHeight);
 		void prepareElement(Element elem);
 	}
 	
@@ -382,12 +377,18 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		}-*/;
 			
 		@Override
-        public void setPosition(Element elem, int pos, int canvasHeight)
-        {
+		public void setDefaultPosition(final Element elem, int canvasHeight){
 	        setStyleTransitionDuration(elem, 0);
-	        changePosition(elem, pos, canvasHeight);
-	        setStyleTransitionDuration(elem, ANIMATION_DURATION);
-        }
+	        changePosition(elem, 0, canvasHeight);
+	        Scheduler.get().scheduleDeferred(new ScheduledCommand()
+			{
+				@Override
+				public void execute()
+				{
+					setStyleTransitionDuration(elem, ANIMATION_DURATION);
+				}
+			});
+		};
 
 		@Override
         public void prepareElement(Element elem)
@@ -408,9 +409,9 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	static class JSPanelAnimation implements PanelAnimation
 	{
 		@Override
-        public void setPosition(Element elem, int pos, int canvasHeight)
+        public void setDefaultPosition(Element elem, int canvasHeight)
         {
-			JSAnimation animation = getAnimation(elem, pos, canvasHeight);
+			JSAnimation animation = getAnimation(elem, 0, canvasHeight);
 			animation.onComplete();
         }
 
@@ -464,5 +465,28 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			    onUpdate(1);
 			}
 		}
+	}
+	
+	private static class ResizeAndRotateExecutor extends BeginEndExecutor
+	{
+		private final TopToolBarArrowsSmallController controller;
+
+		public ResizeAndRotateExecutor(TopToolBarArrowsSmallController controller, int maxIntervalBetweenStartAndEnd)
+        {
+	        super(maxIntervalBetweenStartAndEnd);
+			this.controller = controller;
+        }
+
+		@Override
+        protected void doEndAction()
+        {
+			controller.setPanelDefaultPosition();
+			controller.setFloatPanelPosition();
+        }
+
+		@Override
+        protected void doBeginAction()
+        {
+        }
 	}
 }
