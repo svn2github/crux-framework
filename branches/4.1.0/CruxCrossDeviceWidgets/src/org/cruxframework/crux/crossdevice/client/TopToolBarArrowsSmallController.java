@@ -281,6 +281,9 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		if (!alreadySettingPanelPosition)
 		{
 			alreadySettingPanelPosition = true;
+			final boolean panelOpened = this.opened;
+			setPanelDefaultPosition();
+
 			Scheduler.get().scheduleDeferred(new ScheduledCommand()
 			{
 				@Override
@@ -298,6 +301,10 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							floatPanel.getElement().getStyle().setTop(closedPosition + gripHeight , Unit.PX);
 							alreadySettingPanelPosition = false;
 							canvasHeight = (-closedPosition) - gripHeight;
+							if (panelOpened)
+							{
+								open();
+							}
 						}
 					});
 				}
@@ -480,7 +487,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		@Override
         protected void doEndAction()
         {
-			controller.setPanelDefaultPosition();
 			controller.setFloatPanelPosition();
         }
 
