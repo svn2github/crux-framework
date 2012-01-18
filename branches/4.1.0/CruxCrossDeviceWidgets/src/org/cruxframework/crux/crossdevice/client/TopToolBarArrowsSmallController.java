@@ -474,7 +474,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		}
 	}
 	
-	private static class ResizeAndRotateExecutor extends BeginEndExecutor
+	static class ResizeAndRotateExecutor extends BeginEndExecutor
 	{
 		private final TopToolBarArrowsSmallController controller;
 

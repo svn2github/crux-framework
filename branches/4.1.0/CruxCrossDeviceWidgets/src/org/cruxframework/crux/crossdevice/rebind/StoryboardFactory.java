@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.rebind;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -19,9 +20,9 @@ import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 	@TagChild(StoryboardFactory.WidgetContentProcessor.class)
 })
 @TagAttributes({
-	@TagAttribute("largeDeviceItemWidth"),
-	@TagAttribute("smallDeviceItemHeight"),
-	@TagAttribute("largeDeviceItemHeight")
+	@TagAttribute(value="largeDeviceItemWidth", supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch}),
+	@TagAttribute(value="smallDeviceItemHeight", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch}),
+	@TagAttribute(value="largeDeviceItemHeight", supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch})
 })
 public class StoryboardFactory  extends ComplexPanelFactory<WidgetCreatorContext> implements HasSelectionHandlersFactory<WidgetCreatorContext>
 {

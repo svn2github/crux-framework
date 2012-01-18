@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.rebind;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -17,11 +18,11 @@ import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 
 @DeclarativeFactory(library="crossDevice", id="topTollBar", targetWidget=TopToolBar.class)
 @TagChildren({
-	@TagChild(TopToolBarFactory.GripProcessor.class),
+	@TagChild(value=TopToolBarFactory.GripProcessor.class, supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch}),
 	@TagChild(TopToolBarFactory.CanvasProcessor.class)
 })
 @TagAttributes({
-	@TagAttribute(value="gripHeight", type=Integer.class, required=true)
+	@TagAttribute(value="gripHeight", type=Integer.class, required=true, supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
 })
 
 public class TopToolBarFactory  extends ComplexPanelFactory<WidgetCreatorContext> implements HasSelectionHandlersFactory<WidgetCreatorContext>
