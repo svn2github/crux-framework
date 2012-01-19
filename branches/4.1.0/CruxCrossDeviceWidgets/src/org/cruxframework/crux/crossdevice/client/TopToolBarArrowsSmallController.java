@@ -50,6 +50,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -220,6 +221,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	@Override
 	protected void init()
 	{
+		RootPanel.get().add(this);
 		resizeAndRotateExecutor = new ResizeAndRotateExecutor(this, 100);
 		canvas = (FlowPanel) getChildWidget("canvas");
 		grip = (FocusPanel) getChildWidget("grip");

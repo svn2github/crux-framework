@@ -16,7 +16,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import org.cruxframework.crux.crossdevice.client.TopToolBar;
 import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 
-@DeclarativeFactory(library="crossDevice", id="topTollBar", targetWidget=TopToolBar.class)
+@DeclarativeFactory(library="crossDevice", id="topTollBar", targetWidget=TopToolBar.class, attachToDOM=false)
 @TagChildren({
 	@TagChild(value=TopToolBarFactory.GripProcessor.class, supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch}),
 	@TagChild(TopToolBarFactory.CanvasProcessor.class)
