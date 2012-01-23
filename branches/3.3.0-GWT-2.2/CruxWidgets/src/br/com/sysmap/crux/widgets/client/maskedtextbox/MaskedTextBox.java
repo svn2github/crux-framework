@@ -235,16 +235,25 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	 * 
 	 * @param value
 	 */
-	public void setUnformattedValue(Object value)
+	public void setUnformattedValue(Object value, boolean fireEvents)
 	{
 		if (this.formatter != null)
 		{
-			textBox.setValue(this.formatter.format(value));
+			textBox.setValue(this.formatter.format(value), fireEvents);
 		}
 		else
 		{
-			textBox.setValue(value!= null?value.toString():"");
+			textBox.setValue(value!= null?value.toString():"", fireEvents);
 		}
+	}
+
+	/**
+	 * 
+	 * @param value
+	 */
+	public void setUnformattedValue(Object value)
+	{
+		setUnformattedValue(value, false);
 	}
 
 	/**

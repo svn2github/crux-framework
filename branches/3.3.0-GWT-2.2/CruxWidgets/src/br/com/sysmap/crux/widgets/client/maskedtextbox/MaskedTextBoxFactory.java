@@ -31,7 +31,6 @@ import br.com.sysmap.crux.core.client.screen.factory.HasChangeHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasClickHandlersFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasDirectionFactory;
 import br.com.sysmap.crux.core.client.screen.factory.HasNameFactory;
-import br.com.sysmap.crux.core.client.screen.factory.HasValueChangeHandlersFactory;
 import br.com.sysmap.crux.widgets.client.WidgetMsgFactory;
 
 import com.google.gwt.dom.client.Element;
@@ -43,7 +42,7 @@ import com.google.gwt.dom.client.Element;
 @DeclarativeFactory(id="maskedTextBox", library="widgets")
 public class MaskedTextBoxFactory extends WidgetFactory<MaskedTextBox> 
        implements HasDirectionFactory<MaskedTextBox>, HasNameFactory<MaskedTextBox>, 
-                  HasChangeHandlersFactory<MaskedTextBox>, HasValueChangeHandlersFactory<MaskedTextBox>,
+                  HasChangeHandlersFactory<MaskedTextBox>, 
                   HasClickHandlersFactory<MaskedTextBox>, HasAllFocusHandlersFactory<MaskedTextBox>,
                   HasAllKeyHandlersFactory<MaskedTextBox>, HasAllMouseHandlersFactory<MaskedTextBox>
 {
