@@ -43,6 +43,7 @@ public class Events
 	 * @param evt
 	 * @return
 	 */
+	@Deprecated
 	public static Event getEvent(String evtId, String evt)
 	{
 		try
@@ -75,6 +76,7 @@ public class Events
 	 * @param sourceEvent
 	 * @return
 	 */
+	@Deprecated
 	public static Object callEvent(Event event, CruxEvent<?> sourceEvent)
 	{
 		return callEvent(event, sourceEvent, false);
@@ -87,6 +89,7 @@ public class Events
 	 * @param fromOutOfModule
 	 * @return
 	 */
+	@Deprecated
 	public static Object callEvent(Event event, CruxEvent<?> sourceEvent, boolean fromOutOfModule)
 	{
 		try 
@@ -108,6 +111,7 @@ public class Events
 	 * @param sourceEvent
 	 * @return
 	 */
+	@Deprecated
 	public static Object callEvent(Event event, GwtEvent<?> sourceEvent)
 	{
 		try 
@@ -129,6 +133,7 @@ public class Events
 	 * @param processor
 	 * @return
 	 */
+	@Deprecated
 	protected static Object processEventResult(Event event, EventProcessor processor)
 	{
 		if (processor.hasException())
@@ -153,6 +158,7 @@ public class Events
 	 * @return
 	 * @throws InterfaceConfigException
 	 */
+	@Deprecated
 	protected static EventProcessor createEventProcessor(final Event event) throws InterfaceConfigException
 	{
 		getRegisteredControllers();
@@ -179,6 +185,7 @@ public class Events
 		};
 	}
 
+	@Deprecated
 	private static RegisteredControllers getRegisteredControllers()
 	{
 		if (registeredControllers == null)
