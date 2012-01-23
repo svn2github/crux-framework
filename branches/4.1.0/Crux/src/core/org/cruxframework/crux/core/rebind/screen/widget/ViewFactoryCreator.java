@@ -97,6 +97,7 @@ public class ViewFactoryCreator
 	private String screenVariable;
 	private String loggerVariable;
 	private String device;
+	protected ControllerAccessHandler controllerAccessHandler = new DefaultControllerAccessor();
 	
 	/**
 	 * Constructor
@@ -149,6 +150,15 @@ public class ViewFactoryCreator
 
 		printer.commit();
 		return getQualifiedName();
+	}
+	
+	/**
+	 * Retrieve the object responsible for print controller access expressions on client JS
+	 * @return
+	 */
+	protected ControllerAccessHandler getControllerAccessHandler()
+	{
+		return this.controllerAccessHandler;
 	}
 	
 	/**
@@ -603,7 +613,8 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowCloseHandler(new "+CloseHandler.class.getCanonicalName()+"<Window>(){");
 			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", CloseEvent.class, "event", context, screen.getId());
+			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", 
+					CloseEvent.class, "event", context, screen.getId(), getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -623,7 +634,8 @@ public class ViewFactoryCreator
 			printer.println(screenVariable+".addWindowClosingHandler(new Window.ClosingHandler(){");
 			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){"); 
 
-			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", ClosingEvent.class, "event", context, screen.getId());
+			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", 
+						ClosingEvent.class, "event", context, screen.getId(), getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -644,7 +656,7 @@ public class ViewFactoryCreator
 			printer.println("public void onValueChange("+ValueChangeEvent.class.getCanonicalName()+"<String> event){");
 
 			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
-					"onHistoryChanged", ValueChangeEvent.class, "event", context, screen.getId());
+					"onHistoryChanged", ValueChangeEvent.class, "event", context, screen.getId(), getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -728,9 +740,7 @@ public class ViewFactoryCreator
 				hasEventParameter = false;
 			}
 
-			printlnPostProcessing("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
-					")ScreenFactory.getInstance().getRegisteredControllers().getController("
-					+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
+			printlnPostProcessing(getControllerAccessHandler().getControllerExpression(event.getController())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
 
 			if (hasEventParameter)
 			{
@@ -754,7 +764,8 @@ public class ViewFactoryCreator
 			printer.println("screen.addWindowResizeHandler(new "+ResizeHandler.class.getCanonicalName()+"(){");
 			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){"); 
 
-			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", ResizeEvent.class, "event", context, screen.getId());
+			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", 
+					ResizeEvent.class, "event", context, screen.getId(), getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -1166,5 +1177,22 @@ public class ViewFactoryCreator
     			indent();
     		}
     	}
+    }
+    
+    private static class DefaultControllerAccessor implements ControllerAccessHandler
+    {
+
+		public String getControllerExpression(String controller)
+        {
+			
+	        return "(("+getControllerImplClassName(controller)+")ScreenFactory.getInstance().getRegisteredControllers().getController("
+			+EscapeUtils.quote(controller)+"))";
+        }
+
+		public String getControllerImplClassName(String controller)
+        {
+			String controllerClass = ClientControllers.getController(controller);
+	        return controllerClass + ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX;
+        }
     }
 }

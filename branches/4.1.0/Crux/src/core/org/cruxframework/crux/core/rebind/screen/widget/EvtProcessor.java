@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.rebind.screen.widget;
 
 import org.cruxframework.crux.core.client.controller.Expose;
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
@@ -94,9 +93,10 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param cruxEvent
      * @param creator
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, String eventClassName, String cruxEvent, WidgetCreator<?> creator)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, String eventClassName, 
+    								String cruxEvent, WidgetCreator<?> creator)
     {
-    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext(), creator.getScreen().getId());
+    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext(), creator.getScreen().getId(), creator.getControllerAccessorHandler());
     }
 
     /**
@@ -106,10 +106,12 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param eventClass
      * @param cruxEvent
      * @param context
+     * @param controllerAccessHandler
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, String cruxEvent, GeneratorContext context, String screenId)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass, 
+    		                        String cruxEvent, GeneratorContext context, String screenId, ControllerAccessHandler controllerAccessHandler)
     {
-    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context, screenId);
+    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context, screenId, controllerAccessHandler);
     }
     
     /**
@@ -119,8 +121,10 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param eventClassName
      * @param cruxEvent
      * @param context
+     * @param controllerAccessHandler
      */
-    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName,String eventClassName, String cruxEvent, GeneratorContext context, String screenId)
+    public static void printEvtCall(SourcePrinter out, String eventValue, String eventName,String eventClassName, 
+    		                        String cruxEvent, GeneratorContext context, String screenId, ControllerAccessHandler controllerAccessHandler)
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
     	
@@ -152,9 +156,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	
     	checkExposedMethod(event, controller, exposedMethod, context);
 
-    	out.print("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
-    			")ScreenFactory.getInstance().getRegisteredControllers().getController("
-    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
+    	out.print(controllerAccessHandler.getControllerExpression(event.getController())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
     	
     	if (hasEventParameter)
     	{
@@ -281,9 +283,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	
     	checkExposedMethod(event, controller, exposedMethod, creator.getContext());
     	
-        creator.printlnPostProcessing("(("+controller+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+
-        		")ScreenFactory.getInstance().getRegisteredControllers().getController("
-    			+EscapeUtils.quote(event.getController())+"))."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
+        creator.printlnPostProcessing(creator.getControllerAccessorHandler().getControllerExpression(event.getController())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
     	
     	if (hasEventParameter)
     	{

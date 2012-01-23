@@ -25,9 +25,9 @@ import org.cruxframework.crux.core.client.screen.LazyPanel;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.json.JSONObject;
-
 
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -75,7 +75,15 @@ public class LazyPanelFactory
 		
 		lazyPrinter.commit();
 		
-		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class();");
+		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
+		{
+			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
+		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+controllerAccessHandler.getSingleControllerVariable()+");");
+		}
+		else
+		{
+			factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class();");
+		}
 		
 		return lazyPanel;
 	}
@@ -92,6 +100,11 @@ public class LazyPanelFactory
 	    {
 	    	printer.println("private "+messageClass+" "+declaredMessages.get(messageClass) + " = GWT.create("+messageClass+".class);");
 	    }
+		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
+		{
+			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
+	    	printer.println("private "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+";");
+		}
     }
 
 	/**
@@ -101,8 +114,22 @@ public class LazyPanelFactory
 	 */
 	private void generateConstructor(SourcePrinter printer, String className, String widgetId)
     {
-		printer.println("public "+className+"(){");
-		printer.println("super("+EscapeUtils.quote(widgetId)+");");
+		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
+		{
+			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
+	    	printer.println("private "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+";");
+			printer.println("public "+className+"("+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+"){");
+			printer.indent();
+			printer.println("super("+EscapeUtils.quote(widgetId)+");");
+			printer.println("this."+controllerAccessHandler.getSingleControllerVariable()+" = "+controllerAccessHandler.getSingleControllerVariable()+";");
+		}
+		else
+		{
+			printer.println("public "+className+"(){");
+			printer.indent();
+			printer.println("super("+EscapeUtils.quote(widgetId)+");");
+		}
+		printer.outdent();
 		printer.println("}");
     }
 

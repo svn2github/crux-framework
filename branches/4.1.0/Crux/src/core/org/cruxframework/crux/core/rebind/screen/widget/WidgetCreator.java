@@ -623,6 +623,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		factory.printlnPostProcessing(s);
 	}
+
+	/**
+	 * Retrieve the object responsible for print controller access expressions on client JS
+	 * @return
+	 */
+	protected ControllerAccessHandler getControllerAccessorHandler()
+	{
+		return factory.getControllerAccessHandler();
+	}
 	
 	/**
 	 * @return

@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.Screen;
+import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONObject;
 
@@ -40,10 +41,33 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * @param logger
 	 * @param screen
 	 * @param device
+	 * @param controllerClass 
 	 */
-	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device)
+	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device, final String controllerClass)
     {
 	    super(context, logger, screen, device);
+	    controllerAccessHandler = new SingleControllerAccessHandler()
+		{
+			public String getControllerExpression(String controller)
+			{
+				return getSingleControllerVariable();
+			}
+
+			public String getControllerImplClassName(String controller)
+            {
+	            return controllerClass;
+            }
+
+			public String getSingleControllerImplClassName()
+			{
+				return controllerClass;
+			}
+
+			public String getSingleControllerVariable()
+            {
+				return "_controller";
+            }
+		};
     }
 
 	/**

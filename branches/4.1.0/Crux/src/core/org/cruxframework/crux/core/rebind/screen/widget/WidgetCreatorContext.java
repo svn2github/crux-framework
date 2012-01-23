@@ -80,5 +80,4 @@ public class WidgetCreatorContext
     {
     	this.addToScreen = addToScreen;
     }
-	
 }

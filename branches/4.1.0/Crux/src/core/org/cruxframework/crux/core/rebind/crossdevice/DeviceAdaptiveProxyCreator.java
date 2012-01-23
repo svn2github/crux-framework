@@ -77,7 +77,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    
 	    initializeTemplateParser();
 	    initializeController();
-		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures());
+		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures(), controllerClass.getQualifiedSourceName());
     }
 
 	/**
@@ -180,7 +180,6 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		
 		JSONObject metaData = templateParser.getTemplateMetadata(template,  baseIntf.getQualifiedSourceName(), device);
 		String widget = viewFactoryCreator.generateWidgetsCreation(srcWriter, metaData);
-		//TODO alterar a chamada de eventos impressa pelo EvtProcessor para referenciar o controller do objeto proxy criado aki
 		
 		srcWriter.println("initWidget("+widget+");");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
@@ -189,7 +188,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		srcWriter.println("}");
     }
 
-	/**
+    /**
 	 * 
 	 * @param srcWriter
 	 */
