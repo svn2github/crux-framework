@@ -19,7 +19,10 @@ import java.util.Map;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.GeneratorMessages;
+import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
@@ -35,6 +38,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 {
+	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	/**
 	 * 
 	 * @param context
@@ -43,18 +47,27 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * @param device
 	 * @param controllerClass 
 	 */
-	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device, final String controllerClass)
+	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device, final String controllerName)
     {
 	    super(context, logger, screen, device);
+	    final String controllerClass = ClientControllers.getController(controllerName);
 	    controllerAccessHandler = new SingleControllerAccessHandler()
 		{
 			public String getControllerExpression(String controller)
 			{
+				if (!controllerName.equals(controller))
+				{
+					throw new CruxGeneratorException(messages.deviceAdaptiveInvalidController(controllerName, controller));
+				}
 				return getSingleControllerVariable();
 			}
 
 			public String getControllerImplClassName(String controller)
             {
+				if (!controllerName.equals(controller))
+				{
+					throw new CruxGeneratorException(messages.deviceAdaptiveInvalidController(controllerName, controller));
+				}
 	            return controllerClass;
             }
 

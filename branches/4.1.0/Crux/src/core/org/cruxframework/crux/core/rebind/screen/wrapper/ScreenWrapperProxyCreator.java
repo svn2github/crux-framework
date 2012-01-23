@@ -28,7 +28,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -49,7 +49,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	    super(logger, context, invokerIntf);
 	    try
         {
-	        widgetType = invokerIntf.getOracle().getType(Widget.class.getCanonicalName());
+	        widgetType = invokerIntf.getOracle().getType(IsWidget.class.getCanonicalName());
         }
         catch (NotFoundException e)
         {
@@ -102,7 +102,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	{
 		JType returnType = method.getReturnType();
 		
-		JClassType returnTypeClass = returnType.isClass();
+		JClassType returnTypeClass = returnType.isClassOrInterface();
 		String name = method.getName();
 		if (widgetType.isAssignableFrom(returnTypeClass))
 		{

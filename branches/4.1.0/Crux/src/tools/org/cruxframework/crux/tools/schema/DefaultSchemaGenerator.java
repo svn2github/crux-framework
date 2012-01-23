@@ -1131,7 +1131,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        out.println("elementFormDefault=\"qualified\" ");
 	        out.println("targetNamespace=\"" + targetNS + "\" >");
 	        
-	        generateXDeviceSchemasImport(libraries, templateLibraries, out);
+	        generateXDeviceSchemasImport(libraries, out);
 
 			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" />");
 			out.println("<xs:complexType name=\"XDevice\">");
@@ -1156,16 +1156,12 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * @param templateLibraries 
 	 * @param out
 	 */
-	private void generateXDeviceSchemasImport(Set<String> libraries, Set<String> templateLibraries, PrintStream out)
+	private void generateXDeviceSchemasImport(Set<String> libraries, PrintStream out)
 	{
 		out.println("<xs:import schemaLocation=\"core.xsd\" namespace=\"http://www.cruxframework.org/crux\"/>");
 		for (String lib : libraries)
 		{
 			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/crux/"+lib+"\"/>");
-		}
-		for (String lib : templateLibraries)
-		{
-			out.println("<xs:import schemaLocation=\""+lib+".xsd\" namespace=\"http://www.cruxframework.org/templates/"+lib+"\"/>");
 		}
 	}		
 

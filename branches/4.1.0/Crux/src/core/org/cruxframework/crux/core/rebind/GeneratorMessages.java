@@ -351,4 +351,7 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[deviceFeatures 001] - Property device.features can not be assigned to value [{0}].")
 	String deviceFeaturesInvalidOption(String value);
+
+	@DefaultServerMessage("[deviceAdaptive 003] - Controller [{1}] can not be used on the deviceAdaptive template. Only the bound controller [{0}] can be refered.")
+	String deviceAdaptiveInvalidController(String controllerName, String controller);
 }

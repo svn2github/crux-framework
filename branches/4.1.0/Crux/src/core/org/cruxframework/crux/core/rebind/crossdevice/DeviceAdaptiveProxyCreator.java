@@ -59,6 +59,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	private JClassType deviceAdaptiveControllerClass;
 	private JClassType deviceAdaptiveClass;
 	private JClassType hasHandlersClass;
+	private String controllerName;
 
 	/**
 	 * 
@@ -77,7 +78,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    
 	    initializeTemplateParser();
 	    initializeController();
-		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures(), controllerClass.getQualifiedSourceName());
+		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures(), controllerName);
     }
 
 	/**
@@ -105,8 +106,8 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 */
 	protected void initializeController()
 	{
-		String controller = templateParser.getTemplateController(template, baseIntf.getQualifiedSourceName(), device);
-		String controllerClassName = ClientControllers.getController(controller);
+		controllerName = templateParser.getTemplateController(template, baseIntf.getQualifiedSourceName(), device);
+		String controllerClassName = ClientControllers.getController(controllerName);
 		
 		controllerClass = context.getTypeOracle().findType(controllerClassName);
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
