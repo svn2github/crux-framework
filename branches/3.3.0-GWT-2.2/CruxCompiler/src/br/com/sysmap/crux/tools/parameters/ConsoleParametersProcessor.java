@@ -363,6 +363,5 @@ public class ConsoleParametersProcessor
 				System.out.println("	Non Flag Parameter Value "+consoleParameter.getValue());
 			}
 		}
-		
 	}
 }
