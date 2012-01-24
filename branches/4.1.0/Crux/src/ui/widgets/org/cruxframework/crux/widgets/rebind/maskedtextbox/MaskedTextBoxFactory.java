@@ -27,11 +27,11 @@ import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.HasChangeHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasNameFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -59,7 +59,7 @@ import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 })
 public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext> 
        implements HasDirectionFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
-                  HasChangeHandlersFactory<WidgetCreatorContext>, 
+                  HasValueChangeHandlersFactory<WidgetCreatorContext>, 
                   HasClickHandlersFactory<WidgetCreatorContext>, HasAllFocusHandlersFactory<WidgetCreatorContext>,
                   HasAllKeyHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
                   HasDoubleClickHandlersFactory<WidgetCreatorContext>
