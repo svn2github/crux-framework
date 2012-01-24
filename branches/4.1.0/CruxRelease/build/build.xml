@@ -49,6 +49,11 @@
 	<property name="showcase.build.dir" value="${showcase.dir}/build" />
 	<property name="showcase.webinf.dir" value="${showcase.dir}/war/WEB-INF" />
 
+	
+	<!-- Proporties refering Showcase Project -->
+	<property name="crossdevice.build" value="../CruxCrossDeviceWidgets" />
+	<property name="crossdevice.build.dir" value="${crossdevice.build}/build" />
+	
 	<!-- 
 	========================================================================================================
 		Dist
@@ -198,6 +203,22 @@
 				<include name="${crux.runtime.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		
+		<!-- Update CruxCrossDeviceWidgets project -->
+		<copy todir="${crossdevice.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
