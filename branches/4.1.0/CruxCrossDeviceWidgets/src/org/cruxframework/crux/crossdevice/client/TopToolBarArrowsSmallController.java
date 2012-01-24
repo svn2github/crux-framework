@@ -23,6 +23,8 @@ import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.Screen.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
@@ -41,11 +43,8 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -72,8 +71,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	
 	@Create
 	protected PanelAnimation panelAnimation;
-
-	private ResizeAndRotateExecutor resizeAndRotateExecutor;
 
 	@Override
     public Widget getWidget(int index)
@@ -220,53 +217,25 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	protected void init()
 	{
 		RootPanel.get().add(this);
-		resizeAndRotateExecutor = new ResizeAndRotateExecutor(this, 100);
 		canvas = getChildWidget("canvas");
 		grip =  getChildWidget("grip");
 		prepareGripPanel();
 		floatPanel = getChildWidget("topToolBarFloatingPanel");
 		panelAnimation.prepareElement(floatPanel.getElement());
 		createPlaceHolderPanel();
-		checkScreenResize();
+		Screen.addOrientationChangeOrResizeHandler(new OrientationChangeOrResizeHandler() 
+		{
+			@Override
+			public void onOrientationChangeOrResize() 
+			{
+				setFloatPanelPosition();
+			}
+		});
 	}
-
+	
 	protected void prepareGripPanel()
     {
     }
-
-	protected void checkScreenResize()
-    {
-	    checkOrientationChanges(this);
-		Window.addResizeHandler(new ResizeHandler()
-		{
-			@Override
-			public void onResize(ResizeEvent event)
-			{
-				resizeOrRotateDevice();
-			}
-		});
-    }
-
-	protected native void checkOrientationChanges(TopToolBarArrowsSmallController controller)/*-{
-		var supportsOrientationChange = 'onorientationchange' in $wnd;
-		if (supportsOrientationChange)
-		{	
-			$wnd.previousOrientation = $wnd.orientation;
-			var checkOrientation = function(){
-			    if($wnd.orientation !== $wnd.previousOrientation){
-			        $wnd.previousOrientation = $wnd.orientation;
-		        	controller.@org.cruxframework.crux.crossdevice.client.TopToolBarArrowsSmallController::resizeOrRotateDevice()();
-			    }
-			};
-		
-			$wnd.addEventListener("orientationchange", checkOrientation, false);
-		}
-	}-*/;
-	
-	protected void resizeOrRotateDevice()
-	{
-		resizeAndRotateExecutor.execute();
-	}
 	
 	protected void setFloatPanelPosition()
     {
@@ -464,27 +433,5 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 			    onUpdate(1);
 			}
 		}
-	}
-	
-	static class ResizeAndRotateExecutor extends BeginEndExecutor
-	{
-		private final TopToolBarArrowsSmallController controller;
-
-		public ResizeAndRotateExecutor(TopToolBarArrowsSmallController controller, int maxIntervalBetweenStartAndEnd)
-        {
-	        super(maxIntervalBetweenStartAndEnd);
-			this.controller = controller;
-        }
-
-		@Override
-        protected void doEndAction()
-        {
-			controller.setFloatPanelPosition();
-        }
-
-		@Override
-        protected void doBeginAction()
-        {
-        }
 	}
 }

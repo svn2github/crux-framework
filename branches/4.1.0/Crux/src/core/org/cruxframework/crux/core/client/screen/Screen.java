@@ -29,15 +29,18 @@ import org.cruxframework.crux.core.client.collection.Map;
 import org.cruxframework.crux.core.client.context.ContextManager;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.Event;
+import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -106,6 +109,7 @@ public class Screen
 	{
 		return Screen.get().addWindowHistoryChangedHandler(handler);
 	}
+	
 	/**
 	 * 
 	 * @param handler
@@ -115,6 +119,106 @@ public class Screen
 	{
 		return Screen.get().addWindowResizeHandler(handler);
 	}
+	
+	/**
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	public static HandlerRegistration addOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
+	{
+		return Screen.get().addWindowOrientationChangeOrResizeHandler(handler);
+	}
+	
+	/**
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
+	{
+		final BeginEndExecutor executor = new BeginEndExecutor(100) 
+		{
+			@Override
+			protected void doEndAction() 
+			{
+				handler.onOrientationChangeOrResize();
+			}
+			
+			@Override
+			protected void doBeginAction() 
+			{
+				// nothing
+			}
+		};
+		
+		ResizeHandler resizeHandler = new ResizeHandler() 
+		{
+			public void onResize(ResizeEvent event) 
+			{
+				executor.execute();
+			}
+		};
+		
+		final HandlerRegistration resizeHandlerRegistration = addResizeHandler(resizeHandler);
+		final JavaScriptObject orientationHandler = attachOrientationChangeHandler(executor);
+		
+		return new HandlerRegistration() 
+		{
+			public void removeHandler() 
+			{
+				resizeHandlerRegistration.removeHandler();
+				
+				if(orientationHandler != null)
+				{
+					removeOrientationChangeHandler(orientationHandler);
+				}
+			}
+		};
+	}
+	
+	/**
+	 * @param orientationHandler
+	 */
+	private native void removeOrientationChangeHandler(JavaScriptObject orientationHandler) /*-{
+
+		var supportsOrientationChange = 'onorientationchange' in $wnd;
+		
+		if (supportsOrientationChange)
+		{
+			$wnd.removeEventListener("orientationchange", orientationHandler);
+		}
+		
+	}-*/;
+	
+	/**
+	 * @param executor
+	 * @return
+	 */
+	private native JavaScriptObject attachOrientationChangeHandler(BeginEndExecutor executor)/*-{
+	
+		var supportsOrientationChange = 'onorientationchange' in $wnd;
+		
+		if (supportsOrientationChange)
+		{	
+			$wnd.previousOrientation = $wnd.orientation;
+			var checkOrientation = function()
+			{
+			    if($wnd.orientation !== $wnd.previousOrientation)
+			    {
+			        $wnd.previousOrientation = $wnd.orientation;
+		        	executor.@org.cruxframework.crux.core.client.executor.BeginEndExecutor::execute()();
+			    }
+			};
+		
+			$wnd.addEventListener("orientationchange", checkOrientation, false);
+			
+			return checkOrientation;
+		}
+		
+		return null;
+	}-*/;
+	
+	
 	/**
 	 * 
 	 * @param token
@@ -1387,5 +1491,10 @@ public class Screen
 		}
 		
 		return values;
-	}		
+	}
+	
+	public static interface OrientationChangeOrResizeHandler
+	{
+		public void onOrientationChangeOrResize();
+	}
 }
