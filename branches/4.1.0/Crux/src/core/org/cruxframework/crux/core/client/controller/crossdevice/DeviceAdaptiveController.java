@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -67,9 +68,10 @@ public abstract class DeviceAdaptiveController
 	 * @param id
 	 * @return
 	 */
-	protected Widget getChildWidget(String id)
+	@SuppressWarnings("unchecked")
+    protected <T extends IsWidget> T getChildWidget(String id)
 	{
-		return Screen.get(getChildWidgetId(id));
+		return (T)Screen.get(getChildWidgetId(id));
 	}
 
 	/**

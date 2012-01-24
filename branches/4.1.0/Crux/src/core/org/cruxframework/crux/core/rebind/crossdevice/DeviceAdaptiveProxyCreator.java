@@ -108,6 +108,10 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	{
 		controllerName = templateParser.getTemplateController(template, baseIntf.getQualifiedSourceName(), device);
 		String controllerClassName = ClientControllers.getController(controllerName);
+		if (controllerClassName == null)
+		{
+			throw new CruxGeneratorException(messages.errorGeneratingInvokerControllerNotFound(controllerName));
+		}
 		
 		controllerClass = context.getTypeOracle().findType(controllerClassName);
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
