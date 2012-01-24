@@ -158,7 +158,7 @@ public class TopToolBarLargeController extends DeviceAdaptiveController implemen
 	protected void init()
 	{
 		RootPanel.get().insert(this, 0);
-		floatPanel = (FlowPanel) getChildWidget("topToolBar");
+		floatPanel = getChildWidget("topToolBar");
 	}
 
 	@Override

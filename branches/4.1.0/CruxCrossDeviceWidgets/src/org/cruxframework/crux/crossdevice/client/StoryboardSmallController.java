@@ -147,15 +147,10 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		return panel;
 	}
 		
-	protected FlowPanel getStoryboard()
-	{
-		return (FlowPanel) getChildWidget("storyboard");
-	}
-
 	@Override
 	protected void init()
     {
-		storyboard = getStoryboard();
+		storyboard = getChildWidget("storyboard");
 		this.itemHeight = "75px";
 		this.itemHeight = "100%";
     }

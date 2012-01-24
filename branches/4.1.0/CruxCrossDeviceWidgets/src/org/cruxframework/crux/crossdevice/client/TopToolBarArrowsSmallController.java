@@ -221,10 +221,10 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	{
 		RootPanel.get().add(this);
 		resizeAndRotateExecutor = new ResizeAndRotateExecutor(this, 100);
-		canvas = (FlowPanel) getChildWidget("canvas");
-		grip = (FocusPanel) getChildWidget("grip");
+		canvas = getChildWidget("canvas");
+		grip =  getChildWidget("grip");
 		prepareGripPanel();
-		floatPanel = (FlowPanel) getChildWidget("topToolBarFloatingPanel");
+		floatPanel = getChildWidget("topToolBarFloatingPanel");
 		panelAnimation.prepareElement(floatPanel.getElement());
 		createPlaceHolderPanel();
 		checkScreenResize();
