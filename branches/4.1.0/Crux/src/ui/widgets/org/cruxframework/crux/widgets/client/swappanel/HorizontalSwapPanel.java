@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -84,10 +85,9 @@ public class HorizontalSwapPanel extends Composite
 	 */
 	public void transitTo(Widget w, final Direction direction) 
 	{
-		prepareSlide();
-		
-		prepareCurrentPanelToSlideOut();
 		prepareNextPanelToSlideIn(w, direction);
+		prepareSlide();
+		prepareCurrentPanelToSlideOut();
 		
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
 		{
@@ -134,7 +134,8 @@ public class HorizontalSwapPanel extends Composite
 		style.setWidth(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
-		currentPanel.setVisible(true);
+		style.setVisibility(Visibility.VISIBLE);
+		//currentPanel.setVisible(true);
 	}
 
 	private void configureNextPanel() 
@@ -146,7 +147,8 @@ public class HorizontalSwapPanel extends Composite
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setTop(0, Unit.PX);
 		style.setLeft(0, Unit.PX);
-		nextPanel.setVisible(false);
+		style.setVisibility(Visibility.HIDDEN);
+		//nextPanel.setVisible(false);
 	}
 	
 	private void prepareNextPanelToSlideIn(Widget w, Direction direction) 
@@ -165,7 +167,7 @@ public class HorizontalSwapPanel extends Composite
 		}
 		
 		nextPanel.getElement().getStyle().setLeft(left, Unit.PX);
-		nextPanel.setVisible(true);
+		nextPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 	}
 
 	private void prepareCurrentPanelToSlideOut() 
@@ -175,14 +177,26 @@ public class HorizontalSwapPanel extends Composite
 
 	private void prepareSlide() 
 	{
-		int enoughHeight = Math.max(currentPanel.getElement().getOffsetHeight(), nextPanel.getElement().getOffsetHeight());
-		getElement().getStyle().setHeight(enoughHeight, Unit.PX);
+		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 	}
 	
 	private void concludeSlide() 
 	{
-		setHeight("auto");
+		getElement().getStyle().setProperty("webkitTransitionProperty", "height");
+		getElement().getStyle().setProperty("webkitTransitionDuration", transitionDuration + "ms");
+		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 		animation = null;
+		
+		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() 
+		{
+			@Override
+			public boolean execute() 
+			{
+				getElement().getStyle().setProperty("webkitTransitionDuration", "0ms");
+				setHeight("auto");
+				return false;
+			}
+		}, transitionDuration + 100);
 	}
 
 	private void slide(Direction direction) 
