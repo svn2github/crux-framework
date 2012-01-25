@@ -40,7 +40,7 @@ import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 })
 public class HorizontalSwapPanelFactory extends WidgetCreator<WidgetCreatorContext>
 {
-    @TagConstraints(minOccurs="0", maxOccurs="1", widgetProperty="initialWidget")
+    @TagConstraints(minOccurs="0", maxOccurs="1", widgetProperty="currentWidget")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
     
 	@Override

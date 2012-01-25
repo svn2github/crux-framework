@@ -30,7 +30,6 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -72,12 +71,21 @@ public class HorizontalSwapPanel extends Composite
 	 * Sets the widget that will be initially visible on this panel. 
 	 * @param widget
 	 */
-	public void setInitialWidget(IsWidget widget) 
+	public void setCurrentWidget(Widget widget) 
 	{
 		this.currentPanel.clear();
 		this.currentPanel.add(widget);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Widget getCurrentWidget()
+	{
+		return this.currentPanel.getWidgetCount() > 0 ? this.currentPanel.getWidget(0) : null;
+	}
+	
 	/**
 	 * Changes the widget being shown on this widget.
 	 * @param w

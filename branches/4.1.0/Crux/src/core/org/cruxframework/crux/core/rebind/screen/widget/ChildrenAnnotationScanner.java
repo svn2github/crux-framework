@@ -48,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -144,6 +145,11 @@ class ChildrenAnnotationScanner
 				{
 					out.println("if ("+widgetCreator.getChildWidgetClassName(context.getChildElement())+".isSupported()){");
 				}
+				if (!Widget.class.isAssignableFrom(widgetCreator.getChildWidgetClass(context.getChildElement())))
+				{
+					childWidget = childWidget+".asWidget()";
+				}
+				
 				if (StringUtils.isEmpty(widgetProperty))
 				{
 					out.println(context.getWidget()+".add("+childWidget+");");

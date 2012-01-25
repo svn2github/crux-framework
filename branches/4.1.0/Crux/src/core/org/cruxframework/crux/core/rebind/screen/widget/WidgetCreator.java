@@ -372,6 +372,16 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	}
 	
 	/**
+	 * 
+	 * @param metaElem
+	 * @return
+	 */
+	public Class<?> getChildWidgetClass(JSONObject metaElem)
+	{
+		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).getWidgetClass();
+	}
+	
+	/**
 	 * @return
 	 */
 	public GeneratorContextExt getContext()
