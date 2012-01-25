@@ -109,7 +109,7 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 			}
 			else
 			{
-				processChild(context, childWidget, context.direction, context.size);
+				out.println(processChild(context, childWidget, context.direction, context.size));
 			}
 			if (childPartialSupport)
 			{
