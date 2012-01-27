@@ -234,4 +234,10 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		configureCurrentPanel();
 		concludeSlide();
 	}
+	
+	public void clear()
+	{
+		currentPanel.clear();
+		nextPanel.clear();
+	}
 }
