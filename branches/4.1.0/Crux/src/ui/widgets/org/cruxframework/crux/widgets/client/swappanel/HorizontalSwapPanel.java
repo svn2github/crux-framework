@@ -104,6 +104,16 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	 */
 	public void transitTo(Widget w, final Direction direction) 
 	{
+		transitTo(w, direction, null);
+	}
+	/**
+	 * Changes the widget being shown on this widget.
+	 * @param w
+	 * @param direction the direction of the animation
+	 * @param completeCallback
+	 */
+	public void transitTo(Widget w, final Direction direction, final CompleteCallback completeCallback) 
+	{
 		prepareNextPanelToSlideIn(w, direction);
 		freezeContainerHeight();
 		prepareCurrentPanelToSlideOut();
@@ -113,7 +123,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 			@Override
 			public void execute() 
 			{
-				slide(direction);
+				slide(direction, completeCallback);
 			}
 		});
 	}
@@ -205,7 +215,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		}, transitionDuration+100);
 	}
 
-	private void slide(Direction direction) 
+	private void slide(Direction direction, final CompleteCallback completeCallback) 
 	{
 		if(animation != null)
 		{
@@ -222,6 +232,10 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 			public void onComplete()
 			{
 				onTransitionComplete();
+				if (completeCallback != null)
+				{
+					completeCallback.onComplete();
+				}
 				SwapEvent.fire(HorizontalSwapPanel.this);
 			}
 		});

@@ -47,7 +47,7 @@ public abstract class Animation
 			}
 		};
 		
-		this.finishTimer.schedule(durationMillis);
+		this.finishTimer.schedule(durationMillis+10);
 		
 	}
 
