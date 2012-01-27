@@ -7,11 +7,6 @@ import com.google.gwt.user.client.Element;
  */
 public class WebkitHorizontalSlidingSwapAnimation extends HorizontalSlidingSwapAnimation
 {
-	public WebkitHorizontalSlidingSwapAnimation(Element entering, Element leaving, int delta, Direction orientation) 
-	{
-		super(entering, leaving, delta, orientation);
-	}
-
 	@Override
 	protected native void beforeStart(Element entering, Element leaving) /*-{
 		entering.style.webkitTransitionProperty = 'left';

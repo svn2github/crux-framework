@@ -6,33 +6,11 @@ import com.google.gwt.user.client.Element;
  * Base class for animate swaping 
  * @author Gesse Dafe
  */
-public abstract class SwapAnimation 
+public abstract class SwapAnimation extends Animation
 {
-	private final Element entering;
-	private final Element leaving;
-	private int durationMillis;
-
-	public SwapAnimation(Element entering, Element leaving)
-	{
-		this.entering = entering;
-		this.leaving = leaving;
-	}
+	private Element entering;
+	private Element leaving;
 	
-	public void start(int durationMillis)
-	{
-		this.durationMillis = durationMillis;
-		doStart();
-	}
-
-	public abstract void cancel();
-	public abstract void finish();
-	protected abstract void doStart();
-
-	protected int getDurationMillis() 
-	{
-		return durationMillis;
-	}
-
 	protected Element getEntering() 
 	{
 		return entering;
@@ -42,4 +20,14 @@ public abstract class SwapAnimation
 	{
 		return leaving;
 	}
+
+	public void setEntering(Element entering)
+    {
+    	this.entering = entering;
+    }
+
+	public void setLeaving(Element leaving)
+    {
+    	this.leaving = leaving;
+    }
 }

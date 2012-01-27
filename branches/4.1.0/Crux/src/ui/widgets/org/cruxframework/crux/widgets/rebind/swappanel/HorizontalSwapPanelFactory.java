@@ -24,7 +24,10 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
+import org.cruxframework.crux.widgets.rebind.event.SwapEvtBind;
 
 /**
  * 
@@ -37,6 +40,9 @@ import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 })
 @TagAttributes({
 	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500")
+})
+@TagEvents({
+	@TagEvent(SwapEvtBind.class)
 })
 public class HorizontalSwapPanelFactory extends WidgetCreator<WidgetCreatorContext>
 {

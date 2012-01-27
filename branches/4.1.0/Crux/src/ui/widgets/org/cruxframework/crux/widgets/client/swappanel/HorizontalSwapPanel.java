@@ -15,9 +15,13 @@
  */
 package org.cruxframework.crux.widgets.client.swappanel;
 
+import org.cruxframework.crux.widgets.client.animation.Animation.CompleteCallback;
+import org.cruxframework.crux.widgets.client.animation.AnimationFactory;
 import org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation;
 import org.cruxframework.crux.widgets.client.animation.SlidingSwapAnimation.Direction;
-import org.cruxframework.crux.widgets.client.animation.WebkitHorizontalSlidingSwapAnimation;
+import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
+import org.cruxframework.crux.widgets.client.event.swap.SwapEvent;
+import org.cruxframework.crux.widgets.client.event.swap.SwapHandler;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -27,6 +31,7 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -36,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * A panel that swaps its contents using slide animations.
  * @author Gesse Dafe
  */
-public class HorizontalSwapPanel extends Composite
+public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 {
 	private FlowPanel mainContainer;
 	
@@ -67,6 +72,12 @@ public class HorizontalSwapPanel extends Composite
 		mainContainer.add(nextPanel);
 	}
 
+	@Override
+    public HandlerRegistration addSwapHandler(SwapHandler handler)
+    {
+	    return addHandler(handler, SwapEvent.getType());
+    }
+	
 	/**
 	 * Sets the widget that will be initially visible on this panel. 
 	 * @param widget
@@ -103,23 +114,6 @@ public class HorizontalSwapPanel extends Composite
 			public void execute() 
 			{
 				slide(direction);
-				
-				Scheduler.get().scheduleFixedDelay(new RepeatingCommand()  
-				{
-					@Override
-					public boolean execute() 
-					{
-						FlowPanel temp = nextPanel;
-						nextPanel = currentPanel;
-						currentPanel = temp;
-						
-						configureNextPanel();
-						configureCurrentPanel();
-						concludeSlide();
-						
-						return false;
-					}
-				}, transitionDuration);
 			}
 		});
 	}
@@ -204,7 +198,7 @@ public class HorizontalSwapPanel extends Composite
 				setHeight("auto");
 				return false;
 			}
-		}, transitionDuration + 100);
+		}, 100);
 	}
 
 	private void slide(Direction direction) 
@@ -218,7 +212,26 @@ public class HorizontalSwapPanel extends Composite
 		Element leaving = currentPanel.getElement();
 		
 		int delta = this.getElement().getClientWidth();
-		animation = new WebkitHorizontalSlidingSwapAnimation(entering, leaving, delta, direction);
-		animation.start(transitionDuration);
+		animation = AnimationFactory.createHorizontalSlidingSwapAnimation(entering, leaving, delta, direction, transitionDuration, new CompleteCallback()
+		{
+			@Override
+			public void onComplete()
+			{
+				onTransitionComplete();
+				SwapEvent.fire(HorizontalSwapPanel.this);
+			}
+		});
+		animation.start();
+	}
+	
+	private void onTransitionComplete()
+	{
+		FlowPanel temp = nextPanel;
+		nextPanel = currentPanel;
+		currentPanel = temp;
+		
+		configureNextPanel();
+		configureCurrentPanel();
+		concludeSlide();
 	}
 }
