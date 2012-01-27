@@ -9,13 +9,13 @@ public class WebkitHorizontalSlidingSwapAnimation extends HorizontalSlidingSwapA
 {
 	@Override
 	protected native void beforeStart(Element entering, Element leaving) /*-{
-		entering.style.webkitTransitionProperty = 'left';
-		leaving.style.webkitTransitionProperty = 'left';
+		entering.style.webkitTransitionProperty = '-webkit-transform';
+		leaving.style.webkitTransitionProperty = '-webkit-transform';
 	}-*/;
 
 	@Override
-	protected native void setPosition(Element target, int finalPosition, int durationMillis) /*-{
+	protected native void setPositionDelta(Element target, int delta, int durationMillis) /*-{
 		target.style.webkitTransitionDuration = durationMillis + 'ms';
-		target.style.left = finalPosition + 'px';
+		target.style.webkitTransform = 'translate3d(' + delta + 'px,0,0)';
 	}-*/;
 }

@@ -105,7 +105,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	public void transitTo(Widget w, final Direction direction) 
 	{
 		prepareNextPanelToSlideIn(w, direction);
-		prepareSlide();
+		freezeContainerHeight();
 		prepareCurrentPanelToSlideOut();
 		
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() 
@@ -129,6 +129,10 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	
 	private void configureCurrentPanel() 
 	{
+		if (animation != null)
+		{
+			animation.cancel();
+		}
 		Style style = currentPanel.getElement().getStyle();
 		style.setProperty("left", "auto");
 		style.setProperty("top", "auto");
@@ -147,8 +151,8 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setWidth(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
-		style.setTop(0, Unit.PX);
-		style.setLeft(0, Unit.PX);
+//		style.setTop(0, Unit.PX);
+//		style.setLeft(0, Unit.PX);
 		style.setVisibility(Visibility.HIDDEN);
 		//nextPanel.setVisible(false);
 	}
@@ -157,7 +161,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	{
 		nextPanel.clear();
 		nextPanel.add(w);
-		int left = 0;
+		int left;
 		
 		if(direction.equals(Direction.FORWARD))
 		{
@@ -177,7 +181,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		currentPanel.getElement().getStyle().setPosition(Position.ABSOLUTE);
 	}
 
-	private void prepareSlide() 
+	private void freezeContainerHeight() 
 	{
 		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 	}
@@ -185,7 +189,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	private void concludeSlide() 
 	{
 		getElement().getStyle().setProperty("webkitTransitionProperty", "height");
-		getElement().getStyle().setProperty("webkitTransitionDuration", transitionDuration + "ms");
+		getElement().getStyle().setProperty("webkitTransitionDuration", "200ms");
 		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 		animation = null;
 		
@@ -198,14 +202,14 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 				setHeight("auto");
 				return false;
 			}
-		}, 100);
+		}, transitionDuration+100);
 	}
 
 	private void slide(Direction direction) 
 	{
 		if(animation != null)
 		{
-			animation.finish();
+			animation.cancel();
 		}
 		
 		Element entering = nextPanel.getElement();
