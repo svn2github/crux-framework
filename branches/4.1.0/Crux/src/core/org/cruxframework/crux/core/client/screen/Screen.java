@@ -138,10 +138,27 @@ public class Screen
 	{
 		final BeginEndExecutor executor = new BeginEndExecutor(100) 
 		{
+			private int clientHeight = 0;
+			private int clientWidth = 0;
+
 			@Override
 			protected void doEndAction() 
 			{
-				handler.onOrientationChangeOrResize();
+				if (!getCurrentDevice().equals(Device.largeDisplayMouse))
+				{
+					int newClientHeight = Window.getClientHeight();
+					int newClientWidth = Window.getClientWidth();
+					if (this.clientHeight != newClientHeight && clientWidth != newClientWidth)
+					{
+						handler.onOrientationChangeOrResize();
+					}
+					clientHeight = newClientHeight;
+					clientWidth  = newClientWidth;
+				}
+				else
+				{
+					handler.onOrientationChangeOrResize();
+				}
 			}
 			
 			@Override
