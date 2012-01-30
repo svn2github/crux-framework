@@ -44,6 +44,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -248,18 +249,19 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		{
 			alreadySettingPanelPosition = true;
 			setPanelDefaultPosition();
+			floatPanel.getElement().getStyle().setTop(-1000, Unit.PX);
 
-			Scheduler.get().scheduleDeferred(new ScheduledCommand()
+			new Timer()
 			{
 				@Override
-				public void execute()
+				public void run()
 				{
 					final int closedPosition = -floatPanel.getOffsetHeight();
 					floatPanel.getElement().getStyle().setTop(closedPosition, Unit.PX);
-					Scheduler.get().scheduleDeferred(new ScheduledCommand()
+					new Timer()
 					{
 						@Override
-						public void execute()
+						public void run()
 						{
 							int gripHeight = - grip.getAbsoluteTop();
 							placeHolder.getStyle().setHeight(gripHeight, Unit.PX);
@@ -267,9 +269,10 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							alreadySettingPanelPosition = false;
 							canvasHeight = (-closedPosition) - gripHeight;
 						}
-					});
+
+					}.schedule(1);
 				}
-			});
+			}.schedule(200);
 		}
     }
 	
@@ -336,7 +339,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		void setDefaultPosition(Element element, int canvasHeight);
 		void prepareElement(Element elem);
 	}
-	
 	
 	static class WebkitPanelAnimation implements PanelAnimation
 	{

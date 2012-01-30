@@ -55,7 +55,7 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 		gripHandler.prepare(grip, this);
 	}
 	
-	static class GripHandler
+	static class GripHandler 
 	{
 		public void prepare(FocusPanel grip, final TopToolBarTouchSmallController controller)
 		{
@@ -78,12 +78,12 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 		private FocusPanel grip;
 		private HandlerRegistration touchMoveHandler;
 		private HandlerRegistration touchEndHandler;
-
+		
 		@Override
 		public void prepare(FocusPanel grip, final TopToolBarTouchSmallController controller)
 		{
 			this.grip = grip;
-			this.controller = controller;
+			this.controller = controller;			
 			grip.addTouchStartHandler(this);
 		}
 		
@@ -101,18 +101,17 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 
 		public void onTouchMove(TouchMoveEvent event)
 		{
-			int delta = event.getTouches().get(0).getPageY() - this.startDelta;
-
-			if (delta < 0) 
+			int deltaY = event.getTouches().get(0).getPageY() - this.startDelta;
+			if (deltaY < 0) 
 			{
-				delta = 0;
+				deltaY = 0;
 			} 
-			else if (delta > controller.canvasHeight) 
+			else if (deltaY > controller.canvasHeight) 
 			{
-				delta = controller.canvasHeight;
+				deltaY = controller.canvasHeight;
 			}
-			
-			controller.setPosition(delta);
+
+			controller.setPosition(deltaY);
 		}
 		
 		public void onTouchEnd(TouchEndEvent event)
