@@ -138,8 +138,8 @@ public class Screen
 	{
 		final BeginEndExecutor executor = new BeginEndExecutor(100) 
 		{
-			private int clientHeight = 0;
-			private int clientWidth = 0;
+			private int clientHeight = Window.getClientHeight();
+			private int clientWidth = Window.getClientWidth();
 
 			@Override
 			protected void doEndAction() 
