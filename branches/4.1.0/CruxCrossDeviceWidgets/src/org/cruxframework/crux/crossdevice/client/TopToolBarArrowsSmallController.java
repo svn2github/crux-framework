@@ -165,23 +165,29 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	@Override
     public void close()
     {
-		BeforeCloseEvent event = BeforeCloseEvent.fire(this);
-		if (!event.isCanceled())
-		{
-			doClose();
-			CloseEvent.fire(this, this);
+	    if (this.opened)
+	    {
+	    	BeforeCloseEvent event = BeforeCloseEvent.fire(this);
+	    	if (!event.isCanceled())
+	    	{
+	    		doClose();
+	    		CloseEvent.fire(this, this);
+	    	}
 		}
     }
 
 	@Override
     public void open()
     {
-		BeforeOpenEvent event = BeforeOpenEvent.fire(this);
-		if (!event.isCanceled())
-		{
-			doOpen();
-			OpenEvent.fire(this, this);
-		}
+	    if (!this.opened)
+	    {
+	    	BeforeOpenEvent event = BeforeOpenEvent.fire(this);
+	    	if (!event.isCanceled())
+	    	{
+	    		doOpen();
+	    		OpenEvent.fire(this, this);
+	    	}
+	    }
     }
 	
 	@Expose
@@ -241,7 +247,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		if (!alreadySettingPanelPosition)
 		{
 			alreadySettingPanelPosition = true;
-			final boolean panelOpened = this.opened;
 			setPanelDefaultPosition();
 
 			Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -261,10 +266,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 							floatPanel.getElement().getStyle().setTop(closedPosition + gripHeight , Unit.PX);
 							alreadySettingPanelPosition = false;
 							canvasHeight = (-closedPosition) - gripHeight;
-							if (panelOpened)
-							{
-								open();
-							}
 						}
 					});
 				}
