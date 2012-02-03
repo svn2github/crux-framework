@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.json.JSONObject;
 
 /**
@@ -27,7 +28,7 @@ public class WidgetCreatorContext
 	private JSONObject widgetElement;
 	private String widget;
 	private String widgetId;
-	private boolean addToScreen;
+	private WidgetConsumer widgetConsumer;
 
 	public WidgetCreatorContext()
 	{
@@ -60,9 +61,9 @@ public class WidgetCreatorContext
 	{
 		return childElement;
 	}
-	public boolean isAddToScreen()
+	public WidgetConsumer getWidgetConsumer()
 	{
-		return addToScreen;
+		return widgetConsumer;
 	}
 	void setWidgetElement(JSONObject widgetElement) 
 	{
@@ -76,8 +77,8 @@ public class WidgetCreatorContext
 	{
 		this.widgetId = widgetId;
 	}
-	void setAddToScreen(boolean addToScreen)
+	void setWidgetConsumer(WidgetConsumer consumer)
     {
-    	this.addToScreen = addToScreen;
+    	this.widgetConsumer = consumer;
     }
 }

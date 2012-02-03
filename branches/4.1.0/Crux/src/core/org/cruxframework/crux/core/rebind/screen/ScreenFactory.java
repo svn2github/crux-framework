@@ -583,6 +583,14 @@ public class ScreenFactory
 	        			screen.setFragment(fragment);
 	        		}
 	        	}
+	        	else if (attrName.equals("enableTouchEventAdapters"))
+	        	{
+	        		String touchAdapters = elem.getString(attrName);
+	        		if (touchAdapters != null && touchAdapters.length() > 0)
+	        		{
+	        			screen.setToucheEventAdaptersEnabled(Boolean.parseBoolean(touchAdapters));
+	        		}
+	        	}
 	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
 	        		if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));

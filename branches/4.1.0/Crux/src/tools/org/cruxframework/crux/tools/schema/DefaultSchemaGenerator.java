@@ -660,6 +660,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"onResized\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onLoad\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"enableTouchEventAdapters\" type=\"xs:boolean\" default=\"false\"/>");
 		out.println("</xs:complexType>");
 	}
 

@@ -209,7 +209,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 	protected static String getSubMenu(WidgetCreator<?> widgetCreator, SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 	{
 		String widget = context.getWidget();
-		String subMenu = widgetCreator.createChildWidget(out, context.getChildElement(), context);	
+		String subMenu = widgetCreator.createChildWidget(out, context.getChildElement(), null, false, context);	
 		out.println(subMenu+".setAutoOpen("+widget+".getAutoOpen());");
 		out.println(subMenu+".setAnimationEnabled("+widget+".isAnimationEnabled());");
 		return subMenu;

@@ -51,6 +51,14 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
     {
 	    super(context, logger, screen, device);
 	    final String controllerClass = ClientControllers.getController(controllerName);
+		this.screenWidgetConsumer = new WidgetConsumer()
+		{
+			@Override
+			public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
+			{
+				out.println("this._controller.addWidget("+EscapeUtils.quote(widgetId)+","+widgetVariableName+");");
+			}
+		};
 	    controllerAccessHandler = new SingleControllerAccessHandler()
 		{
 			public String getControllerExpression(String controller)
@@ -141,38 +149,9 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), widgetType));
 		}
 
-		widget = newWidget(printer, metaElem, widgetId, widgetType, false);
+		widget = newWidget(printer, metaElem, widgetId, widgetType, this.screenWidgetConsumer, true);
 		return widget;
 	}
-	
-	/**
-	 * Creates a new widget based on its meta-data element.
-	 *  
-	 * @param printer 
-	 * @param metaElem
-	 * @param widgetId
-	 * @param addToScreen
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	@Override
-	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) 
-				throws CruxGeneratorException
-	{
-		String widget = super.newWidget(printer, metaElem, widgetId, widgetType, addToScreen);
-		addToScreen(printer, widgetId, widget);
-		return widget;
-	}
-
-	/**
-	 * 
-	 * @param printer
-	 * @param widget
-	 */
-	protected void addToScreen(SourcePrinter printer, String widgetId, String widget)
-    {
-	   printer.println("this._controller.addWidget("+EscapeUtils.quote(widgetId)+","+widget+");");
-    }	
 	
 	@Override
 	protected Map<String, String> getDeclaredMessages()

@@ -19,12 +19,12 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
-import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.AttachEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.DettachEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.LoadWidgetEvtProcessor;
@@ -238,7 +238,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String createChildWidget(SourcePrinter out, JSONObject metaElem, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		return createChildWidget(out, metaElem, true, context);
+		return createChildWidget(out, metaElem, null, true, context);
 	}
 
 	/**
@@ -246,19 +246,20 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * 
 	 * @param out
 	 * @param metaElem
-	 * @param addToScreen
+	 * @param consumer
+	 * @param allowWrapperForCreatedWidget
 	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, WidgetConsumer consumer, boolean allowWrapperForCreatedWidget, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		if (!metaElem.has("id"))
 		{
 			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), factory.getMetaElementType(metaElem)));
 		}
 		String widgetId = metaElem.optString("id");
-		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen, context);
+		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), consumer, allowWrapperForCreatedWidget, context);
 	}		
 	
 	/**
@@ -268,15 +269,17 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param metaElem
 	 * @param widgetId
 	 * @param widgetType
-	 * @param addToScreen
+	 * @param consumer
+	 * @param allowWrapperForCreatedWidget
 	 * @param context
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
 	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, 
-			String widgetType, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
+			String widgetType, WidgetConsumer consumer, boolean allowWrapperForCreatedWidget, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		return factory.newWidget(out, metaElem, widgetId, widgetType, addToScreen && context.isAddToScreen());
+		WidgetConsumer widgetConsumer = consumer != null ? consumer : context.getWidgetConsumer();
+		return factory.newWidget(out, metaElem, widgetId, widgetType, widgetConsumer, allowWrapperForCreatedWidget);
 	}
 	
 	/**
@@ -287,19 +290,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return ViewFactoryCreator.createVariableName(varName);
 	}
-
-	/**
-	 * 
-	 * @param out
-	 * @param metaElem
-	 * @param widgetId
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	public final String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
-	{
-		return createWidget(out, metaElem, widgetId, true);
-	}
 	
 	/**
 	 * Generates the code for the given widget creation. 
@@ -307,14 +297,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param out
 	 * @param metaElem
 	 * @param widgetId
-	 * @param addToScreen
+	 * @param consumer
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
+	public String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId, WidgetConsumer consumer) throws CruxGeneratorException
 	{
 		boolean partialSupport = hasPartialSupport();
-		C context = createContext(out, metaElem, widgetId, addToScreen);
+		C context = createContext(out, metaElem, widgetId, consumer);
 		if (partialSupport)
 		{
 			out.println("if ("+getWidgetClassName()+".isSupported()){");
@@ -561,28 +551,24 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @param srcWriter 
 	 * @param element
 	 * @param widgetId
-	 * @param addToScreen
+	 * @param consumer
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected C createContext(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
+	protected C createContext(SourcePrinter out, JSONObject metaElem, String widgetId, WidgetConsumer consumer) throws CruxGeneratorException
 	{
 		C context = instantiateContext();
 		context.setWidgetElement(metaElem);
 		context.setWidgetId(widgetId);
 		context.setChildElement(metaElem);
-		context.setAddToScreen(addToScreen);
-		String varName = createVariableName("widget");
-		context.setWidget(varName);
+		context.setWidgetConsumer(consumer);
+		String widgetVariableName = createVariableName("widget");
+		context.setWidget(widgetVariableName);
 
 		instantiateWidget(out, context);
-		if(addToScreen)
+		if(consumer != null)
 		{
-			out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+varName+");");
-			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
-			{
-				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+varName+");");
-			}
+			consumer.consume(out, widgetId, widgetVariableName);
 		}			
 		return context;
 	}

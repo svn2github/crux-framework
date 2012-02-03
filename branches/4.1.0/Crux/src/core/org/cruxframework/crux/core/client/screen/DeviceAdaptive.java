@@ -51,7 +51,42 @@ public interface DeviceAdaptive extends IsWidget
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static enum Device{largeDisplayMouse, largeDisplayTouch, largeDisplayArrows, smallDisplayTouch, smallDisplayArrows, all}
+	public static enum Device
+	{
+		largeDisplayMouse(new Feature[]{Feature.mouse}, Size.large), 
+		largeDisplayTouch(new Feature[]{Feature.touch}, Size.large), 
+		largeDisplayArrows(new Feature[]{}, Size.large), 
+		smallDisplayTouch(new Feature[]{Feature.touch}, Size.small), 
+		smallDisplayArrows(new Feature[]{}, Size.small), 
+		all(null, null);
+		
+		private final Size size;
+		private final Feature[] supportedFeatures;
+
+		Device(Feature[] supportedFeatures, Size size)
+		{
+			this.supportedFeatures = supportedFeatures;
+			this.size = size;
+		}
+		
+		public boolean supportsFeature(Feature feature)
+		{
+			if (supportedFeatures == null) return false;
+			for (Feature supported: supportedFeatures)
+			{
+				if (supported.equals(feature))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public Size getSize()
+		{
+			return size;
+		}
+	}
 	
 	/**
 	 * Used to map the all templates used by the target deviceAdaptive Widget

@@ -15,6 +15,7 @@
  */ 
 package org.cruxframework.crux.widgets.rebind.eventadapters;
 
+import org.cruxframework.crux.core.client.screen.eventadapter.TapEventAdapter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -24,7 +25,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeF
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.widgets.client.eventadapters.TapEventAdapter;
 import org.json.JSONObject;
 
 

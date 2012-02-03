@@ -46,6 +46,7 @@ public class Screen
 	protected List<String> formatters = new ArrayList<String>();
 	protected List<String> dataSources = new ArrayList<String>();
 	protected String title;
+	protected boolean toucheEventAdaptersEnabled = false;
 	
 	private ViewFactoryCreator factory = null;
 	
@@ -105,6 +106,24 @@ public class Screen
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isTouchEventAdaptersEnabled()
+	{
+		return this.toucheEventAdaptersEnabled;
+	}
+	
+	/**
+	 * 
+	 * @param toucheEventAdaptersEnabled
+	 */
+	public void setToucheEventAdaptersEnabled(boolean toucheEventAdaptersEnabled)
+	{
+		this.toucheEventAdaptersEnabled = toucheEventAdaptersEnabled;
+	}
+	
 	/**
 	 * Return screen identifier
 	 * @return

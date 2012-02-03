@@ -24,14 +24,18 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Feature;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.screen.ScreenFactory;
 import org.cruxframework.crux.core.client.screen.ScreenLoadEvent;
 import org.cruxframework.crux.core.client.screen.ViewFactory;
 import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
+import org.cruxframework.crux.core.client.screen.eventadapter.TapEventAdapter;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.i18n.MessageClasses;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -58,6 +62,8 @@ import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dev.shell.log.SwingLoggerPanel.CloseHandler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.dom.client.HasAllTouchHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -98,6 +104,33 @@ public class ViewFactoryCreator
 	private String loggerVariable;
 	private String device;
 	protected ControllerAccessHandler controllerAccessHandler = new DefaultControllerAccessor();
+	protected WidgetConsumer screenWidgetConsumer;
+	
+	public interface WidgetConsumer 
+	{
+		public static EmptyWidgetConsumer EMPTY_WIDGET_CONSUMER = new EmptyWidgetConsumer();
+
+		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
+	}
+	
+	private static class EmptyWidgetConsumer implements WidgetConsumer
+	{
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		{
+		}
+	}
+	
+	public class ScreenWidgetConsumer implements WidgetConsumer
+	{
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		{
+			out.println(getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
+			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
+			{
+				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
+			}
+		}
+	}
 	
 	/**
 	 * Constructor
@@ -115,6 +148,7 @@ public class ViewFactoryCreator
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 		this.loggerVariable = createVariableName("logger");
+		this.screenWidgetConsumer = new ScreenWidgetConsumer();
 
     }	
 	
@@ -278,7 +312,7 @@ public class ViewFactoryCreator
 	 */
 	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
 	{
-		return newWidget(printer, metaElem, widgetId, widgetType, true);
+		return newWidget(printer, metaElem, widgetId, widgetType, this.screenWidgetConsumer, true);
 	}
 
 	/**
@@ -287,11 +321,13 @@ public class ViewFactoryCreator
 	 * @param printer 
 	 * @param metaElem
 	 * @param widgetId
-	 * @param addToScreen
+	 * @param consumer
+	 * @param allowWrapperForCreatedWidget
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) 
+	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, 
+			WidgetConsumer consumer, boolean allowWrapperForCreatedWidget) 
 				throws CruxGeneratorException
 	{
 		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
@@ -302,24 +338,55 @@ public class ViewFactoryCreator
 		
 		String widget;
 		//TODO nao colocar na lista de lazyDeps qdo addToScreen for false
-		if (addToScreen && mustRenderLazily(widgetType, metaElem, widgetId))
+		if (consumer != null && consumer instanceof ScreenWidgetConsumer && mustRenderLazily(widgetType, metaElem, widgetId))
 		{
 			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			lazyPanels.add(lazyPanelId);
 			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
-			printer.println(screenVariable+".addWidget("+EscapeUtils.quote(lazyPanelId)+", "+widget+");");
+			consumer.consume(printer, lazyPanelId, widget);
 		}
 		else
 		{
-			widget = widgetFactory.createWidget(printer, metaElem, widgetId, addToScreen); 
+			widget = widgetFactory.createWidget(printer, metaElem, widgetId, consumer); 
 		}
 		if (widget == null)
 		{
 			throw new CruxGeneratorException(messages.screenFactoryErrorCreatingWidget(widgetId));
 		}
 		
+		Class<?> widgetClass = getWidgetCreatorHelper(widgetType).getWidgetType();
+		if (allowWrapperForCreatedWidget)
+		{
+			widget = getEventTapWrapperForHasClickWidget(printer, widget, widgetClass);
+		}
+		
 		return widget;
 	}
+
+	/**
+	 * Create a TapEventAdapter for touch devices, once click events has a delay to be fired
+	 * @param printer
+	 * @param widget
+	 * @param widgetClass
+	 * @return
+	 */
+	protected String getEventTapWrapperForHasClickWidget(SourcePrinter printer, String widget, Class<?> widgetClass)
+    {
+		if (getScreen().isTouchEventAdaptersEnabled())
+		{
+			Device currentDevice = Device.valueOf(getDevice());
+			if (currentDevice.supportsFeature(Feature.touch))
+			{
+				if (HasClickHandlers.class.isAssignableFrom(widgetClass) && HasAllTouchHandlers.class.isAssignableFrom(widgetClass))
+				{
+					String wrapperWidget = createVariableName("widget");
+					printer.println(TapEventAdapter.class.getCanonicalName()+" "+wrapperWidget+" = new "+TapEventAdapter.class.getCanonicalName()+"("+widget+");" );
+					widget = wrapperWidget;
+				}
+			}
+		}
+	    return widget;
+    }
 
 	/**
 	 * Close the current postProcessing scope and schedule the execution of all scope commands.
@@ -1195,4 +1262,12 @@ public class ViewFactoryCreator
 	        return controllerClass + ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX;
         }
     }
+    
+	/**
+	 * @return the screenWidgetConsumer
+	 */
+	WidgetConsumer getScreenWidgetConsumer() 
+	{
+		return screenWidgetConsumer;
+	}    
 }

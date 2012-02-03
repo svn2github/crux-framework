@@ -23,9 +23,10 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.AlignmentAttributeParser;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
@@ -47,9 +48,9 @@ import org.cruxframework.crux.widgets.client.grid.ColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.ColumnDefinitions;
 import org.cruxframework.crux.widgets.client.grid.DataColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.Grid;
+import org.cruxframework.crux.widgets.client.grid.Grid.SortingType;
 import org.cruxframework.crux.widgets.client.grid.RowSelectionModel;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition;
-import org.cruxframework.crux.widgets.client.grid.Grid.SortingType;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition.WidgetColumnCreator;
 import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.BeforeRowSelectEvtBind;
@@ -58,7 +59,6 @@ import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.RowDoubleClickE
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.RowRenderEvtBind;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -461,7 +461,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	    out.println("public Widget createWidgetForColumn(){");
 	    
 	    JSONObject child = ensureFirstChild(colElem, false, context.getWidgetId());
-		String childWidget = createChildWidget(out, child, false, context);
+		String childWidget = createChildWidget(out, child, WidgetConsumer.EMPTY_WIDGET_CONSUMER, true, context);
         out.println("return "+childWidget+";");
 	    
 	    out.println("};");
