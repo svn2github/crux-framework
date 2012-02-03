@@ -32,6 +32,7 @@ import org.cruxframework.crux.core.client.screen.ViewFactory;
 import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.i18n.MessageClasses;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -95,6 +96,33 @@ public class ViewFactoryCreator
 	private final Screen screen;
 	private String screenVariable;
 	private String loggerVariable;
+	private ScreenWidgetConsumer screenWidgetConsumer;
+	
+	public interface WidgetConsumer 
+	{
+		public static EmptyWidgetConsumer EMPTY_WIDGET_CONSUMER = new EmptyWidgetConsumer();
+
+		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
+	}
+	
+	private static class EmptyWidgetConsumer implements WidgetConsumer
+	{
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		{
+		}
+	}
+	
+	public class ScreenWidgetConsumer implements WidgetConsumer
+	{
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		{
+			out.println(getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
+			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
+			{
+				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
+			}
+		}
+	}
 	
 	/**
 	 * Constructor
@@ -111,6 +139,7 @@ public class ViewFactoryCreator
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.screenVariable = createVariableName("screen");
 		this.loggerVariable = createVariableName("logger");
+		this.screenWidgetConsumer = new ScreenWidgetConsumer();
 
     }	
 	
@@ -265,7 +294,7 @@ public class ViewFactoryCreator
 	 */
 	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType) throws CruxGeneratorException
 	{
-		return newWidget(printer, metaElem, widgetId, widgetType, true);
+		return newWidget(printer, metaElem, widgetId, widgetType, this.screenWidgetConsumer);
 	}
 
 	/**
@@ -278,7 +307,7 @@ public class ViewFactoryCreator
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, boolean addToScreen) 
+	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, WidgetConsumer consumer) 
 				throws CruxGeneratorException
 	{
 		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
@@ -289,16 +318,16 @@ public class ViewFactoryCreator
 		
 		String widget;
 		//TODO nao colocar na lista de lazyDeps qdo addToScreen for false
-		if (addToScreen && mustRenderLazily(widgetType, metaElem, widgetId))
+		if (consumer != null && consumer instanceof ScreenWidgetConsumer && mustRenderLazily(widgetType, metaElem, widgetId))
 		{
 			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			lazyPanels.add(lazyPanelId);
 			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
-			printer.println(screenVariable+".addWidget("+EscapeUtils.quote(lazyPanelId)+", "+widget+");");
+			consumer.consume(printer, lazyPanelId, widget);
 		}
 		else
 		{
-			widget = widgetFactory.createWidget(printer, metaElem, widgetId, addToScreen); 
+			widget = widgetFactory.createWidget(printer, metaElem, widgetId, consumer); 
 		}
 		if (widget == null)
 		{
@@ -463,7 +492,7 @@ public class ViewFactoryCreator
      */
     SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
     {
-    	return getSubTypeWriter(subType, superClass, interfaces, imports, false);
+    	return getSubTypeWriter(subType, null, superClass, interfaces, imports, false);
     }
     
     /**
@@ -479,7 +508,28 @@ public class ViewFactoryCreator
      */
     SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
     {
-		String packageName = ViewFactory.class.getPackage().getName();
+    	return getSubTypeWriter(subType, null, superClass, interfaces, imports, makeInterface);    
+	}
+	
+    /**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}. 
+	 * 
+     * @param subType
+     * @param packageName
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param makeInterface
+     * @return
+     */
+    SourcePrinter getSubTypeWriter(String subType, String packageName, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
+    {
+    	if(packageName == null)
+    	{
+    		packageName = ViewFactory.class.getPackage().getName();
+    	}
+		
 		PrintWriter printWriter = context.tryCreate(logger, packageName, subType);
 
 		if (printWriter == null)
@@ -516,7 +566,7 @@ public class ViewFactoryCreator
 		
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);       
 	}
-	
+    
 	/**
 	 * Check if the given metaElement refers to a valid widget
 	 * 
@@ -1153,4 +1203,12 @@ public class ViewFactoryCreator
     		}
     	}
     }
+
+	/**
+	 * @return the screenWidgetConsumer
+	 */
+	ScreenWidgetConsumer getScreenWidgetConsumer() 
+	{
+		return screenWidgetConsumer;
+	}
 }

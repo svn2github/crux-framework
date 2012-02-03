@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.client.datasource;
 
+
 /**
  * Metadata information about a DataSource column
  * @author Thiago da Rosa de Bustamante
@@ -42,6 +43,7 @@ public abstract class ColumnDefinition<V, R>
 	 * @return
 	 */
 	public abstract V getValue(R recordObject);
+	
 	
 	/**
 	 * @return

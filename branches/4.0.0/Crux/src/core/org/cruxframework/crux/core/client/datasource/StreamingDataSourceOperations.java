@@ -39,7 +39,6 @@ class StreamingDataSourceOperations<E>
 	{
 		this.DataSource = DataSource;
 	}
-	
 
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#insertRecord(int)
@@ -185,6 +184,25 @@ class StreamingDataSourceOperations<E>
     public DataSourceRecord<E>[] getSelectedRecords()
 	{
 		return selectedRecords.toArray(new DataSourceRecord[0]);
+	}
+	
+	public int getRecordIndex(E boundObject)
+	{
+		for(int i = 0; i < this.DataSource.data.size(); i++)
+		{
+			if(this.DataSource.data.get(i).recordObject.equals(boundObject))
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public void selectRecord(int index, boolean selected)
+	{
+		checkRange(index);
+		this.DataSource.data.get(index).setSelected(selected);
 	}
 	
 	public void reset()

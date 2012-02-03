@@ -92,6 +92,16 @@ public class DataSourceRecord<T>
 			}
 		}
 	}
+	
+	public void setDirty()
+	{
+		DataSourceRecordState previousState = getCurrentState();
+		this.state.setDirty(true);
+		if (!previousState.equals(state));
+		{
+			dataSource.updateState(this, previousState);
+		}
+	}
 
 	public void setReadOnly(boolean readOnly)
 	{

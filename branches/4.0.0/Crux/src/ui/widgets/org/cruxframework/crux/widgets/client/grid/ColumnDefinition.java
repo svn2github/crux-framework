@@ -18,31 +18,38 @@ package org.cruxframework.crux.widgets.client.grid;
 import org.cruxframework.crux.core.client.utils.ObjectUtils;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 public class ColumnDefinition
 {
 	String key;
-	
 	Grid grid = null;
-	
 	String width;
 	boolean visible;
 	String label;
-	
+	boolean frozen;
 	HorizontalAlignmentConstant horizontalAlign;
 	VerticalAlignmentConstant verticalAlign;
+	
+	protected boolean isDataColumn = false;
 
 	public ColumnDefinition(String label, String width, boolean visible, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	{
+		this(label, width, visible, false, horizontalAlign, verticalAlign);
+	}
+	
+	public ColumnDefinition(String label, String width, boolean visible, boolean frozen, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
 		this.label = label;
 		this.width = width;
 		this.visible = visible;
+		this.frozen = frozen;
 		this.horizontalAlign = horizontalAlign == null ? HasHorizontalAlignment.ALIGN_CENTER : horizontalAlign;
 		this.verticalAlign = verticalAlign == null ? HasVerticalAlignment.ALIGN_MIDDLE : verticalAlign;
 	}
+
 
 	/**
 	 * @return
@@ -231,5 +238,15 @@ public class ColumnDefinition
 		{
 			this.grid.refresh();
 		}
+	}
+	
+	public boolean isFrozen() 
+	{
+		return this.frozen;
+	}
+	
+	public void setDataColumn(boolean dataColumn)
+	{
+		this.isDataColumn = dataColumn;
 	}
 }

@@ -102,6 +102,7 @@ public interface WidgetMessages extends Messages
 
 	@DefaultMessage("[crux-widgets 033] - No pageable widget set for this pager.")
 	String pagerNoPageableSet();
-
 	
+	@DefaultMessage("[crux-widgets 034] - Could not create row details.")
+	String errorCreatingWidgetForRowDetails();
 }

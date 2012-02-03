@@ -18,10 +18,12 @@ package org.cruxframework.crux.widgets.client.grid;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 
 public class Row
 {
@@ -31,29 +33,37 @@ public class Row
 	private boolean hasSelectionCell;
 	private boolean selected;
 	private boolean enabled;
+	private boolean hasRowDetails;
+	private boolean showRowDetailsIcon;
+	private boolean detailsShown;
 		
-	protected Row(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell)
+	protected Row(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell, boolean hasRowDetails, boolean showRowDetailsIcon)
 	{
 		this.index = index;
 		this.elem = elem;
 		this.hasSelectionCell = hasSelectionCell;
+		this.hasRowDetails = hasRowDetails;
 		this.grid = grid;
+		this.showRowDetailsIcon = this.hasRowDetails && showRowDetailsIcon;
+	}
+	
+	protected Row(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell)
+	{
+		this(index, elem, grid, hasSelectionCell, false, false);
 	}
 	
 	protected void setCell(Cell cell, String column)
 	{
-		CellFormatter formatter = grid.getTable().getCellFormatter();
-		
 		ColumnDefinition def = grid.getColumnDefinitions().getDefinition(column);
 		int colIndex = getColumnIndex(column, false);
-		formatter.setAlignment(index, colIndex, def.getHorizontalAlign(), def.getVerticalAlign());
 		
 		if(def.getWidth() != null)
 		{
-			formatter.setWidth(index, colIndex, def.getWidth());
+			grid.getTable().setCellWidth(index, colIndex, def.getWidth());
 		}	
 		
 		setCell(cell, colIndex);	
+		grid.getTable().setCellAlignment(index, colIndex, def.getHorizontalAlign(), def.getVerticalAlign());
 	}
 
 	void setCell(Cell cell, int column)
@@ -149,6 +159,12 @@ public class Row
 		{
 			colIndex++;
 		}
+		
+		if(showRowDetailsIcon)
+		{
+			colIndex++;
+		}
+		
 		return colIndex;
 	}
 
@@ -180,6 +196,53 @@ public class Row
 	{
 		return enabled;
 	}
+	
+	
+	/**
+	 * Shows or hides the TR element below the current row, 
+	 *   where the details will be attached
+	 *   
+	 * @param show
+	 */
+	void showDetailsArea(boolean show)
+	{
+		if(hasRowDetails)
+		{
+			if(show)
+			{
+				grid.getTable().getRowElement(index + 1).getStyle().setOverflow(Overflow.VISIBLE);
+				grid.getTable().getRowElement(index + 1).getStyle().setProperty("height", "auto");
+				grid.getTable().getRowElement(index + 1).getStyle().setOpacity(1);
+			}
+			else
+			{
+				grid.getTable().getRowElement(index + 1).getStyle().setOverflow(Overflow.HIDDEN);
+				grid.getTable().getRowElement(index + 1).getStyle().setHeight(1, Unit.PX);
+				grid.getTable().getRowElement(index + 1).getStyle().setOpacity(0.01);
+			}
+			
+			this.detailsShown = show;
+		}
+	}
+	
+	/**
+	 * Shows the details of this row.
+	 * 
+	 * @param show
+	 * @param fireEvents
+	 */
+	public void showDetails(boolean show, boolean fireEvents)
+	{
+		grid.onShowDetails(show, this, fireEvents);
+	}
+	
+	/**
+	 * @return <code>true</code> if the details of the row are shown
+	 */
+	public boolean isDetailsShown()
+	{
+		return this.detailsShown;
+	}
 
 	/**
 	 * @param enabled the enabled to set
@@ -190,7 +253,13 @@ public class Row
 		{
 			CheckBox selector = (CheckBox) getCell(0).getCellWidget();
 			selector.setEnabled(enabled);
-		}		
+		}
+		
+		if(showRowDetailsIcon)
+		{
+			Button button = (Button) getCell(hasSelectionCell ? 1 : 0).getCellWidget();
+			button.setEnabled(enabled);
+		}
 		
 		if(!enabled)
 		{
@@ -202,5 +271,41 @@ public class Row
 		}
 		
 		this.enabled = enabled;
+	}
+	
+	/**
+	 * @return The panel on which the row's details are attached 
+	 */
+	public RowDetailsPanel getDetailsPanel() 
+	{
+		return (RowDetailsPanel) grid.getTable().getWidget(index + 1, 0);
+	}
+	
+	/**
+	 * @return The icon which collapses or expands the row's details
+	 */
+	public Button getRowDetailsIcon()
+	{
+		Button btn = null; 
+		
+		if(showRowDetailsIcon)
+		{
+			btn = (Button) getCell(hasSelectionCell ? 1 : 0).getCellWidget();
+		}
+		
+		return btn;
+	}
+	
+	/**
+	 * Attaches the details to the TR element above the row.
+	 * 
+	 * @param details
+	 */
+	void attachDetails(RowDetailsPanel details) 
+	{
+		if(details != null)
+		{
+			grid.getTable().setWidget(index + 1, 0, details);
+		}
 	}
 }

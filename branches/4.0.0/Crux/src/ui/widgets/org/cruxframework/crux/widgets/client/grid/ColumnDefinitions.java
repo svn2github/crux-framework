@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.grid;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.collection.FastList;
@@ -31,6 +32,7 @@ public class ColumnDefinitions
 	private FastList<ColumnDefinition> definitionsInOrder = new FastList<ColumnDefinition>();
 	private FastMap<ColumnDefinition> definitionsByKey = new FastMap<ColumnDefinition>();
 	private FastMap<Integer> actualColumnIndexes = new FastMap<Integer>();
+	private HashMap<Integer, Integer> visibleIndexes = new HashMap<Integer, Integer>();
 	private int visibleColumnCount = -1;
 	
 	void setGrid(Grid grid)
@@ -115,6 +117,7 @@ public class ColumnDefinitions
 	{
 		this.visibleColumnCount = -1;
 		this.actualColumnIndexes.clear();
+		this.visibleIndexes.clear();
 	}
 	
 	/**
@@ -137,7 +140,39 @@ public class ColumnDefinitions
 			}
 		}
 		
-		return this.visibleColumnCount ;		
+		return this.visibleColumnCount;		
+	}
+	
+	/**
+	 * Gets the definition of the i-th visible column
+	 * @param visibleIndex
+	 * @return
+	 */
+	public ColumnDefinition getVisibleColumnDefinition(int visibleIndex)
+	{
+		Integer index = visibleIndexes.get(visibleIndex);
+		
+		if(index == null)
+		{
+			int i = -1;
+			
+			for (int j=0; j < definitionsInOrder.size(); j++)
+			{
+				ColumnDefinition column = definitionsInOrder.get(j);
+				if(column.isVisible())
+				{
+					i++;
+				}
+				
+				if(i == visibleIndex)
+				{
+					index = j;
+					visibleIndexes.put(visibleIndex, index);
+				}
+			}
+		}
+		
+		return definitionsInOrder.get(index);
 	}
 	
 	/**

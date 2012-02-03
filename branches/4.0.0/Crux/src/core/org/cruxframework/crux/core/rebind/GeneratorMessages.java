@@ -241,11 +241,14 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 053] - Error generating widgetFactory. LazyCondition must declare one of properties : equals or notEquals")
 	String errorGeneratingWidgetFactoryInvalidLazyCondition();
 
-	@DefaultServerMessage("[generator 054] - Error Generating registered element. Can not retrieve current screen.")
+	@DefaultServerMessage("[generator 054] - Error generating registered element. Can not retrieve current screen.")
 	String errorGeneratingRegisteredElementCanNotFoundCurrentScreen();
 
-	@DefaultServerMessage("[generator 055] - Error Generating value binding code for DTO [{0}], Field [{1}]. Circular Reference. ")
+	@DefaultServerMessage("[generator 055] - Error generating value binding code for DTO [{0}], Field [{1}]. Circular Reference. ")
 	String errorGeneratingValueBindingCodeCircularReference(String className, String fieldName);
+	
+	@DefaultServerMessage("[generator 056] - Error generating binding code for DTO [{0}], Field [{1}]. No getter method found. ")
+	String errorGeneratingBindingCodeNoGetterMethodFound(String className, String fieldName);
 	
 	@DefaultServerMessage("[viewFactory 001] - Crux Meta Data contains an invalid meta element (without type attribute).")
 	String viewFactoryMetaElementDoesNotContainsType();

@@ -15,15 +15,17 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import java.util.Map;
+
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
-import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.AttachEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.DettachEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.LoadWidgetEvtProcessor;
@@ -66,7 +68,6 @@ import com.google.gwt.dom.client.PartialSupport;
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
 	
@@ -236,7 +237,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String createChildWidget(SourcePrinter out, JSONObject metaElem, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		return createChildWidget(out, metaElem, true, context);
+		return createChildWidget(out, metaElem, null, context);
 	}
 
 	/**
@@ -249,14 +250,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createChildWidget(SourcePrinter out, JSONObject metaElem, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
+	public String createChildWidget(SourcePrinter out, JSONObject metaElem, WidgetConsumer consumer, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		if (!metaElem.has("id"))
 		{
 			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), factory.getMetaElementType(metaElem)));
 		}
 		String widgetId = metaElem.optString("id");
-		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), addToScreen, context);
+		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), consumer, context);
 	}		
 	
 	/**
@@ -272,9 +273,10 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @throws CruxGeneratorException
 	 */
 	public String createChildWidget(SourcePrinter out, JSONObject metaElem, String widgetId, 
-			String widgetType, boolean addToScreen, WidgetCreatorContext context) throws CruxGeneratorException
+			String widgetType, WidgetConsumer consumer, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		return factory.newWidget(out, metaElem, widgetId, widgetType, addToScreen && context.isAddToScreen());
+		WidgetConsumer widgetConsumer = consumer != null ? consumer : context.getWidgetConsumer();
+		return factory.newWidget(out, metaElem, widgetId, widgetType, widgetConsumer);
 	}
 	
 	/**
@@ -284,19 +286,6 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public String createVariableName(String varName)
 	{
 		return ViewFactoryCreator.createVariableName(varName);
-	}
-
-	/**
-	 * 
-	 * @param out
-	 * @param metaElem
-	 * @param widgetId
-	 * @return
-	 * @throws CruxGeneratorException
-	 */
-	public final String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId) throws CruxGeneratorException
-	{
-		return createWidget(out, metaElem, widgetId, true);
 	}
 	
 	/**
@@ -309,10 +298,10 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	public String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
+	public String createWidget(SourcePrinter out, JSONObject metaElem, String widgetId, WidgetConsumer consumer) throws CruxGeneratorException
 	{
 		boolean partialSupport = hasPartialSupport();
-		C context = createContext(out, metaElem, widgetId, addToScreen);
+		C context = createContext(out, metaElem, widgetId, consumer);
 		if (partialSupport)
 		{
 			out.println("if ("+getWidgetClassName()+".isSupported()){");
@@ -405,6 +394,22 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
     	return factory.getSubTypeWriter(subType, superClass, interfaces, imports, makeInterface);
     }
 	
+    /**
+	 * Create a new printer for a subType. That subType will be declared on the same package of the
+	 * {@code ViewFactory}. 
+	 * 
+     * @param subType
+     * @param packageName
+     * @param superClass
+     * @param interfaces
+     * @param imports
+     * @param makeInterface
+     * @return
+     */
+    public SourcePrinter  getSubTypeWriter(String subType, String packageName, String superClass, String[] interfaces, String[] imports, boolean makeInterface)
+    {
+    	return factory.getSubTypeWriter(subType, packageName, superClass, interfaces, imports, makeInterface);
+    }
 	
 	/**
 	 * @param property
@@ -553,25 +558,22 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected C createContext(SourcePrinter out, JSONObject metaElem, String widgetId, boolean addToScreen) throws CruxGeneratorException
+	protected C createContext(SourcePrinter out, JSONObject metaElem, String widgetId, WidgetConsumer consumer) throws CruxGeneratorException
 	{
 		C context = instantiateContext();
 		context.setWidgetElement(metaElem);
 		context.setWidgetId(widgetId);
 		context.setChildElement(metaElem);
-		context.setAddToScreen(addToScreen);
-		String varName = createVariableName("widget");
-		context.setWidget(varName);
+		context.setWidgetConsumer(consumer);
+		String widgetVariableName = createVariableName("widget");
+		context.setWidget(widgetVariableName);
 
 		instantiateWidget(out, context);
-		if(addToScreen)
+		if(consumer != null)
 		{
-			out.println(factory.getScreenVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+varName+");");
-			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
-			{
-				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+varName+");");
-			}
-		}			
+			consumer.consume(out, widgetId, widgetVariableName);
+		}
+		
 		return context;
 	}
 
@@ -604,7 +606,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	/**
 	 * @return
 	 */
-	ViewFactoryCreator getViewFactory()
+	protected ViewFactoryCreator getViewFactory()
 	{
 		return this.factory;
 	}
@@ -660,5 +662,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			}
 			return property;
 		}
+	}
+	
+	protected String getLoggerVariable()
+	{
+		return factory.getLoggerVariable();
+	}
+	
+	protected Map<String, String> getDeclaredMessages()
+	{
+		return factory.getDeclaredMessages();
 	}
 }

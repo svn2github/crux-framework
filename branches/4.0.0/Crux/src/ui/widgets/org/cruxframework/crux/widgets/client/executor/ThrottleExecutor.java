@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.executor;
+package org.cruxframework.crux.widgets.client.executor;
 
 import java.util.Date;
 
@@ -24,7 +24,8 @@ import com.google.gwt.user.client.Timer;
  * Throttles a chain of incoming tasks in order to
  * execute only some of them, ensuring that the
  * max number of tasks executed per second is fixed.
- *   
+ * 
+ * @author Gesse Dafe
  */
 public abstract class ThrottleExecutor
 {
@@ -57,7 +58,7 @@ public abstract class ThrottleExecutor
 	/**
 	 * Throttles the invocations on the executor
 	 */
-	protected void throttle() 
+	public void throttle() 
 	{
 		long now = new Date().getTime();
 		

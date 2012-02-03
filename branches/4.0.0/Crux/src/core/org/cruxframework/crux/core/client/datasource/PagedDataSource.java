@@ -33,5 +33,8 @@ public interface PagedDataSource<E> extends DataSource<E>
 	void setPageSize(int pageSize);
 	int getCurrentPageSize();
 
-	int getCurrentPage();	
+	int getCurrentPage();
+	
+	int getRecordIndex(E boudObject);
+	void selectRecord(int index, boolean selected);
 }

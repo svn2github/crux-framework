@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 
 
 /**
@@ -121,7 +123,20 @@ public abstract class LocalScrollableDataSource<T> extends AbstractScrollableDat
 	
 	public void updateData(List<T> data)
 	{
-	}	
+	}
+	
+	public void copyValueToWidget(HasValue<?> valueContainer, String key, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+	
+	public void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+	
+	public int getRecordIndex(T boundObject)
+	{
+		return operations.getRecordIndex(boundObject);
+	}
 	
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#updateState(org.cruxframework.crux.core.client.datasource.DataSourceRecord, org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState)

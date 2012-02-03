@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 
 
 
@@ -124,6 +126,24 @@ public abstract class LocalPagedDataSource<T> extends AbstractPagedDataSource<T>
 	{
 	}	
 
+	public void copyValueToWidget(HasValue<?> valueContainer, String key, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+	
+	public void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+	
+	public int getRecordIndex(T boundObject)
+	{
+		return operations.getRecordIndex(boundObject);
+	}
+	
+	public void selectRecord(int index, boolean selected)
+	{
+		operations.selectRecord(index, selected);
+	}
+
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#updateState(org.cruxframework.crux.core.client.datasource.DataSourceRecord, org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState)
 	 */
@@ -131,4 +151,5 @@ public abstract class LocalPagedDataSource<T> extends AbstractPagedDataSource<T>
 	{
 		operations.updateState(record, previousState);
 	}
+	
 }

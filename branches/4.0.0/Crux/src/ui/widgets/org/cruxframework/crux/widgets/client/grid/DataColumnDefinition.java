@@ -16,6 +16,7 @@
 package org.cruxframework.crux.widgets.client.grid;
 
 import org.cruxframework.crux.core.client.formatter.Formatter;
+import org.cruxframework.crux.widgets.client.grid.DataColumnEditorCreators.DataColumnEditorCreator;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
@@ -25,6 +26,7 @@ public class DataColumnDefinition extends ColumnDefinition
 	private Formatter formatter;
 	private boolean wrapLine;
 	private boolean sortable;
+	private DataColumnEditorCreator<?> editorCreator;
 
 	/**
 	 * @param label
@@ -38,7 +40,7 @@ public class DataColumnDefinition extends ColumnDefinition
 	@Deprecated
 	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
 	{
-		this(label, width, formatter, visible, true, wrapLine, horizontalAlign, verticalAlign);
+		this(label, width, formatter, visible, true, wrapLine, false, horizontalAlign, verticalAlign, null);
 	}
 
 	/**
@@ -51,12 +53,14 @@ public class DataColumnDefinition extends ColumnDefinition
 	 * @param horizontalAlign
 	 * @param verticalAlign
 	 */
-	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean sortable, boolean wrapLine, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign)
+	public DataColumnDefinition(String label, String width, Formatter formatter, boolean visible, boolean sortable, boolean wrapLine, boolean frozen, HorizontalAlignmentConstant horizontalAlign, VerticalAlignmentConstant verticalAlign, DataColumnEditorCreator<?> editorCreator)
 	{
-		super(label, width, visible, horizontalAlign, verticalAlign);
+		super(label, width, visible, frozen, horizontalAlign, verticalAlign);
 		this.formatter = formatter;
 		this.wrapLine = wrapLine;
 		this.sortable = sortable;
+		this.editorCreator = editorCreator;
+		super.isDataColumn = true;
 	}
 
 	/**
@@ -84,4 +88,17 @@ public class DataColumnDefinition extends ColumnDefinition
     {
     	this.sortable = sortable;
     }
+
+	public DataColumnEditorCreator<?> getEditorCreator() 
+	{
+		return this.editorCreator;
+	}
+
+	/**
+	 * @param editorCreator the editorCreator to set
+	 */
+	public void setEditorCreator(DataColumnEditorCreator<?> editorCreator) 
+	{
+		this.editorCreator = editorCreator;
+	}
 }
