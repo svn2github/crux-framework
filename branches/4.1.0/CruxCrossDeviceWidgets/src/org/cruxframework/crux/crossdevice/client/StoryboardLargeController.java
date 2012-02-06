@@ -5,7 +5,6 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @Controller("storyboardLargeController")
@@ -20,9 +19,9 @@ public class StoryboardLargeController extends StoryboardSmallController
     }
 
 	@Override
-	protected FocusPanel createFocusPanelForCell(Widget widget)
+	protected Widget createClickablePanelForCell(Widget widget)
 	{
-	    final FocusPanel panel = super.createFocusPanelForCell(widget);
+	    final Widget panel = super.createClickablePanelForCell(widget);
 	    panel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		return panel;
 	}

@@ -15,9 +15,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class StoryboardLargeMouseController extends StoryboardLargeController
 {
 	@Override
-	protected FocusPanel createFocusPanelForCell(Widget widget)
+	protected Widget createClickablePanelForCell(Widget widget)
 	{
-	    final FocusPanel panel = super.createFocusPanelForCell(widget);
+	    final FocusPanel panel = (FocusPanel) super.createClickablePanelForCell(widget);
 		panel.addKeyPressHandler(new KeyPressHandler()
 		{
 			@Override

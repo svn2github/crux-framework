@@ -33,7 +33,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 
 	public void add(Widget widget)
 	{
-		storyboard.add(createFocusPanelForCell(widget));
+		storyboard.add(createClickablePanelForCell(widget));
 	}
 	
 	@Override
@@ -120,7 +120,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		 return addHandler(handler, SelectionEvent.getType());
 	}
 
-	protected FocusPanel createFocusPanelForCell(Widget widget)
+	protected Widget createClickablePanelForCell(Widget widget)
 	{
 		final FocusPanel panel = new FocusPanel();
 		panel.add(widget);
@@ -165,7 +165,6 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	protected void applyWidgetDependentStyleNames()
 	{
 		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.touch.toString());
 	}
 
 	@Override

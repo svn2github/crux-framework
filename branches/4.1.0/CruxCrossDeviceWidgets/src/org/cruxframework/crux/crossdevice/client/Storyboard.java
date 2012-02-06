@@ -30,8 +30,10 @@ import com.google.gwt.user.client.ui.IndexedPanel;
  */
 @Templates({
 	@Template(name="storyboardLarge", device=Device.all),
+	@Template(name="storyboardLargeTouch", device=Device.largeDisplayTouch),
 	@Template(name="storyboardLargeMouse", device=Device.largeDisplayMouse),
-	@Template(name="storyboardSmall", device=Device.smallDisplayArrows)
+	@Template(name="storyboardSmall", device=Device.smallDisplayArrows),
+	@Template(name="storyboardSmallTouch", device=Device.smallDisplayTouch)
 })
 public interface Storyboard extends DeviceAdaptive, IndexedPanel, HasSelectionHandlers<Integer>, HasWidgets
 {
