@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.HasAllTouchHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,6 +32,12 @@ public class TapEventAdapter extends Composite
 		sinkEvents(Event.TOUCHEVENTS | Event.ONCLICK);
 	}
 
+	@Override
+	public Widget getWidget()
+	{
+	    return super.getWidget();
+	}
+	
 	@Override
 	public void onBrowserEvent(Event event) 
 	{
@@ -92,7 +97,6 @@ public class TapEventAdapter extends Composite
 	{
 		if (!touchMoved)
 		{
-//			event.stopPropagation();
 			touchHandled = true;
 			fireClick();
 		}
@@ -123,8 +127,6 @@ public class TapEventAdapter extends Composite
 	 */
 	private void onTouchStart(Event event) 
 	{
-//		event.stopPropagation();
-
 		Touch touch = event.getTouches().get(0);
 		this.startX = touch.getClientX();
 		this.startY = touch.getClientY();		
