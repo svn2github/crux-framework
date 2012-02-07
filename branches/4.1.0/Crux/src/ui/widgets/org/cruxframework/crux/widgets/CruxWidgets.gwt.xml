@@ -124,6 +124,23 @@
 			<when-property-is name="user.agent" value="safari" />
 		</any>
 	</replace-with>
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.animation.WebkitHorizontalSlidingSwapAnimation">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation" />
+		<any>
+      		<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+	<replace-with
+		class="org.cruxframework.crux.widgets.client.animation.JSHorizontalSlidingSwapAnimation">
+		<when-type-assignable
+			class="org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation" />
+		<none>
+      		<when-property-is name="user.agent" value="safari" />
+		</none>
+	</replace-with>
+	
 
     
 </module>

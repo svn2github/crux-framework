@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.animation;
 import org.cruxframework.crux.widgets.client.animation.Animation.CompleteCallback;
 import org.cruxframework.crux.widgets.client.animation.SlidingSwapAnimation.Direction;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -29,7 +30,7 @@ public class AnimationFactory
 	public static HorizontalSlidingSwapAnimation createHorizontalSlidingSwapAnimation(Element entering, Element leaving, 
 			               										int delta, Direction direction, int durationMillis, CompleteCallback completeCallback)
 	{
-		HorizontalSlidingSwapAnimation animation = new WebkitHorizontalSlidingSwapAnimation(); //TODO alterar para GWT.create
+		HorizontalSlidingSwapAnimation animation = GWT.create(HorizontalSlidingSwapAnimation.class);
 		animation.setEntering(entering);
 		animation.setLeaving(leaving);
 		animation.setDelta(delta, direction);

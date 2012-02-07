@@ -7,8 +7,8 @@ import com.google.gwt.user.client.Element;
  */
 public abstract class SlidingSwapAnimation extends SwapAnimation
 {
-	private int orientation;
-	private int delta;
+	protected int orientation;
+	protected int delta;
 	public static enum Direction {FORWARD, BACKWARDS}
 
 	public void setDelta(int delta, Direction direction)
