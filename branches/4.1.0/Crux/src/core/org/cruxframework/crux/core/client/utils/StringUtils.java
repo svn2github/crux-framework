@@ -224,5 +224,89 @@ public class StringUtils
 		return false;
 	}
 		
-	
+	/**
+	 *
+	 * <p>Find the Levenshtein distance between two Strings.</p>
+	 *
+	 * <pre>
+	 * StringUtils.getLevenshteinDistance(null, *)             = IllegalArgumentException
+	 * StringUtils.getLevenshteinDistance(*, null)             = IllegalArgumentException
+	 * StringUtils.getLevenshteinDistance("","")               = 0
+	 * StringUtils.getLevenshteinDistance("","a")              = 1
+	 * StringUtils.getLevenshteinDistance("aaapppp", "")       = 7
+	 * StringUtils.getLevenshteinDistance("frog", "fog")       = 1
+	 * StringUtils.getLevenshteinDistance("fly", "ant")        = 3
+	 * StringUtils.getLevenshteinDistance("elephant", "hippo") = 7
+	 * StringUtils.getLevenshteinDistance("hippo", "elephant") = 7
+	 * StringUtils.getLevenshteinDistance("hippo", "zzzzzzzz") = 8
+	 * StringUtils.getLevenshteinDistance("hello", "hallo")    = 1
+	 * </pre>
+	 *
+	 * @param s  the first String, must not be null
+	 * @param t  the second String, must not be null
+	 * @return result distance
+	 * @throws IllegalArgumentException if either String input <code>null</code>
+	 */
+	public static int getLevenshteinDistance(String s, String t) 
+	{
+		if (s == null || t == null) 
+		{
+			throw new IllegalArgumentException("Strings must not be null");
+		}
+
+		int n = s.length(); 
+		int m = t.length(); 
+
+		if (n == 0) 
+		{
+			return m;
+		} 
+		else if (m == 0) 
+		{
+			return n;
+		}
+
+		if (n > m) 
+		{
+			String tmp = s;
+			s = t;
+			t = tmp;
+			n = m;
+			m = t.length();
+		}
+
+		int p[] = new int[n+1]; 
+		int d[] = new int[n+1]; 
+		int _d[]; 
+
+		int i; 
+		int j; 
+
+		char t_j; 
+
+		int cost; 
+
+		for (i = 0; i<=n; i++) 
+		{
+			p[i] = i;
+		}
+
+		for (j = 1; j<=m; j++) 
+		{
+			t_j = t.charAt(j-1);
+			d[0] = j;
+
+			for (i=1; i<=n; i++) 
+			{
+				cost = s.charAt(i-1)==t_j ? 0 : 1;
+				d[i] = Math.min(Math.min(d[i-1]+1, p[i]+1),  p[i-1]+cost);
+			}
+
+			_d = p;
+			p = d;
+			d = _d;
+		}
+
+		return p[n];
+	}
 }

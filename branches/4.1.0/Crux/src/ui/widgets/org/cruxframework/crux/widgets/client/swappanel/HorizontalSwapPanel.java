@@ -151,6 +151,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setVisibility(Visibility.VISIBLE);
+		style.setOpacity(1);
 		//currentPanel.setVisible(true);
 	}
 
@@ -164,6 +165,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 //		style.setTop(0, Unit.PX);
 //		style.setLeft(0, Unit.PX);
 		style.setVisibility(Visibility.HIDDEN);
+		style.setOpacity(0);
 		//nextPanel.setVisible(false);
 	}
 	
@@ -182,8 +184,11 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 			left = -getOffsetWidth();
 		}
 		
-		nextPanel.getElement().getStyle().setLeft(left, Unit.PX);
-		nextPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+		Style style = nextPanel.getElement().getStyle();
+		style.setLeft(left, Unit.PX);
+		style.setVisibility(Visibility.VISIBLE);
+		style.setOpacity(1);
+
 	}
 
 	private void prepareCurrentPanelToSlideOut() 
@@ -198,9 +203,10 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	
 	private void concludeSlide() 
 	{
-		getElement().getStyle().setProperty("webkitTransitionProperty", "height");
-		getElement().getStyle().setProperty("webkitTransitionDuration", "200ms");
-		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
+		Style style = getElement().getStyle();
+		style.setProperty("webkitTransitionProperty", "height");
+		style.setProperty("webkitTransitionDuration", "200ms");
+		style.setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 		animation = null;
 		
 		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() 
