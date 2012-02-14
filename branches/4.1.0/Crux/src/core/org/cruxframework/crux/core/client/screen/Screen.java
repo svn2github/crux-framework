@@ -32,6 +32,7 @@ import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.Screen.Platform;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -64,6 +65,10 @@ public class Screen
 {
 	private static Logger logger = Logger.getLogger(Screen.class.getName());
 
+	private static Platform platform;
+
+	public static enum Platform{mobile, desktop, tv}
+	
 	/**
 	 * 
 	 * @param id
@@ -128,6 +133,32 @@ public class Screen
 	public static HandlerRegistration addOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
 	{
 		return Screen.get().addWindowOrientationChangeOrResizeHandler(handler);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Platform getPlatform()
+	{
+		if (Screen.platform == null)
+		{
+			String ua = Window.Navigator.getUserAgent();
+			if (ua.indexOf("googletv") != -1)
+			{
+				Screen.platform = Platform.tv;
+			}
+			else if ((ua.indexOf("opera mini") != -1)  || (ua.indexOf("opera mobi") != -1) || (ua.indexOf("android") != -1) || (ua.indexOf("mobile") != -1) || 
+		             (ua.indexOf("iphone") != -1) || (ua.indexOf("ipod;") != -1) || (ua.indexOf("ipad;") != -1))
+			{
+				Screen.platform = Platform.mobile;
+			}
+			else
+			{
+				Screen.platform = Platform.desktop;
+			}
+		}
+		return Screen.platform;
 	}
 	
 	/**
