@@ -14,7 +14,7 @@
  * the License.
  */
 package org.cruxframework.crux.widgets.client.swappanel;
-
+ 
 import org.cruxframework.crux.widgets.client.animation.Animation.CompleteCallback;
 import org.cruxframework.crux.widgets.client.animation.AnimationFactory;
 import org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation;
@@ -201,11 +201,12 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		getElement().getStyle().setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 	}
 	
-	private void concludeSlide() 
+	private void concludeSlide(final CompleteCallback completeCallback) 
 	{
+		final int HEIGHT_TRANSITION_DURATION = 200;
 		Style style = getElement().getStyle();
 		style.setProperty("webkitTransitionProperty", "height");
-		style.setProperty("webkitTransitionDuration", "200ms");
+		style.setProperty("webkitTransitionDuration", HEIGHT_TRANSITION_DURATION+"ms");
 		style.setHeight(currentPanel.getElement().getOffsetHeight(), Unit.PX);
 		animation = null;
 		
@@ -216,9 +217,14 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 			{
 				getElement().getStyle().setProperty("webkitTransitionDuration", "0ms");
 				setHeight("auto");
+				if (completeCallback != null)
+				{
+					completeCallback.onComplete();
+				}
+				SwapEvent.fire(HorizontalSwapPanel.this);
 				return false;
 			}
-		}, transitionDuration+100);
+		}, HEIGHT_TRANSITION_DURATION+10);
 	}
 
 	private void slide(Direction direction, final CompleteCallback completeCallback) 
@@ -237,18 +243,13 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 			@Override
 			public void onComplete()
 			{
-				onTransitionComplete();
-				if (completeCallback != null)
-				{
-					completeCallback.onComplete();
-				}
-				SwapEvent.fire(HorizontalSwapPanel.this);
+				onTransitionComplete(completeCallback);
 			}
 		});
 		animation.start();
 	}
 	
-	private void onTransitionComplete()
+	private void onTransitionComplete(CompleteCallback completeCallback)
 	{
 		FlowPanel temp = nextPanel;
 		nextPanel = currentPanel;
@@ -256,7 +257,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		
 		configureNextPanel();
 		configureCurrentPanel();
-		concludeSlide();
+		concludeSlide(completeCallback);
 	}
 	
 	public void clear()

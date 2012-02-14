@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -22,12 +23,14 @@ public class TapEventAdapter extends Composite
 	private boolean touchMoved = false;
 	private int startY;
 	private int startX;
+	private boolean isHasEnabled = false;
 	
 	public TapEventAdapter(Widget child)
 	{
 		// TODO - messages
 		assert (child instanceof HasAllTouchHandlers) : "";
 		assert (child instanceof HasClickHandlers) : "";
+		isHasEnabled = (child instanceof HasEnabled);
 		initWidget(child);
 		sinkEvents(Event.TOUCHEVENTS | Event.ONCLICK);
 	}
@@ -101,7 +104,7 @@ public class TapEventAdapter extends Composite
 			fireClick();
 		}
 	}
-
+ 
 	/**
 	 * 
 	 * @param event
@@ -139,8 +142,11 @@ public class TapEventAdapter extends Composite
 	 */
 	private void fireClick() 
 	{
-		NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false,
-				false, false, false);
-		getElement().dispatchEvent(evt);
+		if (!isHasEnabled || ((HasEnabled)getWidget()).isEnabled())
+		{
+			NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false,
+					false, false, false);
+			getElement().dispatchEvent(evt);
+		}
 	}
 }
