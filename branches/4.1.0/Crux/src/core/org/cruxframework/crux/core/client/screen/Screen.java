@@ -32,7 +32,6 @@ import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.Screen.Platform;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -143,7 +142,7 @@ public class Screen
 	{
 		if (Screen.platform == null)
 		{
-			String ua = Window.Navigator.getUserAgent();
+			String ua = Window.Navigator.getUserAgent().toLowerCase();
 			if (ua.indexOf("googletv") != -1)
 			{
 				Screen.platform = Platform.tv;

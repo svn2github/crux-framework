@@ -104,4 +104,22 @@
     	<when-type-is class="org.cruxframework.crux.core.client.screen.ScreenBlocker" />
    		<when-property-is name="user.agent" value="ie6" />
     </replace-with>
+    
+	<!-- Specify DeviceDusplayHandler -->
+    <replace-with class="org.cruxframework.crux.core.client.screen.DeviceDisplayHandler.SmallDisplayHandler">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceDisplayHandler.DisplayHandler" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+		</any>
+	</replace-with>
+    <replace-with class="org.cruxframework.crux.core.client.screen.DeviceDisplayHandler.IEStyleContentInjector">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceDisplayHandler.StyleContentInjector" />
+		<any>
+			<when-property-is name="user.agent" value="ie6" />
+			<when-property-is name="user.agent" value="ie8" />
+			<when-property-is name="user.agent" value="ie9" />
+		</any>
+	</replace-with>
+    
 </module>

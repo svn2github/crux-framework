@@ -47,6 +47,7 @@ public class Screen
 	protected List<String> dataSources = new ArrayList<String>();
 	protected String title;
 	protected boolean toucheEventAdaptersEnabled = false;
+	protected boolean normalizeDeviceAspectRatio = false;
 	
 	private ViewFactoryCreator factory = null;
 	
@@ -124,6 +125,24 @@ public class Screen
 		this.toucheEventAdaptersEnabled = toucheEventAdaptersEnabled;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isNormalizeDeviceAspectRatio()
+    {
+    	return normalizeDeviceAspectRatio;
+    }
+
+	/**
+	 * 
+	 * @param normalizeDeviceAspectRatio
+	 */
+	public void setNormalizeDeviceAspectRatio(boolean normalizeDeviceAspectRatio)
+    {
+    	this.normalizeDeviceAspectRatio = normalizeDeviceAspectRatio;
+    }
+
 	/**
 	 * Return screen identifier
 	 * @return

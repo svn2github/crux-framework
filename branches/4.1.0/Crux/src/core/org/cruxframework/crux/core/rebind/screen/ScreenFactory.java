@@ -591,6 +591,14 @@ public class ScreenFactory
 	        			screen.setToucheEventAdaptersEnabled(Boolean.parseBoolean(touchAdapters));
 	        		}
 	        	}
+	        	else if (attrName.equals("normalizeDeviceAspectRatio"))
+	        	{
+	        		String normalize = elem.getString(attrName);
+	        		if (normalize != null && normalize.length() > 0)
+	        		{
+	        			screen.setNormalizeDeviceAspectRatio(Boolean.parseBoolean(normalize));
+	        		}
+	        	}
 	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
 	        		if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));

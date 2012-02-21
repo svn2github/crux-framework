@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Feature;
+import org.cruxframework.crux.core.client.screen.DeviceDisplayHandler;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.screen.ScreenFactory;
@@ -944,6 +945,11 @@ public class ViewFactoryCreator
 		printer.println("createRegisteredControllers();");
 		printer.println("createRegisteredDataSources();");
     	
+		if (this.screen.isNormalizeDeviceAspectRatio())
+		{
+			printer.println(DeviceDisplayHandler.class.getCanonicalName()+".configureDisplayForDevice();");
+		}
+		
 		JSONArray metaData = this.screen.getMetaData();
 		createScreen(printer);
 		for (int i = 0; i < metaData.length(); i++)
