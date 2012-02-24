@@ -26,23 +26,42 @@ import com.google.gwt.dom.client.StyleElement;
  */
 public class DeviceDisplayHandler
 {
+	private static DisplayHandler displayHandler = null;
+	
 	/**
 	 * Normalize the zoom level to ensure that the page will be displayed with the same relative width on different devices.
 	 */
 	public static void configureDisplayForDevice()
 	{
-		DisplayHandler displayHandler = GWT.create(DisplayHandler.class); 
-//		Window.alert("User Agent:"+Window.Navigator.getUserAgent().toLowerCase());
-//		Window.alert("Platform:"+Screen.getPlatform().toString());
-//		Window.alert("Device:"+Screen.getCurrentDevice().toString());
+		DisplayHandler displayHandler = getDisplayHandler(); 
 		displayHandler.configureScreenZoom();
 	}
+	
+	public static double getScreenZoomFactor()
+	{
+		DisplayHandler displayHandler = getDisplayHandler(); 
+		return displayHandler.getScreenZoomFactor();
+	}
+
+	private static DisplayHandler getDisplayHandler()
+    {
+		if (displayHandler == null)
+		{
+			displayHandler = GWT.create(DisplayHandler.class);
+		}
+		return displayHandler;
+    }
 
 	static class DisplayHandler
 	{
 		void configureScreenZoom()
 		{
 			
+		}
+		
+		double getScreenZoomFactor()
+		{
+			return 1;
 		}
 	}
 	
@@ -51,28 +70,38 @@ public class DeviceDisplayHandler
 		@Override
 		void configureScreenZoom()
 		{
-			double pixelRatio = getDevicePixelRatio();
-//			Window.alert("Pixel Ratio:"+pixelRatio);
-			if (pixelRatio > 0)
+			double zoomFactor = getScreenZoomFactor();
+			if (zoomFactor != 1)
 			{
 				StyleContentInjector styleContentInjector = GWT.create(StyleContentInjector.class);
+				createStyleElementForScreenZoom(styleContentInjector, zoomFactor);
+			}
+		}
+		
+		@Override
+		double getScreenZoomFactor()
+		{
+			double pixelRatio = getDevicePixelRatio();
+			if (pixelRatio > 0)
+			{
 				if (pixelRatio >= 2)
 				{
-					createStyleElementForHighDensityDevices(styleContentInjector);
+					return 0.667;
 				}
 				else if (pixelRatio >= 1.5)
 				{
-					createStyleElementForMediumDensityDevices(styleContentInjector);
+					return 1;
 				}
 				else if (pixelRatio >= 1.0)
 				{
-					createStyleElementForLowDensityDevices(styleContentInjector);
+					return 0.667;
 				}
 				else if (pixelRatio < 1.0)
 				{
-					createStyleElementForVeryLowDensityDevices(styleContentInjector);
+					return 0.5;
 				}
 			}
+			return 1;
 		}
 		
 		/**
@@ -90,56 +119,18 @@ public class DeviceDisplayHandler
 		/**
 		 * 
 		 * @param styleContentInjector
+		 * @param zoomFactor
 		 */
-		private void createStyleElementForHighDensityDevices(StyleContentInjector styleContentInjector)
+		private void createStyleElementForScreenZoom(StyleContentInjector styleContentInjector, double zoomFactor)
 	    {
 		    StyleElement styleElement = Document.get().createStyleElement();
 			styleElement.setType("text/css");
-			styleContentInjector.injectContent(styleElement,"HTML{zoom: 0.667;}");
-			
-			Document.get().getElementsByTagName("head").getItem(0).appendChild(styleElement);
-	    }
-		
-		/**
-		 * 
-		 * @param styleContentInjector
-		 */
-		private void createStyleElementForMediumDensityDevices(StyleContentInjector styleContentInjector)
-	    {
-		    StyleElement styleElement = Document.get().createStyleElement();
-			styleElement.setType("text/css");
-			styleContentInjector.injectContent(styleElement,"HTML{zoom: 1.0;}");
-			
-			Document.get().getElementsByTagName("head").getItem(0).appendChild(styleElement);
-	    }
-
-		/**
-		 * 
-		 * @param styleContentInjector
-		 */
-		private void createStyleElementForLowDensityDevices(StyleContentInjector styleContentInjector)
-	    {
-		    StyleElement styleElement = Document.get().createStyleElement();
-			styleElement.setType("text/css");
-			styleContentInjector.injectContent(styleElement,"HTML{zoom: 0.667;}");
-			
-			Document.get().getElementsByTagName("head").getItem(0).appendChild(styleElement);
-	    }
-
-		/**
-		 * 
-		 * @param styleContentInjector
-		 */
-		private void createStyleElementForVeryLowDensityDevices(StyleContentInjector styleContentInjector)
-	    {
-		    StyleElement styleElement = Document.get().createStyleElement();
-			styleElement.setType("text/css");
-			styleContentInjector.injectContent(styleElement,"HTML{zoom: 0.5;}");
+			styleContentInjector.injectContent(styleElement,"HTML{zoom: "+zoomFactor+";}");
 			
 			Document.get().getElementsByTagName("head").getItem(0).appendChild(styleElement);
 	    }
 	}
-
+	
 	static class StyleContentInjector
 	{
 		void injectContent(StyleElement element, String content)

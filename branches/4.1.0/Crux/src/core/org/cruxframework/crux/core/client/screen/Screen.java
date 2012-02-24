@@ -138,6 +138,15 @@ public class Screen
 	 * 
 	 * @return
 	 */
+	public static double getScreenZoomFactorForCurrentDevice()
+	{
+		return DeviceDisplayHandler.getScreenZoomFactor();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public static Platform getPlatform()
 	{
 		if (Screen.platform == null)
