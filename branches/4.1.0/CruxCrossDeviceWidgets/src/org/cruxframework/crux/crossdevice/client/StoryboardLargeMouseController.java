@@ -38,6 +38,6 @@ public class StoryboardLargeMouseController extends StoryboardLargeController
 	protected void applyWidgetDependentStyleNames()
 	{
 		super.applyWidgetDependentStyleNames();
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.mouse.toString());
+		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.mouse.toString());
 	}	
 }

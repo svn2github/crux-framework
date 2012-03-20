@@ -46,7 +46,7 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
     protected void applyWidgetDependentStyleNames()
     {
 		super.applyWidgetDependentStyleNames();
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.touch.toString());
+		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
     }
 
 	@Override

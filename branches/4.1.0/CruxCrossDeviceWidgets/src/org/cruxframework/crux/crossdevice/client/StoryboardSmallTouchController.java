@@ -54,6 +54,6 @@ public class StoryboardSmallTouchController extends StoryboardSmallController
 	protected void applyWidgetDependentStyleNames()
 	{
 		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.touch.toString());
+		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
 	}
 }

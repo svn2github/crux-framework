@@ -56,6 +56,6 @@ public class StoryboardLargeTouchController extends StoryboardLargeController
 	protected void applyWidgetDependentStyleNames()
 	{
 		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Feature.touch.toString());
+		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
 	}		
 }
