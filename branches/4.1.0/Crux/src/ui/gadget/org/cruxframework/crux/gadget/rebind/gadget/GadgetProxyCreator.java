@@ -186,7 +186,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			Class<?> featureClass = feature.getFeatureClass();
 			if (featureClass != null)
 			{
-				srcWriter.println("private " + featureClass.getCanonicalName() + " "+feature.toString()+"Feature = null;");
+				srcWriter.println("private " + featureClass.getCanonicalName() + " "+feature.toString()+"Input = null;");
 			}
 		}
     }
@@ -210,7 +210,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			{
 				srcWriter.println("public " + featureClass.getCanonicalName() + " get"+featureClass.getSimpleName()+"(){");
 				srcWriter.indent();
-				srcWriter.println("return "+feature.toString()+"Feature;");
+				srcWriter.println("return "+feature.toString()+"Input;");
 				srcWriter.outdent();
 				srcWriter.println("}");
 			}
@@ -252,7 +252,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 */
 	private void initializeFeature(SourceWriter srcWriter, ContainerFeature feature)
 	{
-		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
+		srcWriter.println("this."+feature.toString()+"Input = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
 		neededFeatures.add(feature.getFeatureName());
 	}
 	
@@ -264,7 +264,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	{
 		srcWriter.println("if (hasFeature("+EscapeUtils.quote(feature.getFeatureName())+")){");
 		srcWriter.indent();
-		srcWriter.println("this."+feature.toString()+"Feature = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
+		srcWriter.println("this."+feature.toString()+"Input = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
 		srcWriter.outdent();
 		srcWriter.println("}");
 		neededFeatures.add(feature.getFeatureName());
