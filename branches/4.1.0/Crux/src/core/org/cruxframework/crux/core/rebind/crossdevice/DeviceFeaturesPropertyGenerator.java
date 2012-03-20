@@ -44,42 +44,24 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 	static void writeDeviceFeaturesPropertyJavaScript(SourceWriter body) 
 	{
 		body.println("var ua = navigator.userAgent.toLowerCase();"); 
-		body.println("var isNotPCDevice = ((ua.indexOf('opera mini') != -1)  || (ua.indexOf('opera mobi') != -1) || (ua.indexOf('android') != -1) || (ua.indexOf('mobile') != -1) || "+
-	                     "(ua.indexOf('googletv') != -1) || (ua.indexOf('iphone') != -1) || (ua.indexOf('ipod;') != -1) || (ua.indexOf('ipad;') != -1));");
 		body.println("var supportsTouch = ('ontouchstart' in window);");
-		body.println("var isLargeScreen = ((screen.width * screen.height) >= (1024 * (9/16)*1024));"); 
 		
-		body.println("if (isLargeScreen){");
+		body.println("if (ua.indexOf('googletv') != -1){");
 		body.indent();
-		body.println("if (supportsTouch) {");
-		body.indent();
-		body.println("return 'largeDisplayTouch';");
+		body.println("return 'largeDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
-		body.println("} else if (isNotPCDevice) {");
+		body.println("} else if ((ua.indexOf('opera mini') != -1)  || (ua.indexOf('opera mobi') != -1) || (ua.indexOf('mobile') != -1) || "+
+	                     "(ua.indexOf('iphone') != -1) || (ua.indexOf('ipod;') != -1)){");
 		body.indent();
-		body.println("return 'largeDisplayArrows';");
+		body.println("return 'smallDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
-		body.println("} else {");
+		body.println("} else if ((ua.indexOf('android') != -1) || (ua.indexOf('ipad;') != -1)){");
 		body.indent();
-		body.println("return 'largeDisplayMouse';");
-		body.outdent();
-		body.println("}");
-		body.outdent();
-		body.println("} else if (isNotPCDevice) {");
-		body.indent();
-		body.println("if (supportsTouch) {");
-		body.indent();
-		body.println("return 'smallDisplayTouch';");
+		body.println("return 'largeDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
 		body.println("} else {");
 		body.indent();
-		body.println("return 'smallDisplayArrows';");
-		body.outdent();
-		body.println("}");
-		body.outdent();
-		body.println("} else {");
-		body.indent();
-		body.println("return 'largeDisplayMouse';");
+		body.println("return 'largeDisplay'+(supportsTouch?'Touch':'Mouse');");
 		body.outdent();
 		body.println("}");
 	}

@@ -63,10 +63,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class Screen
 {
 	private static Logger logger = Logger.getLogger(Screen.class.getName());
-
-	private static Platform platform;
-
-	public static enum Platform{mobile, desktop, tv}
 	
 	/**
 	 * 
@@ -141,32 +137,6 @@ public class Screen
 	public static double getScreenZoomFactorForCurrentDevice()
 	{
 		return DeviceDisplayHandler.getScreenZoomFactor();
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public static Platform getPlatform()
-	{
-		if (Screen.platform == null)
-		{
-			String ua = Window.Navigator.getUserAgent().toLowerCase();
-			if (ua.indexOf("googletv") != -1)
-			{
-				Screen.platform = Platform.tv;
-			}
-			else if ((ua.indexOf("opera mini") != -1)  || (ua.indexOf("opera mobi") != -1) || (ua.indexOf("android") != -1) || (ua.indexOf("mobile") != -1) || 
-		             (ua.indexOf("iphone") != -1) || (ua.indexOf("ipod;") != -1) || (ua.indexOf("ipad;") != -1))
-			{
-				Screen.platform = Platform.mobile;
-			}
-			else
-			{
-				Screen.platform = Platform.desktop;
-			}
-		}
-		return Screen.platform;
 	}
 	
 	/**

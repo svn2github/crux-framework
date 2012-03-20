@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Feature;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
 import org.cruxframework.crux.core.client.screen.DeviceDisplayHandler;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
@@ -107,6 +107,11 @@ public class ViewFactoryCreator
 	protected ControllerAccessHandler controllerAccessHandler = new DefaultControllerAccessor();
 	protected WidgetConsumer screenWidgetConsumer;
 	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	public interface WidgetConsumer 
 	{
 		public static EmptyWidgetConsumer EMPTY_WIDGET_CONSUMER = new EmptyWidgetConsumer();
@@ -114,6 +119,11 @@ public class ViewFactoryCreator
 		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
 	}
 	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	private static class EmptyWidgetConsumer implements WidgetConsumer
 	{
 		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
@@ -121,6 +131,11 @@ public class ViewFactoryCreator
 		}
 	}
 	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	public class ScreenWidgetConsumer implements WidgetConsumer
 	{
 		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
@@ -376,7 +391,7 @@ public class ViewFactoryCreator
 		if (getScreen().isTouchEventAdaptersEnabled())
 		{
 			Device currentDevice = Device.valueOf(getDevice());
-			if (currentDevice.supportsFeature(Feature.touch))
+			if (currentDevice.getInput().equals(Input.touch))
 			{
 				if (HasClickHandlers.class.isAssignableFrom(widgetClass) && HasAllTouchHandlers.class.isAssignableFrom(widgetClass))
 				{

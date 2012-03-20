@@ -44,7 +44,7 @@ public interface DeviceAdaptive extends IsWidget
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static enum Feature{touch, mouse}
+	public static enum Input{touch, mouse, arrows}
 
 	/**
 	 * All devices supported by Crux CrossDevice engine
@@ -53,33 +53,25 @@ public interface DeviceAdaptive extends IsWidget
 	 */
 	public static enum Device
 	{
-		largeDisplayMouse(new Feature[]{Feature.mouse}, Size.large), 
-		largeDisplayTouch(new Feature[]{Feature.touch}, Size.large), 
-		largeDisplayArrows(new Feature[]{}, Size.large), 
-		smallDisplayTouch(new Feature[]{Feature.touch}, Size.small), 
-		smallDisplayArrows(new Feature[]{}, Size.small), 
+		largeDisplayMouse(Input.mouse, Size.large), 
+		largeDisplayTouch(Input.touch, Size.large), 
+		largeDisplayArrows(Input.arrows, Size.large), 
+		smallDisplayTouch(Input.touch, Size.small), 
+		smallDisplayArrows(Input.arrows, Size.small), 
 		all(null, null);
 		
 		private final Size size;
-		private final Feature[] supportedFeatures;
+		private final Input input;
 
-		Device(Feature[] supportedFeatures, Size size)
+		Device(Input input, Size size)
 		{
-			this.supportedFeatures = supportedFeatures;
+			this.input = input;
 			this.size = size;
 		}
 		
-		public boolean supportsFeature(Feature feature)
+		public Input getInput()
 		{
-			if (supportedFeatures == null) return false;
-			for (Feature supported: supportedFeatures)
-			{
-				if (supported.equals(feature))
-				{
-					return true;
-				}
-			}
-			return false;
+			return this.input;
 		}
 		
 		public Size getSize()
