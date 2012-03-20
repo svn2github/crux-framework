@@ -1,0 +1,10 @@
+<t:template 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	useController="analyticsController" 
+	library="siteTemplates">
+	
+	<gwt:simplePanel id="loadAnalyticsTrigger" onLoadWidget="analyticsController.load"/>
+	
+</t:template>

@@ -5,6 +5,7 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site" 
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
 	library="siteTemplates"
 	useController="mainPageController">
 	
@@ -64,7 +65,7 @@
 																<gwt:label id="menuSeparator3" styleName="MenuSeparator"/>
 																<gwt:anchor id="whyCruxMenuItem" text="${siteMessages.whyCruxMenuItem}" styleName="MenuItem" tooltip="${siteMessages.whyCruxMenuItemTooltip}"/>
 																<gwt:label id="menuSeparator4" styleName="MenuSeparator"/>
-																<gwt:anchor id="learnMenuItem" text="${siteMessages.contributeMenuItem}" styleName="MenuItem" tooltip="${siteMessages.contributeMenuItemTooltip}"/>
+																<gwt:anchor id="contributeMenuItem" text="${siteMessages.contributeMenuItem}" styleName="MenuItem" tooltip="${siteMessages.contributeMenuItemTooltip}"/>
 																<gwt:label id="menuSeparator6" styleName="MenuSeparator"/>
 																<gwt:anchor id="communityMenuItem" text="Community" styleName="MenuItem" tooltip="Our community"/>
 																<gwt:label id="menuSeparator5" styleName="MenuSeparator"/>
@@ -133,6 +134,7 @@
 				</gwt:row>
 			</gwt:grid>
 		</div>
+		<tmp:analytics/>
 	</body>
 	 
 </t:template>
