@@ -23,6 +23,9 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface SiteConstants extends Constants
 {
+	@DefaultStringValue("UA-7689544-6")
+	String analyticsCode();
+
 	@DefaultStringValue("ABQIAAAArGIZjhmsan61DtT58_d6cRQNU4gAv_Jc96TUa1T-tg6v_fuASxRtwAMNaJHgnp12SaDI9Cs17oKAzw")
 	String googleApiKey();
 
