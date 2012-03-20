@@ -71,6 +71,7 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	private boolean masked;
 	private boolean filtered;
 	protected TextBox textBox;
+	private boolean clearIfNotValid = true;
 	
 	MaskedInput maskedInput;
 	
@@ -83,7 +84,7 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	public static MaskedTextBox wrap(Element element, Formatter formatter) 
 	{
 		return new MaskedTextBox(TextBox.wrap(element), formatter);
-	}
+	} 
 
 	/**
 	 * Constructor
@@ -162,7 +163,8 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 				{
 					public void execute()
 					{
-						((MaskedFormatter)formatter).applyMask(MaskedTextBox.this);
+						MaskedFormatter masked = (MaskedFormatter)formatter;
+						masked.applyMask(MaskedTextBox.this, clearIfNotValid);
 					}
 				});
 			}
@@ -217,8 +219,21 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	{
 		if (this.formatter != null)
 		{
-			return this.formatter.unformat(getValue());
-			
+			if(clearIfNotValid)
+			{
+				return this.formatter.unformat(getValue());
+			}
+			else
+			{
+				try 
+				{
+					return this.formatter.unformat(getValue());
+				} 
+				catch (Exception e) 
+				{
+					return null;
+				}
+			}
 		}
 		else
 		{
@@ -398,5 +413,27 @@ public class MaskedTextBox extends Composite implements HasFormatter, HasDirecti
 	public HandlerRegistration addPasteHandler(PasteHandler handler)
 	{
 		return addHandler(handler, PasteEvent.getType());
+	}
+
+	/**
+	 * @return the clearIfNotValid
+	 */
+	public boolean isClearIfNotValid() 
+	{
+		return clearIfNotValid;
+	}
+
+	/**
+	 * @param clearIfNotValid the clearIfNotValid to set
+	 */
+	public void setClearIfNotValid(boolean clearIfNotValid) 
+	{
+		this.clearIfNotValid = clearIfNotValid;
+		
+		if(this.formatter != null && this.formatter instanceof MaskedFormatter)
+		{
+			MaskedFormatter masked = (MaskedFormatter)formatter;
+			masked.applyMask(this, clearIfNotValid);
+		}
 	}
 }

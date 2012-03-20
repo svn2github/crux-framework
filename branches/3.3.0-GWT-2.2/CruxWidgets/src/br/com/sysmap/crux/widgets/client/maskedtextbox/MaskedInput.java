@@ -23,5 +23,5 @@ package br.com.sysmap.crux.widgets.client.maskedtextbox;
 public interface MaskedInput
 {
 	void removeMask();
-	void applyMask(MaskedTextBox maskedTextBox, String mask, char placeHolder);
+	void applyMask(MaskedTextBox maskedTextBox, String mask, char placeHolder, boolean clearIfNotValid);
 }

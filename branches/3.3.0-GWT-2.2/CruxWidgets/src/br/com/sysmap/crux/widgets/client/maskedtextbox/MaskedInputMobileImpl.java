@@ -70,7 +70,7 @@ public class MaskedInputMobileImpl implements MaskedInput, KeyDownHandler, KeyPr
 	 * @param mask
 	 * @param placeHolder
 	 */
-	public void applyMask (MaskedTextBox maskedTextBox, String mask, char placeHolder)
+	public void applyMask (MaskedTextBox maskedTextBox, String mask, char placeHolder, boolean clearIfNotValid)
 	{
 		this.maskedTextBox = maskedTextBox;
 		this.placeHolder = placeHolder;

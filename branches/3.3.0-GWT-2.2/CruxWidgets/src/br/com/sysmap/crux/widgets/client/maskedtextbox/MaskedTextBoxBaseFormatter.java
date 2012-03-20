@@ -28,10 +28,22 @@ public abstract class MaskedTextBoxBaseFormatter implements MaskedFormatter
 {
 	public void applyMask(Widget widget)
 	{
+		applyMask(widget, true);		
+	}
+
+	public void applyMask(Widget widget, boolean clearIfNotValid)
+	{
 		if (widget instanceof MaskedTextBox)
 		{
-			((MaskedTextBox) widget).maskedInput = GWT.create(MaskedInput.class);
-			((MaskedTextBox) widget).maskedInput.applyMask((MaskedTextBox) widget, getMask(), getPlaceHolder());
+			MaskedTextBox masked = (MaskedTextBox) widget;
+			
+			if(masked.maskedInput != null)
+			{
+				masked.maskedInput.removeMask();
+			}
+			
+			masked.maskedInput = GWT.create(MaskedInput.class);
+			masked.maskedInput.applyMask(masked, getMask(), getPlaceHolder(), clearIfNotValid);
 		}		
 	}
 

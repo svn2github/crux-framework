@@ -25,5 +25,6 @@ public interface MaskedFormatter extends Formatter
 {
 	String getMask();
 	void applyMask(Widget widget);
+	void applyMask(Widget widget, boolean clearIfNotValid);
 	void removeMask(Widget widget);
 }
