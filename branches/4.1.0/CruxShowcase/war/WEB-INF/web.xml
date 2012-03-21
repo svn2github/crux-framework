@@ -8,7 +8,7 @@
 	<context-param> 
 	    <param-name>outputCharset</param-name> 
 	    <param-value>UTF-8</param-value> 
-	</context-param> 
+	</context-param>
 
 	<listener>
         <listener-class>org.cruxframework.crux.core.server.InitializerListener</listener-class>
@@ -34,7 +34,7 @@
 	===========================================================================			
 	-->
 	<listener>
-        <listener-class>org.cruxframework.crux.core.rebind.DevModeInitializerListener</listener-class>
+        <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
     </listener>
 	<filter>
 		<display-name>CruxFilter</display-name>
