@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.TextBox;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, BlurHandler, PasteHandler
+public class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, BlurHandler, PasteHandler
 {
 	private static FastMap<String> definitions = new FastMap<String>();
 	static
@@ -66,6 +66,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	private HandlerRegistration blurHandlerRegistration;
 	private HandlerRegistration pasteHandlerRegistration;
 	private MaskedTextBox maskedTextBox;
+	private boolean clearIfNotValid = true;
 	
 	/**
 	 * Constructor
@@ -73,13 +74,14 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	 * @param mask
 	 * @param placeHolder
 	 */
-	public MaskedInput(MaskedTextBox maskedTextBox, String mask, char placeHolder)
+	public void applyMask(MaskedTextBox maskedTextBox, String mask, char placeHolder, boolean clearIfNotValid)
 	{
 		this.maskedTextBox = maskedTextBox;
 		this.placeHolder = placeHolder;
 		this.partialPosition = mask.length();;
 		this.buffer = new char[mask.length()];
 		this.length = mask.length();
+		this.clearIfNotValid = clearIfNotValid;
 
 		for (int i=0; i< mask.length(); i++)
 		{
@@ -108,25 +110,39 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		blurHandlerRegistration = this.textBox.addBlurHandler(this);
 		pasteHandlerRegistration = this.maskedTextBox.addPasteHandler(this);
 		
-		
 		this.checkVal(false);
 	}
 	
-	TextBox getTextBox()
-	{
-		return textBox;
-	}
-
 	/**
 	 * Unmask the current textBox
 	 */
 	public void removeMask()
 	{
-		keyDownHandlerRegistration.removeHandler();
-		keyPressHandlerRegistration.removeHandler();
-		focusHandlerRegistration.removeHandler();
-		blurHandlerRegistration.removeHandler();
-		pasteHandlerRegistration.removeHandler();
+		if (keyDownHandlerRegistration != null)
+		{
+			keyDownHandlerRegistration.removeHandler();
+			keyDownHandlerRegistration = null;
+		}
+		if (keyPressHandlerRegistration != null)
+		{
+			keyPressHandlerRegistration.removeHandler();
+			keyPressHandlerRegistration = null;
+		}
+		if (focusHandlerRegistration != null)
+		{
+			focusHandlerRegistration.removeHandler();
+			focusHandlerRegistration = null;
+		}
+		if (blurHandlerRegistration != null)
+		{
+			blurHandlerRegistration.removeHandler();
+			blurHandlerRegistration = null;
+		}
+		if (pasteHandlerRegistration != null)
+		{
+			pasteHandlerRegistration.removeHandler();
+			pasteHandlerRegistration = null;
+		}
 		this.textBox = null;
 		this.maskedTextBox = null;
 	}
@@ -166,7 +182,55 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 				caret(firstNonMaskPos, -1);
 				event.preventDefault();
 			}
+			else
+			{
+				int start = pos[0];
+				if(start > 0)
+				{
+					PreviousCharMatchResult lastMatch = getLastMatch(start - 1);
+					if(!lastMatch.previousCharMatches)
+					{
+						caret(lastMatch.previousMatchPosition + 1, lastMatch.previousMatchPosition + 1);
+					}
+				}
+			}
 		}
+	}
+
+	private PreviousCharMatchResult getLastMatch(int beforePos) 
+	{
+		PreviousCharMatchResult result = new PreviousCharMatchResult();
+		
+		boolean previousReached = false;
+		
+		for(int i = beforePos; i >= 0; i--)
+		{
+			String acceptable = tests.get(i);
+			
+			if(acceptable != null)
+			{
+				if(("" + buffer[i]).matches(acceptable))
+				{
+					if(!previousReached)
+					{
+						result.previousCharMatches = true;
+					}
+					
+					result.previousMatchPosition = i;
+					break;
+				}
+
+				previousReached = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	private static class PreviousCharMatchResult
+	{
+		boolean previousCharMatches = false;
+		int previousMatchPosition = -1;
 	}
 
 	public void onPaste(PasteEvent event)
@@ -179,40 +243,35 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 	 */
 	public void onKeyPress(KeyPressEvent event)
 	{
-		if (ignore)
+		if (!ignore)
 		{
-			ignore = false;
-			if (event.getCharCode() == '\b')
+			if (event.isControlKeyDown() || event.isAltKeyDown())
 			{
-				event.preventDefault();
+				return;
 			}
-		}
-
-		if (event.isControlKeyDown() || event.isAltKeyDown())
-		{
-			return;
-		}
-
-		char code = event.getCharCode();
-		if ((code >= 41 && code <= 122) || code == 32 || code > 186) //typeable characters
-		{
-			int[] pos = caret(-1, -1);
-			int p = seekNext(pos[0] - 1);
-			if (p < length)
+			
+			char code = event.getCharCode();
+			if ((code >= 41 && code <= 122) || code == 32 || code > 186) //typeable characters
 			{
-				String c = ""+event.getCharCode();
-				if (c.matches(tests.get(p)))
+				int[] pos = caret(-1, -1);
+				int p = seekNext(pos[0] - 1);
+				if (p < length)
 				{
-					shiftR(p);
-					buffer[p] = c.charAt(0);
-					writeBuffer();
-					int next = seekNext(p);
-					caret(next, -1);
+					String c = ""+event.getCharCode();
+					if (c.matches(tests.get(p)))
+					{
+						shiftR(p);
+						buffer[p] = c.charAt(0);
+						writeBuffer();
+						int next = seekNext(p);
+						caret(next, -1);
+					}
 				}
+				
 			}
-
+			event.preventDefault();
 		}
-		event.preventDefault();
+		ignore = false;
 	}
 
 	/**
@@ -252,8 +311,9 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			{
 				end = begin;
 			}
-			textBox.setFocus(true);
-			textBox.setSelectionRange(begin, end - begin);
+//			textBox.setFocus(true);
+//			textBox.setSelectionRange(begin, end - begin);
+			textBox.setCursorPos(end);
 		}
 		else
 		{
@@ -391,6 +451,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			if (tests.get(i) != null && tests.get(i).length() > 0)
 			{
 				buffer[i] = placeHolder;
+				
 				while (pos++ < test.length())
 				{
 					char c = test.charAt(pos-1);
@@ -401,6 +462,7 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 						break;
 					}
 				}
+				
 				if (pos > test.length())
 				{
 					break;
@@ -409,8 +471,11 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 		}
 		if (!allow && lastMatch+1 < partialPosition)
 		{
-			textBox.setText("");
-			clearBuffer(0, length);
+			if(clearIfNotValid)
+			{
+				textBox.setText("");
+				clearBuffer(0, length);
+			}
 		}
 		else if (allow || lastMatch+1 >= partialPosition)
 		{
@@ -422,5 +487,10 @@ class MaskedInput implements KeyDownHandler, KeyPressHandler, FocusHandler, Blur
 			}
 		}
 		return ((partialPosition != 0) ? i : firstNonMaskPos);
+	}
+
+	public TextBox getTextBox()
+	{
+		return textBox;
 	}
 }

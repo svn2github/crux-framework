@@ -21,13 +21,12 @@ import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.HasChangeHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
@@ -53,14 +52,15 @@ import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 	@TagAttribute(value="maxLength", type=Integer.class),
 	@TagAttribute(value="accessKey", type=Character.class),
 	@TagAttribute(value="focus", type=Boolean.class),
-	@TagAttribute(value="value", processor=MaskedTextBoxFactory.ValueAttributeParser.class)
+	@TagAttribute(value="value", processor=MaskedTextBoxFactory.ValueAttributeParser.class),
+	@TagAttribute(value="clearIfNotValid", type=Boolean.class, defaultValue="true")
 })
 @TagAttributesDeclaration({
 	@TagAttributeDeclaration(value="formatter", required=true)
 })
 public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext> 
        implements HasDirectionFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
-                  HasChangeHandlersFactory<WidgetCreatorContext>, HasValueChangeHandlersFactory<WidgetCreatorContext>,
+                  HasValueChangeHandlersFactory<WidgetCreatorContext>,
                   HasClickHandlersFactory<WidgetCreatorContext>, HasAllFocusHandlersFactory<WidgetCreatorContext>,
                   HasAllKeyHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
                   HasDoubleClickHandlersFactory<WidgetCreatorContext>

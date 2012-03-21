@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.client.maskedtextbox;
 
 import org.cruxframework.crux.core.client.formatter.MaskedFormatter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -27,9 +28,22 @@ public abstract class MaskedTextBoxBaseFormatter implements MaskedFormatter
 {
 	public void applyMask(Widget widget)
 	{
+		applyMask(widget, true);		
+	}
+
+	public void applyMask(Widget widget, boolean clearIfNotValid)
+	{
 		if (widget instanceof MaskedTextBox)
 		{
-			((MaskedTextBox) widget).setMaskedInput(new MaskedInput((MaskedTextBox) widget, getMask(), getPlaceHolder()));
+			MaskedTextBox masked = (MaskedTextBox) widget;
+			
+			if(masked.getMaskedInput() != null)
+			{
+				masked.getMaskedInput().removeMask();
+			}
+			
+			masked.setMaskedInput((MaskedInput) GWT.create(MaskedInput.class));
+			masked.getMaskedInput().applyMask(masked, getMask(), getPlaceHolder(), clearIfNotValid);
 		}		
 	}
 
