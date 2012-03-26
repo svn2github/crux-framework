@@ -1,8 +1,6 @@
 package org.cruxframework.crux.widgets.client.select;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.widgets.client.listbox.ValueListBox;
-
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -13,10 +11,8 @@ import com.google.gwt.user.client.ui.ListBox;
  * A simple single-select listBox that implements HasValue interface.
  * @author Gesse S. F. Dafe - <code>gessedafe@gmail.com</code>
 
- * @deprecated Use {@link ValueListBox} instead
  *
  */
-@Deprecated
 public class SingleSelect extends ListBox implements HasValue<String>
 {
 	/**

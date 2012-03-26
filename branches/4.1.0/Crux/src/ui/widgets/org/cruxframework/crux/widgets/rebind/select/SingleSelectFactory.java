@@ -31,10 +31,6 @@ import org.cruxframework.crux.widgets.client.select.SingleSelect;
 	@TagChild(SingleSelectFactory.SelectItemsProcessor.class)
 })
 
-/**
-  * @deprecated Use {@link ValueListBoxFactory} instead
- */
-@Deprecated
 public class SingleSelectFactory extends AbstractListBoxFactory
 {
 	public static class SelectItemsProcessor extends ItemsProcessor
