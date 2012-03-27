@@ -32,7 +32,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.dto.DataObject;
 import org.cruxframework.crux.core.client.dto.DataObjectIdentifier;
-import org.cruxframework.crux.core.client.dto.DataObjectLabel;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
@@ -52,7 +51,6 @@ public class DataObjects
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static Map<String, String> dataObjects;
 	private static Map<String, String[]> dataObjectIdentifiers;
-	private static Map<String, List<Label>> dataObjectLabels;
 
 
 	/**
@@ -87,7 +85,6 @@ public class DataObjects
 	{
 		dataObjects = new HashMap<String, String>();
 		dataObjectIdentifiers = new LinkedHashMap<String, String[]>();
-		dataObjectLabels = new LinkedHashMap<String, List<Label>>();
 
 		initializeDefaultDataObjects();
 
@@ -107,7 +104,6 @@ public class DataObjects
 
 					dataObjects.put(annot.value(), dataClass.getCanonicalName());
 					dataObjectIdentifiers.put(annot.value(), extractIdentifiers(dataClass));
-					dataObjectLabels.put(annot.value(), extractLabels(dataClass));
 				}
 				catch (ClassNotFoundException e)
 				{
@@ -174,48 +170,6 @@ public class DataObjects
 		return ids.toArray(new String[ids.size()]);
     }
 
-	/**
-	 * @param dataClass
-	 * @return
-	 */
-	private static List<Label> extractLabels(Class<?> dataClass)
-    {
-		Class<?> dtoClass = dataClass;
-
-		List<Label> labels = new ArrayList<Label>();
-
-		while(dtoClass.getSuperclass() != null)
-		{
-			Field[] fields = dtoClass.getDeclaredFields();
-
-			for (Field field : fields)
-			{
-				DataObjectLabel annotation = field.getAnnotation(DataObjectLabel.class);
-
-				if (annotation != null)
-				{
-					if (Modifier.isPublic(field.getModifiers()))
-					{
-						Label label = new Label();
-						label.setLabelField(field.getName());
-						label.setSuffix(annotation.separator());
-
-						labels.add(label);
-					}
-					else
-					{
-						Label label = new Label();
-						label.setLabelField(ClassUtils.getGetterMethod(field.getName(), dtoClass)+"()");
-						label.setSuffix(annotation.separator());
-
-						labels.add(label);
-					}
-				}
-			}
-			dtoClass = dtoClass.getSuperclass();
-		}
-		return labels;
-    }
 
 
 	/**
@@ -238,15 +192,6 @@ public class DataObjects
 			initialize();
 		}
 		return dataObjectIdentifiers.get(name);
-	}
-
-	public static List<Label> getDataObjectLabels(String name)
-	{
-		if (dataObjectLabels == null)
-		{
-			initialize();
-		}
-		return dataObjectLabels.get(name);
 	}
 
 	/**
