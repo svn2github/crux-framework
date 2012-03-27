@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,14 +14,13 @@
  * the License.
  */
 package org.cruxframework.crux.core.rebind.dto;
-
+ 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,17 +43,16 @@ import org.cruxframework.crux.core.utils.ClassUtils;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DataObjects
+public class DataObjects 
 {
 	private static final Log logger = LogFactory.getLog(DataObjects.class);
 	private static final Lock lock = new ReentrantLock();
 	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static Map<String, String> dataObjects;
 	private static Map<String, String[]> dataObjectIdentifiers;
-
-
+	
 	/**
-	 *
+	 * 
 	 */
 	public static void initialize()
 	{
@@ -69,7 +67,7 @@ public class DataObjects
 			{
 				return;
 			}
-
+			
 			initializeDataObjects();
 		}
 		finally
@@ -79,21 +77,21 @@ public class DataObjects
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	protected static void initializeDataObjects()
 	{
 		dataObjects = new HashMap<String, String>();
-		dataObjectIdentifiers = new LinkedHashMap<String, String[]>();
-
+		dataObjectIdentifiers = new HashMap<String, String[]>();
+		
 		initializeDefaultDataObjects();
-
+		
 		Set<String> dataNames =  ClassScanner.searchClassesByAnnotation(DataObject.class);
 		if (dataNames != null)
 		{
-			for (String dataObject : dataNames)
+			for (String dataObject : dataNames) 
 			{
-				try
+				try 
 				{
 					Class<?> dataClass = Class.forName(dataObject);
 					DataObject annot = dataClass.getAnnotation(DataObject.class);
@@ -101,20 +99,20 @@ public class DataObjects
 					{
 						throw new CruxGeneratorException(messages.dataObjectsDuplicatedObject(annot.value()));
 					}
-
+					
 					dataObjects.put(annot.value(), dataClass.getCanonicalName());
 					dataObjectIdentifiers.put(annot.value(), extractIdentifiers(dataClass));
-				}
-				catch (ClassNotFoundException e)
+				} 
+				catch (ClassNotFoundException e) 
 				{
 					logger.error(messages.dataObjectsInitializeError(e.getLocalizedMessage()),e);
 				}
 			}
 		}
 	}
-
+	
 	/**
-	 *
+	 * 
 	 */
 	private static void initializeDefaultDataObjects()
     {
@@ -145,7 +143,7 @@ public class DataObjects
 	private static String[] extractIdentifiers(Class<?> dataClass)
     {
 		Class<?> dtoClass = dataClass;
-
+		
 		List<String> ids = new ArrayList<String>();
 		while(dtoClass.getSuperclass() != null)
 		{
@@ -170,8 +168,6 @@ public class DataObjects
 		return ids.toArray(new String[ids.size()]);
     }
 
-
-
 	/**
 	 * @param name
 	 * @return
@@ -184,7 +180,7 @@ public class DataObjects
 		}
 		return dataObjects.get(name);
 	}
-
+	
 	public static String[] getDataObjectIdentifiers(String name)
 	{
 		if (dataObjectIdentifiers == null)
@@ -193,7 +189,7 @@ public class DataObjects
 		}
 		return dataObjectIdentifiers.get(name);
 	}
-
+	
 	/**
 	 * @return
 	 */
@@ -204,28 +200,5 @@ public class DataObjects
 			initialize();
 		}
 		return dataObjects.keySet().iterator();
-	}
-
-	public static class Label
-	{
-		private String labelField;
-
-		private String suffix;
-
-		public String getLabelField() {
-			return labelField;
-		}
-
-		public void setLabelField(String labelField) {
-			this.labelField = labelField;
-		}
-
-		public String getSuffix() {
-			return suffix;
-		}
-
-		public void setSuffix(String suffix) {
-			this.suffix = suffix;
-		}
 	}
 }

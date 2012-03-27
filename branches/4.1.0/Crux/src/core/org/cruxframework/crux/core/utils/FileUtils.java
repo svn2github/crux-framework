@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -30,12 +32,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Gesse S. F. Dafe - <code>gesse@sysmap.com.br</code>
  */
 public class FileUtils
 {
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public static String read(File file) throws IOException
+	{
+		return read(new FileInputStream(file));
+	}
+	
 	/**
 	 * @param in
 	 * @return
@@ -333,6 +347,48 @@ public class FileUtils
 			{
 				inStream.close();
 			}
+		}
+	}
+	
+	public static void zip(File inputDirectory, File zippedFile, FileFilter filter) 
+	{
+		int BUFFER = 2048;
+		try
+		{
+			BufferedInputStream origin = null;
+			FileOutputStream dest = new FileOutputStream(zippedFile);
+			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+			// out.setMethod(ZipOutputStream.DEFLATED);
+			byte data[] = new byte[BUFFER];
+			// get a list of files from current directory
+			File files[];
+			
+			if (filter!= null)
+			{
+				files = inputDirectory.listFiles(filter);	
+			}
+			else
+			{
+				files = inputDirectory.listFiles();
+			}
+			for (int i = 0; i < files.length; i++)
+			{
+				FileInputStream fi = new FileInputStream(files[i]);
+				origin = new BufferedInputStream(fi, BUFFER);
+				ZipEntry entry = new ZipEntry(files[i].getName());
+				out.putNextEntry(entry);
+				int count;
+				while ((count = origin.read(data, 0, BUFFER)) != -1)
+				{
+					out.write(data, 0, count);
+				}
+				origin.close();
+			}
+			out.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 
