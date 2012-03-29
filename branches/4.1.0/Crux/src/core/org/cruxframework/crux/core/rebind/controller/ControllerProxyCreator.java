@@ -141,7 +141,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
-		generateAutoCreateFields(srcWriter, "this");
+		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectFields(srcWriter, "this", controllerClass);
 		srcWriter.outdent();
 		srcWriter.println("}");

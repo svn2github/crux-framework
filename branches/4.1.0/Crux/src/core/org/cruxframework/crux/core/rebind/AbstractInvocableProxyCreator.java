@@ -62,13 +62,17 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	
 	/**
 	 * Create objects for fields that are annotated with @Create
-	 * @param logger
-	 * @param controller
 	 * @param sourceWriter
+	 * @param parentVariable
+	 * @param isAutoBindEnabled
 	 */
-	protected void generateAutoCreateFields(SourceWriter sourceWriter, String parentVariable)
+	protected void generateAutoCreateFields(SourceWriter sourceWriter, String parentVariable, boolean isAutoBindEnabled)
 	{
 		generateAutoCreateFields(invocableClassType, sourceWriter, parentVariable, new HashSet<String>());
+		if (isAutoBindEnabled)
+		{
+			sourceWriter.println("updateScreenWidgets();");
+		}		
 	}
 
 	/**

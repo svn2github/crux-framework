@@ -93,7 +93,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
-		generateAutoCreateFields(srcWriter, "this");
+		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}	
