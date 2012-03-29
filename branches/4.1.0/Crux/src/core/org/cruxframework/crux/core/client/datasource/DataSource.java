@@ -17,6 +17,8 @@ package org.cruxframework.crux.core.client.datasource;
 
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 /**
  * A Datasource is used to provide information to widgets that implements <code>HasDataSource</code> interface, 
  * like Crux <code>Grid</code>.
@@ -84,14 +86,14 @@ public interface DataSource<E>
 	 * @return value of the column
 	 */
 	Object getValue(String columnName);
-
+	
 	/**
 	 * Return the column value
 	 * @param columnName
 	 * @param record
 	 * @return
 	 */
-	Object getValue(String columnName, DataSourceRecord<E> record);
+	Object getValue(String columnName, DataSourceRecord<?> record);
 
 	/** Return the DataSourceRecord object, representing the current record
 	 * @return current DataSourceRecord object.
@@ -159,5 +161,21 @@ public interface DataSource<E>
 	/**
 	 * Undo all changes 
 	 */
-	void clearChanges();	
+	void clearChanges();
+	
+	/**
+	 * Copies the value from data record to the given widget
+	 * @param widget
+	 * @param key
+	 * @param dataSourceRecord
+	 */
+	void copyValueToWidget(HasValue<?> widget, String key, DataSourceRecord<?> dataSourceRecord);
+	
+	/**
+	 * Sets the value on the given column of the give  record
+	 * @param value 
+	 * @param columnKey
+	 * @param dataSourceRecord
+	 */
+	void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord);
 }

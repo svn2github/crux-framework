@@ -20,7 +20,7 @@ import java.io.Serializable;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
 
-
+import com.google.gwt.dom.client.Style.TableLayout;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
@@ -42,6 +42,7 @@ public abstract class AbstractWizardNavigationBar<T extends Serializable> extend
 		this.rollingPanel = new RollingPanel();
 		this.rollingPanel.setStyleName(styleName);
 		initWidget(this.rollingPanel);
+		this.getElement().getStyle().setTableLayout(TableLayout.AUTO);
     }
 	
 	/**

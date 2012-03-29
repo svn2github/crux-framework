@@ -41,4 +41,16 @@ public class ModuleContainerLayoutProjectGenerator extends ModuleLayoutProjectGe
     {
 	    return "MODULE_CONTAINER_APP";
     }
+    
+    @Override
+    public void createSources() throws IOException
+    {
+        createModuleSources();
+    }
+    
+    @Override
+	protected void createIndexPage(String pageName) throws IOException
+    {
+	    createFile(getModulePublicDir(), pageName, "modulescontainer/index.crux.xml");
+    }
 }

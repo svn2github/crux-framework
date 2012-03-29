@@ -154,8 +154,7 @@ public class StackMenu extends Composite implements Filterable<StackMenuItem>, H
 		
 		if(!item.hasChildren() && label != null && label.toUpperCase().contains(query.toUpperCase()))
 		{
-
-			FilterResult<StackMenuItem> resultItem = new FilterResult<StackMenuItem>(item, currentPath);
+			FilterResult<StackMenuItem> resultItem = new FilterResult<StackMenuItem>(item, currentPath, label);
 			result.add(resultItem);
 		}
 		

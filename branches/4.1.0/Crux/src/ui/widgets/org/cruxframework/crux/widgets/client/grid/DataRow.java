@@ -25,14 +25,18 @@ public class DataRow extends Row
 {
 	private DataSourceRecord<?> dataSourceRecord;
 	
+	private boolean editMode = false;
+	
+	protected DataRow(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell, boolean hasRowDetails, boolean showRowDetailsIcon)
+	{
+		super(index, elem, grid, hasSelectionCell, hasRowDetails, showRowDetailsIcon);
+	}
+	
 	protected DataRow(int index, Element elem, AbstractGrid<?> grid, boolean hasSelectionCell)
 	{
-		super(index, elem, grid, hasSelectionCell);
+		super(index, elem, grid, hasSelectionCell, false, false);
 	}
 
-	/**
-	 * @return the dataSourceRowId
-	 */
 	public DataSourceRecord<?> getDataSourceRecord()
 	{
 		return dataSourceRecord;
@@ -46,7 +50,7 @@ public class DataRow extends Row
 		this.dataSourceRecord = dataSourceRowId;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Object getValue(String column)
 	{
 		PagedDataSource dataSource = ((Grid) getGrid()).getDataSource();
@@ -63,11 +67,10 @@ public class DataRow extends Row
 		return getBoundObject();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Object getBoundObject()
 	{
 		Grid grid = (Grid) getGrid();
-		
 		DataSource dataSource = grid.getDataSource();
 		return dataSource.getBoundObject(getDataSourceRecord());
 	}
@@ -102,5 +105,15 @@ public class DataRow extends Row
 	{
 		this.dataSourceRecord.setReadOnly(!enabled);
 		super.setEnabled(enabled);
+	}
+	
+	public boolean isEditMode() 
+	{
+		return editMode;
+	}
+	
+	public void setEditMode(boolean editMode)
+	{
+		this.editMode = editMode;
 	}
 }

@@ -19,12 +19,18 @@ import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectEvent;
 import org.cruxframework.crux.widgets.client.event.row.BeforeRowSelectHandler;
+import org.cruxframework.crux.widgets.client.event.row.BeforeShowRowDetailsEvent;
+import org.cruxframework.crux.widgets.client.event.row.BeforeShowRowDetailsHandler;
+import org.cruxframework.crux.widgets.client.event.row.LoadRowDetailsEvent;
+import org.cruxframework.crux.widgets.client.event.row.LoadRowDetailsHandler;
 import org.cruxframework.crux.widgets.client.event.row.RowClickEvent;
 import org.cruxframework.crux.widgets.client.event.row.RowClickHandler;
 import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickEvent;
 import org.cruxframework.crux.widgets.client.event.row.RowDoubleClickHandler;
 import org.cruxframework.crux.widgets.client.event.row.RowRenderEvent;
 import org.cruxframework.crux.widgets.client.event.row.RowRenderHandler;
+import org.cruxframework.crux.widgets.client.event.row.ShowRowDetailsEvent;
+import org.cruxframework.crux.widgets.client.event.row.ShowRowDetailsHandler;
 
 
 /**
@@ -162,6 +168,105 @@ public class RowEventsBind
 	    public Class<?> getEventHandlerClass()
 	    {
 		    return BeforeRowSelectHandler.class;
+	    }		
+	}
+	
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class BeforeShowRowDetailsEvtBind extends EvtProcessor
+	{
+		public BeforeShowRowDetailsEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		private static final String EVENT_NAME = "onBeforeShowRowDetails";
+
+		/**
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
+
+		@Override
+	    public Class<?> getEventClass()
+	    {
+		    return BeforeShowRowDetailsEvent.class;
+	    }
+
+		@Override
+	    public Class<?> getEventHandlerClass()
+	    {
+		    return BeforeShowRowDetailsHandler.class;
+	    }		
+	}
+	
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class ShowRowDetailsEvtBind extends EvtProcessor
+	{
+		public ShowRowDetailsEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		private static final String EVENT_NAME = "onShowRowDetails";
+
+		/**
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
+
+		@Override
+	    public Class<?> getEventClass()
+	    {
+		    return ShowRowDetailsEvent.class;
+	    }
+
+		@Override
+	    public Class<?> getEventHandlerClass()
+	    {
+		    return ShowRowDetailsHandler.class;
+	    }		
+	}
+	
+	/**
+	 * @author Gesse S. F. Dafe
+	 */
+	public static class LoadRowDetailsEvtBind extends EvtProcessor
+	{
+		public LoadRowDetailsEvtBind(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		private static final String EVENT_NAME = "onLoadRowDetails";
+
+		/**
+		 * @see org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor#getEventName()
+		 */
+		public String getEventName()
+		{
+			return EVENT_NAME;
+		}		
+
+		@Override
+	    public Class<?> getEventClass()
+	    {
+		    return LoadRowDetailsEvent.class;
+	    }
+
+		@Override
+	    public Class<?> getEventHandlerClass()
+	    {
+		    return LoadRowDetailsHandler.class;
 	    }		
 	}
 }

@@ -78,7 +78,7 @@
 	-->
 	<target name="export-as-module" >
 		<moduleExporter sourcedir="${src.dir}" outputdir="${dist.dir}" modulename="${moduleSimpleName}" outputmodulename="${final.name}" 
-			excludes="**/Crux.properties,**/CruxModuleConfig.properties" outputCharset="UTF-8">
+			excludes="**/Crux.properties,**/CruxModuleConfig.properties" pagesOutputCharset="UTF-8">
 			<classpath>
 				<path refid="build.classpath" />
 			</classpath>

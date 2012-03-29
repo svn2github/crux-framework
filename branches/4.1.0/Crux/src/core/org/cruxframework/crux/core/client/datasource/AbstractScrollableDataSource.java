@@ -196,12 +196,12 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#getValue(java.lang.String, org.cruxframework.crux.core.client.datasource.DataSourceRecord)
 	 */
-	public Object getValue(String columnName, DataSourceRecord<E> dataSourceRecord)
+	public Object getValue(String columnName, DataSourceRecord<?> dataSourceRecord)
 	{
 		ColumnDefinition<?, E> column = definitions.getColumn(columnName);
 		if (column != null)
 		{
-			return column.getValue(dataSourceRecord.getRecordObject());
+			return column.getValue((E) dataSourceRecord.getRecordObject());
 		}
 		return null;
 	}

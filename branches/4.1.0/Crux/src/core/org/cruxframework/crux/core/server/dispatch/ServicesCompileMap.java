@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.server.dispatch;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -70,9 +71,10 @@ public class ServicesCompileMap
 		try
 		{
 			properties.load(context.getResourceAsStream("/META-INF/crux-remote"));
-			Set<String> serviceNames = properties.stringPropertyNames();
-			for (String serviceName : serviceNames)
+			Enumeration<?> serviceNames = (Enumeration<?>) properties.propertyNames();
+			while (serviceNames.hasMoreElements())
 			{
+				String serviceName = (String) serviceNames.nextElement();
 				remoteServices.put(serviceName, properties.getProperty(serviceName));
 			}
 			return true;

@@ -36,6 +36,15 @@ public class WidgetColumnDefinition extends ColumnDefinition
 		this.creator = creator;
 	}
 	
+
+	public WidgetColumnDefinition(String label, String width, WidgetColumnCreator creator, 
+			 boolean visible, boolean frozen, HorizontalAlignmentConstant horizontalAlign, 
+			 VerticalAlignmentConstant verticalAlign)
+	{
+		super(label, width, visible, frozen, horizontalAlign, verticalAlign);
+		this.creator = creator;
+	}
+	
 	public WidgetColumnCreator getWidgetColumnCreator()
     {
     	return creator;

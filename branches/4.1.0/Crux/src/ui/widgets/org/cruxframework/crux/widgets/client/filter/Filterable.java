@@ -44,16 +44,19 @@ public interface Filterable<T>
 	{
 		private T value;
 		private String label;
+		private String shortLabel;
 		
 		/**
 		 * Constructor.
-		 * @param label
-		 * @param value
+		 * @param label A label to be shown in the suggestion panel
+		 * @param value The value to be bound to this item
+		 * @param shortLabel A short label to be displayed on the filter box when this result is selected
 		 */
-		public FilterResult(T value, String label)
+		public FilterResult(T value, String label, String shortLabel)
 		{
 			this.value = value;
-			this.label = label;		
+			this.label = label;
+			this.shortLabel = shortLabel;		
 		}
 		
 		/**
@@ -72,6 +75,16 @@ public interface Filterable<T>
 		public T getValue()
 		{
 			return value;
-		}	
+		}
+		
+		public String getShortLabel() 
+		{
+			return shortLabel;
+		}
+		
+		public void setShortLabel(String shortLabel) 
+		{
+			this.shortLabel = shortLabel;
+		}
 	}	
 }

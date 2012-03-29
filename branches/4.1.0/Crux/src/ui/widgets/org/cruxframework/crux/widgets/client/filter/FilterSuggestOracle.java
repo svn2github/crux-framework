@@ -20,14 +20,13 @@ import java.util.List;
 
 import org.cruxframework.crux.widgets.client.filter.Filterable.FilterResult;
 
-
 import com.google.gwt.user.client.ui.SuggestOracle;
 
 /**
  * TODO - Gesse - Comment this
  * @author Gesse S. F. Dafe
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class FilterSuggestOracle extends SuggestOracle
 {
 	private Filterable filterable;
@@ -47,7 +46,6 @@ public class FilterSuggestOracle extends SuggestOracle
 		this.filterable = filterable;
 	}	
 	
-	
 	@Override
 	public void requestSuggestions(Request request, Callback callback)
 	{
@@ -59,7 +57,7 @@ public class FilterSuggestOracle extends SuggestOracle
 		{
 			for (FilterResult<?> result : results)
 			{
-				FilterSuggestion suggestion = new FilterSuggestion(result.getValue(), result.getLabel());
+				FilterSuggestion suggestion = new FilterSuggestion(result.getValue(), result.getLabel(), result.getShortLabel());
 				suggestions.add(suggestion);
 			}
 		}	

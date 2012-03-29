@@ -187,11 +187,15 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-Popup .topLeftCell
 {
 	height:41px;
-	width:19px;
-	font-size: 19px;
+	width:29px;
+	font-size: 29px;
 	font-family: monospace;
 	background: url(../img/dialogs-nw.png) no-repeat top left;
 	cursor: move;
+}
+.crux-Popup .topLeftCell DIV
+{
+	display: none;
 }
 .crux-Popup .topCenterCell
 {
@@ -201,6 +205,10 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: move;
 	padding-top: 8px;
 	padding-left: 2px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #EEEEEE;
+	text-shadow: -1px -1px #2f5578;
 }
 .crux-Popup .topCenterCell .Caption
 {
@@ -211,8 +219,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-Popup .topRightCell
 {
-	width:20px;
-	font-size: 20px;
+	width:30px;
+	font-size: 30px;
 	font-family: monospace;
 	background: url(../img/dialogs-ne.png) no-repeat top right;
 	padding-right: 5px;
@@ -266,6 +274,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: pointer;
 	opacity: 0.9;
 	filter: alpha(opacity=90);
+	border: solid 0px;
 }
 .crux-Popup .closeButton-disabled
 {
@@ -276,11 +285,37 @@ SPAN, DIV, TD, LI, STRONG, UL
 	opacity:0.7;
 	filter:alpha(opacity=70);
 }
-
-.crux-Popup-dragging .topLeftCell,		.crux-Popup-dragging .topCenterCell, 	.crux-Popup-dragging .topRightCell, 
-.crux-Popup-dragging .middleLeftCell, 	.crux-Popup-dragging .middleCenterCell,	.crux-Popup-dragging .middleRightCell,
-.crux-Popup-dragging .bottomLeftCell,	.crux-Popup-dragging .bottomCenterCell,	.crux-Popup-dragging .bottomRightCell
+.crux-Popup-dragging .topLeftCell
 {
+	background-image: url(../img/dialogs-nw-drag.png);
+}
+.crux-Popup-dragging .topCenterCell
+{
+	background-image: url(../img/dialogs-n-drag.png);
+}
+.crux-Popup-dragging .topRightCell
+{
+	background-image: url(../img/dialogs-ne-drag.png);
+}
+.crux-Popup-dragging .middleLeftCell
+{
+	background-image: url(../img/dialogs-w-drag.png);
+}
+.crux-Popup-dragging .middleRightCell
+{
+	background-image: url(../img/dialogs-e-drag.png);
+}
+.crux-Popup-dragging .bottomLeftCell
+{
+	background-image: url(../img/dialogs-sw-drag.png);
+}
+.crux-Popup-dragging .bottomCenterCell
+{
+	background-image: url(../img/dialogs-s-drag.png);
+}
+.crux-Popup-dragging .bottomRightCell
+{
+	background-image: url(../img/dialogs-se-drag.png);
 }
 
 /******************************************************************************
@@ -454,10 +489,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border: solid 1px #C9C9C9;
 	-webkit-box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
 	-moz-box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
+	box-shadow:0px 0px 4px 4px rgba(180,180,180,0.15);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#f8f8f8),color-stop(0.99,#e5e5e5));
 	background-image: -moz-linear-gradient(top, #f8f8f8,#e5e5e5);	
+	background-image: -o-linear-gradient(top, #f8f8f8,#e5e5e5);	
 }
 
 .crux-SuggestPopup .item
@@ -468,6 +506,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-color: transparent;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
+	border-radius: 2px;
 }
 
 .crux-SuggestPopup .item-selected
@@ -476,6 +515,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #FFFFFF;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#5386af),color-stop(0.99,#40688d));
 	background-image: -moz-linear-gradient(top, #5386af,#40688d);
+	background-image: -o-linear-gradient(top, #5386af,#40688d);
 }
 
 /******************************************************************************
@@ -488,7 +528,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	height: 23px;
 	cursor:pointer;
-	background: url(../img/menu-lv1-off-bg.gif) repeat-x bottom;
+	background: url(../img/menu-lv1-off-bg.gif) repeat-x top;
 	background-color: #5386AF;
 	width: 100%;
 }
@@ -503,7 +543,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-StackMenu .item .item-border-n
 {
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
+	background-position: top;
 }
 .crux-StackMenu .item .item-border-ne
 {
@@ -534,7 +575,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-StackMenu .item .item-border-s
 {
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
+	background-position: bottom;
 }
 .crux-StackMenu .item .item-border-se
 {
@@ -584,6 +626,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height: 0px;
 	background: none;
 	font-size: 0px;
+	background: url(../img/menu-lv2-w.gif) repeat-y left;
 }
 .crux-StackMenu .subItemsWrapper .item .item-border-n
 {
@@ -594,6 +637,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width: 10px;
 	background: none;
 	font-size: 0px;
+	background: url(../img/menu-lv2-e.gif) repeat-y right;
 }
 .crux-StackMenu .subItemsWrapper .item .item-border-w
 {
@@ -682,6 +726,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-Wizard .crux-WizardControlBar .crux-DecoratedButton, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3 
 {
 	min-width: 60px;
+	margin-left: 4px;
 }
 .crux-Wizard .crux-WizardControlBar .crux-DecoratedButton-finish, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3-finish
 {
@@ -694,14 +739,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-size:12px;
 	text-decoration:none;
 	cursor: default;
+	padding: 1px;
 }
-
 .crux-Wizard .crux-WizardNavigationLabel-selected
 {
 	font-weight:bold;
 	cursor: default;
 }
-
 .crux-Wizard .crux-WizardNavigationSeparator
 {
 	width: 20px;
@@ -709,8 +753,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background: url(../img/wizard-step-hor-separator.gif) no-repeat center;
 	font-family: monospace;
 	font-size: 1px;
+	margin-top: 2px;
 }
-
 .crux-Wizard .crux-WizardControlBarSouthWrapper, .crux-Wizard .crux-WizardControlBarNorthWrapper
 {
 	height: 25px;
@@ -755,10 +799,14 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border: solid 0px;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-color: #6b9bc2;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 	height: 100%;
 	width: 20px;
 	padding: 0px;
@@ -768,6 +816,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 }
 .crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
 {	
@@ -777,8 +826,10 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
 	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	background-image: -o-linear-gradient(top, #e0e0e0,#c3c3c3);
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.15);
 	color: #B5B5B5;
 	text-shadow: #FFFFFF 1px 1px 0;
 }
@@ -800,9 +851,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	border:none;
 	border-top:none;
 	-moz-border-radius: 0px;
+	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
+	box-shadow: none;
 	font-size: 1px;
 	color: transparent;
 }
@@ -815,13 +868,14 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: pointer;
 	border:none;
 	-moz-border-radius: 0px;
+	border-radius: 0px;
 	-webkit-border-radius: 0px;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
+	box-shadow: none;
 	font-size: 1px;
 	color: transparent;
 }
-
 .crux-TabBar .crux-RollingPanelPrevious:active, .crux-TabBar .crux-RollingPanelNext:active
 {
 	opacity:0.7;
@@ -844,14 +898,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-right: 3px;
 	padding-bottom: 4px;
 }
-
 .crux-TabBar .crux-RollingPanelBody
 {
 	background-image: url(../img/dyna-tabs-roll-bg.gif);
 	background-repeat: repeat-x;
 	background-position: top;
 }
-
 .crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext, 
 .crux-TabBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious
 {
@@ -909,7 +961,6 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	margin-right: 2px;
 }
-
 .crux-DynaTabs .crux-TabBarItem .flapLeft
 {
 	padding:1px !important;
@@ -1006,22 +1057,26 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #FFFFFF;
 	width: 50px;
 	height: 20px;
-	border:	solid 2px #0157A9;
+	border:	solid 1px #0157A9;
 	font-size:12px;
-	font-weight:bold !important;	
+	font-weight: bold !important;	
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
-	background-color: url(../img/transfer-list-button.gif) repeat-x top left;	
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
-	background: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	border-radius: 3px;
+	background-color: #6b9bc2;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
+	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 }
 .crux-TransferList .moveToRight:active, .crux-TransferList .moveToLeft:active
 {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
-	background: -moz-linear-gradient(top, #3f668a,#3f668a);	
-	background: #3f668a !important;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
+	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);	
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);	
+	background-color: #3f668a !important;
 }
 .crux-TransferList .gwt-Label
 {
@@ -1036,6 +1091,16 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-DecoratedButton
 {
 	height: 26px;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border: solid 0px;
+	padding: 0px;
+}
+.crux-DecoratedButton TD
+{
+	padding: 0px;
+	margin:0px;
+	border: solid 0px;
 }
 .crux-DecoratedButton .leftCell 
 {
@@ -1044,7 +1109,9 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	padding: 0px !important;
 	margin: 0px !important;
-	background: url(../img/decorated-btn-left.png) no-repeat left;
+	background: url(../img/decorated-btn-left.png);
+	background-repeat: no-repeat;
+	background-position: top left; 
 }
 .crux-DecoratedButton .centerCell
 {
@@ -1062,7 +1129,9 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	padding: 0px !important;
 	margin: 0px !important;
-	background: url(../img/decorated-btn-right.png) no-repeat right;
+	background: url(../img/decorated-btn-right.png);
+	background-repeat: no-repeat;
+	background-position: top right; 
 }
 .crux-DecoratedButton-down .centerCell
 {
@@ -1070,17 +1139,17 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedButton-disabled .leftCell 
 {
-	background: url(../img/decorated-btn-disabled-left.png) no-repeat left;
+	background-image: url(../img/decorated-btn-disabled-left.png);
 }
 .crux-DecoratedButton-disabled .centerCell
 {
-	background: url(../img/decorated-btn-disabled-bg.png) repeat-x top center;
+	background-image: url(../img/decorated-btn-disabled-bg.png);
 	text-shadow: 1px 1px 1px #E2E2E2;
 	color: #808080;
 }
 .crux-DecoratedButton-disabled .rightCell 
 {
-	background: url(../img/decorated-btn-disabled-right.png) no-repeat right;
+	background-image: url(../img/decorated-btn-disabled-right.png);
 }
 
 /******************************************************************************
@@ -1109,7 +1178,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-TitlePanel .topRightCell
 {
-	width:28px;
+	width:8px;
 	font-size: 5px;
 	font-family: monospace;
 	background: url(../img/collapse-panel-ne.gif) no-repeat top right;
@@ -1245,7 +1314,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .topLeftCell 
 {
-	font-size: 0px;
+	font-size: 6px;
 	font-family: monospace;
 	height:7px;
 	width:6px;
@@ -1264,15 +1333,15 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .topRightCell
 {
-	font-size: 0px;
+	font-size: 6px;
 	font-family: monospace;
 	width:6px;
 	background: url(../img/decorated-panel-ne.gif) no-repeat top right;
 }
 .crux-DecoratedPanel .middleLeftCell
 {
-	width:3px;
-	font-size: 3px;
+	width:6px;
+	font-size: 6px;
 	font-family: monospace;
 	background: url(../img/decorated-panel-w.gif) repeat-y left;
 }
@@ -1283,25 +1352,31 @@ SPAN, DIV, TD, LI, STRONG, UL
 }
 .crux-DecoratedPanel .middleRightCell
 {
-	width:3px;
-	font-size: 3px;
+	width:6px;
+	font-size: 6px;
 	font-family: monospace;
 	background: url(../img/decorated-panel-e.gif) repeat-y center right;
 }
 .crux-DecoratedPanel .bottomLeftCell
 {
-	font-size: 0px;
-	height:7px;
+	height:6px;
+	font-size: 6px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-sw.gif) no-repeat bottom left;
 }
 .crux-DecoratedPanel .bottomCenterCell
 {
-	font-size: 0px;
+	font-size: 6px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-s.gif) repeat-x bottom center;
 }
 .crux-DecoratedPanel .bottomRightCell
 {
-	font-size: 0px;
+	font-size: 6px;
+	font-family: monospace;
+	padding: 0px;
 	background: url(../img/decorated-panel-se.gif) no-repeat bottom right;
 }
 
@@ -1571,9 +1646,9 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-MessageBoxScreenBlocker, .crux-ProgressDialogScreenBlocker, .crux-PopupScreenBlocker, .crux-ConfirmScreenBlocker
 {
 	background-color: #BCC7D2;
-	filter:alpha(opacity=32);
-	-moz-opacity: 0.32;
-	opacity: .32;
+	filter:alpha(opacity=62);
+	-moz-opacity: 0.62;
+	opacity: .62;
 }
 
 
@@ -1599,22 +1674,25 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding: 4px; 
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
+	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#6b9bc2),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
+	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 }
-
 .crux-DecoratedButtonCSS3:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
 	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 }
-
 .crux-DecoratedButtonCSS3-disabled, .crux-DecoratedButtonCSS3-disabled:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#e0e0e0),color-stop(0.99,#c3c3c3));
 	background-image: -moz-linear-gradient(top, #e0e0e0,#c3c3c3);
+	background-image: -o-linear-gradient(top, #e0e0e0,#c3c3c3);
 	color: #787878;
 	text-shadow: #FFFFFF 1px 1px 0;
 	border: solid 1px #BBBBBB;	

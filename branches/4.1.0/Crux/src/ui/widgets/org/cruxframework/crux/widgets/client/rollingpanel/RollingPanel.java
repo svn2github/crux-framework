@@ -353,7 +353,8 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 	 */
 	protected void createNavigationButtons()
 	{
-		previousButton = new Button("\u003C");
+		previousButton = new Button();
+		previousButton.setText("<");
 		previousButton.setStyleName(DEFAULT_PREVIOUS_STYLE_NAME);
 		HorizontalNavButtonEvtHandler handler = new HorizontalNavButtonEvtHandler(-20, -5);
 		previousButton.addMouseDownHandler(handler);
@@ -361,7 +362,8 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 
 		this.layoutPanel.add(previousButton, DockPanel.WEST);
 		
-		nextButton = new Button("\u003E");
+		nextButton = new Button();
+		nextButton.setText(">");
 		nextButton.setStyleName(DEFAULT_NEXT_STYLE_NAME);
 		handler = new HorizontalNavButtonEvtHandler(20, 5);
 		nextButton.addMouseDownHandler(handler);

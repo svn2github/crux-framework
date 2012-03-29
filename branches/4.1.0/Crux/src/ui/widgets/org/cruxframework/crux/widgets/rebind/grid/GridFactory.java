@@ -47,16 +47,22 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.widgets.client.grid.ColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.ColumnDefinitions;
 import org.cruxframework.crux.widgets.client.grid.DataColumnDefinition;
+import org.cruxframework.crux.widgets.client.grid.DataColumnEditorCreators;
+import org.cruxframework.crux.widgets.client.grid.DataRow;
 import org.cruxframework.crux.widgets.client.grid.Grid;
 import org.cruxframework.crux.widgets.client.grid.Grid.SortingType;
+import org.cruxframework.crux.widgets.client.grid.RowDetailWidgetCreator;
 import org.cruxframework.crux.widgets.client.grid.RowSelectionModel;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition.WidgetColumnCreator;
 import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.BeforeRowSelectEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.BeforeShowRowDetailsEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.LoadRowDetailsEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.RowClickEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.RowDoubleClickEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.RowRenderEvtBind;
+import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.ShowRowDetailsEvtBind;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -79,7 +85,9 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 	@TagAttributeDeclaration(value="fixedCellSize", type=Boolean.class, defaultValue="false"),
 	@TagAttributeDeclaration(value="emptyDataFilling", type=String.class, defaultValue=" "),
 	@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
-	@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending")
+	@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending"),
+	@TagAttributeDeclaration(value="showRowDetailsIcon", type=Boolean.class, defaultValue="true"),
+	@TagAttributeDeclaration(value="freezeHeaders", type=Boolean.class, defaultValue="false")
 })
 @TagAttributes({
 	@TagAttribute(value="dataSource", processor=GridFactory.DataSourceAttributeParser.class)
@@ -88,25 +96,61 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 	@TagEvent(RowClickEvtBind.class),
 	@TagEvent(RowDoubleClickEvtBind.class),
 	@TagEvent(RowRenderEvtBind.class),
-	@TagEvent(BeforeRowSelectEvtBind.class)
+	@TagEvent(BeforeRowSelectEvtBind.class),
+	@TagEvent(BeforeShowRowDetailsEvtBind.class),
+	@TagEvent(ShowRowDetailsEvtBind.class),
+	@TagEvent(LoadRowDetailsEvtBind.class)
 })
 @TagChildren({
-	@TagChild(value=GridFactory.ColumnProcessor.class, autoProcess=false)
+	@TagChild(value=GridFactory.ColumnProcessor.class, autoProcess=false),
+	@TagChild(value=GridFactory.RowDetailsProcessor.class, autoProcess=false)
 })
 public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 {
 	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
-
+	protected static int childWidgetsIdSuffix = 0;
+	
 	@Override
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		String className = getWidgetClassName();
 		String columnsDefinitions = getColumnDefinitions(out, context);
+		String rowDetailsCreator = getRowDetailCreator(out, context);
 		
-		out.println(className + " " + context.getWidget()+" = new "+className+"("+columnsDefinitions+", "+getPageSize(context.getWidgetElement())+", "+
-                getRowSelectionModel(context.getWidgetElement())+", "+getCellSpacing(context.getWidgetElement())+", "+getAutoLoad(context.getWidgetElement())+", "+
-                getStretchColumns(context.getWidgetElement())+", "+getHighlightRowOnMouseOver(context.getWidgetElement())+", "+
-                getEmptyDataFilling(context.getWidgetElement())+", "+isFixedCellSize(context.getWidgetElement())+", "+getSortingColumn(context.getWidgetElement())+", "+getSortingType(context.getWidgetElement())+");");
+		JSONObject widgetElement = context.getWidgetElement();
+		
+		out.println(className + " " + context.getWidget()+" = new "+className+"("+columnsDefinitions+", "+getPageSize(widgetElement)+", "+
+            getRowSelectionModel(widgetElement)+", "+getCellSpacing(widgetElement)+", "+getAutoLoad(widgetElement)+", "+
+            getStretchColumns(widgetElement)+", "+getHighlightRowOnMouseOver(widgetElement)+", "+
+            getEmptyDataFilling(widgetElement)+", "+isFixedCellSize(widgetElement)+", "+getSortingColumn(widgetElement)+", "+
+            getSortingType(widgetElement) + ", "+ rowDetailsCreator + ", "+ 
+            getShowRowDetailsIcon(widgetElement) + ", " + getFreezeHeaders(widgetElement) + ");");
+	}
+	
+	private boolean getShowRowDetailsIcon(JSONObject gridElem) 
+	{	
+		String showRowDetailsIcon = gridElem.optString("showRowDetailsIcon");
+		if(!StringUtils.isEmpty(showRowDetailsIcon))
+		{
+			return Boolean.parseBoolean(showRowDetailsIcon);
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	private boolean getFreezeHeaders(JSONObject gridElem) 
+	{	
+		String strFreeze = gridElem.optString("freezeHeaders");
+		if(!StringUtils.isEmpty(strFreeze))
+		{
+			return Boolean.parseBoolean(strFreeze);
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**
@@ -387,55 +431,65 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 				JSONObject colElem = colElems.optJSONObject(i);
 				if (colElem != null)
 				{
-					String width = colElem.optString("width");
-					String strVisible = colElem.optString("visible");
-					String strSortable = colElem.optString("sortable");					
-					String strWrapLine = colElem.optString("wrapLine");
-					String label = colElem.optString("label");
-					String key = colElem.optString("key");
-					String strFormatter = colElem.optString("formatter");
-					String hAlign = colElem.optString("horizontalAlignment");
-					String vAlign = colElem.optString("verticalAlignment");
-
-					boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
-					boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
-					boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
-					String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
-					label = (label != null && label.length() > 0) ? getDeclaredMessage(label) : EscapeUtils.quote("");
-
-					String def = createVariableName("def");
-
-					String columnType = getChildName(colElem);
-					if("dataColumn".equals(columnType))
+					if(!getChildName(colElem).equals("rowDetails"))
 					{
-						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+DataColumnDefinition.class.getCanonicalName()+"("+
-								label+", "+
-								EscapeUtils.quote(width)+", "+
-								Formatters.getFormatterInstantionCommand(formatter)+", "+ 
-								visible+", "+
-								sortable+", "+
-								wrapLine+", "+
-								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_CENTER")+", "+
-								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE")+");");
+						String width = colElem.optString("width");
+						String strVisible = colElem.optString("visible");
+						String strSortable = colElem.optString("sortable");					
+						String strWrapLine = colElem.optString("wrapLine");
+						String strFrozen = colElem.optString("frozen");
+						String label = colElem.optString("label");
+						String key = colElem.optString("key");
+						String strFormatter = colElem.optString("formatter");
+						String hAlign = colElem.optString("horizontalAlignment");
+						String vAlign = colElem.optString("verticalAlignment");
+	
+						boolean visible = (strVisible != null && strVisible.length() > 0) ? Boolean.parseBoolean(strVisible) : true;
+						boolean sortable = (strSortable != null && strSortable.length() > 0) ? Boolean.parseBoolean(strSortable) : true;
+						boolean wrapLine = (strWrapLine != null && strWrapLine.length() > 0) ? Boolean.parseBoolean(strWrapLine) : false;
+						boolean frozen = (strFrozen != null && strFrozen.length() > 0) ? Boolean.parseBoolean(strFrozen) : false;
+						String formatter = (strFormatter != null && strFormatter.length() > 0) ? strFormatter : null;
+						label = (label != null && label.length() > 0) ? getDeclaredMessage(label) : EscapeUtils.quote("");
+	
+						String def = createVariableName("def");
+	
+						String columnType = getChildName(colElem);
+						if("dataColumn".equals(columnType))
+						{
+							String editorCreatorVarName = getDataColumnEditorCreator(out, colElem, context);
+							
+							out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+DataColumnDefinition.class.getCanonicalName()+"("+
+									label+", "+
+									EscapeUtils.quote(width)+", "+
+									Formatters.getFormatterInstantionCommand(formatter)+", "+ 
+									visible+", "+
+									sortable+", "+
+									wrapLine+", "+
+									frozen + ", " +
+									AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_CENTER") + ", " +
+									AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE") + ", " +
+									editorCreatorVarName + ");");
+						}
+						else if("widgetColumn".equals(columnType))
+						{
+							String widgetCreator = getWidgetColumnCreator(out, colElem, context);
+							
+							out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+WidgetColumnDefinition.class.getCanonicalName()+"("+
+									label+", "+
+									EscapeUtils.quote(width)+", "+
+									widgetCreator+", "+
+									visible+", "+
+									frozen+", "+
+									AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_CENTER")+", "+
+									AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE")+");");
+						}
+						else
+						{
+							throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(context.readWidgetProperty("id")));
+						}
+	
+						out.print(defs+".add("+EscapeUtils.quote(key)+", "+def+");");
 					}
-					else if("widgetColumn".equals(columnType))
-					{
-						String widgetCreator = getWidgetColumnCreator(out, colElem, context);
-						
-						out.println(ColumnDefinition.class.getCanonicalName()+" "+def+" = new "+WidgetColumnDefinition.class.getCanonicalName()+"("+
-								label+", "+
-								EscapeUtils.quote(width)+", "+
-								widgetCreator+", "+
-								visible+", "+
-								AlignmentAttributeParser.getHorizontalAlignment(hAlign, HasHorizontalAlignment.class.getCanonicalName()+".ALIGN_CENTER")+", "+
-								AlignmentAttributeParser.getVerticalAlignment(vAlign, HasVerticalAlignment.class.getCanonicalName()+".ALIGN_MIDDLE")+");");
-					}
-					else
-					{
-						throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(context.readWidgetProperty("id")));
-					}
-
-					out.print(defs+".add("+EscapeUtils.quote(key)+", "+def+");");
 				}
 			}
 		}
@@ -447,6 +501,32 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		return defs;
 	}
 	
+	private String getDataColumnEditorCreator(SourcePrinter out, JSONObject colElem, WidgetCreatorContext context)
+    {
+	    String editorCreatorVarName = "null";
+	    
+	    JSONObject child = ensureFirstChild(colElem, true, context.getWidgetId());
+	    
+	    if(child != null)
+	    {
+		    editorCreatorVarName = createVariableName("dataColumnEditor");
+
+		    String packageName = DataColumnEditorCreators.class.getPackage().getName();
+		    String classSimpleName = ("DColEdit_" + getScreen().getId() + "_" + context.getWidgetId() + "_" + colElem.optString("key")).replaceAll("[^a-zA-Z0-9\\$]", "_");
+			String classCanonicalName = packageName + "." + classSimpleName;
+		    
+			out.println(classCanonicalName + " " + editorCreatorVarName + " = new " + classCanonicalName + "();");
+		    
+		    DataColumnEditorCreatorFactory dataColEditorFactory = new DataColumnEditorCreatorFactory(
+		    		classSimpleName, packageName, this, context, child, 
+		    		this.getLoggerVariable(), getDeclaredMessages());
+		   
+		    dataColEditorFactory.createEditorCreator();
+	    }
+
+	    return editorCreatorVarName;
+    }
+	
 	/**
 	 * @param out
 	 * @param colElem
@@ -454,14 +534,14 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	 */
 	private String getWidgetColumnCreator(SourcePrinter out, JSONObject colElem, WidgetCreatorContext context)
     {
-	    String colDef = createVariableName("colDef");
+		String colDef = createVariableName("widgetColumnCreator");
 	    String className = WidgetColumnCreator.class.getCanonicalName();
 	    
 	    out.println(className+" "+colDef+" = new "+className+"(){");
 	    out.println("public Widget createWidgetForColumn(){");
 	    
 	    JSONObject child = ensureFirstChild(colElem, false, context.getWidgetId());
-		String childWidget = createChildWidget(out, child, WidgetConsumer.EMPTY_WIDGET_CONSUMER, true, context);
+		String childWidget = createChildWidget(out, child, null, true, context);
         out.println("return "+childWidget+";");
 	    
 	    out.println("};");
@@ -469,6 +549,64 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 
 	    return colDef;
     }
+	
+	/**
+	 * @param out
+	 * @param colElem
+	 * @return
+	 */
+	private String getRowDetailCreator(SourcePrinter out, WidgetCreatorContext context)
+    {
+		String rowDetailCreatorVar = "null";
+		
+		JSONArray childElems = ensureChildren(context.getWidgetElement(), false, context.getWidgetId());
+		int childrenSize = childElems.length();
+		if(childrenSize > 0)
+		{
+			for (int i = 0; i < childrenSize; i++)
+			{
+				JSONObject child = childElems.optJSONObject(i);
+				if (child != null)
+				{
+					String childType = getChildName(child);
+					if(childType.equals("rowDetails"))
+					{
+						String className = RowDetailWidgetCreator.class.getCanonicalName();
+						rowDetailCreatorVar = createVariableName("rowDetailCreator");
+						JSONObject detailElem = ensureChildren(child, false, context.getWidgetId()).optJSONObject(0);
+						out.println("final "+ className + " " + rowDetailCreatorVar + " = new " + className+"(){");
+						out.println("public Widget createWidgetForRowDetail(" + DataRow.class.getCanonicalName() + " row){");
+						String childWidget = createChildWidget(out, detailElem, new RowDetailsWidgetConsumer("row"), true, context);
+						out.println("return "+childWidget+";");
+						out.println("};");
+						out.println("};");
+						return rowDetailCreatorVar;
+					}
+				}
+			}
+		}
+		
+	    return rowDetailCreatorVar;
+    }
+	
+	/**
+	 * 
+	 * @author Gesse Dafe
+	 */
+	private class RowDetailsWidgetConsumer implements WidgetConsumer
+	{
+		private final String rowVariableName;
+
+		public RowDetailsWidgetConsumer(String rowVariableName) 
+		{
+			this.rowVariableName = rowVariableName;
+		}
+		
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		{
+			out.println("this.registerWidget(" + rowVariableName + "," + EscapeUtils.quote(widgetId) + ", " + widgetVariableName + ");");
+		}
+	}
 	
 	@TagConstraints(maxOccurs="unbounded")
 	@TagChildren({
@@ -488,11 +626,15 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		@TagAttributeDeclaration(value="visible", type=Boolean.class),
 		@TagAttributeDeclaration(value="sortable", type=Boolean.class, defaultValue="true"),
 		@TagAttributeDeclaration(value="wrapLine", type=Boolean.class, defaultValue="false"),
+		@TagAttributeDeclaration(value="frozen", type=Boolean.class, defaultValue="false"),
 		@TagAttributeDeclaration("label"),
 		@TagAttributeDeclaration(value="key", required=true),
 		@TagAttributeDeclaration("formatter"),
 		@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
 		@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
+	})
+	@TagChildren({
+		@TagChild(value=GridFactory.DataColumnEditorProcessor.class, autoProcess=false)
 	})
 	public static class DataColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
@@ -511,6 +653,19 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	public static class WidgetColumnProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 	
 	public static class WidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext>{}
+	
+	@TagConstraints(tagName="rowDetails", maxOccurs="1", minOccurs="0")
+	@TagChildren({
+		@TagChild(value=WidgetProcessor.class, autoProcess=false)
+	})
+	public static class RowDetailsProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
+	
+	@TagConstraints(tagName="editor", maxOccurs="1", minOccurs="0")
+	@TagChildren({
+		@TagChild(value=WidgetProcessor.class, autoProcess=false)
+	})
+	public static class DataColumnEditorProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
+	
 	
 	@Override
     public WidgetCreatorContext instantiateContext()

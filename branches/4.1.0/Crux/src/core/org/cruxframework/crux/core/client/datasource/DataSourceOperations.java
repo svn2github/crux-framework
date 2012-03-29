@@ -210,6 +210,25 @@ class DataSourceOperations<E>
 		return selectedRecords.toArray(new DataSourceRecord[0]);
 	}
 	
+	public int getRecordIndex(E boundObject)
+	{
+		for(int i = 0; i < this.dataSource.data.length; i++)
+		{
+			if(this.dataSource.data[i].recordObject.equals(boundObject))
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public void selectRecord(int index, boolean selected)
+	{
+		checkRange(index);
+		this.dataSource.data[index].setSelected(selected);
+	}
+	
 	public void reset()
 	{
 		newRecords.clear();

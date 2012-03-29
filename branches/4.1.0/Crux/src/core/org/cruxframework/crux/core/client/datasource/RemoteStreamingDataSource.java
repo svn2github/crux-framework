@@ -23,8 +23,8 @@ import java.util.List;
 import org.cruxframework.crux.core.client.ClientMessages;
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState;
 
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -202,7 +202,25 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	
 	public void updateData(List<T> data)
 	{
-	}	
+	}
+	
+	public void copyValueToWidget(HasValue<?> valueContainer, String key, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+
+	public void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord)
+	{
+	}
+	
+	public int getRecordIndex(T boundObject)
+	{
+		return editableOperations.getRecordIndex(boundObject);
+	}
+	
+	public void selectRecord(int index, boolean selected)
+	{
+		editableOperations.selectRecord(index, selected);
+	}
 
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.RemoteDataSource#cancelFetching()
@@ -547,7 +565,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 				return compareNonNullValuesByType(value1,value2,ascending);
 			}
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			private int compareNonNullValuesByType(Object value1, Object value2,boolean ascending)
 			{
 				if (ascending)
@@ -586,12 +604,13 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#getValue(java.lang.String, org.cruxframework.crux.core.client.datasource.DataSourceRecord)
 	 */
-	public Object getValue(String columnName, DataSourceRecord<T> dataSourceRecord)
+	@SuppressWarnings("unchecked")
+	public Object getValue(String columnName, DataSourceRecord<?> dataSourceRecord)
 	{
 		ColumnDefinition<?, T> column = definitions.getColumn(columnName);
 		if (column != null)
 		{
-			return column.getValue(dataSourceRecord.getRecordObject());
+			return column.getValue((T) dataSourceRecord.getRecordObject());
 		}
 		return null;
 	}

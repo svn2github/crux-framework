@@ -20,19 +20,21 @@ import java.io.PrintWriter;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.datasource.ColumnDefinition;
 import org.cruxframework.crux.core.client.datasource.ColumnDefinitions;
+import org.cruxframework.crux.core.client.datasource.DataSourceRecord;
 import org.cruxframework.crux.core.client.datasource.LocalDataSource;
 import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
 import org.cruxframework.crux.core.client.screen.ScreenBindableObject;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
+import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -40,8 +42,12 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPackage;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -127,7 +133,10 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 
 	        generateUpdateFunction(srcWriter);
 	        generateGetBoundObjectFunction(srcWriter);
-
+	        generateCopyValueToWidgetMethod(srcWriter);
+	        generateBindToWidgetMethod(srcWriter);
+	        generateSetValueMethod(srcWriter);
+	        
 	        generateScreenUpdateWidgetsFunction(dataSourceClass, srcWriter);
 	        generateControllerUpdateObjectsFunction(dataSourceClass, srcWriter);
 	        generateIsAutoBindEnabledMethod(srcWriter, isAutoBindEnabled);
@@ -316,7 +325,8 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
     		Widget.class.getCanonicalName(),
     		Crux.class.getCanonicalName(), 
     		ColumnDefinition.class.getCanonicalName(), 
-    		ColumnDefinitions.class.getCanonicalName() 
+    		ColumnDefinitions.class.getCanonicalName(),
+    		DataSourceRecord.class.getCanonicalName()
 		};
 	    return imports;
     }
@@ -418,4 +428,186 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	{
 		return getTypeFromMethodClass("getRecord");
 	}
+	
+	
+	/**
+	 * Generates the copyValueToWidget method
+	 * @param srcWriter
+	 */
+	protected void generateCopyValueToWidgetMethod(SourceWriter srcWriter)
+	{
+		srcWriter.println("public void copyValueToWidget(HasValue<?> valueContainer, String columnKey, DataSourceRecord<?> dataSourceRecord) {");
+
+		String elseStm = "";
+		JField[] fields = JClassUtils.getDeclaredFields(dtoType);
+		for (int i = 0; i < fields.length; i++) 
+		{
+			JField field = fields[i];
+			String name = field.getName();
+			JType type = field.getType();
+			String typeName = type.getQualifiedSourceName();
+			
+			if (type.isPrimitive() != null)
+			{
+				JPrimitiveType jPrimitiveType = type.isPrimitive();
+				typeName = jPrimitiveType.getQualifiedBoxedSourceName();
+			}
+			
+			srcWriter.println();
+			
+			srcWriter.indent();
+			if(JClassUtils.getGetterMethod(name, dtoType) != null)
+			{
+				srcWriter.println(elseStm + "if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
+				srcWriter.indent();
+				srcWriter.println("((HasValue<" + typeName + ">)valueContainer).setValue((" + typeName + ") getValue(columnKey, dataSourceRecord));");
+				srcWriter.outdent();
+				srcWriter.print("}");
+				srcWriter.println();
+				elseStm = "else ";
+			}
+			
+			srcWriter.outdent();
+		}
+		
+		srcWriter.indent();
+		srcWriter.println();
+		srcWriter.println("bindToWidget(valueContainer, columnKey, dataSourceRecord);");
+		srcWriter.outdent();
+		
+		srcWriter.println("}");
+		
+	}
+	
+	/**
+	 * Generates the copyValueToWidget method
+	 * @param srcWriter
+	 */
+	protected void generateBindToWidgetMethod(SourceWriter srcWriter)
+	{
+		srcWriter.println("private void bindToWidget(Object widget, final String columnKey, final DataSourceRecord<?> dataSourceRecord) {");
+		JField[] fields = JClassUtils.getDeclaredFields(dtoType);
+		srcWriter.indent();
+		
+		String elseStm = "";
+		for (int i = 0; i < fields.length; i++) 
+		{
+			JField field = fields[i];
+			String name = field.getName();
+			JType type = field.getType();
+			String typeName = type.getQualifiedSourceName();
+			
+			if (type.isPrimitive() != null)
+			{
+				JPrimitiveType jPrimitiveType = type.isPrimitive();
+				typeName = jPrimitiveType.getQualifiedBoxedSourceName();
+			}
+			
+			srcWriter.println();
+			
+			srcWriter.println(elseStm + "if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
+			srcWriter.indent();
+			
+			srcWriter.println("((" + HasValueChangeHandlers.class.getCanonicalName() + ") widget).addValueChangeHandler(");
+			srcWriter.indent();
+			srcWriter.println("new " + ValueChangeHandler.class.getCanonicalName()  + "<" + typeName + ">(){");
+			srcWriter.indent();
+			srcWriter.println("public void onValueChange(" + ValueChangeEvent.class.getCanonicalName() + "<" + typeName + "> event){");
+			srcWriter.indent();
+			srcWriter.println(getProxySimpleName() + ".this.setValue(event.getValue(), columnKey, dataSourceRecord);");
+			srcWriter.outdent();
+			srcWriter.println("}");
+			srcWriter.outdent();
+			srcWriter.println("});");
+			srcWriter.outdent();
+			srcWriter.println("}");
+			srcWriter.outdent();
+			elseStm = "else ";
+		}
+		
+		srcWriter.outdent();
+		srcWriter.println("}");
+	}	
+	
+	/**
+	 * Generates the setValue method
+	 * @param srcWriter
+	 */
+	protected void generateSetValueMethod(SourceWriter srcWriter)
+	{
+		srcWriter.println("public void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord) {");
+
+		JField[] fields = JClassUtils.getDeclaredFields(dtoType);
+		String dtoTypeName = dtoType.getParameterizedQualifiedSourceName();
+		
+		for (int i = 0; i < fields.length; i++) 
+		{
+			JField field = fields[i];
+			String name = field.getName();
+			JType fieldType = field.getType();
+			String fieldTypeName = fieldType.getParameterizedQualifiedSourceName();
+			String setterName = null;
+			String getterName = null;
+
+			if (fieldType.isPrimitive() != null)
+			{
+				JPrimitiveType jPrimitiveType = fieldType.isPrimitive();
+				fieldTypeName = jPrimitiveType.getQualifiedBoxedSourceName();
+			}
+			
+			try 
+			{
+				setterName = dtoType.getMethod(ClassUtils.getSetterMethod(name), new JType[]{fieldType}).getName();
+				getterName = dtoType.getMethod(ClassUtils.getGetterMethod(name), new JType[]{}).getName();
+			} 
+			catch (NotFoundException e) 
+			{
+				// do nothing
+			}
+			
+			boolean isPublic = field.isPublic() && !field.isStatic();
+			boolean hasGetterAndSetter = setterName != null && getterName != null;
+			boolean isAccessible = isPublic || hasGetterAndSetter;
+			
+			if(isAccessible)
+			{
+				srcWriter.println();
+				srcWriter.indent();
+				srcWriter.println("if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
+				srcWriter.indent();
+
+				if(isPublic)
+				{
+					srcWriter.println(fieldTypeName + " field = ((" + dtoTypeName + ") dataSourceRecord.getRecordObject())." + name + ";");
+				}
+				else
+				{
+					srcWriter.println(fieldTypeName + " field = ((" + dtoTypeName + ") dataSourceRecord.getRecordObject())." + getterName + "();");
+				}
+				
+				srcWriter.println("boolean changed = (value == null && field != null) || (value != null && field == null) || !field.equals(value);");
+				srcWriter.println("if(changed){");
+				srcWriter.indent();
+				
+				if(isPublic)
+				{
+					srcWriter.println("((" + dtoTypeName + ") dataSourceRecord.getRecordObject())." + name + " = (" + fieldTypeName + ") value;");
+				}
+				else
+				{
+					srcWriter.println("((" + dtoTypeName + ") dataSourceRecord.getRecordObject())." + setterName + "((" + fieldTypeName + ") value);");
+				}
+				
+				srcWriter.println("dataSourceRecord.setDirty();");
+				srcWriter.println("return;");
+				srcWriter.outdent();
+				srcWriter.print("}");
+				srcWriter.outdent();
+				srcWriter.print("}");
+				srcWriter.outdent();
+			}
+		}
+		
+		srcWriter.println("}");
+	}	
 }

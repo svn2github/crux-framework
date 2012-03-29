@@ -305,6 +305,16 @@ public class DynaTabs extends Composite
 	 */
 	void doCloseTab(String tabId)
 	{
+		try
+		{
+			Tab removed = getTab(tabId);
+			removed.changeURL("about:blank");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		int index = getTabIndex(tabId);
 		this.tabPanel.remove(index);
 		this.tabs.remove(tabId);

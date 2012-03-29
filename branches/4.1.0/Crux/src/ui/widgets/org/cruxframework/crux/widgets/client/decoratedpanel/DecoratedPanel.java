@@ -70,7 +70,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		table.setClassName(styleName != null && styleName.length() > 0 ? styleName : DEFAULT_STYLE_NAME);
 		table.setPropertyString("width", (width==null?"":width));
 		table.getStyle().setProperty("height", (height==null?"":height));
-//		getTable().getStyle().setProperty("tableLayout", "fixed");
+		getTable().getStyle().setTableLayout(com.google.gwt.dom.client.Style.TableLayout.FIXED);
 	 	
 		Element templateTR = DOM.createTR();
 		topLine = templateTR;
@@ -85,7 +85,6 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 		topCenterCell = createTd(templateTd, "topCenterCell");
 		topRightCell = createTd(templateTd, "topRightCell");
 		
-		
 		Element wrapper = DOM.createTable().cast();
 		wrapper.setPropertyInt("cellSpacing", 0);
 		wrapper.setPropertyInt("cellPadding", 0);
@@ -94,7 +93,7 @@ public class DecoratedPanel extends CellPanel implements HasHorizontalAlignment,
 	    Element wrapperBody = DOM.createTBody();
 	    
 	    Element middleLineTD = templateSpaceTd;
-	    middleLineTD.setPropertyInt("colSpan", 4);		
+	    middleLineTD.setPropertyInt("colSpan", 3);	
 	    middleLineTD.getStyle().setProperty("padding", "0px");
 	    middleLineTD.appendChild(wrapper);
 		

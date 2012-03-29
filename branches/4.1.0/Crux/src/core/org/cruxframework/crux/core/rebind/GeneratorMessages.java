@@ -256,6 +256,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[generator 056] - Can not read user.agent property.")
 	String errorGeneratingRegisteredElementCanNotReadUserAgent();
 
+	@DefaultServerMessage("[generator 058] - Error generating binding code for DTO [{0}], Field [{1}]. No getter method found. ")
+	String errorGeneratingBindingCodeNoGetterMethodFound(String className, String fieldName);
+	
 	@DefaultServerMessage("[generator 057] -Can not read device.features property.")
 	String errorGeneratingRegisteredElementCanNotReadDeviceFeatures();
 

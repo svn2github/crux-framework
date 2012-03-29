@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -61,6 +62,7 @@ class StackMenuItemCaption extends Composite
 	
 		initWidget(widget);
 		
+		fillBorderCells();
 	}
 	
 	/**
@@ -268,5 +270,27 @@ class StackMenuItemCaption extends Composite
 		{
 			canvas.addStyleDependentName("last");
 		}
+	}
+	
+    private native Element getCellElement(Element table, int row, int col) /*-{
+		return table.rows[row].cells[col];
+	}-*/;
+	
+	private void fillBorderCells() 
+	{
+		Element table = canvas.getElement();
+		fillBorderCell(getCellElement(table, 0, 0), "item-border-nw");
+		fillBorderCell(getCellElement(table, 0, 1), "item-border-n");
+		fillBorderCell(getCellElement(table, 0, 2), "item-border-ne");
+		fillBorderCell(getCellElement(table, 1, 0), "item-border-w");
+		fillBorderCell(getCellElement(table, 1, 2), "item-border-e");
+		fillBorderCell(getCellElement(table, 2, 0), "item-border-sw");
+		fillBorderCell(getCellElement(table, 2, 1), "item-border-s");
+		fillBorderCell(getCellElement(table, 2, 2), "item-border-se");
+	}
+	
+	private void fillBorderCell(Element cell, String cssClassName) 
+	{
+		cell.setInnerHTML("<div style=\"overflow:hidden\" class=\"" + cssClassName + "\"> </div>");
 	}
 }

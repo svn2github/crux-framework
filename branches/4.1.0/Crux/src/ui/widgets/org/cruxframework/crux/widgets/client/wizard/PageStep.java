@@ -21,10 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.dynatabs.AbstractTab;
+import org.cruxframework.crux.widgets.client.dynatabs.DynaTabsControllerInvoker;
 import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.LazyPanel;
@@ -71,6 +72,11 @@ public class PageStep<T extends Serializable> extends LazyPanel
     {
     	return url;
     }
+	
+	public JSWindow getWindow()
+	{
+		return DynaTabsControllerInvoker.getTabWindow(id);
+	}
 
 	/**
 	 * @param previousStep

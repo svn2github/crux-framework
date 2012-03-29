@@ -17,6 +17,8 @@ package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
+import org.cruxframework.crux.core.client.screen.JSWindow;
+
 /**
  * @author Thiago da Rosa de Bustamante 
  *
@@ -126,5 +128,10 @@ public class WizardAccessor<T extends Serializable>
 	public T readData()
 	{
 		return proxy.readData();
+	}
+	
+	public JSWindow getStepWindow(String stepId)
+	{
+		return proxy.getStepWindow(stepId);
 	}
 }

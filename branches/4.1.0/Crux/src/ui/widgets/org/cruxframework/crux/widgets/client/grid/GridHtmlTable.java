@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 cruxframework.org.
+ * Copyright 2009 Sysmap Solutions Software e Consultoria Ltda.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,15 +16,17 @@
 package org.cruxframework.crux.widgets.client.grid;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
-public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid
+public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid implements GridBaseTable
 {	
-	Element getCellElement(int row, int col)
+	public Element getCellElement(int row, int col)
 	{
 		return getCellElement(this.getElement(), row, col);
 	}
 	
-	Element getRowElement(int row)
+	public Element getRowElement(int row)
 	{
 		return getRowElement(this.getElement(), row);
 	}
@@ -37,10 +39,37 @@ public class GridHtmlTable extends com.google.gwt.user.client.ui.Grid
     	return table.rows[row];
   	}-*/;
     
-    
     @Override
-    protected Element getBodyElement()
+    public Element getBodyElement()
     {
     	return super.getBodyElement();
     }
+
+	public void removeAllRows() 
+	{
+		resizeRows(0);
+	}
+	
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellAlignment(int, int, com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant, com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant)
+	 */
+	public void setCellAlignment(int index, int colIndex,
+			HorizontalAlignmentConstant horizontalAlign,
+			VerticalAlignmentConstant verticalAlign) 
+	{
+		getCellFormatter().setAlignment(index, colIndex, horizontalAlign, verticalAlign);
+	}
+
+	/**
+	 * @see br.com.sysmap.crux.widgets.client.grid.GridBaseTable#setCellWidth(int, int, java.lang.String)
+	 */
+	public void setCellWidth(int index, int colIndex, String width) 
+	{
+		getCellFormatter().setWidth(index, colIndex, width);
+	}
+
+	public void onAfterRender() 
+	{
+		// nothing do to
+	}
 }

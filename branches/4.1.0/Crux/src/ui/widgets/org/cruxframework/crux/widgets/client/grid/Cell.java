@@ -28,7 +28,8 @@ public class Cell extends Composite
 	private Row row;
 	private boolean fireEvents;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
+
 	private AbstractGrid grid;
 	private boolean selectRowOnClick;
 	private boolean highlightRowOnMouseOver;
@@ -76,7 +77,7 @@ public class Cell extends Composite
 		this.row = row;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void setGrid(AbstractGrid grid)
 	{
 		this.grid = grid;
@@ -104,6 +105,11 @@ public class Cell extends Composite
 
 		if (type == Event.ONDBLCLICK)
 		{
+			if(grid instanceof Grid && ((Grid)grid).isEditable())
+			{
+				((Grid)grid).makeEditable((DataRow) row, this);
+			}
+			
 			if(fireEvents && row.isEnabled())
 			{
 				grid.fireRowDoubleClickEvent(row);

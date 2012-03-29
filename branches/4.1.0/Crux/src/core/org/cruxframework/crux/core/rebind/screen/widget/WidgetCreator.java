@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import java.util.Map;
+
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -68,7 +70,6 @@ import com.google.gwt.dom.client.PartialSupport;
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
 	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
 	
@@ -644,6 +645,16 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		this.factory = factory;
 		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(getClass(), this);
+	}
+	
+	protected String getLoggerVariable()
+	{
+		return factory.getLoggerVariable();
+	}
+	
+	protected Map<String, String> getDeclaredMessages()
+	{
+		return factory.getDeclaredMessages();
 	}
 	
 	/**

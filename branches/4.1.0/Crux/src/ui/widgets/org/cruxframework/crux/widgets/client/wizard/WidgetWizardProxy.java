@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.client.wizard;
 
 import java.io.Serializable;
 
+import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.widgets.client.wizard.WizardControlBar.WizardCommand;
 
 
@@ -319,5 +320,10 @@ class WidgetWizardProxy<T extends Serializable> implements WizardProxy<T>
         {
 	        controlBar.setSpacing(spacing);
         }
+	}
+	
+	public JSWindow getStepWindow(String stepId) 
+	{
+		return JSWindow.currentWindow();
 	}
 }

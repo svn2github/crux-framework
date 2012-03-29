@@ -19,8 +19,9 @@ import java.io.Serializable;
 
 import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
+import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
-
+import org.cruxframework.crux.widgets.client.dynatabs.DynaTabsControllerInvoker;
 
 import com.google.gwt.core.client.GWT;
 
@@ -345,4 +346,9 @@ class PageWizardProxy<T extends Serializable> implements WizardProxy<T>
 		}
 	    return wizardDataSerializer.getResource();
     }
+	
+	public JSWindow getStepWindow(String stepId) 
+	{
+		return DynaTabsControllerInvoker.getSiblingTabWindow(stepId);
+	}
 }

@@ -24,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.screen.RequiresResizeFactory;
 import org.cruxframework.crux.core.client.screen.WidgetContainer;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.ServerMessages;
@@ -40,6 +41,7 @@ public class WidgetConfig
 	private static Map<String, String> config = null;
 	private static Map<String, String> widgets = null;
 	private static Set<String> widgetContainers = null;
+	private static Set<String> requiresResizeWidgets = null;
 	private static Map<String, Set<String>> registeredLibraries = null;
 	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Log logger = LogFactory.getLog(WidgetConfig.class);
@@ -76,6 +78,7 @@ public class WidgetConfig
 		config = new HashMap<String, String>(100);
 		widgets = new HashMap<String, String>();
 		widgetContainers = new HashSet<String>();
+		requiresResizeWidgets = new HashSet<String>();
 		registeredLibraries = new HashMap<String, Set<String>>();
 		Set<String> factoriesNames =  ClassScanner.searchClassesByAnnotation(org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory.class);
 		if (factoriesNames != null)
@@ -100,6 +103,11 @@ public class WidgetConfig
 					if (WidgetContainer.class.isAssignableFrom(factoryClass))
 					{
 						widgetContainers.add(widgetType);
+					}
+					
+					if (RequiresResizeFactory.class.isAssignableFrom(factoryClass))
+					{
+						requiresResizeWidgets.add(widgetType);
 					}
 				} 
 				catch (ClassNotFoundException e) 
@@ -196,5 +204,18 @@ public class WidgetConfig
 			initializeWidgetConfig();
 		}
 		return widgetContainers.contains(type);
+	}
+	
+	/**
+	 * @param type
+	 * @return
+	 */
+	public static boolean isRequiresResizeWidget(String type)
+	{
+		if (requiresResizeWidgets == null)
+		{
+			initializeWidgetConfig();
+		}
+		return requiresResizeWidgets.contains(type);
 	}
 }
