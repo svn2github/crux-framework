@@ -1,42 +1,21 @@
 package org.cruxframework.crux.showcase.client.controller;
 
+import java.util.ArrayList;
+
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Expose;
 
 @Controller("serverCommunicationSourcesController")
-public class ServerCommunicationSourcesController extends SourcesController {
-	
-	private boolean serviceLoaded;
-	private boolean serviceAsyncLoaded;
-	private boolean serviceImplLoaded;
+public class ServerCommunicationSourcesController  extends BaseSourcesController implements ServerCommunicationSourcesControllerCrossDoc {
 
-	@Expose
-	public void loadServiceSource() {
-		
-		if(!serviceLoaded){
-			serviceLoaded = true;
-			
-			loadFile("client/remote/ServerService.java", "serviceSource");
-		}
-	}
-
-	@Expose
-	public void loadServiceAsyncSource() {
-		
-		if(!serviceAsyncLoaded){
-			serviceAsyncLoaded = true;
-			
-			loadFile("client/remote/ServerServiceAsync.java", "serviceAsyncSource");
-		}
-	}
-
-	@Expose
-	public void loadServiceImplSource() {
-		
-		if(!serviceImplLoaded){
-			serviceImplLoaded = true;
-			
-			loadFile("server/ServerServiceImpl.java", "serviceImplSource");
-		}
+	/**
+	 * @see org.cruxframework.crux.showcase.client.controller.BaseSourcesController#getAdditionalSources()
+	 */
+	protected ArrayList<SourceTab> getAdditionalSources() {
+		ArrayList<SourceTab> aditionalTabs = new ArrayList<SourceTab>();
+		aditionalTabs.add(new SourceTab("client/remote/ServerCommunicationService.java", "Business Interface", true));
+		aditionalTabs.add(new SourceTab("client/remote/ServerCommunicationServiceAsync.java", "Async Interface", true));
+		aditionalTabs.add(new SourceTab("server/ServerCommunicationServiceImpl.java", "Service Implementation", true));
+		aditionalTabs.add(new SourceTab("client/remote/PleaseTypeYourNameException.java", "Business Exception", true));
+		return aditionalTabs;
 	}
 }

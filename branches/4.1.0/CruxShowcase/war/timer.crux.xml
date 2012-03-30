@@ -19,7 +19,7 @@
 		<center>
 			<b:verticalPanel id="vPanel" spacing="8">				
 				<b:cell horizontalAlignment="center">
-					<a:decoratedPanel id="timerBorder">
+					<a:decoratedPanel id="timerBorder" width="50">
 						<a:widget>
 							<a:timer id="timer" start="true" style="paddingLeft:4px;paddingRight:4px;" pattern="mm:ss">
 								<a:onTimeout execute="timerController.afterThreeSeconds" time="3"/>

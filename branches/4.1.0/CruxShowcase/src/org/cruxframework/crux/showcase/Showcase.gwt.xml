@@ -4,9 +4,14 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.themes.widgets.smooth.Smooth'/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
-    <!-- extend-property name="locale" values="pt_BR"/-->
+	
+	<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
+	
+    <extend-property name="locale" values="pt_BR"/>
+    
     <!-- set-property name="user.agent" value="ie8" /-->
     
+	<!-- 
 	<set-property name="gwt.logging.enabled" value="TRUE"/>
 	<set-property name="gwt.logging.logLevel" value="FINE"/>
 	<set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
@@ -16,9 +21,14 @@
 	<set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 	<set-property name="gwt.logging.systemHandler" value="DISABLED"/>
 	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED"/>
+ 	-->	
 	
 	<replace-with class="org.cruxframework.crux.showcase.client.common.ShowcaseErrorHandler">
 		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ErrorHandler" />
-	</replace-with>	
-         
+	</replace-with>
+	
+	<replace-with class="org.cruxframework.crux.showcase.client.common.ShowcaseErrorHandler">
+		<when-type-assignable class="org.cruxframework.crux.core.client.errors.ValidationErrorHandler" />
+	</replace-with>
+	         
 </module>

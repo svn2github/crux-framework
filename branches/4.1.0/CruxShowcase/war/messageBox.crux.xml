@@ -16,16 +16,24 @@
 
 		<c:screen useController="messageBoxController"/>
 
-		<b:dockPanel id="centeringPanel" width="100%" height="150" spacing="5">
-			<b:cell direction="west" verticalAlignment="middle" horizontalAlignment="right" width="50%">
-				<a:decoratedButton id="showMessageButton" text="Show Message" onClick="messageBoxController.showMessage"/>
-			</b:cell>
-			<b:cell direction="east" verticalAlignment="middle" horizontalAlignment="left" width="50%">
-				<b:label id="message"/>
-			</b:cell>
-		</b:dockPanel>
+		<center>
+			<a:decoratedButton id="showMessageButton" text="Show Message" onClick="messageBoxController.showMessage"/>
+		</center>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				MessageBox are widgets used to display messages to users. They are an alternative to the 
+				Window.alert function, natively provided by browsers. The main difference, besides the 
+				customizable look-and-feel, is that MessageBoxes do not suspend the JavaScript processing 
+				when they are displayed. On the other hand, MessageBox triggers an event when its OK button 
+				is pressed, which can be captured and properly handled.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				if you click the button, a message will be shown. When you close the MessageBox, by clicking 
+				its OK button, another message is shown, just for emphasize that the OkEvent was captured 
+				and handled. 
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

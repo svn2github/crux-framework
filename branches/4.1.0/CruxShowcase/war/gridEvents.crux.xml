@@ -20,70 +20,62 @@
 	
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
-		<c:screen onLoad="gridEventsController.onLoad" useController="gridEventsController" 
-			useDataSource="simpleGridDataSource" useFormatter="birthday" fragment="grids"/>
+		<c:screen onLoad="gridEventsController.onLoad" useController="gridEventsController" useDataSource="simpleGridDataSource"/>
 		
 		<center>
-			<b:horizontalPanel id="mainPanel" spacing="20">
-				<b:cell verticalAlignment="top">
-					<a:titlePanel id="tPanel" width="470">
-						<a:title>
-							<a:widget>
-								<b:horizontalPanel id="hPanel" width="100%">
-									<b:cell horizontalAlignment="left" verticalAlignment="middle">
-										<b:label id="title" text="Contacts" styleName="SpecialLabel"/>
-									</b:cell>
-									<b:cell horizontalAlignment="right" verticalAlignment="middle">
-										<a:sequentialPager id="pager" pageable="gridWithEvents"/>	
-									</b:cell>				 
-								</b:horizontalPanel>
-							</a:widget>
-						</a:title>
-						<a:body>
-							<a:widget>
-								<a:grid id="gridWithEvents" height="200" width="100%" dataSource="simpleGridDataSource" 
-									stretchColumns="true" pageSize="7" highlightRowOnMouseOver="true"
-									onRowRender="gridEventsController.applyAvatar" onRowClick="gridEventsController.showDetail">
-									<a:widgetColumn key="avatar">
-										<b:image id="avatar" url="../style/img/default_avatar.gif" style="cursor:pointer"/>
-									</a:widgetColumn>
-									<a:dataColumn key="name" label="Name"/>
-									<a:dataColumn key="phone" label="Phone"/>
-									<a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
-									<a:dataColumn key="gender" visible="false"/>
-								</a:grid>
-							</a:widget>				
-						</a:body>
-					</a:titlePanel>
-				</b:cell>
-				<b:cell verticalAlignment="top">
-					<a:decoratedPanel id="textPanel" width="270" height="235">
-						<a:html>
-							<table cellspacing="5" class="CommentsTable">
-								<tr>
-									<th>In this grid we are handling two different events:</th>
-								</tr>
-								<tr>
-									<td>
-										<li>
-											<b>RowRenderEvent:</b><span> When each row is rendered, its contact's picture URL is changed, according to the person's gender.</span>
-										</li>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<li>
-											<b>RowClickEvent:</b><span> When a row is clicked, the details of the underlying contact are shown in a message box.</span>
-										</li>
-									</td>
-								</tr>								  
-							</table>
-						</a:html>
-					</a:decoratedPanel>
-				</b:cell>
-			</b:horizontalPanel>
-			<s:gridSources pageName="simpleGrid"/>
+
+			<a:titlePanel id="tPanel" width="470">
+				<a:title>
+					<a:widget>
+						<b:horizontalPanel id="hPanel" width="100%">
+							<b:cell horizontalAlignment="left" verticalAlignment="middle">
+								<b:label id="title" text="Contacts" styleName="SpecialLabel"/>
+							</b:cell>
+							<b:cell horizontalAlignment="right" verticalAlignment="middle">
+								<a:sequentialPager id="pager" pageable="gridWithEvents"/>	
+							</b:cell>				 
+						</b:horizontalPanel>
+					</a:widget>
+				</a:title>
+				<a:body>
+					<a:widget>
+						<a:grid id="gridWithEvents" height="200" width="100%" dataSource="simpleGridDataSource" 
+							stretchColumns="true" pageSize="7" highlightRowOnMouseOver="true"
+							onRowRender="gridEventsController.applyAvatar" onRowClick="gridEventsController.showDetail">
+							<a:widgetColumn key="avatar">
+								<b:image id="avatar" url="../style/img/default_avatar.gif" style="cursor:pointer"/>
+							</a:widgetColumn>
+							<a:dataColumn key="name" label="Name"/>
+							<a:dataColumn key="phone" label="Phone"/>
+							<a:dataColumn key="birthday" label="Birthday" formatter="birthday"/>
+							<a:dataColumn key="gender" visible="false"/>
+						</a:grid>
+					</a:widget>				
+				</a:body>
+			</a:titlePanel>
+		
+		</center>	
+			
+		<s:info sourcesController="baseSourcesController" width="740">
+			<s:widgetInfo>
+				Grids support not only data in their cells, but also widgets! Those widgets can fire events 
+				which can be captured and properly handled.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				we are handling two different events:<br/><br/>
+				<li>
+					<b>RowRenderEvent:</b>
+					When each row is rendered, its contact's picture URL is changed, 
+					according to the person's gender.
+				</li>
+				<br/>
+				<li>
+					<b>RowClickEvent:</b>
+					When a row is clicked, the details of the underlying contact are 
+					shown in a message box.
+				</li>
+			</s:exampleInfo>
+		</s:info>
 	
-		</center>						
 	</body>	
 </html>

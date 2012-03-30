@@ -14,7 +14,7 @@ public class ContextSourcesController extends BaseSourcesController implements C
 		ArrayList<SourceTab> aditionalTabs = new ArrayList<SourceTab>();
 		aditionalTabs.add(new SourceTab("client/controller/ContextFrameController.java", "Internal Frame Controller", true));
 		aditionalTabs.add(new SourceTab("client/controller/ContextInitializerController.java", "Context Initializer Controller", true));
-		aditionalTabs.add(new SourceTab("contextFrame.crux.xml", "Internal Frame Page", true));
+		aditionalTabs.add(new SourceTab("contextFrame.crux.xml", "Internal Frame Page", false));
 		return aditionalTabs;
 	}	
 }

@@ -2,12 +2,9 @@ package org.cruxframework.crux.showcase.client.controller;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
-
-import com.google.gwt.user.client.ui.Label;
 
 @Controller("messageBoxController")
 public class MessageBoxController {
@@ -17,14 +14,13 @@ public class MessageBoxController {
 		
 		MessageBox.show(
 				
-			"Message For You",
+			"A Memorable Quote from Mad Max Movie",
 			
-			"The truth is out there.", 
+			"\"I'm a fuel injected suicide machine. I am the rocker, I am the roller, I am the out-of-controller!\"", 
 			
 			new OkHandler(){
-				public void onOk(OkEvent event)
-				{
-					Screen.get("message", Label.class).setText("You accepted the message.");
+				public void onOk(OkEvent event){
+					MessageBox.show(null, "You just closed the message box!", null);
 				}
 			}
 		);

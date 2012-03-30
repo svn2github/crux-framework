@@ -3,11 +3,11 @@ package org.cruxframework.crux.showcase.client.controller;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 import org.cruxframework.crux.widgets.client.dialog.Popup;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 @Controller("popupController")
@@ -16,22 +16,26 @@ public class PopupController {
 	@Expose
 	public void browse(){
 		
-		String url = Screen.get("url", TextBox.class).getText();
-		
-		if(url == null)
+		TextBox textBox = Screen.get("url", TextBox.class);
+
+		String url = textBox.getText();		
+		if(url == null || url.length() == 0)
 		{
-			url = "http://www.google.com";
+			url = "http://blog.cruxframework.org";
+			textBox.setValue(url);
 		}
 		
-		Popup.show(		
-			"Popup Example", 
-			url,			
+		Popup.show(
+			"Popup Example", url, 
+			"700", "500", 
 			new BeforeCloseHandler(){
-				public void onBeforeClose(BeforeCloseEvent event)
-				{
-					Screen.get("message", Label.class).setText("Popup was closed!");
+				public void onBeforeClose(BeforeCloseEvent event){
+					MessageBox.show("", "You just closed the Popup!", null);
 				}				
-			}
+			},
+			null,
+			true,
+			true
 		);
 	}
 }

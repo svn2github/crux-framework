@@ -66,10 +66,17 @@ public class BaseSourcesController implements BaseSourcesControllerCrossDoc {
 		{
 			public void onOpen(OpenEvent event)
 			{
-				ArrayList<SourceTab> sourceTabs = getSourceTabs();
-				BaseSourcesControllerCrossDoc crossDoc = GWT.create(BaseSourcesControllerCrossDoc.class);
-				((TargetDocument) crossDoc).setTargetWindow(Popup.getWindow());
-				crossDoc.setSourceTabs(sourceTabs);
+				try 
+				{
+					ArrayList<SourceTab> sourceTabs = getSourceTabs();
+					BaseSourcesControllerCrossDoc crossDoc = GWT.create(BaseSourcesControllerCrossDoc.class);
+					((TargetDocument) crossDoc).setTargetWindow(Popup.getWindow());
+					crossDoc.setSourceTabs(sourceTabs);
+				} 
+				catch (Exception e) 
+				{
+					GWT.log(e.getMessage(), e);
+				}
 			}
 		};
 	}

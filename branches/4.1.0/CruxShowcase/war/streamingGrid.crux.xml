@@ -14,8 +14,7 @@
 
 		<script type="text/javascript" src="showcase/showcase.nocache.js"></script>
 		
-		<c:screen onLoad="streamingGridController.onLoad" useController="streamingGridController,streamingGridSourcesController" 
-			useDataSource="streamingGridDataSource" useFormatter="birthday" fragment="grids"/>
+		<c:screen onLoad="streamingGridController.onLoad" useController="streamingGridController,streamingGridSourcesController" useDataSource="streamingGridDataSource"/>
 		
 		<center>
 		
@@ -46,28 +45,25 @@
 						</a:body>
 					</a:titlePanel>
 				</b:cell>
-				<b:cell verticalAlignment="top">
-					<a:decoratedPanel id="textPanel" width="270" height="235">
-						<a:html>
-							<table cellspacing="5" class="CommentsTable">
-								<tr>
-									<th>This grid uses a remote data source.</th>
-								</tr>
-								<tr>
-									<td>
-										It means that each record page is fetched from the server only when 
-										the user asks for it for the first time. Once such page was fetched, 
-										it is cached in the browser's memory.
-									</td>
-								</tr>								  
-							</table>
-						</a:html>
-					</a:decoratedPanel>
-				</b:cell>
 			</b:horizontalPanel>
-	
-		<s:gridSources pageName="streamingGrid"/>		
-	
+			
+			<s:info sourcesController="streamingGridSourcesController" width="720">
+				<s:widgetInfo>
+					Grids can incrementally fetch data from server. It can be done by using a Remote DataSource.
+					The main goal of a Remote DataSource is to ensure that each record page is fetched from the 
+					server only when the user asks for it for the first time. Once a page was fetched, it is cached 
+					in the browser's memory and future requests for it are handled entirely at the client side.
+				</s:widgetInfo>
+				<s:exampleInfo>
+					we are using a Remote Streaming DataSource. Its main difference from a simple Remote DataSource
+					is that it does not requires you to inform how much records exist at the server side. In other words,
+					it allows you to fetch records incrementally until they end. <br/>You may note that there is a little 
+					delay when you ask for a page for the first time. It occurs because Crux is fetching it from the server. 
+					Once a page is fetched, if you as for it again, it is immediately returned.
+				</s:exampleInfo>
+			</s:info>
+
+
 		</center>						
 	</body>	
 </html>

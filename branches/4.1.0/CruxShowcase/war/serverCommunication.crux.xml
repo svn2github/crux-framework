@@ -17,29 +17,29 @@
 
 		<center>
 		
-		<b:flexTable id="centeringPanel" cellSpacing="15">
-			<b:row>
-				<b:cell horizontalAlignment="left" verticalAlignment="middle" width="150">
-					<b:text>Type your name:</b:text>				
-				</b:cell>
-			</b:row>
-			<b:row>
-				<b:cell horizontalAlignment="left" verticalAlignment="middle" width="150">
-					<b:widget><b:textBox id="name" /></b:widget>
-				</b:cell>
-				<b:cell horizontalAlignment="left" verticalAlignment="middle">
-					<b:widget><a:decoratedButton id="button" onClick="serverCommunicationController.callService" text="Call Server Method"/></b:widget>
-				</b:cell>
-			</b:row>
-			<b:row>
-				<b:cell horizontalAlignment="left" verticalAlignment="middle" width="150">
-					<b:widget><b:label id="serverResponse" text=" "/></b:widget>
-				</b:cell>
-			</b:row>
-		</b:flexTable>
+		<a:decoratedPanel id="borders" width="370">
+			<a:widget>
+				<b:horizontalPanel id="cells" spacing="5" style="margin:5px">
+					<b:label id="label" text="Type your name:"/>
+					<b:textBox id="name" />
+					<a:decoratedButton id="button" onClick="serverCommunicationController.callService" text="Say Hello!"/>
+				</b:horizontalPanel>				
+			</a:widget>
+		</a:decoratedPanel>
 		
 		</center>
 		
-		<s:serverCommunicationSources/>
+		<s:info sourcesController="serverCommunicationSourcesController">
+			<s:widgetInfo>
+				The client-server communication model proposed by Crux is very similar to the GWT's model. The main difference is that Crux does not 
+				require you declare your server-side business classes as a Servlets. Instead, with Crux, service implementation classes 
+				are just POJOs, which are bound to their interfaces by an internal front-controller mechanism.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				you can see a simple Hello World example, where you type and submit your name and the server answers 
+				with a greeting.  
+			</s:exampleInfo>
+		</s:info>
+
 	</body>
 </html>

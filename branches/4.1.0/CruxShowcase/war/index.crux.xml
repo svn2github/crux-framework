@@ -31,27 +31,45 @@
 		<c:screen useController="mainController,contextInitializerController" onLoad="contextInitializerController.onLoad" />
 
 		<b:dockPanel id="centeringPanel" width="100%" height="100%" spacing="0">
-			<b:cell direction="north" height="68" verticalAlignment="top">
+			<b:cell direction="north" height="82" verticalAlignment="top">
 				<b:dockPanel id="titlePanel" width="100%" height="68" styleName="MainHeader" verticalAlignment="top" spacing="0">
 					<b:cell direction="west" verticalAlignment="top">
-						<b:image id="logoImg" url="style/img/crux-logo.gif" width="240" height="68"/>
+						<b:image id="logoImg" url="style/img/crux-logo.png" width="429" height="82"/>
 					</b:cell>
 					<b:cell direction="center" horizontalAlignment="right" verticalAlignment="top">
-						<b:anchor id="projectHome" href="http://crux-framework.googlecode.com/" text="Project Home" styleName="MainHeaderLink"/>
+						<b:horizontalPanel id="linksHztlPanel">
+							<!-- b:anchor id="siteLink" href="http://www.cruxframework.org/" text="Crux Site" styleName="MainHeaderLink" target="_blank"/>
+							<b:label id="linkSeparator1" text="|" styleName="MainLinkSeparator"/ -->
+							<b:anchor id="projectHomeLink" href="http://crux-framework.googlecode.com/" text="Project Home" styleName="MainHeaderLink" target="_blank"/>
+							<b:label id="linkSeparator2" text="|" styleName="MainLinkSeparator"/>
+							<b:anchor id="blogLink" href="http://blog.cruxframework.org/" text="Crux Blog" styleName="MainHeaderLink" target="_blank"/>
+						</b:horizontalPanel>
 					</b:cell>
 					<b:cell direction="east" width="5">
 						<b:image id="headerRightCorner" url="style/img/main-header-right.gif"/>
 					</b:cell>
 				</b:dockPanel>
 			</b:cell>
-			<b:cell direction="south" verticalAlignment="top" horizontalAlignment="center" height="100%">
-				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="5">
-					<b:cell direction="west" width="160">
-						<a:stackMenu id="menu" height="400" onSelection="mainController.openExample">
-							<a:item key="widgets" label="Widgets" open="true">
+			<b:cell direction="center" verticalAlignment="top" horizontalAlignment="center" height="100%">
+				<b:dockPanel id="menuTabsDividerPannel" width="100%" height="100%" spacing="0">
+					<b:cell direction="west" width="13" height="100%">
+						<b:simplePanel id="leftBg" width="13" height="100%" styleName="MainLeftBorder">
+							<b:label id="leftBgSpace"/>
+						</b:simplePanel>						
+					</b:cell>
+					<b:cell direction="west" width="170">
+						<a:stackMenu id="menu" height="400" onSelection="mainController.openExample" width="163">
+							<a:item key="outputWidgets" label="Output Widgets">
+								<a:item key="maskedLabel" label="Masked Label" />
+								<a:item key="scrollBanner" label="Scroll Banner" />
+							</a:item>
+							<a:item key="command" label="Command and Logic">
 								<a:item key="decoratedButton" label="Decorated Button" />
 								<a:item key="timer" label="Timer" />
-								<a:item key="scrollBanner" label="Scroll Banner" />
+							</a:item>
+							<a:item key="text" label="Input Widgets">
+								<a:item key="maskedTextBox" label="Masked Text Box" />
+								<a:item key="textArea" label="Text Area" />
 							</a:item>
 							<a:item key="panels" label="Panels">
 								<a:item key="decoratedPanel" label="Decorated Panel" />
@@ -64,20 +82,15 @@
 								<a:item key="stackMenu" label="Stack Menu" />
 								<a:item key="filter" label="Filter" />
 							</a:item>
-							<a:item key="text" label="Text Widgets">
-								<a:item key="maskedTextBox" label="Masked Text Box" />
-								<a:item key="maskedLabel" label="Masked Label" />
-								<a:item key="textArea" label="Text Area" />
-							</a:item>
-							<a:item key="tabs" label="Tabs">
-								<a:item key="dynaTabs" label="Dyna Tabs" />
-								<!-- a:item id="rollingTabsItem" label="Rolling Tab Panel" onClick="mainController.onClickRollingTabsItem" /-->
-							</a:item>
 							<a:item key="grids" label="Grids">
 								<a:item key="simpleGrid" label="Simple" />
 								<a:item key="streamingGrid" label="Streaming Data" />
 								<a:item key="widgetGrid" label="Grid with Widgets" />
 								<a:item key="gridEvents" label="Grid Events" />
+							</a:item>
+							<a:item key="tabs" label="Tabs">
+								<a:item key="dynaTabs" label="Dyna Tabs" />
+								<!-- a:item id="rollingTabsItem" label="Rolling Tab Panel" onClick="mainController.onClickRollingTabsItem" /-->
 							</a:item>
 							<a:item key="popups" label="Popups">
 								<a:item key="confirm" label="Confirm" />
@@ -89,11 +102,11 @@
 								<a:item key="simpleWizard" label="Simple Wizard" />
 								<a:item key="multiPagesWizard" label="Multiple Pages Wizard" />
 							</a:item>
-							<a:item key="integration" label="Integration">
+							<a:item key="integration" label="GWT Integration">
 								<a:item key="gwt" label="GWT Widgets" />
-								<a:item key="gwtGrids" label="GWT Grids" />
+								<!-- a:item key="gwtGrids" label="GWT Grids" / -->
 							</a:item>
-							<a:item key="features" label="Other Features">
+							<a:item key="features" label="Logical Features">
 								<a:item key="valueBind" label="Value Binding" />
 								<a:item key="parameterBind" label="Parameter Binding" />
 								<a:item key="screenWrapper" label="Screen Wrappers" />
@@ -103,12 +116,17 @@
 								<a:item key="serverCommunication" label="Server Communication" />
 								<a:item key="i18n" label="I18N" />
 								<a:item key="sensitiveMethod" label="Sensitive Method Protection" />
-								<a:item key="hugePage" label="Performance Test" />
+								<!--  a:item key="hugePage" label="Performance Test" / -->
 							</a:item>
 						</a:stackMenu>
 					</b:cell>
-					<b:cell direction="east">
+					<b:cell direction="west">
 						<a:dynaTabs id="tabs" height="100%" width="100%"/>
+					</b:cell>
+					<b:cell direction="east" width="13">
+						<b:simplePanel id="rightBg" width="13" height="100%" styleName="MainRightBorder">
+							<b:label id="rightBgSpace"/>
+						</b:simplePanel>						
 					</b:cell>
 				</b:dockPanel>
 			</b:cell>

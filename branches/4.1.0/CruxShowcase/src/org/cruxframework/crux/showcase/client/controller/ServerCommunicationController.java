@@ -5,28 +5,34 @@ import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
 import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.showcase.client.remote.ServerServiceAsync;
+import org.cruxframework.crux.showcase.client.remote.ServerCommunicationServiceAsync;
+import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 
-
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 @Controller("serverCommunicationController")
 public class ServerCommunicationController {
 	
 	@Create
-	protected ServerServiceAsync service;
+	protected ServerCommunicationServiceAsync service;
 	
 	@Expose
 	public void callService() {
 
-		final Label label = Screen.get("serverResponse", Label.class);
 		String name = Screen.get("name", TextBox.class).getValue();
-		service.sayHello(name, new AsyncCallbackAdapter<String>(this){
-			public void onComplete(String result)
-			{
-				label.setText(result);
-			}			
-		});
+		
+		service.sayHello(name,
+			
+			new AsyncCallbackAdapter<String>(this){
+			
+				public void onComplete(String result){
+					MessageBox.show("Greeting", result, null);
+				}
+				
+				public void onError(Throwable e){
+					MessageBox.show("Oops!", e.getMessage(), null);
+				}
+			}
+		);
 	}
 }

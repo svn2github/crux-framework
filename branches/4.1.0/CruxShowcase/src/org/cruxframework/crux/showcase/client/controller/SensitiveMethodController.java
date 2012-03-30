@@ -40,11 +40,6 @@ public class SensitiveMethodController {
 				public void onComplete(String result){
 					MessageBox.show("Message", result, null);
 				}
-				
-				@Override
-				public void onError(Throwable e){
-					MessageBox.show("Ops...", "This action is already being processed. Please wait it to finish...", null);
-				}
 			});
 		}
 	}

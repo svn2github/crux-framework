@@ -29,7 +29,7 @@
 		
 		<s:info sourcesController="baseSourcesController">
 			<s:widgetInfo>
-				A DecoratedButton is a push button that can be flexibly styled. Using CSS and images, you can easily define a sophisticated appearance to it.
+				A DecoratedButton is a push button that can be flexibly styled. Using pure CSS (or CSS plus images, for browsers without support for CSS3), you can easily define a sophisticated appearance to it.
 			</s:widgetInfo>
 			<s:exampleInfo>
 				you can enable or disable the 'Click Me!' button and see how its style is affected.  

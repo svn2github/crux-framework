@@ -1,31 +1,19 @@
 package org.cruxframework.crux.showcase.client.controller;
 
+import java.util.ArrayList;
+
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Expose;
 
 @Controller("i18nSourcesController")
-public class I18NSourcesController extends SourcesController{
-	
-	private boolean messagesLoaded;
-	private boolean propertiesLoaded;
+public class I18NSourcesController extends BaseSourcesController implements I18NSourcesControllerCrossDoc {
 
-	@Expose
-	public void loadMessagesSource() {
-		
-		if(!messagesLoaded){
-			messagesLoaded = true;
-			
-			loadFile("client/controller/MyMessages.java", "messagesSource");
-		}
-	}
-
-	@Expose
-	public void loadPropertiesSource() {
-		
-		if(!propertiesLoaded){
-			propertiesLoaded = true;
-			
-			loadFile("client/controller/MyMessages_pt_BR.properties", "propertiesSource");
-		}
+	/**
+	 * @see org.cruxframework.crux.showcase.client.controller.BaseSourcesController#getAdditionalSources()
+	 */
+	protected ArrayList<SourceTab> getAdditionalSources() {
+		ArrayList<SourceTab> aditionalTabs = new ArrayList<SourceTab>();
+		aditionalTabs.add(new SourceTab("client/controller/MyMessages.java", "Messages Interface (default locale)", true));
+		aditionalTabs.add(new SourceTab("client/controller/MyMessages_pt_BR.properties", "Messages for pt_BR Locale (properties file)", true));
+		return aditionalTabs;
 	}
 }

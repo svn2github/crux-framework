@@ -7,6 +7,7 @@ import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.showcase.client.controller.ContextInitializerController.SharedContext;
+import org.cruxframework.crux.widgets.client.dialog.MessageBox;
 
 
 import com.google.gwt.user.client.ui.TextBox;
@@ -27,5 +28,7 @@ public class ContextController {
 		context.setDate(new Date());
 		
 		textBox.setText("");
+		
+		MessageBox.show("", "Your message was saved in context. Try reading it from inside the IFrame.", null);
 	}	
 }

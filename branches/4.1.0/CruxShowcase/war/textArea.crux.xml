@@ -18,40 +18,37 @@
 
 		<center>
 		
-		<b:horizontalPanel id="mainPanel" spacing="20">
-			<b:cell verticalAlignment="top">
-				<a:decoratedPanel id="textAreaPanel" width="350" height="235">
-					<a:widget>
-						<a:textArea id="niceTextArea" width="300" visibleLines="8" maxLength="200">This is a simple TextArea that obeys the maxLength attribute.</a:textArea>
-					</a:widget>
-				</a:decoratedPanel>
-			</b:cell>
-			<b:cell verticalAlignment="top">
-				<a:decoratedPanel id="captionPanel" width="270" height="235">
-					<a:widget>
-						<b:HTMLPanel id="captionTablePanel">
-							<table cellspacing="10" class="CommentsTable">
-								<tr>
-									<th>Type the desired maxLength below and test the widget behavior...</th>
-								</tr>
-								<tr>
-									<td align="center">
-										<b:horizontalPanel id="controls" spacing="3">
-											<b:textBox id="maxLength" width="70"></b:textBox>
-											<a:decoratedButton id="btn" text="Apply!" onClick="textAreaController.applyMaxLength" width="70"/>
-										</b:horizontalPanel>									
-									</td>
-								</tr>
-							</table>
-						</b:HTMLPanel>
-					</a:widget>
-				</a:decoratedPanel>
-			</b:cell>
-		</b:horizontalPanel>
-
+		<a:decoratedPanel id="borders" width="450">
+			<a:widget>
+				<b:verticalPanel id="mainPanel" spacing="5" style="margin:5px">
+					<b:cell>
+						<b:label id="messageLabel" text="Type some maxLength below and test the behavior of the text area..." styleName="CommentsTitle"/>
+					</b:cell>
+					<b:cell>
+						<a:textArea id="niceTextArea" width="100%" visibleLines="8" maxLength="60">This is a simple TextArea that obeys the maxLength attribute</a:textArea>
+					</b:cell>
+					<b:cell horizontalAlignment="right">
+						<b:horizontalPanel id="controls" spacing="3">
+							<b:textBox id="maxLength" width="70" value="60"/>
+							<a:decoratedButton id="btn" text="Apply!" onClick="textAreaController.applyMaxLength" width="70"/>
+						</b:horizontalPanel>
+					</b:cell>
+				</b:verticalPanel>
+			</a:widget>
+		</a:decoratedPanel>
+		
 		</center>
 		
-		<s:sources/>
+		<s:info sourcesController="baseSourcesController">
+			<s:widgetInfo>
+				Crux TextArea is almost a standard GWT TextArea widget. The only difference is that you can control
+				the maximum length of the text it can contain.
+			</s:widgetInfo>
+			<s:exampleInfo>
+				the text area starts with the maximum length of 200 characters. To see it in action, try changing that 
+				value to, lets say, 10 characters. Then, try editing the text area contents.  
+			</s:exampleInfo>
+		</s:info>
 		
 	</body>
 </html>

@@ -15,7 +15,7 @@ public class DecoratedButtonController {
 	@Expose
 	public void onClick(){
 		clickTimes++;
-		Screen.get("myButton", DecoratedButton.class).setText("You have clicked " + clickTimes + " times");
+		Screen.get("myButton", DecoratedButton.class).setText("You clicked " + clickTimes + " times");
 	}
 	
 	@Expose
