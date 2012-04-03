@@ -19,6 +19,7 @@ package org.cruxframework.crux.core.client.event;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Deprecated
 public class EventException extends RuntimeException
 {
 	private static final long serialVersionUID = -1494786840509633213L;

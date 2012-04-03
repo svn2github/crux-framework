@@ -15,16 +15,47 @@
  */
 package org.cruxframework.crux.core.rebind.screen;
 
-public class Event extends org.cruxframework.crux.core.client.event.Event
+/**
+ * Event Metadata
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
+public class Event
 {
+	private String id;
+	private String controller;
+	private String method;
+	
+	
 	public Event(String id, String controller, String method) 
 	{
-		super(id, controller, method);
+		this.id = id;
+		this.controller = controller;
+		this.method = method;
 	}
 	
-	@Override
-	public String toString()
+	public String getId() 
 	{
-	    return getController()+"."+getMethod();
+		return id;
+	}
+
+	public String getController()
+	{
+		return controller;
+	}
+
+	public void setController(String controller)
+	{
+		this.controller = controller;
+	}
+
+	public String getMethod()
+	{
+		return method;
+	}
+
+	public void setMethod(String method)
+	{
+		this.method = method;
 	}
 }

@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.ioc.Inject;
+
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
@@ -51,10 +53,11 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * </pre>
  * @see Controller  
  * @author Thiago da Rosa de Bustamante
- *
+ * @deprecated Use {@code @}{@link Inject} instead
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface Create 
 {
 }

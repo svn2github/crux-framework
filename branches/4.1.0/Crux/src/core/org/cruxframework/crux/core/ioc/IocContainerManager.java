@@ -75,7 +75,7 @@ public class IocContainerManager
 	 * @param className
 	 * @return
 	 */
-	public static IocConfig getConfigurationForType(String className)
+	public static IocConfig<?> getConfigurationForType(String className)
 	{
 		return IocContainerConfigurations.getConfigurationForType(className);
 	}

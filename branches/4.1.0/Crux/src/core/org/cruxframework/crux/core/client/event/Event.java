@@ -19,6 +19,7 @@ package org.cruxframework.crux.core.client.event;
  * Crux event abstraction. 
  * @author Thiago
  */
+@Deprecated
 public class Event 
 {
 	private String id;

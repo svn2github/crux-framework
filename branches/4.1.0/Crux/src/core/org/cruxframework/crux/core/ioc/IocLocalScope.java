@@ -19,7 +19,7 @@ package org.cruxframework.crux.core.ioc;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class LocalScope implements IocScope
+public class IocLocalScope implements IocScope
 {
 
 }

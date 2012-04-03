@@ -15,6 +15,11 @@
  */
 package org.cruxframework.crux.core.client.event;
 
+/**
+ * 
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
 public class ValidateException extends Exception 
 {
 	private static final long serialVersionUID = 5974522064907442546L;

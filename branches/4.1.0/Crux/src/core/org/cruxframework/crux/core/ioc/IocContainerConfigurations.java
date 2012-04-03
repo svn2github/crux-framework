@@ -16,9 +16,9 @@
 package org.cruxframework.crux.core.ioc;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+
+import org.cruxframework.crux.core.client.ioc.Inject;
 
 /**
  * Base class for an IoC configuration class. Crux engine search for all subclasses of IocContainerConfig and 
@@ -29,8 +29,7 @@ import java.util.Set;
  */
 public abstract class IocContainerConfigurations implements IocConfiguration
 {
-	private static Map<String, IocConfig> configurations = new HashMap<String, IocConfig>();
-	private static Set<IocConfigList> groupConfigurations = new HashSet<IocConfigList>();
+	private static Map<String, IocConfig<?>> configurations = new HashMap<String, IocConfig<?>>();
 	
 	/**
 	 * Call this method on your configure method to create a configuration for some Type. Eg: 
@@ -42,68 +41,20 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	 * </pre>
 	 * <p>
 	 * That would cause Crux to inject a new instance of ArrayList whenever you declare 
-	 * a field of type List annotated with
+	 * a field of type List annotated with {@link Inject}
 	 * @param <T>
 	 * @param clazz
 	 * @return
 	 */
-	protected <T> IocConfigClass<T> bindType(Class<T> clazz)
+	protected <T> IocConfig<T> bindType(Class<T> clazz)
 	{
-		IocConfigClass<T> iocConfig = new IocConfigClass<T>(clazz);
+		IocConfig<T> iocConfig = new IocConfig<T>(clazz);
 		String className = clazz.getCanonicalName();
 		if (configurations.containsKey(className))
 		{
 			throw new IoCException("Invalid Ioc configuration. Class "+className+" is already bound to the container.");//TODO message.
 		}
 		configurations.put(className, iocConfig);
-		return iocConfig;
-	}
-
-	/**
-	 * 
-	 * @param clazz
-	 * @return
-	 */
-	protected IocConfigList bindAssignableTo(Class<?> clazz)
-	{
-		IocConfigList iocConfig = new IocConfigList(clazz, null, null, null);
-		groupConfigurations.add(iocConfig);
-		return iocConfig;
-	}
-	
-	/**
-	 * 
-	 * @param annotation
-	 * @return
-	 */
-	protected IocConfigList bindAnnotatedWith(Class<?> annotation)
-	{
-		IocConfigList iocConfig = new IocConfigList(null, annotation, null, null);
-		groupConfigurations.add(iocConfig);
-		return iocConfig;
-	}
-
-	/**
-	 * 
-	 * @param expression
-	 * @return
-	 */
-	protected IocConfigList bindIncludingName(String expression)
-	{
-		IocConfigList iocConfig = new IocConfigList(null, null, expression, null);
-		groupConfigurations.add(iocConfig);
-		return iocConfig;
-	}
-
-	/**
-	 * 
-	 * @param expression
-	 * @return
-	 */
-	protected IocConfigList bindExcludingName(String expression)
-	{
-		IocConfigList iocConfig = new IocConfigList(null, null, null, expression);
-		groupConfigurations.add(iocConfig);
 		return iocConfig;
 	}
 
@@ -123,20 +74,9 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	 * @param className
 	 * @return
 	 */
-	static IocConfig getConfigurationForType(String className)
+	static IocConfig<?> getConfigurationForType(String className)
 	{
-		IocConfig iocConfig = configurations.get(className);
-		if (iocConfig == null)
-		{
-			for (IocConfigList iocConfigList : groupConfigurations)
-            {
-	            if (iocConfigList.apliesTo(className))
-	            {
-	            	configurations.put(className, iocConfigList);
-	            	return iocConfigList;
-	            }
-            }
-		}
+		IocConfig<?> iocConfig = configurations.get(className);
 		return iocConfig;
 	}
 }

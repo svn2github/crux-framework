@@ -50,6 +50,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractInvocableProxyCreator extends AbstractSerializableProxyCreator
 {
 	protected JClassType invocableClassType;
