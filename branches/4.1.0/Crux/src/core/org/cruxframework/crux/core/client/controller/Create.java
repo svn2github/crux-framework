@@ -53,11 +53,11 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * </pre>
  * @see Controller  
  * @author Thiago da Rosa de Bustamante
- * @deprecated Use {@code @}{@link Inject} instead
+ * /@deprecated Use {@code @}{@link Inject} instead
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Deprecated
+//@Deprecated
 public @interface Create 
 {
 }
