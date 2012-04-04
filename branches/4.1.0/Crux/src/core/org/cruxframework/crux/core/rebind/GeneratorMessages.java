@@ -160,6 +160,9 @@ public interface GeneratorMessages
 	@DefaultServerMessage("[screenWrapper 002] - The method {0} from ScreenWrapper {1} must return a subclass of com.google.gwt.user.client.ui.Widget.")
 	String screenWrapperMethodReturningNonWidget(String methodName, String screenWrpperName);
 
+	@DefaultServerMessage("[screenBinder 001] - The method {1} from ScreenBinder {0} has an invalid signature.")
+	String screenBinderInvalidSignature(String qualifiedSourceName, String methodName);
+	
 	@DefaultServerMessage("[parameter 001] - Required parameter {0} is missing.")
 	String requiredParameterMissing(String name);
 

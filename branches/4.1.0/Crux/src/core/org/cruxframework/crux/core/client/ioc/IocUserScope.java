@@ -15,11 +15,31 @@
  */
 package org.cruxframework.crux.core.client.ioc;
 
+import org.cruxframework.crux.core.client.collection.FastMap;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-abstract class IocScope
+class IocUserScope 
 {
-	public abstract <T> T getValue(IocProvider<T> provider, String className);	
+	private static FastMap<FastMap<Object>> scopes = new FastMap<FastMap<Object>>();
+	
+	@SuppressWarnings("unchecked")
+    public static <T> T getValue(IocProvider<T> provider, String className, String scope)
+    {
+		FastMap<Object> values = (FastMap<Object>) scopes.get(scope);
+		if (values == null)
+		{
+			values = new FastMap<Object>();
+			scopes.put(scope, values);
+		}
+		T result = (T) values.get(className);
+		if (result == null)
+		{
+			result = provider.get();
+			values.put(className, result);
+		}
+	    return result;
+    }
 }

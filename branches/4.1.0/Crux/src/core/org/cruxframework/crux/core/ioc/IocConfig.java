@@ -64,16 +64,15 @@ public class IocConfig<T>
 		this.scope = new IocDocumentScope();
 	}
 	
-	public IocShareableScope inScreenScope()
+	public void inViewScope()
 	{
-		this.scope = new IocScreenScope();
-		return (IocShareableScope) this.scope;
+		this.scope = new IocViewScope();
 	}
-	
-	public IocShareableScope inUserScope(String scopeName)
+
+	public IocScope inUserScope(String scopeName)
 	{
 		this.scope = new IocUserScope(scopeName);
-		return (IocShareableScope) this.scope;
+		return this.scope;
 	}
 
 	Class<T> getBoundClass()

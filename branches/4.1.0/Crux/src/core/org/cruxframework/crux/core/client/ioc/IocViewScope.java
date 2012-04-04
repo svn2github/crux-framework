@@ -13,13 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.ioc;
+package org.cruxframework.crux.core.client.ioc;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IocScreenScope extends IocShareableScope
+class IocViewScope 
 {
-
+    public static <T> T getValue(IocProvider<T> provider, String className)
+    {
+		String viewName = "";//Screen.getCurrentView().getName();
+		return IocUserScope.getValue(provider, className, "_crux_view_"+viewName);
+    }
 }

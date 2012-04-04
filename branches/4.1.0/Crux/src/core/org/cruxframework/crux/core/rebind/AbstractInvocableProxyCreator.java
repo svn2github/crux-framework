@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.rebind;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +29,6 @@ import org.cruxframework.crux.core.client.event.ValidateException;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
-
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -328,7 +326,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			name = field.getName();
 		}
 		
-		if (isSimpleType(type)) 
+		if (JClassUtils.isSimpleType(type)) 
 		{
 			if (required)
 			{
@@ -451,7 +449,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				sourceWriter.println("}");
 			}
 			
-			generateFieldValueSet(voClass, field, parentVariable, "("+getGenericDeclForType(type)+")"
+			generateFieldValueSet(voClass, field, parentVariable, "("+JClassUtils.getGenericDeclForType(type)+")"
 					            + valueVariableName, sourceWriter, allowProtected);
 		}
 	}	
@@ -494,13 +492,13 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	{
 		if (populateScreen)
 		{
-			sourceWriter.println("((HasValue<"+getGenericDeclForType(type)+">)"+valueVariable+").setValue("
+			sourceWriter.println("((HasValue<"+JClassUtils.getGenericDeclForType(type)+">)"+valueVariable+").setValue("
 					            + getFieldValueGet(voClass, field, parentVariable, allowProtected)+");");
 		}
 		else
 		{
 			generateFieldValueSet(voClass, field, parentVariable, 
-					"("+getGenericDeclForType(type)+")((HasValue<"+getGenericDeclForType(type)+">)"+valueVariable+").getValue()", 
+					"("+JClassUtils.getGenericDeclForType(type)+")((HasValue<"+JClassUtils.getGenericDeclForType(type)+">)"+valueVariable+").getValue()", 
 					sourceWriter, allowProtected);
 		}
 	}
@@ -600,7 +598,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			name = field.getName();
 		}
 		
-		if (isSimpleType(type)) 
+		if (JClassUtils.isSimpleType(type)) 
 		{
 			generateAutoBindHandlerForAllWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, type, name, allowProtected);
 		}
@@ -753,28 +751,6 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Returns a string to be used in generic code block, according with the given type 
-	 * @param type
-	 * @return
-	 */
-	private String getGenericDeclForType(JType type)
-	{
-		if (type.isEnum() != null)
-		{
-			return "String";
-		}
-		else if (type.isPrimitive() != null)
-		{
-			JPrimitiveType jPrimitiveType = type.isPrimitive();
-			return jPrimitiveType.getQualifiedBoxedSourceName();
-		}
-		else
-		{
-			return type.getParameterizedQualifiedSourceName();
-		}
 	}
 	
 	/**
@@ -934,45 +910,6 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		else
 		{
 			return hasSetMethod(field, voClass);
-		}
-	}
-	
-	/**
-	 * @param type
-	 * @return
-	 */
-	private boolean isSimpleType(JType type)
-	{
-		
-		if (type instanceof JPrimitiveType)
-		{
-			return true;
-		}
-		else
-		{
-			try
-            {
-	            JClassType classType = (JClassType)type;
-
-	            JClassType charSequenceType = classType.getOracle().getType(CharSequence.class.getCanonicalName());
-	            JClassType dateType = classType.getOracle().getType(Date.class.getCanonicalName());
-	            JClassType numberType = classType.getOracle().getType(Number.class.getCanonicalName());
-	            JClassType booleanType = classType.getOracle().getType(Boolean.class.getCanonicalName());
-	            JClassType characterType = classType.getOracle().getType(Character.class.getCanonicalName());
-
-	            return (classType.isPrimitive() != null) ||
-	            (numberType.isAssignableFrom(classType)) ||
-	            (booleanType.isAssignableFrom(classType)) ||
-	            (characterType.isAssignableFrom(classType)) ||
-	            (charSequenceType.isAssignableFrom(classType)) ||
-	            (charSequenceType.isAssignableFrom(classType)) ||
-	            (dateType.isAssignableFrom(classType)) ||
-	            (classType.isEnum() != null);
-            }
-            catch (NotFoundException e)
-            {
-            	throw new CruxGeneratorException(e.getMessage(), e);
-            }		
 		}
 	}
 }

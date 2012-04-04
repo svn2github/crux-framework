@@ -21,13 +21,12 @@ import org.cruxframework.crux.core.client.collection.FastMap;
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocDocumentScope extends IocScope
+class IocDocumentScope 
 {
 	private static FastMap<Object> values = new FastMap<Object>();
 	
 	@SuppressWarnings("unchecked")
-    @Override
-    public <T> T getValue(IocProvider<T> provider, String className)
+    public static <T> T getValue(IocProvider<T> provider, String className)
     {
 		T result = (T) values.get(className);
 		if (result == null)

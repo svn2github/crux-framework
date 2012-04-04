@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -327,4 +328,65 @@ public class JClassUtils
 		
 		return str.toString();
 	}
+	
+	/**
+	 * Returns a string to be used in generic code block, according with the given type 
+	 * @param type
+	 * @return
+	 */
+	public static String getGenericDeclForType(JType type)
+	{
+		if (type.isEnum() != null)
+		{
+			return "String";
+		}
+		else if (type.isPrimitive() != null)
+		{
+			JPrimitiveType jPrimitiveType = type.isPrimitive();
+			return jPrimitiveType.getQualifiedBoxedSourceName();
+		}
+		else
+		{
+			return type.getParameterizedQualifiedSourceName();
+		}
+	}
+	
+	/**
+	 * @param type
+	 * @return
+	 */
+	public static boolean isSimpleType(JType type)
+	{
+		if (type instanceof JPrimitiveType)
+		{
+			return true;
+		}
+		else
+		{
+			try
+            {
+	            JClassType classType = (JClassType)type;
+
+	            JClassType charSequenceType = classType.getOracle().getType(CharSequence.class.getCanonicalName());
+	            JClassType dateType = classType.getOracle().getType(Date.class.getCanonicalName());
+	            JClassType numberType = classType.getOracle().getType(Number.class.getCanonicalName());
+	            JClassType booleanType = classType.getOracle().getType(Boolean.class.getCanonicalName());
+	            JClassType characterType = classType.getOracle().getType(Character.class.getCanonicalName());
+
+	            return (classType.isPrimitive() != null) ||
+	            (numberType.isAssignableFrom(classType)) ||
+	            (booleanType.isAssignableFrom(classType)) ||
+	            (characterType.isAssignableFrom(classType)) ||
+	            (charSequenceType.isAssignableFrom(classType)) ||
+	            (charSequenceType.isAssignableFrom(classType)) ||
+	            (dateType.isAssignableFrom(classType)) ||
+	            (classType.isEnum() != null);
+            }
+            catch (NotFoundException e)
+            {
+            	throw new CruxGeneratorException(e.getMessage(), e);
+            }		
+		}
+	}
+	
 }

@@ -19,6 +19,7 @@ package org.cruxframework.crux.core.client.screen;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Deprecated
 public interface ScreenBindableObject
 {
 	void updateScreenWidgets();

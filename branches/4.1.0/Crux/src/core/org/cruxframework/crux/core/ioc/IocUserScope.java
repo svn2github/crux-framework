@@ -19,7 +19,7 @@ package org.cruxframework.crux.core.ioc;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IocUserScope extends IocShareableScope
+public class IocUserScope implements IocScope
 {
 	private final String scopeName;
 

@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.ScreenBinder;
 /**
  * This annotation can be used to bind a Data Object to the {@link Screen}.
  * <p>
@@ -95,10 +96,11 @@ import org.cruxframework.crux.core.client.screen.Screen;
  * @see Create  
  * @see ScreenBind 
  * @author Thiago da Rosa de Bustamante
- *
+ * @deprecated See {@link ScreenBinder} feature
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Deprecated
 public @interface ValueObject
 {
 	/**

@@ -44,6 +44,11 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ScreenWrapper" />
 	</generate-with>
 
+	<!-- Specify the generator for screen binders.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.screen.binder.ScreenBinderGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ScreenBinder" />
+	</generate-with>
+
 	<!-- Specify the generator for client configurations .-->
 	<generate-with class="org.cruxframework.crux.core.rebind.config.CruxClientConfigGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.config.CruxClientConfig" />

@@ -13,16 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.ioc;
+package org.cruxframework.crux.core.client.screen;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocLocalScope
+public interface ScreenBinder
 {
-    public static <T> T getValue(IocProvider<T> provider, String className)
-    {
-	    return provider.get();
-    }
+
 }

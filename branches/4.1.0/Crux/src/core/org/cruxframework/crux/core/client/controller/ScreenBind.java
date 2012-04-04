@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.ScreenBinder;
+
 /**
  * This annotation can be used to customize the binding of a {@link ValueObject} field with 
  * a screen widget.
@@ -43,9 +45,11 @@ import java.lang.annotation.Target;
  * </pre>
  * @author Thiago da Rosa de Bustamante
  * @see ValueObject
+ * @deprecated See {@link ScreenBinder} feature
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface ScreenBind
 {
 	/**
