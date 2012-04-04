@@ -20,7 +20,7 @@ public class MessageBoxController {
 			
 			new OkHandler(){
 				public void onOk(OkEvent event){
-					MessageBox.show(null, "You just closed the message box!", null);
+					MessageBox.show(null, "You've just closed the message box!", null);
 				}
 			}
 		);

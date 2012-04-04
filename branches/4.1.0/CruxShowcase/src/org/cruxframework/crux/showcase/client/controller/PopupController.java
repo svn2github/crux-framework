@@ -30,7 +30,7 @@ public class PopupController {
 			"700", "500", 
 			new BeforeCloseHandler(){
 				public void onBeforeClose(BeforeCloseEvent event){
-					MessageBox.show("", "You just closed the Popup!", null);
+					MessageBox.show("", "You've just closed the Popup!", null);
 				}				
 			},
 			null,

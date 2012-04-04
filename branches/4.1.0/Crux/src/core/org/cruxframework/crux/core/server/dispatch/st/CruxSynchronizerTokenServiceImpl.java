@@ -39,8 +39,8 @@ import com.google.gwt.user.server.Base64Utils;
  */
 public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenService, CruxSynchronizerTokenHandler
 {
-	private static final String CRUX_SYNC_TOKEN_ATTR = "__CRUX_SYNC_TOKEN_";
-	private static final String CRUX_SYNC_TOKEN_IN_USE_ATTR = "__CRUX_SYNC_TOKEN_IN_USE_";
+	private static final String EXPECTED_TOKENS_ATT = "__CRUX_SYNC_TOKEN_";
+	private static final String PROCESSING_TOKENS_ATT = "__CRUX_SYNC_TOKEN_IN_USE_";
 
 	private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private static Lock readLock = readWriteLock.readLock();
@@ -75,7 +75,7 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 		{
 			if (createToken(methodFullSignature))
 			{
-				return getTokens().get(methodFullSignature);
+				return getExpectedToken(methodFullSignature);
 			}
 		}
 		finally
@@ -94,7 +94,7 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 		readLock.lock();
 		try
 		{
-			return getInUseTokens().containsKey(methodFullSignature);
+			return getProcessingTokens().containsKey(methodFullSignature);
 		}
 		finally
 		{
@@ -110,12 +110,12 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 		writeLock.lock();
 		try
 		{
-			String expectedToken = getTokens().get(methodFullSignature);
+			String expectedToken = getExpectedToken(methodFullSignature);
 			String receivedToken = request.getParameter(CRUX_SYNC_TOKEN_PARAM);
 			if (expectedToken != null && receivedToken != null && expectedToken.equals(receivedToken))
 			{
-				getTokens().remove(methodFullSignature);
-				getInUseTokens().put(methodFullSignature, true);
+				unregisterExpectedToken(methodFullSignature);
+				registerProcessingToken(methodFullSignature);
 			}
 			else
 			{
@@ -128,6 +128,36 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 		}
 	}
 
+	private void registerProcessingToken(String methodFullSignature) 
+	{
+		getProcessingTokens().put(methodFullSignature, true);
+		forceProcessingTokensReplication();
+	}
+	
+	private void unregisterProcessingToken(String methodFullSignature) 
+	{
+		getProcessingTokens().remove(methodFullSignature);
+		forceProcessingTokensReplication();
+	}
+
+	private void unregisterExpectedToken(String methodFullSignature) 
+	{
+		getExpectedTokens().remove(methodFullSignature);
+		forceExpectedTokensReplication();
+	}
+	
+
+	private void registerExpectedToken(String methodFullSignature, String token) 
+	{
+		getExpectedTokens().put(methodFullSignature, token);
+		forceExpectedTokensReplication();
+	}
+	
+	private String getExpectedToken(String methodSignature)
+	{
+		 return getExpectedTokens().get(methodSignature);
+	}
+	
 	/**
 	 * @see org.cruxframework.crux.core.server.dispatch.st.CruxSynchronizerTokenHandler#endMethod(java.lang.String)
 	 */
@@ -136,7 +166,7 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 		writeLock.lock();
 		try
 		{
-			getInUseTokens().remove(methodFullSignature);
+			unregisterProcessingToken(methodFullSignature);
 		}
 		finally
 		{
@@ -160,12 +190,13 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 	 */
 	private boolean createToken(String methodFullSignature)
 	{
-		if (!getInUseTokens().containsKey(methodFullSignature))
+		if (!isMethodRunning(methodFullSignature))
 		{
 			String token = generateRandomToken();
-			getTokens().put(methodFullSignature, token);
+			registerExpectedToken(methodFullSignature, token);
 			return true;
 		}
+		
 		return false;
 	}
 
@@ -181,18 +212,45 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 	}
 	
 	/**
+	 * This is only necessary because Google AppEngine does not replicates sessions the same way other containers do.
+	 * The replication only occurs when you call the <code>setAttribute</code> method on the <code>session</code> object, 
+	 * storing an object different than the previous one stored for the desired key.
+	 * <a href="https://developers.google.com/appengine/docs/java/config/appconfig#Enabling_Sessions">AppEngine Documentation</a>  
+	 */
+	private void forceProcessingTokensReplication() 
+	{
+		Map<String, Boolean> processing = getProcessingTokens();
+		Map<String, Boolean> clone = new HashMap<String, Boolean>();
+		clone.putAll(processing);
+		session.setAttribute(PROCESSING_TOKENS_ATT, clone);
+	}
+
+	/**
+	 * This is only necessary because Google AppEngine does not replicates sessions the same way other containers do.
+	 * The replication only occurs when you call the <code>setAttribute</code> method on the <code>session</code> object, 
+	 * storing an object different than the previous one stored for the desired key.
+	 * <a href="https://developers.google.com/appengine/docs/java/config/appconfig#Enabling_Sessions">AppEngine Documentation</a>  
+	 */
+	private void forceExpectedTokensReplication() 
+	{
+		Map<String, String> expected = getExpectedTokens();
+		Map<String, String> clone = new HashMap<String, String>();
+		clone.putAll(expected);
+		session.setAttribute(EXPECTED_TOKENS_ATT, clone);
+	}
+
+	/**
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private Map<String, String> getTokens()
+	private Map<String, String> getExpectedTokens()
 	{
-		Map<String, String> tokens = (Map<String, String>) this.session.getAttribute(CRUX_SYNC_TOKEN_ATTR); 
+		Map<String, String> tokens = (Map<String, String>) this.session.getAttribute(EXPECTED_TOKENS_ATT); 
 		if (tokens == null)
 		{
 			tokens = new HashMap<String, String>();
-			session.setAttribute(CRUX_SYNC_TOKEN_ATTR, tokens);
+			session.setAttribute(EXPECTED_TOKENS_ATT, tokens);
 		}
-		
 		return tokens;
 	}
 
@@ -200,15 +258,14 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private Map<String, Boolean> getInUseTokens()
+	private Map<String, Boolean> getProcessingTokens()
 	{
-		Map<String, Boolean> inUsetokens = (Map<String, Boolean>) this.session.getAttribute(CRUX_SYNC_TOKEN_IN_USE_ATTR); 
+		Map<String, Boolean> inUsetokens = (Map<String, Boolean>) this.session.getAttribute(PROCESSING_TOKENS_ATT); 
 		if (inUsetokens == null)
 		{
 			inUsetokens = new HashMap<String, Boolean>();
-			session.setAttribute(CRUX_SYNC_TOKEN_IN_USE_ATTR, inUsetokens);
+			session.setAttribute(PROCESSING_TOKENS_ATT, inUsetokens);
 		}
-		
 		return inUsetokens;
 	}
 }
