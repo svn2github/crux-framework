@@ -360,4 +360,16 @@ public interface GeneratorMessages
 
 	@DefaultServerMessage("[deviceAdaptive 003] - Controller [{1}] can not be used on the deviceAdaptive template. Only the bound controller [{0}] can be refered.")
 	String deviceAdaptiveInvalidController(String controllerName, String controller);
+
+	@DefaultServerMessage("[ioc 004] - Error injecting field [{0}] from type [{1}]. Primitive fields can not be handled by ioc container.")
+	String iocInjectionForPrimitivesNotAllowed(String name, String qualifiedSourceName);
+
+	@DefaultServerMessage("[ioc 005] - Error injecting field [{0}] from type [{1}]. Static fields can not be handled by ioc container.")
+	String iocInjectionForStaticNotAllowed(String name, String qualifiedSourceName);
+
+	@DefaultServerMessage("[ioc 006] - IoC Error Class [{0}] not found.")
+	String iocErrorClassNotFound(String className);
+
+	@DefaultServerMessage("[ioc 007] - IoC Error Field [{1}] from class [{0}] is not a writeable property.")
+	String ioErrorPropertyCanNotBeWritten(String qualifiedSourceName, String name);
 }

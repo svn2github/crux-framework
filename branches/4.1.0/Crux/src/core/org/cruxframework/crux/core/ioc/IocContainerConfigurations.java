@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.ioc;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.cruxframework.crux.core.client.ioc.Inject;
@@ -48,7 +49,7 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	 */
 	protected <T> IocConfig<T> bindType(Class<T> clazz)
 	{
-		IocConfig<T> iocConfig = new IocConfig<T>(clazz);
+		IocConfig<T> iocConfig = new IocConfigImpl<T>(clazz);
 		String className = clazz.getCanonicalName();
 		if (configurations.containsKey(className))
 		{
@@ -78,6 +79,15 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	{
 		IocConfig<?> iocConfig = configurations.get(className);
 		return iocConfig;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	static Iterator<String> iterateClasses()
+	{
+		return configurations.keySet().iterator();
 	}
 }
 

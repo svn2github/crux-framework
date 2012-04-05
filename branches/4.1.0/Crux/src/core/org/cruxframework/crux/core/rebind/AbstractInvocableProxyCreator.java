@@ -65,6 +65,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param parentVariable
 	 * @param isAutoBindEnabled
 	 */
+	@Deprecated
 	protected void generateAutoCreateFields(SourceWriter sourceWriter, String parentVariable, boolean isAutoBindEnabled)
 	{
 		generateAutoCreateFields(invocableClassType, sourceWriter, parentVariable, new HashSet<String>());
@@ -285,7 +286,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		boolean hasAtLeastOneField = false;
 		for (JField field : voClass.getFields()) 
 		{
-			if (isPropertyVisibleToWrite(voClass, field))
+			if (JClassUtils.isPropertyVisibleToWrite(voClass, field))
 			{
 				ParameterObject parameterObject = voClass.getAnnotation(ParameterObject.class);
 				Parameter parameter = field.getAnnotation(Parameter.class); 
@@ -553,8 +554,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		dtoLooping.add(voClass.getQualifiedSourceName());
 		for (JField field : voClass.getFields()) 
 		{
-			if ((populateScreen && isPropertyVisibleToRead(voClass, field)) || 
-				(!populateScreen && isPropertyVisibleToWrite(voClass, field)))
+			if ((populateScreen && JClassUtils.isPropertyVisibleToRead(voClass, field)) || 
+				(!populateScreen && JClassUtils.isPropertyVisibleToWrite(voClass, field)))
 			{
 				ValueObject valueObject = voClass.getAnnotation(ValueObject.class);
 				ScreenBind screenBind = field.getAnnotation(ScreenBind.class); 
@@ -794,122 +795,4 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		return type;
 	}	
-	
-	/**
-	 * Returns <code>true</code> is the given field has both a "get" and a "set" methods.
-	 * @param clazz
-	 * @param field
-	 * @return
-	 */
-	private boolean hasGetAndSetMethods(JField field, JClassType clazz)
-	{
-		return hasGetMethod(field, clazz) && hasSetMethod(field, clazz);
-	}
-	
-	/**
-	 * Returns <code>true</code> is the given field has an associated public "get" method.
-	 * @param clazz
-	 * @param field
-	 * @return
-	 */
-	private boolean hasGetMethod(JField field, JClassType clazz)
-	{
-		String getterMethodName = "get"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-		try
-		{
-			return (clazz.getMethod(getterMethodName, new JType[]{}) != null);
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				getterMethodName = "is"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-				return (clazz.getMethod(getterMethodName, new JType[]{}) != null);
-			}
-			catch (Exception e1)
-			{
-				if (clazz.getSuperclass() == null)
-				{
-					return false;
-				}
-				else
-				{
-					return hasGetMethod(field, clazz.getSuperclass());
-				}
-			}
-		}
-	}	
-	
-	/**
-	 * Returns <code>true</code> is the given field has an associated public "set" method.
-	 * @param field
-	 * @param clazz
-	 * @return
-	 */
-	private boolean hasSetMethod(JField field, JClassType clazz)
-	{
-		String setterMethodName = "set"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-		try
-		{
-			return (clazz.getMethod(setterMethodName, new JType[]{field.getType()}) != null);
-		}
-		catch (Exception e)
-		{
-			if (clazz.getSuperclass() == null)
-			{
-				return false;
-			}
-			else
-			{
-				return hasSetMethod(field, clazz.getSuperclass());
-			}
-		}
-	}
-
-	/**
-	 * Verify if the given field is fully accessible.
-	 * @param field
-	 * @param clazz
-	 * @return <code>true</code> if the field is public or has associated "get" and "set" methods.
-	 */
-	protected boolean isFullAccessibleField(JField field, JClassType clazz)
-	{
-		return field.isPublic() || hasGetAndSetMethods(field, clazz);
-	}	
-	
-	/**
-	 * Verify if the given field is a visible property
-	 * @param voClass
-	 * @param field
-	 * @return
-	 */
-	private boolean isPropertyVisibleToRead(JClassType voClass, JField field)
-	{
-		if (field.isPublic() || field.isProtected())
-		{
-			return true;
-		}
-		else
-		{
-			return hasGetMethod(field, voClass);
-		}
-	}
-	
-	/**
-	 * Verify if the given field is a visible property
-	 * @param voClass
-	 * @param field
-	 * @return
-	 */
-	private boolean isPropertyVisibleToWrite(JClassType voClass, JField field)
-	{
-		if ((field.isPublic() || field.isProtected()) && !field.isFinal())
-		{
-			return true;
-		}
-		else
-		{
-			return hasSetMethod(field, voClass);
-		}
-	}
 }

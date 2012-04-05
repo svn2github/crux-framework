@@ -15,14 +15,19 @@
  */
 package org.cruxframework.crux.core.ioc;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
+import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -69,14 +74,67 @@ public class IocContainerManager
 			}
 		}
 	}
+
+	//TODO transformar o metodo abaixo em um metdo que vasculhe os controllers e datasources
+	// checando por loops e montando configuracoes automaticamente para injecoes simples 
+	//(@Inject simples, sem substituicao de classes ou uso de providers)
+	private static void preventCreateLopping(Class<?> type, Set<String> added, Set<String> path)
+    {
+        for (Field field : type.getFields()) 
+        {
+        	String fieldName = field.getName();
+			if (!added.contains(fieldName))
+        	{
+				added.add(fieldName);
+				Class<?> fieldType = field.getType();
+				Inject inject = field.getAnnotation(Inject.class);
+				if ((inject != null) && (!Modifier.isStatic(field.getModifiers())) && ClassUtils.isPropertyVisibleToWrite(type, field));
+				{
+					if (path.contains(fieldType.getCanonicalName()))
+					{
+						throw new IoCException(messages.iocCreateLoopingError(type.getCanonicalName(), fieldType.getCanonicalName()));
+					}
+		        	Set<String> fieldPath = new HashSet<String>();
+		        	fieldPath.addAll(path);
+		        	fieldPath.add(fieldType.getCanonicalName());
+					preventCreateLopping(fieldType, added, fieldPath);
+				}
+        	}
+        }
+        if (type.getSuperclass() != null)
+        {
+        	preventCreateLopping(type.getSuperclass(), added, path);
+        }
+    }
+
+	
+	
 	
 	/**
 	 * 
 	 * @param className
 	 * @return
 	 */
-	public static IocConfig<?> getConfigurationForType(String className)
+	public static IocConfigImpl<?> getConfigurationForType(String className)
 	{
-		return IocContainerConfigurations.getConfigurationForType(className);
+		if (!initialized)
+		{
+			initialize();
+		}
+		
+		return (IocConfigImpl<?>) IocContainerConfigurations.getConfigurationForType(className);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Iterator<String> iterateClasses()
+	{
+		if (!initialized)
+		{
+			initialize();
+		}
+		return IocContainerConfigurations.iterateClasses();
 	}
 }

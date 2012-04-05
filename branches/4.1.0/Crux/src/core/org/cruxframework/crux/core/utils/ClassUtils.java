@@ -15,7 +15,9 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
@@ -278,4 +280,16 @@ public class ClassUtils
 		
 		return str.toString();
 	}
+
+	/**
+	 * 
+	 * @param type
+	 * @param field
+	 * @return
+	 */
+	public static boolean isPropertyVisibleToWrite(Class<?> type, Field field)
+    {
+		return Modifier.isPublic(field.getModifiers()) || 
+				ClassUtils.hasValidSetter(type, ClassUtils.getSetterMethod(field.getName()), field.getType());
+    }
 }

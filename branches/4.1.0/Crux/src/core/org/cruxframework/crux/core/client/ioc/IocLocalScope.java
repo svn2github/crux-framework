@@ -19,10 +19,12 @@ package org.cruxframework.crux.core.client.ioc;
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocLocalScope
+class IocLocalScope implements IocScope
 {
-    public static <T> T getValue(IocProvider<T> provider, String className)
+    public <T> T getValue(IocProvider<T> provider, String className, String subscope, CreateCallback<T> callback)
     {
-	    return provider.get();
+	    T t = provider.get();
+	    callback.onCreate(t);
+		return t;
     }
 }

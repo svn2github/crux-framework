@@ -16,23 +16,35 @@
 package org.cruxframework.crux.core.client.ioc;
 
 import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocDocumentScope 
+class IocDocumentScope implements IocScope
 {
-	private static FastMap<Object> values = new FastMap<Object>();
+	private FastMap<FastMap<Object>> scopes = new FastMap<FastMap<Object>>();
 	
 	@SuppressWarnings("unchecked")
-    public static <T> T getValue(IocProvider<T> provider, String className)
+    public <T> T getValue(IocProvider<T> provider, String className, String subscope, CreateCallback<T> callback)
     {
+		if (StringUtils.isEmpty(subscope))
+		{
+			subscope = "__default__";
+		}
+		FastMap<Object> values = (FastMap<Object>) scopes.get(subscope);
+		if (values == null)
+		{
+			values = new FastMap<Object>();
+			scopes.put(subscope, values);
+		}
 		T result = (T) values.get(className);
 		if (result == null)
 		{
 			result = provider.get();
 			values.put(className, result);
+			callback.onCreate(result);
 		}
 	    return result;
     }

@@ -15,16 +15,29 @@
  */
 package org.cruxframework.crux.core.client.ioc;
 
+import org.cruxframework.crux.core.client.collection.FastMap;
+
+import com.google.gwt.core.client.GWT;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocViewScope 
+class IocViewScope implements IocScope
 {
-    public static <T> T getValue(IocProvider<T> provider, String className)
+	private FastMap<IocDocumentScope> views = new FastMap<IocDocumentScope>();
+	
+    public <T> T getValue(IocProvider<T> provider, String className, String subscope, CreateCallback<T> callback)
     {
 		String viewName = "";//Screen.getCurrentView().getName();
-		return IocUserScope.getValue(provider, className, "_crux_view_"+viewName);
+		IocDocumentScope scope = views.get(viewName);
+		if (scope == null)
+		{
+			scope = GWT.create(IocDocumentScope.class);
+			views.put(viewName, scope);
+		}
+		
+		return scope.getValue(provider, className, subscope, callback);
     }
 }

@@ -135,16 +135,24 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
 	 */
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void generateProxyContructor(SourceWriter srcWriter)
 	{
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
-		IocContainerRebind.injectFields(srcWriter, "this", controllerClass);
+		IocContainerRebind.injectProxyFields(srcWriter, controllerClass);
 		srcWriter.outdent();
 		srcWriter.println("}");
+	}
+	
+	@Override
+	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+	    super.generateSubTypes(srcWriter);
+	    new IocContainerRebind(logger, context).create();
 	}
 	
 	/**
@@ -272,6 +280,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return a sourceWriter for the proxy class
 	 */
+	@SuppressWarnings("deprecation")
 	protected SourceWriter getSourceWriter()
 	{
 		JPackage crossDocIntfPkg = controllerClass.getPackage();
@@ -292,7 +301,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 
 		composerFactory.setSuperclass(controllerClass.getQualifiedSourceName());
-		@SuppressWarnings("deprecation")
         String baseInterface = isCrossDoc?CrossDocumentInvoker.class.getCanonicalName():org.cruxframework.crux.core.client.event.ControllerInvoker.class.getCanonicalName();
 		composerFactory.addImplementedInterface(baseInterface);
 

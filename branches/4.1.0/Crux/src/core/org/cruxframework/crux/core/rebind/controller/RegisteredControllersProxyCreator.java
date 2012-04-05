@@ -115,12 +115,8 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
 	{
 		Set<String> usedWidgets = new HashSet<String>();
-		String module = null;
-		if (module == null)
-		{
-			module = screen.getModule();
-		}
-		generateControllersForScreen(srcWriter, screen);
+		String module = screen.getModule();
+		generateControllersForScreen(screen);
 		Iterator<org.cruxframework.crux.core.rebind.screen.Widget> screenWidgets = screen.iterateWidgets();
 		while (screenWidgets.hasNext())
 		{
@@ -129,7 +125,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		}
 		if (module != null)
 		{
-			generateControllersForWidgets(srcWriter, usedWidgets, module);
+			generateControllersForWidgets(usedWidgets, module);
 		}
 	}
 
@@ -156,10 +152,9 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	
 	/**
 	 * Generate the block to include controller object.
-	 * @param sourceWriter
 	 * @param controller
 	 */
-	private void generateControllerBlock(SourceWriter sourceWriter, String controller)
+	private void generateControllerBlock(String controller)
 	{
 		try
 		{
@@ -227,17 +222,16 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 
 	/**
 	 * Generate wrapper classes for event handling.
-	 * @param sourceWriter
 	 * @param screen
 	 */
-	private void generateControllersForScreen(SourceWriter sourceWriter, Screen screen)
+	private void generateControllersForScreen(Screen screen)
 	{
 		Iterator<String> controllers = screen.iterateControllers();
 		
 		while (controllers.hasNext())
 		{
 			String controller = controllers.next();
-			generateControllerBlock(sourceWriter, controller);
+			generateControllerBlock(controller);
 		}		
 
 		controllers = ClientControllers.iterateGlobalControllers();
@@ -251,18 +245,17 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				String controllerClassName = controllerClass.getQualifiedSourceName();
 				if (Modules.getInstance().isClassOnModulePath(controllerClassName, screen.getModule()))
 				{
-					generateControllerBlock(sourceWriter, controller);
+					generateControllerBlock(controller);
 				}
 			}
 		}		
 	}
 
 	/**
-	 * @param sourceWriter
 	 * @param usedWidgets
 	 * @param module
 	 */
-	private void generateControllersForWidgets(SourceWriter sourceWriter, Set<String> usedWidgets, String module)
+	private void generateControllersForWidgets(Set<String> usedWidgets, String module)
 	{
 		
 		Iterator<String> widgets = usedWidgets.iterator();
@@ -280,10 +273,10 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 						String controllerClassName = controllerClass.getQualifiedSourceName();
 						if (Modules.getInstance().isClassOnModulePath(controllerClassName, module))
 						{
-							generateControllerBlock(sourceWriter, controller);
+							generateControllerBlock(controller);
 						}
 					}
-					generateControllerBlock(sourceWriter, controller);
+					generateControllerBlock(controller);
 				}
 			}		
 		}

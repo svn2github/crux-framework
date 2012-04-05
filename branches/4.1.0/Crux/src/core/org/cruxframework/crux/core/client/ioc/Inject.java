@@ -41,4 +41,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Inject 
 {
+	public static enum Scope{LOCAL, DOCUMENT, VIEW}
+	Scope scope() default Scope.LOCAL;
+	String subscope() default "";
 }

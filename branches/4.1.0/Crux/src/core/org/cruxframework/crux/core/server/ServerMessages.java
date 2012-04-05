@@ -168,4 +168,7 @@ public interface ServerMessages
 
 	@DefaultServerMessage("[ioc 002] - Configuring new ioc module [{0}]...")
 	String iocContainerConfiguringModule(String configurationClassName);
+	
+	@DefaultServerMessage("[ioc 003] - IoC Create Looping Error between classes [{0}] and [{1}].")
+	String iocCreateLoopingError(String qualifiedSourceName, String qualifiedSourceName2);
 }

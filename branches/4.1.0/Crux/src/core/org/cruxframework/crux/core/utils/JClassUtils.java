@@ -389,4 +389,122 @@ public class JClassUtils
 		}
 	}
 	
+	/**
+	 * Returns <code>true</code> is the given field has both a "get" and a "set" methods.
+	 * @param clazz
+	 * @param field
+	 * @return
+	 */
+	public static boolean hasGetAndSetMethods(JField field, JClassType clazz)
+	{
+		return hasGetMethod(field, clazz) && hasSetMethod(field, clazz);
+	}
+	
+	/**
+	 * Returns <code>true</code> is the given field has an associated public "get" method.
+	 * @param clazz
+	 * @param field
+	 * @return
+	 */
+	public static boolean hasGetMethod(JField field, JClassType clazz)
+	{
+		String getterMethodName = "get"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+		try
+		{
+			return (clazz.getMethod(getterMethodName, new JType[]{}) != null);
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				getterMethodName = "is"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+				return (clazz.getMethod(getterMethodName, new JType[]{}) != null);
+			}
+			catch (Exception e1)
+			{
+				if (clazz.getSuperclass() == null)
+				{
+					return false;
+				}
+				else
+				{
+					return hasGetMethod(field, clazz.getSuperclass());
+				}
+			}
+		}
+	}	
+	
+	/**
+	 * Returns <code>true</code> is the given field has an associated public "set" method.
+	 * @param field
+	 * @param clazz
+	 * @return
+	 */
+	public static boolean hasSetMethod(JField field, JClassType clazz)
+	{
+		String setterMethodName = "set"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+		try
+		{
+			return (clazz.getMethod(setterMethodName, new JType[]{field.getType()}) != null);
+		}
+		catch (Exception e)
+		{
+			if (clazz.getSuperclass() == null)
+			{
+				return false;
+			}
+			else
+			{
+				return hasSetMethod(field, clazz.getSuperclass());
+			}
+		}
+	}
+	
+	/**
+	 * Verify if the given field is fully accessible.
+	 * @param field
+	 * @param clazz
+	 * @return <code>true</code> if the field is public or has associated "get" and "set" methods.
+	 */
+	public static boolean isFullAccessibleField(JField field, JClassType clazz)
+	{
+		return field.isPublic() || hasGetAndSetMethods(field, clazz);
+	}	
+	
+	/**
+	 * Verify if the given field is a visible property
+	 * @param voClass
+	 * @param field
+	 * @return
+	 */
+	public static boolean isPropertyVisibleToRead(JClassType voClass, JField field)
+	{
+		if (field.isPublic() || field.isProtected())
+		{
+			return true;
+		}
+		else
+		{
+			return hasGetMethod(field, voClass);
+		}
+	}
+	
+	/**
+	 * Verify if the given field is a visible property
+	 * @param voClass
+	 * @param field
+	 * @return
+	 */
+	public static boolean isPropertyVisibleToWrite(JClassType voClass, JField field)
+	{
+		if ((field.isPublic() || field.isProtected()) && !field.isFinal())
+		{
+			return true;
+		}
+		else
+		{
+			return hasSetMethod(field, voClass);
+		}
+	}
+	
 }
