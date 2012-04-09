@@ -52,7 +52,8 @@ import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 	@TagAttribute(value="maxLength", type=Integer.class),
 	@TagAttribute(value="accessKey", type=Character.class),
 	@TagAttribute(value="focus", type=Boolean.class),
-	@TagAttribute(value="value", processor=MaskedTextBoxFactory.ValueAttributeParser.class)
+	@TagAttribute(value="value", processor=MaskedTextBoxFactory.ValueAttributeParser.class),
+	@TagAttribute(value="clearIfNotValid", type=Boolean.class, defaultValue="true")
 })
 @TagAttributesDeclaration({
 	@TagAttributeDeclaration(value="formatter", required=true)
