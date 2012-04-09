@@ -89,6 +89,21 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	{
 		return configurations.keySet().iterator();
 	}
+	
+	/**
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 */
+	static <T> void bindTypeImplicitly(Class<T> clazz)
+	{
+		String className = clazz.getCanonicalName();
+		if (!configurations.containsKey(className))
+		{
+			IocConfig<T> iocConfig = new IocConfigImpl<T>(clazz);
+			configurations.put(className, iocConfig);
+		}
+	}
 }
 
 

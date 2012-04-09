@@ -153,20 +153,25 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	/**
 	 * Generate the block to include controller object.
 	 * @param controller
+	 * @param module
 	 */
-	private void generateControllerBlock(String controller)
+	private void generateControllerBlock(String controller, String module)
 	{
 		try
 		{
 			JClassType controllerClass = getControllerClass(controller);
 			if (!controllerClassNames.containsKey(controller) && controllerClass!= null)
 			{
-				String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
-				controllerClassNames.put(controller, genClass);
-	        	JClassType crossDocumentType = controllerClass.getOracle().getType(CrossDocument.class.getCanonicalName());
-				if (crossDocumentType.isAssignableFrom(controllerClass))
+				String controllerClassName = controllerClass.getQualifiedSourceName();
+				if (Modules.getInstance().isClassOnModulePath(controllerClassName, module))
 				{
-					crossDocsClassNames.put(controller, genClass);
+					String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
+					controllerClassNames.put(controller, genClass);
+					JClassType crossDocumentType = controllerClass.getOracle().getType(CrossDocument.class.getCanonicalName());
+					if (crossDocumentType.isAssignableFrom(controllerClass))
+					{
+						crossDocsClassNames.put(controller, genClass);
+					}
 				}
 			}
 		}
@@ -231,7 +236,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		while (controllers.hasNext())
 		{
 			String controller = controllers.next();
-			generateControllerBlock(controller);
+			generateControllerBlock(controller, screen.getModule());
 		}		
 
 		controllers = ClientControllers.iterateGlobalControllers();
@@ -242,11 +247,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 			JClassType controllerClass = getControllerClass(controller);
 			if (controllerClass != null)
 			{
-				String controllerClassName = controllerClass.getQualifiedSourceName();
-				if (Modules.getInstance().isClassOnModulePath(controllerClassName, screen.getModule()))
-				{
-					generateControllerBlock(controller);
-				}
+				generateControllerBlock(controller, screen.getModule());
 			}
 		}		
 	}
@@ -270,13 +271,8 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 					JClassType controllerClass = getControllerClass(controller);
 					if (controllerClass != null)
 					{
-						String controllerClassName = controllerClass.getQualifiedSourceName();
-						if (Modules.getInstance().isClassOnModulePath(controllerClassName, module))
-						{
-							generateControllerBlock(controller);
-						}
+						generateControllerBlock(controller, module);
 					}
-					generateControllerBlock(controller);
 				}
 			}		
 		}

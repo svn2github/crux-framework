@@ -158,6 +158,23 @@ public class ClientControllers
 		}
 		return controllers.get(name);
 	}
+
+	/**
+	 * 
+	 * @param controller
+	 * @return
+	 */
+	public static Class<?> getControllerClass(String controller)
+	{
+		try
+        {
+	        return Class.forName(getController(controller));
+        }
+        catch (Exception e)
+        {
+        	return null;
+        }
+	}
 	
 	/**
 	 * @return

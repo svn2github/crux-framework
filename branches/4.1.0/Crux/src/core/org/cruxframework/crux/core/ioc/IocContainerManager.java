@@ -25,9 +25,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.rebind.controller.ClientControllers;
+import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
-import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -67,6 +68,8 @@ public class IocContainerManager
 						}
 					}
 				}
+				bindImplicityInjectcionsForControllers();
+				bindImplicityInjectcionsForDatasources();
 			}
 			catch (Exception e)
 			{
@@ -75,41 +78,6 @@ public class IocContainerManager
 		}
 	}
 
-	//TODO transformar o metodo abaixo em um metdo que vasculhe os controllers e datasources
-	// checando por loops e montando configuracoes automaticamente para injecoes simples 
-	//(@Inject simples, sem substituicao de classes ou uso de providers)
-	private static void preventCreateLopping(Class<?> type, Set<String> added, Set<String> path)
-    {
-        for (Field field : type.getFields()) 
-        {
-        	String fieldName = field.getName();
-			if (!added.contains(fieldName))
-        	{
-				added.add(fieldName);
-				Class<?> fieldType = field.getType();
-				Inject inject = field.getAnnotation(Inject.class);
-				if ((inject != null) && (!Modifier.isStatic(field.getModifiers())) && ClassUtils.isPropertyVisibleToWrite(type, field));
-				{
-					if (path.contains(fieldType.getCanonicalName()))
-					{
-						throw new IoCException(messages.iocCreateLoopingError(type.getCanonicalName(), fieldType.getCanonicalName()));
-					}
-		        	Set<String> fieldPath = new HashSet<String>();
-		        	fieldPath.addAll(path);
-		        	fieldPath.add(fieldType.getCanonicalName());
-					preventCreateLopping(fieldType, added, fieldPath);
-				}
-        	}
-        }
-        if (type.getSuperclass() != null)
-        {
-        	preventCreateLopping(type.getSuperclass(), added, path);
-        }
-    }
-
-	
-	
-	
 	/**
 	 * 
 	 * @param className
@@ -137,4 +105,66 @@ public class IocContainerManager
 		}
 		return IocContainerConfigurations.iterateClasses();
 	}
+
+	/**
+	 * 
+	 */
+	private static void bindImplicityInjectcionsForControllers()
+	{
+		Iterator<String> controllers = ClientControllers.iterateControllers();
+		while (controllers.hasNext())
+		{
+			Class<?> controllerClass = ClientControllers.getControllerClass(controllers.next());
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>());
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private static void bindImplicityInjectcionsForDatasources()
+	{
+		Iterator<String> datasources = DataSources.iterateDataSources();
+		while (datasources.hasNext())
+		{
+			Class<?> controllerClass = DataSources.getDataSourceClass(datasources.next());
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @param added
+	 * @param path
+	 */
+	private static void bindImplicityInjectcions(Class<?> type, Set<String> added, Set<String> path)
+    {
+        for (Field field : type.getDeclaredFields()) 
+        {
+        	String fieldName = field.getName();
+			if (!added.contains(fieldName))
+        	{
+				added.add(fieldName);
+				Class<?> fieldType = field.getType();
+				Inject inject = field.getAnnotation(Inject.class);
+				if (inject != null)
+				{
+					if (path.contains(fieldType.getCanonicalName()))
+					{
+						throw new IoCException(messages.iocCreateLoopingError(type.getCanonicalName(), fieldType.getCanonicalName()));
+					}
+		        	Set<String> fieldPath = new HashSet<String>();
+		        	fieldPath.addAll(path);
+		        	fieldPath.add(fieldType.getCanonicalName());
+		        	IocContainerConfigurations.bindTypeImplicitly(fieldType);
+					bindImplicityInjectcions(fieldType, added, fieldPath);
+				}
+        	}
+        }
+        if (type.getSuperclass() != null)
+        {
+        	bindImplicityInjectcions(type.getSuperclass(), added, path);
+        }
+    }
 }

@@ -134,6 +134,22 @@ public class DataSources
 		return dataSources.get(name);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static Class<?> getDataSourceClass(String name)
+	{
+		try
+        {
+	        return Class.forName(getDataSource(name));
+        }
+        catch (Exception e)
+        {
+        	return null;
+        }
+	}
 	
 	/**
 	 * @return
@@ -147,4 +163,5 @@ public class DataSources
 		
 		return dataSources.keySet().iterator();
 	}
+
 }
