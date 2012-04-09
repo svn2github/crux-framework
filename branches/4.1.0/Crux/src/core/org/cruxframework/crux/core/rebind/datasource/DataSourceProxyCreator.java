@@ -32,6 +32,7 @@ import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.GeneratorMessages;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
@@ -93,16 +94,25 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
 	 */
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void generateProxyContructor(SourceWriter srcWriter)
 	{
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
 		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
+		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}	
+
+	@Override
+	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+	    super.generateSubTypes(srcWriter);
+	    new IocContainerRebind(logger, context).create();
+	}
 	
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
