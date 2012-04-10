@@ -26,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 
@@ -38,7 +36,6 @@ import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
  */
 public class TemplatesHotDeploymentScanner
 {
-	private static DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static final Log logger = LogFactory.getLog(TemplatesHotDeploymentScanner.class);
 
 	private ScheduledExecutorService threadPool;
@@ -68,7 +65,7 @@ public class TemplatesHotDeploymentScanner
 				}
 				catch (Exception e) 
 				{
-					logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(file.getName()), e);
+					logger.info("Error scanning dir: ["+file.getName()+"].", e);
 				}
 			}
 		}, 0, 5, TimeUnit.SECONDS);
@@ -103,7 +100,7 @@ public class TemplatesHotDeploymentScanner
 					else if (templateLastModified < modified)
 					{
 						lastModified.put(fileName, modified);
-						logger.info(messages.templatesHotDeploymentScannerTemplateFileModified(fileName));
+						logger.info("Template file modified: ["+fileName+"].");
 						Templates.restart();
 						ScreenFactory.getInstance().clearScreenCache();
 					}
@@ -135,7 +132,7 @@ public class TemplatesHotDeploymentScanner
 				}
 				catch (URISyntaxException e)
 				{
-					logger.info(messages.templatesHotDeploymentScannerErrorScanningDir(url.toString()), e);
+					logger.info("Error scanning dir: ["+url.toString()+"].", e);
 				}
 			}
 		}

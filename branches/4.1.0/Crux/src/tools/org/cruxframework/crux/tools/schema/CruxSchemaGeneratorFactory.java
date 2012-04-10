@@ -18,8 +18,6 @@ package org.cruxframework.crux.tools.schema;
 import java.io.File;
 import java.lang.reflect.Constructor;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.tools.CruxToolsMessages;
 import org.cruxframework.crux.tools.ToolsConfigurationFactory;
 
 
@@ -29,8 +27,6 @@ import org.cruxframework.crux.tools.ToolsConfigurationFactory;
  */
 public class CruxSchemaGeneratorFactory
 {
-	private static CruxToolsMessages messages = MessagesFactory.getMessages(CruxToolsMessages.class);
-	
 	public static CruxSchemaGenerator createSchemaGenerator(File projectBaseDir, File destDir, File webDir) throws SchemaGeneratorException
 	{
 		Class<?> generatorClass;
@@ -44,7 +40,7 @@ public class CruxSchemaGeneratorFactory
         }
         catch (Exception e)
         {
-	        throw new SchemaGeneratorException(messages.cruxSchemaGeneratorFactoryErrorCreatingSchemaGenerator(e.getLocalizedMessage()),e);
+	        throw new SchemaGeneratorException("Error, creating the SchemaGenerator class: "+e.getLocalizedMessage(),e);
         }
 		
 	}

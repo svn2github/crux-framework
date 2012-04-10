@@ -6,9 +6,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.tools.CruxToolsMessages;
-
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -17,7 +14,6 @@ import org.cruxframework.crux.tools.CruxToolsMessages;
 public class ClassPathUtils 
 {
 	private static final Class<?>[] parameters = new Class[]{URL.class};
-	private static CruxToolsMessages messages = MessagesFactory.getMessages(CruxToolsMessages.class);	
 
 	public static void addURL(URL u) throws IOException 
 	{
@@ -36,7 +32,7 @@ public class ClassPathUtils
 		} 
 		catch (Throwable t) 
 		{
-			throw new IOException(messages.errorAddingURLToSystemClassLoader());
+			throw new IOException("Error, could not add URL to system classloader.");
 		}
 	}
 }

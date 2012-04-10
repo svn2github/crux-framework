@@ -38,7 +38,7 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 	 * You can write something like:
 	 * <p>
 	 * <pre>
-	 * bindType(List.class).toClass(ArrayList.class).inLocalScope();
+	 * bindType(List.class).toClass(ArrayList.class);
 	 * </pre>
 	 * <p>
 	 * That would cause Crux to inject a new instance of ArrayList whenever you declare 
@@ -105,30 +105,3 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 		}
 	}
 }
-
-
-/*
-bindType(MyDTO.class).inLocalScope(); //Default is LocalSope
-bindType(MyDTO.class).toClass(Class.class).inLocalScope(); //Default is LocalSope
-bindType(MyDTO2.class).toProvider(MyProvider.class).inDocumentScope(); // inScreenScope()??? //userScope seria um dos tipos de scope "Shareable"
-bindType(MyDTO3.class).inUserScope("myScope").managedByContainer();//autualizacoes feitas antes e depois de cada metodo
-bindType(MyDTO4.class).inUserScope("myScope").managedByApplication();//DEFAULT. autualizacoes devem ser commitadas e lidas de forma expl√É¬≠cita, 
-                                                                     //via os metodos CruxIoCContainer.[readScopeState() e writeScope()]
-bindAnnotatedWith(Parameter.class).toProviderGenerator(ParameterProviderFactory.class).inLocalScope();
-bindAnnotatedWith(ValueObject.class).toProviderGenerator(ValueObjectProviderFactory.class).inScreenScope(); // inViewScope()???
-bindAnnotatedWith(Controller.class).toProviderGenerator(ControllerProviderFactory.class);
-bindAssignableTo(Parameter.class).toProviderGenerator(TestProviderFactory.class).inUserScope("myScope");
-*///bindIncludingName("**/*Async").toProviderGenerator(RpcProviderFactory.class).inLocalScope();
-//bindExcludingName("**/*Controller").toProviderGenerator(StatisticsControllerProvider.class).inLocalScope();
-/*
- * 1) Criar uma class IocConfig, que √É¬© retornada pelo metodo bindType.... outra IoCConfigList 
- * pelos metodos bindAnnotatedWith (e outros do genero)....criar tbm uma classe base pros 
- * 2 tipos citados. Usar mesma estrategia para os metodos in*Scope() retornando metodos de acordo com o 
- * tipo de escopo escolhido
- * 
- * 2) Fazer um scanner para registrar automaticamente todas as classes de configura√É¬ß√É¬£o do Ioc container
- * e executar o configure de todos eles..... essas classes ser√É¬£o executadas no rebind (e n√É¬£o no client)
- * 
- * 3) QQ tentativa de inje√É¬ß√É¬£o nao mapeada explicitamente aki √É¬© simplesmente tratada por um GWT.create()
- * apontando para o tipo do campo a ser injetado.
- */

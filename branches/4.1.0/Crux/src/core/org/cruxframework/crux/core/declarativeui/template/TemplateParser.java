@@ -30,10 +30,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,9 +42,6 @@ import org.w3c.dom.NodeList;
  */
 public class TemplateParser
 {
-	private static final Log logger = LogFactory.getLog(TemplateParser.class);
-	private static DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
-
 	private XPathExpression templateAttributesExpression;
 	private XPathExpression templateChildrenNameExpression;
 	private XPathExpression templateChildrenExpression;
@@ -88,8 +81,7 @@ public class TemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.templateParserErrorInitializingGenerator());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error initializing template parser.", e);
 		}
 	}
 	
@@ -136,8 +128,7 @@ public class TemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.templateParserErrorExtractingAttributesForTemplate(template.getLocalName()));
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error generating attributes for template ["+template.getLocalName()+"].", e);
 		}
 	}
 
@@ -165,8 +156,7 @@ public class TemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.schemaGeneratorErrorGeneratingChildrenForTemplate(template.getLocalName()));
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error generating children for template ["+template.getLocalName()+"]", e);
 		}
 	}
 	
@@ -194,8 +184,7 @@ public class TemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.schemaGeneratorErrorGeneratingChildrenForTemplate(template.getLocalName()));
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error generating children for template ["+template.getLocalName()+"]", e);
 		}
 	}
 

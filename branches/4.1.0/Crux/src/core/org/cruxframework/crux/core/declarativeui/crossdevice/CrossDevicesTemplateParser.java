@@ -26,12 +26,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -44,9 +40,6 @@ import org.w3c.dom.NodeList;
  */
 public class CrossDevicesTemplateParser
 {
-	private static final Log logger = LogFactory.getLog(CrossDevicesTemplateParser.class);
-	private static DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
-
 	private static CrossDevicesTemplateParser instance = new CrossDevicesTemplateParser();
 	
 	private XPathExpression templateControllerExpression;
@@ -84,8 +77,7 @@ public class CrossDevicesTemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.templateParserErrorInitializingGenerator());
-			throw new CrossDevicesException(e.getLocalizedMessage(), e);
+			throw new CrossDevicesException("Error initializing generator.", e);
 		}
     }
 
@@ -106,10 +98,9 @@ public class CrossDevicesTemplateParser
 		}
 		catch (XPathExpressionException e)
 		{
-			logger.error(messages.crossDevicesTemplateParserErrorSearchingForController(deviceAdaptive, device.toString()));
-			throw new CrossDevicesException(e.getLocalizedMessage(), e);
+			throw new CrossDevicesException("Error searching for controller associated with the deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]", e);
 		}
-		throw new CrossDevicesException(messages.crossDevicesTemplateParserCanNotFindController(deviceAdaptive, device.toString()));
+		throw new CrossDevicesException("Can not find the controller attribute for deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]");
     }
 	
 	/**
@@ -128,8 +119,7 @@ public class CrossDevicesTemplateParser
 	    }
 	    catch (Exception e)
 	    {
-			logger.error(messages.crossDevicesTemplateParserErrorRetrievingMetadata(deviceAdaptive, device.toString()));
-			throw new CrossDevicesException(e.getLocalizedMessage(), e);
+			throw new CrossDevicesException("Error retrieving metadata from template associated with the deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]", e);
 	    }
     }
 

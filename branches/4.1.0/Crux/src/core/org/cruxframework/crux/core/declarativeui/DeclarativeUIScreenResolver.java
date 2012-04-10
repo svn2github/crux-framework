@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolver;
@@ -40,8 +39,6 @@ import org.cruxframework.crux.scannotation.URLStreamManager;
  */
 public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 {
-	DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);	
-
 	/**
 	 * 
 	 */
@@ -122,7 +119,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException(messages.declarativeUIScreenResolverError(screenId, e.getMessage()), e);
+			throw new CruxGeneratorException("Error obtaining screen resource. Screen id: ["+screenId+"].", e);
 		}
 	}
 

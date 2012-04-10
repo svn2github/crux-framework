@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.utils.FileUtils;
 
 
@@ -41,7 +40,6 @@ public class CruxModuleBridge
 {
 	private static final Log logger = LogFactory.getLog(CruxModuleBridge.class);
 	private static CruxModuleBridge instance = new CruxModuleBridge();
-	private static CruxModuleMessages messages = MessagesFactory.getMessages(CruxModuleMessages.class);
 
 	//Woww :) How GWT generators and the application server run in different JVMs, 
 	//the only way to obtain these informations is using a bridge in file system.
@@ -76,7 +74,7 @@ public class CruxModuleBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.moduleBridgeErrorRegisteringModule(e.getLocalizedMessage()), e);
+			logger.error("Error registering current module.", e);
 		}
 	}
 	
@@ -92,7 +90,7 @@ public class CruxModuleBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.info(messages.moduleBridgeErrorReadingModule());
+			logger.info("No module registered under the bridge module. Assuming the development module");
 			return null;
 		}
 	}

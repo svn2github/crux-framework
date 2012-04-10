@@ -28,8 +28,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.scan.ScannerURLS;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.scannotation.AbstractScanner;
@@ -48,7 +46,6 @@ import org.w3c.dom.Document;
 public class TemplatesScanner extends AbstractScanner
 {
 	private static final TemplatesScanner instance = new TemplatesScanner();
-	private DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private DocumentBuilder documentBuilder;
 	private static URL[] urlsForSearch = null;
 	private static final Lock lock = new ReentrantLock(); 
@@ -66,7 +63,7 @@ public class TemplatesScanner extends AbstractScanner
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new TemplateException(messages.templatesScannerErrorBuilderCanNotBeCreated(), e);
+			throw new TemplateException("Error creating XML Parser.", e);
 		}
 	}
 
@@ -120,14 +117,14 @@ public class TemplatesScanner extends AbstractScanner
 						}
 						catch (Exception e)
 						{
-							throw new TemplateException(messages.templatesScannerErrorParsingTemplateFile(urlString), e);
+							throw new TemplateException("Error parsing template file: ["+urlString+"]", e);
 						}
 					}
 				}
 			}
 			catch (IOException e)
 			{
-				throw new TemplateException(messages.templatesScannerInitializationError(e.getLocalizedMessage()), e);
+				throw new TemplateException("Error initializing TemplateScanner.", e);
 			}
 		}
 	}

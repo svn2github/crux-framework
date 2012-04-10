@@ -19,8 +19,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.tools.CruxToolsMessages;
 import org.cruxframework.crux.tools.parameters.ConsoleParameter;
 import org.cruxframework.crux.tools.parameters.ConsoleParametersProcessingException;
 import org.cruxframework.crux.tools.parameters.ConsoleParametersProcessor;
@@ -34,7 +32,6 @@ import org.cruxframework.crux.tools.parameters.ConsoleParametersProcessor;
 public class CruxCompiler 
 {
 	private static final Log logger = LogFactory.getLog(CruxCompiler.class);
-	private static CruxToolsMessages messages = MessagesFactory.getMessages(CruxToolsMessages.class);
 	
 	/**
 	 * 
@@ -62,11 +59,11 @@ public class CruxCompiler
 		}
 		catch (ConsoleParametersProcessingException e)
 		{
-			logger.error(messages.cruxCompilerErrorProcessingParameters(e.getLocalizedMessage()));
+			logger.error("Error processing program parameters: "+e.getLocalizedMessage()+". Program aborted.");
 		}
 		catch (CompilerException e)
 		{
-			logger.error(messages.cruxCompilerErrorCompilingFiles(e.getLocalizedMessage()));
+			logger.error("Error compiling files: "+e.getLocalizedMessage()+". Program aborted.");
 		}
 		System.exit(1);
 	}	

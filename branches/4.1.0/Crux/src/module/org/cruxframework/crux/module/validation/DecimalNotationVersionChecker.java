@@ -17,9 +17,7 @@ package org.cruxframework.crux.module.validation;
 
 import java.util.regex.Pattern;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
-import org.cruxframework.crux.module.CruxModuleMessages;
 
 
 /**
@@ -30,8 +28,6 @@ public class DecimalNotationVersionChecker implements CruxModuleVersionChecker
 {
     public static final Pattern REGEXP_DOT_NUMBER = Pattern.compile("[\\.0-9 ]+");
     public static final Pattern REGEXP_SPACE_OR_DOT = Pattern.compile("[\\. ]+");
-    
-    private CruxModuleMessages messages = MessagesFactory.getMessages(CruxModuleMessages.class);
     
     /**
      * 
@@ -128,7 +124,7 @@ public class DecimalNotationVersionChecker implements CruxModuleVersionChecker
 	{
 		if (realVersion == null || realVersion.trim().length() == 0)
 		{
-			throw new NullPointerException(messages.decimalVersionCheckerEmptyRealVersion());
+			throw new NullPointerException("Module version is empty.");
 		}
 		
 		if (expectedVersion != null && expectedVersion.length() > 0 && !REGEXP_DOT_NUMBER.matcher(expectedVersion).matches())

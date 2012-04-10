@@ -25,8 +25,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.CruxFilter;
 import org.cruxframework.crux.core.utils.StreamUtils;
@@ -41,8 +39,6 @@ import org.cruxframework.crux.core.utils.StreamUtils;
 public class DeclarativeUIFilter extends CruxFilter
 {
 	private static final Log log = LogFactory.getLog(DeclarativeUIFilter.class);
-
-	private DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)  throws IOException, ServletException 
@@ -68,7 +64,7 @@ public class DeclarativeUIFilter extends CruxFilter
 					}
 					else
 					{
-						log.info(messages.declarativeUIDoesNotTransformPage(requestedScreen));
+						log.info("The page ["+requestedScreen+"] is not transformed... Accessing directly.");
 					}
 				}
 				catch (Exception e)

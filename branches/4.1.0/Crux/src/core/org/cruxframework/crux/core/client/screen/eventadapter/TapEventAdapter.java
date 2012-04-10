@@ -1,5 +1,7 @@
 package org.cruxframework.crux.core.client.screen.eventadapter;
 
+import org.cruxframework.crux.core.client.Crux;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Touch;
@@ -12,7 +14,8 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Implementation of Google FastButton {@link http://code.google.com/mobile/articles/fast_buttons.html}
+ * Implementation of Google FastButton {@link http://code.google.com/mobile/articles/fast_buttons.html} for
+ * better performance on touch mobile devices.
  * @author Thiago da Rosa de Bustamante
  * @author Gesse Dafe
  *
@@ -27,9 +30,8 @@ public class TapEventAdapter extends Composite
 	
 	public TapEventAdapter(Widget child)
 	{
-		// TODO - messages
-		assert (child instanceof HasAllTouchHandlers) : "";
-		assert (child instanceof HasClickHandlers) : "";
+		assert (child instanceof HasAllTouchHandlers) : Crux.getMessages().tapEventAdapterInvalidWidget();
+		assert (child instanceof HasClickHandlers) : Crux.getMessages().tapEventAdapterInvalidWidget();
 		isHasEnabled = (child instanceof HasEnabled);
 		initWidget(child);
 		sinkEvents(Event.TOUCHEVENTS | Event.ONCLICK);
@@ -81,13 +83,11 @@ public class TapEventAdapter extends Composite
 		
 		if(touchHandled)
 		{
-//			Window.alert("click via touch: "+ this.toString());
 			touchHandled = false;
 			super.onBrowserEvent(event);
 		}
 		else
 		{
-//			Window.alert("click nativo: "+ this.toString());
 			event.preventDefault();
 		}
 	}

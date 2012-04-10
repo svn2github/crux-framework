@@ -32,7 +32,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.template.TemplatesPreProcessor;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.StreamUtils;
@@ -50,13 +49,11 @@ public class CruxToHtmlTransformer
 	private static String outputCharset;
 
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
-	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static DocumentBuilder documentBuilder = null;
 
 	private static List<CruxXmlPreProcessor> preProcessors;
 	private static final Lock lock = new ReentrantLock();
 
-	//TODO renomear esta classe para CruxPageHandler e renomear o HTMLBuilder
 	/**
 	 * Generate the HTML code from the .crux.xml page.
 	 * 
@@ -81,7 +78,7 @@ public class CruxToHtmlTransformer
 			String outCharset = getOutputCharset();
 			if (outCharset == null || outCharset.length() == 0)
 			{
-				throw new DeclarativeUITransformerException(messages.transformerErrorOutputCharsetUndefined());
+				throw new DeclarativeUITransformerException("Outputcharset is undefined. Check your web.xml file to ensure that DevModeInitializerListener is correctly configured.");
 			}
 			StreamUtils.write(new ByteArrayInputStream(result.getBytes(outCharset)), out, false);
 		}
@@ -189,7 +186,7 @@ public class CruxToHtmlTransformer
 				}
 				catch (Throwable e)
 				{
-					log.error(messages.cruxToHtmlTransformerInitializeError(e.getMessage()), e);
+					log.error("Error initializing cruxToHtmlTransformer.", e);
 				}
 				finally
 				{

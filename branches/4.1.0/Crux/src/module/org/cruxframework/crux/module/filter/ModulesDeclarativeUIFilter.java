@@ -70,7 +70,7 @@ public class ModulesDeclarativeUIFilter extends ModulesFilter
 					}
 					else
 					{
-						log.info(messages.modulesFilterDoesNotTransformPage(requestedScreen));
+						log.info("The page ["+requestedScreen+"] is not transformed... Accessing directly.");
 					}
 				}
 				catch (Exception e)

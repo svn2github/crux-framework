@@ -101,4 +101,7 @@ public interface ClientMessages extends Messages
 	String screenAccessorCallingCrossDocument(String screenId, String controller, String method, String target);
 	@DefaultMessage("[screenAccessor 001] - Cross document method executed. Screen[{0}], Controller[{1}], Method[{2}], Target[{3}]")
 	String screenAccessorCrossDocumentExecuted(String screenId, String controller, String method, String target);
+
+	@DefaultMessage("[tapEventAdapter 001] - TapEventAdapter only can be used as a wrapper for subclasses of HasAllTouchHandlers and HasClickHandlers")
+	String tapEventAdapterInvalidWidget();
 }

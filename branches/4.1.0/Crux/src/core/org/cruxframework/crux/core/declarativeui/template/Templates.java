@@ -20,16 +20,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +45,6 @@ public class Templates
 	private static boolean hotDeploymentScannerStarted = false;
 	private static final Lock lock = new ReentrantLock();
 	private static final Log logger = LogFactory.getLog(Templates.class);
-	private static DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static Map<String, Set<String>> registeredLibraries = null;
 	private static boolean starting = false;
 	private static Map<String, Document> templates = null;
@@ -172,7 +169,7 @@ public class Templates
 		templates = new HashMap<String, Document>();
 		widgetTemplates = new HashMap<String, Set<String>>();
 		registeredLibraries = new HashMap<String, Set<String>>();
-		logger.info(messages.templatesScannerSearchingTemplateFiles());
+		logger.info("Searching for template files.");
 		TemplatesScanner.getInstance().scanArchives();
 		
 		initializeWidgetTemplates();
@@ -274,7 +271,7 @@ public class Templates
 		String library = templateElement.getAttribute("library");
 		if (templates.containsKey(library+"_"+templateId))
 		{
-			throw new TemplateException(messages.templateDuplicatedTemplate(library, templateId));
+			throw new TemplateException("Duplicated template found. Library: ["+library+"]. Template: ["+templateId+"].");
 		}
 		
 		if (!registeredLibraries.containsKey(library))

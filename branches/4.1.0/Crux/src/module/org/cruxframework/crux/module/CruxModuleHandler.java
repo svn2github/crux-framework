@@ -33,7 +33,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.server.Environment;
@@ -58,7 +57,6 @@ public class CruxModuleHandler
 	private static boolean pagesInitialized = false;
 	private static final Lock lock = new ReentrantLock();
 	private static final Lock lockPages = new ReentrantLock();
-	private static final CruxModuleMessages messages = MessagesFactory.getMessages(CruxModuleMessages.class);
 	private static DocumentBuilder documentBuilder;
 	
 	/**
@@ -84,7 +82,7 @@ public class CruxModuleHandler
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new CruxModuleException(messages.errorInitializingCruxModuleHandler(), e);
+			throw new CruxModuleException("Error initializing the crux module handler.", e);
 		}
 		finally
 		{
@@ -122,7 +120,7 @@ public class CruxModuleHandler
 			}
 			else
 			{
-				throw new CruxModuleException(messages.developmentCruxModuleNotDefined());
+				throw new CruxModuleException("No development module found. Define it using the 'developmentModule' properties on CruxModuleConfig.properties file.");
 			}
 		}		
 		return getCruxModule(currentModule);
@@ -204,7 +202,7 @@ public class CruxModuleHandler
 			}
 			catch (Exception e)
 			{
-				throw new CruxModuleException(messages.errorInitializingCruxModuleHandler(), e);
+				throw new CruxModuleException("Error initializing the crux module handler.", e);
 			}
 			finally
 			{
@@ -336,7 +334,7 @@ public class CruxModuleHandler
 		}
 		catch (Exception e)
 		{
-			throw new CruxModuleException(messages.errorSearchingForModulePages(cruxModule.getName()), e);
+			throw new CruxModuleException("Error searching for pages into module ["+cruxModule.getName()+"].", e);
 		}
 	}
 }

@@ -27,15 +27,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
 import org.cruxframework.crux.core.declarativeui.CruxXmlPreProcessor;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
 import org.cruxframework.crux.core.declarativeui.XPathUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.crossdevice.Devices;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.w3c.dom.Document;
@@ -55,8 +50,6 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	private XPathExpression findBodyExpression;
 	private XPathExpression findCrossBrowserExpression;
 	private XPathExpression templateAttributesExpression;
-	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
-	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
 	
 	private TemplateParser templateParser;
 	
@@ -79,8 +72,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		}
 		catch (XPathExpressionException e)
 		{
-			log.error(messages.templatesPreProcessorInitializingError());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error initializing templates pre-processor.", e);
 		}
 	}
 	
@@ -143,8 +135,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		}
 		catch (XPathExpressionException e)
 		{
-			log.error(messages.templatesPreProcessorError());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error pre-processing templates.", e);
 		}
 	}
 
@@ -207,8 +198,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		}
 		catch (XPathExpressionException e)
 		{
-			log.error(messages.templatesPreProcessorError());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error pre-processing templates.", e);
 		}
 	}
 
@@ -242,8 +232,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		}
 		catch (XPathExpressionException e)
 		{
-			log.error(messages.templatesPreProcessorError());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error pre-processing templates.", e);
 		}
     }
 	
@@ -287,7 +276,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		Document template = Templates.getTemplate(library, element.getLocalName(), true);
 		if (template == null)
 		{
-			throw new TemplateException(messages.templatesPreProcessorTemplateNotFound(library, element.getLocalName()));
+			throw new TemplateException("Template not found. Library: ["+library+"]. Template: ["+element.getLocalName()+"].");
 		}
 		template = preprocess(template, device, controllers, dataSources, formatters, serializables);
 
@@ -315,7 +304,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		List<Element> replacements = getCrossBrowserReplacements(element, device);
 		if (replacements.size() == 0)
 		{
-			throw new TemplateException(messages.crossDevicesTemplateParserErrorNoConditionForAgent(device));
+			throw new TemplateException("No condition associated with userAgent ["+device+"]");
 		}
 		NodeList nodes = element.getChildNodes(); 
 		Node parentNode = element.getParentNode();
@@ -399,8 +388,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		}
 		catch (XPathExpressionException e)
 		{
-			log.error(messages.templatesPreProcessorError());
-			throw new TemplateException(e.getLocalizedMessage(), e);
+			throw new TemplateException("Error pre-processing templates.", e);
 		}
     }
 	
@@ -463,7 +451,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 	        	}
 	        }
         }
-		throw new TemplateException(messages.templatesPreProcessorCrossBrowserParameterNotFound(name));
+		throw new TemplateException("CrossDevice parameter ["+name+"] not found.");
     }
 
 	/**

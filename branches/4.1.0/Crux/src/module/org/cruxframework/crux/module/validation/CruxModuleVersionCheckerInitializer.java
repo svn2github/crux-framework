@@ -20,8 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.module.CruxModuleMessages;
 import org.cruxframework.crux.module.config.CruxModuleConfigurationFactory;
 
 
@@ -34,7 +32,6 @@ public class CruxModuleVersionCheckerInitializer
 	private static final Log logger = LogFactory.getLog(CruxModuleVersionCheckerInitializer.class);
 	private static CruxModuleVersionChecker versionChecker;
 	private static final Lock lock = new ReentrantLock();
-	private static CruxModuleMessages messages = (CruxModuleMessages)MessagesFactory.getMessages(CruxModuleMessages.class);
 
 	public static CruxModuleVersionChecker getVersionChecker()
 	{
@@ -48,7 +45,7 @@ public class CruxModuleVersionCheckerInitializer
 		}
 		catch (Throwable e)
 		{
-			logger.error(messages.versionChekerInitializerError(e.getMessage()), e);
+			logger.error("Error initializing crux module version checker.", e);
 		}
 		finally
 		{

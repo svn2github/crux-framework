@@ -25,8 +25,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.scannotation.AbstractScanner;
 import org.w3c.dom.Document;
@@ -40,7 +38,6 @@ import org.w3c.dom.Document;
 public class CrossDevicesScanner extends AbstractScanner
 {
 	private static final CrossDevicesScanner instance = new CrossDevicesScanner();
-	private DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private DocumentBuilder documentBuilder;
 	
 	/**
@@ -56,7 +53,7 @@ public class CrossDevicesScanner extends AbstractScanner
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new CrossDevicesException(messages.templatesScannerErrorBuilderCanNotBeCreated(), e);
+			throw new CrossDevicesException("Error creating XML Parser.", e);
 		}
 	}
 
@@ -79,7 +76,7 @@ public class CrossDevicesScanner extends AbstractScanner
 						Templates templates = deviceAdaptiveClass.getAnnotation(Templates.class);
 						if (templates == null)
 						{
-							throw new CrossDevicesException(messages.crossDeviceScannerDeviceAdaptiveWithoutTemplates(deviceAdaptive));
+							throw new CrossDevicesException("DeviceAdaptive widget ["+deviceAdaptive+"] does not declare any templates. Use the annotation @Templates to add templates to this widget.");
 						}
 
 						for (Template template : templates.value())
@@ -94,18 +91,18 @@ public class CrossDevicesScanner extends AbstractScanner
 							}
 							catch (Exception e)
 							{
-								throw new CrossDevicesException(messages.crossDeviceScannerErrorParsingTemplateFile(template.name(), deviceAdaptiveClass.getCanonicalName()), e);
+								throw new CrossDevicesException("Error parsing cross device file: ["+template.name()+"], for DeviceAdaptive interface ["+deviceAdaptiveClass.getCanonicalName()+"].", e);
 							}
 						}
 					}
 				} 
 				catch (ClassNotFoundException e) 
 				{
-					throw new CrossDevicesException(messages.crossDeviceScannerDeviceAdaptiveNotFound(deviceAdaptive),e);
+					throw new CrossDevicesException("DeviceAdaptive widget ["+deviceAdaptive+"] not found on classpath.",e);
 				}
 				catch (Exception e)
 				{
-					throw new CrossDevicesException(messages.crossDeviceScannerInitializationError(e.getLocalizedMessage()), e);
+					throw new CrossDevicesException("Error initializing CrossDevicesScanner.", e);
 				}
 			}
 		}

@@ -30,11 +30,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
 import org.cruxframework.crux.core.declarativeui.template.TemplateParser;
 import org.cruxframework.crux.core.declarativeui.template.Templates;
 import org.cruxframework.crux.core.declarativeui.template.TemplatesScanner;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -79,7 +77,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	protected File destDir;
 	protected Map<String, Class<?>> enumTypes;
 	
-	protected DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	protected Map<String, File> namespacesForCatalog;
 	protected File projectBaseDir;
 	protected Stack<Class<? extends WidgetChildProcessor<?>>> subTagTypes;
@@ -160,26 +157,26 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        Set<String> templateLibraries = Templates.getRegisteredLibraries();
 	        for (String library : libraries)
 	        {
-	        	logger.info(messages.schemaGeneratorCreatingLibraryXSD(library));
+	        	logger.info("Generating xsd file for library ["+library+"]");
 	        	generateSchemaForLibrary(library, libraries, templateLibraries);
 	        }
 
-	        logger.info(messages.schemaGeneratorCreatingTemplateXSD());
+	        logger.info("Generating template.xsd file.");
 	        generateTemplateSchema(libraries, templateLibraries);
 
 	        for (String library : templateLibraries)
 	        {
-	        	logger.info(messages.schemaGeneratorCreatingTemplateLibrary(library));
+	        	logger.info("Generating XSD file for library ["+library+"]");
 	        	generateSchemaForTemplateLibrary(library);
 	        }
 	        
-	        logger.info(messages.schemaGeneratorCreatingCoreXSD());
+	        logger.info("Generating core.xsd file");
 	        generateCoreSchema(libraries, templateLibraries);
 	        generateXDeviceSchema(libraries, templateLibraries);
 	        
 	        copyXHTMLSchema();
 
-	        logger.info(messages.schemaGeneratorXSDFilesGenerated());
+	        logger.info("XSD Files Generated.");
         }
         catch (Exception e)
         {
@@ -389,7 +386,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		catch (Exception e)
 		{
-			logger.error(messages.schemaGeneratorErrorGeneratingAttributesForProcessor(), e);
+			logger.error("Error creating XSD File: Error generating attributes for Processor.", e);
 		}
 	}
 
@@ -498,7 +495,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		catch (Exception e)
 		{
-			logger.error(messages.schemaGeneratorErrorGeneratingChildrenForFactory(), e);
+			logger.error("Error creating XSD File: Error generating children for Processor.", e);
 		}
 	}
 	
@@ -516,7 +513,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		catch (Exception e)
 		{
-			logger.error(messages.schemaGeneratorErrorProcessChildrenMethodNotFound(), e);
+			logger.error("Error creating XSD File: ProcessChildren method not found.", e);
 		}
 	}
 
@@ -819,7 +816,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 				}
 				catch (Exception e)
 				{
-					logger.error(messages.schemaGeneratorErrorGeneratingEventsForProcessor(), e);
+					logger.error("Error creating XSD File: Error generating events for Processor.", e);
 				}
 			}
 		}
@@ -871,7 +868,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		}
 		catch (Exception e)
 		{
-			logger.error(messages.schemaGeneratorErrorGeneratingEventsForProcessor(), e);
+			logger.error("Error creating XSD File: Error generating events for Processor.", e);
 		}
 	}
 
@@ -895,7 +892,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		{
 			if (tagName.length() == 0)
 			{
-				logger.error(messages.schemaGeneratorErrorTagNameExpected(processorClass.getName()));
+				logger.error("Error creating XSD File: Tag Name expected in processor class: ["+processorClass.getName()+"].");
 			}
 			else
 			{

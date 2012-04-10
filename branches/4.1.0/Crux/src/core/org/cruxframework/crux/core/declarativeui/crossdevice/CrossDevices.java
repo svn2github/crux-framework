@@ -27,8 +27,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.declarativeui.DeclarativeUIMessages;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +43,6 @@ public class CrossDevices
 {
 	private static final Lock lock = new ReentrantLock();
 	private static final Log logger = LogFactory.getLog(CrossDevices.class);
-	private static DeclarativeUIMessages messages = MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static Map<String, Set<Device>> registeredDevices = null;
 	private static Map<String, Document> templates = null;
 	
@@ -151,7 +148,7 @@ public class CrossDevices
 	{
 		templates = new HashMap<String, Document>();
 		registeredDevices = new HashMap<String, Set<Device>>();
-		logger.info(messages.crossDeviceScannerSearchingTemplateFiles());
+		logger.info("Searching for cross device files.");
 		CrossDevicesScanner.getInstance().scanArchives();
 	}
 
@@ -198,7 +195,7 @@ public class CrossDevices
 	{
 		if (templates.containsKey(deviceAdaptive+"_"+device.toString()))
 		{
-			throw new CrossDevicesException(messages.crossDeviceDuplicatedTemplate(deviceAdaptive, device.toString()));
+			throw new CrossDevicesException("Duplicated cross device file found. Library: ["+deviceAdaptive+"]. Template: ["+device.toString()+"].");
 		}
 		
 		if (!registeredDevices.containsKey(deviceAdaptive))

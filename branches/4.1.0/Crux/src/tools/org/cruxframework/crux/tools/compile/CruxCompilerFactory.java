@@ -15,8 +15,6 @@
  */
 package org.cruxframework.crux.tools.compile;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.tools.CruxToolsMessages;
 import org.cruxframework.crux.tools.ToolsConfigurationFactory;
 
 
@@ -27,8 +25,6 @@ import org.cruxframework.crux.tools.ToolsConfigurationFactory;
  */
 public class CruxCompilerFactory
 {
-	private static CruxToolsMessages messages = MessagesFactory.getMessages(CruxToolsMessages.class);
-	
 	public static AbstractCruxCompiler createCompiler() throws CompilerException
 	{
 		Class<?> compilerClass;
@@ -40,7 +36,7 @@ public class CruxCompilerFactory
         }
         catch (Exception e)
         {
-	        throw new CompilerException(messages.cruxCompilerFactoryErrorCreatingCompiler(e.getLocalizedMessage()),e);
+	        throw new CompilerException("Error creating the CruxCompiler class: "+e.getLocalizedMessage(),e);
         }
 		
 	}

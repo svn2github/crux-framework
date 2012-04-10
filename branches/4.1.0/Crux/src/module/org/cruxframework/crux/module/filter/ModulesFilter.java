@@ -27,14 +27,12 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.CruxFilter;
 import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.module.CruxModuleBridge;
 import org.cruxframework.crux.module.CruxModuleHandler;
-import org.cruxframework.crux.module.CruxModuleMessages;
 
 
 /**
@@ -47,8 +45,6 @@ public class ModulesFilter extends CruxFilter
 {
 	private static final Log log = LogFactory.getLog(ModulesFilter.class);
 	
-	protected CruxModuleMessages messages = MessagesFactory.getMessages(CruxModuleMessages.class);
-
 	protected String modulesUrlPrefix;
 	
 	
@@ -87,7 +83,7 @@ public class ModulesFilter extends CruxFilter
 					}
 					else
 					{
-						log.info(messages.modulesFilterDoesNotTransformPage(requestedScreen));
+						log.info("The page ["+requestedScreen+"] is not transformed... Accessing directly.");
 					}
 				}
 				catch (Exception e)

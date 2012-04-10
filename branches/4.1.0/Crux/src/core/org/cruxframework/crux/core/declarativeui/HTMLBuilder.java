@@ -33,7 +33,6 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -71,7 +70,6 @@ class HTMLBuilder
 	private static XPathExpression findHTMLHeadExpression;
 	private static Set<String> htmlPanelContainers;
 	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
-	private static DeclarativeUIMessages messages = (DeclarativeUIMessages)MessagesFactory.getMessages(DeclarativeUIMessages.class);
 	private static Map<String, String> referenceWidgetsList;
 	private static final String WIDGETS_NAMESPACE_PREFIX= "http://www.cruxframework.org/crux/";
 	private static Set<String> widgetsSubTags;
@@ -97,7 +95,7 @@ class HTMLBuilder
         }
         catch (Exception e)
         {
-        	log.error(messages.htmlBuilderErrorCreatingBuilder(e.getMessage()), e);
+        	log.error("Error creating htmlBuilder.", e);
         }
 	}
 	private String cruxTagName;
@@ -156,7 +154,7 @@ class HTMLBuilder
 				}
 				catch (Exception e)
 				{
-					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
+					throw new HTMLBuilderException("Error creating XSD File: Error generating widgets reference list.", e);
 				}
 			}
 		}
@@ -188,7 +186,7 @@ class HTMLBuilder
 				}
 				catch (Exception e)
 				{
-					throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsReferenceList(), e);
+					throw new HTMLBuilderException("Error creating XSD File: Error generating widgets reference list.", e);
 				}
 			}
 		}
@@ -247,7 +245,7 @@ class HTMLBuilder
 					}
 					catch (Exception e)
 					{
-						throw new HTMLBuilderException(messages.transformerErrorGeneratingWidgetsList(), e);
+						throw new HTMLBuilderException("Error creating XSD File: Error generating widgets list.", e);
 					}
 				}
 			}
@@ -478,7 +476,7 @@ class HTMLBuilder
 			
 		if (screenModule == null)
 		{
-			throw new HTMLBuilderException(messages.htmlBuilderNoModulesOnPage(screenId));
+			throw new HTMLBuilderException("No module declared on screen ["+screenId+"].");
 		}
 		try
 		{
@@ -697,7 +695,7 @@ class HTMLBuilder
 		String namespaceURI = parentNode.getNamespaceURI();
 		if (namespaceURI == null)
 		{
-			log.warn(messages.htmlBuilderElementWithoutNamespace(this.screenId));
+			log.warn("The screen ["+this.screenId+"] contains elements that is not bound to any namespace. It can cause errors while translating to an HTML page.");
 		}
 		if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode))
 		{
@@ -850,7 +848,8 @@ class HTMLBuilder
     {
 		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
 		String currentWidgetTag = getCurrentWidgetTag();
-		if (htmlContainerWidget || ((isWidget(currentWidgetTag)) && isHTMLChild(cruxPageElement)))
+		boolean notOrphanWidget = !isOrphanWidget(cruxPageElement);
+		if (htmlContainerWidget || ((isWidget(currentWidgetTag)) && notOrphanWidget && isHTMLChild(cruxPageElement)))
 		{
 			Element widgetHolder;
 			boolean hasSiblings = hasSiblingElements(cruxPageElement);

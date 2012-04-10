@@ -20,11 +20,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.module.CruxModuleHandler;
-import org.cruxframework.crux.module.CruxModuleMessages;
 
 
 /**
@@ -33,8 +31,6 @@ import org.cruxframework.crux.module.CruxModuleMessages;
  */
 public class ModulesLauncher
 {
-	private static CruxModuleMessages messages = (CruxModuleMessages)MessagesFactory.getMessages(CruxModuleMessages.class);
-
 	/**
 	 * 
 	 * @param args
@@ -45,7 +41,7 @@ public class ModulesLauncher
 		String[] developmentModules = CruxModuleHandler.getDevelopmentModules();
 		if (developmentModules==null || developmentModules.length ==0)
 		{
-			throw new RuntimeException(messages.launcherErrorNoDevelopmentModulesSpecified());
+			throw new RuntimeException("No development module specified.");
 		}
 		
 		String webDir = "./war/";
