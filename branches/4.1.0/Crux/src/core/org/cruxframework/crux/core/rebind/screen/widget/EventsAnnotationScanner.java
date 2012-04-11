@@ -114,7 +114,7 @@ class EventsAnnotationScanner
         }
         catch (Exception e)
         {
-        	throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingEvtBinder());
+        	throw new CruxGeneratorException("Error creating evtBinder.");
         }
 		final Device[] supportedDevices = evt.supportedDevices();
 		return new EventCreator()

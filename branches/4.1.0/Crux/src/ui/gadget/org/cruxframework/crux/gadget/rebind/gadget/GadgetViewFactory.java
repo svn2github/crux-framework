@@ -17,9 +17,7 @@ package org.cruxframework.crux.gadget.rebind.gadget;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -48,8 +46,6 @@ import org.cruxframework.crux.gwt.rebind.AbstractHTMLPanelFactory;
 })
 public class GadgetViewFactory extends AbstractHTMLPanelFactory
 {
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	@Override
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
@@ -57,7 +53,8 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 		String id = context.readWidgetProperty("id");
         if(StringUtils.isEmpty(id))
         {
-        	throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), context.readChildProperty("_type")));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
         }
 		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
 		createChildren(out, context);

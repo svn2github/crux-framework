@@ -563,9 +563,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				{
 					if (dtoLooping.contains(field.getType().getQualifiedSourceName()))
 					{
-						throw new CruxGeneratorException(
-								messages.errorGeneratingValueBindingCodeCircularReference(voClass.getQualifiedSourceName(), 
-																						  field.getName()));
+						throw new CruxGeneratorException("Error Generating value binding code for DTO ["+voClass.getQualifiedSourceName()+"], " +
+								"Field ["+field.getName()+"]. Circular Reference.");
 					}
 					generateScreenOrDTOPopulationField(resultVariable, voClass, field, sourceWriter, populateScreen, false, dtoLooping);
 				}

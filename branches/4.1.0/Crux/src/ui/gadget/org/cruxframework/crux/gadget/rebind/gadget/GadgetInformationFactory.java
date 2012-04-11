@@ -15,10 +15,8 @@
  */
 package org.cruxframework.crux.gadget.rebind.gadget;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.gadget.client.GadgetException;
-import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
 
 
 /**
@@ -27,8 +25,6 @@ import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
  */
 public class GadgetInformationFactory
 {
-	private static GadgetGeneratorMessages messages = MessagesFactory.getMessages(GadgetGeneratorMessages.class);
-	
 	/**
 	 * @param module
 	 * @return
@@ -41,7 +37,7 @@ public class GadgetInformationFactory
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw new GadgetException(messages.gadgetInformationMetaClassNotFound(module.getFullName()));
+			throw new GadgetException("Can not find the GadgetInformation meta class ["+module.getFullName()+"].");
 		}
 	}
 }

@@ -64,12 +64,12 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 			name = annotation.value();
 			if (ClientControllers.getController(name) == null)
 			{
-				throw new CruxGeneratorException(messages.errorGeneratingInvokerControllerNotFound(name));
+				throw new CruxGeneratorException("Error generating invoker. Controller ["+name+"] not found.");
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingInvokerControllerNotFoundForWrapper(declaringClass.getParameterizedQualifiedSourceName()));
+			throw new CruxGeneratorException("Error generating invoker. Controller not found for interface ["+declaringClass.getParameterizedQualifiedSourceName()+"].");
 		}
 		return name;
 	}

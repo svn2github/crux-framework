@@ -15,13 +15,11 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget.creator;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.RangeChangeEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.RowCountChangeEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
@@ -45,8 +43,6 @@ public interface HasRowsFactory<C extends WidgetCreatorContext>
 {
 	class EstimatedRowCountProcessor extends AttributeProcessor<WidgetCreatorContext>
 	{
-		private GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
-		
 		public EstimatedRowCountProcessor(WidgetCreator<?> widgetCreator)
         {
 	        super(widgetCreator);
@@ -61,7 +57,7 @@ public interface HasRowsFactory<C extends WidgetCreatorContext>
 			}
 			catch (Exception e) 
 			{
-				throw new CruxGeneratorException(messages.rowCountProcessorErrorInvalidValue(attributeValue, getWidgetCreator().getScreen().getId(), context.getWidgetId()),e);
+				throw new CruxGeneratorException("Error parsing attribute value ["+attributeValue+"], of widget ["+context.getWidgetId()+"], on screen ["+getWidgetCreator().getScreen().getId()+"].",e);
 			}
 			out.println(context.getWidget()+".setRowCount("+attributeValue+", false);");
         }

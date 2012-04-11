@@ -123,7 +123,7 @@ class WidgetCreatorAnnotationsProcessor
 		{
 			if (!childrenProcessors.containsKey(childName))
 			{
-				throw new CruxGeneratorException(messages.widgetCreatorCanNotFindProcessor(childName));
+				throw new CruxGeneratorException("Can not find ChildProcessor for ["+childName+"].");
 			}
 			childrenProcessors.get(childName).processChild(out, context);
 		}

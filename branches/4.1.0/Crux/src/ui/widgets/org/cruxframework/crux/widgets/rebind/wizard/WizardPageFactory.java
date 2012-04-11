@@ -96,7 +96,8 @@ public class WizardPageFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
+				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));

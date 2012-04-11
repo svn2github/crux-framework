@@ -135,7 +135,7 @@ class AttributesAnnotationScanner
         }
         catch (Exception e)
         {
-	        throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingAttributeProcessor(), e);
+	        throw new CruxGeneratorException("Error creating AttibuteProcessor.", e);
         }
 		
 		return doCreateAttributeProcessorWithParser(attrName, method, processor, attr.supportedDevices());
@@ -165,8 +165,8 @@ class AttributesAnnotationScanner
 						catch (Exception e)
 						{
 
-							throw new CruxGeneratorException(messages.widgetCreatorRunningAttributeProcessor(attrName, 
-									context.getWidgetId(), widgetCreator.getScreen().getId()), e);
+							throw new CruxGeneratorException("Error running attribute processor for attribute ["+attrName+"], " +
+									"from widget ["+context.getWidgetId()+"], on screen ["+widgetCreator.getScreen().getId()+"].", e);
 						}
 					}
 				}

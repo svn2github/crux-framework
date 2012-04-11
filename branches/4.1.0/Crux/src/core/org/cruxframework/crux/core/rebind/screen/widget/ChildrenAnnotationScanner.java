@@ -115,7 +115,7 @@ class ChildrenAnnotationScanner
             			}
             			catch (Exception e)
             			{
-            				throw new CruxGeneratorException(messages.widgetCreatorErrorRunningChildProcessor(e.getMessage()),e);
+            				throw new CruxGeneratorException("Error invoking ChildProcessor method.",e);
             			}
             			processChildren(out, context);
             		}
@@ -238,7 +238,7 @@ class ChildrenAnnotationScanner
 					}
 					else 
 					{
-						throw new CruxGeneratorException(messages.widgetCreatorInvalidTextProperty(context.getWidgetId()));
+						throw new CruxGeneratorException("Can not process the text property for widget ["+context.getWidgetId()+"]. The widget is not assignable to HasText and its factory does not define any property for text value.");
 					}
 				}
 			}
@@ -270,14 +270,14 @@ class ChildrenAnnotationScanner
 					final boolean isTextProcessor = TextChildProcessor.class.isAssignableFrom(childProcessorClass);
 					if (isTextProcessor)
 					{
-						throw new CruxGeneratorException(messages.widgetCreatorTextProcessorWithSiblingElements());
+						throw new CruxGeneratorException("A TextProcessor child processor can not have any sibling processor defined.");
 					}
 					boolean isAgregator = isAgregatorProcessor(childProcessorClass);
 					if (isAgregator)
 					{
 						if (hasAgregator)
 						{
-							throw new CruxGeneratorException(messages.widgetCreatorVariousAgregatorsOnProcessor());
+							throw new CruxGeneratorException("You can not define more than one agregator under the same parent processor.");
 						}
 						hasAgregator = true;
 					}
@@ -295,7 +295,7 @@ class ChildrenAnnotationScanner
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingChildrenProcessor(e.getMessage()), e);
+			throw new CruxGeneratorException("Error creating ChildrenProcessor class.", e);
 		}
     }
 
@@ -332,7 +332,7 @@ class ChildrenAnnotationScanner
 		}
 		catch (Exception e)
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorErrorCreatingChildrenProcessor(e.getMessage()),e);
+			throw new CruxGeneratorException("Error creating ChildrenProcessor class.", e);
 		}
     }	
 	
@@ -548,7 +548,7 @@ class ChildrenAnnotationScanner
 	    }
 		if (StringUtils.isEmpty(childName))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorInvalidTagName());
+			throw new CruxGeneratorException("Invalid tagName for child processor.");
 		}
 	    return childName;
     }	

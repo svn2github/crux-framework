@@ -346,7 +346,7 @@ public class Modules
 		}
 		catch (ScreenConfigException e)
 		{
-			throw new ModuleException(messages.modulesErrorSearchingModulepages(module.getName()), e);
+			throw new ModuleException("Error searching for module pages. Module Name ["+module.getName()+"]", e);
 		}
 		return pages;
 	}

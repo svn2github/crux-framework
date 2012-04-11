@@ -295,7 +295,7 @@ public class ViewFactoryCreator
         }
         catch (Exception e)
         {
-        	throw new CruxGeneratorException(messages.viewFactoryErrorRetrievingWidgetFactory(widgetType),e);
+        	throw new CruxGeneratorException("Error retrieveing widgetFactory for type ["+widgetType+"].",e);
         }
 		return creators.get(widgetType);
 	}
@@ -349,7 +349,7 @@ public class ViewFactoryCreator
 		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
 		if (widgetFactory == null)
 		{
-			throw new CruxGeneratorException(messages.viewFactoryWidgetFactoryNotFound(widgetType));
+			throw new CruxGeneratorException("Can not found widgetFactory for type: ["+widgetType+"].");
 		}
 		
 		String widget;
@@ -367,7 +367,7 @@ public class ViewFactoryCreator
 		}
 		if (widget == null)
 		{
-			throw new CruxGeneratorException(messages.screenFactoryErrorCreatingWidget(widgetId));
+			throw new CruxGeneratorException("Can not create widget ["+widgetId+"]. Verify the widget type.");
 		}
 		
 		Class<?> widgetClass = getWidgetCreatorHelper(widgetType).getWidgetType();
@@ -545,7 +545,8 @@ public class ViewFactoryCreator
      */
     String[] getImports()
     {
-	    String[] imports = new String[] {
+	    @SuppressWarnings("deprecation")
+        String[] imports = new String[] {
     		GWT.class.getCanonicalName(), 
     		org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName(),
     		StringUtils.class.getCanonicalName(), 
@@ -805,20 +806,20 @@ public class ViewFactoryCreator
 			String controller = ClientControllers.getController(event.getController());
 			if (controller == null)
 			{
-				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screen.getId()));
+				throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+screen.getId()+"],  not found.");
 			}
 
 			boolean hasEventParameter = true;
 			JClassType controllerClass = context.getTypeOracle().findType(controller);
 			if (controllerClass == null)
 			{
-				throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screen.getId()));
+				throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+screen.getId()+"],  not found.");
 			}
 			if (EvtProcessor.getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
 			{
 				if (JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}) == null)
 				{
-					throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screen.getId(), controller, event.getMethod()));
+	        		throw new CruxGeneratorException("Screen ["+screen.getId()+"] tries to invoke the method ["+event.getMethod()+"] on controller ["+controller+"]. That method does not exist.");
 				}
 				hasEventParameter = false;
 			}
@@ -868,14 +869,16 @@ public class ViewFactoryCreator
 	{
 		if (!metaElem.has("id"))
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(screen.getId(), widgetType));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+screen.getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 		String widget;
 
 		String widgetId = metaElem.optString("id");
 		if (widgetId == null || widgetId.length() == 0)
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(screen.getId(), widgetType));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+screen.getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 
 		if (!isAttachToDOM(widgetType))
@@ -973,7 +976,7 @@ public class ViewFactoryCreator
 
 			if (!metaElement.has("_type"))
 			{
-				throw new CruxGeneratorException(messages.viewFactoryMetaElementDoesNotContainsType());
+				throw new CruxGeneratorException("Crux Meta Data contains an invalid meta element (without type attribute).");
 			}
 			String type = getMetaElementType(metaElement);
 			if (!StringUtils.unsafeEquals("screen",type))
@@ -984,7 +987,7 @@ public class ViewFactoryCreator
 				}
 				catch (Throwable e) 
 				{
-					throw new CruxGeneratorException(messages.viewFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+					throw new CruxGeneratorException("Error Creating widget. See Log for more detail.", e);
 				}
 			}
 		}

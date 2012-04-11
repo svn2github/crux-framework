@@ -19,9 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -36,8 +34,6 @@ import com.google.gwt.user.rebind.StringSourceWriter;
  */
 public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerator 
 {
-	private static GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	private static final List<String> VALID_VALUES = Arrays.asList(new String[]{
 			"largeDisplayMouse", "largeDisplayTouch", "largeDisplayArrows", "smallDisplayArrows", "smallDisplayTouch"});
 
@@ -72,7 +68,7 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		{
 			if (!VALID_VALUES.contains(value)) 
 			{
-				throw new CruxGeneratorException(messages.deviceFeaturesInvalidOption(value));
+				throw new CruxGeneratorException("Property device.features can not be assigned to value ["+value+"].");
 			}
 		}
 		StringSourceWriter body = new StringSourceWriter();

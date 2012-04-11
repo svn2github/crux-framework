@@ -33,7 +33,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
@@ -52,7 +51,6 @@ import org.cruxframework.crux.gadget.client.meta.GadgetFeature.WantsFeatures;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo;
 import org.cruxframework.crux.gadget.client.meta.GadgetInfo.ModulePrefs;
 import org.cruxframework.crux.gadget.config.GadgetsConfigurationFactory;
-import org.cruxframework.crux.gadget.rebind.GadgetGeneratorMessages;
 import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
 import org.cruxframework.crux.gadget.rebind.gwt.PreferenceGenerator;
 import org.cruxframework.crux.gadget.rebind.scanner.GadgetScreenResolver;
@@ -82,8 +80,6 @@ import com.google.gwt.core.ext.UnableToCompleteException;
  */
 public class GadgetManifestGenerator
 {
-	private static GadgetGeneratorMessages messages = MessagesFactory.getMessages(GadgetGeneratorMessages.class);
-	
 	private final TreeLogger logger;
 	private Class<?> moduleMetaClass;
 	private String moduleName;
@@ -101,7 +97,7 @@ public class GadgetManifestGenerator
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new CruxGeneratorException(messages.gadgetManifestGeneratorCanNotCreateDocumentBuilder(), e);
+			throw new CruxGeneratorException("Could not create manifest document builder.", e);
 		}
 		return documentBuilder;
 	}
@@ -137,7 +133,7 @@ public class GadgetManifestGenerator
         }
         catch (Exception e)
         {
-        	throw new CruxGeneratorException(messages.gadgetManifestGeneratorCanNotCreateDocument(), e);
+        	throw new CruxGeneratorException("Could not create manifest document.", e);
         }
 	}
 	
@@ -152,7 +148,7 @@ public class GadgetManifestGenerator
 		Set<String> descriptorClasses = ClassScanner.searchClassesByInterface(GadgetInfo.class);
 		if (descriptorClasses == null || descriptorClasses.size() != 1)
 		{
-			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorInterfaceNotFound());
+			logger.log(TreeLogger.ERROR, "Error generating gadget descriptor. You must declare a interface (only one) that implements the interface GadgetInfo.");
 			throw new CruxGeneratorException();
 		}
 
@@ -162,12 +158,12 @@ public class GadgetManifestGenerator
         }
         catch (ClassNotFoundException e)
         {
-			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorInterfaceNotLoaded());
+			logger.log(TreeLogger.ERROR, "Gadget descriptor not found.");
 			throw new CruxGeneratorException();
         }
 		if (!moduleMetaClass.isInterface())
 		{
-			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorDescriptorMustBeInterface());
+			logger.log(TreeLogger.ERROR, "Gadget Descriptor must be an interface.");
 			throw new CruxGeneratorException();
 		}
     }
@@ -197,7 +193,7 @@ public class GadgetManifestGenerator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorCanNotCreateDocument(), e);
+			logger.log(TreeLogger.ERROR, "Could not create manifest document.", e);
 			throw new UnableToCompleteException();
 		}
 
@@ -366,12 +362,12 @@ public class GadgetManifestGenerator
         }
     	catch (ClassCastException e)
     	{
-			logger.log(TreeLogger.ERROR, messages.gadgetScreenResolverCastError(), e);
+			logger.log(TreeLogger.ERROR, "Gadget projects must use GadgetScreenResolver or a subClass of it.", e);
 			throw new UnableToCompleteException();
     	}
         catch (Exception e)
         {
-			logger.log(TreeLogger.ERROR, messages.gadgetManifestGeneratorErrorReadingScreenIds(), e);
+			logger.log(TreeLogger.ERROR, "Could not retrieve screen ids.", e);
 			throw new UnableToCompleteException();
         }
     }

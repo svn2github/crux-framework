@@ -17,9 +17,7 @@ package org.cruxframework.crux.widgets.rebind.wizard;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.dto.DataObjects;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
@@ -38,14 +36,14 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import org.cruxframework.crux.widgets.client.wizard.WidgetStep;
 import org.cruxframework.crux.widgets.client.wizard.Wizard;
-import org.cruxframework.crux.widgets.client.wizard.WizardCommandEvent;
-import org.cruxframework.crux.widgets.client.wizard.WizardCommandHandler;
-import org.cruxframework.crux.widgets.client.wizard.WizardControlBar;
-import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
 import org.cruxframework.crux.widgets.client.wizard.Wizard.ControlHorizontalAlign;
 import org.cruxframework.crux.widgets.client.wizard.Wizard.ControlPosition;
 import org.cruxframework.crux.widgets.client.wizard.Wizard.ControlVerticalAlign;
 import org.cruxframework.crux.widgets.client.wizard.Wizard.NoData;
+import org.cruxframework.crux.widgets.client.wizard.WizardCommandEvent;
+import org.cruxframework.crux.widgets.client.wizard.WizardCommandHandler;
+import org.cruxframework.crux.widgets.client.wizard.WizardControlBar;
+import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
 import org.cruxframework.crux.widgets.rebind.event.CancelEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.FinishEvtBind;
 
@@ -64,8 +62,6 @@ import org.cruxframework.crux.widgets.rebind.event.FinishEvtBind;
 })
 public class WizardFactory extends AbstractWizardFactory
 {
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	@Override
 	public void instantiateWidget(SourcePrinter out, WizardContext context) throws CruxGeneratorException
 	{
@@ -199,7 +195,8 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
+				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			context.stepId = id;
@@ -236,7 +233,8 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
+				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String widget = context.getWidget();
@@ -339,7 +337,8 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
+				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String widget = context.getWidget();
@@ -507,7 +506,8 @@ public class WizardFactory extends AbstractWizardFactory
 			String id = context.readChildProperty("id");
 			if (StringUtils.isEmpty(id))
 			{
-				throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getWidgetCreator().getScreen().getId(), context.readChildProperty("_type")));
+				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));

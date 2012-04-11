@@ -21,9 +21,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
@@ -69,7 +67,6 @@ import com.google.gwt.dom.client.PartialSupport;
 })
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
 	private ViewFactoryCreator factory = null;
 	
@@ -83,7 +80,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
 		}
 		
 		JSONArray children = metaElem.optJSONArray("_children");
@@ -94,7 +91,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 
 		if (!acceptsNoChild && (children == null || children.length() == 0 || children.opt(0)==null))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
 		}
 		return children;
 	}	
@@ -108,7 +105,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
 		}
 		JSONArray children = metaElem.optJSONArray("_children");
 		if (acceptsNoChild && children == null)
@@ -117,12 +114,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		if (!acceptsNoChild && (children == null || children.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
 		}
 		JSONObject firstChild = children.optJSONObject(0);
 		if (!acceptsNoChild && firstChild == null)
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureChildrenEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
 		}
 		return firstChild;
 	}
@@ -139,7 +136,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		String result = metaElem.optString("_html");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureHtmlChildEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain an inner HTML.");
 		}
 		return result;
 	}
@@ -156,7 +153,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		String result = metaElem.optString("_text");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureTextChildEmpty(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain a text node child.");
 		}
 		return result;
 	}
@@ -257,7 +254,8 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!metaElem.has("id"))
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), factory.getMetaElementType(metaElem)));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+getScreen().getId()+"], there is an widget of type ["+factory.getMetaElementType(metaElem)+"] without id.");
 		}
 		String widgetId = metaElem.optString("id");
 		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), consumer, allowWrapperForCreatedWidget, context);
@@ -348,7 +346,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!isWidget(metaElem))
 		{
-			throw new CruxGeneratorException(messages.widgetCreatorEnsureWidgetFail(getScreen().getId(), parentWidgetId));
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain a valid widget as child.");
 		}
 		return metaElem;
 	}
@@ -460,7 +458,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		{
 			return declarativeFactory.library()+"_"+declarativeFactory.id();
 		}
-		throw new CruxGeneratorException(messages.widgetCreatorErrorReadingFactoryDeclaration()); 
+		throw new CruxGeneratorException("Error reading factory declaration."); 
 	}
 	
 	/**

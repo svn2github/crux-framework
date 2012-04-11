@@ -26,7 +26,6 @@ import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
-import org.cruxframework.crux.core.client.screen.ScreenBindableObject;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
@@ -249,7 +248,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 					JField field = ((JClassType)fieldType).findField(fieldName.trim());
 					if (field == null)
 					{
-						throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceCanNotFindIdentifier(dataSourceClass.getName(), identifier[i]));
+						throw new CruxGeneratorException("Error Generating DataSource ["+dataSourceClass.getName()+"]. Can not retrieve identifier field ["+identifier[i]+"].");
 					}
 					if (first)
 					{
@@ -361,7 +360,8 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @return a sourceWriter for the proxy class
 	 */
-	protected SourceWriter getSourceWriter()
+	@SuppressWarnings("deprecation")
+    protected SourceWriter getSourceWriter()
 	{
 		JPackage pkg = dataSourceClass.getPackage();
 		String packageName = pkg == null ? "" : pkg.getName();
@@ -381,7 +381,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 
 		composerFactory.setSuperclass(dataSourceClass.getParameterizedQualifiedSourceName());
-		composerFactory.addImplementedInterface(ScreenBindableObject.class.getCanonicalName());
+		composerFactory.addImplementedInterface(org.cruxframework.crux.core.client.screen.ScreenBindableObject.class.getCanonicalName());
 
 		return composerFactory.createSourceWriter(context, printWriter);
 	}
@@ -426,7 +426,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		
 		if (returnClassType == null)
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingRegisteredDataSourceInvalidBoundObject(dataSourceClass.getName()));
+			throw new CruxGeneratorException("Error Generating DataSource ["+dataSourceClass.getName()+"]. Invalid Bound object. Primitive is not allowed");
 		}
 		return returnClassType;
     }

@@ -24,8 +24,6 @@ import java.util.List;
 
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.rebind.module.ModulesScanner;
@@ -45,7 +43,6 @@ import org.w3c.dom.NodeList;
 public class ModuleUtils
 {
 	private static final String MODULE_IMPORT_SUFFIX = ".nocache.js";
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);	
 	
 	public static void initializeScannerURLs(URL[] urls)
 	{
@@ -105,7 +102,7 @@ public class ModuleUtils
 		}
 		catch (XMLException e)
 		{
-			throw new InterfaceConfigException(messages.screenFactoryErrorParsingScreen(pageFile.toString(), e.getMessage()));
+			throw new InterfaceConfigException("Error parsing screen ["+pageFile.toString()+"].", e);
 		}
 		
 		NodeList elementList = source.getElementsByTagName("script");

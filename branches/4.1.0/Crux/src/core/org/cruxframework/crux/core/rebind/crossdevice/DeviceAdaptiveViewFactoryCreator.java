@@ -65,7 +65,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 			{
 				if (!controllerName.equals(controller))
 				{
-					throw new CruxGeneratorException(messages.deviceAdaptiveInvalidController(controllerName, controller));
+					throw new CruxGeneratorException("Controller ["+controller+"] can not be used on the deviceAdaptive template. Only the bound controller ["+controllerName+"] can be refered.");
 				}
 				return getSingleControllerVariable();
 			}
@@ -74,7 +74,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
             {
 				if (!controllerName.equals(controller))
 				{
-					throw new CruxGeneratorException(messages.deviceAdaptiveInvalidController(controllerName, controller));
+					throw new CruxGeneratorException("Controller ["+controller+"] can not be used on the deviceAdaptive template. Only the bound controller ["+controllerName+"] can be refered.");
 				}
 	            return controllerClass;
             }
@@ -107,7 +107,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 
 	    if (!metaElement.has("_type"))
 	    {
-	    	throw new CruxGeneratorException(messages.viewFactoryMetaElementDoesNotContainsType());
+	    	throw new CruxGeneratorException("Crux Meta Data contains an invalid meta element (without type attribute).");
 	    }
 	    String type = getMetaElementType(metaElement);
 	    if (!StringUtils.unsafeEquals("screen",type))
@@ -118,7 +118,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	    	}
 	    	catch (Throwable e) 
 	    	{
-	    		throw new CruxGeneratorException(messages.viewFactoryGenericErrorCreateWidget(e.getLocalizedMessage()), e);
+	    		throw new CruxGeneratorException("Error Creating widget. See Log for more detail.", e);
 	    	}
 	    }
 
@@ -139,14 +139,16 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	{
 		if (!metaElem.has("id"))
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), widgetType));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+getScreen().getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 		String widget;
 
 		String widgetId = metaElem.optString("id");
 		if (widgetId == null || widgetId.length() == 0)
 		{
-			throw new CruxGeneratorException(messages.screenFactoryWidgetIdRequired(getScreen().getId(), widgetType));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+getScreen().getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 
 		widget = newWidget(printer, metaElem, widgetId, widgetType, this.screenWidgetConsumer, true);

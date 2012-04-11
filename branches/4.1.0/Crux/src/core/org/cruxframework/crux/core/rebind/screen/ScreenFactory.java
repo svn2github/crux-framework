@@ -27,8 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
@@ -57,7 +56,6 @@ public class ScreenFactory
 	private static ScreenFactory instance = new ScreenFactory();
 	private static final Log logger = LogFactory.getLog(ScreenFactory.class);
 	
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final Lock screenLock = new ReentrantLock();
 	private static final long UNCHANGED_RESOURCE = -1;
 	private static final long REPROCESS_RESOURCE = -2;	
@@ -112,7 +110,7 @@ public class ScreenFactory
 			InputStream stream = ScreenResourceResolverInitializer.getScreenResourceResolver().getScreenXMLResource(id, device);
 			if (stream == null)
 			{
-				throw new ScreenConfigException(messages.screenFactoryScreeResourceNotFound(id));
+				throw new ScreenConfigException("Screen ["+id+"] not found!");
 			}
 			
 			screenLock.lock();
@@ -137,7 +135,7 @@ public class ScreenFactory
 		} 
 		catch (Throwable e) 
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorRetrievingScreen(id, e.getLocalizedMessage()), e);
+			throw new ScreenConfigException("Error retrieving screen ["+id+"].", e);
 		}
 	}
 
@@ -230,7 +228,7 @@ public class ScreenFactory
 		Module mod = Modules.getInstance().getModule(module);
 		if (mod == null)
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorNoModulesOnPage(id));
+			throw new ScreenConfigException("No module declared on screen ["+id+"].");
 		}
 		return Modules.getInstance().getRelativeScreenId(mod, id);
 	}
@@ -247,7 +245,8 @@ public class ScreenFactory
 	{
 		if (!elem.has("id"))
 		{
-			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired(screen.getId(), elem.optString("_type")));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+screen.getId()+"], there is an widget of type ["+elem.optString("_type")+"] without id.");
 		}
 		String widgetId;
         try
@@ -256,18 +255,19 @@ public class ScreenFactory
         }
         catch (JSONException e)
         {
-			throw new ScreenConfigException(messages.screenFactoryWidgetIdRequired(screen.getId(), elem.optString("_type")));
+			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
+					"On page ["+screen.getId()+"], there is an widget of type ["+elem.optString("_type")+"] without id.");
         }
 		Widget widget = screen.getWidget(widgetId);
 		if (widget != null)
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorDuplicatedWidget(widgetId));
+			throw new ScreenConfigException("Error creating widget. Duplicated identifier ["+widgetId+"].");
 		}
 		
 		widget = newWidget(elem, widgetId);
 		if (widget == null)
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId));
+			throw new ScreenConfigException("Can not create widget ["+widgetId+"]. Verify the widget type.");
 		}
 		
 		screen.addWidget(widget);
@@ -310,7 +310,7 @@ public class ScreenFactory
             }
 			catch (JSONException e)
             {
-    			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId), e);
+				throw new ScreenConfigException("Can not create widget ["+widgetId+"]. Verify the widget type.", e);
             }
 		}
     }
@@ -336,7 +336,7 @@ public class ScreenFactory
 			{
 				if (result != null)
 				{
-					throw new ScreenConfigException(messages.screenFactoryErrorMultipleModulesOnPage());
+					throw new ScreenConfigException("Multiple modules in the same html page is not allowed in CRUX.");
 				}
 				
 				int lastSlash = src.lastIndexOf("/");
@@ -408,7 +408,7 @@ public class ScreenFactory
 		} 
 		catch (Throwable e) 
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorCreatingWidget(widgetId), e);
+			throw new ScreenConfigException("Can not create widget ["+widgetId+"]. Verify the widget type.", e);
 		} 
 	}
 	
@@ -432,7 +432,7 @@ public class ScreenFactory
 		catch (XMLException e)
 		{
 			logger.error(e.getMessage(), e);
-			throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()));
+			throw new ScreenConfigException("Error parsing screen ["+id+"].", e);
 		}
 
 		String screenModule = getScreenModule(source);
@@ -462,19 +462,19 @@ public class ScreenFactory
 						} 
 						catch (ScreenConfigException e) 
 						{
-							logger.error(messages.screenFactoryGenericErrorCreateWidget(id, e.getLocalizedMessage()));
+							logger.error("Error creating widget ["+id+"].", e);
 						}
 					}
 				}
 			}
 			catch (JSONException e)
 			{
-				throw new ScreenConfigException(messages.screenFactoryErrorParsingScreen(id, e.getMessage()), e);
+				throw new ScreenConfigException("Error parsing screen ["+id+"].", e);
 			}
 		}
 		else
 		{
-			throw new ScreenConfigException(messages.screenFactoryErrorNoModulesOnPage(id));
+			throw new ScreenConfigException("No module declared on screen ["+id+"].");
 		}
 		
 		return screen;
@@ -504,7 +504,7 @@ public class ScreenFactory
 	    	return meta.getJSONArray("elements");
 	    }
 	    
-	    throw new ScreenConfigException(messages.screenFactoryErrorParsingScreenMetaData(id));
+        throw new ScreenConfigException("Error parsing screen metaData. Screen ["+id+"].");
     }
 
 	/**
@@ -601,13 +601,13 @@ public class ScreenFactory
 	        	}
 	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
-	        		if (logger.isDebugEnabled()) logger.debug(messages.screenPropertyError(attrName.substring(1), screen.getId()));
+	        		if (logger.isDebugEnabled()) logger.debug("Error setting property ["+attrName+"] for screen ["+screen.getId()+"].");
 	        	}
 	        }
         }
         catch (JSONException e)
         {
-	        throw new ScreenConfigException(messages.screenFactoryErrorParsingScreenMetaData(screen.getId()));
+	        throw new ScreenConfigException("Error parsing screen metaData. Screen ["+screen.getId()+"].");
         }
 	}
 
@@ -637,7 +637,7 @@ public class ScreenFactory
 	    		{
 	    			if (DataSources.getDataSource(datasource) == null)
 	    			{
-	    				throw new ScreenConfigException(messages.screenFactoryInvalidDataSource(datasource, screen.getId()));
+	    				throw new ScreenConfigException("Datasource ["+datasource+"], declared on screen ["+screen.getId()+"], not found!");
 	    			}
 	    			screen.addDataSource(datasource);
 	    		}
@@ -671,7 +671,7 @@ public class ScreenFactory
 	    		{
 	    			if (Formatters.getFormatter(formatter) == null)
 	    			{
-	    				throw new ScreenConfigException(messages.screenFactoryInvalidFormatter(formatter, screen.getId()));
+	    				throw new ScreenConfigException("Formatter ["+formatter+"], declared on screen ["+screen.getId()+"], not found!");
 	    			}
 	    			screen.addFormatter(formatter);
 	    		}
@@ -706,7 +706,7 @@ public class ScreenFactory
 	    		{
 	    			if (org.cruxframework.crux.core.rebind.serializable.Serializers.getCruxSerializable(serializer) == null)
 	    			{
-	    				throw new ScreenConfigException(messages.screenFactoryInvalidSerializable(serializer, screen.getId()));
+	    				throw new ScreenConfigException("Serializable ["+serializer+"], declared on screen ["+screen.getId()+"], not found!");
 	    			}
 	    			screen.addSerializer(serializer);
 	    		}
@@ -740,7 +740,7 @@ public class ScreenFactory
 	    		{
 	    			if (ClientControllers.getController(handler) == null)
 	    			{
-	    				throw new ScreenConfigException(messages.screenFactoryInvalidController(handler, screen.getId()));
+	    				throw new ScreenConfigException("Controller ["+handler+"], declared on screen ["+screen.getId()+"], not found!");
 	    			}
 	    			screen.addController(handler);
 	    		}

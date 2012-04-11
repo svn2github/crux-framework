@@ -97,7 +97,7 @@ public class DataObjects
 					DataObject annot = dataClass.getAnnotation(DataObject.class);
 					if (dataObjects.containsKey(annot.value()))
 					{
-						throw new CruxGeneratorException(messages.dataObjectsDuplicatedObject(annot.value()));
+						throw new CruxGeneratorException("Duplicated DataObject found: ["+annot.value()+"].");
 					}
 					
 					dataObjects.put(annot.value(), dataClass.getCanonicalName());
@@ -105,7 +105,7 @@ public class DataObjects
 				} 
 				catch (ClassNotFoundException e) 
 				{
-					logger.error(messages.dataObjectsInitializeError(e.getLocalizedMessage()),e);
+					logger.error("Error initializing DataObjects.",e);
 				}
 			}
 		}

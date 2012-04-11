@@ -151,7 +151,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 		}
 		catch (NotFoundException e)
 		{
-			throw new IoCException(messages.iocErrorClassNotFound(className));
+			throw new IoCException("IoC Error Class ["+className+"] not found.");
 		}
     }
 	
@@ -190,7 +190,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 						}
 						else
 						{
-							throw new IoCException(messages.ioErrorPropertyCanNotBeWritten(type.getQualifiedSourceName(), field.getName()));
+							throw new IoCException("IoC Error Field ["+field.getName()+"] from class ["+type.getQualifiedSourceName()+"] is not a writeable property.");
 						}
 					}
 				}
@@ -328,12 +328,12 @@ public class IocContainerRebind extends AbstractProxyCreator
 				}
 				else
 				{
-					throw new IoCException(messages.iocInjectionForPrimitivesNotAllowed(field.getName(), field.getEnclosingType().getQualifiedSourceName()));
+					throw new IoCException("Error injecting field ["+field.getName()+"] from type ["+field.getEnclosingType().getQualifiedSourceName()+"]. Primitive fields can not be handled by ioc container.");
 				}
 			}
 			else
 			{
-				throw new IoCException(messages.iocInjectionForStaticNotAllowed(field.getName(), field.getEnclosingType().getQualifiedSourceName()));
+				throw new IoCException("Error injecting field ["+field.getName()+"] from type ["+field.getEnclosingType().getQualifiedSourceName()+"]. Static fields can not be handled by ioc container.");
 			}
 		}
 	    return null;

@@ -97,7 +97,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    		return;
 	    	}
         }
-	    throw new CruxGeneratorException(messages.deviceAdaptiveNoMappingForDevice(getDeviceFeatures()));
+	    throw new CruxGeneratorException("DeviceAdaptive widget does not declare any valid template for device ["+getDeviceFeatures()+"].");
     }
 	
 	/**
@@ -110,19 +110,19 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		String controllerClassName = ClientControllers.getController(controllerName);
 		if (controllerClassName == null)
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingInvokerControllerNotFound(controllerName));
+			throw new CruxGeneratorException("Error generating invoker. Controller ["+controllerName+"] not found.");
 		}
 		
 		controllerClass = context.getTypeOracle().findType(controllerClassName);
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 		if (controllerAnnot == null)
 		{
-			throw new CruxGeneratorException(messages.deviceAdaptiveImplementationIsNotAController(controllerClass.getQualifiedSourceName()));
+			throw new CruxGeneratorException("DeviceAdaptive implementation class ["+controllerClass.getQualifiedSourceName()+"] is not a valid Controller. It must be annotated with @Controller annotation.");
 		}
 		
 		if (!controllerClass.isAssignableTo(deviceAdaptiveControllerClass))
 		{
-			throw new CruxGeneratorException(messages.deviceAdaptiveImplementationIsNotADeviceAdaptiveController(controllerClass.getQualifiedSourceName()));
+			throw new CruxGeneratorException("DeviceAdaptive implementation class ["+controllerClass.getQualifiedSourceName()+"] must externds the base class DeviceAdaptiveController.");
 		}
 	}
 	

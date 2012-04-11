@@ -219,7 +219,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		}
 		else
 		{
-			sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote(messages.crux2OldInterfacesCompatibilityDisabled())+");");
+			sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote("To use this feature you need to enable crux2 old interfaces compatibility.")+");");
 		}
 		sourceWriter.outdent();
 		sourceWriter.println("}");

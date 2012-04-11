@@ -19,14 +19,12 @@ import java.util.ArrayList;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.dto.DataObjects;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -38,7 +36,6 @@ import org.cruxframework.crux.gwt.client.DateFormatUtil;
 import org.cruxframework.crux.gwt.client.NumberFormatUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ActionCell;
@@ -70,8 +67,6 @@ import com.google.gwt.view.client.ProvidesKey;
 })
 public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extends WidgetCreator<C> 
 {
-	protected GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	/**
 	 * @param metaElem
 	 * @return
@@ -82,7 +77,7 @@ public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extend
 		String dataObjectClass = DataObjects.getDataObject(dataObject);
 		if (StringUtils.isEmpty(dataObjectClass))
 		{
-			throw new CruxGeneratorException(messages.dataObjectNotFound(dataObject, metaElem.optString("id")));
+			throw new CruxGeneratorException("DataObject ["+dataObject+"], referenced by widget ["+metaElem.optString("id")+"] not found.");
 		}
 		
 		return dataObjectClass;

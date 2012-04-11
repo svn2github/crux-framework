@@ -16,9 +16,7 @@
 package org.cruxframework.crux.core.rebind.screen.widget;
 
 import org.cruxframework.crux.core.client.controller.Expose;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.Event;
@@ -48,8 +46,6 @@ public abstract class EvtProcessor extends AbstractProcessor
     {
 	    super(widgetCreator);
     }
-
-	private static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
 	/**
 	 * @param out
@@ -133,14 +129,14 @@ public abstract class EvtProcessor extends AbstractProcessor
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(event.getController(), screenId));
+    		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on screen ["+screenId+"],  not found.");
     	}
 
     	boolean hasEventParameter = true;
     	JClassType controllerClass = context.getTypeOracle().findType(controller);
     	if (controllerClass == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, screenId));
+    		throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+screenId+"],  not found.");
     	}
     	
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass); 
@@ -149,7 +145,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     		exposedMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
-        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(screenId, controller, event.getMethod()));
+        		throw new CruxGeneratorException("Screen ["+screenId+"] tries to invoke the method ["+event.getMethod()+"] on controller ["+controller+"]. That method does not exist.");
     		}
     		hasEventParameter = false;
     	}
@@ -175,7 +171,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 	{
 		if (exposedMethod.getAnnotation(Expose.class) == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotExposed(controller, event.getMethod()));
+    		throw new CruxGeneratorException(" Method ["+event.getMethod()+"] of Controller ["+controller+"] is not exposed, so it can not be called from crux.xml pages.");
     	}
     	
 		JClassType runtimeExceptionType = context.getTypeOracle().findType(RuntimeException.class.getCanonicalName());
@@ -187,7 +183,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     		{
     			if (!exception.isAssignableTo(runtimeExceptionType))
     			{
-    				throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodTrhowsException(controller, event.getMethod()));
+    				throw new CruxGeneratorException("Method ["+event.getMethod()+"] of Controller ["+controller+"] can not be exposed. It can throw a checked exception.");
     			}
 			}
     	}
@@ -260,14 +256,14 @@ public abstract class EvtProcessor extends AbstractProcessor
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(event.getController(), creator.getScreen().getId()));
+    		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on screen ["+creator.getScreen().getId()+"],  not found.");
     	}
 
     	boolean hasEventParameter = true;
     	JClassType controllerClass = creator.getContext().getTypeOracle().findType(controller);
     	if (controllerClass == null)
     	{
-    		throw new CruxGeneratorException(messages.eventProcessorErrorControllerNotFound(controller, creator.getScreen().getId()));
+    		throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+creator.getScreen().getId()+"],  not found.");
     	}
     	
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass);
@@ -276,7 +272,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 			exposedMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{}); 
     		if (exposedMethod == null)
     		{
-        		throw new CruxGeneratorException(messages.eventProcessorErrorControllerMethodNotFound(creator.getScreen().getId(), controller, event.getMethod()));
+        		throw new CruxGeneratorException("Screen ["+creator.getScreen().getId()+"] tries to invoke the method ["+event.getMethod()+"] on controller ["+controller+"]. That method does not exist.");
     		}
     		hasEventParameter = false;
     	}

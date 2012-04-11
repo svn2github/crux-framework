@@ -136,7 +136,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		}
 		catch (BadPropertyValueException e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElementCanNotReadUserAgent(),e);
+			logger.log(TreeLogger.ERROR, "Can not read user.agent property.",e);
 			throw new CruxGeneratorException();
 		}
 	}
@@ -154,7 +154,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		}
 		catch (BadPropertyValueException e)
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingRegisteredElementCanNotReadDeviceFeatures(), e);
+			throw new CruxGeneratorException("Can not read device.features property.", e);
 		}
 	}
 
@@ -181,7 +181,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		{
 			throw new CruxGeneratorException(e.getMessage(), e);
 		}
-		throw new CruxGeneratorException(messages.errorGeneratingRegisteredElementCanNotFoundCurrentScreen());
+		throw new CruxGeneratorException("Error Generating registered element. Can not retrieve current screen.");
 	}	
 	
 	/**
@@ -220,7 +220,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
         }
         catch (ScreenConfigException e)
         {
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElementCanNotFoundScreens(),e);
+			logger.log(TreeLogger.ERROR, "Error Generating registered element. Can not retrieve module's list of screens.",e);
 			throw new CruxGeneratorException();
         }
 	}

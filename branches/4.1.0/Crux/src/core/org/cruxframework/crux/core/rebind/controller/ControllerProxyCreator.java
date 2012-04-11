@@ -105,12 +105,14 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         	this.isCrossDoc = (crossDocumentType.isAssignableFrom(controllerClass));
         	if (isCrossDoc && this.baseProxyType == null)
         	{
-        		throw new CruxGeneratorException(messages.crossDocumentCanNotFindControllerCrossDocInterface(controllerClass.getQualifiedSourceName()));
+        		throw new CruxGeneratorException("The Controller ["+controllerClass.getQualifiedSourceName()+"] is a CrossDocument controller." +
+        				" However, it does not implement the required interface ["+controllerClass.getQualifiedSourceName()+"CrossDoc]");
         	}
         }
         catch (NotFoundException e)
         {
-        	throw new CruxGeneratorException(messages.crossDocumentCanNotFindControllerCrossDocInterface(controllerClass.getQualifiedSourceName()));
+    		throw new CruxGeneratorException("The Controller ["+controllerClass.getQualifiedSourceName()+"] is a CrossDocument controller. " +
+    				"However, it does not implement the required interface ["+controllerClass.getQualifiedSourceName()+"CrossDoc]");
         }
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 		this.isAutoBindEnabled = (controllerAnnot == null || controllerAnnot.autoBind());
@@ -721,7 +723,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 		if (!isCrux2OldInterfacesCompatibilityEnabled())
 		{
-			sourceWriter.println("throw new Exception("+EscapeUtils.quote(messages.crux2OldInterfacesCompatibilityDisabled())+");");
+			sourceWriter.println("throw new Exception("+EscapeUtils.quote("To use this feature you need to enable crux2 old interfaces compatibility.")+");");
 		}
 		else
 		{
