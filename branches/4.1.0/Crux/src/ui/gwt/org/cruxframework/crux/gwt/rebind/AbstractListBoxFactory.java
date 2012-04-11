@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 @TagAttributes({
 	@TagAttribute(value="visibleItemCount", type=Integer.class)
 })
-public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxContext> 
+public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxContext>
 				implements HasChangeHandlersFactory<ListBoxContext>, HasNameFactory<ListBoxContext>
 {
 	@TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
@@ -46,24 +46,19 @@ public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxC
 	public abstract static class ItemsProcessor extends WidgetChildProcessor<ListBoxContext>
 	{
 		@Override
-		public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException 
+		public void processChildren(SourcePrinter out, ListBoxContext context) throws CruxGeneratorException
 		{
-			
+
 			String label = context.readChildProperty("label");
 			String value = context.readChildProperty("value");
-			
+
 			if(label != null && label.length() > 0)
 			{
 				label = getWidgetCreator().getDeclaredMessage(label);
-			}			
-			if (value == null || value.length() == 0)
-			{
-				value = label;
 			}
-			else
-			{
-				value = EscapeUtils.quote(value);
-			}
+
+			value = EscapeUtils.quote(value);
+
 			out.println(context.getWidget()+".insertItem("+label+", "+value+", "+context.index+");");
 
 			String selected = context.readChildProperty("selected");
@@ -74,7 +69,7 @@ public abstract class AbstractListBoxFactory extends FocusWidgetFactory<ListBoxC
 			context.index += 1;
 		}
 	}
-	
+
 	@Override
 	public ListBoxContext instantiateContext()
 	{
