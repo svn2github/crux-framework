@@ -115,8 +115,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		}
 		catch (Throwable e) 
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredElementInvalidScreenID(),e);
-			throw new CruxGeneratorException();
+			throw new CruxGeneratorException("Error retrieving screen Identifier.");
 		}
 		
         Screen screen = ScreenFactory.getInstance().getScreen(screenID, getDeviceFeatures());
@@ -204,7 +203,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	        	
 	        	if (screenIDs == null)
 	        	{
-	        		throw new ScreenConfigException(messages.errorGeneratingRegisteredElementModuleNotFound(requestedScreen.getModule()));
+	        		throw new ScreenConfigException("Can not find the module ["+requestedScreen.getModule()+"].");
 	        	}
 	        	for (String screenID : screenIDs)
 	        	{

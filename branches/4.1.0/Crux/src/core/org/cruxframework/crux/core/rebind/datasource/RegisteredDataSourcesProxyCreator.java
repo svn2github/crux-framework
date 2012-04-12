@@ -113,7 +113,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 		boolean first = true;
 		sourceWriter.println("if(id==null){");
 		sourceWriter.indent();
-		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
+		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 		for (String dataSource : dataSourcesClassNames.keySet()) 
@@ -132,7 +132,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
-		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote(messages.errorGeneratingRegisteredDataSourceNotFound())+"+id);");
+		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}

@@ -27,8 +27,6 @@ import org.cruxframework.crux.core.client.rpc.st.CruxSynchronizerTokenServiceAsy
 import org.cruxframework.crux.core.client.rpc.st.SensitiveMethodAlreadyBeingProcessedException;
 import org.cruxframework.crux.core.client.rpc.st.UseSynchronizerToken;
 import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -66,7 +64,6 @@ public class CruxProxyCreator extends ProxyCreator
 	private static final String WRAPPER_SUFFIX = "_Wrapper";
 	private boolean hasSyncTokenMethod = false;
 	private TreeLogger logger;
-	private GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
 	
 	
 	/**
@@ -283,7 +280,7 @@ public class CruxProxyCreator extends ProxyCreator
 		}
 		catch (NotFoundException e)
 		{
-			logger.log(TreeLogger.ERROR, messages.cruxProxyCreatorMethodNotFoundOnServiceInterface(asyncMethod.getName()));
+			logger.log(TreeLogger.ERROR, "No method found on service interface that matches the async method ["+asyncMethod.getName()+"].");
 		}
 	}
 
@@ -299,7 +296,7 @@ public class CruxProxyCreator extends ProxyCreator
 	{
 		if (asyncReturnType != JPrimitiveType.VOID) 
 		{
-			logger.log(TreeLogger.ERROR, messages.cruxProxyCreatorInvalidReturnType(asyncReturnType.getSimpleSourceName()));
+			logger.log(TreeLogger.ERROR, "UseSynchronizer Token only can be used with void return type on Async interface.");
 			throw new UnableToCompleteException();
 		}
 		UseSynchronizerToken synchronizerTokenAnnot = syncMethod.getAnnotation(UseSynchronizerToken.class);

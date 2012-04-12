@@ -25,9 +25,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.declarativeui.LazyWidgets;
 import org.cruxframework.crux.core.declarativeui.LazyWidgets.WidgetLazyChecker;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.ChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.ChildrenProcessor;
@@ -56,7 +54,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 class ChildrenAnnotationScanner
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final int UNBOUNDED = -1;
 
 	private WidgetCreatorHelper factoryHelper;
@@ -459,7 +456,7 @@ class ChildrenAnnotationScanner
 		{
 			if (children.value().length > 1 && TextChildProcessor.class.isAssignableFrom(child.value()))
 			{
-				throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryMixedContentNotAllowed());
+				throw new CruxGeneratorException("Error generating widget factory. An element can not contains text and other children.");
 			}
 			
 			AllowedOccurences allowedForChild = getAllowedOccurrencesForChild(child);

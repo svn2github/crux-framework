@@ -24,9 +24,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.AttributeCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
@@ -41,8 +39,6 @@ import org.cruxframework.crux.core.utils.RegexpPatterns;
  */
 class AttributesAnnotationScanner
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	private final WidgetCreator<?> widgetCreator;
 
 	private WidgetCreatorHelper factoryHelper;
@@ -97,7 +93,7 @@ class AttributesAnnotationScanner
 						}
 						else
 						{
-							throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidAttrName(attrName));
+							throw new CruxGeneratorException("Error generating widget factory. Invalid attribute name: ["+attrName+"].");
 						}
 					}
 				}
@@ -226,7 +222,7 @@ class AttributesAnnotationScanner
 		Class<?> type = attr.type();
 		if (type == null ||  !(nestedProperty || ClassUtils.hasValidSetter(factoryHelper.getWidgetType(), setterMethod, type)))
 		{//TODO: implement method check for nested property.
-			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryInvalidProperty(attrName));
+			throw new CruxGeneratorException("Error generating widget factory. Widget does not have a valid setter for attribute: ["+attrName+"].");
 		}
 		final boolean isStringExpression = String.class.isAssignableFrom(type);
 		final boolean supportsI18N = isStringExpression && attr.supportsI18N();

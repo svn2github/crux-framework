@@ -18,8 +18,6 @@ package org.cruxframework.crux.core.rebind;
 import java.util.List;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-
 
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
@@ -35,7 +33,6 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public abstract class AbstractProxyCreator
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	protected final GeneratorContextExt context;
 	protected final TreeLogger logger;
 

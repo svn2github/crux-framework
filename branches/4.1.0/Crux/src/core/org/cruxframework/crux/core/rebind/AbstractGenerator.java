@@ -15,8 +15,6 @@
  */
 package org.cruxframework.crux.core.rebind;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.GeneratorExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -32,8 +30,6 @@ import com.google.gwt.dev.javac.rebind.RebindStatus;
  */
 public abstract class AbstractGenerator extends GeneratorExt
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	@Override
 	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContextExt context, String typeName) throws UnableToCompleteException
 	{
@@ -43,7 +39,7 @@ public abstract class AbstractGenerator extends GeneratorExt
 		JClassType baseIntf = typeOracle.findType(typeName);
 		if (baseIntf == null)
 		{
-			logger.log(TreeLogger.ERROR, messages.generatorSourceNotFound(typeName), null);
+			logger.log(TreeLogger.ERROR, "Unable to find source for type ["+typeName+"]", null);
 			throw new UnableToCompleteException();
 		}
 		

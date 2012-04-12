@@ -107,7 +107,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 		}
 		else
 		{
-			throw new CruxGeneratorException(messages.errorInvokerWrapperInvalidSignature(method.getReadableDeclaration()));
+			throw new CruxGeneratorException("Error for generating invoker wrapper: Invalid Method signature: ["+method.getReadableDeclaration()+"].");
 		}
 	}
 	
@@ -211,7 +211,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 			sourceWriter.println(getTabMethodInvocationString() + "(\"" + tabId + "\", \"" + controllerName + "." + methodName + "\"," + (hasValue?"value":"null") + ");");
 		}
 		sourceWriter.println("}catch(Throwable e){");
-		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote(messages.errorInvokerWrapperSerializationError())+",e);");
+		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote("Error for invoking method. Serialization Error.")+",e);");
 		sourceWriter.println("}");
 		if (returnTypeDeclaration != null)
 		{

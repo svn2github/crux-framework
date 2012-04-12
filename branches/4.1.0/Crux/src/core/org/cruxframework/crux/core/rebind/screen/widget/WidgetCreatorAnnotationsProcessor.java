@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.json.JSONObject;
 
@@ -32,7 +30,6 @@ import org.json.JSONObject;
  */
 class WidgetCreatorAnnotationsProcessor
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private List<AttributeCreator> attributes;
 	private List<EventCreator> events;
 	private ChildrenProcessor children;

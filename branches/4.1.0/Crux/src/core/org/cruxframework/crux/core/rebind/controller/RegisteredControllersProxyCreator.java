@@ -177,7 +177,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		}
 		catch (Throwable e) 
 		{
-			throw new CruxGeneratorException(messages.errorGeneratingRegisteredController(controller, e.getLocalizedMessage()), e);
+			throw new CruxGeneratorException("Error for register client event handler. Controller: ["+controller+"].", e);
 		}
 	}	
 	

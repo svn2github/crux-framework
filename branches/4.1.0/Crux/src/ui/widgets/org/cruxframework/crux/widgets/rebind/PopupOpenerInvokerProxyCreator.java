@@ -169,7 +169,7 @@ public class PopupOpenerInvokerProxyCreator extends AbstractWrapperProxyCreator
 			sourceWriter.println(Popup.class.getName() + ".invokeOnOpener(\""+controllerName+"."+methodName+"\","+(hasValue?"value":"null")+");");
 		}
 		sourceWriter.println("}catch(Throwable e){");
-		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote(messages.errorInvokerWrapperSerializationError())+",e);");
+		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote("Error invoking method. Serialization Error.")+",e);");
 		sourceWriter.println("}");
 		if (returnTypeDeclaration != null)
 		{

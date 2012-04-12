@@ -251,16 +251,14 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		String crossDocInterfaceName = baseProxyType.getQualifiedSourceName();
 		if (!crossDocInterfaceName.endsWith("CrossDoc"))
 		{
-			logger.branch(TreeLogger.ERROR, messages.crossDocumentInvalidCrossDocInterfaceName(crossDocInterfaceName), null);
-			throw new CruxGeneratorException();
+			throw new CruxGeneratorException("Cross document interface ["+crossDocInterfaceName+"] does not follow the name pattern for cross document objects.");
 			
 		}
 		
 		JClassType controllerClass = typeOracle.findType(crossDocInterfaceName.substring(0, crossDocInterfaceName.length()-8));
 		if (controllerClass == null)
 		{
-			logger.branch(TreeLogger.ERROR, messages.crossDocumentCanNotFindControllerForInterface(crossDocInterfaceName), null);
-			throw new CruxGeneratorException();
+			throw new CruxGeneratorException("Could not find the cross document controller for the interface ["+crossDocInterfaceName+"].");
 		}
 		return controllerClass;
 	}
@@ -277,8 +275,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 		if (controllerAnnot == null)
 		{
-			logger.branch(TreeLogger.ERROR, messages.crossDocumentInvalidController(crossDocInterfaceName), null);
-			throw new CruxGeneratorException();
+			throw new CruxGeneratorException("The controller found for the interface ["+crossDocInterfaceName+"] does not have the annotation @Controller.");
 		}
 		
 		return controllerAnnot.value();

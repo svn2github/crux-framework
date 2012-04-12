@@ -156,8 +156,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 			}
 			else
 			{
-				logger.log(TreeLogger.ERROR, messages.errorContextWrapperInvalidSignature(method.getJsniSignature()));
-				throw new CruxGeneratorException();
+				throw new CruxGeneratorException("Error for generating context wrapper: Invalid Method signature: ["+method.getJsniSignature()+"].");
 			}
 		}
 	}

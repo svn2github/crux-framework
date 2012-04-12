@@ -22,9 +22,7 @@ import java.util.Set;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.EventCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
@@ -38,8 +36,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
  */
 class EventsAnnotationScanner
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-	
 	private WidgetCreatorHelper factoryHelper;
 
 	private final WidgetCreator<?> widgetCreator;

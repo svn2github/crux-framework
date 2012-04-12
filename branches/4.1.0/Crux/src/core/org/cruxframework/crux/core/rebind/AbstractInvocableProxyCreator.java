@@ -299,7 +299,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		if (!hasAtLeastOneField)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredObjectParameterObjectHasNoValidField(voClass.getName()));
+			logger.log(TreeLogger.ERROR, "Parameter Object ["+voClass.getName()+"] has no valid field for binding.");
 		}
 	}	
 
@@ -334,7 +334,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				
 				sourceWriter.println("if ("+StringUtils.class.getName()+".isEmpty(" +Window.class.getName()+".Location.getParameter(\""+name+"\"))){");
 				sourceWriter.indent();
-				sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote(messages.requiredParameterMissing(name))+");");
+				sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Required parameter ["+name+"] is missing.")+");");
 				sourceWriter.outdent();
 				sourceWriter.println("}");
 				
@@ -347,7 +347,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			sourceWriter.outdent();
 			sourceWriter.println("}catch(Throwable _e1){");
 			sourceWriter.indent();
-			sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote(messages.errorReadingParameter(name))+");");
+			sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Error parsing parameter ["+name+"].")+");");
 			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.outdent();
@@ -413,7 +413,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			}
 			catch (Exception e)
 			{
-				logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
+				throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
 			}
 		}
 	}
@@ -726,7 +726,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				}
 				else
 				{
-					logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
+					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
 				}
 			}
 			catch (Exception e)
@@ -741,16 +741,15 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 					}
 					else
 					{
-						logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
+						throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
 					}
 				}
 				catch (Exception e1)
 				{
-					logger.log(TreeLogger.ERROR, messages.registeredClientObjectPropertyNotFound(field.getName()));
+					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
 				}
 			}
 		}
-		return null;
 	}
 	
 	/**

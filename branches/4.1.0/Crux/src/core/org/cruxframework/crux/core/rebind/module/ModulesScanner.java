@@ -35,8 +35,6 @@ import org.cruxframework.crux.classpath.PackageFileURLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.core.server.scan.ScannerURLS;
@@ -61,7 +59,6 @@ public class ModulesScanner extends AbstractScanner
 {
 	private static final Log logger = LogFactory.getLog(ModulesScanner.class);
 	private static final ModulesScanner instance = new ModulesScanner();
-	private GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
 	private DocumentBuilder documentBuilder;
 	private static URL[] urlsForSearch = null;
 	private static final Lock lock = new ReentrantLock();
@@ -94,11 +91,11 @@ public class ModulesScanner extends AbstractScanner
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new ModuleException(messages.modulesScannerErrorBuilderCanNotBeCreated(), e);
+			throw new ModuleException("Error creating modules scanner. Can not create builder object.", e);
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(messages.modulesScannerErrorFindingClassesDir(), e);
+			throw new ModuleException("Can not find the web classes dir.", e);
 		}
 	}
 	
@@ -197,7 +194,7 @@ public class ModulesScanner extends AbstractScanner
 					}
 					catch (Exception e) 
 					{
-						logger.error(messages.modulesScannerErrorParsingModuleFile(found.toString()));
+						logger.error("Error parsing module file: ["+found.toString()+"].");
 					}
 					finally
 					{
@@ -207,7 +204,7 @@ public class ModulesScanner extends AbstractScanner
 			}
 			catch (IOException e)
 			{
-				throw new ModuleException(messages.modulesScannerInitializationError(e.getLocalizedMessage()), e);
+				throw new ModuleException("Error initializing modulesScanner.", e);
 			}
 		}
 	}

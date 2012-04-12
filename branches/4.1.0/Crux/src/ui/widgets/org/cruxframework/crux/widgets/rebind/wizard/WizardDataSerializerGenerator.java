@@ -36,7 +36,7 @@ public class WizardDataSerializerGenerator extends AbstractGenerator
     {
 		if (baseIntf.isInterface() == null)
 		{
-			logger.log(TreeLogger.ERROR, messages.generatorTypeIsNotInterface(baseIntf.getQualifiedSourceName()), null); 
+			logger.log(TreeLogger.ERROR, "["+baseIntf.getQualifiedSourceName()+"] is not an interface.", null); 
 			throw new UnableToCompleteException();
 		}
 	    return new WizardDataSerializerProxyCreator(logger, ctx, baseIntf);

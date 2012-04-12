@@ -930,7 +930,7 @@ public class Screen
 	 */
 	protected void addTokenToHistory(String token)
 	{
-		History.newItem(token);
+		History.newItem(token, false);
 	}
 
 	/**

@@ -16,17 +16,15 @@
 package org.cruxframework.crux.widgets.rebind.wizard;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.dto.DataObjects;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
 import org.cruxframework.crux.widgets.client.wizard.Wizard.NoData;
+import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
 
 
 class WizardContext extends WidgetCreatorContext
@@ -50,8 +48,6 @@ class WizardContext extends WidgetCreatorContext
 })
 public abstract class AbstractWizardFactory extends WidgetCreator<WizardContext>
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	/**
 	 * @param wizardData
 	 * @param wizardContextObject

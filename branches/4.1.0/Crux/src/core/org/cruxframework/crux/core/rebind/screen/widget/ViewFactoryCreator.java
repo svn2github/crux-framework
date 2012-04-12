@@ -38,9 +38,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.i18n.MessageClasses;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
@@ -88,7 +86,6 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class ViewFactoryCreator
 {
 	private static NameFactory nameFactory = new NameFactory();
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private GeneratorContextExt context;

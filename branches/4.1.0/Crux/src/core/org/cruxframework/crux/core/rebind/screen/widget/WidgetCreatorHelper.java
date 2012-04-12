@@ -17,9 +17,7 @@ package org.cruxframework.crux.core.rebind.screen.widget;
 
 import java.lang.reflect.Method;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
@@ -30,8 +28,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
  */
 public class WidgetCreatorHelper 
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	private final Class<?> factoryClass;
 	private final Class<?> widgetType;
 	private final Class<?> contextType;
@@ -133,7 +129,7 @@ public class WidgetCreatorHelper
         }
         catch (Exception e)
         {
-			throw new CruxGeneratorException(messages.errorGeneratingWidgetFactoryCanNotRealizeGenericType(factoryClass.getName()));
+			throw new CruxGeneratorException("Error generating widget factory ["+factoryClass.getName()+"]. Can not realize the type for generic declaration.");
         }
 	}	
 }

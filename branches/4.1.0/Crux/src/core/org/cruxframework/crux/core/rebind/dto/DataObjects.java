@@ -31,9 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.dto.DataObject;
 import org.cruxframework.crux.core.client.dto.DataObjectIdentifier;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
@@ -47,7 +45,6 @@ public class DataObjects
 {
 	private static final Log logger = LogFactory.getLog(DataObjects.class);
 	private static final Lock lock = new ReentrantLock();
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static Map<String, String> dataObjects;
 	private static Map<String, String[]> dataObjectIdentifiers;
 	

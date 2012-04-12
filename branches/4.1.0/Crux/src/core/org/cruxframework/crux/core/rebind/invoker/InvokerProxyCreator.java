@@ -238,7 +238,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 			}
 		}
 		sourceWriter.println("}catch(Throwable e){");
-		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote(messages.errorInvokerWrapperSerializationError())+",e);");
+		sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote("Error for invoking method. Serialization Error.")+",e);");
 		sourceWriter.println("}");
 		if (hasReturn)
 		{
@@ -282,7 +282,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 			String sufix = name.substring(name.indexOf("OnFrame"));
 			if (sufix.length() <= 7)
 			{
-				throw new CruxGeneratorException(messages.errorInvokerWrapperInvalidSignature(method.getReadableDeclaration()));
+				throw new CruxGeneratorException("Error for generating invoker wrapper: Invalid Method signature: ["+method.getReadableDeclaration()+"].");
 			}
 			generateMethod(method, sourceWriter, sufix);
 		}
@@ -291,13 +291,13 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 			String sufix = name.substring(name.indexOf("OnSiblingFrame"));
 			if (sufix.length() <= 14)
 			{
-				throw new CruxGeneratorException(messages.errorInvokerWrapperInvalidSignature(method.getReadableDeclaration()));
+				throw new CruxGeneratorException("Error for generating invoker wrapper: Invalid Method signature: ["+method.getReadableDeclaration()+"].");
 			}
 			generateMethod(method, sourceWriter, sufix);
 		}
 		else
 		{
-			throw new CruxGeneratorException(messages.errorInvokerWrapperInvalidSignature(method.getReadableDeclaration()));
+			throw new CruxGeneratorException("Error for generating invoker wrapper: Invalid Method signature: ["+method.getReadableDeclaration()+"].");
 		}
 	}
 }

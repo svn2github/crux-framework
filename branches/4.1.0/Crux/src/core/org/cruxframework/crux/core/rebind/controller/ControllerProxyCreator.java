@@ -36,15 +36,12 @@ import org.cruxframework.crux.core.client.event.CruxEvent;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -78,7 +75,6 @@ import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
  */
 public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	public static final String CONTROLLER_PROXY_SUFFIX = "_ControllerProxy";
 	public static final String EXPOSED_METHOD_SUFFIX = "_Exposed_";
 	
@@ -770,7 +766,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 			sourceWriter.println("if (methodNotFound){");
 			sourceWriter.indent();
-			sourceWriter.println("throw new Exception(\""+messages.errorInvokingGeneratedMethod()+" \"+metodo);");
+			sourceWriter.println("throw new Exception(\"Method Not Found: \"+metodo);");
 			sourceWriter.outdent();
 			sourceWriter.println("}");
 
@@ -852,7 +848,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredControllerInvalidValidateMethod(validateMethod), e);
+			logger.log(TreeLogger.ERROR, "Error generating widget factory. invalid validation method: ["+validateMethod+"].", e);
 		}
 	}
 	

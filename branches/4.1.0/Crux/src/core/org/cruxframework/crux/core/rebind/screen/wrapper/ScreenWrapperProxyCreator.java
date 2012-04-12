@@ -125,12 +125,12 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 			}
 			else
 			{
-				throw new CruxGeneratorException(messages.screenWrapperMethodWithParameters(method.getName(), method.getEnclosingType().getQualifiedSourceName()));
+				throw new CruxGeneratorException("The method ["+method.getName()+"] from ScreenWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException(messages.screenWrapperMethodReturningNonWidget(method.getName(), method.getEnclosingType().getQualifiedSourceName()));
+			throw new CruxGeneratorException("The method ["+method.getName()+"] from ScreenWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of com.google.gwt.user.client.ui.Widget.");
 		}
 	}
 

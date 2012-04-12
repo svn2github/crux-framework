@@ -292,14 +292,14 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		{
 			if (method.getParameters().length != 0)
 			{
-				throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 			}
 			if (!JClassUtils.isSimpleType(returnType))
 			{
 				JClassType returnTypeClass = returnType.isClassOrInterface();
 				if (returnTypeClass == null || !returnTypeClass.isAssignableTo(screenBinderType))
 				{
-					throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+					throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 				}
 			}
 		}
@@ -307,12 +307,12 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		{
 			if (method.getParameters().length != 1)
 			{
-				throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 			}
 			
 		    if (returnType.getErasedType() != JPrimitiveType.VOID)
 		    {
-				throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 		    }
 		    JType parameterType = method.getParameterTypes()[0];
 			if (!JClassUtils.isSimpleType(parameterType))
@@ -320,13 +320,13 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 				JClassType parameterTypeClass = parameterType.isClassOrInterface();
 				if (parameterTypeClass == null || !parameterTypeClass.isAssignableTo(screenBinderType))
 				{
-					throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+					throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 				}
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException(messages.screenBinderInvalidSignature(baseIntf.getQualifiedSourceName(), name));
+			throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 		}
     }
 }

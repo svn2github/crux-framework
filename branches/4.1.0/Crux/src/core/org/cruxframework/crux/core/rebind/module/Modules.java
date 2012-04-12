@@ -29,8 +29,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
@@ -48,7 +46,6 @@ public class Modules
 {
 	protected Map<String, Module> modules = null;
 	protected Map<String, String> moduleAliases = null;
-	private GeneratorMessages messages = MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final Log logger = LogFactory.getLog(Modules.class);
 	private static final Lock lock = new ReentrantLock();
 
@@ -173,7 +170,7 @@ public class Modules
 	{
 		modules = new HashMap<String, Module>();
 		moduleAliases = new HashMap<String, String>();
-		logger.info(messages.modulesScannerSearchingModuleFiles());
+		logger.info("Searching for modules.");
 		ModulesScanner.getInstance().scanArchives();
 	}
 

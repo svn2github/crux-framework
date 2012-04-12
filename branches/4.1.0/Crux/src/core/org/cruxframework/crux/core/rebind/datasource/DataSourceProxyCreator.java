@@ -27,10 +27,8 @@ import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
 import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
@@ -61,7 +59,6 @@ import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
  */
 public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
 	private static final String DATASOURCE_PROXY_SUFFIX = "_DataSourceProxy";
 
 	private final JClassType dataSourceClass;
@@ -174,7 +171,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSource(dataSourceClass.getName(), e.getLocalizedMessage()), e);
+			throw new CruxGeneratorException("Error for register client datasource. DataSource: ["+dataSourceClass.getName()+"].", e);
 		}
 	}	
 	
@@ -221,7 +218,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSource(dataSourceClass.getName(), e.getLocalizedMessage()), e);
+			throw new CruxGeneratorException("Error for register client datasource. DataSource: ["+dataSourceClass.getName()+"].", e);
 		}
 	}
 	
@@ -284,7 +281,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSource(dataSourceClass.getQualifiedSourceName(), e.getLocalizedMessage()), e);
+			throw new CruxGeneratorException("Error for register client datasource. DataSource: ["+dataSourceClass.getName()+"].", e);
 		}
 	}	
 	
@@ -308,7 +305,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 		catch (Exception e)
 		{
-			logger.log(TreeLogger.ERROR, messages.errorGeneratingRegisteredDataSource(dataSourceClass.getQualifiedSourceName(), e.getLocalizedMessage()), e);
+			throw new CruxGeneratorException("Error for register client datasource. DataSource: ["+dataSourceClass.getName()+"].", e);
 		}
 	}
 	

@@ -15,9 +15,6 @@
  */
 package org.cruxframework.crux.core.rebind.crossdocument;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.rebind.GeneratorMessages;
-
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.GeneratorExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -35,8 +32,6 @@ import com.google.gwt.dev.javac.rebind.RebindStatus;
  */
 public class CrossDocumentGenerator extends GeneratorExt
 {
-	protected static GeneratorMessages messages = (GeneratorMessages)MessagesFactory.getMessages(GeneratorMessages.class);
-
 	@Override
 	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContextExt context, String typeName) throws UnableToCompleteException
 	{
@@ -46,13 +41,13 @@ public class CrossDocumentGenerator extends GeneratorExt
 		JClassType crossDocument = typeOracle.findType(typeName);
 		if (crossDocument == null)
 		{
-			logger.log(TreeLogger.ERROR, messages.generatorSourceNotFound(typeName), null); 
+			logger.log(TreeLogger.ERROR, "Unable to find source for type ["+typeName+"]", null); 
 			throw new UnableToCompleteException();
 		}
 		
 		if (crossDocument.isInterface() == null)
 		{
-			logger.log(TreeLogger.ERROR, messages.generatorTypeIsNotInterface(crossDocument.getQualifiedSourceName()), null); 
+			logger.log(TreeLogger.ERROR, "["+crossDocument.getQualifiedSourceName()+"] is not an interface.", null); 
 			throw new UnableToCompleteException();
 		}
 		
