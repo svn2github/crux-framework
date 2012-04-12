@@ -19,13 +19,12 @@ import java.util.LinkedList;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
@@ -48,7 +47,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
 import org.cruxframework.crux.gwt.client.LoadImagesEvent;
-
 
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Tree.Resources;
@@ -86,8 +84,6 @@ public class TreeFactory extends WidgetCreator<TreeContext>
                   HasAllMouseHandlersFactory<TreeContext>, HasAllKeyHandlersFactory<TreeContext>,
                   HasSelectionHandlersFactory<TreeContext>
 {
-	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-	
 	@Override
 	public void instantiateWidget(SourcePrinter out, TreeContext context) throws CruxGeneratorException
 	{

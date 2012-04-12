@@ -16,7 +16,6 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
@@ -31,10 +30,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import org.cruxframework.crux.gwt.rebind.DockPanelContext.DockDirection;
 import org.json.JSONObject;
 
-
 import com.google.gwt.user.client.ui.DockPanel;
 
-@SuppressWarnings("deprecation")
 class DockPanelContext extends CellPanelContext
 {
 	public static enum DockDirection{center, lineStart, lineEnd, east, north, south, west}
@@ -46,7 +43,6 @@ class DockPanelContext extends CellPanelContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@SuppressWarnings("deprecation")
 @DeclarativeFactory(id="dockPanel", library="gwt", targetWidget=DockPanel.class)
 @TagChildren({
 	@TagChild(DockPanelFactory.DockPanelProcessor.class)
@@ -79,8 +75,6 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 	})		
 	public static class DockCellProcessor extends AbstractCellProcessor<DockPanelContext> 
 	{
-		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-		
 		@Override
 		public void processChildren(SourcePrinter out, DockPanelContext context) throws CruxGeneratorException 
 		{
@@ -96,7 +90,7 @@ public class DockPanelFactory extends CellPanelFactory<DockPanelContext>
 				catch (Exception e) 
 				{
 					String childId = context.readChildProperty("id");
-					throw new CruxGeneratorException(messages.dockPanelInvalidDirection(childId, context.getWidgetId()));
+					throw new CruxGeneratorException("Error adding widget ["+childId+"] on parent Dockpanel ["+context.getWidgetId()+"]. Invalid direction.");
 				}
 			}
 			else

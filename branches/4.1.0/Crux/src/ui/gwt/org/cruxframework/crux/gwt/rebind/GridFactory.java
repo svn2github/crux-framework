@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
@@ -24,7 +23,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.json.JSONArray;
-
 
 import com.google.gwt.user.client.ui.Grid;
 
@@ -126,8 +124,6 @@ public class GridFactory extends HTMLTableFactory<GridFactoryContext>
 	})
 	public static class GridChildrenProcessor extends ChoiceChildProcessor<GridFactoryContext> 
 	{
-		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-		
 		@Override
 		public void processChildren(SourcePrinter out, GridFactoryContext context) throws CruxGeneratorException {}
 	}

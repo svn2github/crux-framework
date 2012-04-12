@@ -16,13 +16,12 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasCloseHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
@@ -38,7 +37,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.gwt.client.ExecuteEvent;
 import org.json.JSONObject;
-
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -74,8 +72,6 @@ class MenuBarContext extends WidgetCreatorContext
 public class MenuBarFactory extends WidgetCreator<MenuBarContext> 
        implements HasAnimationFactory<MenuBarContext>, HasCloseHandlersFactory<MenuBarContext>
 {
-	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-	
 	@Override
 	public void instantiateWidget(SourcePrinter out, MenuBarContext context)
 	{

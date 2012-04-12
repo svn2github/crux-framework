@@ -17,12 +17,11 @@ package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasScrollHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -118,7 +117,6 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
         {
 	        super(widgetCreator);
         }
-		protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 		public void processAttribute(SourcePrinter out, final WidgetCreatorContext context, final String propertyValue) 
 		{
 			String widget = context.getWidget();
@@ -128,7 +126,8 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 			printlnPostProcessing("Widget "+targetWidget+" = Screen.get("+EscapeUtils.quote(propertyValue)+");");
 			printlnPostProcessing("if ("+targetWidget+" == null){");
 			String widgetId = context.getWidgetId();
-			printlnPostProcessing("throw new NullPointerException("+EscapeUtils.quote(messages.scrollPanelWidgetNotFound(widgetId, propertyValue))+");");
+			printlnPostProcessing("throw new NullPointerException("+EscapeUtils.quote("Error in ScrollPanel ["+widgetId+"]." +
+					"Error ensuring visibility for component ["+propertyValue+"].")+");");
 			printlnPostProcessing("}");
 			printlnPostProcessing(widget+".ensureVisible("+targetWidget+");");
 		}

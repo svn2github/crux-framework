@@ -16,7 +16,6 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -85,8 +84,6 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 	@TagConstraints(type=AnyWidget.class)
 	public static class AbstractDockPanelWidgetProcessor<C extends DockLayoutPanelContext> extends WidgetChildProcessor<C> 
 	{
-		GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-		
 		@Override
 		public void processChildren(SourcePrinter out, C context) throws CruxGeneratorException 
 		{
@@ -95,7 +92,7 @@ public abstract class AbstractDockLayoutPanelFactory<C extends DockLayoutPanelCo
 			
 			if (!context.direction.equals(Direction.CENTER) && context.size == -1)
 			{
-				throw new CruxGeneratorException(messages.dockLayoutPanelRequiredSize(context.getWidgetId()));
+				throw new CruxGeneratorException("The attribute size is required for cells not centered in DockLayoutPanel wiht id: ["+context.getWidgetId()+"].");
 			}
 			boolean childPartialSupport = getWidgetCreator().hasChildPartialSupport(context.getChildElement());
 			if (childPartialSupport)

@@ -19,14 +19,13 @@ import java.util.Comparator;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.EventFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
-import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.AlignmentAttributeParser;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
@@ -43,7 +42,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.utils.JClassUtils;
-
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -104,7 +102,6 @@ class CellTableContext extends WidgetCreatorContext
 public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 {
 	private static final int DEFAULT_PAGE_SIZE = 15;
-	private static GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
 
 	@Override
 	public void processAttributes(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
@@ -134,7 +131,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 	    JMethod loadDataProviderMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
 	    if (loadDataProviderMethod == null)
 	    {
-	    	throw new CruxGeneratorException(messages.cellTableDataProviderMethodNotFound(event.getController(), event.getMethod()));
+	    	throw new CruxGeneratorException("DataProvider factory method not found: Controller["+event.getController()+"], Method["+event.getMethod()+"].");
 	    }
 	    JType returnType = loadDataProviderMethod.getReturnType();
 	    if (returnType instanceof JClassType)
@@ -202,7 +199,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
             }
             catch (NoSuchFieldException e)
             {
-            	throw new CruxGeneratorException(messages.cellTableCanNotAccessProperty(property, context.rowDataObject));
+            	throw new CruxGeneratorException("Can not access property ["+property+"] on row object["+context.rowDataObject+"].");
             }
 		}
 		
@@ -331,13 +328,13 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 						}
 						else
 						{
-							throw new CruxGeneratorException(messages.cellTableCanNotSortColumn(property, context.rowDataObject));
+							throw new CruxGeneratorException("Can not sort column for property ["+property+"] on row object["+context.rowDataObject+"]. Property must have a primitive or Comparable type.");
 						}
 					}
 				}
 				catch (NoSuchFieldException e)
 				{
-					throw new CruxGeneratorException(messages.cellTableCanNotAccessProperty(property, context.rowDataObject));
+	            	throw new CruxGeneratorException("Can not access property ["+property+"] on row object["+context.rowDataObject+"].");
 				}
 				out.println("}");
 				out.println("return 1;");

@@ -18,10 +18,9 @@ package org.cruxframework.crux.gwt.rebind;
 import org.cruxframework.crux.core.client.screen.LazyPanel;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAnimationFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasCloseHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasOpenHandlersFactory;
@@ -63,8 +62,6 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
                   HasOpenHandlersFactory<WidgetCreatorContext>, 
                   HasCloseHandlersFactory<WidgetCreatorContext>
 {
-	protected GWTMessages messages = MessagesFactory.getMessages(GWTMessages.class);
-	
 	@Override
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context)
 	{
