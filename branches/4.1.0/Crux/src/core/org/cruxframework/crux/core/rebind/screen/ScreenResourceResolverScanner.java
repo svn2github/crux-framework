@@ -21,8 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.DeclarativeUIScreenResolver;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -33,7 +31,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class ScreenResourceResolverScanner 
 {
 	private static final Log logger = LogFactory.getLog(ScreenResourceResolverScanner.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	
 	/**
 	 * Return the ScreenResourceResolver to be used to find screen files. If one is configured in Crux.properties, use it, 
@@ -64,7 +61,7 @@ public class ScreenResourceResolverScanner
 		} 
 		catch (ClassNotFoundException e) 
 		{
-			logger.debug(messages.screenResourceResolverUsingDefault());
+			logger.debug("Using Default ScreenResourceResouver.");
 		}
 		return DeclarativeUIScreenResolver.class;
 	}

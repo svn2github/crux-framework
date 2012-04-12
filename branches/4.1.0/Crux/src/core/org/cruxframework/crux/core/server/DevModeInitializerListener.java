@@ -21,7 +21,6 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 
 
@@ -32,7 +31,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 public class DevModeInitializerListener implements ServletContextListener
 {
 	private static final Log logger = LogFactory.getLog(InitializerListener.class);
-	private ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
 
 	/**
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
@@ -47,7 +45,7 @@ public class DevModeInitializerListener implements ServletContextListener
 		}
 		else
 		{
-			logger.error(messages.initializerListenerRequiredParameterMissing(getClass().getSimpleName(), "outputCharset"));
+			logger.error("Missing required parameter for [DevModeInitializerListener] in web.xml: [outputCharset].");
 		}
 		if (!Environment.isProduction())
 		{

@@ -25,9 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.datasource.DataSource;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -39,7 +37,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class DataSources 
 {
 	private static final Log logger = LogFactory.getLog(DataSources.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Lock lock = new ReentrantLock();
 	private static Map<String, String> dataSources;
 	
@@ -89,7 +86,7 @@ public class DataSources
 					{
 						if (dataSources.containsKey(annot.value()))
 						{
-							throw new CruxGeneratorException(messages.dataSourcesDuplicatedDataSource(annot.value()));
+							throw new CruxGeneratorException("Duplicated datasource: ["+annot.value()+"].");
 						}
 						dataSources.put(annot.value(), dataSourceClass.getCanonicalName());
 					}
@@ -106,14 +103,14 @@ public class DataSources
 						}
 						if (dataSources.containsKey(simpleName))
 						{
-							throw new CruxGeneratorException(messages.dataSourcesDuplicatedDataSource(simpleName));
+							throw new CruxGeneratorException("Duplicated datasource: ["+simpleName+"].");
 						}
 						dataSources.put(simpleName, dataSourceClass.getCanonicalName());
 					}
 				} 
 				catch (Throwable e) 
 				{
-					logger.error(messages.dataSourcesDataSourceInitializeError(e.getLocalizedMessage()),e);
+					logger.error("Error initializing datasource.",e);
 				}
 			}
 		}

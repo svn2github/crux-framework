@@ -25,10 +25,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.CruxSerializable;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.serializable.annotation.SerializableName;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -41,7 +39,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class Serializers 
 {
 	private static final Log logger = LogFactory.getLog(Serializers.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Lock lock = new ReentrantLock();
 	private static Map<String, String> serializers;
 	
@@ -89,7 +86,7 @@ public class Serializers
 					{
 						if (serializers.containsKey(annot.value()))
 						{
-							throw new CruxGeneratorException(messages.serializersDuplicatedMessageKey(annot.value()));
+							throw new CruxGeneratorException("Duplicated SerializableName ["+annot.value()+"].");
 						}
 						serializers.put(annot.value(), serializerClass.getCanonicalName());
 					}
@@ -98,14 +95,14 @@ public class Serializers
 						String simpleName = serializerClass.getSimpleName();
 						if (serializers.containsKey(simpleName))
 						{
-							throw new CruxGeneratorException(messages.serializersDuplicatedMessageKey(simpleName));
+							throw new CruxGeneratorException("Duplicated SerializableName ["+simpleName+"].");
 						}
 						serializers.put(simpleName, serializerClass.getCanonicalName());
 					}
 				} 
 				catch (Throwable e) 
 				{
-					logger.error(messages.serializersSerializersInitializeError(e.getLocalizedMessage()),e);
+					logger.error("Error initializing serializer.",e);
 				}
 			}
 		}

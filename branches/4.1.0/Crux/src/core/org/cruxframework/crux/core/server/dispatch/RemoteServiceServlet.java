@@ -20,13 +20,10 @@ import java.lang.reflect.Method;
 import org.cruxframework.crux.core.client.rpc.st.UseSynchronizerToken;
 import org.cruxframework.crux.core.i18n.LocaleResolver;
 import org.cruxframework.crux.core.i18n.LocaleResolverInitialiser;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.dispatch.st.CruxSynchronizerTokenHandler;
 import org.cruxframework.crux.core.server.dispatch.st.CruxSynchronizerTokenHandlerFactory;
 import org.cruxframework.crux.core.server.dispatch.st.InvalidTokenException;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
-
 
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -40,7 +37,6 @@ import com.google.gwt.user.server.rpc.RPCRequest;
 public class RemoteServiceServlet extends com.google.gwt.user.server.rpc.RemoteServiceServlet
 {
 	private static final long serialVersionUID = -5471459247489132091L;
-	private ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
 
 	/**
 	 * @see com.google.gwt.user.server.rpc.RemoteServiceServlet#processCall(java.lang.String)
@@ -114,7 +110,7 @@ public class RemoteServiceServlet extends com.google.gwt.user.server.rpc.RemoteS
 			}
 			else
 			{
-				throw new IncompatibleRemoteServiceException(messages.synchronizerTokenServiceInvalidTokenError(methodFullSignature));
+				throw new IncompatibleRemoteServiceException("Invalid Synchronizer Token for method ["+methodFullSignature+"]. Possible CSRF attack.");
 			}
 		}
 		return false;

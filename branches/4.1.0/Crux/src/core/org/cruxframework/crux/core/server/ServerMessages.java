@@ -135,40 +135,4 @@ public interface ServerMessages
 
 	@DefaultServerMessage("[classpath 002] - Using classPathResolver: {0}.")
 	String classPathResolverInitializerUsingResolver(String name);
-	
-	@DefaultServerMessage("[serializers 001] - Error initializing serializer: {0}.")
-	String serializersSerializersInitializeError(String localizedMessage);
-
-	@DefaultServerMessage("[serializers 002] - Duplicated SerializableName {0}.")
-	String serializersDuplicatedMessageKey(String name);
-
-	@DefaultServerMessage("[screenResourceScanner 001] - Error initializing screenResourceScanner: {0}.")
-	String screenResourceScannerInitializationError(String localizedMessage);
-
-	@DefaultServerMessage("[screenResourceResolver 001] - Using Default ScreenResourceResouver.")
-	String screenResourceResolverUsingDefault();
-
-	@DefaultServerMessage("[datasources 001] - Error initializing datasource: {0}.")
-	String dataSourcesDataSourceInitializeError(String localizedMessage);
-
-	@DefaultServerMessage("[datasources 002] - Duplicated datasource: {0}.")
-	String dataSourcesDuplicatedDataSource(String value);
-	
-	@DefaultServerMessage("[synchronizerToken 001] - Invalid Synchronizer Token for method {0}. Possible CSRF attack.")
-	String synchronizerTokenServiceInvalidTokenError(String methodFullSignature);
-
-	@DefaultServerMessage("[widgetConfig 002] - Error initializing widgets. Invalid widget type: {0}")
-	String widgetConfigInitializeErrorInvalidType(String widgetType);
-	
-	@DefaultServerMessage("[listener 001] - Missing required parameter for {0} in web.xml: {1}.")
-	String initializerListenerRequiredParameterMissing(String filterName, String parameterName);
-
-	@DefaultServerMessage("[ioc 001] - Error initializing ioc container.")
-	String iocContainerManagerError();
-
-	@DefaultServerMessage("[ioc 002] - Configuring new ioc module [{0}]...")
-	String iocContainerConfiguringModule(String configurationClassName);
-	
-	@DefaultServerMessage("[ioc 003] - IoC Create Looping Error between classes [{0}] and [{1}].")
-	String iocCreateLoopingError(String qualifiedSourceName, String qualifiedSourceName2);
 }

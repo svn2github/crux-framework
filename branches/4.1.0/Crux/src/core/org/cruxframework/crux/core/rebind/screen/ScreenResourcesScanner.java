@@ -25,8 +25,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.scannotation.archiveiterator.Filter;
 import org.cruxframework.crux.scannotation.archiveiterator.IteratorFactory;
@@ -40,8 +38,6 @@ import org.cruxframework.crux.scannotation.archiveiterator.URLIterator;
  */
 public abstract class ScreenResourcesScanner 
 {
-	private ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
-
 	private static Map<String, Set<String>> pagesPerModule = null;
 	private static Lock lock = new ReentrantLock();
 	
@@ -78,7 +74,7 @@ public abstract class ScreenResourcesScanner
 			}
 			catch (IOException e)
 			{
-				throw new ScreenResourcesScannerException(messages.screenResourceScannerInitializationError(e.getLocalizedMessage()), e);
+				throw new ScreenResourcesScannerException("Error initializing screenResourceScanner.", e);
 			}
 		}
 		return screens;

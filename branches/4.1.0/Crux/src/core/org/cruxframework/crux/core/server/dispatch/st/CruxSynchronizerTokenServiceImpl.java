@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.cruxframework.crux.core.client.rpc.st.CruxSynchronizerTokenService;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 import com.google.gwt.user.server.Base64Utils;
@@ -45,7 +43,6 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 	private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private static Lock readLock = readWriteLock.readLock();
 	private static Lock writeLock = readWriteLock.writeLock();
-	private static ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
 	private HttpServletRequest request;
 	private HttpSession session;
 
@@ -119,7 +116,7 @@ public class CruxSynchronizerTokenServiceImpl implements CruxSynchronizerTokenSe
 			}
 			else
 			{
-				throw new InvalidTokenException(messages.synchronizerTokenServiceInvalidTokenError(methodFullSignature));
+				throw new InvalidTokenException("Invalid Synchronizer Token for method ["+methodFullSignature+"]. Possible CSRF attack.");
 			}
 		}
 		finally

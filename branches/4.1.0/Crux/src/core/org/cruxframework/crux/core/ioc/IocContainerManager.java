@@ -24,10 +24,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.ioc.Inject;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 /**
@@ -37,7 +35,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class IocContainerManager
 {
 	private static final Log logger = LogFactory.getLog(IocContainerManager.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	private static boolean initialized = false;
 	
@@ -61,7 +58,7 @@ public class IocContainerManager
 							{
 								if (logger.isInfoEnabled())
 								{
-									logger.info(messages.iocContainerConfiguringModule(configurationClassName));
+									logger.info("Configuring new ioc module ["+configurationClassName+"]...");
 								}
 								configuration.configure();
 							}
@@ -73,7 +70,7 @@ public class IocContainerManager
 			}
 			catch (Exception e)
 			{
-				logger.error(messages.iocContainerManagerError(), e);
+				logger.error("Error initializing ioc container.", e);
 			}
 		}
 	}
@@ -152,7 +149,7 @@ public class IocContainerManager
 				{
 					if (path.contains(fieldType.getCanonicalName()))
 					{
-						throw new IoCException(messages.iocCreateLoopingError(type.getCanonicalName(), fieldType.getCanonicalName()));
+						throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+fieldType.getCanonicalName()+"].");
 					}
 		        	Set<String> fieldPath = new HashSet<String>();
 		        	fieldPath.addAll(path);
