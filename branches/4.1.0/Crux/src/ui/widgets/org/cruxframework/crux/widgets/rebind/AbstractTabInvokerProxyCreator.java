@@ -18,7 +18,6 @@ package org.cruxframework.crux.widgets.rebind;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.invoker.InvokerProxyCreator;
@@ -41,7 +40,6 @@ import com.google.gwt.user.rebind.SourceWriter;
 @Deprecated
 public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProxyCreator
 {
-	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
 	private static final String ON_TAB_SUFIX = "OnTab";
 
 	/**
@@ -98,7 +96,8 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 			
 			if (tabId.length() <= ON_TAB_SUFIX.length())
 			{
-				throw new CruxGeneratorException(widgetMessages.tabsControllerInvalidSignature(method.getReadableDeclaration())); 
+				throw new CruxGeneratorException("Error for generating invoker wrapper: Invalid Method signature: ["+method.getReadableDeclaration()+"]." +
+						" A valid signature must have the form [methodName][OnTab][tabId]"); 
 			}
 			
 			tabId = toJavaName(tabId);

@@ -16,17 +16,15 @@
 package org.cruxframework.crux.widgets.rebind.paging;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.cruxframework.crux.widgets.client.paging.Pageable;
-import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 import org.cruxframework.crux.widgets.rebind.event.PageEvtBind;
 
 
@@ -42,8 +40,6 @@ import org.cruxframework.crux.widgets.rebind.event.PageEvtBind;
 })
 public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
-
 	@Override
 	public void processAttributes(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
@@ -63,7 +59,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		}
 		else
 		{
-			throw new CruxGeneratorException(widgetMessages.pagerNoPageableSet(context.getWidgetId(), getScreen().getId())); 
+			throw new CruxGeneratorException("No pageable widget set for the pager ["+context.getWidgetId()+"], on screen ["+getScreen().getId()+"]."); 
 		}							
 	}
 	

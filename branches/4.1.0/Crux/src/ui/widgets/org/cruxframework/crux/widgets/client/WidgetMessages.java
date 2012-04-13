@@ -19,31 +19,22 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface WidgetMessages extends Messages
 {
-	@DefaultMessage("[crux-widgets 001] - Filterable widget ''{0}'' not found during Filter instantiation. Please, check the given filterable id.")
+	@DefaultMessage("Filterable widget ''{0}'' not found during Filter instantiation. Please, check the given filterable id.")
 	String filterableNotFoundWhenInstantiantingFilter(String filterable);
-
-	@DefaultMessage("[crux-widgets 002] - formattable widget must use setUnformattedValue value instead of setValue.")
-	String formattableWidgetMustUseSetUnformattedValue();
-
-	@DefaultMessage("[crux-widgets 004] - The formatter {0} was not found on this screen.")
-	String maskedTextBoxFormatterNotFound(String formatter);
 	
-	@DefaultMessage("[crux-widgets 006] - Could not create widget for grid column ''{0}''")
+	@DefaultMessage("Could not create widget for grid column ''{0}''")
 	String errorCreatingWidgetForColumn(String key);
 	
-	@DefaultMessage("[crux-widgets 009] - It is not possible unregister a column definition.")
+	@DefaultMessage("It is not possible unregister a column definition.")
 	String removingColumnDefinitionByIterator();
 	
-	@DefaultMessage("[crux-widgets 010] - There is no sibling tab with the id ''{0}''")
+	@DefaultMessage("There is no sibling tab with the id ''{0}''")
 	String tabsControllerNoSiblingTabFound(String tabId);
 	
-	@DefaultMessage("[crux-widgets 011] - There is no tab with the id ''{0}''")
+	@DefaultMessage("There is no tab with the id ''{0}''")
 	String tabsControllerNoTabFound(String tabId);
 	
-	@DefaultMessage("[crux-widgets 012] - It is not possible remove a grid row.")
-	String gridDoesNotAllowRemoveRow();
-
-	@DefaultMessage("[crux-widgets 015] - Random paging is only supported in Grids whose DataSources are instances of MeasurablePagedDataSource.")
+	@DefaultMessage("Random paging is only supported in Grids whose DataSources are instances of MeasurablePagedDataSource.")
 	String gridRandomPagingNotSupported();
 
 	@DefaultMessage("< Back")
@@ -58,49 +49,43 @@ public interface WidgetMessages extends Messages
 	@DefaultMessage("Finish")
 	String wizardFinishCommand();
 
-	@DefaultMessage("[crux-widgets 018] - WizardControlBar is not associated with any Wizard.")
+	@DefaultMessage("WizardControlBar is not associated with any Wizard.")
 	String wizardControlBarOrphan();
 	
-	@DefaultMessage("[crux-widgets 019] - A started timer can not be modified.")
+	@DefaultMessage("A started timer can not be modified.")
 	String startedTimerCannotBeModified();
 
-	@DefaultMessage("[crux-widgets 020] - TextArea widget only accepts maxLength greater or equals zero.")
+	@DefaultMessage("TextArea widget only accepts maxLength greater or equals zero.")
 	String textAreaInvalidMaxLengthParameter();
 
-	@DefaultMessage("[crux-widgets 021] - Error while communicating with inner page step.")
-	String wizardPageStepErrorInvokingEventOnInnerPage();
-
-	@DefaultMessage("[crux-widgets 022] - Error while communicating with wizard widget.")
-	String wizardPageStepErrorInvokingEventOuterPage();
-
-	@DefaultMessage("[crux-widgets 023] - Only one WizardPage widget can be used on a single screen.")
+	@DefaultMessage("Only one WizardPage widget can be used on a single screen.")
 	String wizardPageDuplicatedWidgetOnPage();
 
-	@DefaultMessage("[crux-widgets 024] - This wizard already contains a step with id {0}.")
+	@DefaultMessage("This wizard already contains a step with id {0}.")
 	String wizardDuplicatedStep(String id);
 
-	@DefaultMessage("[crux-widgets 025] - Step {0} not found.")
+	@DefaultMessage("Step {0} not found.")
 	String wizardStepNotFound(String stepId);
 
-	@DefaultMessage("[crux-widgets 026] - Wizard does not have a step with index {0}.")
+	@DefaultMessage("Wizard does not have a step with index {0}.")
 	String wizardStepNotFound(int stepOrder);
 
-	@DefaultMessage("[crux-widgets 027] - The wizard step with index {0} can not be selected because it is not enabled.")
+	@DefaultMessage("The wizard step with index {0} can not be selected because it is not enabled.")
 	String wizardInvalidStepSelected(int step);
 
-	@DefaultMessage("[crux-widgets 028] - Error runnig the wizard command {0}. Message: {1}.")
+	@DefaultMessage("Error runnig the wizard command {0}. Message: {1}.")
 	String wizardCommandError(String commandId, String message);
 
-	@DefaultMessage("[crux-widgets 030] - It is not possible to remove a row from a Grid.")
+	@DefaultMessage("It is not possible to remove a row from a Grid.")
 	String errorItsNotPossibleToRemoveARowmFromAGrid();
 
-	@DefaultMessage("[crux-widgets 031] - Error sorting the Grid. No DataColumn with the key ''{0}'' was found.")
+	@DefaultMessage("Error sorting the Grid. No DataColumn with the key ''{0}'' was found.")
 	String errorGridNoDataColumnFound(String column);
 
-	@DefaultMessage("[crux-widgets 032] - Wizard does not have any WizardData assigned.")
+	@DefaultMessage("Wizard does not have any WizardData assigned.")
 	String wizardNoSerializerAssigned();
 
-	@DefaultMessage("[crux-widgets 033] - No pageable widget set for this pager.")
+	@DefaultMessage("No pageable widget set for this pager.")
 	String pagerNoPageableSet();
 
 	

@@ -18,7 +18,6 @@ package org.cruxframework.crux.widgets.rebind.grid;
 import org.cruxframework.crux.core.client.datasource.PagedDataSource;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
@@ -55,7 +54,6 @@ import org.cruxframework.crux.widgets.client.grid.RowDetailWidgetCreator;
 import org.cruxframework.crux.widgets.client.grid.RowSelectionModel;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition;
 import org.cruxframework.crux.widgets.client.grid.WidgetColumnDefinition.WidgetColumnCreator;
-import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.BeforeRowSelectEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.BeforeShowRowDetailsEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.RowEventsBind.LoadRowDetailsEvtBind;
@@ -107,7 +105,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 })
 public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 {
-	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
 	protected static int childWidgetsIdSuffix = 0;
 	
 	@Override
@@ -332,7 +329,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 							}
 							catch (Exception e)
 							{
-						        throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumn(gridId, colKey));
+						        throw new CruxGeneratorException("Grid ["+gridId+"] has an invalid column ["+colKey+"].");
 							}
 							
 							JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
@@ -485,7 +482,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 						}
 						else
 						{
-							throw new CruxGeneratorException(widgetMessages.gridErrorInvalidColumnType(context.readWidgetProperty("id")));
+							throw new CruxGeneratorException("Grid ["+context.readWidgetProperty("id")+"] has an invalid column (unexpected column type).");
 						}
 	
 						out.print(defs+".add("+EscapeUtils.quote(key)+", "+def+");");
@@ -495,7 +492,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		}
 		else
 		{
-			throw new CruxGeneratorException(widgetMessages.gridDoesNotHaveColumns(context.readWidgetProperty("id")));
+			throw new CruxGeneratorException("Grid ["+context.readWidgetProperty("id")+"] has no column.");
 		}
 				
 		return defs;

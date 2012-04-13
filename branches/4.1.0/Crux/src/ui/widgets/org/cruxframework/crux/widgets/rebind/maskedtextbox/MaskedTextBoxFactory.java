@@ -17,7 +17,6 @@ package org.cruxframework.crux.widgets.rebind.maskedtextbox;
 
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
@@ -38,7 +37,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.widgets.client.maskedtextbox.MaskedTextBox;
-import org.cruxframework.crux.widgets.rebind.WidgetGeneratorMessages;
 
 
 /**
@@ -65,8 +63,6 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
                   HasAllKeyHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
                   HasDoubleClickHandlersFactory<WidgetCreatorContext>
 {
-	protected static WidgetGeneratorMessages widgetMessages = (WidgetGeneratorMessages)MessagesFactory.getMessages(WidgetGeneratorMessages.class);
-
 	/**
 	 * @param metaElem
 	 * @param widgetId
@@ -84,12 +80,12 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
 			String fmt = createVariableName("fmt");
 
 			out.println(Formatter.class.getCanonicalName()+" "+fmt+" = "+Formatters.getFormatterInstantionCommand(formatter)+";");
-			out.println("assert ("+fmt+" != null):"+EscapeUtils.quote(widgetMessages.maskedLabelFormatterNotFound(formatter))+";");
+			out.println("assert ("+fmt+" != null):"+EscapeUtils.quote("The formatter ["+formatter+"] was not found on this screen.")+";");
 			out.println(className + " " + context.getWidget()+" = new "+className+"("+fmt+");");
 		}	
 		else
 		{
-			throw new CruxGeneratorException(widgetMessages.maskedTextBoxFormatterRequired());	
+			throw new CruxGeneratorException("The attribute formatter is required for MaskedTextBox.");	
 		}
 	}	
 	
