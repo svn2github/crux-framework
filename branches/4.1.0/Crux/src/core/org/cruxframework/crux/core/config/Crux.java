@@ -19,6 +19,9 @@ import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 
 public interface Crux 
 {
+	@DefaultServerMessage("org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGeneratorImpl")
+	String parameterBindGenerator();
+
 	@DefaultServerMessage("org.cruxframework.crux.core.server.dispatch.ServiceFactoryImpl")
 	String serviceFactory();
 	
@@ -59,5 +62,6 @@ public interface Crux
 	void setScreenResourceResolver(String value);
 	void setLocaleResolver(String value);
 	void setServiceFactory(String value);
+	void setParameterBindGenerator(String value);
 	//TODO atualizar wiki com as opções correntes
 }

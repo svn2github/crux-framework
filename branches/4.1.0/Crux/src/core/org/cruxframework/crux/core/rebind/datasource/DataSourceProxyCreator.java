@@ -252,7 +252,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 						fieldExpression.append(parentVariable);
 					}
 					first = false;
-					fieldExpression.append(getFieldValueGet((JClassType)fieldType, field, "", false));
+					fieldExpression.append(JClassUtils.getFieldValueGet((JClassType)fieldType, field, "", false));
 					fieldType = field.getType();
                 }
 				result.append("+"+fieldExpression.toString());

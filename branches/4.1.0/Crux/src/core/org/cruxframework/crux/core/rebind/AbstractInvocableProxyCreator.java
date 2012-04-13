@@ -18,27 +18,23 @@ package org.cruxframework.crux.core.rebind;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Parameter;
 import org.cruxframework.crux.core.client.controller.ParameterObject;
 import org.cruxframework.crux.core.client.controller.ScreenBind;
 import org.cruxframework.crux.core.client.controller.ValueObject;
 import org.cruxframework.crux.core.client.datasource.DataSource;
-import org.cruxframework.crux.core.client.event.ValidateException;
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGenerator;
+import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGeneratorInitializer;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -275,101 +271,6 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	}	
 	
 	/**
-	 * Generates the code for DTO population from screen. 
-	 * 
-	 * @param resultVariable
-	 * @param voClass
-	 * @param sourceWriter
-	 */
-	private void generateDTOParameterPopulation(String resultVariable, JClassType voClass, SourceWriter sourceWriter)
-	{
-		boolean hasAtLeastOneField = false;
-		for (JField field : voClass.getFields()) 
-		{
-			if (JClassUtils.isPropertyVisibleToWrite(voClass, field))
-			{
-				ParameterObject parameterObject = voClass.getAnnotation(ParameterObject.class);
-				Parameter parameter = field.getAnnotation(Parameter.class); 
-				if ((parameterObject != null && parameterObject.bindParameterByFieldName()) || parameter != null)
-				{
-					hasAtLeastOneField = true;
-					generateDTOParameterPopulationField(resultVariable, voClass, field, sourceWriter, false);
-				}
-			}
-		}
-		if (!hasAtLeastOneField)
-		{
-			logger.log(TreeLogger.ERROR, "Parameter Object ["+voClass.getName()+"] has no valid field for binding.");
-		}
-	}	
-
-	/**
-	 * 
-	 * @param parentVariable
-	 * @param voClass
-	 * @param field
-	 * @param sourceWriter
-	 * @param allowProtected
-	 */
-	private void generateDTOParameterPopulationField(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, boolean allowProtected)
-	{
-		JType type = field.getType();
-		String name = null;
-		boolean required = false;
-		Parameter parameterAnnot = field.getAnnotation(Parameter.class);
-		if (parameterAnnot != null)
-		{
-			name = parameterAnnot.value();
-			required = parameterAnnot.required();
-		}
-		if (name == null || name.length() == 0)
-		{
-			name = field.getName();
-		}
-		
-		if (JClassUtils.isSimpleType(type)) 
-		{
-			if (required)
-			{
-				
-				sourceWriter.println("if ("+StringUtils.class.getName()+".isEmpty(" +Window.class.getName()+".Location.getParameter(\""+name+"\"))){");
-				sourceWriter.indent();
-				sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Required parameter ["+name+"] is missing.")+");");
-				sourceWriter.outdent();
-				sourceWriter.println("}");
-				
-			}
-			sourceWriter.println("if (!"+StringUtils.class.getName()+".isEmpty(" +Window.class.getName()+".Location.getParameter(\""+name+"\"))){");
-			sourceWriter.indent();
-			sourceWriter.println("try{");
-			sourceWriter.indent();
-			generateParameterBinding(parentVariable, voClass, field, sourceWriter, type, name, allowProtected);
-			sourceWriter.outdent();
-			sourceWriter.println("}catch(Throwable _e1){");
-			sourceWriter.indent();
-			sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Error parsing parameter ["+name+"].")+");");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-		}
-		else if (type instanceof JClassType && ((JClassType)type).getAnnotation(ParameterObject.class) != null)
-		{
-			sourceWriter.println("if (" +getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
-			sourceWriter.indent();
-			generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
-			sourceWriter.outdent();
-			sourceWriter.println("}");
-
-			parentVariable = getFieldValueGet(voClass, field, parentVariable, allowProtected);
-			if (parentVariable != null)
-			{
-				generateDTOParameterPopulation(parentVariable, (JClassType)type, sourceWriter);
-			}
-		}			
-	}
-	
-	/**
 	 * Generates a property set block. First try to set the field directly, then try to use a javabean setter method.
 	 * 
 	 * @param voClass
@@ -381,41 +282,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	private void generateFieldValueSet(JClassType voClass, JField field, String parentVariable,  
 			                           String valueVariable, SourceWriter sourceWriter)
 	{
-		generateFieldValueSet(voClass, field, parentVariable, valueVariable, sourceWriter, true);
-	}
-	
-	/**
-	 * Generates a property set block. First try to set the field directly, then try to use a javabean setter method.
-	 * 
-	 * @param logger
-	 * @param voClass
-	 * @param field
-	 * @param parentVariable
-	 * @param valueVariable
-	 * @param sourceWriter
-	 */
-	private void generateFieldValueSet(JClassType voClass, JField field, String parentVariable,  
-			                           String valueVariable, SourceWriter sourceWriter, boolean allowProtected)
-	{
-		if (field.isPublic() || (allowProtected && field.isProtected()))
-		{
-			sourceWriter.println(parentVariable+"."+field.getName()+"="+valueVariable+";");
-		}
-		else
-		{
-			String setterMethodName = "set"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-			try
-			{
-				if (voClass.getMethod(setterMethodName, new JType[]{field.getType()}) != null)
-				{
-					sourceWriter.println(parentVariable+"."+setterMethodName+"("+valueVariable+");");
-				}
-			}
-			catch (Exception e)
-			{
-				throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
-			}
-		}
+		JClassUtils.generateFieldValueSet(voClass, field, parentVariable, valueVariable, sourceWriter, true);
 	}
 	
 	/**
@@ -438,7 +305,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		if (populateScreen)
 		{
 			sourceWriter.println("((HasFormatter)"+valueVariable+").setUnformattedValue("
-					            + getFieldValueGet(voClass, field, parentVariable, allowProtected)+");");
+					            + JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+");");
 		}
 		else
 		{
@@ -450,7 +317,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 				sourceWriter.println("}");
 			}
 			
-			generateFieldValueSet(voClass, field, parentVariable, "("+JClassUtils.getGenericDeclForType(type)+")"
+			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, "("+JClassUtils.getGenericDeclForType(type)+")"
 					            + valueVariableName, sourceWriter, allowProtected);
 		}
 	}	
@@ -469,12 +336,12 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	{
 		if (populateScreen)
 		{
-			sourceWriter.println("o = " +getFieldValueGet(voClass, field, parentVariable, allowProtected)+";");
+			sourceWriter.println("o = " +JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+";");
 			sourceWriter.println("((HasText)"+valueVariable+").setText(String.valueOf(o!=null?o:\"\"));");
 		}
 		else
 		{
-			generateFieldValueSet(voClass, field, parentVariable, "((HasText)"+valueVariable+").getText()", sourceWriter, allowProtected);
+			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, "((HasText)"+valueVariable+").getText()", sourceWriter, allowProtected);
 		}
 	}
 	
@@ -494,30 +361,15 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		if (populateScreen)
 		{
 			sourceWriter.println("((HasValue<"+JClassUtils.getGenericDeclForType(type)+">)"+valueVariable+").setValue("
-					            + getFieldValueGet(voClass, field, parentVariable, allowProtected)+");");
+					            + JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+");");
 		}
 		else
 		{
-			generateFieldValueSet(voClass, field, parentVariable, 
+			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, 
 					"("+JClassUtils.getGenericDeclForType(type)+")((HasValue<"+JClassUtils.getGenericDeclForType(type)+">)"+valueVariable+").getValue()", 
 					sourceWriter, allowProtected);
 		}
 	}
-	
-	/**
-	 * @param parentVariable
-	 * @param voClass
-	 * @param field
-	 * @param sourceWriter
-	 * @param type
-	 * @param name
-	 * @param allowProtected
-	 */
-	private void generateParameterBinding(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
-			JType type, String name, boolean allowProtected)
-	{
-		generateFieldValueSet(voClass, field, parentVariable, getParameterFromURL(type, name), sourceWriter, allowProtected);
-	}	
 	
 	/**
 	 * 
@@ -528,15 +380,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 */
 	private void generateParameterPopulation(JClassType classType, String parentVariable, SourceWriter sourceWriter, JField field)
 	{
-		sourceWriter.println("try{");
-		sourceWriter.indent();
-		generateDTOParameterPopulationField(parentVariable, classType, field, sourceWriter, true);
-		sourceWriter.outdent();
-		sourceWriter.println("}catch("+ValidateException.class.getName() + " _e){");
-		sourceWriter.indent();
-		sourceWriter.println(Crux.class.getName()+".getValidationErrorHandler().handleValidationError(_e.getMessage());");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
+		ParameterBindGenerator parameterBindGenerator = ParameterBindGeneratorInitializer.getParameterBindGenerator();
+		parameterBindGenerator.generate(parentVariable, classType, field, sourceWriter, logger);
 	}
 	
 	/**
@@ -604,13 +449,13 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		}
 		else if (type instanceof JClassType && ((JClassType)type).getAnnotation(ValueObject.class) != null)
 		{
-			sourceWriter.println("if (" +getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
+			sourceWriter.println("if (" +JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
 			sourceWriter.indent();
 
-			generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
+			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
 			sourceWriter.outdent();
 			sourceWriter.println("}");
-			parentVariable = getFieldValueGet(voClass, field, parentVariable, allowProtected);
+			parentVariable = JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected);
 			if (parentVariable != null)
 			{
 				generateScreenOrDTOPopulation(parentVariable, (JClassType)type, sourceWriter, populateScreen, dtoLooping);
@@ -697,78 +542,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 */
 	protected String getFieldValueGet(JClassType voClass, JField field, String parentVariable)
 	{
-		return getFieldValueGet(voClass, field, parentVariable, true);
+		return JClassUtils.getFieldValueGet(voClass, field, parentVariable, true);
 	}
-	
-	/**
-	 * Generates a property get block. First try to get the field directly, then try to use a javabean getter method.
-	 * 
-	 * @param voClass
-	 * @param field
-	 * @param parentVariable
-	 * @param allowProtected
-	 */
-	protected String getFieldValueGet(JClassType voClass, JField field, String parentVariable, boolean allowProtected)
-	{
-		if (field.isPublic() || (allowProtected && field.isProtected()))
-		{
-			return parentVariable+"."+field.getName();
-		}
-		else
-		{
-			String getterMethodName = "get"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-			try
-			{
-				JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
-				if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
-				{
-					return (parentVariable+"."+getterMethodName+"()");
-				}
-				else
-				{
-					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
-				}
-			}
-			catch (Exception e)
-			{
-				try
-				{
-					getterMethodName = "is"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
-					JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
-					if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
-					{
-						return (parentVariable+"."+getterMethodName+"()");
-					}
-					else
-					{
-						throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
-					}
-				}
-				catch (Exception e1)
-				{
-					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @param type
-	 * @param name
-	 * @return
-	 */
-	private String getParameterFromURL(JType type, String name)
-	{
-		try
-        {
-	        return JClassUtils.getParsingExpressionForSimpleType(Window.class.getName()+".Location.getParameter(\""+name+"\")", type);
-        }
-        catch (NotFoundException e)
-        {
-        	throw new CruxGeneratorException(e.getMessage(), e);
-        }
-	}	
 	
 	/**
 	 * Get the field type

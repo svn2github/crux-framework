@@ -29,6 +29,7 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -507,4 +508,89 @@ public class JClassUtils
 		}
 	}
 	
+	/**
+	 * Generates a property set block. First try to set the field directly, then try to use a javabean setter method.
+	 * 
+	 * @param logger
+	 * @param voClass
+	 * @param field
+	 * @param parentVariable
+	 * @param valueVariable
+	 * @param sourceWriter
+	 */
+	public static void generateFieldValueSet(JClassType voClass, JField field, String parentVariable,  
+			                           String valueVariable, SourceWriter sourceWriter, boolean allowProtected)
+	{
+		if (field.isPublic() || (allowProtected && field.isProtected()))
+		{
+			sourceWriter.println(parentVariable+"."+field.getName()+"="+valueVariable+";");
+		}
+		else
+		{
+			String setterMethodName = "set"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+			try
+			{
+				if (voClass.getMethod(setterMethodName, new JType[]{field.getType()}) != null)
+				{
+					sourceWriter.println(parentVariable+"."+setterMethodName+"("+valueVariable+");");
+				}
+			}
+			catch (Exception e)
+			{
+				throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
+			}
+		}
+	}
+	
+	/**
+	 * Generates a property get block. First try to get the field directly, then try to use a javabean getter method.
+	 * 
+	 * @param voClass
+	 * @param field
+	 * @param parentVariable
+	 * @param allowProtected
+	 */
+	public static String getFieldValueGet(JClassType voClass, JField field, String parentVariable, boolean allowProtected)
+	{
+		if (field.isPublic() || (allowProtected && field.isProtected()))
+		{
+			return parentVariable+"."+field.getName();
+		}
+		else
+		{
+			String getterMethodName = "get"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+			try
+			{
+				JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
+				if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
+				{
+					return (parentVariable+"."+getterMethodName+"()");
+				}
+				else
+				{
+					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
+				}
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					getterMethodName = "is"+Character.toUpperCase(field.getName().charAt(0))+field.getName().substring(1);
+					JMethod method = voClass.getMethod(getterMethodName, new JType[]{});
+					if (method != null && (method.isPublic() || (allowProtected && method.isProtected())))
+					{
+						return (parentVariable+"."+getterMethodName+"()");
+					}
+					else
+					{
+						throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
+					}
+				}
+				catch (Exception e1)
+				{
+					throw new CruxGeneratorException("Property ["+field.getName()+"] could not be created. This is not visible neither has a getter/setter method.");
+				}
+			}
+		}
+	}
 }
