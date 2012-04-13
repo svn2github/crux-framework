@@ -19,8 +19,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -31,7 +29,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class Services 
 {
 	private static final Log logger = LogFactory.getLog(Services.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	
 	/**
 	 * Return the service that implements the interface informed.
@@ -54,11 +51,11 @@ public class Services
 					}
 				}
 			}
-			logger.info(messages.servicesNoImplementationFound(interfaceName));
+			logger.info("No implementation class found to service interface: ["+interfaceName+"].");
 		} 
 		catch (ClassNotFoundException e) 
 		{
-			logger.error(messages.servicesErrorCreatingService(interfaceName, e.getLocalizedMessage()),e);
+			logger.error("Error creating service ["+interfaceName+"].",e);
 		}
 		return null;
 	}

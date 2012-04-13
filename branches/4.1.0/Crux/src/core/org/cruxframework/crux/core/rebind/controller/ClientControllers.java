@@ -31,10 +31,8 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.WidgetController;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -48,7 +46,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 public class ClientControllers 
 {
 	private static final Log logger = LogFactory.getLog(ClientControllers.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Lock lock = new ReentrantLock();
 	private static Map<String, String> controllers;
 	private static List<String> globalControllers;
@@ -99,7 +96,7 @@ public class ClientControllers
 					Controller annot = controllerClass.getAnnotation(Controller.class);
 					if (controllers.containsKey(annot.value()))
 					{
-						throw new CruxGeneratorException(messages.controllersDuplicatedController(annot.value()));
+						throw new CruxGeneratorException("Duplicated Client Controller: ["+annot.value()+"].");
 					}
 					
 					controllers.put(annot.value(), controllerClass.getCanonicalName());
@@ -112,7 +109,7 @@ public class ClientControllers
 				} 
 				catch (ClassNotFoundException e) 
 				{
-					logger.error(messages.controllersInitializeError(e.getLocalizedMessage()),e);
+					logger.error("Error initializing client controller.",e);
 				}
 			}
 		}

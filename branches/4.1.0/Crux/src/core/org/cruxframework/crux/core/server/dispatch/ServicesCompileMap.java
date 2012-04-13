@@ -19,14 +19,11 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 
 
 /**
@@ -36,7 +33,6 @@ import org.cruxframework.crux.core.server.ServerMessages;
 public class ServicesCompileMap
 {
 	private static final Log logger = LogFactory.getLog(ServicesCompileMap.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static Map<String, String> remoteServices = new HashMap<String, String>();
 	
 	/**
@@ -53,11 +49,11 @@ public class ServicesCompileMap
 				Class<?> serviceClass = Class.forName(implementationClassName);
 				return serviceClass;
 			}
-			logger.error(messages.servicesNoImplementationFound(serviceName));
+			logger.error("No implementation class found to service interface: ["+serviceName+"].");
 		} 
 		catch (ClassNotFoundException e) 
 		{
-			logger.error(messages.servicesErrorCreatingService(serviceName, e.getLocalizedMessage()),e);
+			logger.error("Error creating service ["+serviceName+"].",e);
 		}
 		return null;	
 	}
@@ -81,7 +77,7 @@ public class ServicesCompileMap
 		}
 		catch (Exception e)
 		{
-			logger.info(messages.servicesInitializeError(e.getMessage()),e);
+			logger.info("Error initializing services.",e);
 		}
 		return false;
 	}

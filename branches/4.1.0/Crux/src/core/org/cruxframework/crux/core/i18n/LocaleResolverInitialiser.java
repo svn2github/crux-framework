@@ -21,7 +21,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 
 
 /**
@@ -35,7 +34,6 @@ public class LocaleResolverInitialiser
 	protected static ThreadLocal<LocaleResolver> localeResolver = new ThreadLocal<LocaleResolver>();
 	private static final Lock lock = new ReentrantLock();
 	private static final Log logger = LogFactory.getLog(LocaleResolverInitialiser.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	/**
 	 * 
@@ -61,7 +59,7 @@ public class LocaleResolverInitialiser
 		}
 		catch (Exception e)
 		{
-			logger.error(messages.localeResolverInitialisationError(e.getMessage()), e);
+			logger.error("Error initializing LocaleResolver.", e);
 		}
 	}
 	
@@ -98,7 +96,7 @@ public class LocaleResolverInitialiser
 		}
 		catch (Exception e) 
 		{
-			logger.error(messages.localeResolverInitialisationError(e.getMessage()), e);
+			logger.error("Error initializing LocaleResolver.", e);
 		}
 		finally
 		{

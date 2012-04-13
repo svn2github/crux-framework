@@ -21,9 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.Environment;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 
@@ -39,7 +37,6 @@ public class ScannerURLS
 	private static final Lock lock = new ReentrantLock();
 
 	private static final Log logger = LogFactory.getLog(ScannerURLS.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	
 	/**
 	 * 
@@ -85,7 +82,7 @@ public class ScannerURLS
 				}
 				catch (Throwable e) 
 				{
-					logger.error(messages.scannerURLSErrorSearchingLibDir(e.getLocalizedMessage()), e);
+					logger.error("Error searching /WEB-INF/lib dir.", e);
 				}
 				URL webInfClasses = ClassPathResolverInitializer.getClassPathResolver().findWebInfClassesPath();
 				
@@ -103,7 +100,7 @@ public class ScannerURLS
 					}
 					catch (Throwable e) 
 					{
-						logger.error(messages.scannerURLSErrorSearchingClassesDir(e.getLocalizedMessage()), e);
+						logger.error("Error searching /WEB-INF/classes dir.", e);
 					}
 				}
 			}

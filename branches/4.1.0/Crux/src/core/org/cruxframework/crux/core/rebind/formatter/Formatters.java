@@ -28,9 +28,7 @@ import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.annotation.FormatterName;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 
@@ -43,7 +41,6 @@ import org.cruxframework.crux.core.utils.RegexpPatterns;
 public class Formatters 
 {
 	private static final Log logger = LogFactory.getLog(Formatters.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Lock lock = new ReentrantLock();
 	private static Map<String, String> formatters;
 	
@@ -92,7 +89,7 @@ public class Formatters
 					{
 						if (formatters.containsKey(annot.value()))
 						{
-							throw new CruxGeneratorException(messages.formattersDuplicatedFormatter(annot.value()));
+							throw new CruxGeneratorException("Duplicated formatter: ["+annot.value()+"].");
 						}
 						formatters.put(annot.value(), formatterClass.getCanonicalName());
 					}
@@ -109,14 +106,14 @@ public class Formatters
 						}
 						if (formatters.containsKey(simpleName))
 						{
-							throw new CruxGeneratorException(messages.formattersDuplicatedFormatter(simpleName));
+							throw new CruxGeneratorException("Duplicated formatter: ["+simpleName+"].");
 						}
 						formatters.put(simpleName, formatterClass.getCanonicalName());
 					}
 				} 
 				catch (Throwable e) 
 				{
-					logger.error(messages.formattersFormatterInitializeError(e.getLocalizedMessage()),e);
+					logger.error("Error initializing formatters.",e);
 				}
 			}
 		}

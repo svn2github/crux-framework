@@ -21,16 +21,17 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 
-
+/**
+ * 
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
 public class ClassPathResolverInitializer 
 {
 	private static final Log logger = LogFactory.getLog(ClassPathResolverInitializer.class);
 	private static ClassPathResolver classPathResolver;
 	private static final Lock lock = new ReentrantLock();
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	public static ClassPathResolver getClassPathResolver()
 	{
@@ -45,13 +46,13 @@ public class ClassPathResolverInitializer
 		}
 		catch (Throwable e)
 		{
-			logger.error(messages.classPathResolverInitializerError(e.getMessage()), e);
+			throw new ClassPathResolverException("Error initializing classPathResolver.", e);
 		}
 		finally
 		{
 			lock.unlock();
 		}
-		logger.info(messages.classPathResolverInitializerUsingResolver(classPathResolver.getClass().getName()));
+		logger.info("Using classPathResolver: ["+classPathResolver.getClass().getName()+"]");
 		return classPathResolver;
 	}
 

@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.utils.FileUtils;
 
 
@@ -44,7 +43,6 @@ public class CruxBridge
 {
 	private static CruxBridge instance = new CruxBridge();
 	private static final Log logger = LogFactory.getLog(CruxBridge.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	private String scanAllowedPackages = null;
 	private File scanAllowedPackagesFile;
@@ -99,7 +97,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.error(messages.screenBridgeErrorReadingScreenId(e.getLocalizedMessage()), e);
+			logger.error("Error reading screen id.", e);
 			return null;
 		}
 	}
@@ -125,7 +123,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.error(messages.screenBridgeErrorReadingOutputCharset(e.getLocalizedMessage()), e);
+			logger.error("Error reading outputCharset.", e);
 			return null;
 		}
 	}
@@ -151,7 +149,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.debug(messages.screenBridgeErrorReadingAllowedPackages(e.getLocalizedMessage()), e);
+			logger.debug("Error reading allowedPackages.", e);
 			return null;
 		}
 	}
@@ -177,7 +175,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.debug(messages.screenBridgeErrorReadingIgnoredPackages(e.getLocalizedMessage()), e);
+			logger.debug("Error reading ignoredPackages.", e);
 			return null;
 		}
 	}
@@ -203,7 +201,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.debug(messages.screenBridgeErrorReadingWebinfClasses(e.getLocalizedMessage()), e);
+			logger.debug("Error reading webinfClasses.", e);
 			return null;
 		}
 	}
@@ -229,7 +227,7 @@ public class CruxBridge
 		} 
 		catch (Exception e) 
 		{
-			logger.debug(messages.screenBridgeErrorReadingWebinfLib(e.getLocalizedMessage()), e);
+			logger.debug("Error reading webinfLib.", e);
 			return null;
 		}
 	}
@@ -262,7 +260,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringOutputCharset(e.getLocalizedMessage()), e);
+			logger.error("Error registering outputCharset.", e);
 		}
     }	
 	
@@ -290,7 +288,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringScreen(e.getLocalizedMessage()), e);
+			logger.error("Error registering screen.", e);
 		}
 	}
 
@@ -316,7 +314,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringAllowedPackages(e.getLocalizedMessage()), e);
+			logger.error("Error registering allowedPackages.", e);
 		}
 	}
 
@@ -342,7 +340,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringIgnoredPackages(e.getLocalizedMessage()), e);
+			logger.error("Error registering ignoredPackages.", e);
 		}
 	}
 
@@ -368,7 +366,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringWebinfClasses(e.getLocalizedMessage()), e);
+			logger.error("Error registering webinfClasses.", e);
 		}
 	}
 	
@@ -395,7 +393,7 @@ public class CruxBridge
 		} 
 		catch (FileNotFoundException e) 
 		{
-			logger.error(messages.screenBridgeErrorRegisteringWebinfLib(e.getLocalizedMessage()), e);
+			logger.error("Error registering webinfLib.", e);
 		}
 	}
 

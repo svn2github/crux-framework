@@ -19,8 +19,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.cruxframework.crux.core.server.ServerMessages;
-
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -38,7 +36,7 @@ public class LocaleResolverImpl implements LocaleResolver
 	{
 		if (userLocale == null)
 		{
-			throw new LocaleResolverException(MessagesFactory.getMessages(ServerMessages.class).localeResolverNotInitialized());
+			throw new LocaleResolverException("User LocaleResolver not initialized.");
 		}
 		return userLocale;
 	}

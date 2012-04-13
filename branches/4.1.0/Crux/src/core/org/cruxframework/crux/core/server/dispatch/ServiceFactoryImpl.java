@@ -20,9 +20,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.Environment;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -35,7 +33,6 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
  */
 public class ServiceFactoryImpl implements ServiceFactory 
 {
-	private static ServerMessages messages = MessagesFactory.getMessages(ServerMessages.class);
 	private static final Log logger = LogFactory.getLog(ServiceFactoryImpl.class);
 	
 	/**
@@ -56,7 +53,7 @@ public class ServiceFactoryImpl implements ServiceFactory
 			} 
 			catch (Exception e) 
 			{
-				throw new RuntimeException(messages.servicesErrorCreatingService(serviceName, e.getMessage()), e);
+				throw new RuntimeException("Error creating service ["+serviceName+"].", e);
 			} 
 		}
 
@@ -103,7 +100,7 @@ public class ServiceFactoryImpl implements ServiceFactory
 			} 
 			catch (Exception e) 
 			{
-				throw new RuntimeException(messages.servicesErrorCreatingService(serviceName, e.getMessage()), e);
+				throw new RuntimeException("Error creating service ["+serviceName+"].", e);
 			} 
 		}
 
@@ -149,7 +146,7 @@ public class ServiceFactoryImpl implements ServiceFactory
 		{
 			if (strategy instanceof CompileTimeStrategy)
 			{
-				logger.info(messages.servicesCompileStrategyInitializeError());
+				logger.info("Error initializing services. Using runtime strategy for services...");
 				strategy = new RuntimeStrategy();
 				strategy.initialize(context);
 			}

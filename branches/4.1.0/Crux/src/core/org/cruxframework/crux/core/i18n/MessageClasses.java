@@ -23,9 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.client.i18n.MessageName;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
-
 
 import com.google.gwt.i18n.client.LocalizableResource;
 
@@ -36,7 +34,6 @@ import com.google.gwt.i18n.client.LocalizableResource;
 public class MessageClasses 
 {
 	private static final Lock lock = new ReentrantLock();
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static Map<String, String> messagesClasses = null;	
 	
 	/**
@@ -79,7 +76,7 @@ public class MessageClasses
 							{
 								if (messagesClasses.containsKey(messageNameAnnot.value()))
 								{
-									throw new CruxGeneratorException(messages.messagesClassesDuplicatedMessageKey(messageNameAnnot.value()));
+									throw new CruxGeneratorException("Duplicated Message Key: ["+messageNameAnnot.value()+"].");
 								}
 								messagesClasses.put(messageNameAnnot.value(), messageClass.getCanonicalName());
 							}
@@ -87,7 +84,7 @@ public class MessageClasses
 							{
 								if (messagesClasses.containsKey(nameAnnot.value()))
 								{
-									throw new CruxGeneratorException(messages.messagesClassesDuplicatedMessageKey(nameAnnot.value()));
+									throw new CruxGeneratorException("Duplicated Message Key: ["+nameAnnot.value()+"].");
 								}
 								messagesClasses.put(nameAnnot.value(), messageClass.getCanonicalName());
 							}
@@ -104,7 +101,7 @@ public class MessageClasses
 								}
 								if (messagesClasses.containsKey(className))
 								{
-									throw new CruxGeneratorException(messages.messagesClassesDuplicatedMessageKey(className));
+									throw new CruxGeneratorException("Duplicated Message Key: ["+className+"].");
 								}
 								messagesClasses.put(className, messageClass.getCanonicalName());
 							}
@@ -114,7 +111,7 @@ public class MessageClasses
 			} 
 			catch (ClassNotFoundException e) 
 			{
-				throw new CruxGeneratorException(messages.messagesClassesInitializeError(e.getLocalizedMessage()),e);
+				throw new CruxGeneratorException("Error initializing messagesClasses.",e);
 			}
 			finally
 			{

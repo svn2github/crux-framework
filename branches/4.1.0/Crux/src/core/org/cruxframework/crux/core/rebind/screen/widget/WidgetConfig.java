@@ -26,8 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.RequiresResizeFactory;
 import org.cruxframework.crux.core.client.screen.WidgetContainer;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
@@ -43,7 +41,6 @@ public class WidgetConfig
 	private static Set<String> widgetContainers = null;
 	private static Set<String> requiresResizeWidgets = null;
 	private static Map<String, Set<String>> registeredLibraries = null;
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Log logger = LogFactory.getLog(WidgetConfig.class);
 	private static final Lock lock = new ReentrantLock();
 
@@ -112,13 +109,13 @@ public class WidgetConfig
 				} 
 				catch (ClassNotFoundException e) 
 				{
-					throw new WidgetConfigException(messages.widgetConfigInitializeError(e.getLocalizedMessage()),e);
+					throw new WidgetConfigException("Error initializing widgets.",e);
 				}
 			}
 		}
 		if (logger.isInfoEnabled())
 		{
-			logger.info(messages.widgetCongigWidgetsRegistered());
+			logger.info("Widgets registered.");
 		}
 	}
 	

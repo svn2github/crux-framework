@@ -25,9 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
 import org.cruxframework.crux.core.server.CruxBridge;
-import org.cruxframework.crux.core.server.ServerMessages;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 
 
@@ -38,7 +36,6 @@ import org.cruxframework.crux.core.utils.RegexpPatterns;
 public class ClassScanner
 {
 	private static final Log logger = LogFactory.getLog(ClassScanner.class);
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static final Lock lock = new ReentrantLock();
 
 	private static ScannerDB scannerDB = new ScannerDB();
@@ -207,13 +204,16 @@ public class ClassScanner
 	{
 		try
 		{
-			if (logger.isInfoEnabled())logger.info(messages.annotationScannerBuildIndex());
+			if (logger.isInfoEnabled())
+			{
+				logger.info("Building index of annotations for classes.");
+			}
 
 			scannerDB.scanArchives(urls);
 		}
 		catch (IOException e)
 		{
-			throw new ClassScannerException(messages.annotationScannerBuildIndexError(e.getLocalizedMessage()), e);
+			throw new ClassScannerException("Error creating index of annotations.", e);
 		}
 	}
 	
@@ -240,7 +240,7 @@ public class ClassScanner
 	{
 		if (!interfaceClass.isInterface())
 		{
-			throw new ClassScannerException(messages.annotationScannerInterfaceRequired(interfaceClass.getName()));
+			throw new ClassScannerException("The class ["+interfaceClass.getName()+"] is not an interface.");
 		}
 		return searchClassesByInterface(interfaceClass.getName(), true);
 	}

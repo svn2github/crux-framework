@@ -23,8 +23,6 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 
 
 public class ServiceFactoryInitializer 
@@ -33,7 +31,6 @@ public class ServiceFactoryInitializer
 	private static ServiceFactory serviceFactory;
 	private static final Lock lock = new ReentrantLock();
 	private static final Lock initializeLock = new ReentrantLock();
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 	private static boolean factoryInitialized = false;
 	
 	/**
@@ -52,7 +49,7 @@ public class ServiceFactoryInitializer
 		}
 		catch (Throwable e)
 		{
-			logger.error(messages.serviceFactoryInitializerError(e.getMessage()), e);
+			logger.error("Error initializing serviceFactory.", e);
 		}
 		finally
 		{
@@ -87,7 +84,7 @@ public class ServiceFactoryInitializer
 					getServiceFactory().initialize(context);
 					if (logger.isInfoEnabled())
 					{
-						logger.info(messages.serviceFactoryInitializerServicesRegistered());
+						logger.info("Server services registered.");
 					}
 					factoryInitialized = true;
 				}

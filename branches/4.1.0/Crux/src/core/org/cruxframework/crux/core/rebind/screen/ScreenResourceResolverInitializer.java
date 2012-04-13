@@ -20,8 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.i18n.MessagesFactory;
-import org.cruxframework.crux.core.server.ServerMessages;
 
 
 /**
@@ -34,7 +32,6 @@ public class ScreenResourceResolverInitializer
 	private static final Log logger = LogFactory.getLog(ScreenResourceResolverInitializer.class);
 	private static ScreenResourceResolver screenResourceResolver;
 	private static final Lock lock = new ReentrantLock();
-	private static ServerMessages messages = (ServerMessages)MessagesFactory.getMessages(ServerMessages.class);
 
 	/**
 	 * 
@@ -52,7 +49,7 @@ public class ScreenResourceResolverInitializer
 		}
 		catch (Throwable e)
 		{
-			logger.error(messages.screenResourceResolverInitializerError(e.getMessage()), e);
+			logger.error("Error initializing ScreenResolver.", e);
 		}
 		finally
 		{
