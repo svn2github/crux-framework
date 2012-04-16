@@ -335,7 +335,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 							JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
 							
 							boolean isSortable = (propType.isPrimitive() != null) || (comparableType.isAssignableFrom((JClassType) propType));
-							String propTypeName = propType.getParameterizedQualifiedSourceName();
+							String propTypeName = JClassUtils.getGenericDeclForType(propType);
 							out.println(colDefs+".addColumn(new "+org.cruxframework.crux.core.client.datasource.ColumnDefinition.class.getCanonicalName()+
 									    "<"+propTypeName+","+dtoClassName+">("+EscapeUtils.quote(colElem.optString("key"))+","+isSortable+"){");
 							out.println("public "+propTypeName+" getValue("+dtoClassName+" recordObject){");
