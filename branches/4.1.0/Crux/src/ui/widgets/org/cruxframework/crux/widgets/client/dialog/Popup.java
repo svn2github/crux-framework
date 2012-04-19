@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.MultiFrameParametersHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
@@ -328,7 +329,7 @@ public class Popup extends Widget implements HasBeforeCloseHandlers, HasAnimatio
 			@Override
 			public void run()
 			{
-				popupController.showPopup(new PopupData(title, url, width, height, styleName!=null ? styleName : DEFAULT_STYLE_NAME, animationEnabled, closeable));
+				popupController.showPopup(new PopupData(title, MultiFrameParametersHandler.handleUrl(url), width, height, styleName!=null ? styleName : DEFAULT_STYLE_NAME, animationEnabled, closeable));
 			}
 		};
 

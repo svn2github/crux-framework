@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.cruxframework.crux.core.client.screen.JSWindow;
+import org.cruxframework.crux.core.client.screen.MultiFrameParametersHandler;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
@@ -217,7 +218,7 @@ public class DynaTabs extends Composite
 	private Tab openTab(final String tabId, String label, String url, boolean closeable, boolean reloadIfAlreadyOpen, boolean focus, boolean lazy)
 	{
 		Tab tab = null;
-
+		url = MultiFrameParametersHandler.handleUrl(url);
 		if (!this.tabs.containsKey(tabId))
 		{
 			FlapPanel flapPanel = new FlapPanel(this, tabId, label, closeable);
@@ -240,7 +241,7 @@ public class DynaTabs extends Composite
 							focusTab(tabId);
 							new Timer() {							
 								public void run() {
-									newTab.changeURL(Screen.appendDebugParameters(lazyURL));
+									newTab.changeURL(Screen.rewriteUrl(lazyURL));
 								}
 							}.schedule(100);
 						}
@@ -262,7 +263,7 @@ public class DynaTabs extends Composite
 			if(reloadIfAlreadyOpen)
 			{
 				tab.setLoaded(true);
-				tab.changeURL(Screen.appendDebugParameters(url));
+				tab.changeURL(Screen.rewriteUrl(url));
 			}
 		}			
 
