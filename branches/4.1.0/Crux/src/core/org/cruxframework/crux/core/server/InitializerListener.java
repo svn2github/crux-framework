@@ -65,31 +65,33 @@ public class InitializerListener implements ServletContextListener
 			{
 				CruxBridge.getInstance().setSingleVM(true);	
 			}
-			
-			//TODO - Thiago documentar isso no wiki
-			//TODO - Thiago remover quebras de linha e espacos antes de gravar....
-			
-			String classScannerAllowedPackages = contextEvent.getServletContext().getInitParameter("classScannerAllowedPackages");
-			if (classScannerAllowedPackages != null && classScannerAllowedPackages.length() > 0)
-			{
-				CruxBridge.getInstance().registerScanAllowedPackages(classScannerAllowedPackages);
-			}
 			else
 			{
-				CruxBridge.getInstance().registerScanAllowedPackages("");
+				//TODO - Thiago documentar isso no wiki
+				//TODO - Thiago remover quebras de linha e espacos antes de gravar....
+
+				String classScannerAllowedPackages = contextEvent.getServletContext().getInitParameter("classScannerAllowedPackages");
+				if (classScannerAllowedPackages != null && classScannerAllowedPackages.length() > 0)
+				{
+					CruxBridge.getInstance().registerScanAllowedPackages(classScannerAllowedPackages);
+				}
+				else
+				{
+					CruxBridge.getInstance().registerScanAllowedPackages("");
+				}
+
+				String classScannerIgnoredPackages = contextEvent.getServletContext().getInitParameter("classScannerIgnoredPackages");
+				if (classScannerIgnoredPackages != null && classScannerIgnoredPackages.length() > 0)
+				{
+					CruxBridge.getInstance().registerScanIgnoredPackages(classScannerIgnoredPackages);
+				}
+				else
+				{
+					CruxBridge.getInstance().registerScanIgnoredPackages("");
+				}
+				ConfigurationFactory.getConfigurations();
+				ClassPathResolverInitializer.getClassPathResolver().initialize();
 			}
-			
-			String classScannerIgnoredPackages = contextEvent.getServletContext().getInitParameter("classScannerIgnoredPackages");
-			if (classScannerIgnoredPackages != null && classScannerIgnoredPackages.length() > 0)
-			{
-				CruxBridge.getInstance().registerScanIgnoredPackages(classScannerIgnoredPackages);
-			}
-			else
-			{
-				CruxBridge.getInstance().registerScanIgnoredPackages("");
-			}
-			ConfigurationFactory.getConfigurations();
-			ClassPathResolverInitializer.getClassPathResolver().initialize();
 			ServiceFactoryInitializer.initialize(context);
 		}
 		catch (Throwable e) 
