@@ -303,7 +303,7 @@ public class ViewFactoryCreator
 	 * @param printer 
 	 * @param metaElem
 	 * @param widgetId
-	 * @param addToScreen
+	 * @param consumer
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
