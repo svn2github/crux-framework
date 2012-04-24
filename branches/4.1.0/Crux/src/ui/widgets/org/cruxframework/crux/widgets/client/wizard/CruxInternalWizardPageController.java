@@ -156,6 +156,18 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 		return Screen.get(wizardId, Wizard.class).selectStep(stepId, ignoreLeaveEvents);
 	}
 
+	@Override
+    public void setStepEnabled(String wizardId, int stepOrder, boolean enabled)
+    {
+		Screen.get(wizardId, Wizard.class).setStepEnabled(stepOrder, enabled);
+    }
+
+	@Override
+    public void setStepEnabled(String wizardId, String stepId, boolean enabled)
+    {
+		Screen.get(wizardId, Wizard.class).setStepEnabled(stepId, enabled);
+    }
+	
 	/**
 	 * @param event
 	 * @return
@@ -565,7 +577,5 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 	
 	private static native boolean existsAccessorFunction(JSWindow tabWindow)/*-{
 		return typeof tabWindow['_cruxCrossDocumentAccessor'] == 'function';
-	}-*/;
-	
-	
+	}-*/;	
 }

@@ -750,7 +750,7 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
     	}
     	else
     	{
-    		HasEnterHandlers source =(HasEnterHandlers)entryStep.getWidget();
+    		HasEnterHandlers<T> source =(HasEnterHandlers<T>)entryStep.getWidget();
     		EnterEvent.fire(source, new WidgetWizardProxy<T>(this), previousStep);
     	}
 		isChangingStep = false;
@@ -835,13 +835,13 @@ public class Wizard<T extends Serializable> extends Composite implements HasCanc
 	    	if (previousStep.getWidget() instanceof PageStep)
 	    	{
 	    		PageStep<T> source =(PageStep<T>)previousStep.getWidget();
-	    		LeaveEvent leaveEvent = source.fireLeaveEvent(this, nextStep);
+	    		LeaveEvent<T> leaveEvent = source.fireLeaveEvent(this, nextStep);
 	    		leave = leaveEvent == null || !leaveEvent.isCanceled();
 	    	}
 	    	else
 	    	{
-	    		HasLeaveHandlers source =(HasLeaveHandlers)previousStep.getWidget();
-	    		LeaveEvent leaveEvent = LeaveEvent.fire(source, new WidgetWizardProxy<T>(this), nextStep);
+	    		HasLeaveHandlers<T> source =(HasLeaveHandlers<T>)previousStep.getWidget();
+	    		LeaveEvent<T> leaveEvent = LeaveEvent.fire(source, new WidgetWizardProxy<T>(this), nextStep);
 	    		leave = !leaveEvent.isCanceled();
 	    	}
 	    }

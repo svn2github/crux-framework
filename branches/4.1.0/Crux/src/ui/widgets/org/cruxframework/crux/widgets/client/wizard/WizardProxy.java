@@ -38,4 +38,6 @@ interface WizardProxy<T extends Serializable>
     T readData();
     T getResource();
 	JSWindow getStepWindow(String stepId);
+	void setStepEnabled(int stepOrder, boolean enabled);
+	void setStepEnabled(String stepId, boolean enabled);
 }

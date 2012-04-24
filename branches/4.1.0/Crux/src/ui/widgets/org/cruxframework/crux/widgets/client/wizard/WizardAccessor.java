@@ -84,6 +84,16 @@ public class WizardAccessor<T extends Serializable>
 		return selectStep(id, false);
 	}
 	
+	public void setStepEnabled(int stepOrder, boolean enabled)
+	{
+		proxy.setStepEnabled(stepOrder, enabled);
+	}
+	
+	public void setStepEnabled(String stepId, boolean enabled)
+	{
+		proxy.setStepEnabled(stepId, enabled);
+	}
+
 	/**
 	 * @param id
 	 * @param fireLeaveEvent

@@ -63,4 +63,6 @@ public interface CruxInternalWizardPageControllerCrossDoc extends CrossDocument
 	void setCommandStyleName(String wizardId, String commandId, String styleName);
 	void setCommandHeight(String wizardId, String commandId, String height);
 	void setCommandWidth(String wizardId, String commandId, String width);
+	void setStepEnabled(String wizardId, int stepOrder, boolean enabled);
+	void setStepEnabled(String wizardId, String stepId, boolean enabled);
 }
