@@ -116,6 +116,17 @@ class WidgetWizardProxy<T extends Serializable> implements WizardProxy<T>
 	    return wizard.selectStep(id, ignoreLeaveEvent);
     }
 	
+    public void setStepEnabled(int stepOrder, boolean enabled)
+    {
+		wizard.setStepEnabled(stepOrder, enabled);
+    }
+
+    public void setStepEnabled(String stepId, boolean enabled)
+    {
+		wizard.setStepEnabled(stepId, enabled);
+    }
+	
+
 	/**
 	 * @see org.cruxframework.crux.widgets.client.wizard.WizardProxy#updateData(java.lang.Object)
 	 */

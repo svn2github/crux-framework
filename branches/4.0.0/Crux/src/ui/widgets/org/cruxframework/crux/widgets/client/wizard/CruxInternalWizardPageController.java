@@ -156,6 +156,16 @@ public class CruxInternalWizardPageController extends DynaTabsControllerInvoker 
 		return Screen.get(wizardId, Wizard.class).selectStep(stepId, ignoreLeaveEvents);
 	}
 
+    public void setStepEnabled(String wizardId, int stepOrder, boolean enabled)
+    {
+		Screen.get(wizardId, Wizard.class).setStepEnabled(stepOrder, enabled);
+    }
+
+    public void setStepEnabled(String wizardId, String stepId, boolean enabled)
+    {
+		Screen.get(wizardId, Wizard.class).setStepEnabled(stepId, enabled);
+    }
+	
 	/**
 	 * @param event
 	 * @return
