@@ -38,21 +38,22 @@ public class DataSources
 {
 	private static final Log logger = LogFactory.getLog(DataSources.class);
 	private static final Lock lock = new ReentrantLock();
-	private static Map<String, String> dataSources;
+	private static Map<String, String> dataSourcesCanonicalNames;
+	private static Map<String, String> dataSourcesClassNames;
 	
 	/**
 	 * 
 	 */
 	public static void initialize()
 	{
-		if (dataSources != null)
+		if (dataSourcesCanonicalNames != null)
 		{
 			return;
 		}
 		try
 		{
 			lock.lock();
-			if (dataSources != null)
+			if (dataSourcesCanonicalNames != null)
 			{
 				return;
 			}
@@ -71,7 +72,8 @@ public class DataSources
 	@SuppressWarnings("unchecked")
 	protected static void initializeDataSources()
 	{
-		dataSources = new HashMap<String, String>();
+		dataSourcesCanonicalNames = new HashMap<String, String>();
+		dataSourcesClassNames = new HashMap<String, String>();
 		Set<String> dataSourceNames =  ClassScanner.searchClassesByInterface(DataSource.class);
 		if (dataSourceNames != null)
 		{
@@ -84,11 +86,12 @@ public class DataSources
 								dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.DataSource.class);
 					if (annot != null)
 					{
-						if (dataSources.containsKey(annot.value()))
+						if (dataSourcesCanonicalNames.containsKey(annot.value()))
 						{
 							throw new CruxGeneratorException("Duplicated datasource: ["+annot.value()+"].");
 						}
-						dataSources.put(annot.value(), dataSourceClass.getCanonicalName());
+						dataSourcesCanonicalNames.put(annot.value(), dataSourceClass.getCanonicalName());
+						dataSourcesClassNames.put(annot.value(), dataSourceClass.getName());
 					}
 					else
 					{
@@ -101,11 +104,12 @@ public class DataSources
 						{
 							simpleName = simpleName.toLowerCase();
 						}
-						if (dataSources.containsKey(simpleName))
+						if (dataSourcesCanonicalNames.containsKey(simpleName))
 						{
 							throw new CruxGeneratorException("Duplicated datasource: ["+simpleName+"].");
 						}
-						dataSources.put(simpleName, dataSourceClass.getCanonicalName());
+						dataSourcesCanonicalNames.put(simpleName, dataSourceClass.getCanonicalName());
+						dataSourcesClassNames.put(simpleName, dataSourceClass.getName());
 					}
 				} 
 				catch (Throwable e) 
@@ -123,12 +127,12 @@ public class DataSources
 	 */
 	public static String getDataSource(String name)
 	{
-		if (dataSources == null)
+		if (dataSourcesCanonicalNames == null)
 		{
 			initialize();
 		}
 		
-		return dataSources.get(name);
+		return dataSourcesCanonicalNames.get(name);
 	}
 	
 	/**
@@ -140,7 +144,11 @@ public class DataSources
 	{
 		try
         {
-	        return Class.forName(getDataSource(name));
+			if (dataSourcesClassNames == null)
+			{
+				initialize();
+			}
+	        return Class.forName(dataSourcesClassNames.get(name));
         }
         catch (Exception e)
         {
@@ -153,12 +161,12 @@ public class DataSources
 	 */
 	public static Iterator<String> iterateDataSources()
 	{
-		if (dataSources == null)
+		if (dataSourcesCanonicalNames == null)
 		{
 			initialize();
 		}
 		
-		return dataSources.keySet().iterator();
+		return dataSourcesCanonicalNames.keySet().iterator();
 	}
 
 }
