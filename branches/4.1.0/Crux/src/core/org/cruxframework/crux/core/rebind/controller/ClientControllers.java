@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 
 /**
- * Maps all controllers in a module.
+ * Maps all controllersCanonicalNames in a module.
  * @author Thiago Bustamante
  *
  */
@@ -47,7 +47,8 @@ public class ClientControllers
 {
 	private static final Log logger = LogFactory.getLog(ClientControllers.class);
 	private static final Lock lock = new ReentrantLock();
-	private static Map<String, String> controllers;
+	private static Map<String, String> controllersCanonicalNames;
+	private static Map<String, String> controllersNames;
 	private static List<String> globalControllers;
 	private static Map<String, Set<String>> widgetControllers;
 	
@@ -56,14 +57,14 @@ public class ClientControllers
 	 */
 	public static void initialize()
 	{
-		if (controllers != null)
+		if (controllersCanonicalNames != null)
 		{
 			return;
 		}
 		try
 		{
 			lock.lock();
-			if (controllers != null)
+			if (controllersCanonicalNames != null)
 			{
 				return;
 			}
@@ -81,7 +82,8 @@ public class ClientControllers
 	 */
 	protected static void initializeControllers()
 	{
-		controllers = new HashMap<String, String>();
+		controllersCanonicalNames = new HashMap<String, String>();
+		controllersNames = new HashMap<String, String>();
 		globalControllers = new ArrayList<String>();
 		widgetControllers = new HashMap<String, Set<String>>();
 		
@@ -94,12 +96,13 @@ public class ClientControllers
 				{
 					Class<?> controllerClass = Class.forName(controller);
 					Controller annot = controllerClass.getAnnotation(Controller.class);
-					if (controllers.containsKey(annot.value()))
+					if (controllersCanonicalNames.containsKey(annot.value()))
 					{
 						throw new CruxGeneratorException("Duplicated Client Controller: ["+annot.value()+"].");
 					}
 					
-					controllers.put(annot.value(), controllerClass.getCanonicalName());
+					controllersCanonicalNames.put(annot.value(), controllerClass.getCanonicalName());
+					controllersNames.put(annot.value(), controllerClass.getName());
 					if (controllerClass.getAnnotation(Global.class) != null)
 					{
 						globalControllers.add(annot.value());
@@ -149,11 +152,11 @@ public class ClientControllers
 	 */
 	public static String getController(String name)
 	{
-		if (controllers == null)
+		if (controllersCanonicalNames == null)
 		{
 			initialize();
 		}
-		return controllers.get(name);
+		return controllersCanonicalNames.get(name);
 	}
 
 	/**
@@ -165,7 +168,11 @@ public class ClientControllers
 	{
 		try
         {
-	        return Class.forName(getController(controller));
+			if (controllersNames == null)
+			{
+				initialize();
+			}
+	        return Class.forName(controllersNames.get(controller));
         }
         catch (Exception e)
         {
@@ -178,11 +185,11 @@ public class ClientControllers
 	 */
 	public static Iterator<String> iterateControllers()
 	{
-		if (controllers == null)
+		if (controllersCanonicalNames == null)
 		{
 			initialize();
 		}
-		return controllers.keySet().iterator();
+		return controllersCanonicalNames.keySet().iterator();
 	}
 	
 	/**
