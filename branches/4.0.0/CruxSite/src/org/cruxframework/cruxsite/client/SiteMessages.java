@@ -110,13 +110,28 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("The best webstore to take off your Crux app.")
 	String bannerTriggoText();
 	
-	@DefaultMessage("Lear More")
+	@DefaultMessage("Learn More")
 	String bannerActionLearnMore();
 	
 	@DefaultMessage("Visit Now!")
 	String bannerActionVisitNow();
 	
+	@DefaultMessage("Crux Framework - Download")
+	String downloadPageTitle();
 	
+	@DefaultMessage("Dowload the lastest version of Crux")
+	String downloadPageSecondaryTitle();
 	
+	@DefaultMessage("Click the icon below and download the lastest version of Crux Framework. The distribution brings with sample projects, API JavaDocs, visual installer and project generator. Give it a try!")
+	String downloadPageSecondaryTitleMessage();	
+	
+	@DefaultMessage("Crux Framework 4")
+	String downloadPageVersionName();
+	
+	@DefaultMessage("Version 4.0.1, All platforms - ZIP File, 12.5MB")
+	String downloadPageVersionDetails();	
+	
+	@DefaultMessage("Main features in this version:")
+	String releaseFeatures();
 	
 }

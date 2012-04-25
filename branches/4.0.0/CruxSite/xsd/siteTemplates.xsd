@@ -9,9 +9,7 @@ targetNamespace="http://www.cruxframework.org/templates/siteTemplates" >
 <xs:complexType name="TinsidePage">
 <xs:all>
 <xs:element type="xs:anyType" name="contentBody" />
-<xs:element type="xs:anyType" name="contentRightBody" />
 </xs:all>
-<xs:attribute name="contentTitle" type="xs:string" use="required" />
 </xs:complexType>
 <xs:element name="mainPage" type="TmainPage" />
 <xs:complexType name="TmainPage">
@@ -19,5 +17,14 @@ targetNamespace="http://www.cruxframework.org/templates/siteTemplates" >
 <xs:element type="xs:anyType" name="contentSection" />
 <xs:element type="xs:anyType" name="screenSection" />
 </xs:all>
+</xs:complexType>
+<xs:element name="download" type="Tdownload" />
+<xs:complexType name="Tdownload">
+<xs:all>
+<xs:element type="xs:anyType" name="releaseFeatsList" />
+</xs:all>
+</xs:complexType>
+<xs:element name="analytics" type="Tanalytics" />
+<xs:complexType name="Tanalytics">
 </xs:complexType>
 </xs:schema>

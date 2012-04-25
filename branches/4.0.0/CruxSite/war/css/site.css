@@ -12,7 +12,7 @@ BODY
 	background-color: #B8BCBD;
 }
 
-h1{
+h1, .h1{
 	margin-top: 10px;
 	color: #004F5E;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
@@ -20,7 +20,7 @@ h1{
 	font-weight: bold;
 	margin-bottom:10px;
 }
-p{
+p, .p{
 	color:#333;
 	text-shadow:0 1px 0 #fff;
 }
@@ -59,7 +59,6 @@ p{
 
 .HeaderMenuLabel
 {
-	padding-left: 380px;
 	font-size: 15px;
 	color: white;
 	opacity: 0.7;
@@ -81,7 +80,6 @@ p{
 
 .HeaderMenuItems
 {
-	padding-left: 165px;
 }
 
 .MenuItem, .MenuItem-disabled
@@ -421,38 +419,61 @@ p{
  	font-size:15px;
  }
  
- .Line{
- 	border-bottom:1px solid
- }
- 
- .Risk{
- 	height:1px;
- 	background:#555;
- 	background:rgba(0,0,0,0.15);
- 	border-bottom:1px solid #f0f0f0;
- 	border-bottom:1px solid rgba(255,255,255,0.8);
- 	margin:20px 0;
- }
- 
- .BlockImg{
- 	float:left;
- 	height:94px;
- 	margin-bottom:8px;
- }
- .BlockText{
- 	float:left;
- 	width:300px;
- 	margin-left:10px;
- }
-.BlockTypes{
+.Line{
+	border-bottom:1px solid
+}
+
+.Risk{
+	height:1px;
+	background:#555;
+	background:rgba(0,0,0,0.15);
+	border-bottom:1px solid #f0f0f0;
+	border-bottom:1px solid rgba(255,255,255,0.8);
+	margin:20px 0;
+}
+
+.ShyLink, .ShyText 
+{
+	color: rgba(0, 0, 0, 0.4);
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 1);
+	font-size: 12px;
+	padding: 2px;
+}
+
+.ShyLink
+{
+	text-decoration: underline;
+}
+
+.ShyText
+{
+	margin-top: 1px;
+}
+
+.BlockImg
+{
+	float:left;
+	height:94px;
+	margin-bottom:8px;
+}
+.BlockText
+{
+	float:left;
+	width:300px;
+	margin-left:10px;
+}
+.BlockTypes
+{
 	margin-right:10px;
 	height:200px;
 }
-.b2{
+.b2
+{
 	margin-right:0;
 	margin-left:10px;
 }
-.BlockTypes button{
+.BlockTypes button
+{
 	cursor: pointer;
 	-webkit-transition: box-shadow 0.3s linear;
 	padding:0 25px;
@@ -469,39 +490,53 @@ p{
 	margin-right: 10px;
 	margin-top: 5px;
 }
-.BlockTypes button:hover{
+.BlockTypes button:hover
+{
  	-webkit-transition: box-shadow 0.3s linear;
  	box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 1px rgba(0,0,0,0.3) inset;
 }
-.BlockTypes button:active{
+.BlockTypes button:active
+{
  	background: -webkit-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
 }
-.BlockText h1{
+.BlockText h1
+{
  	font-size:23px;
  	letter-spacing:-1px;
  	margin-top:0;
 }
-.BlockText p{
+.BlockText p
+{
  	font-size:14px;
- }
- .divDownTxt{
+}
+.divDownTxt
+{
  	background:#333;
  	background:rgba(0,0,0,0.2);
  	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
  	border-radius:5px;
  	height:150px;
  	padding:10px;
+ 	text-align: left;
 }
-.divDownTxt h1{
+.divDownTxt .divDownTxtTitle 
+{
 	font-size:19px;
 	color:#fff;
-	text-shadow:0 1px 1px rgba(0,0,0,0.4);	
+	text-shadow:0 1px 1px rgba(0,0,0,0.4);
+	text-align: left;
+	font-weight: bold;	
 }
-.divDownTxt p{
+.divDownTxt li 
+{
 	color:#fff;
 	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+	text-align: left;
+	margin-top: 10px;
 }
-.BgBlack{
+
+.BgBlack
+{
 	background:#333;
  	background:rgba(0,0,0,0.2);
  	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
@@ -511,19 +546,24 @@ p{
  	text-shadow:0 1px 1px rgba(0,0,0,0.5);
  	margin-bottom:7px;
 }
-.BgBlack span{
+.BgBlack span
+{
 	font-size:13px;
 }
-.BgBlack img{
+.BgBlack img
+{
 	margin-right:10px;
 }
-.BgBlack h1{
+.BgBlack h1
+{
 	margin-top:-4px;
 }
-.MarginRight{
+.MarginRight
+{
 	margin-right:6px;
 }
-.SilverButton{
+.SilverButton
+{
 	background:#eee;
 	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
 	padding:7px 10px;
@@ -533,7 +573,8 @@ p{
 	border-radius:5px;
 	text-align:center;
 }
-.SilverButton2{
+.SilverButton2
+{
 	background:#eee;
 	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
 	padding:7px 10px;
@@ -545,67 +586,78 @@ p{
 	text-shadow:0 1px 0 #fff;
 	margin:0 5px;
 }
-.TableCompareHeader{
+.TableCompareHeader
+{
 	box-shadow:0 0 0 3px rgba(0,0,0,0.1);
 	border-radius:5px;
 	margin-right:10px;
 }
-.TableCompareHeader tr{
+.TableCompareHeader tr
+{
 	background:#fff;
 }
-.TableCompareHeader tr.Header{
+.TableCompareHeader tr.Header
+{
 	height:30px;
 }
-.TableCompareHeader tr.Header td{
+.TableCompareHeader tr.Header td
+{
 	background:-webkit-linear-gradient(#fdfdfd 0%, #e6e6e6 100%);
 	border-bottom:1px solid #bcbcbc;
 	color:#444;
 	text-shadow:0 1px 1px rgba(0,0,0,0.1);
 }
-.TableCompareHeader tr.Header td.first{
+.TableCompareHeader tr.Header td.first
+{
 	border-radius:5px 0 0 0;
 	background:-webkit-linear-gradient(#dde4e8 0%, #c7ced2 100%);
 	border-bottom:1px solid #647881;
 }
-.TableCompareHeader tr.Header td.last{
+.TableCompareHeader tr.Header td.last
+{
 	border-radius:0 5px 0 0;
 }
-.TableCompareHeader tr td{
+.TableCompareHeader tr td
+{
 	padding:10px 20px;
 	border-right:1px solid #dcdcdc;
 	text-align:center;
 }
-.CellFirst{
+.CellFirst
+{
 	background:#738c99;
 	border-right:1px solid #fff;
 	font-size:13px;
 	color:#fff;
 	text-shadow:0 1px 0 rgba(0,0,0,0.4);
 }
-.baloon{
+.baloon
+{
 	width:295px;
 	height:50px;
 	background:url(../img/baloon.png) no-repeat;
 	font-size:12px;
 	padding:10px 10px 5px 13px;
 }
-.features{
+.features
+{
 	text-align:left;
 }
-.features h2{
+.features h2
+{
 	margin:0;
 	font-size:15px;
 	font-weight:normal;
 	color:#222;
 	text-shadow:0 1px 0 rgba(255,255,255,0.5);
 }
-.features p{
+.features p
+{
 	margin:0;
 	color:#fff;
 	text-shadow:0 1px 0 rgba(0,0,0,0.4);
 	font-size:13px;
 }
-
 .UnderConstructionTag
 {
 	width: 115px;

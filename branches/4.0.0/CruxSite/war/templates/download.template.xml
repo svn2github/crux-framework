@@ -1,0 +1,105 @@
+<t:template 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site" 
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
+	library="siteTemplates"
+	useController="mainPageController">
+	
+	<tmp:mainPage>
+	
+		<tmp:screenSection>
+			<c:screen title="${siteMessages.downloadPageTitle}"/>
+		</tmp:screenSection>
+		
+		<tmp:contentSection>
+			<gwt:flexTable id="insideContentDown">
+				<gwt:row>
+					<gwt:cell>
+						<gwt:widget>
+							<gwt:flexTable id="mainDownloadMessagePanel">
+								<gwt:row>
+									<gwt:cell>
+										<gwt:widget>
+									 		<gwt:label id="downloadPageSecondaryTitle" text="${siteMessages.downloadPageSecondaryTitle}" styleName="h1"/>
+									 	</gwt:widget>
+									</gwt:cell>
+								</gwt:row>
+								<gwt:row>
+									<gwt:cell>
+									 	<gwt:widget>
+									 		<gwt:label id="downloadPageSecondaryTitleMessage" text="${siteMessages.downloadPageSecondaryTitleMessage}" styleName="p"/>
+								 		</gwt:widget>
+									</gwt:cell>
+								</gwt:row>
+							</gwt:flexTable>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
+				<gwt:row>
+					<gwt:cell>
+						<gwt:html><div class="Risk"/></gwt:html>
+					</gwt:cell>
+				</gwt:row>
+				<gwt:row>
+					<gwt:cell>
+						<gwt:widget>
+							<gwt:grid id="downloadPanel" width="100%">
+								<gwt:row>
+									<gwt:cell width="50%" verticalAlignment="top">
+										<gwt:widget>
+											<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
+												<gwt:row>
+													<gwt:cell rowSpan="2">
+														<gwt:html>
+															<a href="http://crux-framework.googlecode.com/files/crux-4.0.1.zip">
+																<img src="../img/icon_download.png" />
+															</a>			
+														</gwt:html>
+													</gwt:cell>
+													<gwt:cell styleName="h1"><gwt:text>${siteMessages.downloadPageVersionName}</gwt:text></gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell styleName="p"><gwt:text>${siteMessages.downloadPageVersionDetails}</gwt:text></gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell colSpan="2" styleName="p" horizontalAlignment="center">
+														<gwt:widget>
+															<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
+																<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
+																<gwt:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+																<gwt:label styleName="ShyText" id="areYoulookingLabel" text="?"/>
+															</gwt:horizontalPanel>
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+											</gwt:flexTable>
+										</gwt:widget>
+									</gwt:cell>
+									<gwt:cell width="50%" verticalAlignment="top" horizontalAlignment="left">
+										<gwt:widget>
+											<gwt:verticalPanel id="releaseFeatures" styleName="divDownTxt" horizontalAlignment="left">
+												<gwt:label id="releaseTitle" text="${siteMessages.releaseFeatures}" styleName="divDownTxtTitle"/>
+												<gwt:HTML id="releaseFeatsListPanel">
+													<ul><t:section name="releaseFeatsList"/></ul>
+												</gwt:HTML>
+											</gwt:verticalPanel>
+										</gwt:widget>
+									</gwt:cell>
+								</gwt:row>
+							</gwt:grid>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
+				<gwt:row>
+					<gwt:cell>
+						<gwt:html><div class="Risk"/></gwt:html>
+					</gwt:cell>
+				</gwt:row>
+			</gwt:flexTable>
+		</tmp:contentSection>
+	</tmp:mainPage>
+</t:template>

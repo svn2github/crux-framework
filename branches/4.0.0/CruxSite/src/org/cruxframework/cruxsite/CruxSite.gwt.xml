@@ -2,6 +2,11 @@
 	<inherits name='org.cruxframework.crux.core.Crux'/>
 	<inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	
+	<extend-property name="locale" values="pt"/>
+	<extend-property name="locale" values="en"/>
+	<set-property-fallback name="locale" value="en"/>
 
 	<!-- To enable logging -->
 	<!-- 
