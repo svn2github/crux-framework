@@ -337,11 +337,7 @@ public class JClassUtils
 	 */
 	public static String getGenericDeclForType(JType type)
 	{
-		if (type.isEnum() != null)
-		{
-			return "String";
-		}
-		else if (type.isPrimitive() != null)
+		if (type.isPrimitive() != null)
 		{
 			JPrimitiveType jPrimitiveType = type.isPrimitive();
 			return jPrimitiveType.getQualifiedBoxedSourceName();
