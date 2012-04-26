@@ -1,4 +1,4 @@
-package org.cruxframework.crux.crossdevice.rebind;
+package org.cruxframework.crux.crossdevice.rebind.storyboard;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -12,7 +12,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.crossdevice.client.Storyboard;
+import org.cruxframework.crux.crossdevice.client.storyboard.Storyboard;
 import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 
 @DeclarativeFactory(library="crossDevice", id="storyboard", targetWidget=Storyboard.class)

@@ -1,4 +1,4 @@
-package org.cruxframework.crux.crossdevice.client;
+package org.cruxframework.crux.crossdevice.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;

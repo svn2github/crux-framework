@@ -1,4 +1,4 @@
-package org.cruxframework.crux.crossdevice.rebind;
+package org.cruxframework.crux.crossdevice.rebind.toptoolbar;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -13,7 +13,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.crossdevice.client.TopToolBar;
+import org.cruxframework.crux.crossdevice.client.toptoolbar.TopToolBar;
 import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 
 @DeclarativeFactory(library="crossDevice", id="topTollBar", targetWidget=TopToolBar.class, attachToDOM=false)

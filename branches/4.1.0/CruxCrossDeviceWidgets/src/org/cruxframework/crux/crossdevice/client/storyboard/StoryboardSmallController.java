@@ -1,4 +1,4 @@
-package org.cruxframework.crux.crossdevice.client;
+package org.cruxframework.crux.crossdevice.client.storyboard;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
