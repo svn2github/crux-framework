@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.module.CruxModuleHandler;
@@ -65,7 +66,11 @@ public class ModulesLauncher
 		List<String> modules = new ArrayList<String>();
 		for (String moduleName : developmentModules)
 		{
-			modules.add(Modules.getInstance().getModule(moduleName).getFullName());
+			Module module = Modules.getInstance().getModule(moduleName);
+			if (module != null)
+			{
+				modules.add(module.getFullName());
+			}
 		}
 		String[] newArgs = new String[args.length+modules.size()];
 		System.arraycopy(args, 0, newArgs, 0, args.length);
