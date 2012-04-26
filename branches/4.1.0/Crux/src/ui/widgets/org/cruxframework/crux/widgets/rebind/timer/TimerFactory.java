@@ -40,7 +40,7 @@ import org.cruxframework.crux.widgets.rebind.event.TimeoutEvtBind;
 	@TagAttributeDeclaration(value="start", type=Boolean.class, defaultValue="false"),
 	@TagAttributeDeclaration(value="initial", type=Integer.class, defaultValue="0"),
 	@TagAttributeDeclaration(value="regressive", type=Boolean.class, defaultValue="false"),
-	@TagAttributeDeclaration(value="pattern", required=true)
+	@TagAttributeDeclaration(value="pattern")
 })
 @TagChildren({
 	@TagChild(TimerFactory.TimerChildrenProcessor.class)
@@ -78,6 +78,10 @@ public class TimerFactory extends WidgetCreator<WidgetCreatorContext>
 		}
 
 		String pattern = context.readWidgetProperty("pattern");  
+		if (pattern == null)
+		{
+			pattern = "";
+		}
 		
 		out.println(className + " " + context.getWidget()+" = new "+className+"("+initial+", "+regressive+", "+EscapeUtils.quote(pattern)+", "+start+");");
 	}
