@@ -220,14 +220,6 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
-	 */
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator#getImports()
 	 */
 	@Override

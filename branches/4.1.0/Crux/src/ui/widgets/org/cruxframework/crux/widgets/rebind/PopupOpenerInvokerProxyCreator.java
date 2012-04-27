@@ -64,22 +64,7 @@ public class PopupOpenerInvokerProxyCreator extends AbstractWrapperProxyCreator
 		};
 		return imports; 
     }
-	
-	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }		
-	
+		
 	/**
 	 * @throws WrapperGeneratorException 
 	 * 

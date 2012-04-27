@@ -63,21 +63,6 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 		};
 		return imports; 
     }
-
-	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }		
 	
 	/**
 	 * @throws WrapperGeneratorException 
