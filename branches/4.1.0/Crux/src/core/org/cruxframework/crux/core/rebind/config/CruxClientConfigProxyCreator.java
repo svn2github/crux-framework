@@ -51,26 +51,11 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
     }
 
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
 		generateEnableChildrenWindowsDebugMethod(sourceWriter);
 		generateEnableCrux2OldInterfacesCompatibility(sourceWriter);
     }
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }	
 
 	/**
 	 * @param sourceWriter

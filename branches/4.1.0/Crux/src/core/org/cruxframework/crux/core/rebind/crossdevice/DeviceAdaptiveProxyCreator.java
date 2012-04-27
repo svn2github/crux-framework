@@ -217,11 +217,6 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
     }
 
 	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-	
-	@Override
 	public String getProxySimpleName()
 	{
 		String name = super.getProxySimpleName();

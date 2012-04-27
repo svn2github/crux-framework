@@ -64,11 +64,6 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
         }
 	    
     }
-	
-	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
 
 	@Override
     protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
@@ -89,11 +84,6 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
     	}
     }
 
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-	
 	@Override
 	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
 	{
@@ -173,11 +163,11 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 			sourceWriter.indent();
 			if (parameterType.isPrimitive() != null)
 			{
-				sourceWriter.println("(((HasFormatter)w).setUnformattedValue(("+parameterClassName+")value));");
+				sourceWriter.println("((HasFormatter)w).setUnformattedValue(("+parameterClassName+")value);");
 			}
 			else
 			{
-				sourceWriter.println("(((HasFormatter)w).setUnformattedValue(value));");
+				sourceWriter.println("((HasFormatter)w).setUnformattedValue(value);");
 			}
 			sourceWriter.outdent();
 			sourceWriter.println("}");

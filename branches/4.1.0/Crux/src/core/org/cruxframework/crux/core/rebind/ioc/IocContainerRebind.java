@@ -53,11 +53,6 @@ public class IocContainerRebind extends AbstractProxyCreator
     }
 
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
     protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private static IocLocalScope _localScope = new IocLocalScope();");
@@ -221,11 +216,6 @@ public class IocContainerRebind extends AbstractProxyCreator
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
 
 	@Override
     public String getProxyQualifiedName()

@@ -75,27 +75,39 @@ public abstract class AbstractProxyCreator
 	 * using the default address for the
 	 * {@link com.google.gwt.user.client.rpc.RemoteService RemoteService}.
 	 */
-	protected abstract void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException;
+	protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+		
+	}
 	
 	/**
 	 * Generate any fields required by the proxy.
 	 * @throws CruxGeneratorException 
 	 */
-	protected abstract void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException;	
+	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+		
+	}
 
 	/**
 	 * @param srcWriter
 	 * @param serializableTypeOracle
 	 * @throws CruxGeneratorException 
 	 */
-	protected abstract void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException;	
+	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+		
+	}
 	
 	/**
 	 * Override this method to generate any nested type required by the proxy
 	 * @param srcWriter
 	 * @throws CruxGeneratorException 
 	 */
-	protected abstract void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException;	
+	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	{
+		
+	}
 	
 	/**
 	 * @param method

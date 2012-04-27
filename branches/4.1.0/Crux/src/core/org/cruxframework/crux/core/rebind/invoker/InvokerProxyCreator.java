@@ -73,21 +73,6 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 		}
 		return name;
 	}
-
-	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }		
 	
 	@Override
     protected String[] getImports()

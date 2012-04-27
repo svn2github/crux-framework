@@ -58,16 +58,6 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
     }
 
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
 		generateGetDataSourceMethod(sourceWriter);

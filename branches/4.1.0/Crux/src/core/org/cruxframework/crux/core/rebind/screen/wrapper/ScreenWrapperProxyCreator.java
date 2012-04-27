@@ -56,22 +56,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
         	throw new CruxGeneratorException(e.getMessage(), e);
         }
     }
-	
-	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-	
+		
 	@Override
 	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
 	{

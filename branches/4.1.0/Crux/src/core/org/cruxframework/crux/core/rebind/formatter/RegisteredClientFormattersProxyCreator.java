@@ -107,14 +107,6 @@ public class RegisteredClientFormattersProxyCreator extends AbstractInterfaceWra
 		srcWriter.outdent();
 		srcWriter.println("}");
     }
-
-	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
-	 */
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }	
 	
 	private void generateFormatterBlock(SourceWriter sourceWriter, String formatter)
 	{

@@ -111,14 +111,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	}
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
-	 */
-	@Override
-	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-	{
-	}
-	
-	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
 	 */
 	@Override

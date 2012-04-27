@@ -59,16 +59,6 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
     }
 	
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
-	@Override
     protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
     {
 		generateCreateViewMethod(sourceWriter);
@@ -266,11 +256,6 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		}
 	}
 	
-	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
-    {
-    }
-
 	@Override
 	protected String[] getImports()
 	{
