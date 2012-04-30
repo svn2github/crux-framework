@@ -36,8 +36,8 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
 	/**
-	 * @param cruxHTMLPanel
-	 * @param metaElem
+	 * @param out
+	 * @param context
 	 * @throws CruxGeneratorException
 	 */
 	protected void createChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException

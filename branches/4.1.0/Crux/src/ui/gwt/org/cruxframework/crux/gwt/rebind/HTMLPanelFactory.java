@@ -51,7 +51,7 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
 					"On page ["+getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
         }
-		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+", false);");
 		createChildren(out, context);
 	}
 

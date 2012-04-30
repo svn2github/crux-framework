@@ -20,6 +20,7 @@ import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
@@ -31,14 +32,29 @@ public class CruxHTMLPanel extends HTMLPanel implements HTMLContainer
 	/**
 	 * Constructor
 	 * @param element
+	 * @param wrapDOMElement if true create an wrapper element and insert the original DOM structure into it. 
+	 * If false, copy all child nodes to the panel element, preserving the _crux_ enclosing panel as the widget wrapper 
 	 */
-	public CruxHTMLPanel(String wrapperElementId)
+	public CruxHTMLPanel(String wrapperElementId, boolean wrapDOMElement)
 	{
 		super("");
 		Element panelElement = ViewFactoryUtils.getEnclosingPanelElement(wrapperElementId);
 		assert Document.get().getBody().isOrHasChild(panelElement);
-		panelElement.removeFromParent();
-		getElement().appendChild(panelElement);
+		if (wrapDOMElement)
+		{
+			panelElement.removeFromParent();
+			getElement().appendChild(panelElement);
+		}
+		else
+		{
+			Element htmlPanelElement = getElement();
+			while (panelElement.getChildCount() > 0)
+			{
+				Node child = panelElement.getChild(0);
+				child.removeFromParent();
+				htmlPanelElement.appendChild(child);
+			}
+		}
 	}
 
 	@Override
