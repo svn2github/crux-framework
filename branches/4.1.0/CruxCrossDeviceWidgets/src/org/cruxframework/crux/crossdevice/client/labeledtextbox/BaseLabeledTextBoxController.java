@@ -320,6 +320,7 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 			this.placeholder = placeholder;
 
 			textBox.setValue(placeholder);
+			textBox.setStyleName("placeholder");
 
 			textBox.addBlurHandler(new BlurHandler()
 			{
@@ -327,7 +328,13 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 				@Override
 				public void onBlur(BlurEvent event)
 				{
-					textBox.setValue(placeholder);
+					TextBox textBox = (TextBox) event.getSource();
+
+					if( textBox.getValue() == null || "".equals(textBox.getValue()) )
+					{
+						textBox.setValue(placeholder);
+						textBox.setStyleName("placeholder");
+					}
 				}
 			});
 
@@ -337,7 +344,10 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 				@Override
 				public void onFocus(FocusEvent event)
 				{
+					TextBox textBox = (TextBox) event.getSource();
+
 					textBox.setValue(null);
+					textBox.removeStyleName("placeholder");
 				}
 			});
 		}
