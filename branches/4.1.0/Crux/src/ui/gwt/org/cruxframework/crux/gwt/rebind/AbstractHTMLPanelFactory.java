@@ -43,8 +43,9 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 	protected void createChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
     {
 		out.println(context.getWidget()+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+		out.println("private boolean childrenCreated = false;");
 		out.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
-		out.println("if (event.isAttached()){");
+		out.println("if (!childrenCreated && event.isAttached()){");
 		
 		createPostProcessingScope();
 
@@ -71,6 +72,7 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 
 		commitPostProcessing(out);
 		
+		out.println("childrenCreated = true;");
 		out.println("}");
 		out.println("}");
 		out.println("});");

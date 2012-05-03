@@ -265,7 +265,13 @@ public class StyleUtils
 		return DOM.getElementProperty(elem.<com.google.gwt.user.client.Element> cast(), "className");
 	}
 
-	public static native void addStyleProperty(Element element, String camelizedName, String value)/*-{
+	public static void addStyleProperty(Element element, String camelizedName, String value)
+	{
+		assert(element != null && camelizedName != null && value != null);
+		addStylePropertyNative(element, camelizedName.trim(), value.trim());
+	}
+
+	private static native void addStylePropertyNative(Element element, String camelizedName, String value)/*-{
 		element.style[camelizedName] = value;
 	}-*/;
 }
