@@ -276,82 +276,6 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	}
 
 	/**
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	public static class DataSourceAttributeParser extends AttributeProcessor<WidgetCreatorContext>
-	{
-		public DataSourceAttributeParser(WidgetCreator<?> widgetCreator)
-        {
-	        super(widgetCreator);
-        }
-
-		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
-		{
-			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
-			JClassType dtoType = JClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{}).isClassOrInterface();
-
-			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoType.getParameterizedQualifiedSourceName()+">";
-			String dataSource = getWidgetCreator().createVariableName("dataSource");
-			out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(propertyValue)+");");
-			String widget = context.getWidget();			
-			String dataSourceDefinitions = createDataSourceColumnDefinitions(out, context.getWidgetElement(), dtoType, context.getWidgetId());
-			out.println(dataSource+".setColumnDefinitions("+dataSourceDefinitions+");");
-			out.println(widget+".setDataSource("+dataSource+");");
-		}
-
-		private String createDataSourceColumnDefinitions(SourcePrinter out, JSONObject gridElem, JClassType dtoType, String gridId)
-        {
-			String colDefs = getWidgetCreator().createVariableName("colDefs");
-			
-			String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
-			String columnDefinitionsClassName = org.cruxframework.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
-			out.println(columnDefinitionsClassName+" "+colDefs+" = new "+columnDefinitionsClassName+"();");
-
-			JSONArray colElems = widgetCreator.ensureChildren(gridElem, false, gridId);
-			int colsSize = colElems.length();
-			if(colsSize > 0)
-			{
-				for (int i=0; i<colsSize; i++)
-				{
-					JSONObject colElem = colElems.optJSONObject(i);
-					if (colElem != null)
-					{
-						String columnType = getChildName(colElem);
-						if("dataColumn".equals(columnType))
-						{
-							StringBuilder getValueExpression = new StringBuilder();
-							String colKey = colElem.optString("key");
-							JType propType;
-							try
-							{
-								propType = JClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
-							}
-							catch (Exception e)
-							{
-						        throw new CruxGeneratorException("Grid ["+gridId+"] has an invalid column ["+colKey+"].");
-							}
-							
-							JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
-							
-							boolean isSortable = (propType.isPrimitive() != null) || (comparableType.isAssignableFrom((JClassType) propType));
-							String propTypeName = JClassUtils.getGenericDeclForType(propType);
-							out.println(colDefs+".addColumn(new "+org.cruxframework.crux.core.client.datasource.ColumnDefinition.class.getCanonicalName()+
-									    "<"+propTypeName+","+dtoClassName+">("+EscapeUtils.quote(colElem.optString("key"))+","+isSortable+"){");
-							out.println("public "+propTypeName+" getValue("+dtoClassName+" recordObject){");
-							out.println("return "+getValueExpression.toString());
-							out.println("}");
-							out.println("});");
-						}
-					}
-				}
-			}
-			
-			return colDefs;
-        }
-	}
-
-	/**
 	 * @param gridElem
 	 * @return
 	 */
@@ -669,4 +593,110 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
     {
 	    return new WidgetCreatorContext();
     }
+	
+	/**
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class DataSourceAttributeParser extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public DataSourceAttributeParser(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String propertyValue)
+		{
+			JClassType dataSourceClass = getWidgetCreator().getContext().getTypeOracle().findType(DataSources.getDataSource(propertyValue));
+			JClassType dtoType = JClassUtils.getReturnTypeFromMethodClass(dataSourceClass, "getBoundObject", new JType[]{}).isClassOrInterface();
+			org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitionsAnot = 
+				dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions.class);
+
+			String colDefs = getWidgetCreator().createVariableName("colDefs");
+			String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
+			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoClassName+">";
+			String dataSource = getWidgetCreator().createVariableName("dataSource");
+			String columnDefinitionsClassName = org.cruxframework.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
+			out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(propertyValue)+");");
+
+			if (columnDefinitionsAnot != null)
+			{
+				out.println(columnDefinitionsClassName+" "+colDefs+" = "+dataSource+".getColumnDefinitions();");
+			}
+			else
+			{
+				out.println(columnDefinitionsClassName+" "+colDefs+" = new "+columnDefinitionsClassName+"();");
+				out.println(dataSource+".setColumnDefinitions("+colDefs+");");
+			}
+			
+			String widget = context.getWidget();			
+			autoCreateDataSourceColumnDefinitions(out, context.getWidgetElement(), dtoType, context.getWidgetId(), colDefs, columnDefinitionsAnot);
+			out.println(widget+".setDataSource("+dataSource+");");
+		}
+
+		private void autoCreateDataSourceColumnDefinitions(SourcePrinter out, JSONObject gridElem, JClassType dtoType, String gridId, String colDefs,
+				org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitions)
+        {
+			String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
+
+			JSONArray colElems = widgetCreator.ensureChildren(gridElem, false, gridId);
+			int colsSize = colElems.length();
+			if(colsSize > 0)
+			{
+				for (int i=0; i<colsSize; i++)
+				{
+					JSONObject colElem = colElems.optJSONObject(i);
+					if (colElem != null)
+					{
+						String columnType = getChildName(colElem);
+						if("dataColumn".equals(columnType))
+						{
+							StringBuilder getValueExpression = new StringBuilder();
+							String colKey = colElem.optString("key");
+							
+							if (!isDatasourceColumnBound(colKey, columnDefinitions))
+							{
+								JType propType;
+								try
+								{
+									propType = JClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
+								}
+								catch (Exception e)
+								{
+									throw new CruxGeneratorException("Grid ["+gridId+"] has an invalid column ["+colKey+"].");
+								}
+
+								JClassType comparableType = getWidgetCreator().getContext().getTypeOracle().findType(Comparable.class.getCanonicalName());
+
+								boolean isSortable = (propType.isPrimitive() != null) || (comparableType.isAssignableFrom((JClassType) propType));
+								String propTypeName = JClassUtils.getGenericDeclForType(propType);
+								out.println(colDefs+".addColumn(new "+org.cruxframework.crux.core.client.datasource.ColumnDefinition.class.getCanonicalName()+
+										"<"+propTypeName+","+dtoClassName+">("+EscapeUtils.quote(colKey)+","+isSortable+"){");
+								out.println("public "+propTypeName+" getValue("+dtoClassName+" recordObject){");
+								out.println("return "+getValueExpression.toString());
+								out.println("}");
+								out.println("});");
+							}
+						}
+					}
+				}
+			}
+        }
+
+		private boolean isDatasourceColumnBound(String colKey, org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitions)
+        {
+	        if (columnDefinitions != null)
+	        {
+	        	for (org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinition columnDefinition : columnDefinitions.value())
+                {
+	                if (columnDefinition.value().equals(colKey))
+	                {
+	                	return true;
+	                }
+                }
+	        }
+			
+			return false;
+        }
+	}	
 }
