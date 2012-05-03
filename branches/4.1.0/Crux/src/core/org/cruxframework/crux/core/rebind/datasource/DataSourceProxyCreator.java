@@ -99,9 +99,61 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);
+		createColumnDefinitions(srcWriter);
 		srcWriter.outdent();
 		srcWriter.println("}");
 	}	
+
+	protected void createColumnDefinitions(SourceWriter out)
+	{
+		org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitionsAnot = 
+			dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions.class);
+
+		if (columnDefinitionsAnot != null)
+		{
+			String colDefs = "colDefs";
+			String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
+			String columnDefinitionsClassName = org.cruxframework.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
+
+			out.println(columnDefinitionsClassName+" "+colDefs+" = new "+columnDefinitionsClassName+"();");
+			out.println("setColumnDefinitions("+colDefs+");");
+
+			autoCreateDataSourceColumnDefinitions(out, colDefs, columnDefinitionsAnot);
+		}
+	}
+
+	protected void autoCreateDataSourceColumnDefinitions(SourceWriter out, String colDefs,
+			org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitions)
+    {
+		String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
+
+    	for (org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinition columnDefinition : columnDefinitions.value())
+        {
+    		StringBuilder getValueExpression = new StringBuilder();
+    		String colKey = columnDefinition.value();
+
+    		JType propType;
+    		try
+    		{
+    			propType = JClassUtils.buildGetValueExpression(getValueExpression, dtoType, colKey, "recordObject", true);
+    		}
+    		catch (Exception e)
+    		{
+    			throw new CruxGeneratorException("Datasource ["+dataSourceClass.getQualifiedSourceName()+"] has an invalid ColumnDefinition ["+colKey+"].");
+    		}
+
+    		JClassType comparableType = context.getTypeOracle().findType(Comparable.class.getCanonicalName());
+
+    		boolean isSortable = (propType.isPrimitive() != null) || (comparableType.isAssignableFrom((JClassType) propType));
+    		String propTypeName = JClassUtils.getGenericDeclForType(propType);
+    		out.println(colDefs+".addColumn(new "+org.cruxframework.crux.core.client.datasource.ColumnDefinition.class.getCanonicalName()+
+    				"<"+propTypeName+","+dtoClassName+">("+EscapeUtils.quote(colKey)+","+isSortable+"){");
+    		out.println("public "+propTypeName+" getValue("+dtoClassName+" recordObject){");
+    		out.println("return "+getValueExpression.toString());
+    		out.println("}");
+    		out.println("});");
+		}
+    }
 
 	@Override
 	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
