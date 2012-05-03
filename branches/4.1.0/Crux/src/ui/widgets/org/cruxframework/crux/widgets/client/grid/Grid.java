@@ -1282,4 +1282,10 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		
 		return dataObjects;
 	}
+
+	@Override
+    protected void onBeforeRender()
+    {
+	    assert (getDataSource() == null || getDataSource().getColumnDefinitions() != null):"DataSource dos not declare any ColumnDefinition";
+    }
 }

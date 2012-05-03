@@ -518,6 +518,8 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 	 */
 	protected void render()
 	{
+		onBeforeRender();
+		
 		this.definitions.reset();
 		
 		int rowCount = (hasRowDetails() ? 2 * getRowsToBeRendered() : getRowsToBeRendered()) + 1;
@@ -545,11 +547,17 @@ public abstract class AbstractGrid<R extends Row> extends Composite implements H
 				cellElem.getStyle().setOpacity(0.01);
 			}
 		}
-		
+
 		renderHeaders(rowCount);
 		renderRows();
 		table.onAfterRender();
 	}
+	
+	/**
+	 * Return true if the grid can be rendered
+	 * @return
+	 */
+	protected abstract void onBeforeRender();
 	
 	/**
 	 * Renders the given row cells
