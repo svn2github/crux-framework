@@ -25,6 +25,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.google.gwt.dev.util.collect.HashSet;
 
@@ -53,13 +54,15 @@ public class Screen
 	
 	protected String module;
 	private final JSONArray metaData;
+	private final JSONObject lazyDependencies;
 	
-	public Screen(String id, String relativeId, String module, JSONArray metaData) 
+	public Screen(String id, String relativeId, String module, JSONArray metaData, JSONObject lazyDependencies) 
 	{
 		this.id = id;
 		this.relativeId = relativeId;
 		this.module = module;
 		this.metaData = metaData;
+		this.lazyDependencies = lazyDependencies;
 	}
 
 	/**
@@ -298,6 +301,11 @@ public class Screen
     	return metaData;
     }
 
+	public JSONObject getLazyDependencies()
+	{
+		return lazyDependencies;
+	}
+	
 	public ViewFactoryCreator getFactory() {
 		return factory;
 	}

@@ -54,6 +54,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 			public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
 			{
 				out.println("this._controller.addWidget("+EscapeUtils.quote(widgetId)+","+widgetVariableName+");");
+				//TODO: tratar o renderWidgetsWithIDs para este caso.
 			}
 		};
 	    controllerAccessHandler = new SingleControllerAccessHandler()

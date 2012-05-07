@@ -116,6 +116,12 @@ public class ViewFactoryCreator
 		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
 	}
 	
+	public interface LazyCompatibleWidgetConsumer extends WidgetConsumer
+	{
+		void handleLazyWholeWidgetCreation(SourcePrinter out, String widgetId);
+		void handleLazyWrapChildrenCreation(SourcePrinter out, String widgetId);
+	}
+	
 	/**
 	 * 
 	 * @author Thiago da Rosa de Bustamante
@@ -133,7 +139,7 @@ public class ViewFactoryCreator
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public class ScreenWidgetConsumer implements WidgetConsumer
+	public class ScreenWidgetConsumer implements LazyCompatibleWidgetConsumer
 	{
 		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
 		{
@@ -143,6 +149,20 @@ public class ViewFactoryCreator
 				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
 			}
 		}
+
+		@Override
+        public void handleLazyWholeWidgetCreation(SourcePrinter out, String widgetId)
+        {
+			out.println(getScreenVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+ 
+					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget)) +");");
+        }
+
+		@Override
+        public void handleLazyWrapChildrenCreation(SourcePrinter out, String widgetId)
+        {
+			out.println(getScreenVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+ 
+					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren)) +");");
+        }
 	}
 	
 	/**
@@ -351,12 +371,13 @@ public class ViewFactoryCreator
 		
 		String widget;
 		//TODO nao colocar na lista de lazyDeps qdo addToScreen for false
-		if (consumer != null && consumer instanceof ScreenWidgetConsumer && mustRenderLazily(widgetType, metaElem, widgetId))
+		if (consumer != null && consumer instanceof LazyCompatibleWidgetConsumer && mustRenderLazily(widgetType, metaElem, widgetId))
 		{
 			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			lazyPanels.add(lazyPanelId);
 			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			consumer.consume(printer, lazyPanelId, widget);
+			((LazyCompatibleWidgetConsumer)consumer).handleLazyWholeWidgetCreation(printer, widgetId);
 		}
 		else
 		{

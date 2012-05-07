@@ -1123,6 +1123,25 @@ public class Screen
     }
 	
 	/**
+	 * When we have multi-level inner lazy panels, the most inside panel is dependent from the most outside one.
+	 * If the most outside is initialized, a new dependency must be created for the inner lazy panels not yet 
+	 * initialized.
+	 * @param id
+	 * @param lazyPanelId
+	 */
+	void checkRuntimeLazyDependency(String id, String lazyPanelId)
+	{
+		if (!lazyWidgets.containsKey(id))
+		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.log(Level.FINE, "New runtime lazy dependency found. Widget["+id+"] depends on LazyPanel["+lazyPanelId+"]...");
+			}
+			lazyWidgets.put(id, lazyPanelId);
+		}
+	}
+	
+	/**
 	 * When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
 	 * lazy instantiation.
 	 * 

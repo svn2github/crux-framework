@@ -26,7 +26,9 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.declarativeui.LazyWidgets;
 import org.cruxframework.crux.core.declarativeui.LazyWidgets.WidgetLazyChecker;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.LazyCompatibleWidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.ChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.ChildrenProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
@@ -126,12 +128,13 @@ class ChildrenAnnotationScanner
 			private void processAnyWidgetChild(SourcePrinter out, WidgetCreatorContext context)
             {
 				String childWidget; //TODO validar se o lazyCondition esta sendo usado sempre com widgets na factory
-				if (lazyChecker != null && lazyChecker.isLazy(context.getWidgetElement()))
+				WidgetConsumer consumer = widgetCreator.getViewFactory().getScreenWidgetConsumer();
+				if (consumer != null && consumer instanceof LazyCompatibleWidgetConsumer && lazyChecker != null && lazyChecker.isLazy(context.getWidgetElement()))
 				{
-					
 					childWidget = lazyFactory.getLazyPanel(out, context.getChildElement(), context.getWidgetId(), LazyPanelWrappingType.wrapChildren);
 					String lazyPanelId = ViewFactoryUtils.getLazyPanelId(context.getWidgetId(), LazyPanelWrappingType.wrapChildren);
-					out.println("Screen.add("+EscapeUtils.quote(lazyPanelId)+", "+childWidget+");");
+					consumer.consume(out, lazyPanelId, childWidget);
+					((LazyCompatibleWidgetConsumer)consumer).handleLazyWrapChildrenCreation(out, context.getWidgetId());
 				}
 				else
 				{

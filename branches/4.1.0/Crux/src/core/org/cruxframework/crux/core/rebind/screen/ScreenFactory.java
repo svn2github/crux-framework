@@ -441,14 +441,16 @@ public class ScreenFactory
 		{
 			try
 			{
-				JSONArray metaData = getMetaData(source, id);
+				JSONObject metadata = getMetaData(source, id);
+				JSONArray elementsMetaData = metadata.getJSONArray("elements");
+				JSONObject lazyDependencies = metadata.getJSONObject("lazyDeps");
 
-				screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule, metaData);
+				screen = new Screen(id, getRelativeScreenId(id, screenModule), screenModule, elementsMetaData, lazyDependencies);
 
-				int length = metaData.length();
+				int length = elementsMetaData.length();
 				for (int i = 0; i < length; i++) 
 				{
-					JSONObject compCandidate = metaData.getJSONObject(i);
+					JSONObject compCandidate = elementsMetaData.getJSONObject(i);
 
 					if (isScreenDefinition(compCandidate))
 					{
@@ -486,7 +488,7 @@ public class ScreenFactory
 	 * @throws JSONException
 	 * @throws ScreenConfigException 
 	 */
-	private JSONArray getMetaData(Document source, String id) throws JSONException, ScreenConfigException
+	private JSONObject getMetaData(Document source, String id) throws JSONException, ScreenConfigException
     {
 		
 		Element cruxMetaData = getCruxMetaDataElement(source);
@@ -501,7 +503,7 @@ public class ScreenFactory
 	    	metaData = metaData.substring(indexReturnFunction+7, indexCloseFunction).trim();
 	    	
 	    	JSONObject meta = new JSONObject(metaData);
-	    	return meta.getJSONArray("elements");
+	    	return meta;
 	    }
 	    
         throw new ScreenConfigException("Error parsing screen metaData. Screen ["+id+"].");
