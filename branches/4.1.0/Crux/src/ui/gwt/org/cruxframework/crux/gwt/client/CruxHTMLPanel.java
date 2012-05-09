@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
@@ -55,6 +56,8 @@ public class CruxHTMLPanel extends HTMLPanel implements HTMLContainer
 				htmlPanelElement.appendChild(child);
 			}
 		}
+		
+		panelElement.getStyle().setDisplay(Display.BLOCK);
 	}
 
 	@Override

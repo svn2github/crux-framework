@@ -864,6 +864,11 @@ class HTMLBuilder
 			}
 			
 			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
+			if (htmlContainerWidget)
+			{
+				String style = widgetHolder.getAttribute("style");
+				widgetHolder.setAttribute("style", "display:none;"+(style==null?"":style));
+			}
 			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
 		}
 		else

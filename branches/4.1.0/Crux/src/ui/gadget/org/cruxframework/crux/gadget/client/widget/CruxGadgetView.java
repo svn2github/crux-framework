@@ -20,6 +20,7 @@ import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -38,6 +39,8 @@ public class CruxGadgetView extends GadgetView implements HTMLContainer
         assert Document.get().getBody().isOrHasChild(panelElement);
         panelElement.removeFromParent();
         getElement().appendChild(panelElement);
+		panelElement.getStyle().setDisplay(Display.BLOCK);
+        
     }
 	
 	@Override
