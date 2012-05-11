@@ -104,4 +104,7 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("TapEventAdapter only can be used as a wrapper for subclasses of HasAllTouchHandlers and HasClickHandlers")
 	String tapEventAdapterInvalidWidget();
+
+	@DefaultMessage("Invalid value for style property: [{0}]:[{1}]")
+	String styleErrorInvalidProperty(String camelizedName, String value);
 }
