@@ -14,7 +14,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-MessageBox
 {
 }
-.crux-MessageBox .dialogTopLeft 
+.crux-MessageBox .dialogTopLeft
 {
 	height:41px;
 	width:19px;
@@ -22,7 +22,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	background: url(../img/dialogs-nw.png) no-repeat top left;
 }
-.crux-MessageBox .dialogTopCenter 
+.crux-MessageBox .dialogTopCenter
 {
 	text-align: left;
 	font-family: Arial, Helvetica;
@@ -97,7 +97,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	min-width: 60px;
 	overflow: visible;
 	white-space: nowrap;
-}	
+}
 
 /******************************************************************************
 	Progress Dialog
@@ -127,13 +127,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height: 60px;
 	font-size: 20px;
 	font-family: monospace;
-	background: url(../img/progressdialog-w.png) no-repeat left;	
+	background: url(../img/progressdialog-w.png) no-repeat left;
 }
 .crux-ProgressDialog .dialogMiddleCenter
 {
 	font-size: 0px;
 	font-family: monospace;
-	background: url(../img/progressdialog-c.png) repeat-x center;	
+	background: url(../img/progressdialog-c.png) repeat-x center;
 }
 .crux-ProgressDialog .dialogMiddleRight
 {
@@ -328,7 +328,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-size:12px;
 	font-weight:bold;
 }
-.crux-Confirm .dialogTopLeft 
+.crux-Confirm .dialogTopLeft
 {
 	height:41px;
 	width:19px;
@@ -337,7 +337,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background: url(../img/dialogs-nw.png) no-repeat top left;
 	cursor: move;
 }
-.crux-Confirm .dialogTopCenter 
+.crux-Confirm .dialogTopCenter
 {
 	text-align: left;
 	font-family: Arial, Helvetica;
@@ -407,7 +407,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #4E4E4E;
 	padding: 5px;
 }
-.crux-Confirm .crux-DecoratedButtonCSS3, .crux-Confirm .crux-DecoratedButton  
+.crux-Confirm .crux-DecoratedButtonCSS3, .crux-Confirm .crux-DecoratedButton
 {
 	min-width: 60px;
 	overflow: visible;
@@ -438,7 +438,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-size: 0px;
 	cursor: pointer;
 }
-.crux-ScrollBanner .nextMessageButton 
+.crux-ScrollBanner .nextMessageButton
 {
 	background-image: url(../img/scroll-banner-arrow-down.png);
 }
@@ -494,8 +494,8 @@ SPAN, DIV, TD, LI, STRONG, UL
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#f8f8f8),color-stop(0.99,#e5e5e5));
-	background-image: -moz-linear-gradient(top, #f8f8f8,#e5e5e5);	
-	background-image: -o-linear-gradient(top, #f8f8f8,#e5e5e5);	
+	background-image: -moz-linear-gradient(top, #f8f8f8,#e5e5e5);
+	background-image: -o-linear-gradient(top, #f8f8f8,#e5e5e5);
 }
 
 .crux-SuggestPopup .item
@@ -522,7 +522,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	Stack Menu
 *******************************************************************************/
 /*=====================
-    first level 
+    first level
 =====================*/
 .crux-StackMenu .item
 {
@@ -538,7 +538,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height: 3px;
 	background: url(../img/menu-lv1-nw.gif) no-repeat top left;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .item-border-n
 {
@@ -551,26 +551,26 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width: 10px;
 	background: url(../img/menu-lv1-ne.gif) no-repeat top right;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .item-border-w
 {
 	background: url(../img/menu-lv1-w.gif) repeat-y left;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .item-border-e
 {
 	background: url(../img/menu-lv1-e.gif) repeat-y right;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .item-border-sw
 {
 	height: 3px;
 	background: url(../img/menu-lv1-sw.gif) no-repeat bottom left;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .item-border-s
 {
@@ -582,7 +582,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background: url(../img/menu-lv1-se.gif) no-repeat bottom right;
 	font-size: 3px;
-	font-family: monospace; 
+	font-family: monospace;
 }
 .crux-StackMenu .item .itemLabel
 {
@@ -609,7 +609,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-color: #7D8288;
 }
 /*=====================
-    second level 
+    second level
 =====================*/
 .crux-StackMenu .subItemsWrapper .itemWrapper
 {
@@ -688,7 +688,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	color: #5182AB;
 }
 /*=====================
-    third level 
+    third level
 =====================*/
 .crux-StackMenu .subItemsWrapper .subItemsWrapper .item .itemLabel
 {
@@ -708,9 +708,9 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height: 99.0% !important;
 }
 .crux-Wizard .crux-WizardControlBar .crux-RollingPanelPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardControlBar .crux-RollingPanelNextWrapper-disabled, 
+.crux-Wizard .crux-WizardControlBar .crux-RollingPanelNextWrapper-disabled,
 .crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelPreviousWrapper-disabled,
-.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelNextWrapper-disabled 
+.crux-Wizard .crux-WizardNavigationBar .crux-RollingPanelNextWrapper-disabled
 {
 	width: 1px;
 	height: 1px;
@@ -723,7 +723,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	display: none;
 }
-.crux-Wizard .crux-WizardControlBar .crux-DecoratedButton, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3 
+.crux-Wizard .crux-WizardControlBar .crux-DecoratedButton, .crux-Wizard .crux-WizardControlBar .crux-DecoratedButtonCSS3
 {
 	min-width: 60px;
 	margin-left: 4px;
@@ -819,7 +819,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 }
 .crux-RollingPanelPreviousWrapper-disabled, .crux-RollingPanelNextWrapper-disabled
-{	
+{
 }
 .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext,
 .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious:active, .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext:active
@@ -841,7 +841,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	height: 36px;
 }
-.crux-TabBar .crux-RollingPanelPrevious, .crux-TabBar .crux-RollingPanelPrevious:active  
+.crux-TabBar .crux-RollingPanelPrevious, .crux-TabBar .crux-RollingPanelPrevious:active
 {
 	height: 24px;
 	width: 22px;
@@ -879,7 +879,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 .crux-TabBar .crux-RollingPanelPrevious:active, .crux-TabBar .crux-RollingPanelNext:active
 {
 	opacity:0.7;
-	filter:alpha(opacity=70);	
+	filter:alpha(opacity=70);
 }
 .crux-TabBar .crux-RollingPanelPreviousWrapper
 {
@@ -904,11 +904,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-repeat: repeat-x;
 	background-position: top;
 }
-.crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext, 
+.crux-TabBar .crux-RollingPanelNextWrapper-disabled .crux-RollingPanelNext,
 .crux-TabBar .crux-RollingPanelPreviousWrapper-disabled .crux-RollingPanelPrevious
 {
 	opacity:0.2;
-	filter:alpha(opacity=20);	
+	filter:alpha(opacity=20);
 }
 .crux-TabBarFirst
 {
@@ -918,7 +918,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding: 0px;
 	margin: 0px !important;
 }
-.crux-TabBarFirst, .crux-TabBarRest  
+.crux-TabBarFirst, .crux-TabBarRest
 {
 	height:36px !important;
 	padding:0px;
@@ -931,7 +931,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding: 0px;
 	overflow: auto;
 }
-.crux-TabBarItem 
+.crux-TabBarItem
 {
 	background-image: none;
 	cursor:default;
@@ -973,7 +973,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-position: top left;
 	margin-right: 2px;
 }
-.crux-DynaTabs .crux-TabBarItem .flapRight 
+.crux-DynaTabs .crux-TabBarItem .flapRight
 {
 	padding:1px !important;
 	font-family:monospace;
@@ -982,15 +982,15 @@ SPAN, DIV, TD, LI, STRONG, UL
 	height:29px;
 	background-image: url(../img/dyna-tabs-tab-right.gif);
 	background-repeat: no-repeat;
-	background-position: top right; 
+	background-position: top right;
 }
-.crux-DynaTabs .crux-TabBarItem .flapCenter 
+.crux-DynaTabs .crux-TabBarItem .flapCenter
 {
 	background-image: url(../img/dyna-tabs-tab-bg.gif);
 	background-position: top;
 	background-repeat: repeat-x;
 }
-.crux-DynaTabs .crux-TabBarItem .flapLabel 
+.crux-DynaTabs .crux-TabBarItem .flapLabel
 {
 	cursor:default;
 	font-family:arial;
@@ -1007,19 +1007,19 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background-image: url(../img/dyna-tabs-tab-left-selected.gif);
 }
-.crux-DynaTabs .crux-TabBarItem-selected .flapRight 
+.crux-DynaTabs .crux-TabBarItem-selected .flapRight
 {
 	background-image: url(../img/dyna-tabs-tab-right-selected.gif);
 }
-.crux-DynaTabs .crux-TabBarItem-selected .flapCenter 
+.crux-DynaTabs .crux-TabBarItem-selected .flapCenter
 {
 	background-image: url(../img/dyna-tabs-tab-bg-selected.gif);
 }
-.crux-DynaTabs .crux-TabBarItem-selected .flapLabel 
+.crux-DynaTabs .crux-TabBarItem-selected .flapLabel
 {
 	color:#7b8287;
 }
-.crux-DynaTabs .crux-TabBarItem .flapCloseButton 
+.crux-DynaTabs .crux-TabBarItem .flapCloseButton
 {
 	background-image: url(../img/dyna-tabs-close.png);
 	background-position: middle right;
@@ -1032,7 +1032,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	font-size: 0px;
 }
-.crux-DynaTabs .flapCloseButton-disable 
+.crux-DynaTabs .flapCloseButton-disable
 {
 	cursor: wait;
 }
@@ -1040,7 +1040,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	border: solid 0px !important;
 	height: 100.0% !important;
-}			  
+}
 
 /******************************************************************************
 	Transfer List
@@ -1050,16 +1050,16 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width: 180px;
 	border: solid 1px #93989C;
 	font-size:12px;
-	font-family: sans-serif,Arial,Helvetica;	
-} 
-.crux-TransferList .moveToRight, .crux-TransferList .moveToLeft
+	font-family: sans-serif,Arial,Helvetica;
+}
+.crux-TransferList .moveToRight, .crux-TransferList .moveToLeft, .crux-TransferList .moveAllToRight, .crux-TransferList .moveAllToLeft
 {
 	color: #FFFFFF;
 	width: 50px;
 	height: 20px;
 	border:	solid 1px #0157A9;
 	font-size:12px;
-	font-weight: bold !important;	
+	font-weight: bold !important;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
@@ -1071,11 +1071,11 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: -moz-linear-gradient(top, #6b9bc2,#3f668a);
 	background-image: -o-linear-gradient(top, #6b9bc2,#3f668a);
 }
-.crux-TransferList .moveToRight:active, .crux-TransferList .moveToLeft:active
+.crux-TransferList .moveToRight:active, .crux-TransferList .moveToLeft:active, .crux-TransferList .moveAllToRight:active, .crux-TransferList .moveAllToLeft:active
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.01,#3f668a),color-stop(0.99,#3f668a));
-	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);	
-	background-image: -o-linear-gradient(top, #3f668a,#3f668a);	
+	background-image: -moz-linear-gradient(top, #3f668a,#3f668a);
+	background-image: -o-linear-gradient(top, #3f668a,#3f668a);
 	background-color: #3f668a !important;
 }
 .crux-TransferList .gwt-Label
@@ -1102,7 +1102,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	margin:0px;
 	border: solid 0px;
 }
-.crux-DecoratedButton .leftCell 
+.crux-DecoratedButton .leftCell
 {
 	width:7px;
 	font-size: 7px;
@@ -1111,7 +1111,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	margin: 0px !important;
 	background: url(../img/decorated-btn-left.png);
 	background-repeat: no-repeat;
-	background-position: top left; 
+	background-position: top left;
 }
 .crux-DecoratedButton .centerCell
 {
@@ -1122,7 +1122,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background: url(../img/decorated-btn-bg.png) repeat-x top center;
 	cursor: default;
 }
-.crux-DecoratedButton .rightCell 
+.crux-DecoratedButton .rightCell
 {
 	width:7px;
 	font-size: 7px;
@@ -1131,13 +1131,13 @@ SPAN, DIV, TD, LI, STRONG, UL
 	margin: 0px !important;
 	background: url(../img/decorated-btn-right.png);
 	background-repeat: no-repeat;
-	background-position: top right; 
+	background-position: top right;
 }
 .crux-DecoratedButton-down .centerCell
 {
 	padding-top: 2px;
 }
-.crux-DecoratedButton-disabled .leftCell 
+.crux-DecoratedButton-disabled .leftCell
 {
 	background-image: url(../img/decorated-btn-disabled-left.png);
 }
@@ -1147,7 +1147,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	text-shadow: 1px 1px 1px #E2E2E2;
 	color: #808080;
 }
-.crux-DecoratedButton-disabled .rightCell 
+.crux-DecoratedButton-disabled .rightCell
 {
 	background-image: url(../img/decorated-btn-disabled-right.png);
 }
@@ -1159,7 +1159,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background: url(../img/smooth-footer.gif) repeat-x bottom;
 }
-.crux-TitlePanel .topLeftCell 
+.crux-TitlePanel .topLeftCell
 {
 	height:30px;
 	width:8px;
@@ -1167,7 +1167,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	background: url(../img/collapse-panel-nw.gif) no-repeat top left;
 }
-.crux-TitlePanel .topCenterCell 
+.crux-TitlePanel .topCenterCell
 {
 	font-size: 12px;
 	font-weight: bold;
@@ -1227,7 +1227,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background: url(../img/smooth-footer.gif) repeat-x bottom;
 }
-.crux-CollapsePanel .topLeftCell 
+.crux-CollapsePanel .topLeftCell
 {
 	height:30px;
 	width:8px;
@@ -1235,7 +1235,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	background: url(../img/collapse-panel-nw.gif) no-repeat top left;
 }
-.crux-CollapsePanel .topCenterCell 
+.crux-CollapsePanel .topCenterCell
 {
 	font-size: 12px;
 	font-weight: bold;
@@ -1268,7 +1268,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	width: 3px;
 	font-size: 3px;
-	font-family: monospace;	
+	font-family: monospace;
 	background: url(../img/collapse-panel-e.gif) repeat-y right;
 }
 .crux-CollapsePanel .bottomLeftCell
@@ -1293,7 +1293,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width: 19px;
 	height: 19px;
 	border: solid 0px;
-	cursor: pointer;	
+	cursor: pointer;
 }
 .crux-CollapsePanel .collapseExpandButton-collapsed
 {
@@ -1312,7 +1312,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	background: url(../img/smooth-footer.gif) repeat-x bottom;
 }
-.crux-DecoratedPanel .topLeftCell 
+.crux-DecoratedPanel .topLeftCell
 {
 	font-size: 6px;
 	font-family: monospace;
@@ -1320,12 +1320,12 @@ SPAN, DIV, TD, LI, STRONG, UL
 	width:6px;
 	background: url(../img/decorated-panel-nw.gif) no-repeat top left;
 }
-.crux-DecoratedPanel .topCenterCell 
+.crux-DecoratedPanel .topCenterCell
 {
 	font-size: 0px;
 	background: url(../img/decorated-panel-n.gif) repeat-x top center;
 }
-.crux-DecoratedPanel .topCenterRightCell 
+.crux-DecoratedPanel .topCenterRightCell
 {
 	width: 1px;
 	font-size: 0px;
@@ -1395,7 +1395,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 {
 	vertical-align:middle;
 	background-color:#FFFFFF;
-	border-bottom: solid 1px #F0F0F0; 
+	border-bottom: solid 1px #F0F0F0;
 	border-right: solid 1px #F0F0F0;
 }
 .crux-Grid .row .cell
@@ -1417,7 +1417,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
-.crux-Grid .row-selected .cellWrapper, .crux-Grid .row-selected .cell  
+.crux-Grid .row-selected .cellWrapper, .crux-Grid .row-selected .cell
 {
 	background-color: #F5F5F5;
 }
@@ -1494,7 +1494,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	font-family: monospace;
 	margin-left: 5px;
 	margin-top: 5px;
-	margin-right: 2px; 
+	margin-right: 2px;
 }
 .crux-Grid .columnSorter-asc .label
 {
@@ -1521,7 +1521,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/pager-previous.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
-	cursor: pointer; 
+	cursor: pointer;
 	margin-left: 5px;
 }
 .crux-SequentialPager .nextButton
@@ -1565,7 +1565,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/pager-previous.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
-	cursor: pointer; 
+	cursor: pointer;
 	margin-left: 5px;
 }
 .crux-RandomPager .nextButton
@@ -1599,7 +1599,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: url(../img/pager-first.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
-	cursor: pointer; 
+	cursor: pointer;
 	margin-left: 5px;
 }
 .crux-RandomPager .lastButton
@@ -1671,7 +1671,7 @@ SPAN, DIV, TD, LI, STRONG, UL
 	cursor: default;
 	border: solid 1px #40688b;
 	border-top: solid 1px #598ab2;
-	padding: 4px; 
+	padding: 4px;
 	-webkit-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	-moz-box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
 	box-shadow:0px 0px 2px 2px rgba(180,180,180,0.3);
@@ -1695,5 +1695,5 @@ SPAN, DIV, TD, LI, STRONG, UL
 	background-image: -o-linear-gradient(top, #e0e0e0,#c3c3c3);
 	color: #787878;
 	text-shadow: #FFFFFF 1px 1px 0;
-	border: solid 1px #BBBBBB;	
+	border: solid 1px #BBBBBB;
 }

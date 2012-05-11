@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,6 @@ import org.cruxframework.crux.widgets.client.event.moveitem.HasBeforeMoveItemsHa
 import org.cruxframework.crux.widgets.client.event.moveitem.HasMoveItemsHandlers;
 import org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsEvent;
 import org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsHandler;
-
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -46,17 +45,20 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class TransferList extends Composite implements HasBeforeMoveItemsHandlers, HasMoveItemsHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-TransferList" ;
-	
+
 	private HorizontalPanel panel;
 	private ListBox leftList;
 	private ListBox rightList;
 	private Button moveToRightButton;
 	private Button moveToLeftButton;
+	private Button moveAllToRightButton;
+	private Button moveAllToLeftButton;
 	private Label leftListLabel;
 	private Label rightListLabel;
 	private boolean multiTransferFromLeft = true;
 	private boolean multiTransferFromRight = true;
-	
+	private boolean showAllTransferButtons = false;
+
 	/**
 	 * TODO - Gesse - Comment this
 	 * @author Gesse S. F. Dafe
@@ -65,7 +67,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		left, right;
 	}
-	
+
 	/**
 	 * TODO - Gesse - Comment this
 	 * @author Gesse S. F. Dafe
@@ -75,7 +77,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		private String label;
 		private String value;
 		private ItemLocation location;
-		
+
 		/**
 		 * @param label
 		 * @param value
@@ -84,7 +86,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		{
 			this(label, value, ItemLocation.left);
 		}
-		
+
 		/**
 		 * @param label
 		 * @param value
@@ -121,7 +123,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 			return location;
 		}
 	}
-	
+
 	/**
 	 * @param width
 	 * @param height
@@ -141,7 +143,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		HorizontalPanel panel = new HorizontalPanel();
 		panel.setStyleName(DEFAULT_STYLE_NAME);
-		
+
 		VerticalPanel vPanelLeft = new VerticalPanel();
 		this.leftListLabel = new Label();
 		this.leftList = new ListBox(this.multiTransferFromLeft);
@@ -149,11 +151,11 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		vPanelLeft.add(this.leftListLabel);
 		vPanelLeft.add(this.leftList);
 		panel.add(vPanelLeft);
-		
+
 		VerticalPanel commandsPanel = createCommands();
 		panel.add(commandsPanel);
 		panel.setCellVerticalAlignment(commandsPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		
+
 		VerticalPanel vPanelRight = new VerticalPanel();
 		this.rightListLabel = new Label();
 		this.rightList = new ListBox(this.multiTransferFromRight);
@@ -161,7 +163,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		vPanelRight.add(this.rightListLabel);
 		vPanelRight.add(this.rightList);
 		panel.add(vPanelRight);
-		
+
 		return panel;
 	}
 
@@ -175,17 +177,27 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		commandsPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		commandsPanel.setStyleName("commands");
 		commandsPanel.setSpacing(5);
-		
+
 		this.moveToRightButton = new Button();
 		moveToRightButton.setStyleName("moveToRight");
 		moveToRightButton.addClickHandler(new TransferItemClickHandler(this, true));
 		commandsPanel.add(this.moveToRightButton);
-				
+
+		this.moveAllToRightButton = new Button();
+		moveAllToRightButton.setStyleName("moveAllToRight");
+		moveAllToRightButton.addClickHandler(new TransferAllItemClickHandler(this, true));
+		commandsPanel.add(this.moveAllToRightButton);
+
 		this.moveToLeftButton = new Button();
 		moveToLeftButton.setStyleName("moveToLeft");
 		moveToLeftButton.addClickHandler(new TransferItemClickHandler(this, false));
 		commandsPanel.add(this.moveToLeftButton);
-		
+
+		this.moveAllToLeftButton = new Button();
+		moveAllToLeftButton.setStyleName("moveAllToLeft");
+		moveAllToLeftButton.addClickHandler(new TransferAllItemClickHandler(this, false));
+		commandsPanel.add(this.moveAllToLeftButton);
+
 		return commandsPanel;
 	}
 
@@ -205,6 +217,24 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		return moveToLeftButton;
 	}
 
+
+	/**
+	 * @return the moveAllToRightButton
+	 */
+	public Button getMoveAllToRightButton()
+	{
+		return moveAllToRightButton;
+	}
+
+	/**
+	 * @return the moveAllToLeftButton
+	 */
+	public Button getMoveAllToLeftButton()
+	{
+		return moveAllToLeftButton;
+	}
+
+
 	/**
 	 * @return the leftList
 	 */
@@ -220,7 +250,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		return rightList;
 	}
-	
+
 	/**
 	 * @param text
 	 */
@@ -228,7 +258,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		this.moveToRightButton.setText(text);
 	}
-	
+
 	/**
 	 * @param text
 	 */
@@ -236,7 +266,24 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		this.moveToLeftButton.setText(text);
 	}
-	
+
+
+	/**
+	 * @param text
+	 */
+	public void setAllLeftToRightButtonText(String text)
+	{
+		this.moveAllToRightButton.setText(text);
+	}
+
+	/**
+	 * @param text
+	 */
+	public void setAllRightToLeftButtonText(String text)
+	{
+		this.moveAllToLeftButton.setText(text);
+	}
+
 	/**
 	 * @param label
 	 */
@@ -244,7 +291,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		this.leftListLabel.setText(label);
 	}
-	
+
 	/**
 	 * @param label
 	 */
@@ -252,7 +299,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		this.rightListLabel.setText(label);
 	}
-	
+
 	/**
 	 * Sets the items to be shown
 	 */
@@ -260,16 +307,16 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		this.leftList.clear();
 		this.rightList.clear();
-		
+
 		for (Item item : items)
 		{
 			addItem(item);
-		}	
+		}
 	}
 
-	
+
 	/**
-	 * Adds a new item 
+	 * Adds a new item
 	 * @param item
 	 */
 	public void addItem(Item item)
@@ -283,8 +330,8 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 			rightList.addItem(item.getLabel(), item.getValue());
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param parseInt
 	 */
@@ -293,7 +340,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		this.leftList.setVisibleItemCount(count);
 		this.rightList.setVisibleItemCount(count);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -301,7 +348,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		return getItens(getLeftList(), true);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -309,7 +356,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		return getItens(getRightList(), false);
 	}
-	
+
 	/**
 	 * @param listBox
 	 * @param left
@@ -318,19 +365,19 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	private List<Item> getItens(ListBox listBox, boolean left)
 	{
 		List<Item> items = new ArrayList<Item>();
-		
+
 		for(int i = 0; i < listBox.getItemCount(); i++)
 		{
 			Item item = new Item(
-				listBox.getItemText(i), 
-				listBox.getValue(i), 
+				listBox.getItemText(i),
+				listBox.getValue(i),
 				left ? ItemLocation.left : ItemLocation.right
 			);
-			
+
 			items.add(item);
 		}
-		
-		return items;	
+
+		return items;
 	}
 
 	/**
@@ -340,24 +387,24 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 	{
 		return addHandler(handler, BeforeMoveItemsEvent.getType());
 	}
-	
+
 	/**
 	 * @see org.cruxframework.crux.widgets.client.event.moveitem.HasMoveItemsHandlers#addMoveItemsHandler(org.cruxframework.crux.widgets.client.event.moveitem.MoveItemsHandler)
 	 */
 	public HandlerRegistration addMoveItemsHandler(MoveItemsHandler handler)
     {
 		return addHandler(handler, MoveItemsEvent.getType());
-    }	
-	
+    }
+
 	/**
 	 * Click handler for transfer list buttons
 	 * @author Gesse S. F. Dafe
 	 */
 	private static class TransferItemClickHandler implements ClickHandler
 	{
-		private TransferList transferList;
-		private boolean leftToRight; 
-		
+		protected TransferList transferList;
+		protected boolean leftToRight;
+
 		/**
 		 * @param transfer
 		 * @param leftToRight
@@ -367,7 +414,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 			this.transferList = transfer;
 			this.leftToRight = leftToRight;
 		}
-		
+
 		/**
 		 * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
 		 */
@@ -375,16 +422,16 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		{
 			ListBox listToRemove = leftToRight ? transferList.getLeftList() : transferList.getRightList();
 			ListBox listToAdd = leftToRight ? transferList.getRightList() : transferList.getLeftList();
-			
+
 			FastList<String[]> move = new FastList<String[]>();
 			FastList<String[]> keep = new FastList<String[]>();
-			
+
 			for (int i = 0; i < listToRemove.getItemCount(); i++)
 			{
 				String text = listToRemove.getItemText(i);
 				String value = listToRemove.getValue(i);
 				String[] item = new String[]{text, value};
-				
+
 				if(listToRemove.isItemSelected(i))
 				{
 					move.add(item);
@@ -394,21 +441,21 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 					keep.add(item);
 				}
 			}
-			
+
 			ItemLocation itemsLocation = leftToRight ? ItemLocation.left : ItemLocation.right;
 			List<Item> itemsForEvet = createItemList(move, itemsLocation);
 			BeforeMoveItemsEvent moveEvt = BeforeMoveItemsEvent.fire(transferList, itemsForEvet, leftToRight);
-			
+
 			if(!moveEvt.isCanceled())
 			{
 				listToRemove.clear();
-				
+
 				for (int i=0; i<move.size(); i++)
 				{
 					String[] item = move.get(i);
 					listToAdd.addItem(item[0], item[1]);
 				}
-				
+
 				for (int i=0; i<keep.size(); i++)
 				{
 					String[] item = keep.get(i);
@@ -417,17 +464,17 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 			}
 			MoveItemsEvent.fire(transferList, itemsForEvet, leftToRight);
 		}
-		
+
 		/**
-		 * Creates a list of Item from a list of string[] containing labels and values 
+		 * Creates a list of Item from a list of string[] containing labels and values
 		 * @param arrays
 		 * @param location
 		 * @return
 		 */
-		private List<Item> createItemList(FastList<String[]> arrays, ItemLocation location)
+		protected List<Item> createItemList(FastList<String[]> arrays, ItemLocation location)
 		{
 			List<Item> items = new ArrayList<Item>();
-			
+
 			for (int i=0; i<arrays.size(); i++)
 			{
 				String[] array = arrays.get(i);
@@ -436,6 +483,55 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 			}
 
 			return items;
+		}
+	}
+
+	/**
+	 * Click handler for transfer all items of list buttons
+	 * @author    Daniel Martins - <code>daniel@cruxframework.org</code>
+	 */
+	private static class TransferAllItemClickHandler extends TransferItemClickHandler
+	{
+
+		public TransferAllItemClickHandler(TransferList transfer, boolean leftToRight)
+		{
+			super(transfer, leftToRight);
+		}
+
+		/**
+		 * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
+		 */
+		public void onClick(ClickEvent event)
+		{
+			ListBox listToRemove = leftToRight ? transferList.getLeftList() : transferList.getRightList();
+			ListBox listToAdd = leftToRight ? transferList.getRightList() : transferList.getLeftList();
+
+			FastList<String[]> move = new FastList<String[]>();
+
+			for (int i = 0; i < listToRemove.getItemCount(); i++)
+			{
+				String text = listToRemove.getItemText(i);
+				String value = listToRemove.getValue(i);
+				String[] item = new String[]{text, value};
+
+				move.add(item);
+			}
+
+			ItemLocation itemsLocation = leftToRight ? ItemLocation.left : ItemLocation.right;
+			List<Item> itemsForEvet = createItemList(move, itemsLocation);
+			BeforeMoveItemsEvent moveEvt = BeforeMoveItemsEvent.fire(transferList, itemsForEvet, leftToRight);
+
+			if(!moveEvt.isCanceled())
+			{
+				listToRemove.clear();
+
+				for (int i=0; i<move.size(); i++)
+				{
+					String[] item = move.get(i);
+					listToAdd.addItem(item[0], item[1]);
+				}
+			}
+			MoveItemsEvent.fire(transferList, itemsForEvet, leftToRight);
 		}
 	}
 
@@ -476,8 +572,26 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		clearListSelections(this.rightList);
 		this.rightList.setMultipleSelect(this.multiTransferFromRight);
 	}
-	
-	
+
+
+	/**
+	 * @return the showAllTransferButtons
+	 */
+	public boolean isShowAllTransferButtons()
+	{
+		return showAllTransferButtons;
+	}
+
+	/**
+	 * @param showAllTransferButtons the showAllTransferButtons to set
+	 */
+	public void setShowAllTransferButtons(boolean showAllTransferButtons)
+	{
+		this.showAllTransferButtons = showAllTransferButtons;
+		this.moveAllToLeftButton.setVisible(showAllTransferButtons);
+		this.moveAllToRightButton.setVisible(showAllTransferButtons);
+	}
+
 	/**
 	 * Clears the selections made in a listBox.
 	 * @param list

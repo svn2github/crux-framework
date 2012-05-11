@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -46,11 +46,14 @@ import org.cruxframework.crux.widgets.rebind.event.MoveItemsEvtBind;
 @TagAttributes({
 	@TagAttribute(value="leftToRightButtonText", supportsI18N=true),
 	@TagAttribute(value="rightToLeftButtonText", supportsI18N=true),
+	@TagAttribute(value="allLeftToRightButtonText", supportsI18N=true),
+	@TagAttribute(value="allRightToLeftButtonText", supportsI18N=true),
 	@TagAttribute(value="leftListLabel", supportsI18N=true),
 	@TagAttribute(value="rightListLabel", supportsI18N=true),
 	@TagAttribute(value="visibleItemCount", type=Integer.class),
 	@TagAttribute(value="multiTransferFromLeft", type=Boolean.class, defaultValue="true"),
-	@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true")
+	@TagAttribute(value="multiTransferFromRight", type=Boolean.class, defaultValue="true"),
+	@TagAttribute(value="showAllTransferButtons", type=Boolean.class, defaultValue="false")
 })
 @TagEvents({
 	@TagEvent(BeforeMoveItemsEvtBind.class),
@@ -61,7 +64,7 @@ import org.cruxframework.crux.widgets.rebind.event.MoveItemsEvtBind;
 })
 public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 {
-	
+
 	@TagConstraints(tagName="item", minOccurs="0", maxOccurs="unbounded")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="label", required=true),
@@ -78,8 +81,8 @@ public class TransferListFactory extends CompositeFactory<WidgetCreatorContext>
 					ItemLocation.class.getCanonicalName()+"."+context.readChildProperty("location")+"));");
 		}
 	}
-	
-	
+
+
 	@Override
     public WidgetCreatorContext instantiateContext()
     {
