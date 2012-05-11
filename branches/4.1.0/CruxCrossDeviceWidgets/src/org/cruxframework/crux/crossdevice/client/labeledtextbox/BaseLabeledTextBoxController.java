@@ -2,6 +2,7 @@ package org.cruxframework.crux.crossdevice.client.labeledtextbox;
 
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -49,7 +50,8 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 	@Override
 	protected void initWidgetDefaultStyleName()
 	{
-		this.flowPanel.setStyleName("xdev-LabeledTextBox");
+		setStyleName("xdev-LabeledTextBox");
+		applyWidgetDependentStyleNames();
 	}
 
 	@Override
@@ -62,14 +64,12 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 	public void setVisible(boolean visible)
 	{
 		this.flowPanel.setVisible(visible);
-		this.label.setVisible(visible);
-		this.textBox.setVisible(visible);
 	}
 
 	@Override
 	public boolean isVisible()
 	{
-		return this.label.isVisible() && this.textBox.isVisible();
+		return this.flowPanel.isVisible();
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 	@Override
 	public String getValue()
 	{
-		return this.textBox.getValue();
+		return labeledTextBoxHandler.getValue(this.textBox);
 	}
 
 	@Override
@@ -292,6 +292,7 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 	public interface LabeledTextBoxHandler
 	{
 		void setPlaceholder(final TextBox textBox, String placeholder);
+		String getValue(final TextBox textBox);
 		String getPlaceholder(final TextBox textBox);
 	}
 
@@ -307,6 +308,12 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 		{
 			return textBox.getElement().getAttribute("placeholder");
 		}
+
+		@Override
+		public String getValue(TextBox textBox)
+		{
+			return textBox.getValue();
+		}
 	}
 
 
@@ -320,7 +327,7 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 			this.placeholder = placeholder;
 
 			textBox.setValue(placeholder);
-			textBox.setStyleName("placeholder");
+			StyleUtils.addStyleDependentName(textBox.getElement(), "placeholder");
 
 			textBox.addBlurHandler(new BlurHandler()
 			{
@@ -333,7 +340,7 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 					if( textBox.getValue() == null || "".equals(textBox.getValue()) )
 					{
 						textBox.setValue(placeholder);
-						textBox.setStyleName("placeholder");
+						StyleUtils.addStyleDependentName(textBox.getElement(), "placeholder");
 					}
 				}
 			});
@@ -346,8 +353,12 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 				{
 					TextBox textBox = (TextBox) event.getSource();
 
-					textBox.setValue(null);
-					textBox.removeStyleName("placeholder");
+					StyleUtils.removeStyleDependentName(textBox.getElement(), "placeholder");
+
+					if( textBox.getValue() != null && textBox.getValue().equals(placeholder) )
+					{
+						textBox.setValue(null);
+					}
 				}
 			});
 		}
@@ -357,6 +368,13 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 		public String getPlaceholder(final TextBox textBox)
 		{
 			return placeholder;
+		}
+
+
+		@Override
+		public String getValue(TextBox textBox)
+		{
+			return textBox.getValue() != null && !textBox.getValue().equals(placeholder) ? textBox.getValue() : null;
 		}
 	}
 }
