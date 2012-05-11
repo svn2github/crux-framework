@@ -268,7 +268,15 @@ public class StyleUtils
 	public static void addStyleProperty(Element element, String camelizedName, String value)
 	{
 		assert(element != null && camelizedName != null && value != null);
-		addStylePropertyNative(element, camelizedName.trim(), value.trim());
+		try
+		{
+			addStylePropertyNative(element, camelizedName.trim(), value.trim());
+		}
+		catch (Throwable e) 
+		{
+			Crux.getErrorHandler().handleError(Crux.getMessages().styleErrorInvalidProperty(camelizedName, value));
+			throw new RuntimeException(Crux.getMessages().styleErrorInvalidProperty(camelizedName, value));
+		}
 	}
 
 	private static native void addStylePropertyNative(Element element, String camelizedName, String value)/*-{
