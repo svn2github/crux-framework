@@ -853,7 +853,7 @@ class HTMLBuilder
 		{
 			Element widgetHolder;
 			boolean hasSiblings = hasSiblingElements(cruxPageElement);
-			if (!isOrphanRequiresResizeWidget(currentWidgetTag, cruxPageElement) && (hasSiblings || isCruxWidgetParent(htmlElement)))
+			if (!isOrphanRequiresResizeWidget(currentWidgetTag, cruxPageElement) && (hasSiblings || isCruxWidgetParent(htmlElement) || isBody(htmlElement)))
 			{
 				widgetHolder = htmlDocument.createElement("div");
 				htmlElement.appendChild(widgetHolder);
@@ -885,7 +885,17 @@ class HTMLBuilder
 	private boolean isOrphanRequiresResizeWidget(String tagName, Element cruxPageElement)
     {
 	    Node parentNode = cruxPageElement.getParentNode(); 
-		return (WidgetConfig.isRequiresResizeWidget(tagName) && parentNode.getLocalName().equalsIgnoreCase("body") && parentNode.getNamespaceURI().equals(XHTML_NAMESPACE));
+		return (WidgetConfig.isRequiresResizeWidget(tagName) && isBody(parentNode));
+    }
+
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private boolean isBody(Node node)
+    {
+	    return node.getLocalName().equalsIgnoreCase("body") && node.getNamespaceURI().equals(XHTML_NAMESPACE);
     }
 
 	/**
