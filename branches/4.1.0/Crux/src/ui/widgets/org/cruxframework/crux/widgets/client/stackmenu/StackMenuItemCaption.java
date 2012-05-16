@@ -31,9 +31,9 @@ class StackMenuItemCaption extends Composite
 	private Grid canvas;
 	private SimplePanel hasSubItemsIndicator;
 	private final StackMenuItem stackMenuItem;
-	
+
 	/**
-	 * Package-protected constructor 
+	 * Package-protected constructor
 	 * @param label
 	 * @param stackMenuItem
 	 */
@@ -49,22 +49,20 @@ class StackMenuItemCaption extends Composite
 		canvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
 
 		ClickHandler clickHandler = createBaseClickHandler();
-		
+
 		createTopBorders();
 		createBody(label, clickHandler);
 		createBottomBorders();
-		
+
 		widget = new FocusPanel(canvas);
 		widget.addClickHandler(clickHandler);
 		widget.addMouseOverHandler(createMouseOverHandler());
 		widget.addMouseOutHandler(createMouseOutHandler());
 		widget.addKeyUpHandler(createKeyUpHandler());
-	
+
 		initWidget(widget);
-		
-		fillBorderCells();
 	}
-	
+
 	/**
 	 * Creates the top borders of the item.
 	 */
@@ -75,11 +73,11 @@ class StackMenuItemCaption extends Composite
 
 		canvas.setHTML(0, 1, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(0, 1, "item-border-n");
-		
+
 		canvas.setHTML(0, 2, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(0, 2, "item-border-ne");
 	}
-	
+
 	/**
 	 * Creates the bottom borders of the item.
 	 */
@@ -90,7 +88,7 @@ class StackMenuItemCaption extends Composite
 
 		canvas.setHTML(2, 1, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(2, 1, "item-border-s");
-		
+
 		canvas.setHTML(2, 2, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(2, 2, "item-border-se");
 	}
@@ -98,7 +96,7 @@ class StackMenuItemCaption extends Composite
 	/**
 	 * Creates the label of the item
 	 * @param label
-	 * @param clickHandler 
+	 * @param clickHandler
 	 * @return
 	 */
 	private Label createBody(String label, ClickHandler clickHandler)
@@ -117,7 +115,7 @@ class StackMenuItemCaption extends Composite
 		canvas.setWidget(1, 2, this.hasSubItemsIndicator);
 		canvas.getCellFormatter().setStyleName(1, 2, "item-border-e");
 		canvas.getCellFormatter().setVerticalAlignment(1, 2, HasVerticalAlignment.ALIGN_MIDDLE);
-		
+
 		return menuItemLabel;
 	}
 
@@ -127,7 +125,7 @@ class StackMenuItemCaption extends Composite
 	private SimplePanel createSubItemsIndicator()
 	{
 		Label emptyLabel = new Label(" ");
-		emptyLabel.getElement().getStyle().setProperty("fontSize", "0px");		
+		emptyLabel.getElement().getStyle().setProperty("fontSize", "0px");
 		SimplePanel indicator = new SimplePanel();
 		indicator.setStyleName("hasSubItems");
 		indicator.add(emptyLabel);
@@ -148,29 +146,29 @@ class StackMenuItemCaption extends Composite
 		else
 		{
 			canvas.removeStyleDependentName("open");
-		}		
+		}
 	}
-	
+
 	/**
 	 * Sets the text of the item
 	 * @param label the label to set
 	 */
 	void setLabel(String label)
 	{
-		((Label) this.canvas.getWidget(1, 1)).setText(label);		
+		((Label) this.canvas.getWidget(1, 1)).setText(label);
 	}
-	
+
 	/**
 	 * Shows or hides the icon indicating child items
 	 * @param show
 	 */
 	void showSubItensIndicator(boolean show)
 	{
-		hasSubItemsIndicator.setVisible(show);		
+		hasSubItemsIndicator.setVisible(show);
 	}
 
 	/**
-	 * Changes the item's appearance when mouse is out of it  
+	 * Changes the item's appearance when mouse is out of it
 	 * @return
 	 */
 	private MouseOutHandler createMouseOutHandler()
@@ -181,7 +179,7 @@ class StackMenuItemCaption extends Composite
 			{
 				canvas.removeStyleDependentName("over");
 				event.stopPropagation();
-			}			
+			}
 		};
 	}
 
@@ -215,8 +213,8 @@ class StackMenuItemCaption extends Composite
 			}
 		};
 	}
-	
-	
+
+
 	/**
 	 * Fires the action associated with the selection of the item when user presses enter.
 	 * @return
@@ -230,12 +228,12 @@ class StackMenuItemCaption extends Composite
 				int keyCode = event.getNativeEvent().getKeyCode();
 				if(keyCode == KeyCodes.KEY_ENTER || keyCode == ' ')
 				{
-					fireAction(event);					
+					fireAction(event);
 				}
 			}
 		};
 	}
-	
+
 	/**
 	 * Cancels the native event and fires the action associated with the selection of the item
 	 * @param event
@@ -243,7 +241,7 @@ class StackMenuItemCaption extends Composite
 	private void fireAction(DomEvent<?> event)
 	{
 		event.preventDefault();
-		event.stopPropagation();		
+		event.stopPropagation();
 		stackMenuItem.select();
 	}
 	/**
@@ -270,27 +268,5 @@ class StackMenuItemCaption extends Composite
 		{
 			canvas.addStyleDependentName("last");
 		}
-	}
-	
-    private native Element getCellElement(Element table, int row, int col) /*-{
-		return table.rows[row].cells[col];
-	}-*/;
-	
-	private void fillBorderCells() 
-	{
-		Element table = canvas.getElement();
-		fillBorderCell(getCellElement(table, 0, 0), "item-border-nw");
-		fillBorderCell(getCellElement(table, 0, 1), "item-border-n");
-		fillBorderCell(getCellElement(table, 0, 2), "item-border-ne");
-		fillBorderCell(getCellElement(table, 1, 0), "item-border-w");
-		fillBorderCell(getCellElement(table, 1, 2), "item-border-e");
-		fillBorderCell(getCellElement(table, 2, 0), "item-border-sw");
-		fillBorderCell(getCellElement(table, 2, 1), "item-border-s");
-		fillBorderCell(getCellElement(table, 2, 2), "item-border-se");
-	}
-	
-	private void fillBorderCell(Element cell, String cssClassName) 
-	{
-		cell.setInnerHTML("<div style=\"overflow:hidden\" class=\"" + cssClassName + "\"> </div>");
 	}
 }
