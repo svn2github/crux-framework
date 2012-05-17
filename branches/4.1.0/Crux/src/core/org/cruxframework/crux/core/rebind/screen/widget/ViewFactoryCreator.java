@@ -381,7 +381,12 @@ public class ViewFactoryCreator
 		}
 		else
 		{
-			widget = widgetFactory.createWidget(printer, metaElem, widgetId, consumer); 
+			widget = widgetFactory.createWidget(printer, metaElem, widgetId, consumer);
+			if (isHtmlContainer(widgetType))
+			{
+				String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
+				printer.println(screenVariable+".cleanLazyDependentWidgets("+EscapeUtils.quote(lazyPanelId)+");");//TODO remover tratamento especial para HTMLPanel
+			}
 		}
 		if (widget == null)
 		{
@@ -1137,7 +1142,8 @@ public class ViewFactoryCreator
 	 */
 	private boolean mustRenderLazily(String widgetType, JSONObject metaElem, String widgetId)
 	{
-		if (Panel.class.isAssignableFrom(getWidgetCreatorHelper(widgetType).getWidgetType()))
+		Class<?> widgetClass = getWidgetCreatorHelper(widgetType).getWidgetType();
+		if ((Panel.class.isAssignableFrom(widgetClass)) && (!isHtmlContainer(widgetType)))
 		{
 			if (!metaElem.optBoolean("visible", true))
 			{
