@@ -186,6 +186,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		this.moveAllToRightButton = new Button();
 		moveAllToRightButton.setStyleName("moveAllToRight");
 		moveAllToRightButton.addClickHandler(new TransferAllItemClickHandler(this, true));
+		moveAllToRightButton.setVisible(false);
 		commandsPanel.add(this.moveAllToRightButton);
 
 		this.moveToLeftButton = new Button();
@@ -196,6 +197,7 @@ public class TransferList extends Composite implements HasBeforeMoveItemsHandler
 		this.moveAllToLeftButton = new Button();
 		moveAllToLeftButton.setStyleName("moveAllToLeft");
 		moveAllToLeftButton.addClickHandler(new TransferAllItemClickHandler(this, false));
+		moveAllToLeftButton.setVisible(false);
 		commandsPanel.add(this.moveAllToLeftButton);
 
 		return commandsPanel;
