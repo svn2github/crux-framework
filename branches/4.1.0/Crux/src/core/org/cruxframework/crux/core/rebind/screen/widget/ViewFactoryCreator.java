@@ -836,7 +836,7 @@ public class ViewFactoryCreator
 			JClassType controllerClass = context.getTypeOracle().findType(controller);
 			if (controllerClass == null)
 			{
-				throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+screen.getId()+"],  not found.");
+				throw new CruxGeneratorException("Controller class ["+controller+"] , declared on screen ["+screen.getId()+"], not found. Check if any type or subtype used by controller refers to another module and if this module is inherited in the .gwt.xml file.");
 			}
 			if (EvtProcessor.getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass) == null)
 			{
