@@ -1,4 +1,63 @@
 =====================================================================================================
+Release 4.0.1
+-----------------------------------------------------------------------------------------------------
+ISSUES - DEFECT
+-----------------------------------------------------------------------------------------------------
+278  - Error running Crux Applications on Tomcat 7 
+
+=====================================================================================================
+Release 4.0.0
+-----------------------------------------------------------------------------------------------------
+ISSUES - DEFECT
+-----------------------------------------------------------------------------------------------------
+262  - Multi Page Wizards throwing CrossDocumentException 
+260  - Filter over StackMenu: too long result being returned to the Filter's TextBox
+259  - Wizard: there is no way to invoke a controller on a sibling step
+258  - DynaTabs: memory leak in DevMode
+254  - GadgetLinker ignores new artifacts when relinking (DevMode)
+251  - Double quotes on *.crux.xml files cause module load failure
+250  - Date fields declared in ParameterObjects always being null
+248  - RollingPanel is not scrolling to the last items when too many items are added
+246  - FocusPanel in ProgressDialog
+244  - NullPointerException when binding an empty widget with a primitive type on a ValueObject
+243  - attachToDOM property of DeclarativeFactory annotation causes error when set to false
+242  - DeckPanel throws ArrayIndexOutOfBoundsException when used declarativelly
+239  - User can't change disk unit on quickstart application, when runnig on windows 
+237  - Module jar files being locked
+233  - Circular References on a ValueObject causes Out Of Memory error
+232  - I need to restart devMode when I add a declared i18n message on crux page
+216  - Extract crux widgets metadata from DOM and put it on a json array
+208  - StackMenuItem should not be an widget
+206  - The Compiler CruxModuleContainerApplicationCompiler does not work properly
+201  - Some images used on crux-themes.jar are wasting too much memory on browser
+170  - The error reported by Compiler if I run with a JRE instead of a JDK is not informative
+166  - DynaTabs does not show scroll buttons in Opera
+10   - Make CRUX generate w3c compliant HTML
+
+-----------------------------------------------------------------------------------------------------
+ISSUES - ENHANCEMENT
+-----------------------------------------------------------------------------------------------------
+265  - Crux Installer - the message about missing GWT jars is not clear 
+249  - Create a method on JsWindow class to get the parent window
+245  - Add support to datasources on application jetty
+240  - Do not include GWT jar on Crux distribution
+235  - Create new themes
+231  - In Crux Grid, allow create non-sortable columns.
+229  - WidgetFactoryGenerator can be optimized to only generate code capable of parse those properties and events that is used on pages
+228  - Support all new features of GWT 2.1
+218  - Screenfactory should always make the parser lazily for invisible panels
+215  - Create a lazyPanel out of collapsePanel body, to only render its contents when panel is opened
+213  - Improve performance of ScreenFactory create method
+192  - Overload the method DynaTabs.openTab to allow the opening of lazy tabs.
+174  - Make instantiateWidget method on WidgetFactory class optional.
+173  - RemotePagedDataSource and its load method should be renamed
+172  - Create an overload method for DataSource.updateData, that accepts a List
+159  - Add support to Google Gadgets
+133  - Add textual explanations to some showcase items
+
+
+
+=====================================================================================================
 Release 3.0.0
 -----------------------------------------------------------------------------------------------------
 ISSUES - DEFECT
