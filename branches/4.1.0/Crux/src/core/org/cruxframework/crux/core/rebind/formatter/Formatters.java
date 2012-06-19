@@ -193,6 +193,10 @@ public class Formatters
 				}
 
 				String formatterClass = Formatters.getFormatter(formatterName);
+				if (formatterClass == null || formatterClass.length() == 0)
+				{
+					throw new CruxGeneratorException("Formatter ["+formatterName+"] not found!");
+				}
 				return "new " + formatterClass + "("+parameters.toString()+")";
 			}
 			catch (Exception e)
