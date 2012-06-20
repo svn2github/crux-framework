@@ -22,30 +22,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
-import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.FastList;
-import org.cruxframework.crux.core.client.collection.FastMap;
-import org.cruxframework.crux.core.client.collection.Map;
 import org.cruxframework.crux.core.client.context.ContextManager;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.Event;
-import org.cruxframework.crux.core.client.executor.BeginEndExecutor;
+import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewContainer;
+import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -64,6 +63,468 @@ public class Screen
 {
 	private static Logger logger = Logger.getLogger(Screen.class.getName());
 	
+	protected RootViewContainer rootViewContainer = null;
+	protected FastList<Element> blockingDivs = new FastList<Element>();
+	protected String id;
+	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
+	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
+
+	@Deprecated
+	protected String[] declaredControllers;
+	@Deprecated
+	protected String[] declaredDataSources;
+	@Deprecated
+	protected String[] declaredFormatters;
+	@Deprecated
+	protected String[] declaredSerializables;
+	@Deprecated
+	protected ModuleComunicationSerializer serializer = null;
+	
+    protected Screen(final String id) 
+	{
+		this.id = id;
+		rootViewContainer = new RootViewContainer();
+		createRootView(id);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 */
+    @SuppressWarnings("deprecation")
+	protected void createRootView(final String id)
+    {
+	    Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				ViewContainer.createView(id, new CreateCallback()
+				{
+					@Override
+					public void onViewCreated(View view)
+					{
+						createCrossDocumentAccessor(Screen.this);
+						if (!rootViewContainer.add(view, true))
+						{
+							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(id));
+						}
+					}
+				});
+				if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
+				{
+					Screen.this.serializer = new ModuleComunicationSerializer();
+					createControllerAccessor(Screen.this);
+					Screen.this.addWindowCloseHandler(new CloseHandler<Window>()
+					{
+						public void onClose(CloseEvent<Window> event)
+						{
+							removeControllerAccessor(Screen.this);
+						}
+					});//TODO estruturar essa parte de invocacao cross doc.... so colocar um tratador por document
+				}
+
+				Screen.this.addWindowCloseHandler(new CloseHandler<Window>()
+				{
+					public void onClose(CloseEvent<Window> event)
+					{
+						removeCrossDocumentAccessor(Screen.this);
+					}
+				});
+			}
+		});
+    }
+	
+	/**
+	 * 
+	 * @param token
+	 *///TODO rever se isso permanece aqui, os tratadores de evento de history devem ir pra dentro da view, como os demais...
+	protected void addTokenToHistory(String token)
+	{
+		History.newItem(token, false);
+	}
+
+	/**
+	 * 
+	 * @param token
+	 * @param issueEvent
+	 */
+	protected void addTokenToHistory(String token, boolean issueEvent)
+	{
+		History.newItem(token, issueEvent);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param widget
+	 */
+	protected void addWidget(String id, Widget widget)
+	{
+		rootViewContainer.getView().addWidget(id, widget);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param widget
+	 */
+	protected void addWidget(String id, IsWidget widget)
+	{
+		rootViewContainer.getView().addWidget(id, widget.asWidget());
+	}
+
+	/**
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowCloseHandler(CloseHandler<Window> handler) 
+	{
+		return rootViewContainer.getView().addWindowCloseHandler(handler);
+	}
+	
+	/**
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowClosingHandler(ClosingHandler handler) 
+	{
+		return rootViewContainer.getView().addWindowClosingHandler(handler);
+	}	
+	
+	/**
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowHistoryChangedHandler(ValueChangeHandler<String> handler) 
+	{
+		return rootViewContainer.getView().addWindowHistoryChangedHandler(handler);
+	}
+	
+	/**
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowResizeHandler(ResizeHandler handler) 
+	{
+		return rootViewContainer.getView().addResizeHandler(handler);
+	}	
+	
+	/**
+	 * 
+	 * 
+	 * @param handler
+	 * @return
+	 */
+	protected HandlerRegistration addWindowOrientationChangeOrResizeHandler(OrientationChangeOrResizeHandler handler)
+	{
+		return rootViewContainer.getView().addWindowOrientationChangeOrResizeHandler(handler);
+	}
+		
+	@Deprecated
+	private native void createControllerAccessor(Screen handler)/*-{
+		$wnd._cruxScreenControllerAccessor = function(call, serializedData){
+			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeController(Ljava/lang/String;Ljava/lang/String;)(call, serializedData);
+			return a?a:null;
+		};
+	}-*/;		
+	
+	/**
+	 * Create a hook javascript function, called outside of module.
+	 * @param handler
+	 */
+	native static void createCrossDocumentAccessor(Screen handler)/*-{
+		$wnd._cruxCrossDocumentAccessor = function(serializedData){
+			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
+			return a?a:null;
+		};
+	}-*/;
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected String getCurrentHistoryToken()
+	{
+		return History.getToken();
+	}
+
+	/**
+	 * @return
+	 */
+	protected String getIdentifier() 
+	{
+		return id;
+	}
+
+
+	/**
+	 * Retrieve a widget contained on this screen.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	protected Widget getWidget(String id)
+	{
+		return rootViewContainer.getView().getWidget(id);
+	}
+	
+	/**
+	 * Generic version of <code>getWidget</code> method
+	 * @param <T>
+	 * @param id
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T extends IsWidget> T getWidget(String id, Class<T> clazz)
+	{
+		Widget w = getWidget(id);
+		return (T) w;
+	}
+	
+	/**
+	 * Hides the DIV that is blocking the Screen contents
+	 */
+	protected void hideBlockDiv()
+	{
+		if(blockingDivs.size() > 0)
+		{
+			int last = blockingDivs.size() - 1;
+			
+			Element blockingDiv = blockingDivs.get(last);
+			blockingDivs.remove(last);
+			
+			Element body = RootPanel.getBodyElement();
+			body.removeChild(blockingDiv);
+			body.getStyle().setProperty("cursor", "");
+		}
+		
+		if(blockingDivs.size() > 0)
+		{
+			Element blockingDiv = blockingDivs.get(blockingDivs.size() - 1);
+			blockingDiv.getStyle().setProperty("display", "block");
+		}
+	}
+	
+	@Deprecated
+	@SuppressWarnings("unused") // called by native code
+	private String invokeController(String call, String serializedData)
+	{
+		Event event = org.cruxframework.crux.core.client.event.Events.getEvent("_onInvokeController", call);
+		InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
+		
+		if (serializedData != null)
+		{
+			try
+			{
+				controllerEvent.setParameter(serializer.deserialize(serializedData));
+			}
+			catch (ModuleComunicationException e)
+			{
+				Crux.getErrorHandler().handleError(e.getLocalizedMessage(), e);
+				return null;
+			}
+		}
+		
+		Object result = org.cruxframework.crux.core.client.event.Events.callEvent(event, controllerEvent, true);
+		try
+		{
+			return serializer.serialize(result); 
+		}
+		catch (ModuleComunicationException e)
+		{
+			Crux.getErrorHandler().handleError(e.getLocalizedMessage(),e);
+			return null;
+		}
+	}
+
+	/**
+	 * Make a call to a cross document object.
+	 * 
+	 * @param serializedData
+	 * @return
+	 */
+	@SuppressWarnings("unused") // called by native code
+	private String invokeCrossDocument(String serializedData)
+	{
+		return getRegisteredControllers().invokeCrossDocument(serializedData);
+	}
+	
+	/**
+	 * @return
+	 * @deprecated Use widgetsList() instead
+	 */
+	@Deprecated
+	protected Iterator<Widget> iteratorWidgets()
+	{
+		FastList<Widget> widgetList = widgetsList();
+		ArrayList<Widget> result = new ArrayList<Widget>();
+		for (int i=0; i<widgetList.size(); i++)
+		{
+			result.add(widgetList.get(i));
+		}
+		
+		return result.iterator();
+	}
+
+	/**
+	 * @return
+	 * @deprecated Use widgetsIdList() instead
+	 */
+	@Deprecated
+	protected Iterator<String> iteratorWidgetsIds()
+	{
+		FastList<String> idList = widgetsIdList();
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i=0; i<idList.size(); i++)
+		{
+			result.add(idList.get(i));
+		}
+		
+		return result.iterator();
+	}
+
+	@Deprecated
+	private native void removeControllerAccessor(Screen handler)/*-{
+		$wnd._cruxScreenControllerAccessor = null;
+	}-*/;
+
+	/**
+	 * Remove the cross document hook function
+	 * @param handler
+	 */
+	private native void removeCrossDocumentAccessor(Screen handler)/*-{
+		$wnd._cruxCrossDocumentAccessor = null;
+	}-*/;
+
+	protected void removeWidget(String id)
+	{
+		rootViewContainer.getView().removeWidget(id);
+	}
+	
+	protected void removeWidget(String id, boolean removeFromDOM)
+	{
+		rootViewContainer.getView().removeWidget(id, removeFromDOM);
+	}
+
+	protected boolean containsWidget(String id)
+	{
+		return rootViewContainer.getView().containsWidget(id);
+	}
+	
+	protected String rewriteURL(String url)
+	{
+		return urlRewriter.rewrite(url);
+	}
+	
+	/**
+	 * @param declaredControllers
+	 */
+	@Deprecated
+	void setDeclaredControllers(String[] declaredControllers) {
+		this.declaredControllers = declaredControllers;
+	}
+
+	/**
+	 * @param declaredDataSources
+	 */
+	@Deprecated
+	void setDeclaredDataSources(String[] declaredDataSources) {
+		this.declaredDataSources = declaredDataSources;
+	}
+	
+	/**
+	 * @param declaredFormatters
+	 */
+	@Deprecated
+	void setDeclaredFormatters(String[] declaredFormatters) {
+		this.declaredFormatters = declaredFormatters;
+	}
+
+	/**
+	 * @param declaredSerializables
+	 */
+	@Deprecated
+	void setDeclaredSerializables(String[] declaredSerializables) {
+		this.declaredSerializables = declaredSerializables;
+	}
+	
+	/**
+	 * Creates and shows a DIV over the screen contents
+	 * @param blockingDivStyleName
+	 */
+	protected void showBlockDiv(String blockingDivStyleName)
+	{
+		if(blockingDivs.size() > 0)
+		{
+			Element blockingDiv = blockingDivs.get(blockingDivs.size() - 1);
+			blockingDiv.getStyle().setProperty("display", "none");
+		}
+		
+		Element body = RootPanel.getBodyElement();		
+		Element blockingDiv = screenBlocker.createBlockingDiv(blockingDivStyleName, body);
+		blockingDivs.add(blockingDiv);
+		body.appendChild(blockingDiv);
+	}
+	
+	
+	
+	/**
+	 * Update fields mapped with ValueObject from widgets that have similar names.
+	 * @param caller
+	 */
+	@Deprecated
+	protected void updateControllerObjects(Object eventHandler)
+	{
+		if (eventHandler != null)
+		{
+			if (!(eventHandler instanceof ScreenBindableObject))
+			{
+				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
+			}
+			((ScreenBindableObject) eventHandler).updateControllerObjects();
+		}
+	}
+	
+	/**
+	 * Update widgets on screen that have the same id of fields mapped with ValueObject
+	 * @param caller
+	 */
+	@Deprecated
+	protected void updateScreenWidgets(Object eventHandler)
+	{
+		if (eventHandler != null)
+		{
+			if (!(eventHandler instanceof ScreenBindableObject))
+			{
+				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
+			}
+
+			((ScreenBindableObject) eventHandler).updateScreenWidgets();
+		}
+	}
+	
+	/**
+	 * @return
+	 */
+	protected FastList<String> widgetsIdList()
+	{
+		return rootViewContainer.getView().widgetsIdList();
+	}		
+	
+	/**
+	 * @return
+	 */
+	protected FastList<Widget> widgetsList()
+	{
+		return rootViewContainer.getView().widgetsList();
+	}
+
 	/**
 	 * 
 	 * @param id
@@ -130,121 +591,15 @@ public class Screen
 		return Screen.get().addWindowOrientationChangeOrResizeHandler(handler);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public static double getScreenZoomFactorForCurrentDevice()
-	{
-		return DeviceDisplayHandler.getScreenZoomFactor();
-	}
-	
-	/**
-	 * @param handler
-	 * @return
-	 */
-	protected HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler) 
-	{
-		final BeginEndExecutor executor = new BeginEndExecutor(100) 
-		{
-			private int clientHeight = Window.getClientHeight();
-			private int clientWidth = Window.getClientWidth();
-
-			@Override
-			protected void doEndAction() 
-			{
-				if (!getCurrentDevice().equals(Device.largeDisplayMouse))
-				{
-					int newClientHeight = Window.getClientHeight();
-					int newClientWidth = Window.getClientWidth();
-					if (this.clientHeight != newClientHeight && clientWidth != newClientWidth)
-					{
-						handler.onOrientationChangeOrResize();
-					}
-					clientHeight = newClientHeight;
-					clientWidth  = newClientWidth;
-				}
-				else
-				{
-					handler.onOrientationChangeOrResize();
-				}
-			}
-			
-			@Override
-			protected void doBeginAction() 
-			{
-				// nothing
-			}
-		};
+//	/**
+//	 * 
+//	 * @return
+//	 */
+//	public static double getScreenZoomFactorForCurrentDevice()
+//	{
+//		return DeviceDisplayHandler.getScreenZoomFactor();
+//	}
 		
-		ResizeHandler resizeHandler = new ResizeHandler() 
-		{
-			public void onResize(ResizeEvent event) 
-			{
-				executor.execute();
-			}
-		};
-		
-		final HandlerRegistration resizeHandlerRegistration = addResizeHandler(resizeHandler);
-		final JavaScriptObject orientationHandler = attachOrientationChangeHandler(executor);
-		
-		return new HandlerRegistration() 
-		{
-			public void removeHandler() 
-			{
-				resizeHandlerRegistration.removeHandler();
-				
-				if(orientationHandler != null)
-				{
-					removeOrientationChangeHandler(orientationHandler);
-				}
-			}
-		};
-	}
-	
-	/**
-	 * @param orientationHandler
-	 */
-	private native void removeOrientationChangeHandler(JavaScriptObject orientationHandler) /*-{
-
-		var supportsOrientationChange = 'onorientationchange' in $wnd;
-		
-		if (supportsOrientationChange)
-		{
-			$wnd.removeEventListener("orientationchange", orientationHandler);
-		}
-		
-	}-*/;
-	
-	/**
-	 * @param executor
-	 * @return
-	 */
-	private native JavaScriptObject attachOrientationChangeHandler(BeginEndExecutor executor)/*-{
-	
-		var supportsOrientationChange = 'onorientationchange' in $wnd;
-		
-		if (supportsOrientationChange)
-		{	
-			$wnd.previousOrientation = $wnd.orientation;
-			var checkOrientation = function()
-			{
-			    if($wnd.orientation !== $wnd.previousOrientation)
-			    {
-			        $wnd.previousOrientation = $wnd.orientation;
-		        	executor.@org.cruxframework.crux.core.client.executor.BeginEndExecutor::execute()();
-			    }
-			};
-		
-			$wnd.addEventListener("orientationchange", checkOrientation, false);
-			
-			return checkOrientation;
-		}
-		
-		return null;
-	}-*/;
-	
-	
 	/**
 	 * 
 	 * @param token
@@ -410,8 +765,17 @@ public class Screen
 	 */
 	public static DataSource<?> createDataSource(String dataSource)
 	{
-		return ScreenFactory.getInstance().createDataSource(dataSource);
+		return get().rootViewContainer.getView().createDataSource(dataSource);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public RegisteredControllers getRegisteredControllers()
+    {
+	    return rootViewContainer.getView().getRegisteredControllers();
+    }
 	
 	/**
 	 * If the given widget does not have a non-empty ID attribute, sets the given id into it. 
@@ -561,6 +925,7 @@ public class Screen
 	 * @param formatter
 	 * @return
 	 */
+	@Deprecated
 	public static Formatter getFormatter(String formatter)
 	{
 		return ScreenFactory.getInstance().getClientFormatter(formatter);
@@ -858,688 +1223,5 @@ public class Screen
 	public static void updateScreen(Object eventHandler)
 	{
 		Screen.get().updateScreenWidgets(eventHandler);
-	}
-	
-	protected FastList<Element> blockingDivs = new FastList<Element>();
-
-	@Deprecated
-	protected String[] declaredControllers;
-	
-	@Deprecated
-	protected String[] declaredDataSources;
-
-	@Deprecated
-	protected String[] declaredFormatters;
-	
-	@Deprecated
-	protected String[] declaredSerializables;
-	
-	protected IFrameElement historyFrame = null;
-	
-	protected String id;
-
-	protected Map<String> lazyWidgets = null;
-	
-	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
-	
-	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
-	
-	@Deprecated
-	protected ModuleComunicationSerializer serializer = null;
-
-	protected FastMap<Widget> widgets = new FastMap<Widget>();
-	
-	@SuppressWarnings("deprecation")
-    protected Screen(String id, Map<String> lazyWidgets) 
-	{
-		this.id = id;
-		this.lazyWidgets = lazyWidgets;
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			Array<String> keys = lazyWidgets.keys();
-			for(int i=0; i< keys.size(); i++)
-			{
-				logger.log(Level.FINE, "Adding lazy dependency. Widget["+keys.get(i)+"] depends on ["+lazyWidgets.get(keys.get(i))+"].");
-			}
-		}
-		if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
-		{
-			this.serializer = new ModuleComunicationSerializer();
-			createControllerAccessor(this);
-			this.addWindowCloseHandler(new CloseHandler<Window>()
-			{
-				public void onClose(CloseEvent<Window> event)
-				{
-					removeControllerAccessor(Screen.this);
-				}
-			});
-		}
-
-		this.addWindowCloseHandler(new CloseHandler<Window>()
-		{
-			public void onClose(CloseEvent<Window> event)
-			{
-				removeCrossDocumentAccessor(Screen.this);
-			}
-		});
-	}
-	
-	/**
-	 * 
-	 * @param token
-	 */
-	protected void addTokenToHistory(String token)
-	{
-		History.newItem(token, false);
-	}
-
-	/**
-	 * 
-	 * @param token
-	 * @param issueEvent
-	 */
-	protected void addTokenToHistory(String token, boolean issueEvent)
-	{
-		History.newItem(token, issueEvent);
-	}
-	
-	protected void addWidget(String id, Widget widget)
-	{
-		widgets.put(id, widget);
-	}
-
-	protected void addWidget(String id, IsWidget widget)
-	{
-		widgets.put(id, widget.asWidget());
-	}
-
-	/**
-	 * 
-	 * @param handler
-	 * @return
-	 */
-	protected HandlerRegistration addWindowCloseHandler(CloseHandler<Window> handler) 
-	{
-		return Window.addCloseHandler(handler);
-	}
-	
-	/**
-	 * 
-	 * @param handler
-	 * @return
-	 */
-	protected HandlerRegistration addWindowClosingHandler(ClosingHandler handler) 
-	{
-		return Window.addWindowClosingHandler(handler);
-	}	
-	
-	/**
-	 * 
-	 * @param handler
-	 * @return
-	 */
-	protected HandlerRegistration addWindowHistoryChangedHandler(ValueChangeHandler<String> handler) 
-	{
-		if (historyFrame == null)
-		{
-			prepareHistoryFrame();
-		}
-		return History.addValueChangeHandler(handler);
-	}
-	
-	/**
-	 * 
-	 * @param handler
-	 * @return
-	 */
-	protected HandlerRegistration addWindowResizeHandler(ResizeHandler handler) 
-	{
-		return Window.addResizeHandler(handler);
-	}	
-	
-	/**
-	 * @param widgetId
-	 */
-	protected void cleanLazyDependentWidgets(String widgetId)
-	{
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.FINE, "Cleaning lazy dependencies of lazyPanel ["+widgetId+"]...");
-		}
-		FastList<String> dependentWidgets = getDependentWidgets(widgetId);
-		for (int i=0; i<dependentWidgets.size(); i++)
-		{
-			lazyWidgets.remove(dependentWidgets.get(i));
-		}
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.FINE, "Lazy dependencies of lazyPanel ["+widgetId+"] removed.");
-		}
-	}
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	protected boolean containsWidget(String id)
-	{
-		return widgets.containsKey(id);
-	}		
-	
-	@Deprecated
-	private native void createControllerAccessor(Screen handler)/*-{
-		$wnd._cruxScreenControllerAccessor = function(call, serializedData){
-			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeController(Ljava/lang/String;Ljava/lang/String;)(call, serializedData);
-			return a?a:null;
-		};
-	}-*/;		
-	
-	/**
-	 * Create a hook javascript function, called outside of module.
-	 * @param handler
-	 */
-	native static void createCrossDocumentAccessor(Screen handler)/*-{
-		$wnd._cruxCrossDocumentAccessor = function(serializedData){
-			var a = handler.@org.cruxframework.crux.core.client.screen.Screen::invokeCrossDocument(Ljava/lang/String;)(serializedData);
-			return a?a:null;
-		};
-	}-*/;
-
-	/**
-	 * 
-	 * @return
-	 */
-	protected String getCurrentHistoryToken()
-	{
-		return History.getToken();
-	}
-	
-	/**
-	 * @param widgetId
-	 * @return
-	 */
-	private FastList<String> getDependentWidgets(String widgetId)
-	{
-		FastList<String> dependentWidgets = new FastList<String>();
-		Array<String> keys = lazyWidgets.keys();
-		int size = keys.size();
-		for (int i=0; i<size; i++)
-		{
-			String key = keys.get(i);
-			if (lazyWidgets.get(key).equals(widgetId))
-			{
-				dependentWidgets.add(key);
-			}
-		}
-		return dependentWidgets;
-	}
-	
-	/**
-	 * @return
-	 */
-	protected String getIdentifier() 
-	{
-		return id;
-	}
-
-	/**
-	 * If a lazyPanel contains as child a panel that is not visible, the enclosing
-	 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
-	 * method is called. It means that a new dependency was created during the initialization
-	 * of the first panel. We must check for this situation and add this new dependency here.
-	 * 
-	 * @param id
-	 * @param lazyPanelId
-	 * @return
-	 */
-	private Widget getRuntimeDependencyWidget(String id, String lazyPanelId)
-    {
-		Widget widget = null;
-	    if (ViewFactoryUtils.isWholeWidgetLazyWrapper(lazyPanelId))  
-	    {
-	    	lazyPanelId = ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(lazyPanelId); 
-	    	lazyPanelId = ViewFactoryUtils.getLazyPanelId(lazyPanelId, LazyPanelWrappingType.wrapChildren);
-	    	if (widgets.containsKey(lazyPanelId))  
-	    	{
-	    		/* When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapChildren
-	    	     lazy instantiation.*/
-	    		lazyWidgets.put(id, lazyPanelId);
-	    		widget = getWidget(id);
-	    	}
-	    	else
-	    	{
-	    		 /* Check if the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
-	    		  lazy instantiation.*/
-		    	widget = getRuntimeDependencyWidgetFromWholeWidget(id);
-	    	}
-	    }
-	    else
-	    {
-	   		 /* Check if the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
-	  		  lazy instantiation.*/
-	    	widget = getRuntimeDependencyWidgetFromWholeWidget(id);
-	    }
-	    return widget;
-    }
-	
-	/**
-	 * When we have multi-level inner lazy panels, the most inside panel is dependent from the most outside one.
-	 * If the most outside is initialized, a new dependency must be created for the inner lazy panels not yet 
-	 * initialized.
-	 * @param id
-	 * @param lazyPanelId
-	 */
-	void checkRuntimeLazyDependency(String id, String lazyPanelId)
-	{
-		if (!lazyWidgets.containsKey(id))
-		{
-			if (LogConfiguration.loggingIsEnabled())
-			{
-				logger.log(Level.FINE, "New runtime lazy dependency found. Widget["+id+"] depends on LazyPanel["+lazyPanelId+"]...");
-			}
-			lazyWidgets.put(id, lazyPanelId);
-		}
-	}
-	
-	/**
-	 * When the internal lazy dependency created is derived from a LazyPanelWrappingType.wrapWholeWidget
-	 * lazy instantiation.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private Widget getRuntimeDependencyWidgetFromWholeWidget(String id)
-    {
-		Widget widget = null;
-		String lazyPanelId;
-	    lazyPanelId = ViewFactoryUtils.getLazyPanelId(id, LazyPanelWrappingType.wrapWholeWidget);
-	    if (widgets.containsKey(lazyPanelId))  
-	    {
-	    	lazyWidgets.put(id, lazyPanelId);
-	    	widget = getWidget(id);
-	    }
-	    return widget;
-    }
-	
-	/**
-	 * Retrieve a widget contained on this screen. If the the requested widget does not exists, we check if
-	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 
-	 * required panel (according with {@code lazyWidgets} map) and try again.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	protected Widget getWidget(String id)
-	{
-		Widget widget = widgets.get(id);
-		if (widget == null)
-		{
-			String lazyPanelId = lazyWidgets.get(id);
-			if (lazyPanelId != null)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.FINE, "Found a lazy dependency. Widget["+id+"] depends on ["+lazyPanelId+"].");
-				}
-				if (initializeLazyDependentWidget(lazyPanelId))
-				{
-					widget = widgets.get(id);
-					if (widget == null)
-					{
-						/*
-						 * If a lazyPanel contains as child a panel that is not visible, the enclosing
-						 * lazy panel of the child is only created when the external lazyPanel ensureWidget 
-						 * method is called. It means that a new dependency was created during the initialization
-						 * of the first panel. We must check for this situation and add this new dependency here.
-						 */
-						widget = getRuntimeDependencyWidget(id, lazyPanelId);
-					}
-				}
-			}
-		}
-		return widget;
-	}
-	
-	/**
-	 * Retrieve a widget contained on this screen. 
-	 * 
-	 * @param id
-	 * @param checkLazyDependencies
-	 * @return
-	 */
-	protected Widget getWidget(String id, boolean checkLazyDependencies)
-	{
-		if (checkLazyDependencies)
-		{
-			return getWidget(id);
-		}
-		else
-		{
-			return widgets.get(id);
-		}
-	}
-
-	/**
-	 * Generic version of <code>getWidget</code> method
-	 * @param <T>
-	 * @param id
-	 * @param clazz
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends IsWidget> T getWidget(String id, Class<T> clazz)
-	{
-		Widget w = getWidget(id);
-		return (T) w;
-	}
-	
-	/**
-	 * Hides the DIV that is blocking the Screen contents
-	 */
-	protected void hideBlockDiv()
-	{
-		if(blockingDivs.size() > 0)
-		{
-			int last = blockingDivs.size() - 1;
-			
-			Element blockingDiv = blockingDivs.get(last);
-			blockingDivs.remove(last);
-			
-			Element body = RootPanel.getBodyElement();
-			body.removeChild(blockingDiv);
-			body.getStyle().setProperty("cursor", "");
-		}
-		
-		if(blockingDivs.size() > 0)
-		{
-			Element blockingDiv = blockingDivs.get(blockingDivs.size() - 1);
-			blockingDiv.getStyle().setProperty("display", "block");
-		}
-	}
-	
-	/**
-	 * Call the {@code LazyPanel.ensureWidget()} method of the given lazyPanel.
-	 * This method can trigger other dependent lazyPanel initialization, through 
-	 * a recursive call to {@code Screen.getWidget(String)}.
-	 * 
-	 * @param widgetId lazyPanel to be initialized
-	 * @return true if some lazyPanel was really initialized for this request
-	 */
-	protected boolean initializeLazyDependentWidget(String widgetId)
-	{
-		boolean ret = false;
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.FINE, "Initializing lazy dependents widgets of lazyPanel ["+widgetId+"]...");
-		}
-
-		LazyPanel lazyPanel = (LazyPanel) widgets.get(widgetId);
-		if (lazyPanel == null)
-		{
-			if (getWidget(ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(widgetId)) != null)
-			{
-				lazyPanel = (LazyPanel) widgets.get(widgetId);
-			}
-		}
-		
-		if (lazyPanel != null)
-		{
-			lazyPanel.ensureWidget();
-			ret = true;
-		}
-		else
-		{
-			cleanLazyDependentWidgets(widgetId);
-		}
-
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.log(Level.FINE, " Lazy dependents widgets of lazyPanel ["+widgetId+"] are now initialized.");
-		}
-		return ret;
-	}
-	
-	@Deprecated
-	@SuppressWarnings("unused") // called by native code
-	private String invokeController(String call, String serializedData)
-	{
-		Event event = org.cruxframework.crux.core.client.event.Events.getEvent("_onInvokeController", call);
-		InvokeControllerEvent controllerEvent = new InvokeControllerEvent();
-		
-		if (serializedData != null)
-		{
-			try
-			{
-				controllerEvent.setParameter(serializer.deserialize(serializedData));
-			}
-			catch (ModuleComunicationException e)
-			{
-				Crux.getErrorHandler().handleError(e.getLocalizedMessage(), e);
-				return null;
-			}
-		}
-		
-		Object result = org.cruxframework.crux.core.client.event.Events.callEvent(event, controllerEvent, true);
-		try
-		{
-			return serializer.serialize(result); 
-		}
-		catch (ModuleComunicationException e)
-		{
-			Crux.getErrorHandler().handleError(e.getLocalizedMessage(),e);
-			return null;
-		}
-	}
-
-	/**
-	 * Make a call to a cross document object.
-	 * 
-	 * @param serializedData
-	 * @return
-	 */
-	@SuppressWarnings("unused") // called by native code
-	private String invokeCrossDocument(String serializedData)
-	{
-		return ScreenFactory.getInstance().getRegisteredControllers().invokeCrossDocument(serializedData);
-	}
-	
-	/**
-	 * @return
-	 * @deprecated Use widgetsList() instead
-	 */
-	@Deprecated
-	protected Iterator<Widget> iteratorWidgets()
-	{
-		FastList<Widget> widgetList = widgetsList();
-		ArrayList<Widget> result = new ArrayList<Widget>();
-		for (int i=0; i<widgetList.size(); i++)
-		{
-			result.add(widgetList.get(i));
-		}
-		
-		return result.iterator();
-	}
-
-	/**
-	 * @return
-	 * @deprecated Use widgetsIdList() instead
-	 */
-	@Deprecated
-	protected Iterator<String> iteratorWidgetsIds()
-	{
-		FastList<String> idList = widgetsIdList();
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i=0; i<idList.size(); i++)
-		{
-			result.add(idList.get(i));
-		}
-		
-		return result.iterator();
-	}
-
-	/**
-	 * 
-	 */
-	protected void prepareHistoryFrame() 
-	{
-		Element body = RootPanel.getBodyElement();
-		if (historyFrame == null)
-		{
-			historyFrame = DOM.createIFrame().cast();
-			historyFrame.setSrc("javascript:''");
-			historyFrame.setId("__gwt_historyFrame");
-			historyFrame.getStyle().setProperty("position", "absolute");
-			historyFrame.getStyle().setProperty("width", "0");
-			historyFrame.getStyle().setProperty("height", "0");
-			historyFrame.getStyle().setProperty("border", "0");
-			body.appendChild(historyFrame);
-		    History.fireCurrentHistoryState();
-		}
-	}
-	
-	@Deprecated
-	private native void removeControllerAccessor(Screen handler)/*-{
-		$wnd._cruxScreenControllerAccessor = null;
-	}-*/;
-
-	/**
-	 * Remove the cross document hook function
-	 * @param handler
-	 */
-	private native void removeCrossDocumentAccessor(Screen handler)/*-{
-		$wnd._cruxCrossDocumentAccessor = null;
-	}-*/;
-
-	protected void removeWidget(String id)
-	{
-		removeWidget(id, true);
-	}
-
-	protected void removeWidget(String id, boolean removeFromDOM)
-	{
-		Widget widget = widgets.remove(id);
-		if (widget != null && removeFromDOM)
-		{
-			widget.removeFromParent();
-		}
-	}
-	
-	protected String rewriteURL(String url)
-	{
-		return urlRewriter.rewrite(url);
-	}
-	
-	/**
-	 * @param declaredControllers
-	 */
-	@Deprecated
-	void setDeclaredControllers(String[] declaredControllers) {
-		this.declaredControllers = declaredControllers;
-	}
-
-	/**
-	 * @param declaredDataSources
-	 */
-	@Deprecated
-	void setDeclaredDataSources(String[] declaredDataSources) {
-		this.declaredDataSources = declaredDataSources;
-	}
-	
-	/**
-	 * @param declaredFormatters
-	 */
-	@Deprecated
-	void setDeclaredFormatters(String[] declaredFormatters) {
-		this.declaredFormatters = declaredFormatters;
-	}
-
-	/**
-	 * @param declaredSerializables
-	 */
-	@Deprecated
-	void setDeclaredSerializables(String[] declaredSerializables) {
-		this.declaredSerializables = declaredSerializables;
-	}
-	
-	/**
-	 * Creates and shows a DIV over the screen contents
-	 * @param blockingDivStyleName
-	 */
-	protected void showBlockDiv(String blockingDivStyleName)
-	{
-		if(blockingDivs.size() > 0)
-		{
-			Element blockingDiv = blockingDivs.get(blockingDivs.size() - 1);
-			blockingDiv.getStyle().setProperty("display", "none");
-		}
-		
-		Element body = RootPanel.getBodyElement();		
-		Element blockingDiv = screenBlocker.createBlockingDiv(blockingDivStyleName, body);
-		blockingDivs.add(blockingDiv);
-		body.appendChild(blockingDiv);
-	}
-	
-	
-	
-	/**
-	 * Update fields mapped with ValueObject from widgets that have similar names.
-	 * @param caller
-	 */
-	protected void updateControllerObjects(Object eventHandler)
-	{
-		if (eventHandler != null)
-		{
-			if (!(eventHandler instanceof ScreenBindableObject))
-			{
-				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
-			}
-			((ScreenBindableObject) eventHandler).updateControllerObjects();
-
-		}
-	}
-	
-	/**
-	 * Update widgets on screen that have the same id of fields mapped with ValueObject
-	 * @param caller
-	 */
-	protected void updateScreenWidgets(Object eventHandler)
-	{
-		if (eventHandler != null)
-		{
-			if (!(eventHandler instanceof ScreenBindableObject))
-			{
-				throw new ClassCastException(Crux.getMessages().screenInvalidObjectError());
-			}
-
-			((ScreenBindableObject) eventHandler).updateScreenWidgets();
-		}
-	}
-	
-	/**
-	 * @return
-	 */
-	protected FastList<String> widgetsIdList()
-	{
-		return widgets.keys();
-	}		
-	
-	/**
-	 * @return
-	 */
-	protected FastList<Widget> widgetsList()
-	{
-		FastList<String> keys = widgets.keys();
-		FastList<Widget> values = new FastList<Widget>();
-		for (int i=0; i<keys.size(); i++)
-		{
-			values.add(widgets.get(keys.get(i)));
-		}
-		
-		return values;
-	}
-	
-	public static interface OrientationChangeOrResizeHandler
-	{
-		public void onOrientationChangeOrResize();
 	}
 }

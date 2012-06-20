@@ -21,14 +21,15 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
-import org.cruxframework.crux.core.rebind.screen.Screen;
+import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONObject;
 
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -40,15 +41,15 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * 
 	 * @param context
 	 * @param logger
-	 * @param screen
+	 * @param view
 	 * @param device
 	 * @param controllerClass 
 	 */
-	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, Screen screen, String device, final String controllerName)
+	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, View view, String device, final String controllerName, String module)
     {
-	    super(context, logger, screen, device);
+	    super(context, logger, view, device, module);
 	    final String controllerClass = ClientControllers.getController(controllerName);
-		this.screenWidgetConsumer = new WidgetConsumer()
+		this.widgetConsumer = new WidgetConsumer()
 		{
 			@Override
 			public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
@@ -94,14 +95,11 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * @param sourceWriter
 	 * @param metaData
 	 */
-	public String generateWidgetsCreation(SourceWriter sourceWriter, JSONObject metaElement)
+	public String generateWidgetCreation(SourcePrinter printer, JSONObject metaElement)
 	{
-		SourcePrinter printer = new SourcePrinter(sourceWriter, getLogger());
 		String widget = null;
 		
 	    createPostProcessingScope();
-
-	    printer.println("final Screen "+getScreenVariable()+" = Screen.get();");
 
 	    if (!metaElement.has("_type"))
 	    {
@@ -120,7 +118,14 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	    	}
 	    }
 
-	    commitPostProcessing(printer);
+	    if (widget != null && widget.length() > 0)
+	    {
+	    	printer.println(widget+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+	    	printer.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
+	    	commitPostProcessing(printer);
+	    	printer.println("}");
+	    	printer.println("});");
+	    }
 		
 		return widget;
 	}
@@ -138,7 +143,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 		if (!metaElem.has("id"))
 		{
 			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getScreen().getId()+"], there is an widget of type ["+widgetType+"] without id.");
+					"On page ["+getView().getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 		String widget;
 
@@ -146,10 +151,10 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 		if (widgetId == null || widgetId.length() == 0)
 		{
 			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getScreen().getId()+"], there is an widget of type ["+widgetType+"] without id.");
+					"On page ["+getView().getId()+"], there is an widget of type ["+widgetType+"] without id.");
 		}
 
-		widget = newWidget(printer, metaElem, widgetId, widgetType, this.screenWidgetConsumer, true);
+		widget = newWidget(printer, metaElem, widgetId, widgetType, this.widgetConsumer, true);
 		return widget;
 	}
 	

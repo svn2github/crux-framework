@@ -19,16 +19,14 @@ import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.datasource.DataSource;
-import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.RegisteredClientFormatters;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.parser.CruxMetaData;
-
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewContainer;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * Factory for CRUX screen. 
@@ -42,11 +40,7 @@ public class ScreenFactory
 	private static Logger logger = Logger.getLogger(ScreenFactory.class.getName());
 	 
 	private RegisteredClientFormatters registeredClientFormatters = null;
-	private RegisteredControllers registeredControllers = null;
-	private RegisteredDataSources registeredDataSources = null;
 	private Screen screen = null;
-	private ViewFactory viewFactory = null;
-	private Device currentDevice = null;	
 	
 	/**
 	 * Constructor
@@ -69,20 +63,11 @@ public class ScreenFactory
 	}
 	
 	/**
-	 * Create a new DataSource instance
-	 * @param dataSource dataSource name, declared with <code>@DataSource</code> annotation
-	 * @return new dataSource instance
-	 */
-	public DataSource<?> createDataSource(String dataSource)
-	{
-		return this.registeredDataSources.getDataSource(dataSource);
-	}
-
-	/**
 	 * 
 	 * @param formatter
 	 * @return
 	 */
+	@Deprecated
 	public Formatter getClientFormatter(String formatter)
 	{
 		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
@@ -92,8 +77,20 @@ public class ScreenFactory
 		}
 
 		return this.registeredClientFormatters.getClientFormatter(formatter);
-	}
+	}//TODO mover os formatters pra dentro da view, assim como controllers e datasource ja estao.
 	
+	/**
+	 * Create a new DataSource instance
+	 * @param dataSource dataSource name, declared with <code>@DataSource</code> annotation
+	 * @return new dataSource instance
+	 * @deprecated Use {@link View}.createDataSource()
+	 */
+	@Deprecated
+	public DataSource<?> createDataSource(String dataSource)
+	{
+		return screen.createDataSource(dataSource);
+	}
+
 	/**
 	 * @deprecated - Use createDataSource(java.lang.String) instead.
 	 * @param dataSource
@@ -108,10 +105,12 @@ public class ScreenFactory
 	/**
 	 * Retrieve the list of controllers registered into this screen
 	 * @return
+	 * @deprecated Use {@link View}.getRegisteredControllers()
 	 */
+	@Deprecated
 	public RegisteredControllers getRegisteredControllers()
     {
-    	return registeredControllers;
+    	return screen.getRegisteredControllers();
     }
 
 	/**
@@ -133,48 +132,23 @@ public class ScreenFactory
 	 */
 	public Device getCurrentDevice()
 	{
-		return currentDevice;
+		return ViewContainer.getViewFactory().getCurrentDevice();
 	}
-	
-	/**
-	 * Called by ViewFactory to initialize the screen controllers 
-	 * @param registeredControllers
-	 */
-	void setRegisteredControllers(RegisteredControllers registeredControllers)
-	{
-		this.registeredControllers = registeredControllers;
-	}
-	
-	/**
-	 * Called by ViewFactory to initialize the screen dataSources 
-	 * @param registeredDataSources
-	 */
-	void setRegisteredDataSources(RegisteredDataSources registeredDataSources)
-	{
-		this.registeredDataSources = registeredDataSources;
-	}
-
+		
 	/**
 	 * 
 	 */
 	private void create()
 	{
-		CruxMetaData metaData = CruxMetaData.loadMetaData();
-		screen = new Screen(metaData.getScreenId(), metaData.getLazyDependencies());
-		this.viewFactory = (ViewFactory) GWT.create(ViewFactory.class);
-		currentDevice = this.viewFactory.getCurrentDevice();
-		
-		if (LogConfiguration.loggingIsEnabled())
-		{
-			logger.info(Crux.getMessages().screenFactoryCreatingView(screen.getIdentifier()));
-		}
-		try
-        {
-	        this.viewFactory.createView(screen.getIdentifier());
-        }
-        catch (InterfaceConfigException e)
-        {
-        	Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryErrorCreatingView(), e);
-        }
+		screen = new Screen(getCurrentScreenId());
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private native String getCurrentScreenId()/*-{
+		return $wnd.__CruxScreen_;
+	}-*/;
+	
 }

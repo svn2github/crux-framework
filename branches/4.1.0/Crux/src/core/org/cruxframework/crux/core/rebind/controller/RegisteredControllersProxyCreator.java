@@ -32,8 +32,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.module.Modules;
-import org.cruxframework.crux.core.rebind.screen.Screen;
-
+import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -41,7 +40,6 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * Generates a RegisteredControllers class. 
@@ -54,27 +52,28 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 {
 	private Map<String, String> controllerClassNames = new HashMap<String, String>();
 	private Map<String, String> crossDocsClassNames = new HashMap<String, String>();
-	private final Screen screen;
+	private final View view;
+	private final String module;
 	
 	/**
 	 * Constructor
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, Screen screen)
+	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()), false);
-		this.screen = screen;
+		this.view = view;
+		this.module = module;
     }
 
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
 	 */
 	@Override
-    protected void generateProxyContructor(SourceWriter sourceWriter) throws CruxGeneratorException
+    protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
     {
 		sourceWriter.println("public "+getProxySimpleName()+"(){");
-		sourceWriter.indent();
 		for (String controller : controllerClassNames.keySet()) 
 		{
 			JClassType controllerClass = getControllerClass(controller);
@@ -83,7 +82,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				sourceWriter.println("controllers.put(\""+controller+"\", new " + controllerClassNames.get(controller) + "());");
 			}
 		}
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 
@@ -91,7 +89,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
 	 */
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
     }	
@@ -100,7 +98,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
 	 */
 	@Override
-    protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter sourceWriter) throws CruxGeneratorException
     {
 		generateControllerInvokeMethod(sourceWriter);
 		generateCrossDocInvokeMethod(sourceWriter);
@@ -112,12 +110,11 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
 	 */
 	@Override
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		Set<String> usedWidgets = new HashSet<String>();
-		String module = screen.getModule();
-		generateControllersForScreen(screen);
-		Iterator<org.cruxframework.crux.core.rebind.screen.Widget> screenWidgets = screen.iterateWidgets();
+		generateControllersForView(view);
+		Iterator<org.cruxframework.crux.core.rebind.screen.Widget> screenWidgets = view.iterateWidgets();
 		while (screenWidgets.hasNext())
 		{
 			String widgetType = screenWidgets.next().getType();
@@ -165,6 +162,8 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				String controllerClassName = controllerClass.getQualifiedSourceName();
 				if (Modules.getInstance().isClassOnModulePath(controllerClassName, module))
 				{
+					//TODO passar a view pra dentro da controller pra poder fazer bind de valores na tela....
+					// fazer a controller proxy criada receber uma variavel com a view associada para referenciar por ela
 					String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
 					controllerClassNames.put(controller, genClass);
 					JClassType crossDocumentType = controllerClass.getOracle().getType(CrossDocument.class.getCanonicalName());
@@ -187,56 +186,46 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @param controllerClassNames
 	 * @throws CruxGeneratorException 
 	 */
-	private void generateControllerInvokeMethod(SourceWriter sourceWriter) throws CruxGeneratorException
+	private void generateControllerInvokeMethod(SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
 		sourceWriter.println("public void invokeController(final String controllerName, final String method, final boolean fromOutOfModule, final Object sourceEvent, final EventProcessor eventProcessor){");
-		sourceWriter.indent();
 
 		if (isCrux2OldInterfacesCompatibilityEnabled())
 		{
 		    sourceWriter.println("ControllerInvoker controller = getController(controllerName);");
 			sourceWriter.println("if (controller != null){");
-			sourceWriter.indent();
 			sourceWriter.println("try{");
-			sourceWriter.indent();
 			sourceWriter.println("controller.invoke(method, sourceEvent, fromOutOfModule, eventProcessor);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("catch (Exception e)"); 
 			sourceWriter.println("{");
-			sourceWriter.indent();
 			sourceWriter.println("eventProcessor.setException(e);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("return;");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("else {");
-			sourceWriter.indent();
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientControllerNotFound(controllerName));");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		else
 		{
 			sourceWriter.println("Crux.getErrorHandler().handleError("+EscapeUtils.quote("To use this feature you need to enable crux2 old interfaces compatibility.")+");");
 		}
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
 	/**
 	 * Generate wrapper classes for event handling.
-	 * @param screen
+	 * @param view
 	 */
-	private void generateControllersForScreen(Screen screen)
+	private void generateControllersForView(View view)
 	{
-		Iterator<String> controllers = screen.iterateControllers();
+		Iterator<String> controllers = view.iterateControllers();
 		
 		while (controllers.hasNext())
 		{
 			String controller = controllers.next();
-			generateControllerBlock(controller, screen.getModule());
+			generateControllerBlock(controller, module);
 		}		
 
 		controllers = ClientControllers.iterateGlobalControllers();
@@ -247,7 +236,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 			JClassType controllerClass = getControllerClass(controller);
 			if (controllerClass != null)
 			{
-				generateControllerBlock(controller, screen.getModule());
+				generateControllerBlock(controller, module);
 			}
 		}		
 	}
@@ -281,69 +270,53 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateCrossDocInvokeMethod(SourceWriter sourceWriter)
+	private void generateCrossDocInvokeMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public String invokeCrossDocument(String serializedData){");
-		sourceWriter.indent();
 
 		if (!this.crossDocsClassNames.isEmpty())
 		{
 			sourceWriter.println("if (serializedData != null){");
-			sourceWriter.indent();
 
 			sourceWriter.println("int idx = serializedData.indexOf('|');");
 			sourceWriter.println("if (idx > 0){");
-			sourceWriter.indent();
 
 			sourceWriter.println("String controllerName = null;");
 			sourceWriter.println("try{");
-			sourceWriter.indent();
 
 			sourceWriter.println("controllerName = serializedData.substring(0,idx);");
 			sourceWriter.println("serializedData = serializedData.substring(idx+1);");
 			sourceWriter.println("CrossDocumentInvoker crossDoc = (CrossDocumentInvoker)getController(controllerName);");
 			sourceWriter.println("if (crossDoc==null){");
-			sourceWriter.indent();
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().eventProcessorClientControllerNotFound(controllerName));");
 			sourceWriter.println("return null;");
-			sourceWriter.outdent();
 			sourceWriter.println("} else {");
-			sourceWriter.indent();
 
 			sourceWriter.println("return crossDoc.invoke(serializedData);");
 
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
-			sourceWriter.outdent();
 			sourceWriter.println("} catch(ClassCastException ex){");
-			sourceWriter.indent();
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().crossDocumentInvalidCrossDocumentController(controllerName));");
 			sourceWriter.println("return null;");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		sourceWriter.println("return null;");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateGetControllertMethod(SourceWriter sourceWriter)
+	private void generateGetControllertMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public <T> T getController(String controller){");
-		sourceWriter.indent();
 		sourceWriter.println("T ret = (T)controllers.get(controller);");
 		sourceWriter.println("if (ret == null){");
-		sourceWriter.indent();
 		
 		boolean first = true;
 		for (String controller : controllerClassNames.keySet())
@@ -357,7 +330,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				}
 				first = false;
 				sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(controller, "+EscapeUtils.quote(controller)+")){");
-				sourceWriter.indent();
 
 				if (isControllerStatefull(controllerClass))
 				{
@@ -368,39 +340,30 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 					sourceWriter.println("ret = (T) new "+controllerClassNames.get(controller)+"();");
 				}
 
-				sourceWriter.outdent();
 				sourceWriter.println("}");
 			}
         }
 
 		sourceWriter.println("if (ret == null){");
-		sourceWriter.indent();
 		sourceWriter.println("ret = (T)controllers.get(controller);");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 		
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 		
 		sourceWriter.println("return ret;");
 
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateRegisterControllerMethod(SourceWriter sourceWriter)
+	private void generateRegisterControllerMethod(SourcePrinter sourceWriter)
     {
 		sourceWriter.println("public void registerController(String controller, ControllerInvoker controllerInvoker){");
-		sourceWriter.indent();
 		sourceWriter.println("if (!controllers.containsKey(controller)){");
-		sourceWriter.indent();
 		sourceWriter.println("controllers.put(controller, controllerInvoker);");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 	
@@ -441,7 +404,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	public String getProxySimpleName()
 	{
-		String className = screen.getModule()+"_"+screen.getRelativeId(); 
+		String className = view.getId(); 
 		className = className.replaceAll("[\\W]", "_");
 		return "RegisteredControllers_"+className;
 	}	

@@ -15,9 +15,9 @@
  */
 package org.cruxframework.crux.widgets.rebind.event;
 
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.widgets.client.event.timeout.TimeoutEvent;
 import org.cruxframework.crux.widgets.client.event.timeout.TimeoutHandler;
 

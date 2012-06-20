@@ -17,9 +17,9 @@ package org.cruxframework.crux.widgets.rebind.wizard;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.dto.DataObjects;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AllChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.ChoiceChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -196,7 +196,7 @@ public class WizardFactory extends AbstractWizardFactory
 			if (StringUtils.isEmpty(id))
 			{
 				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
+						"On page ["+getWidgetCreator().getView().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			context.stepId = id;
@@ -234,7 +234,7 @@ public class WizardFactory extends AbstractWizardFactory
 			if (StringUtils.isEmpty(id))
 			{
 				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
+						"On page ["+getWidgetCreator().getView().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String widget = context.getWidget();
@@ -338,7 +338,7 @@ public class WizardFactory extends AbstractWizardFactory
 			if (StringUtils.isEmpty(id))
 			{
 				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
+						"On page ["+getWidgetCreator().getView().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String widget = context.getWidget();
@@ -507,7 +507,7 @@ public class WizardFactory extends AbstractWizardFactory
 			if (StringUtils.isEmpty(id))
 			{
 				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
+						"On page ["+getWidgetCreator().getView().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));

@@ -16,10 +16,10 @@
 package org.cruxframework.crux.gwt.rebind;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionEstimatorFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
@@ -27,7 +27,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeF
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.gwt.client.NumberFormatUtil;
-
 
 import com.google.gwt.user.client.ui.NumberLabel;
 

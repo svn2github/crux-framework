@@ -57,6 +57,6 @@ public class GadgetScreenResourceScanner extends DeclarativeUIScreenResourceScan
 	 */
 	private boolean hasGadgetViewWidget(Screen screen)
 	{
-		return screen.getWidgetTypesIncluded().contains("gadget_gadgetView");
+		return screen.getRootView().getWidgetTypesIncluded().contains("gadget_gadgetView");
 	}
 }

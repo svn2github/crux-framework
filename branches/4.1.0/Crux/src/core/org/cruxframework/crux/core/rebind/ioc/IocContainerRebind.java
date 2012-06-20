@@ -39,7 +39,6 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -53,7 +52,7 @@ public class IocContainerRebind extends AbstractProxyCreator
     }
 
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private static IocLocalScope _localScope = new IocLocalScope();");
 		srcWriter.println("private static IocDocumentScope _documentScope = new IocDocumentScope();");
@@ -61,7 +60,7 @@ public class IocContainerRebind extends AbstractProxyCreator
     }
 
 	@Override
-    protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		Iterator<String> classes = IocContainerManager.iterateClasses();
 		while (classes.hasNext())
@@ -77,10 +76,9 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param srcWriter
 	 * @param className
 	 */
-	private void generateContainerInstatiationMethod(SourceWriter srcWriter, String className)
+	private void generateContainerInstatiationMethod(SourcePrinter srcWriter, String className)
 	{
 		srcWriter.println("public static "+className+" get"+className.replace('.', '_')+"("+Scope.class.getCanonicalName()+" scope, String subscope){");
-		srcWriter.indent();
 
 		IocConfigImpl<?> iocConfig = IocContainerManager.getConfigurationForType(className);
 		Class<?> providerClass = iocConfig.getProviderClass();
@@ -93,13 +91,9 @@ public class IocContainerRebind extends AbstractProxyCreator
 		else if (iocConfig.getToClass() != null)
 		{
 			srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
-			srcWriter.indent();
 			srcWriter.println("public "+className+" get(){");
-			srcWriter.indent();
 			srcWriter.println("return GWT.create("+iocConfig.getToClass().getCanonicalName()+".class);");
-			srcWriter.outdent();
 			srcWriter.println("}");
-			srcWriter.outdent();
 			srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
 			generateFieldsPopulationCallback(srcWriter, className);
 			srcWriter.println(");");
@@ -107,13 +101,9 @@ public class IocContainerRebind extends AbstractProxyCreator
 		else
 		{
 			srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
-			srcWriter.indent();
 			srcWriter.println("public "+className+" get(){");
-			srcWriter.indent();
 			srcWriter.println("return GWT.create("+className+".class);");
-			srcWriter.outdent();
 			srcWriter.println("}");
-			srcWriter.outdent();
 			srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
 			generateFieldsPopulationCallback(srcWriter, className);
 			srcWriter.println(");");
@@ -121,7 +111,6 @@ public class IocContainerRebind extends AbstractProxyCreator
 
 		srcWriter.println("return result;");
 		
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 
@@ -130,18 +119,14 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param srcWriter
 	 * @param className
 	 */
-	private void generateFieldsPopulationCallback(SourceWriter srcWriter, String className) 
+	private void generateFieldsPopulationCallback(SourcePrinter srcWriter, String className) 
     {
 		try
 		{
 			srcWriter.println("new IocScope.CreateCallback<"+className+">(){");
-			srcWriter.indent();
 			srcWriter.println("public void onCreate("+className+" newObject){");
-			srcWriter.indent();
 			injectFields(srcWriter, context.getTypeOracle().getType(className), "newObject", new HashSet<String>());
-			srcWriter.outdent();
 			srcWriter.println("}");
-			srcWriter.outdent();
 			srcWriter.print("}");
 		}
 		catch (NotFoundException e)
@@ -157,7 +142,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param parentVariable
 	 * @param added
 	 */
-	private void injectFields(SourceWriter srcWriter, JClassType type, String parentVariable, Set<String> added)
+	private void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added)
 	{
         for (JField field : type.getFields()) 
         {
@@ -201,19 +186,15 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * 
 	 * @param srcWriter
 	 */
-	private void generateGetScopeMethod(SourceWriter srcWriter)
+	private void generateGetScopeMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public static IocScope _getScope("+Scope.class.getCanonicalName()+" scope){");
-		srcWriter.indent();
 		srcWriter.println("switch (scope){");
-		srcWriter.indent();
 		srcWriter.println("case LOCAL: return _localScope;");
 		srcWriter.println("case DOCUMENT: return _documentScope;");
 		srcWriter.println("case VIEW: return _viewScope;");
 		srcWriter.println("default: return _localScope;");
-		srcWriter.outdent();
 		srcWriter.println("}");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 
@@ -230,7 +211,7 @@ public class IocContainerRebind extends AbstractProxyCreator
     }
 
 	@Override
-    protected SourceWriter getSourceWriter()
+    protected SourcePrinter getSourcePrinter()
     {
 		String packageName = IocProvider.class.getPackage().getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, getProxySimpleName());
@@ -248,7 +229,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 			composerFactory.addImport(imp);
 		}
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
     }
 	
 	/**
@@ -267,12 +248,12 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param srcWriter
 	 * @param type
 	 */
-	public static void injectProxyFields(SourceWriter srcWriter, JClassType type)
+	public static void injectProxyFields(SourcePrinter srcWriter, JClassType type)
 	{
 		injectProxyFields(srcWriter, type, new HashSet<String>());
 	}
 	
-	private static void injectProxyFields(SourceWriter srcWriter, JClassType type, Set<String> added)
+	private static void injectProxyFields(SourcePrinter srcWriter, JClassType type, Set<String> added)
 	{
         for (JField field : type.getFields()) 
         {

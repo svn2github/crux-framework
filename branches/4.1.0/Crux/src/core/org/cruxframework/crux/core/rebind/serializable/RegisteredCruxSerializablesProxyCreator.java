@@ -39,14 +39,12 @@ import org.cruxframework.crux.core.client.serializer.StringSerializer;
 import org.cruxframework.crux.core.client.serializer.TimestampSerializer;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.Screen;
-
+import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * 
@@ -69,45 +67,43 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
     }	
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("public "+getProxySimpleName()+"(){ ");
-		srcWriter.indent();
 		generateDefaultSerializersBlock(srcWriter);
 		
-		List<Screen> screens = getScreens();
+		List<View> views = getViews();
 		
-		for (Screen screen : screens)
+		for (View view : views)
 		{
-			Iterator<String> iterator = screen.iterateSerializers();
+			Iterator<String> iterator = view.iterateSerializers();
 			while (iterator.hasNext())
 			{
 				String serializer = iterator.next();
 				generateSerialisersBlock(srcWriter, serializer);
 			}
 		}
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private FastMap<CruxSerializable> serializers = new FastMap<CruxSerializable>();");
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		generateGetCruxSerializableMethod(srcWriter);
 		generateRegisterCruxSerializableMethod(srcWriter);
@@ -129,7 +125,7 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateDefaultSerializersBlock(SourceWriter sourceWriter)
+	private void generateDefaultSerializersBlock(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("serializers.put(\"java.lang.Boolean\", new " + BooleanSerializer.class.getName() + "());");
 		sourceWriter.println("serializers.put(\"java.lang.Byte\", new " + ByteSerializer.class.getName() + "());");
@@ -150,24 +146,20 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
 	/**
 	 * @param srcWriter
 	 */
-	private void generateGetCruxSerializableMethod(SourceWriter srcWriter)
+	private void generateGetCruxSerializableMethod(SourcePrinter srcWriter)
     {
 	    srcWriter.println("public CruxSerializable getCruxSerializable(String type){");
-		srcWriter.indent();
 		srcWriter.println("return serializers.get(type);");
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 
 	/**
 	 * @param srcWriter
 	 */
-	private void generateRegisterCruxSerializableMethod(SourceWriter srcWriter)
+	private void generateRegisterCruxSerializableMethod(SourcePrinter srcWriter)
     {
 	    srcWriter.println("public void registerCruxSerializable(String type, CruxSerializable moduleShareable){");
-		srcWriter.indent();
 		srcWriter.println("serializers.put(type, moduleShareable);");
-		srcWriter.outdent();
 		srcWriter.println("}");
     } 
 		
@@ -175,7 +167,7 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
 	 * @param sourceWriter
 	 * @param serializer
 	 */
-	private void generateSerialisersBlock(SourceWriter sourceWriter, String serializer)
+	private void generateSerialisersBlock(SourcePrinter sourceWriter, String serializer)
 	{
 		try
         {

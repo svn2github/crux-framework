@@ -13,23 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
-
+package org.cruxframework.crux.core.client.screen.views;
 
 import org.cruxframework.crux.core.client.event.CruxEvent;
 
-/**
- * @author Thiago da Rosa de Bustamante
- *
- */
-public class ScreenLoadEvent extends CruxEvent<Screen>
+public class ViewAttachEvent extends CruxEvent<View> 
 {
-	
 	/**
-	 * Constructor
+	 * 
 	 */
-	protected ScreenLoadEvent()
+	protected ViewAttachEvent(View view, String viewId)
 	{
-		super(Screen.get(), Screen.getId());
+		super(view, viewId);
 	}
 }

@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.cruxframework.crux.core.client.screen.LazyPanel;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
-import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
+import org.cruxframework.crux.core.client.screen.views.LazyPanel;
+import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.json.JSONObject;
 
 import com.google.gwt.logging.client.LogConfiguration;
@@ -78,11 +78,11 @@ public class LazyPanelFactory
 		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
 		{
 			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
-		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+controllerAccessHandler.getSingleControllerVariable()+");");
+		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+factory.getViewVariable()+", "+controllerAccessHandler.getSingleControllerVariable()+");");
 		}
 		else
 		{
-			factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class();");
+			factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+factory.getViewVariable()+");");
 		}
 		
 		return lazyPanel;
@@ -95,6 +95,7 @@ public class LazyPanelFactory
 	private void generateFields(SourcePrinter printer, String className)
     {
 		printer.println("private static Logger "+factory.getLoggerVariable()+" = Logger.getLogger("+className+".class.getName());");
+		printer.println("private View "+factory.getViewVariable()+";");
 	    Map<String, String> declaredMessages = factory.getDeclaredMessages();
 		for (String messageClass: declaredMessages.keySet())
 	    {
@@ -117,19 +118,17 @@ public class LazyPanelFactory
 		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
 		{
 			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
-	    	printer.println("private "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+";");
-			printer.println("public "+className+"("+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+"){");
-			printer.indent();
-			printer.println("super("+EscapeUtils.quote(widgetId)+");");
+			printer.println("public "+className+"(View view, "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+"){");
+			printer.println("super(view, "+EscapeUtils.quote(widgetId)+");");
+			printer.println("this."+factory.getViewVariable()+" = view;");
 			printer.println("this."+controllerAccessHandler.getSingleControllerVariable()+" = "+controllerAccessHandler.getSingleControllerVariable()+";");
 		}
 		else
 		{
-			printer.println("public "+className+"(){");
-			printer.indent();
-			printer.println("super("+EscapeUtils.quote(widgetId)+");");
+			printer.println("public "+className+"(View view){");
+			printer.println("super(view, "+EscapeUtils.quote(widgetId)+");");
+			printer.println("this."+factory.getViewVariable()+" = view;");
 		}
-		printer.outdent();
 		printer.println("}");
     }
 
@@ -146,7 +145,6 @@ public class LazyPanelFactory
 		printer.println("if (LogConfiguration.loggingIsEnabled()){");
 		printer.println(factory.getLoggerVariable()+".log(Level.FINE, \"Creating ["+lazyId+"] wrapped widget...\");");
 		printer.println("}");
-		printer.println("final Screen "+factory.getScreenVariable()+" = Screen.get();");
     	
 		factory.createPostProcessingScope();
 		

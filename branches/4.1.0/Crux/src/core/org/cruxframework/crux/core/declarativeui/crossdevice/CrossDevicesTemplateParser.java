@@ -27,7 +27,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -114,8 +115,8 @@ public class CrossDevicesTemplateParser
     {
 	    try
 	    {
-	    	String metaData = CruxToHtmlTransformer.extractWidgetsMetadata(template, true, true);
-	    	return new JSONObject(metaData);
+	    	JSONArray metadata = ViewProcessor.extractWidgetsMetadata(template).getJSONArray("elements");
+	    	return metadata.getJSONObject(0);
 	    }
 	    catch (Exception e)
 	    {

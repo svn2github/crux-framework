@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.w3c.dom.Document;
 
 
 /**
@@ -28,20 +29,21 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 public interface ScreenResourceResolver
 {
 	/**
-	 * Gets the resource for a given screenId
-	 * @param id
+	 * Gets the inputStream for a given screenId
+	 * @param screenId
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
 	InputStream getScreenResource(String screenId) throws CruxGeneratorException;
 	
 	/**
-	 * Gets the resource for a given screenId, the result must be a valid XML (escaped correctly)
-	 * @param id
+	 * Gets the Document representing the root view for a given screenId
+	 * @param screenId
+	 * @param device
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	InputStream getScreenXMLResource(String screenId, String userAgent) throws CruxGeneratorException;
+	Document getRootView(String screenId, String device) throws CruxGeneratorException;
 
 	/**
 	 * List all Crux screen IDs

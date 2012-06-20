@@ -13,46 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.declarativeui;
+package org.cruxframework.crux.core.client.screen.views;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HTMLBuilderException extends Exception
+public interface OrientationChangeOrResizeHandler
 {
-
-    private static final long serialVersionUID = 6075364357371138553L;
-
-	/**
-	 * 
-	 */
-	public HTMLBuilderException()
-	{
-	}
-
-	/**
-	 * @param message
-	 */
-	public HTMLBuilderException(String message)
-	{
-		super(message);
-	}
-
-	/**
-	 * @param cause
-	 */
-	public HTMLBuilderException(Throwable cause)
-	{
-		super(cause);
-	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public HTMLBuilderException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+	void onOrientationChangeOrResize();
 }

@@ -17,7 +17,6 @@ package org.cruxframework.crux.core.declarativeui;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Set;
@@ -31,11 +30,12 @@ import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.core.utils.URLUtils;
 import org.cruxframework.crux.scannotation.URLStreamManager;
-
+import org.w3c.dom.Document;
 
 /**
- * Custom screen resolver to handle crux HTML tags 
- * @author Gesse S. F. Dafe
+ * 
+ * @author Thiago da Rosa de Bustamante
+ *
  */
 public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 {
@@ -50,8 +50,8 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	/**
 	 * 
 	 */
-	public InputStream getScreenResource(String screenId, String device, boolean escapeXML, boolean generateWidgetsMetadata) throws CruxGeneratorException
-	{
+	public Document getRootView(String screenId, String device) throws CruxGeneratorException
+    {
 		try
 		{
 			URL[] webBaseDirs = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
@@ -108,8 +108,8 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 				return null;
 			}
 			
-			InputStream result = performTransformation(screenId, device, inputStream, escapeXML, generateWidgetsMetadata);
-			
+			Document result = ViewProcessor.getView(inputStream, device);
+						
 			if(manager != null)
 			{
 				manager.close();
@@ -124,29 +124,14 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	}
 
 	/**
-	 * @param screenId
-	 * @param inputStream
-	 * @param escapeXML
-	 * @param generateWidgetsMetadata
-	 * @return
-	 * @throws IOException
+	 * 
 	 */
-	protected InputStream performTransformation(String screenId, String device, InputStream inputStream, boolean escapeXML, boolean generateWidgetsMetadata) 
-				throws IOException
-	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		CruxToHtmlTransformer.generateHTML(screenId, device, inputStream, out, escapeXML, generateWidgetsMetadata);			
-		return new ByteArrayInputStream(out.toByteArray());
-	}
-
-	public InputStream getScreenXMLResource(String screenId, String device) throws CruxGeneratorException
-    {
-	    return getScreenResource(screenId, device, true, true);
-    }
-
 	public InputStream getScreenResource(String screenId) throws CruxGeneratorException
     {
-	    return getScreenResource(screenId, null, false, false);
+		Document screen = getRootView(screenId, null);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ViewProcessor.generateHTML(screenId, screen, out);			
+		return new ByteArrayInputStream(out.toByteArray());
     }
 	
 	

@@ -13,8 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
+package org.cruxframework.crux.core.client.screen.views;
 
+import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Element;
@@ -22,6 +23,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Do not use this class directly. 
+ * 
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -35,13 +38,14 @@ public class ViewFactoryUtils
 	/**
 	 * @param widgetId
 	 * @param widget
+	 * @param view
 	 */
-	public static void updateWidgetElementId(String widgetId, Widget widget)
+	public static void updateWidgetElementId(String widgetId, Widget widget, View view)
     {
 	    Element element = widget.getElement();
 	    if (StringUtils.isEmpty(element.getId()))
 	    {
-	    	element.setId(widgetId);
+	    	element.setId(view.getPrefix()+widgetId);
 	    }
     }
 	
@@ -63,6 +67,15 @@ public class ViewFactoryUtils
 		return ENCLOSING_PANEL_PREFIX;
 	}	
 	
+	/**
+	 * @return
+	 */
+	public static String getEnclosingPanelId(String widgetId, View view)
+	{
+		return ENCLOSING_PANEL_PREFIX+view.getPrefix()+widgetId;
+	}	
+	
+
 	/**
 	 * Return the id created to the panel that wraps the given widget id.
 	 * @param wrappedWidgetId

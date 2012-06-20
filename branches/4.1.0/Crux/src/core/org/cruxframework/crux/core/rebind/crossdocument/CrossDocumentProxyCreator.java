@@ -24,15 +24,14 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdoc.ClientSerializationStreamWriter;
 import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocumentException;
 import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocumentProxy;
-import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocumentProxy.CrossDocumentReader;
+import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.AbstractSerializableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.impl.Impl;
@@ -50,7 +49,6 @@ import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
 /**
@@ -105,12 +103,10 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * {@link com.google.gwt.user.client.rpc.RemoteService RemoteService}.
 	 */
 	@Override
-	protected void generateProxyContructor(SourceWriter srcWriter)
+	protected void generateProxyContructor(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public " + getProxySimpleName() + "() {");
-		srcWriter.indent();
 		srcWriter.println("super(SERIALIZER);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 	
@@ -120,7 +116,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @throws CruxGeneratorException 
 	 */
 	@Override
-	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		String controllerName = getControllerName(context.getTypeOracle());
 		// Initialize a field with binary name of the remote service interface
@@ -134,7 +130,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * Generates the client's asynchronous proxy method.
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateProxyMethod(SourceWriter w, JMethod method) throws CruxGeneratorException
+	protected void generateProxyMethod(SourcePrinter w, JMethod method) throws CruxGeneratorException
 	{
 		w.println();
 
@@ -142,7 +138,6 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		NameFactory nameFactory = new NameFactory();
 		generateProxyMethodSignature(w, nameFactory, method);
 		w.println("{");
-		w.indent();		
 
 		generateCallToSelfBlock(w, method);
 
@@ -152,7 +147,6 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		w.println(streamWriterName + " = createStreamWriter();");
 
 		w.println("try {");
-		w.indent();
 
 		JParameter[] params = method.getParameters();
 		for (int i = 0; i < params.length ; ++i)
@@ -179,10 +173,8 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 		}
 		w.println("doInvoke("+payloadName+", "+"CrossDocumentReader." + getReaderFor(returnType).name()+");");
 		
-		w.outdent();
 	    generateDoInvokeCatchBlock(w, method, nameFactory);
 
-		w.outdent();
 		w.println("}");
 	}
 
@@ -192,7 +184,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @throws CruxGeneratorException 
 	 */
 	@Override
-	protected void generateProxyMethods(SourceWriter w) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter w) throws CruxGeneratorException
 	{
 		JMethod[] syncMethods = baseProxyType.getOverridableMethods();
 		for (JMethod method : syncMethods)
@@ -339,7 +331,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @return a sourceWriter for the proxy class
 	 */
 	@Override
-	protected SourceWriter getSourceWriter()
+	protected SourcePrinter getSourcePrinter()
 	{
 		JPackage crossDocIntfPkg = baseProxyType.getPackage();
 		String packageName = crossDocIntfPkg == null ? "" : crossDocIntfPkg.getName();
@@ -363,7 +355,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 
 		addAdditionalInterfaces(composerFactory);
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 	  
 	/**
@@ -379,20 +371,17 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @param method
 	 * @throws CruxGeneratorException 
 	 */
-	private void generateCallToSelfBlock(SourceWriter w, JMethod method) throws CruxGeneratorException
+	private void generateCallToSelfBlock(SourcePrinter w, JMethod method) throws CruxGeneratorException
     {
 		JClassType controllerClass = getControllerClass(context.getTypeOracle());
 		JType returnType = method.getReturnType().getErasedType();
 		
 		w.println("if (this.target != null && this.target.equals("+Target.class.getCanonicalName()+".SELF)){");
-		w.indent();
 		String controllerClassName = controllerClass.getQualifiedSourceName();
 		w.println(controllerClassName + " controllerOnSelf = "+ScreenFactory.class.getCanonicalName()+
 				".getInstance().getRegisteredControllers().getController(CONTROLLER_NAME);");    
 		w.println("if (controllerOnSelf == null){");
-		w.indent();
 		w.println("throw new CrossDocumentException(Crux.getMessages().eventProcessorClientControllerNotFound(CONTROLLER_NAME));");
-		w.outdent();
 		w.println("}");
 		
 		if (returnType != JPrimitiveType.VOID)
@@ -418,7 +407,6 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 			w.print("return;");
 		}
 
-		w.outdent();		
 		w.println("}");
     }
 
@@ -427,15 +415,13 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @param method
 	 * @param nameFactory
 	 */
-	private void generateDoInvokeCatchBlock(SourceWriter w, JMethod method, NameFactory nameFactory)
+	private void generateDoInvokeCatchBlock(SourcePrinter w, JMethod method, NameFactory nameFactory)
     {
 	    w.print("} catch (Throwable ");
 	    String exceptionName = nameFactory.createName("ex");
 	    w.println(exceptionName + ") {");
-		w.indent();
 		generateRethrowForInvocationMethod(w, method, exceptionName);
 		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
-		w.outdent();
 		w.println("}");
     }
 
@@ -444,7 +430,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
 	 * @param method
 	 * @param exceptionName
 	 */
-	private void generateRethrowForInvocationMethod(SourceWriter w, JMethod method, String exceptionName)
+	private void generateRethrowForInvocationMethod(SourcePrinter w, JMethod method, String exceptionName)
     {
 	    JType[] methodThrows = method.getThrows();
 		if (methodThrows != null)
@@ -453,9 +439,7 @@ public class CrossDocumentProxyCreator extends AbstractSerializableProxyCreator
             {
 				String exceptionTypeName = jType.getErasedType().getQualifiedSourceName();
 				w.println("if ("+exceptionName+" instanceof "+ exceptionTypeName+"){");
-				w.indent();
 				w.println("throw ("+exceptionTypeName+")"+exceptionName+";");
-				w.outdent();
 				w.println("}");
             }
 		}

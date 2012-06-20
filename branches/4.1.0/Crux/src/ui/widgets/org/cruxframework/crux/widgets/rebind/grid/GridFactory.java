@@ -18,11 +18,11 @@ package org.cruxframework.crux.widgets.rebind.grid;
 import org.cruxframework.crux.core.client.datasource.PagedDataSource;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -433,7 +433,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		    editorCreatorVarName = createVariableName("dataColumnEditor");
 
 		    String packageName = DataColumnEditorCreators.class.getPackage().getName();
-		    String classSimpleName = ("DColEdit_" + getScreen().getId() + "_" + context.getWidgetId() + "_" + colElem.optString("key")).replaceAll("[^a-zA-Z0-9\\$]", "_");
+		    String classSimpleName = ("DColEdit_" + getView().getId() + "_" + context.getWidgetId() + "_" + colElem.optString("key")).replaceAll("[^a-zA-Z0-9\\$]", "_");
 			String classCanonicalName = packageName + "." + classSimpleName;
 		    
 			out.println(classCanonicalName + " " + editorCreatorVarName + " = new " + classCanonicalName + "();");

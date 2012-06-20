@@ -19,10 +19,8 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.config.CruxClientConfigProxyCreator;
 import org.cruxframework.crux.module.CruxModuleHandler;
 
-
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,7 +34,7 @@ public class ConfigProxyCreator extends CruxClientConfigProxyCreator
     }
 
 	@Override
-	protected void generateEnableChildrenWindowsDebugMethod(SourceWriter sourceWriter)
+	protected void generateEnableChildrenWindowsDebugMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public boolean enableDebugForURL(String url){");
 		if (!Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableChildrenWindowsDebug()))

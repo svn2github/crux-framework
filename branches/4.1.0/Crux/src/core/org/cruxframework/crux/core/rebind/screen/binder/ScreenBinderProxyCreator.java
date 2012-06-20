@@ -34,7 +34,6 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -66,7 +65,7 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
     }
 
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
     	JMethod[] methods = baseIntf.getOverridableMethods();
     	for (JMethod method : methods)
@@ -85,7 +84,7 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
     }
 
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 	    super.generateProxyMethods(srcWriter);
 	    generateScreenGetterMethod(srcWriter);
@@ -113,7 +112,7 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 	 * @param interfaceClass
 	 */
 	@Override
-	protected void generateWrapperMethod(JMethod method, SourceWriter sourceWriter)
+	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter)
 	{
 		checkMethodSignature(method);
 
@@ -146,21 +145,18 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 	 * @param methodName
 	 * @param widgetName
 	 */
-	private void generateWrapperMethodForSetter(SourceWriter sourceWriter, JType parameterType, String methodName, String widgetName)
+	private void generateWrapperMethodForSetter(SourcePrinter sourceWriter, JType parameterType, String methodName, String widgetName)
     {
 		String widgetNameFirstLower = Character.toLowerCase(widgetName.charAt(0)) + widgetName.substring(1);
 		String parameterClassName = JClassUtils.getGenericDeclForType(parameterType);
 		sourceWriter.println("public void " + methodName+"("+parameterType.getParameterizedQualifiedSourceName()+" value){");
-		sourceWriter.indent();
 
 		if (JClassUtils.isSimpleType(parameterType)) 
 		{
 			sourceWriter.println("IsWidget w = _getFromScreen(\""+widgetNameFirstLower+"\");");
 			
 			sourceWriter.println("if (w != null) {");
-			sourceWriter.indent();
 			sourceWriter.println("if (w instanceof HasFormatter) {");
-			sourceWriter.indent();
 			if (parameterType.isPrimitive() != null)
 			{
 				sourceWriter.println("((HasFormatter)w).setUnformattedValue(("+parameterClassName+")value);");
@@ -169,22 +165,16 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 			{
 				sourceWriter.println("((HasFormatter)w).setUnformattedValue(value);");
 			}
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("else if (w instanceof HasValue) {");
-			sourceWriter.indent();
 			sourceWriter.println("((HasValue<"+parameterClassName+">)w).setValue(value);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			if (parameterType.equals(stringType))
 			{
 				sourceWriter.println("else if (w instanceof HasText) {");
-				sourceWriter.indent();
 				sourceWriter.println("((HasText)w).setText(value);");
-				sourceWriter.outdent();
 				sourceWriter.println("}");
 			}
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		else
@@ -192,7 +182,6 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 			sourceWriter.println("this._"+methodName+" = value;");
 		}
 		
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }	
 
@@ -203,38 +192,29 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 	 * @param methodName
 	 * @param widgetName
 	 */
-	private void generateWrapperMethodForGetter(SourceWriter sourceWriter, JType returnType, String methodName, String widgetName)
+	private void generateWrapperMethodForGetter(SourcePrinter sourceWriter, JType returnType, String methodName, String widgetName)
 	{
 		String widgetNameFirstLower = Character.toLowerCase(widgetName.charAt(0)) + widgetName.substring(1);
 		String returnClassName = JClassUtils.getGenericDeclForType(returnType);
 		sourceWriter.println("public "+returnType.getParameterizedQualifiedSourceName()+" " + methodName+"(){");
-		sourceWriter.indent();
 
 		if (JClassUtils.isSimpleType(returnType)) 
 		{
 			sourceWriter.println("IsWidget w = _getFromScreen(\""+widgetNameFirstLower+"\");");
 			
 			sourceWriter.println("if (w != null) {");
-			sourceWriter.indent();
 			sourceWriter.println("if (w instanceof HasFormatter) {");
-			sourceWriter.indent();
 			sourceWriter.println("return ("+returnClassName+")((HasFormatter)w).getUnformattedValue();");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("else if (w instanceof HasValue) {");
-			sourceWriter.indent();
 			sourceWriter.println("return ((HasValue<"+returnClassName+">)w).getValue();");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			if (returnType.equals(stringType))
 			{
 				sourceWriter.println("else if (w instanceof HasText) {");
-				sourceWriter.indent();
 				sourceWriter.println("return ((HasText)w).getText();");
-				sourceWriter.outdent();
 				sourceWriter.println("}");
 			}
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			
 			sourceWriter.println("return null;");
@@ -244,33 +224,24 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 			sourceWriter.println("return _"+methodName+";");
 		}
 		
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
-	private void generateScreenGetterMethod(SourceWriter srcWriter)
+	private void generateScreenGetterMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public IsWidget _getFromScreen(String widgetName){");
-		srcWriter.indent();
 		srcWriter.println("IsWidget ret = Screen.get(widgetName);");
 		srcWriter.println("if (ret == null){");
-		srcWriter.indent();
 		srcWriter.println("String widgetNameFirstUpper;");
 		srcWriter.println("if (widgetName.length() > 1){"); 
-		srcWriter.indent();
 		srcWriter.println("widgetNameFirstUpper = Character.toUpperCase(widgetName.charAt(0)) + widgetName.substring(1);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("else{"); 
-		srcWriter.indent();
 		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("ret = Screen.get(widgetNameFirstUpper);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("return ret;");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 	

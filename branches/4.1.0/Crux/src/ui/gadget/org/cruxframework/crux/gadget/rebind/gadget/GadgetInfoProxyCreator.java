@@ -33,7 +33,6 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -56,7 +55,7 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	/**
 	 * @param srcWriter
 	 */
-	protected void generateFeatureMethods(SourceWriter srcWriter)
+	protected void generateFeatureMethods(SourcePrinter srcWriter)
 	{
 		HashSet<String> added = new HashSet<String>();
 		generateRequiredFeaturesMethods(srcWriter, baseIntf, added);
@@ -67,7 +66,7 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	protected void generateRequiredFeaturesMethods(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
+	protected void generateRequiredFeaturesMethods(SourcePrinter srcWriter, JClassType moduleMetaClass, Set<String> added)
 	{
 		NeedsFeatures needsFeatures = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		if (needsFeatures != null)
@@ -100,7 +99,7 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	protected void generateOptionalFeaturesMethods(SourceWriter srcWriter, JClassType moduleMetaClass, Set<String> added)
+	protected void generateOptionalFeaturesMethods(SourcePrinter srcWriter, JClassType moduleMetaClass, Set<String> added)
 	{
 		WantsFeatures needsFeatures = moduleMetaClass.getAnnotation(WantsFeatures.class);
 		if (needsFeatures != null)
@@ -130,15 +129,13 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("public " + UserPreferences.class.getCanonicalName() + " getUserPreferences(){");
-		srcWriter.indent();
 		srcWriter.println("return GadgetView.getGadget().getUserPreferences();");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		generateFeatureMethods(srcWriter);
 	}
@@ -163,13 +160,11 @@ public class GadgetInfoProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param feature
 	 */
-	private void generateFeatureMethod(SourceWriter srcWriter, ContainerFeature feature)
+	private void generateFeatureMethod(SourcePrinter srcWriter, ContainerFeature feature)
 	{
 		Class<?> featureClass = feature.getFeatureClass();
 		srcWriter.println("public " + featureClass.getCanonicalName() + " get"+featureClass.getSimpleName()+"(){");
-		srcWriter.indent();
 		srcWriter.println("return GadgetView.getGadget().get"+featureClass.getSimpleName()+"();");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 }

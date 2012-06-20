@@ -20,7 +20,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 
 
@@ -41,7 +41,7 @@ public class DevModeInitializerListener implements ServletContextListener
 
 		if(charset != null)
 		{
-			CruxToHtmlTransformer.setOutputCharset(charset);
+			ViewProcessor.setOutputCharset(charset);
 		}
 		else
 		{

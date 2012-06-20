@@ -16,8 +16,8 @@
 package org.cruxframework.crux.widgets.rebind.paging;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -59,7 +59,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		}
 		else
 		{
-			throw new CruxGeneratorException("No pageable widget set for the pager ["+context.getWidgetId()+"], on screen ["+getScreen().getId()+"]."); 
+			throw new CruxGeneratorException("No pageable widget set for the pager ["+context.getWidgetId()+"], on screen ["+getView().getId()+"]."); 
 		}							
 	}
 	

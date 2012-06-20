@@ -25,20 +25,18 @@ import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
-import org.cruxframework.crux.core.client.screen.ScreenFactory;
-import org.cruxframework.crux.core.client.screen.ViewFactory;
+import org.cruxframework.crux.core.client.screen.views.ViewFactory;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.Screen;
+import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * 
@@ -47,7 +45,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
-	private Map<String, Set<Screen>> fragmentedScreens = new HashMap<String, Set<Screen>>();
+	private Map<String, Set<View>> fragmentedViews = new HashMap<String, Set<View>>();
 
 	/**
 	 * @param logger
@@ -59,7 +57,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
     }
 	
 	@Override
-    protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter sourceWriter) throws CruxGeneratorException
     {
 		generateCreateViewMethod(sourceWriter);
 		generateGetCurrentDeviceMethod(sourceWriter);
@@ -69,21 +67,19 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * 
 	 * @param sourceWriter
 	 */
-	protected void generateCreateViewMethod(SourceWriter sourceWriter)
+	protected void generateCreateViewMethod(SourcePrinter sourceWriter)
     {
-	    sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
-		sourceWriter.indent();
+	    sourceWriter.println("public void createView(String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
 		if (Environment.isProduction())
 		{
-			generateViewCreationForAllScreens(sourceWriter);
+			generateViewCreation(sourceWriter, getViews());
 		}
 		else
 		{
-			generateViewCreationForCurrentScreen(sourceWriter);
+			generateViewCreation(sourceWriter, getViewsForCurrentScreen());
 		}
 		
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 
 		if (Environment.isProduction())
@@ -96,36 +92,21 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * 
 	 * @param sourceWriter
 	 */
-	protected void generateGetCurrentDeviceMethod(SourceWriter sourceWriter)
+	protected void generateGetCurrentDeviceMethod(SourcePrinter sourceWriter)
     {
 	    sourceWriter.println("public "+Device.class.getCanonicalName()+" getCurrentDevice(){ ");
-		sourceWriter.indent();
-
 		sourceWriter.println("return "+Device.class.getCanonicalName()+"."+getDeviceFeatures()+";");
-
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 
 	/**
 	 * @param sourceWriter
+	 * @param views
 	 */
-	private void generateViewCreationForCurrentScreen(SourceWriter sourceWriter) 
+	protected void generateViewCreation(SourcePrinter sourceWriter, List<View> views) 
 	{
-			Screen screen = getCurrentScreen();
-			generateViewCreator(sourceWriter, screen);
-	}
-
-	/**
-	 * @param sourceWriter
-	 * @param screens
-	 */
-	protected void generateViewCreationForAllScreens(SourceWriter sourceWriter) 
-	{
-		List<Screen> screens = getScreens();
-		
 		boolean first = true;
-		for (Screen screen : screens)
+		for (View view : views)
         {
 			if (!first)
 			{
@@ -133,27 +114,25 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			}
 			first = false;
 			
-			sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
-			sourceWriter.indent();
+			sourceWriter.println("if (StringUtils.unsafeEquals(id, "+EscapeUtils.quote(view.getId())+")){");
 			
-			if (!StringUtils.isEmpty(screen.getFragment()))
+			if (!StringUtils.isEmpty(view.getFragment()))
 			{
-				Set<Screen> fragment = fragmentedScreens.get(screen.getFragment());
+				Set<View> fragment = fragmentedViews.get(view.getFragment());
 				if (fragment == null)
 				{
-					fragment = new HashSet<Screen>();
-					fragmentedScreens.put(screen.getFragment(), fragment);
+					fragment = new HashSet<View>();
+					fragmentedViews.put(view.getFragment(), fragment);
 				}
-				fragment.add(screen);
-				String fragmentName = screen.getFragment().replaceAll("\\W", "");
-				sourceWriter.println("__load"+fragmentName+"(screenId);");
+				fragment.add(view);
+				String fragmentName = view.getFragment().replaceAll("\\W", "");
+				sourceWriter.println("__load"+fragmentName+"(id);");
 			}
 			else
 			{
-				generateViewCreator(sourceWriter, screen);
+				generateViewCreator(sourceWriter, view);
 			}
 
-			sourceWriter.outdent();
 			sourceWriter.println("}");
         }
 	}	
@@ -164,27 +143,22 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param controller
 	 * @param controllerAnnot
 	 */
-	protected void generateFragmentedViewFactoryCreation(SourceWriter sourceWriter)
+	protected void generateFragmentedViewFactoryCreation(SourcePrinter sourceWriter)
     {
-		for (String screenFragment : fragmentedScreens.keySet())
+		for (String viewFragment : fragmentedViews.keySet())
         {
-			String fragment = screenFragment.replaceAll("\\W", "");
-			sourceWriter.println("public void __load"+fragment+"(final String screenId){");
-			sourceWriter.indent();
+			String fragment = viewFragment.replaceAll("\\W", "");
+			sourceWriter.println("public void __load"+fragment+"(final String id){");
 			sourceWriter.println("GWT.runAsync(new "+RunAsyncCallback.class.getCanonicalName()+"(){");
-			sourceWriter.indent();
 			sourceWriter.println("public void onFailure(Throwable reason){");
-			sourceWriter.indent();
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().viewFactoryCanNotBeLoaded(\""+fragment+"\"));");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("public void onSuccess(){");
-			sourceWriter.indent();
 			
-			Set<Screen> screens = fragmentedScreens.get(screenFragment);
+			Set<View> views = fragmentedViews.get(viewFragment);
 			
 			boolean first = true;
-			for (Screen screen : screens)
+			for (View view : views)
             {
 				if (!first)
 				{
@@ -192,21 +166,13 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				}
 				first = false;
 				
-				sourceWriter.println("if (StringUtils.unsafeEquals(screenId, "+EscapeUtils.quote(screen.getModule()+"/"+screen.getRelativeId())+")){");
-				sourceWriter.indent();
-				
-				generateViewCreator(sourceWriter, screen);
-
-				sourceWriter.outdent();
+				sourceWriter.println("if (StringUtils.unsafeEquals(id, "+EscapeUtils.quote(view.getId())+")){");
+				generateViewCreator(sourceWriter, view);
 				sourceWriter.println("}");
             }
 			
-	        
-			sourceWriter.outdent();
 			sourceWriter.println("}");
-			sourceWriter.outdent();
 			sourceWriter.println("});");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
         } 
     }
@@ -214,15 +180,14 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	
 	/**
 	 * @param sourceWriter
-	 * @param screen
+	 * @param view
 	 */
-	private void generateViewCreator(SourceWriter sourceWriter, Screen screen)
+	private void generateViewCreator(SourcePrinter sourceWriter, View view)
     {
-		ViewFactoryCreator factoryCreator = getViewFactoryCreator(screen);
+		ViewFactoryCreator factoryCreator = getViewFactoryCreator(view);
 		try
 		{
-			sourceWriter.println("new "+ factoryCreator.create()+"().create();");
-			sourceWriter.println(org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName()+".createCrossDocumentAccessor("+ScreenFactory.class.getCanonicalName()+".getInstance().getScreen());");
+			sourceWriter.println("callback.onViewCreated(new "+ factoryCreator.create()+"("+EscapeUtils.quote(view.getId())+","+EscapeUtils.quote(factoryCreator.getDeclaredMessage(view.getTitle()))+"));");
 		}
 		finally
 		{
@@ -231,22 +196,22 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
     }
 
 	/**
-	 * @param screen
+	 * @param view
 	 * @return
 	 */
-	private ViewFactoryCreator getViewFactoryCreator(Screen screen)
+	private ViewFactoryCreator getViewFactoryCreator(View view)
 	{
 		if (Environment.isProduction())
 		{
-			return new ViewFactoryCreator(context, logger, screen, getDeviceFeatures());
+			return new ViewFactoryCreator(context, logger, view, getDeviceFeatures(), getModule());
 		}
 		else
 		{
-			ViewFactoryCreator factory = screen.getFactory();
+			ViewFactoryCreator factory = view.getFactory();
 			if (factory == null)
 			{
-				factory = new ViewFactoryCreator(context, logger, screen, getDeviceFeatures());
-				screen.setFactory(factory);
+				factory = new ViewFactoryCreator(context, logger, view, getDeviceFeatures(), getModule());
+				view.setFactory(factory);
 			}
 			else
 			{

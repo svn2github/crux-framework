@@ -15,10 +15,11 @@
  */
 package org.cruxframework.crux.core.rebind.screen.parameter;
 
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,5 +27,5 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public interface ParameterBindGenerator
 {
-	void generate(String parentVariable, JClassType classType, JField field, SourceWriter sourceWriter, TreeLogger logger);
+	void generate(String parentVariable, JClassType classType, JField field, SourcePrinter sourceWriter, TreeLogger logger);
 }

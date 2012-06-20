@@ -26,7 +26,7 @@
 
 	<!-- Specify the generator for registered widgets.     -->
 	<generate-with class="org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ViewFactory" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewFactory" />
 	</generate-with>
 	
 	<!-- Specify the generator for registered formatters.     -->

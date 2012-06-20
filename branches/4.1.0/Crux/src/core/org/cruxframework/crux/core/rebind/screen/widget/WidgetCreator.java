@@ -21,9 +21,9 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.Screen;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.WidgetConsumer;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.AttachEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.DettachEvtBind;
@@ -68,7 +68,7 @@ import com.google.gwt.dom.client.PartialSupport;
 public abstract class WidgetCreator <C extends WidgetCreatorContext>
 {
 	private WidgetCreatorAnnotationsProcessor annotationProcessor;
-	private ViewFactoryCreator factory = null;
+	private ViewFactoryCreator viewFactory = null;
 	
 	/**
 	 * @param metaElem
@@ -80,7 +80,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain at least one child.");
 		}
 		
 		JSONArray children = metaElem.optJSONArray("_children");
@@ -91,7 +91,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 
 		if (!acceptsNoChild && (children == null || children.length() == 0 || children.opt(0)==null))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain at least one child.");
 		}
 		return children;
 	}	
@@ -105,7 +105,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!acceptsNoChild && !metaElem.has("_children"))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain at least one child.");
 		}
 		JSONArray children = metaElem.optJSONArray("_children");
 		if (acceptsNoChild && children == null)
@@ -114,12 +114,12 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 		if (!acceptsNoChild && (children == null || children.length() == 0))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on view ["+getView().getId()+"], must contain at least one child.");
 		}
 		JSONObject firstChild = children.optJSONObject(0);
 		if (!acceptsNoChild && firstChild == null)
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain at least one child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain at least one child.");
 		}
 		return firstChild;
 	}
@@ -136,7 +136,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		String result = metaElem.optString("_html");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain an inner HTML.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain an inner HTML.");
 		}
 		return result;
 	}
@@ -153,7 +153,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		String result = metaElem.optString("_text");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain a text node child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain a text node child.");
 		}
 		return result;
 	}
@@ -222,7 +222,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	
 	public boolean containsWidget(String widgetId)
 	{
-		return factory.containsWidget(widgetId);
+		return viewFactory.containsWidget(widgetId);
 	}
 	
 	/**
@@ -255,10 +255,10 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		if (!metaElem.has("id"))
 		{
 			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getScreen().getId()+"], there is an widget of type ["+factory.getMetaElementType(metaElem)+"] without id.");
+					"On page ["+getView().getId()+"], there is an widget of type ["+viewFactory.getMetaElementType(metaElem)+"] without id.");
 		}
 		String widgetId = metaElem.optString("id");
-		return createChildWidget(out, metaElem, widgetId, factory.getMetaElementType(metaElem), consumer, allowWrapperForCreatedWidget, context);
+		return createChildWidget(out, metaElem, widgetId, viewFactory.getMetaElementType(metaElem), consumer, allowWrapperForCreatedWidget, context);
 	}		
 	
 	/**
@@ -278,7 +278,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			String widgetType, WidgetConsumer consumer, boolean allowWrapperForCreatedWidget, WidgetCreatorContext context) throws CruxGeneratorException
 	{
 		WidgetConsumer widgetConsumer = consumer != null ? consumer : context.getWidgetConsumer();
-		return factory.newWidget(out, metaElem, widgetId, widgetType, widgetConsumer, allowWrapperForCreatedWidget);
+		return viewFactory.newWidget(out, metaElem, widgetId, widgetType, widgetConsumer, allowWrapperForCreatedWidget);
 	}
 	
 	/**
@@ -346,7 +346,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		if (!isWidget(metaElem))
 		{
-			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on screen ["+getScreen().getId()+"], must contain a valid widget as child.");
+			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain a valid widget as child.");
 		}
 		return metaElem;
 	}
@@ -357,7 +357,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String getChildWidgetClassName(JSONObject metaElem)
 	{
-		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).getWidgetClassName();
+		return viewFactory.getWidgetCreator(viewFactory.getMetaElementType(metaElem)).getWidgetClassName();
 	}
 	
 	/**
@@ -367,7 +367,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public Class<?> getChildWidgetClass(JSONObject metaElem)
 	{
-		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).getWidgetClass();
+		return viewFactory.getWidgetCreator(viewFactory.getMetaElementType(metaElem)).getWidgetClass();
 	}
 	
 	/**
@@ -375,7 +375,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public GeneratorContextExt getContext()
 	{
-		return factory.getContext();
+		return viewFactory.getContext();
 	}
 
 	/**
@@ -387,7 +387,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports)
 	{
-		return factory.getSubTypeWriter(subType, superClass, interfaces, imports);
+		return viewFactory.getSubTypeWriter(subType, superClass, interfaces, imports);
 	}
 	
 	/**
@@ -403,7 +403,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
      */
     public SourcePrinter getSubTypeWriter(String subType, String superClass, String[] interfaces, String[] imports, boolean isInterface)
     {
-    	return factory.getSubTypeWriter(subType, superClass, interfaces, imports, isInterface);
+    	return viewFactory.getSubTypeWriter(subType, superClass, interfaces, imports, isInterface);
     }
 	
 	
@@ -413,7 +413,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public String getDeclaredMessage(String property)
 	{
-		return factory.getDeclaredMessage(property);
+		return viewFactory.getDeclaredMessage(property);
 	}
 	
 	/**
@@ -421,15 +421,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public TreeLogger getLogger()
 	{
-		return factory.getLogger();
+		return viewFactory.getLogger();
 	}
 
 	/**
 	 * @return
 	 */
-	public Screen getScreen()
+	public View getView()
 	{
-		return factory.getScreen();
+		return viewFactory.getView();
 	}
 
 	/**
@@ -437,7 +437,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public Class<?> getWidgetClass()
     {
-	    return factory.getWidgetCreatorHelper(getWidgetFactoryDeclaration()).getWidgetType();
+	    return viewFactory.getWidgetCreatorHelper(getWidgetFactoryDeclaration()).getWidgetType();
     }
 
 	/**
@@ -458,7 +458,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		{
 			return declarativeFactory.library()+"_"+declarativeFactory.id();
 		}
-		throw new CruxGeneratorException("Error reading factory declaration."); 
+		throw new CruxGeneratorException("Error reading viewFactory declaration."); 
 	}
 	
 	/**
@@ -467,7 +467,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public boolean hasChildPartialSupport(JSONObject metaElem)
 	{
-		return factory.getWidgetCreator(factory.getMetaElementType(metaElem)).hasPartialSupport();
+		return viewFactory.getWidgetCreator(viewFactory.getMetaElementType(metaElem)).hasPartialSupport();
 	}
 	
 	/**
@@ -503,7 +503,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
     public boolean isWidget(JSONObject metaElem)
 	{
-		return factory.isValidWidget(metaElem);
+		return viewFactory.isValidWidget(metaElem);
 	}
 	
 	/**
@@ -585,7 +585,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			{
 				return true;
 			}
-			if (factory.getDevice().equals(device.toString()))
+			if (viewFactory.getDevice().equals(device.toString()))
 			{
 				return true;
 			}
@@ -598,7 +598,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	protected void createPostProcessingScope()
 	{
-		factory.createPostProcessingScope();
+		viewFactory.createPostProcessingScope();
 	}
 	
 	/**
@@ -607,7 +607,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	protected void commitPostProcessing(SourcePrinter printer)
 	{
-		factory.commitPostProcessing(printer);
+		viewFactory.commitPostProcessing(printer);
 	}
 	
 	/**
@@ -616,7 +616,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	protected void printlnPostProcessing(String s)
 	{
-		factory.printlnPostProcessing(s);
+		viewFactory.printlnPostProcessing(s);
 	}
 
 	/**
@@ -625,7 +625,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	protected ControllerAccessHandler getControllerAccessorHandler()
 	{
-		return factory.getControllerAccessHandler();
+		return viewFactory.getControllerAccessHandler();
 	}
 	
 	/**
@@ -633,26 +633,26 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	ViewFactoryCreator getViewFactory()
 	{
-		return this.factory;
+		return this.viewFactory;
 	}
 	
 	/**
-	 * @param factory
+	 * @param viewFactory
 	 */
 	void setViewFactory(ViewFactoryCreator factory)
 	{
-		this.factory = factory;
+		this.viewFactory = factory;
 		this.annotationProcessor = new WidgetCreatorAnnotationsProcessor(getClass(), this);
 	}
 	
 	protected String getLoggerVariable()
 	{
-		return factory.getLoggerVariable();
+		return viewFactory.getLoggerVariable();
 	}
 	
 	protected Map<String, String> getDeclaredMessages()
 	{
-		return factory.getDeclaredMessages();
+		return viewFactory.getDeclaredMessages();
 	}
 	
 	/**

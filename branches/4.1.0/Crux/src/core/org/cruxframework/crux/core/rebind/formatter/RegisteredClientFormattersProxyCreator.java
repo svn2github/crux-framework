@@ -25,12 +25,10 @@ import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.RegisteredClientFormatters;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.Screen;
-
+import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -64,51 +62,47 @@ public class RegisteredClientFormattersProxyCreator extends AbstractInterfaceWra
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("public "+getProxySimpleName()+"(){ ");
-		srcWriter.indent();
 
-		List<Screen> screens = getScreens();
-		for (Screen screen : screens)
+		List<View> views = getViews();
+		for (View view : views)
 		{
-			Iterator<String> iterator = screen.iterateFormatters();
+			Iterator<String> iterator = view.iterateFormatters();
 			while (iterator.hasNext())
 			{
 				String formatter = iterator.next();
 				generateFormatterBlock(srcWriter, formatter);
 			}
 		}
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private FastMap<Formatter> clientFormatters = new FastMap<Formatter>();");
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("public Formatter getClientFormatter(String id){");
-		srcWriter.indent();
 		srcWriter.println("return clientFormatters.get(id);");
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 	
-	private void generateFormatterBlock(SourceWriter sourceWriter, String formatter)
+	private void generateFormatterBlock(SourcePrinter sourceWriter, String formatter)
 	{
 		if (!formattersAdded.containsKey(formatter))
 		{

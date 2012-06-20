@@ -16,8 +16,6 @@
 package org.cruxframework.crux.core.declarativeui;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -35,45 +33,62 @@ import org.cruxframework.crux.core.declarativeui.template.TemplatesPreProcessor;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.StreamUtils;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 
-
 /**
- * Generates HTML output based on Crux widget tags
- * @author Gesse S. F. Dafe
+ * Process Crux view files, extracting metadata and generating the host html for
+ * application pages.
+ * 
+ * @author Thiago da Rosa de Bustamante
  */
-public class CruxToHtmlTransformer
+public class ViewProcessor
 {
 	// Makes it easier to read the output files
 	private static boolean forceIndent = false;
 	private static String outputCharset;
 
-	private static final Log log = LogFactory.getLog(CruxToHtmlTransformer.class);
+	private static final Log log = LogFactory.getLog(ViewProcessor.class);
 	private static DocumentBuilder documentBuilder = null;
 
 	private static List<CruxXmlPreProcessor> preProcessors;
 	private static final Lock lock = new ReentrantLock();
 
 	/**
-	 * Generate the HTML code from the .crux.xml page.
 	 * 
-	 * @param screenId
-	 * @param device
 	 * @param file
-	 * @param out
-	 * @param escapeXML
-	 * @param generateWidgetsMetadata
+	 * @param device
+	 * @return
 	 */
-	public static void generateHTML(String screenId, String device, InputStream file, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
+	public static Document getView(InputStream file, String device)
 	{
 		init();
 		
 		try
 		{
+			return loadCruxPage(file, device);
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Generate the HTML code from the view page.
+	 * 
+	 * @param screenId
+	 * @param view
+	 * @param out
+	 */
+	public static void generateHTML(String screenId, Document view, OutputStream out)
+	{
+		try
+		{
 			StringWriter buff = new StringWriter();
-			Document source = loadCruxPage(file, device);
-			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
-			htmlBuilder.build(screenId, source, buff);
+			ViewParser viewParser = new ViewParser(false, mustIndent());
+			viewParser.generateHTMLHostPage(screenId, view, buff);
 			String result = buff.toString();
 			String outCharset = getOutputCharset();
 			if (outCharset == null || outCharset.length() == 0)
@@ -90,21 +105,18 @@ public class CruxToHtmlTransformer
 	}
 
 	/**
-	 * Extract the widgets metadata from the  from the .crux.xml page.
+	 * Extract the widgets metadata from the  from the view page.
      *
-	 * @param source
-	 * @param escapeXML
-	 * @param generateWidgetsMetadata
+	 * @param viewSource
 	 * @return
 	 */
-	public static String extractWidgetsMetadata(Document source, boolean escapeXML, boolean generateWidgetsMetadata)
+	public static JSONObject extractWidgetsMetadata(Document viewSource)
 	{
 		try
 		{
-			StringBuilder buff = new StringBuilder();
-			HTMLBuilder htmlBuilder = new HTMLBuilder(escapeXML, generateWidgetsMetadata, mustIndent());
-			htmlBuilder.generateCruxMetaData(source.getDocumentElement(), buff);
-			return buff.toString();
+			ViewParser viewParser = new ViewParser(true, mustIndent());
+			String metadata = viewParser.extractCruxMetaData(viewSource);
+			return new JSONObject(metadata);
 		}
 		catch (Exception e)
 		{
@@ -112,27 +124,6 @@ public class CruxToHtmlTransformer
 			throw new RuntimeException(e);
 		}
 	}	
-	
-	/**
-	 * @param screenId
-	 * @param device
-	 * @param filePath
-	 * @param out
-	 * @param escapeXML
-	 * @param generateWidgetsMetadata
-	 */
-	public static void generateHTML(String screenId, String device, String filePath, OutputStream out, boolean escapeXML, boolean generateWidgetsMetadata)
-	{
-		try
-		{
-			generateHTML(screenId, device, new FileInputStream(filePath), out, escapeXML, generateWidgetsMetadata);
-		}
-		catch (FileNotFoundException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e);
-		}
-	}
 	
 	/**
 	 * Makes it easier to read the output files
@@ -214,12 +205,12 @@ public class CruxToHtmlTransformer
 	}
 
 	/**
-	 * Loads Crux page
+	 * Loads Crux view page
 	 * @param fileName
 	 * @return
-	 * @throws HTMLBuilderException
+	 * @throws ViewParserException
 	 */
-	private static Document loadCruxPage(InputStream file, String device) throws HTMLBuilderException
+	private static Document loadCruxPage(InputStream file, String device) throws ViewParserException
 	{
 		try
 		{
@@ -228,7 +219,7 @@ public class CruxToHtmlTransformer
 		}
 		catch (Exception e)
 		{
-			throw new HTMLBuilderException(e.getMessage(), e);
+			throw new ViewParserException(e.getMessage(), e);
 		}
 	}
 	

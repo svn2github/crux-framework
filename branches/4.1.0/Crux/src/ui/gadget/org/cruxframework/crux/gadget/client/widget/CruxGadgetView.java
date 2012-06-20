@@ -16,7 +16,7 @@
 package org.cruxframework.crux.gadget.client.widget;
 
 import org.cruxframework.crux.core.client.screen.HTMLContainer;
-import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
+import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;

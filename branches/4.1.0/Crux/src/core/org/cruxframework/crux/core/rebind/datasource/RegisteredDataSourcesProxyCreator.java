@@ -27,8 +27,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.Screen;
-
+import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -38,7 +37,6 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * Generates a RegisteredControllers class.  
@@ -49,24 +47,24 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private Map<String, String> dataSourcesClassNames = new HashMap<String, String>();
-	private final Screen screen;
+	private final View view;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, Screen screen)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()), false);
-		this.screen = screen;
+		this.view = view;
     }
 
 	@Override
-    protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter sourceWriter) throws CruxGeneratorException
     {
 		generateGetDataSourceMethod(sourceWriter);
     }
 
 	@Override
-    protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-		generateDataSourcesForScreen(srcWriter, screen);
+		generateDataSourcesForView(srcWriter, view);
     }
 	
 	/**
@@ -96,15 +94,12 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	 * @param implClassName
 	 * @param dataSourcesClassNames
 	 */
-	private void generateGetDataSourceMethod(SourceWriter sourceWriter) 
+	private void generateGetDataSourceMethod(SourcePrinter sourceWriter) 
 	{
 		sourceWriter.println("public DataSource<?> getDataSource(String id){");
-		sourceWriter.indent();
 		boolean first = true;
 		sourceWriter.println("if(id==null){");
-		sourceWriter.indent();
 		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 		for (String dataSource : dataSourcesClassNames.keySet()) 
 		{
@@ -117,41 +112,35 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 				first = false;
 			}
 			sourceWriter.println("if(StringUtils.unsafeEquals(\""+dataSource+"\",id)){");
-			sourceWriter.indent();
 			sourceWriter.println("return new " + dataSourcesClassNames.get(dataSource) + "();");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 	
 	/**
 	 * 
 	 * @param sourceWriter
-	 * @param screen
+	 * @param view
 	 */
-	private void generateDataSourcesForScreen(SourceWriter sourceWriter, Screen screen)
+	private void generateDataSourcesForView(SourcePrinter sourceWriter, View view)
 	{
-		Iterator<String> dataSources = screen.iterateDataSources();
+		Iterator<String> dataSources = view.iterateDataSources();
 		
 		while (dataSources.hasNext())
 		{
 			String dataSource = dataSources.next();
-			generateDataSourceClassBlock(screen, sourceWriter, dataSource);
+			generateDataSourceClassBlock(sourceWriter, dataSource);
 		}		
 	}
 	
 	/**
 	 * 
-	 * @param logger
-	 * @param screen
 	 * @param sourceWriter
 	 * @param dataSource
-	 * @param added
 	 */
-	private void generateDataSourceClassBlock(Screen screen, SourceWriter sourceWriter, String dataSource)
+	private void generateDataSourceClassBlock(SourcePrinter sourceWriter, String dataSource)
 	{
 		if (!dataSourcesClassNames.containsKey(dataSource) && DataSources.getDataSource(dataSource)!= null)
 		{
@@ -171,7 +160,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	public String getProxySimpleName()
 	{
-		String className = screen.getModule()+"_"+screen.getRelativeId(); 
+		String className = view.getId(); 
 		className = className.replaceAll("[\\W]", "_");
 		return "RegisteredDataSources_"+className;
 	}

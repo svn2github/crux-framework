@@ -29,7 +29,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.generator.NameFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
 /**
@@ -120,7 +119,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	/**
 	 * @param srcWriter
 	 */
-	protected void generateLoggerField(SourceWriter srcWriter)
+	protected void generateLoggerField(SourcePrinter srcWriter)
     {
 	    srcWriter.println("private static Logger _logger_ = Logger.getLogger("+getProxySimpleName()+".class.getName());");
     }	
@@ -132,7 +131,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param nameFactory
 	 * @param method
 	 */
-	protected void generateProxyMethodSignature(SourceWriter w, NameFactory nameFactory, JMethod method)
+	protected void generateProxyMethodSignature(SourcePrinter w, NameFactory nameFactory, JMethod method)
 	{
 		// Write the method signature
 		JType returnType = method.getReturnType().getErasedType();
@@ -147,9 +146,9 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	}
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateSubTypes(com.google.gwt.user.rebind.SourcePrinter)
 	 */
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		if (this.baseProxyType != null)
 		{
@@ -186,16 +185,14 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 			                            SerializableTypeOracle typesSentToBrowser) throws CruxGeneratorException;	
 	
 	/**
-	 * @param sourceWriter
+	 * @param sourcePrinter
 	 * @param message
 	 */
-	protected void logDebugMessage(SourceWriter sourceWriter, String message)
+	protected void logDebugMessage(SourcePrinter sourcePrinter, String message)
     {
-	    sourceWriter.println("if (LogConfiguration.loggingIsEnabled()){");
-		sourceWriter.indent();
-		sourceWriter.println("_logger_.log(Level.FINE, "+message+");");
-		sourceWriter.outdent();
-		sourceWriter.println("}");
+	    sourcePrinter.println("if (LogConfiguration.loggingIsEnabled()){");
+		sourcePrinter.println("_logger_.log(Level.FINE, "+message+");");
+		sourcePrinter.println("}");
     }
 	
 	
@@ -204,7 +201,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param nameFactory
 	 * @param method
 	 */
-	protected void generateMethodParameters(SourceWriter w, NameFactory nameFactory, JMethod method)
+	protected void generateMethodParameters(SourcePrinter w, NameFactory nameFactory, JMethod method)
 	{
 		boolean needsComma = false;
 		JParameter[] params = method.getParameters();
@@ -237,7 +234,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 * @param w
 	 * @param methodThrows
 	 */
-	protected void generateMethodTrhowsClause(SourceWriter w, JMethod method)
+	protected void generateMethodTrhowsClause(SourcePrinter w, JMethod method)
     {
 	    boolean needsComma = false;
 	    JType[] methodThrows = method.getThrows();

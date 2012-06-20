@@ -24,12 +24,14 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
 import org.cruxframework.crux.core.declarativeui.template.TemplatesScanner;
+import org.cruxframework.crux.core.declarativeui.view.ViewsScanner;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.scannotation.URLStreamManager;
 import org.cruxframework.crux.tools.compile.CruxPreProcessor;
+import org.w3c.dom.Document;
 
 
 /**
@@ -95,11 +97,12 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 			preprocessedFile = File.createTempFile(getResourceName(url), pageFileExtension);
 		}
 		
-		CruxToHtmlTransformer.setForceIndent(indent);
-		CruxToHtmlTransformer.setOutputCharset(outputCharset);
+		ViewProcessor.setForceIndent(indent);
+		ViewProcessor.setOutputCharset(outputCharset);
 		FileOutputStream out = new FileOutputStream(preprocessedFile);
 		URLStreamManager manager = new URLStreamManager(url);
-		CruxToHtmlTransformer.generateHTML(url.toString(), null, manager.open(), out, false, false);
+		Document screen = ViewProcessor.getView(manager.open(), null);
+		ViewProcessor.generateHTML(url.toString(), screen, out);
 		manager.close();
 		out.flush();
 		out.close();
@@ -187,5 +190,6 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 	{
 		ClassScanner.initialize(urls);
 		TemplatesScanner.initialize(urls);
+		ViewsScanner.initialize(urls);
 	}
 }

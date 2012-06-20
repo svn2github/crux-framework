@@ -23,7 +23,6 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.invoker.InvokerProxyCreator;
 import org.cruxframework.crux.widgets.client.dialog.Popup;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -33,7 +32,6 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * Generator for PopupOpenerInvoker objects.
@@ -70,7 +68,7 @@ public class PopupOpenerInvokerProxyCreator extends AbstractWrapperProxyCreator
 	 * 
 	 */
 	@Override
-	protected void generateWrapperMethod(JMethod method, SourceWriter sourceWriter) throws CruxGeneratorException
+	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
 		JType returnType = method.getReturnType();
 		String methodName = method.getName();
@@ -122,7 +120,7 @@ public class PopupOpenerInvokerProxyCreator extends AbstractWrapperProxyCreator
 	 * @param numParams
 	 * @param returnTypeDeclaration
 	 */
-	private void generateMethodInvocation(SourceWriter sourceWriter, String controllerName, String methodName, 
+	private void generateMethodInvocation(SourcePrinter sourceWriter, String controllerName, String methodName, 
 										  int numParams, String returnTypeDeclaration)
 	{
 		sourceWriter.println("try{");

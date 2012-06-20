@@ -29,7 +29,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -58,7 +57,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
     }
 		
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 	    super.generateProxyMethods(srcWriter);
 	    generateScreenGetterMethod(srcWriter);
@@ -83,7 +82,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	 * @param interfaceClass
 	 */
 	@Override
-	protected void generateWrapperMethod(JMethod method, SourceWriter sourceWriter)
+	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter)
 	{
 		JType returnType = method.getReturnType();
 		
@@ -125,13 +124,11 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	 * @param name
 	 * @param widgetName
 	 */
-	private void generateWrapperMethod(SourceWriter sourceWriter, JType returnType, String name, String widgetName)
+	private void generateWrapperMethod(SourcePrinter sourceWriter, JType returnType, String name, String widgetName)
     {
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
-		sourceWriter.indent();
 		sourceWriter.println("return ("+classSourceName+")Screen.get(\""+widgetName+"\");");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 
@@ -141,42 +138,31 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	 * @param name
 	 * @param widgetName
 	 */
-	private void generateWrapperMethodForGetter(SourceWriter sourceWriter, JType returnType,
+	private void generateWrapperMethodForGetter(SourcePrinter sourceWriter, JType returnType,
 			String name, String widgetName)
 	{
 		String widgetNameFirstLower = Character.toLowerCase(widgetName.charAt(0)) + widgetName.substring(1);
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
-		sourceWriter.indent();
 		sourceWriter.println("return ("+classSourceName+")_getFromScreen(\""+widgetNameFirstLower+"\");");
-		sourceWriter.outdent();
-
 		sourceWriter.println("}");
 	}
 
-	private void generateScreenGetterMethod(SourceWriter srcWriter)
+	private void generateScreenGetterMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public Object _getFromScreen(String widgetName){");
-		srcWriter.indent();
 		srcWriter.println("Object ret = Screen.get(widgetName);");
 		srcWriter.println("if (ret == null){");
-		srcWriter.indent();
 		srcWriter.println("String widgetNameFirstUpper;");
 		srcWriter.println("if (widgetName.length() > 1){"); 
-		srcWriter.indent();
 		srcWriter.println("widgetNameFirstUpper = Character.toUpperCase(widgetName.charAt(0)) + widgetName.substring(1);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("else{"); 
-		srcWriter.indent();
 		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("ret = Screen.get(widgetNameFirstUpper);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		srcWriter.println("return ret;");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 }

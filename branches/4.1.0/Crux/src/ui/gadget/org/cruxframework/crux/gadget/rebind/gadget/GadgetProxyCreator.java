@@ -35,7 +35,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -72,7 +71,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	/**
 	 * @param srcWriter
 	 */
-	private void generateOptionalFeatureInitialization(SourceWriter srcWriter)
+	private void generateOptionalFeatureInitialization(SourcePrinter srcWriter)
 	{
 		generateOptionalFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
 	}
@@ -81,7 +80,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	/**
 	 * @param srcWriter
 	 */
-	private void generateRequiredFeatureInitialization(SourceWriter srcWriter)
+	private void generateRequiredFeatureInitialization(SourcePrinter srcWriter)
 	{
 		generateRequiredFeaturesInitialization(srcWriter, moduleMetaClass, new HashSet<String>());
 	}
@@ -90,7 +89,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	private void generateRequiredFeaturesInitialization(SourceWriter srcWriter, Class<?> moduleMetaClass, Set<String> added)
+	private void generateRequiredFeaturesInitialization(SourcePrinter srcWriter, Class<?> moduleMetaClass, Set<String> added)
 	{
 		NeedsFeatures needsFeatures = moduleMetaClass.getAnnotation(NeedsFeatures.class);
 		if (needsFeatures != null)
@@ -123,7 +122,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param moduleMetaClass
 	 */
-	private void generateOptionalFeaturesInitialization(SourceWriter srcWriter, Class<?> moduleMetaClass, Set<String> added)
+	private void generateOptionalFeaturesInitialization(SourcePrinter srcWriter, Class<?> moduleMetaClass, Set<String> added)
 	{
 		WantsFeatures needsFeatures = moduleMetaClass.getAnnotation(WantsFeatures.class);
 		if (needsFeatures != null)
@@ -153,27 +152,25 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("public " + getProxySimpleName() + "(){");
-		srcWriter.indent();
 		srcWriter.println("this.userPreferences = GWT.create("+GadgetUtils.getUserPrefsType(logger, moduleMetaClass).getCanonicalName()+".class);");
 		
 		generateRequiredFeatureInitialization(srcWriter);
 		generateOptionalFeatureInitialization(srcWriter);
 		
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private " + UserPreferences.class.getSimpleName() + " userPreferences = null;");
 		
@@ -188,15 +185,13 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("public " + UserPreferences.class.getSimpleName() + " getUserPreferences(){");
-		srcWriter.indent();
 		srcWriter.println("return userPreferences;");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		for (ContainerFeature feature : ContainerFeature.values())
 		{
@@ -205,17 +200,13 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			if (featureClass != null)
 			{
 				srcWriter.println("public " + featureClass.getCanonicalName() + " get"+featureClass.getSimpleName()+"(){");
-				srcWriter.indent();
 				srcWriter.println("return "+feature.toString()+"Input;");
-				srcWriter.outdent();
 				srcWriter.println("}");
 			}
 		}
 		
 		srcWriter.println("public native boolean hasFeature(String featureName)/*-{");
-		srcWriter.indent();
 		srcWriter.println("return $wnd.gadgets.util.hasFeature(featureName);");
-		srcWriter.outdent();
 		srcWriter.println("}-*/;");
 	}
 
@@ -238,7 +229,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param feature
 	 */
-	private void initializeFeature(SourceWriter srcWriter, ContainerFeature feature)
+	private void initializeFeature(SourcePrinter srcWriter, ContainerFeature feature)
 	{
 		srcWriter.println("this."+feature.toString()+"Input = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
 		neededFeatures.add(feature.getFeatureName());
@@ -248,12 +239,10 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param srcWriter
 	 * @param feature
 	 */
-	private void initializeOptionalFeature(SourceWriter srcWriter, ContainerFeature feature)
+	private void initializeOptionalFeature(SourcePrinter srcWriter, ContainerFeature feature)
 	{
 		srcWriter.println("if (hasFeature("+EscapeUtils.quote(feature.getFeatureName())+")){");
-		srcWriter.indent();
 		srcWriter.println("this."+feature.toString()+"Input = GWT.create("+feature.getFeatureClass().getCanonicalName()+".class);");
-		srcWriter.outdent();
 		srcWriter.println("}");
 		neededFeatures.add(feature.getFeatureName());
 	}

@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -29,7 +30,6 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -515,7 +515,7 @@ public class JClassUtils
 	 * @param sourceWriter
 	 */
 	public static void generateFieldValueSet(JClassType voClass, JField field, String parentVariable,  
-			                           String valueVariable, SourceWriter sourceWriter, boolean allowProtected)
+			                           String valueVariable, SourcePrinter sourceWriter, boolean allowProtected)
 	{
 		if (field.isPublic() || (allowProtected && field.isProtected()))
 		{

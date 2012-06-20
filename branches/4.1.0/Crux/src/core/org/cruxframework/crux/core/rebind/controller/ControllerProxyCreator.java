@@ -66,7 +66,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
 /**
@@ -131,33 +130,31 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	}
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@SuppressWarnings("deprecation")
     @Override
-	protected void generateProxyContructor(SourceWriter srcWriter)
+	protected void generateProxyContructor(SourcePrinter srcWriter)
 	{
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
-		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, controllerClass);
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 	
 	@Override
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 	    super.generateSubTypes(srcWriter);
 	    new IocContainerRebind(logger, context).create();
 	}
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		if (isCrossDoc)
 		{
@@ -170,7 +167,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	}
 	
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter)
+	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
 		
 		generateInvokeMethod(srcWriter);
@@ -279,7 +276,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @return a sourceWriter for the proxy class
 	 */
 	@SuppressWarnings("deprecation")
-	protected SourceWriter getSourceWriter()
+	protected SourcePrinter getSourcePrinter()
 	{
 		JPackage crossDocIntfPkg = controllerClass.getPackage();
 		String packageName = crossDocIntfPkg == null ? "" : crossDocIntfPkg.getName();
@@ -302,38 +299,34 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
         String baseInterface = isCrossDoc?CrossDocumentInvoker.class.getCanonicalName():org.cruxframework.crux.core.client.event.ControllerInvoker.class.getCanonicalName();
 		composerFactory.addImplementedInterface(baseInterface);
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 	
 	/**
 	 * @param srcWriter
 	 */
-	private void generateCreateStreamReaderMethod(SourceWriter srcWriter)
+	private void generateCreateStreamReaderMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("protected SerializationStreamReader createStreamReader(String encoded) throws SerializationException {");
-		srcWriter.indent();
 		String readerClassName = getClientSerializationStreamReaderClassName();
 
 		srcWriter.println(readerClassName+" clientSerializationStreamReader = new "+readerClassName+"(SERIALIZER);");
 		srcWriter.println("clientSerializationStreamReader.prepareToRead(encoded);");
 		srcWriter.println("return clientSerializationStreamReader;");
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}
 	
 	/**
 	 * @param srcWriter
 	 */
-	private void generateCreateStreamWriterMethod(SourceWriter srcWriter)
+	private void generateCreateStreamWriterMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("protected SerializationStreamWriter createStreamWriter(){");
-		srcWriter.indent();
 		String writerClassName = getClientSerializationStreamWriterClassName();
 
 		srcWriter.println(writerClassName+" clientSerializationStreamWriter = new "+writerClassName+"(SERIALIZER);");
 		srcWriter.println("clientSerializationStreamWriter.prepareToWrite();");
 		srcWriter.println("return clientSerializationStreamWriter;");
-		srcWriter.outdent();
 		srcWriter.println("}");	
 	}
 
@@ -341,13 +334,12 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param sourceWriter
 	 * @param method
 	 */
-	private void generateCrosDocInvokeBlockForMethod(SourceWriter sourceWriter, JMethod method)
+	private void generateCrosDocInvokeBlockForMethod(SourcePrinter sourceWriter, JMethod method)
 	{
 		JParameter[] params = method.getParameters();
 		JType returnType = method.getReturnType();
 
 		sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+getJsniSimpleSignature(method)+"\", methodCalled)){");
-    	sourceWriter.indent();
 
     	if (returnType != JPrimitiveType.VOID)
     	{
@@ -372,48 +364,39 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 		sourceWriter.println(";");
 
-    	sourceWriter.outdent();
     	sourceWriter.println("}");
 	}
 
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateCrossDocInvokeExceptionHandlingBlock(SourceWriter sourceWriter)
+	private void generateCrossDocInvokeExceptionHandlingBlock(SourcePrinter sourceWriter)
     {
 	    sourceWriter.println("try{");
-		sourceWriter.indent();
     	sourceWriter.println("isExecutionOK = false;");
 		sourceWriter.println("streamWriter.writeObject(ex);");
-		sourceWriter.outdent();
 		sourceWriter.println("}catch (Exception ex2){");
-		sourceWriter.indent();
 		sourceWriter.println("return Crux.getMessages().crossDocumentInvocationGeneralError(Screen.getId(), ex.getMessage());"); 
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateCrossDocInvokeMethod(SourceWriter sourceWriter)
+	private void generateCrossDocInvokeMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public String invoke(String serializedData){ ");
-		sourceWriter.indent();
 
 		sourceWriter.println("boolean isExecutionOK = true;");
 
 		sourceWriter.println(SerializationStreamWriter.class.getSimpleName()+" streamWriter = createStreamWriter();");
 		sourceWriter.println("try{");
-		sourceWriter.indent();
 
 		generateMethodIdentificationBlock(sourceWriter);
 		
 		sourceWriter.println(SerializationStreamReader.class.getSimpleName()+" streamReader = null;");
 		sourceWriter.println("if(serializedData.length() > 0){");
-		sourceWriter.indent();
 		sourceWriter.println("streamReader = createStreamReader(serializedData);");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 		
 		logDebugMessage(sourceWriter, "\"Calling cross document method: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]\"");
@@ -439,7 +422,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		if (!first)
 		{
 			sourceWriter.println(" else {");
-			sourceWriter.indent();
 		}
 		
 		logDebugMessage(sourceWriter, "\"Error calling cross document method: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]. NotFound\"");
@@ -456,16 +438,12 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		}
 		logDebugMessage(sourceWriter, "\"Cross document method executed: Screen[\"+Screen.getId()+\"], Controller["+controllerName+"], Method[\"+methodCalled+\"]\"");
 
-		sourceWriter.outdent();
 		sourceWriter.println("}catch (Exception ex){");
-		sourceWriter.indent();
 		generateCrossDocInvokeExceptionHandlingBlock(sourceWriter);
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 
 
 		sourceWriter.println("return (isExecutionOK?\"//OK\":\"//EX\")+streamWriter.toString();");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
@@ -476,17 +454,15 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param method
 	 */
     @SuppressWarnings("deprecation")
-	private void generateInvokeBlockForMethod(SourceWriter sourceWriter, JMethod method)
+	private void generateInvokeBlockForMethod(SourcePrinter sourceWriter, JMethod method)
     {
 	    if (method.getAnnotation(org.cruxframework.crux.core.client.controller.ExposeOutOfModule.class) != null)
 	    {
 	    	sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+method.getName()+"\",metodo)) {");
-			sourceWriter.indent();
 	    }
 	    else
 	    {
 	    	sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(\""+method.getName()+"\",metodo) && !fromOutOfModule) {");
-			sourceWriter.indent();
 	    }
 	    
 	    Validate annot = method.getAnnotation(Validate.class);
@@ -494,7 +470,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    if (mustValidade)
 	    {
 	    	sourceWriter.println("try{");
-			sourceWriter.indent();
 	    	String validateMethod = annot.value();
 	    	if (validateMethod == null || validateMethod.length() == 0)
 	    	{
@@ -503,15 +478,11 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    		validateMethod = "validate"+ methodName;
 	    	}
 	    	generateValidateMethodCall(method, validateMethod, sourceWriter);
-			sourceWriter.outdent();
 	    	sourceWriter.println("}catch (Throwable e){");
-			sourceWriter.indent();
 	    	sourceWriter.println("__runMethod = false;");
 	    	sourceWriter.println("eventProcessor.setValidationMessage(e.getMessage());");
-			sourceWriter.outdent();
 	    	sourceWriter.println("}");
 	    	sourceWriter.println("if (__runMethod){");
-	    	sourceWriter.indent();
 	    }
 	    
 	    boolean hasReturn = method.getReturnType().getErasedType() != JPrimitiveType.VOID;
@@ -528,11 +499,9 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	    
 	    if (mustValidade)
 	    {
-		    sourceWriter.outdent();
 		    sourceWriter.println("}");
 	    }
 
-	    sourceWriter.outdent();
 	    sourceWriter.println("}");
     }
 	
@@ -543,7 +512,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param nameFactory
 	 * @param method
 	 */
-	protected void generateProxyExposedMethodSignature(SourceWriter w, NameFactory nameFactory, JMethod method)
+	protected void generateProxyExposedMethodSignature(SourcePrinter w, NameFactory nameFactory, JMethod method)
 	{
 		// Write the method signature
 		JType returnType = method.getReturnType().getErasedType();
@@ -560,7 +529,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateControllerOverideExposedMethods(SourceWriter sourceWriter)
+	private void generateControllerOverideExposedMethods(SourcePrinter sourceWriter)
 	{
 		List<JMethod> methods = new ArrayList<JMethod>();
 		JMethod[] controllerMethods = controllerClass.getOverridableMethods();
@@ -591,7 +560,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				
 				generateProxyExposedMethodSignature(sourceWriter, new NameFactory(), method);
 				sourceWriter.println("{");
-				sourceWriter.indent();		
 				
 				logDebugMessage(sourceWriter, "\"Calling client event: Controller["+controllerName+"], Method["+method.getName()+"]\"");
 
@@ -607,7 +575,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    if (mustValidade)
 			    {
 			    	sourceWriter.println("try{");
-					sourceWriter.indent();
 			    	String validateMethod = annot.value();
 			    	if (validateMethod == null || validateMethod.length() == 0)
 			    	{
@@ -616,9 +583,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    		validateMethod = "validate"+ methodName;
 			    	}
 			    	generateMethodvalidationCall(sourceWriter, method, validateMethod);
-					sourceWriter.outdent();
 			    	sourceWriter.println("}catch (Throwable e1){");
-					sourceWriter.indent();
 			    	sourceWriter.println("Crux.getValidationErrorHandler().handleValidationError(e1.getLocalizedMessage());");
 					logDebugMessage(sourceWriter, "\"Client event not called due to a Validation error: Controller["+controllerName+"], Method["+method.getName()+"]\"");
 			    	if (hasReturn)
@@ -629,7 +594,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			    	{
 				    	sourceWriter.println("return;");
 			    	}
-					sourceWriter.outdent();
 			    	sourceWriter.println("}");
 			    }
 			    
@@ -651,7 +615,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 					sourceWriter.println("return ret;");
 		    	}
 		    	
-				sourceWriter.outdent();
 				sourceWriter.println("}");
 			}
 		}
@@ -661,7 +624,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
      * @param sourceWriter
      * @param method
      */
-    private void generateExposedMethodCall(SourceWriter sourceWriter, JMethod method)
+    private void generateExposedMethodCall(SourcePrinter sourceWriter, JMethod method)
     {
 		sourceWriter.print(method.getName()+"(");
 		
@@ -691,7 +654,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
      * @param sourceWriter
      * @param method
      */
-    private void generateMethodvalidationCall(SourceWriter sourceWriter, JMethod method, String validationMethod)
+    private void generateMethodvalidationCall(SourcePrinter sourceWriter, JMethod method, String validationMethod)
     {
 		sourceWriter.print(validationMethod+"(");
 		
@@ -712,10 +675,9 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
     /**
 	 * @param sourceWriter
 	 */
-	private void generateInvokeMethod(SourceWriter sourceWriter)
+	private void generateInvokeMethod(SourcePrinter sourceWriter)
     {
 	    sourceWriter.println("public void invoke(String metodo, Object sourceEvent, boolean fromOutOfModule, EventProcessor eventProcessor) throws Exception{ ");
-		sourceWriter.indent();
 
 		if (!isCrux2OldInterfacesCompatibilityEnabled())
 		{
@@ -733,7 +695,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 
 
 			sourceWriter.println("try{");
-			sourceWriter.indent();
 
 			boolean first = true;
 			JMethod[] methods = controllerClass.getOverridableMethods(); 
@@ -757,17 +718,12 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 			}
 			sourceWriter.println("methodNotFound = true;");
 
-			sourceWriter.outdent();
 			sourceWriter.println("}catch (Throwable e){");
-			sourceWriter.indent();
 			sourceWriter.println("eventProcessor.setException(e);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
 			sourceWriter.println("if (methodNotFound){");
-			sourceWriter.indent();
 			sourceWriter.println("throw new Exception(\"Method Not Found: \"+metodo);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
 			if (!first && isAutoBindEnabled)
@@ -775,7 +731,6 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 				sourceWriter.println("updateScreenWidgets();");
 			}		
 		}
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 	
@@ -784,7 +739,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param method
 	 * @param sourceWriter
 	 */
-	private void generateMethodCall(JMethod method, SourceWriter sourceWriter, boolean finalizeCommand)
+	private void generateMethodCall(JMethod method, SourcePrinter sourceWriter, boolean finalizeCommand)
 	{
 		JParameter[] params = method.getParameters();
 		if (params != null && params.length == 1)
@@ -804,19 +759,15 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	/**
 	 * @param sourceWriter
 	 */
-	private void generateMethodIdentificationBlock(SourceWriter sourceWriter)
+	private void generateMethodIdentificationBlock(SourcePrinter sourceWriter)
     {
 	    sourceWriter.println("String methodCalled = null;");
 		sourceWriter.println("int idx = serializedData.indexOf('|');");
 		sourceWriter.println("if (idx > 0){");
-		sourceWriter.indent();
 		sourceWriter.println("methodCalled = serializedData.substring(0,idx);");
 		sourceWriter.println("serializedData = serializedData.substring(idx+1);");
-		sourceWriter.outdent();
 		sourceWriter.println("}else{");
-		sourceWriter.indent();
 		sourceWriter.println("return Crux.getMessages().crossDocumentCanNotIdentifyMethod();"); 
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }	
 
@@ -826,7 +777,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	 * @param validateMethod
 	 * @param sourceWriter
 	 */
-	private void generateValidateMethodCall(JMethod method, String validateMethod, SourceWriter sourceWriter)
+	private void generateValidateMethodCall(JMethod method, String validateMethod, SourcePrinter sourceWriter)
 	{
 		JParameter[] params = method.getParameters();
 		try

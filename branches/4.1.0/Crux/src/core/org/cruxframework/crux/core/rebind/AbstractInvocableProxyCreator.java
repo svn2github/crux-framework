@@ -35,7 +35,6 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * Base class for all proxy creators that will produce crux invocable objects.
@@ -62,7 +61,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param isAutoBindEnabled
 	 */
 	@Deprecated
-	protected void generateAutoCreateFields(SourceWriter sourceWriter, String parentVariable, boolean isAutoBindEnabled)
+	protected void generateAutoCreateFields(SourcePrinter sourceWriter, String parentVariable, boolean isAutoBindEnabled)
 	{
 		generateAutoCreateFields(invocableClassType, sourceWriter, parentVariable, new HashSet<String>());
 		if (isAutoBindEnabled)
@@ -76,13 +75,11 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
-	protected void generateControllerUpdateObjectsFunction(JClassType controller, SourceWriter sourceWriter)
+	protected void generateControllerUpdateObjectsFunction(JClassType controller, SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public void updateControllerObjects(){");
-		sourceWriter.indent();
 		sourceWriter.println("Widget __wid = null;");
 		generateControllerUpdateObjects("this", controller, sourceWriter);
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 	
@@ -91,12 +88,10 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param sourceWriter
 	 * @param autoBind
 	 */
-	protected void generateIsAutoBindEnabledMethod(SourceWriter sourceWriter, boolean autoBind)
+	protected void generateIsAutoBindEnabledMethod(SourcePrinter sourceWriter, boolean autoBind)
 	{
 		sourceWriter.println("public boolean isAutoBindEnabled(){");
-		sourceWriter.indent();
 		sourceWriter.println("return "+autoBind+";");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 
@@ -105,14 +100,12 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
-	protected void generateScreenUpdateWidgetsFunction(JClassType controller, SourceWriter sourceWriter)
+	protected void generateScreenUpdateWidgetsFunction(JClassType controller, SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public void updateScreenWidgets(){");
-		sourceWriter.indent();
 		sourceWriter.println("Widget __wid = null;");
 		sourceWriter.println("Object o = null;");
 		generateScreenUpdateWidgets("this", controller, sourceWriter);
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 	
@@ -126,7 +119,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param name
 	 * @param allowProtected
 	 */
-	private void generateAutoBindHandlerForAllWidgets(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
+	private void generateAutoBindHandlerForAllWidgets(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, 
 			boolean populateScreen, JType type,
 			String name, boolean allowProtected)
 	{
@@ -135,27 +128,19 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	        String valueVariable = "__wid";
 	        sourceWriter.println(valueVariable + "= Screen.get(\""+name+"\");");
 	        sourceWriter.println("if ("+valueVariable+" != null){");
-	        sourceWriter.indent();
 	        sourceWriter.println("if ("+valueVariable+" instanceof HasFormatter){");
-	        sourceWriter.indent();
 	        generateHandleHasFormatterWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, type, valueVariable, allowProtected);
-	        sourceWriter.outdent();
 	        sourceWriter.println("}else if ("+valueVariable+" instanceof HasValue){");
-	        sourceWriter.indent();
 	        generateHandleHasValueWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, type, valueVariable, allowProtected);
-	        sourceWriter.outdent();
 	        sourceWriter.print("}");
 	        JClassType stringType = voClass.getOracle().getType(String.class.getCanonicalName());
 	        
 	        if (type instanceof JClassType && stringType.isAssignableFrom((JClassType) type))
 	        {
 	        	sourceWriter.println("else if ("+valueVariable+" instanceof HasText){");
-	        	sourceWriter.indent();
 	        	generateHandleHasTextWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, valueVariable, allowProtected);
-	        	sourceWriter.outdent();
 	        	sourceWriter.println("}");
 	        }
-	        sourceWriter.outdent();
 	        sourceWriter.println("}");
         }
         catch (NotFoundException e)
@@ -170,7 +155,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
-	private void generateAutoCreateFields(JClassType classType, SourceWriter sourceWriter, String parentVariable, Set<String> added)
+	private void generateAutoCreateFields(JClassType classType, SourcePrinter sourceWriter, String parentVariable, Set<String> added)
 	{
 		try
         {
@@ -235,7 +220,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
-	private void generateControllerUpdateObjects(String controllerVariable, JClassType controller, SourceWriter sourceWriter)
+	private void generateControllerUpdateObjects(String controllerVariable, JClassType controller, SourcePrinter sourceWriter)
 	{
 		for (JField field : controller.getFields()) 
 		{
@@ -265,7 +250,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param field
 	 * @param sourceWriter
 	 */
-	private void generateDTOFieldPopulation(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter)
+	private void generateDTOFieldPopulation(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter)
 	{
 		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, false, true, new HashSet<String>());
 	}	
@@ -280,7 +265,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param sourceWriter
 	 */
 	private void generateFieldValueSet(JClassType voClass, JField field, String parentVariable,  
-			                           String valueVariable, SourceWriter sourceWriter)
+			                           String valueVariable, SourcePrinter sourceWriter)
 	{
 		JClassUtils.generateFieldValueSet(voClass, field, parentVariable, valueVariable, sourceWriter, true);
 	}
@@ -295,7 +280,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param valueVariable
 	 * @param allowProtected
 	 */
-	private void generateHandleHasFormatterWidgets(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
+	private void generateHandleHasFormatterWidgets(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, 
 			boolean populateScreen, JType type, String valueVariable, boolean allowProtected)
 	{
 		String valueVariableName = "__valueVariable";
@@ -331,7 +316,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param valueVariable
 	 * @param allowProtected
 	 */
-	private void generateHandleHasTextWidgets(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
+	private void generateHandleHasTextWidgets(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, 
 			boolean populateScreen, String valueVariable, boolean allowProtected)
 	{
 		if (populateScreen)
@@ -355,7 +340,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param valueVariable
 	 * @param allowProtected
 	 */
-	private void generateHandleHasValueWidgets(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
+	private void generateHandleHasValueWidgets(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, 
 			boolean populateScreen, JType type, String valueVariable, boolean allowProtected)
 	{
 		if (populateScreen)
@@ -378,7 +363,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param sourceWriter
 	 * @param field
 	 */
-	private void generateParameterPopulation(JClassType classType, String parentVariable, SourceWriter sourceWriter, JField field)
+	private void generateParameterPopulation(JClassType classType, String parentVariable, SourcePrinter sourceWriter, JField field)
 	{
 		ParameterBindGenerator parameterBindGenerator = ParameterBindGeneratorInitializer.getParameterBindGenerator();
 		parameterBindGenerator.generate(parentVariable, classType, field, sourceWriter, logger);
@@ -393,7 +378,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param populateScreen
 	 * @param dtoLooping
 	 */
-	private void generateScreenOrDTOPopulation(String resultVariable, JClassType voClass, SourceWriter sourceWriter, 
+	private void generateScreenOrDTOPopulation(String resultVariable, JClassType voClass, SourcePrinter sourceWriter, 
 			boolean populateScreen, Set<String> dtoLooping)
 	{
 		dtoLooping.add(voClass.getQualifiedSourceName());
@@ -428,7 +413,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param allowProtected
 	 */
 	private void generateScreenOrDTOPopulationField(String parentVariable, JClassType voClass, 
-			                                        JField field, SourceWriter sourceWriter, 
+			                                        JField field, SourcePrinter sourceWriter, 
 			                                        boolean populateScreen, boolean allowProtected, 
 			                                        Set<String> dtoLooping)
 	{
@@ -450,10 +435,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		else if (type instanceof JClassType && ((JClassType)type).getAnnotation(ValueObject.class) != null)
 		{
 			sourceWriter.println("if (" +JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
-			sourceWriter.indent();
 
 			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			parentVariable = JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected);
 			if (parentVariable != null)
@@ -469,7 +452,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
-	private void generateScreenUpdateWidgets(String controllerVariable, JClassType controller, SourceWriter sourceWriter)
+	private void generateScreenUpdateWidgets(String controllerVariable, JClassType controller, SourcePrinter sourceWriter)
 	{
 		for (JField field : controller.getFields()) 
 		{
@@ -498,7 +481,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param field
 	 * @param sourceWriter
 	 */
-	private void generateScreenWidgetPopulation(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter)
+	private void generateScreenWidgetPopulation(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter)
 	{
 		generateScreenOrDTOPopulationField(parentVariable, voClass, field, sourceWriter, true, true, new HashSet<String>());
 	}

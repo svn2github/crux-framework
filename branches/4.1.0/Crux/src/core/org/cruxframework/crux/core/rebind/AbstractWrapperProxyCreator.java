@@ -19,7 +19,6 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -38,12 +37,12 @@ public abstract class AbstractWrapperProxyCreator extends AbstractInterfaceWrapp
     }
 
 	@Override
-    protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		generateProxyMethods(srcWriter, baseIntf);
     }
 	
-    protected void generateProxyMethods(SourceWriter srcWriter, JClassType clazz) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter srcWriter, JClassType clazz) throws CruxGeneratorException
     {
     	JMethod[] methods = clazz.getOverridableMethods();
     	for (JMethod method : methods)
@@ -52,5 +51,5 @@ public abstract class AbstractWrapperProxyCreator extends AbstractInterfaceWrapp
     	}
     }
 
-	protected abstract void generateWrapperMethod(JMethod method, SourceWriter srcWriter);
+	protected abstract void generateWrapperMethod(JMethod method, SourcePrinter srcWriter);
 }

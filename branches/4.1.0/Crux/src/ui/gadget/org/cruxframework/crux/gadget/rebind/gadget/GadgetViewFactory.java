@@ -16,9 +16,8 @@
 package org.cruxframework.crux.gadget.rebind.gadget;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyTag;
@@ -28,7 +27,6 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.gadget.client.widget.CruxGadgetView;
 import org.cruxframework.crux.gadget.client.widget.GadgetView;
 import org.cruxframework.crux.gwt.rebind.AbstractHTMLPanelFactory;
 
@@ -49,16 +47,11 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	@Override
 	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 	{
-		String className = CruxGadgetView.class.getCanonicalName();
-		String id = context.readWidgetProperty("id");
-        if(StringUtils.isEmpty(id))
-        {
-			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
-        }
-		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(id)+");");
+		String className = GadgetView.class.getCanonicalName();
+		
+		String html = context.readWidgetProperty("_html");
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(html)+");");
 		createChildren(out, context);
-//		out.println(CruxGadgetView.class.getCanonicalName()+".getGadget();");//initializes the gadget
 	}
 	
 	@Override

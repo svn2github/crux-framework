@@ -15,21 +15,17 @@
  */
 package org.cruxframework.crux.tools.compile.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.rebind.module.ModulesScanner;
 import org.cruxframework.crux.core.server.scan.ScannerURLS;
-import org.cruxframework.crux.core.utils.XMLUtils;
-import org.cruxframework.crux.core.utils.XMLUtils.XMLException;
 import org.cruxframework.crux.scannotation.URLStreamManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -88,19 +84,15 @@ public class ModuleUtils
 	public static Module findModuleFromPageUrl(URL pageFile) throws IOException, InterfaceConfigException
 	{
 		String result = null;
-		
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		URLStreamManager manager = new URLStreamManager(pageFile);
-		CruxToHtmlTransformer.generateHTML(pageFile.toString(), null, manager.open(), out, true, false);
-		manager.close();
-		ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
 		Document source = null;
-
+		
+		URLStreamManager manager = new URLStreamManager(pageFile);
 		try
 		{
-			source = XMLUtils.createNSUnawareDocument(input);
+			source = ViewProcessor.getView(manager.open(), null);
+			manager.close();
 		}
-		catch (XMLException e)
+		catch (Exception e)
 		{
 			throw new InterfaceConfigException("Error parsing screen ["+pageFile.toString()+"].", e);
 		}

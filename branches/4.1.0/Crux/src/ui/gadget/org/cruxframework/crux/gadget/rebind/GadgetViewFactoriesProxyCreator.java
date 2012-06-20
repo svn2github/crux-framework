@@ -15,13 +15,11 @@
  */
 package org.cruxframework.crux.gadget.rebind;
 
-import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoriesProxyCreator;
 import org.cruxframework.crux.core.server.Environment;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -36,14 +34,12 @@ public class GadgetViewFactoriesProxyCreator extends ViewFactoriesProxyCreator
     }
 	
 	@Override
-    protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
+	protected void generateCreateViewMethod(SourcePrinter sourceWriter)
     {
-		sourceWriter.println("public void createView(String screenId) throws InterfaceConfigException{ ");
-		sourceWriter.indent();
+	    sourceWriter.println("public void createView(String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
-		generateViewCreationForAllScreens(sourceWriter);
+		generateViewCreation(sourceWriter, getViews());
 		
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 
 		if (Environment.isProduction())

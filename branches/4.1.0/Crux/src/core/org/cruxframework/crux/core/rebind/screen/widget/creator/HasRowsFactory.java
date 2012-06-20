@@ -15,9 +15,9 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget.creator;
 
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.RangeChangeEvtBind;
@@ -57,7 +57,7 @@ public interface HasRowsFactory<C extends WidgetCreatorContext>
 			}
 			catch (Exception e) 
 			{
-				throw new CruxGeneratorException("Error parsing attribute value ["+attributeValue+"], of widget ["+context.getWidgetId()+"], on screen ["+getWidgetCreator().getScreen().getId()+"].",e);
+				throw new CruxGeneratorException("Error parsing attribute value ["+attributeValue+"], of widget ["+context.getWidgetId()+"], on screen ["+getWidgetCreator().getView().getId()+"].",e);
 			}
 			out.println(context.getWidget()+".setRowCount("+attributeValue+", false);");
         }

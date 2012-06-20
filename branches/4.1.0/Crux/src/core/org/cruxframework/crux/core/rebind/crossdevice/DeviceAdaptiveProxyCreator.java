@@ -43,7 +43,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -75,10 +74,10 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    deviceAdaptiveClass = context.getTypeOracle().findType(DeviceAdaptive.class.getCanonicalName());
 	    hasHandlersClass = context.getTypeOracle().findType(HasHandlers.class.getCanonicalName());
 	    
-	    
 	    initializeTemplateParser();
 	    initializeController();
-		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, getCurrentScreen(), getDeviceFeatures(), controllerName);
+	    org.cruxframework.crux.core.rebind.screen.Screen currentScreen = getCurrentScreen();
+		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, currentScreen.getRootView(), getDeviceFeatures(), controllerName, currentScreen.getModule());
     }
 
 	/**
@@ -130,14 +129,13 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * 
 	 */
 	@Override
-    protected void generateWrapperMethod(JMethod method, SourceWriter srcWriter)
+    protected void generateWrapperMethod(JMethod method, SourcePrinter srcWriter)
     {
 		if (mustDelegateToController(method))
 		{
 			JType returnType = method.getReturnType().getErasedType();
 
 			srcWriter.println(method.getReadableDeclaration(false, false, false, false, true)+"{");
-			srcWriter.indent();
 			if (returnType != JPrimitiveType.VOID)
 			{
 				srcWriter.print("return ");
@@ -155,7 +153,6 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 			}
 			srcWriter.println(");");
 
-			srcWriter.outdent();
 			srcWriter.println("}");
 		}
     }
@@ -176,20 +173,18 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
     }
 
 	@Override
-    protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("public " + getProxySimpleName() + "(){");
-		srcWriter.indent();
 
 		createController(srcWriter);
 		
 		JSONObject metaData = templateParser.getTemplateMetadata(template,  baseIntf.getQualifiedSourceName(), device);
-		String widget = viewFactoryCreator.generateWidgetsCreation(srcWriter, metaData);
+		String widget = viewFactoryCreator.generateWidgetCreation(srcWriter, metaData);
 		
 		srcWriter.println("initWidget("+widget+");");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).initWidgetDefaultStyleName();");
-		srcWriter.outdent();
 		srcWriter.println("}");
     }
 
@@ -197,7 +192,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * 
 	 * @param srcWriter
 	 */
-	protected void createController(SourceWriter srcWriter)
+	protected void createController(SourcePrinter srcWriter)
 	{
 		String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
 		srcWriter.println("this._controller = new "+genClass+"();");
@@ -205,7 +200,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	}
 	
 	@Override
-    protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private "+controllerClass.getQualifiedSourceName()+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" _controller;");
 	    for (String messageClass: viewFactoryCreator.getDeclaredMessages().keySet())
@@ -233,7 +228,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * @return a sourceWriter for the proxy class
 	 */
 	@Override
-	protected SourceWriter getSourceWriter()
+	protected SourcePrinter getSourcePrinter()
 	{
 		String packageName = DeviceAdaptiveController.class.getPackage().getName();
 		PrintWriter printWriter = context.tryCreate(logger, packageName, getProxySimpleName());
@@ -254,6 +249,6 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		composerFactory.addImplementedInterface(baseIntf.getQualifiedSourceName());
 		composerFactory.setSuperclass(Composite.class.getCanonicalName());
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}	
 }

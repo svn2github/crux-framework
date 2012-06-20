@@ -13,33 +13,46 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen.parser;
+package org.cruxframework.crux.core.declarativeui;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class CruxMetaDataException extends RuntimeException
+public class ViewParserException extends Exception
 {
-    private static final long serialVersionUID = 3222571713952972380L;
 
-	public CruxMetaDataException()
-    {
-	    super();
-    }
+    private static final long serialVersionUID = 6075364357371138553L;
 
-	public CruxMetaDataException(String message, Throwable cause)
-    {
-	    super(message, cause);
-    }
+	/**
+	 * 
+	 */
+	public ViewParserException()
+	{
+	}
 
-	public CruxMetaDataException(String message)
-    {
-	    super(message);
-    }
+	/**
+	 * @param message
+	 */
+	public ViewParserException(String message)
+	{
+		super(message);
+	}
 
-	public CruxMetaDataException(Throwable cause)
-    {
-	    super(cause);
-    }
+	/**
+	 * @param cause
+	 */
+	public ViewParserException(Throwable cause)
+	{
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ViewParserException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }

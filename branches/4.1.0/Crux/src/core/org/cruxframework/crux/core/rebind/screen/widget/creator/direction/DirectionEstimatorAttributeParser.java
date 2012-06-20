@@ -15,10 +15,10 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget.creator.direction;
 
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 import com.google.gwt.i18n.shared.AnyRtlDirectionEstimator;
 import com.google.gwt.i18n.shared.FirstStrongDirectionEstimator;

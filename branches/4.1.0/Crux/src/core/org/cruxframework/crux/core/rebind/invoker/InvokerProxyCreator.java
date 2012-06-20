@@ -31,7 +31,6 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -94,7 +93,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 	 * @param prefixLength
 	 * @throws WrapperGeneratorException 
 	 */
-	private void generateMethod(JMethod method, SourceWriter sourceWriter, String sufix) throws CruxGeneratorException
+	private void generateMethod(JMethod method, SourcePrinter sourceWriter, String sufix) throws CruxGeneratorException
 	{
 		JType returnType = method.getReturnType();
 		String name = method.getName();
@@ -132,7 +131,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 	 * @param numParams
 	 * @param returnTypeDeclaration
 	 */
-	private void generateMethodInvocation(SourceWriter sourceWriter, String sufix, String controllerName, String methodName, 
+	private void generateMethodInvocation(SourcePrinter sourceWriter, String sufix, String controllerName, String methodName, 
 										  int numParams, JType returnType)
 	{
 		sourceWriter.println("try{");
@@ -238,7 +237,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 	 * @throws CruxGeneratorException
 	 */
 	@Override
-	protected void generateWrapperMethod(JMethod method, SourceWriter sourceWriter) throws CruxGeneratorException
+	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
 		String name = method.getName();
 		

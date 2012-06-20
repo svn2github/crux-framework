@@ -29,7 +29,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
-import org.cruxframework.crux.core.declarativeui.CruxToHtmlTransformer;
+import org.cruxframework.crux.core.declarativeui.ViewProcessor;
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
@@ -203,7 +203,7 @@ public abstract class AbstractCruxCompiler
 
 	public void setOutputCharset(String outputCharset)
     {
-    	CruxToHtmlTransformer.setOutputCharset(outputCharset);
+    	ViewProcessor.setOutputCharset(outputCharset);
 		this.outputCharset = outputCharset;
     }
 

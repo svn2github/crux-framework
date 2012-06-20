@@ -17,6 +17,8 @@ package org.cruxframework.crux.core.rebind;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -24,8 +26,9 @@ import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.cruxframework.crux.core.server.CruxBridge;
-
 
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -36,7 +39,6 @@ import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.dev.javac.rebind.CachedRebindResult;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * 
@@ -156,7 +158,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 			throw new CruxGeneratorException("Can not read device.features property.", e);
 		}
 	}
-
+	
 	/**
 	 * @return
 	 * @throws ScreenConfigException
@@ -182,6 +184,25 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		}
 		throw new CruxGeneratorException("Error Generating registered element. Can not retrieve current screen.");
 	}	
+
+	protected String getModule()
+	{
+		try
+		{
+			Screen requestedScreen = getRequestedScreen();
+
+			if(requestedScreen != null)
+			{
+				return requestedScreen.getModule();
+			}
+			return null;
+		}
+		catch (ScreenConfigException e)
+		{
+			logger.log(TreeLogger.ERROR, "Error Generating registered element. Can not retrieve current module.",e);
+			throw new CruxGeneratorException();
+        }
+	}
 	
 	/**
 	 * 
@@ -223,12 +244,86 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 			throw new CruxGeneratorException();
         }
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected List<View> getViews()
+	{
+		List<View> views = new ArrayList<View>();
+		List<Screen> screens = getScreens();
+		HashSet<String> added = new HashSet<String>();
+		for (Screen screen : screens)
+        {
+			findViews(screen, views, added);
+        }
+		return views;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected List<View> getViewsForCurrentScreen()
+	{
+		List<View> views = new ArrayList<View>();
+		findViews(getCurrentScreen(), views, new HashSet<String>());
+		return views;
+	}
+	
+	/**
+	 * 
+	 * @param screen
+	 * @param views
+	 * @param added
+	 */
+	private void findViews(Screen screen, List<View> views, Set<String> added) 
+	{
+		View rootView = screen.getRootView();
+		if (!added.contains(rootView.getId()))
+		{
+			added.add(rootView.getId());
+			views.add(rootView);
+			findViews(rootView, views, added);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param view
+	 * @param views
+	 * @param added
+	 */
+	private void findViews(View view, List<View> views, Set<String> added) 
+	{
+		try
+		{
+			Iterator<String> iterator = view.iterateViews();
+			while (iterator.hasNext())
+			{
+				String viewName = iterator.next();
+				if (!added.contains(viewName))
+				{
+					added.add(viewName);
+					View innerView = ViewFactory.getInstance().getView(viewName, getDeviceFeatures());
+					views.add(innerView);
+					findViews(innerView, views, added);
+				}
+			}
+		}
+		catch (ScreenConfigException e)
+		{
+			logger.log(TreeLogger.ERROR, "Error Generating registered element. Can not retrieve screen's list of views.",e);
+			throw new CruxGeneratorException();
+		}
+	}
 	
 	/**
 	 * @return a sourceWriter for the proxy class
 	 */
 	@Override
-	protected SourceWriter getSourceWriter()
+	protected SourcePrinter getSourcePrinter()
 	{
 		JPackage pkg = baseIntf.getPackage();
 		String packageName = pkg == null ? "" : pkg.getName();
@@ -249,7 +344,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 
 		composerFactory.addImplementedInterface(baseIntf.getQualifiedSourceName());
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 	
 	/**

@@ -76,7 +76,7 @@ public class CrossDevicesScanner extends AbstractScanner
 						Templates templates = deviceAdaptiveClass.getAnnotation(Templates.class);
 						if (templates == null)
 						{
-							throw new CrossDevicesException("DeviceAdaptive widget ["+deviceAdaptive+"] does not declare any templates. Use the annotation @Templates to add templates to this widget.");
+							throw new CrossDevicesException("DeviceAdaptive widget ["+deviceAdaptive+"] does not declare any templates. Use the annotation @Views to add templates to this widget.");
 						}
 
 						for (Template template : templates.value())

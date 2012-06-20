@@ -17,9 +17,9 @@ package org.cruxframework.crux.core.rebind.screen.widget.creator.event;
 
 import org.cruxframework.crux.core.client.screen.WidgetLoadEvent;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * Helper Class for widget load events binding

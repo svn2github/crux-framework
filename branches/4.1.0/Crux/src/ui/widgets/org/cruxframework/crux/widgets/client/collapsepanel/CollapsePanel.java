@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.collapsepanel;
 
-import org.cruxframework.crux.core.client.screen.LazyPanel;
+import org.cruxframework.crux.core.client.screen.views.LazyPanel;
 import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseEvent;
 import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseHandler;
 import org.cruxframework.crux.widgets.client.event.collapseexpand.BeforeCollapseOrBeforeExpandEvent;

@@ -23,7 +23,6 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -51,7 +50,7 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
     }
 
 	@Override
-    protected void generateProxyMethods(SourceWriter sourceWriter) throws CruxGeneratorException
+    protected void generateProxyMethods(SourcePrinter sourceWriter) throws CruxGeneratorException
     {
 		generateEnableChildrenWindowsDebugMethod(sourceWriter);
 		generateEnableCrux2OldInterfacesCompatibility(sourceWriter);
@@ -60,24 +59,20 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 	/**
 	 * @param sourceWriter
 	 */
-	protected void generateEnableChildrenWindowsDebugMethod(SourceWriter sourceWriter)
+	protected void generateEnableChildrenWindowsDebugMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public boolean enableDebugForURL(String url){");
-		sourceWriter.indent();
 		sourceWriter.println("return " + ConfigurationFactory.getConfigurations().enableChildrenWindowsDebug() + ";");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 	
 	/**
 	 * @param sourceWriter
 	 */
-	protected void generateEnableCrux2OldInterfacesCompatibility(SourceWriter sourceWriter)
+	protected void generateEnableCrux2OldInterfacesCompatibility(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public boolean enableCrux2OldInterfacesCompatibility(){");
-		sourceWriter.indent();
 		sourceWriter.println("return " + isCrux2OldInterfacesCompatibilityEnabled() + ";");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
 }

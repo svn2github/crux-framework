@@ -17,9 +17,9 @@ package org.cruxframework.crux.widgets.rebind.wizard;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.dto.DataObjects;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
@@ -29,11 +29,11 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.widgets.client.wizard.Wizard.NoData;
 import org.cruxframework.crux.widgets.client.wizard.WizardCommandEvent;
 import org.cruxframework.crux.widgets.client.wizard.WizardCommandHandler;
 import org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer;
 import org.cruxframework.crux.widgets.client.wizard.WizardPage;
-import org.cruxframework.crux.widgets.client.wizard.Wizard.NoData;
 
 
 /**
@@ -97,7 +97,7 @@ public class WizardPageFactory extends AbstractWizardFactory
 			if (StringUtils.isEmpty(id))
 			{
 				throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-						"On page ["+getWidgetCreator().getScreen().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
+						"On page ["+getWidgetCreator().getView().getId()+"], there is an widget of type ["+context.readChildProperty("_type")+"] without id.");
 			}
 			
 			String label = getWidgetCreator().getDeclaredMessage(context.readChildProperty("label"));

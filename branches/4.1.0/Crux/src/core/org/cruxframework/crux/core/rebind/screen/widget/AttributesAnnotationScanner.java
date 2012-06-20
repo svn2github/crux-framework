@@ -24,8 +24,8 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorAnnotationsProcessor.AttributeCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
@@ -162,7 +162,7 @@ class AttributesAnnotationScanner
 						{
 
 							throw new CruxGeneratorException("Error running attribute processor for attribute ["+attrName+"], " +
-									"from widget ["+context.getWidgetId()+"], on screen ["+widgetCreator.getScreen().getId()+"].", e);
+									"from widget ["+context.getWidgetId()+"], on screen ["+widgetCreator.getView().getId()+"].", e);
 						}
 					}
 				}

@@ -13,28 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
+package org.cruxframework.crux.core.client.screen.views;
 
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.event.CruxEvent;
 
-
-/**
- * Create the view, based on the {@code .crux.xml} page.  
- * 
- * @author Thiago da Rosa de Bustamante
- *
- */
-public interface ViewFactory 
+public class ViewDetachEvent extends CruxEvent<View> 
 {
-	/**
-	 * Create the view for the informed screenId
-	 * @param screenId - the page 
-	 */
-	void createView(String screenId) throws InterfaceConfigException;
+	private boolean canceled = false;
 
 	/**
-	 * Retrieve the device that runs the application
+	 * 
+	 */
+	protected ViewDetachEvent(View view, String viewId)
+	{
+		super(view, viewId);
+	}
+
+	public void cancel()
+	{
+		this.canceled = false;
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
-	Device getCurrentDevice();
+	public boolean isCanceled()
+    {
+	    return this.canceled;
+    }
 }

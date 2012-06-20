@@ -57,8 +57,8 @@ public interface ClientMessages extends Messages
 	@DefaultMessage("The id attribute is required for CRUX Screens.")
 	String screenFactoryScreenIdRequired();
 	
-	@DefaultMessage("Error creating view: ")
-	String screenFactoryErrorCreatingView();
+	@DefaultMessage("Error creating view [{0}]. ")
+	String viewContainerErrorCreatingView(String id);
 	
 	@DefaultMessage("An Invalid controller was passed to AsyncCallbackAdapter.")
 	String asyncCallbackInvalidHandlerError();
@@ -66,11 +66,13 @@ public interface ClientMessages extends Messages
 	@DefaultMessage("An Invalid object was passed to update screen or DTOs.")
 	String screenInvalidObjectError();
 	@DefaultMessage("Creating the view for screen {0}.")
-	String screenFactoryCreatingView(String identifier);
+	String viewContainerCreatingView(String identifier);
 	@DefaultMessage("To use this feature you must enabled compatibility with Crux 2 old interfaces.")
 	String screenFactoryCrux2OldInterfacesCompatibilityDisabled();
-	@DefaultMessage("Screen {0} created.")
+	@DefaultMessage("View {0} created.")
 	String screenFactoryViewCreated(String identifier);
+	@DefaultMessage("View {0} rendered.")
+	String screenFactoryViewRendered(String identifier);
 	@DefaultMessage("This application contains components that are not fully supported by your brownser.")
 	String screenFactoryUnsupportedWidget();
 	

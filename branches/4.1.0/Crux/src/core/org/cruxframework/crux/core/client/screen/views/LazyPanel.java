@@ -13,7 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
+package org.cruxframework.crux.core.client.screen.views;
+
 
 
 /**
@@ -24,9 +25,11 @@ public abstract class LazyPanel extends com.google.gwt.user.client.ui.LazyPanel
 {
 	private boolean initialized = false;
 	private final String lazyId;
+	private final View view;
 
-	public LazyPanel(String lazyId)
+	public LazyPanel(View view, String lazyId)
     {
+		this.view = view;
 		this.lazyId = lazyId;
     }
 	
@@ -38,7 +41,7 @@ public abstract class LazyPanel extends com.google.gwt.user.client.ui.LazyPanel
 	{
 		if (!initialized)
 		{
-			ScreenFactory.getInstance().getScreen().cleanLazyDependentWidgets(lazyId);
+			view.cleanLazyDependentWidgets(lazyId);
 			initialized = true;
 		}
 		super.ensureWidget();

@@ -15,7 +15,7 @@
 
 	<!-- Specify the generator for registered widgets.     -->
 	<generate-with class="org.cruxframework.crux.gadget.rebind.GadgetViewFactoryGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ViewFactory" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewFactory" />
 	</generate-with>
 
 	<!-- Servlet used to handle RPC event calls.                -->

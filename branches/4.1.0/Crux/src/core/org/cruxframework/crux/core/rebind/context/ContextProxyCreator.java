@@ -33,7 +33,6 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
 /**
@@ -64,7 +63,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * @throws CruxGeneratorException 
 	 */
 	@Override
-	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		String typeSerializerName = SerializationUtils.getTypeSerializerQualifiedName(baseProxyType);
 		srcWriter.println("private static final " + typeSerializerName + " SERIALIZER = new " + typeSerializerName + "();");
@@ -75,7 +74,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * Generates the method for context reading.
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateProxyGetMethod(SourceWriter w, JMethod method, int propPrefixLength) throws CruxGeneratorException
+	protected void generateProxyGetMethod(SourcePrinter w, JMethod method, int propPrefixLength) throws CruxGeneratorException
 	{
 		w.println();
 
@@ -86,29 +85,21 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 		NameFactory nameFactory = new NameFactory();
 		generateProxyMethodSignature(w, nameFactory, method);
 		w.println("{");
-		w.indent();		
 
 		w.println("try {");
-		w.indent();
 
 		String retName = nameFactory.createName("ret");
 		w.println("String "+retName + "="+ContextManager.class.getName()+".getContextHandler().read(\""+propertyName+"\");");
 		w.println("if (!"+StringUtils.class.getCanonicalName()+".isEmpty("+retName+")){");
-		w.indent();
 		w.print("return ("+returnType.getQualifiedSourceName()+") ");
 		w.println("CrossDocumentReader." + getReaderFor(returnType).name()+".read(createStreamReader("+retName+"));");;
-		w.outdent();
 		w.println("}");
 		w.println("else{");
-		w.indent();
 		w.println("return null;");
-		w.outdent();
 		w.println("}");
 		
-		w.outdent();
 		generateSerializationCatchBlock(w, nameFactory);
 
-		w.outdent();
 		w.println("}");
 	}
 
@@ -118,7 +109,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * @throws CruxGeneratorException 
 	 */
 	@Override
-	protected void generateProxyMethods(SourceWriter w) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter w) throws CruxGeneratorException
 	{
 		JMethod[] syncMethods = baseProxyType.getOverridableMethods();
 		for (JMethod method : syncMethods)
@@ -165,7 +156,7 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * Generates method for context writing.
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateProxySetMethod(SourceWriter w, JMethod method) throws CruxGeneratorException
+	protected void generateProxySetMethod(SourcePrinter w, JMethod method) throws CruxGeneratorException
 	{
 		w.println();
 
@@ -175,7 +166,6 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 		NameFactory nameFactory = new NameFactory();
 		generateProxyMethodSignature(w, nameFactory, method);
 		w.println("{");
-		w.indent();		
 
 		w.print(SerializationStreamWriter.class.getSimpleName());
 		w.print(" ");
@@ -183,30 +173,23 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 		w.println(streamWriterName + " = createStreamWriter();");
 
 		w.println("try {");
-		w.indent();
 
 		JParameter[] params = method.getParameters();
 		JParameter param = params[0];
 
 		w.println("if ("+param.getName()+" == null){");
-		w.indent();
 		w.println(ContextManager.class.getName()+".getContextHandler().erase(\""+propertyName+"\");");
-		w.outdent();
 		w.println("} else {");
-		w.indent();
 		w.print(streamWriterName + ".");
 		w.print(Shared.getStreamWriteMethodNameFor(param.getType()));
 		w.println("(" + param.getName() + ");");
 		String payloadName = nameFactory.createName("payload");
 		w.println("String " + payloadName + " = "+ streamWriterName + ".toString();");
 		w.println(ContextManager.class.getName()+".getContextHandler().write(\""+propertyName+"\", "+payloadName+");");
-		w.outdent();
 		w.println("}");
 		
-		w.outdent();
 		generateSerializationCatchBlock(w, nameFactory);
 
-		w.outdent();
 		w.println("}");
 	}
 
@@ -254,14 +237,12 @@ public class ContextProxyCreator extends CrossDocumentProxyCreator
 	 * @param w
 	 * @param nameFactory
 	 */
-	private void generateSerializationCatchBlock(SourceWriter w, NameFactory nameFactory)
+	private void generateSerializationCatchBlock(SourcePrinter w, NameFactory nameFactory)
     {
 	    w.print("} catch (SerializationException ");
 	    String exceptionName = nameFactory.createName("ex");
 	    w.println(exceptionName + ") {");
-		w.indent();
 		w.println("throw new CrossDocumentException("+exceptionName+".getMessage(), "+exceptionName+");");
-		w.outdent();
 	    w.println("}");
     }
 }

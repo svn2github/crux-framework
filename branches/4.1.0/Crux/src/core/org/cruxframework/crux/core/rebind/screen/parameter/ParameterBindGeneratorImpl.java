@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.controller.ParameterObject;
 import org.cruxframework.crux.core.client.event.ValidateException;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
@@ -30,7 +31,6 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -39,16 +39,12 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 {
 	@Override
-    public void generate(String parentVariable, JClassType classType, JField field, SourceWriter sourceWriter, TreeLogger logger)
+    public void generate(String parentVariable, JClassType classType, JField field, SourcePrinter sourceWriter, TreeLogger logger)
     {
 		sourceWriter.println("try{");
-		sourceWriter.indent();
 		generateDTOParameterPopulationField(parentVariable, classType, field, sourceWriter, true, logger);
-		sourceWriter.outdent();
 		sourceWriter.println("}catch("+ValidateException.class.getName() + " _e){");
-		sourceWriter.indent();
 		sourceWriter.println(Crux.class.getName()+".getValidationErrorHandler().handleValidationError(_e.getMessage());");
-		sourceWriter.outdent();
 		sourceWriter.println("}");
     }
 
@@ -60,7 +56,7 @@ public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 	 * @param sourceWriter
 	 * @param allowProtected
 	 */
-	private void generateDTOParameterPopulationField(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, boolean allowProtected, TreeLogger logger)
+	private void generateDTOParameterPopulationField(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, boolean allowProtected, TreeLogger logger)
 	{
 		JType type = field.getType();
 		String name = null;
@@ -82,32 +78,22 @@ public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 			{
 				
 				sourceWriter.println("if ("+StringUtils.class.getName()+".isEmpty(" +Window.class.getName()+".Location.getParameter(\""+name+"\"))){");
-				sourceWriter.indent();
 				sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Required parameter ["+name+"] is missing.")+");");
-				sourceWriter.outdent();
 				sourceWriter.println("}");
 				
 			}
 			sourceWriter.println("if (!"+StringUtils.class.getName()+".isEmpty(" +Window.class.getName()+".Location.getParameter(\""+name+"\"))){");
-			sourceWriter.indent();
 			sourceWriter.println("try{");
-			sourceWriter.indent();
 			generateParameterBinding(parentVariable, voClass, field, sourceWriter, type, name, allowProtected);
-			sourceWriter.outdent();
 			sourceWriter.println("}catch(Throwable _e1){");
-			sourceWriter.indent();
 			sourceWriter.println("throw new "+ValidateException.class.getName()+"("+EscapeUtils.quote("Error parsing parameter ["+name+"].")+");");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		else if (type instanceof JClassType && ((JClassType)type).getAnnotation(ParameterObject.class) != null)
 		{
 			sourceWriter.println("if (" +JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected)+"==null){");
-			sourceWriter.indent();
 			JClassUtils.generateFieldValueSet(voClass, field, parentVariable, "new "+type.getParameterizedQualifiedSourceName()+"()", sourceWriter, allowProtected);
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
 			parentVariable = JClassUtils.getFieldValueGet(voClass, field, parentVariable, allowProtected);
@@ -125,7 +111,7 @@ public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 	 * @param voClass
 	 * @param sourceWriter
 	 */
-	private void generateDTOParameterPopulation(String resultVariable, JClassType voClass, SourceWriter sourceWriter, TreeLogger logger)
+	private void generateDTOParameterPopulation(String resultVariable, JClassType voClass, SourcePrinter sourceWriter, TreeLogger logger)
 	{
 		boolean hasAtLeastOneField = false;
 		for (JField field : voClass.getFields()) 
@@ -156,7 +142,7 @@ public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 	 * @param name
 	 * @param allowProtected
 	 */
-	private void generateParameterBinding(String parentVariable, JClassType voClass, JField field, SourceWriter sourceWriter, 
+	private void generateParameterBinding(String parentVariable, JClassType voClass, JField field, SourcePrinter sourceWriter, 
 			JType type, String name, boolean allowProtected)
 	{
 		JClassUtils.generateFieldValueSet(voClass, field, parentVariable, getParameterFromURL(type, name), sourceWriter, allowProtected);

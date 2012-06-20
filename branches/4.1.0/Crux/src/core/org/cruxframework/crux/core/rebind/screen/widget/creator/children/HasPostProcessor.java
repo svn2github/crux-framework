@@ -15,9 +15,9 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget.creator.children;
 
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 
 /**
  * @author Thiago da Rosa de Bustamante

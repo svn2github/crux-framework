@@ -33,8 +33,8 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public abstract class AbstractProxyCreator
 {
-	protected final GeneratorContextExt context;
-	protected final TreeLogger logger;
+	protected GeneratorContextExt context;
+	protected TreeLogger logger;
 
 	/**
 	 * @param logger
@@ -55,18 +55,18 @@ public abstract class AbstractProxyCreator
 	 */
 	public String create() throws CruxGeneratorException
 	{
-		SourceWriter srcWriter = getSourceWriter();
-		if (srcWriter == null)
+		SourcePrinter printer = getSourcePrinter();
+		if (printer == null)
 		{
 			return getProxyQualifiedName();
 		}
 
-		generateSubTypes(srcWriter);
-		generateProxyFields(srcWriter);
-		generateProxyContructor(srcWriter);
-		generateProxyMethods(srcWriter);
+		generateSubTypes(printer);
+		generateProxyFields(printer);
+		generateProxyContructor(printer);
+		generateProxyMethods(printer);
 
-		srcWriter.commit(logger);
+		printer.commit();
 		return getProxyQualifiedName();
 	}
 
@@ -75,7 +75,7 @@ public abstract class AbstractProxyCreator
 	 * using the default address for the
 	 * {@link com.google.gwt.user.client.rpc.RemoteService RemoteService}.
 	 */
-	protected void generateProxyContructor(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		
 	}
@@ -84,7 +84,7 @@ public abstract class AbstractProxyCreator
 	 * Generate any fields required by the proxy.
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateProxyFields(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		
 	}
@@ -94,7 +94,7 @@ public abstract class AbstractProxyCreator
 	 * @param serializableTypeOracle
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		
 	}
@@ -104,7 +104,7 @@ public abstract class AbstractProxyCreator
 	 * @param srcWriter
 	 * @throws CruxGeneratorException 
 	 */
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		
 	}
@@ -140,7 +140,7 @@ public abstract class AbstractProxyCreator
 	/**
 	 * @return a sourceWriter for the proxy class
 	 */
-	protected abstract SourceWriter getSourceWriter();
+	protected abstract SourcePrinter getSourcePrinter();
 	
 	/**
 	 * @return
@@ -175,4 +175,89 @@ public abstract class AbstractProxyCreator
 	{
 		return false;
 	}
+	
+    /**
+     * Printer for screen creation codes.
+     * 
+     * @author Thiago da Rosa de Bustamante
+     */
+    public static class SourcePrinter
+    {
+    	private final TreeLogger logger;
+		private final SourceWriter srcWriter;
+
+    	/**
+    	 * Constructor
+    	 * @param srcWriter
+    	 * @param logger
+    	 */
+    	public SourcePrinter(SourceWriter srcWriter, TreeLogger logger)
+        {
+			this.srcWriter = srcWriter;
+			this.logger = logger;
+        }
+    	
+    	
+    	/**
+    	 * Flushes the printed code into a real output (file).
+    	 */
+    	public void commit()
+    	{
+    		srcWriter.commit(logger);
+    	}
+    	
+    	/**
+    	 * Indents the next line to be printed
+    	 */
+    	public void indent()
+    	{
+    		srcWriter.indent();
+    	}
+    	
+    	/**
+    	 * Outdents the next line to be printed
+    	 */
+    	public void outdent()
+    	{
+    		srcWriter.outdent();
+    	}
+    	
+    	/**
+    	 * Prints an in-line code.
+    	 * @param s
+    	 */
+    	public void print(String s)
+    	{
+    		srcWriter.print(s);
+    	}
+    	
+    	/**
+    	 * Prints a line of code into the output. 
+    	 * <li>If the line ends with <code>"{"</code>, indents the next line.</li>
+    	 * <li>If the line ends with <code>"}"</code>, <code>"};"</code> or <code>"});"</code>, outdents the next line.</li>
+    	 * @param s
+    	 */
+    	public void println(String s)
+    	{
+    		String line = s.trim();
+    		
+			if (line.endsWith("}") || line.endsWith("});") || line.endsWith("};") || line.endsWith("}-*/;"))
+    		{
+    			outdent();
+    		}
+			
+    		srcWriter.println(s);
+    		
+    		if (line.endsWith("{"))
+    		{
+    			indent();
+    		}
+    	}
+
+
+		public void println()
+        {
+			srcWriter.println();
+        }
+    }
 }

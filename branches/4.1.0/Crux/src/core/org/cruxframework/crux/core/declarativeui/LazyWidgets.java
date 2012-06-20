@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
-import org.cruxframework.crux.core.client.screen.ViewFactoryUtils;
-import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
+import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildLazyCondition;
@@ -34,7 +34,6 @@ import org.cruxframework.crux.core.utils.HTMLUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
@@ -290,7 +289,7 @@ public class LazyWidgets
 	{
 		if (widget.has("_children"))
 		{
-			ScreenFactory factory = ScreenFactory.getInstance();
+			ViewFactory factory = ViewFactory.getInstance();
 			JSONArray children = widget.getJSONArray("_children");
 			int size = children.length();
 			for (int i=0; i<size; i++)
@@ -326,7 +325,7 @@ public class LazyWidgets
 	 */
 	private void generateScreenLazyDeps(JSONObject dependencies, JSONObject widget) throws JSONException, ClassNotFoundException
     {
-		if (ScreenFactory.getInstance().isValidWidget(widget))
+		if (ViewFactory.getInstance().isValidWidget(widget))
 		{
 			boolean wholeWidgetLazy = checkLazy(widget);
 			boolean widgetChildrenLazy = checkChildrenLazy(widget);

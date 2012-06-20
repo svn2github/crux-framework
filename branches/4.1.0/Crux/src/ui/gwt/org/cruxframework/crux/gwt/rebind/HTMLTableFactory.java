@@ -17,9 +17,9 @@ package org.cruxframework.crux.gwt.rebind;
 
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.align.AlignmentAttributeParser;

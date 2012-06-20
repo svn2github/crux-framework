@@ -50,7 +50,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwt.user.rebind.rpc.SerializableTypeOracle;
 
 /**
@@ -88,23 +87,21 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	}
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@SuppressWarnings("deprecation")
     @Override
-	protected void generateProxyContructor(SourceWriter srcWriter)
+	protected void generateProxyContructor(SourcePrinter srcWriter)
 	{
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
-		srcWriter.indent();
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);
 		createColumnDefinitions(srcWriter);
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}	
 
-	protected void createColumnDefinitions(SourceWriter out)
+	protected void createColumnDefinitions(SourcePrinter out)
 	{
 		org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitionsAnot = 
 			dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions.class);
@@ -122,7 +119,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		}
 	}
 
-	protected void autoCreateDataSourceColumnDefinitions(SourceWriter out, String colDefs,
+	protected void autoCreateDataSourceColumnDefinitions(SourcePrinter out, String colDefs,
 			org.cruxframework.crux.core.client.datasource.annotation.ColumnDefinitions columnDefinitions)
     {
 		String dtoClassName = dtoType.getParameterizedQualifiedSourceName();
@@ -156,17 +153,17 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
     }
 
 	@Override
-	protected void generateSubTypes(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 	    super.generateSubTypes(srcWriter);
 	    new IocContainerRebind(logger, context).create();
 	}
 	
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourceWriter)
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)
 	 */
 	@Override
-	protected void generateProxyMethods(SourceWriter srcWriter) throws CruxGeneratorException
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		try
         {
@@ -201,16 +198,14 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * 
 	 * @param sourceWriter
 	 */
-	private void generateGetBoundObjectFunction(SourceWriter sourceWriter)
+	private void generateGetBoundObjectFunction(SourcePrinter sourceWriter)
 	{
 		try
 		{
 			sourceWriter.println("public "+dtoType.getParameterizedQualifiedSourceName()+
 					                   " getBoundObject("+recordType.getParameterizedQualifiedSourceName()+" record){");
-			sourceWriter.indent();
 			sourceWriter.println("if (record == null) return null;");
 			sourceWriter.println("return record.getRecordObject();");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		catch (Exception e)
@@ -223,40 +218,32 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * 
 	 * @param sourceWriter
 	 */
-	private void generateUpdateFunction(SourceWriter sourceWriter)
+	private void generateUpdateFunction(SourcePrinter sourceWriter)
 	{
 		try
 		{
 			String recordTypeDeclaration = recordType.getQualifiedSourceName();
 			
 			sourceWriter.println("public void updateData("+dtoType.getParameterizedQualifiedSourceName()+"[] data){");
-			sourceWriter.indent();
 			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[(data!=null?data.length:0)];");
 			sourceWriter.println("for (int i=0; i<data.length; i++){");
-			sourceWriter.indent();
 			sourceWriter.print("ret[i] = new "+recordType.getParameterizedQualifiedSourceName()+"(this,");
 			sourceWriter.print(getIdentifierDeclaration("data[i]"));
 			sourceWriter.println(");");
 			sourceWriter.println("ret[i].setRecordObject(data[i]);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("update(ret);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 
 			sourceWriter.println("public void updateData(java.util.List<"+dtoType.getParameterizedQualifiedSourceName()+"> data){");
-			sourceWriter.indent();
 			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[(data!=null?data.size():0)];");
 			sourceWriter.println("for (int i=0; i<data.size(); i++){");
-			sourceWriter.indent();
 			sourceWriter.print("ret[i] = new "+recordType.getParameterizedQualifiedSourceName()+"(this,");
 			sourceWriter.print(getIdentifierDeclaration("data.get(i)"));
 			sourceWriter.println(");");
 			sourceWriter.println("ret[i].setRecordObject(data.get(i));");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 			sourceWriter.println("update(ret);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		
 		}
@@ -309,18 +296,16 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * 
 	 * @param sourceWriter
 	 */
-	private void generateLoadFunction(SourceWriter sourceWriter)
+	private void generateLoadFunction(SourcePrinter sourceWriter)
 	{		
 		try
 		{
 			sourceWriter.println("public void load(){");
-			sourceWriter.indent();
 			if (isAutoBindEnabled)
 			{
 				sourceWriter.println("updateControllerObjects();");
 			}
 			sourceWriter.println("super.load();");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		catch (Exception e)
@@ -333,18 +318,16 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * 
 	 * @param sourceWriter
 	 */
-	private void generateFetchFunction(SourceWriter sourceWriter)
+	private void generateFetchFunction(SourcePrinter sourceWriter)
 	{
 		try
 		{
 			sourceWriter.println("public void fetch(int startRecord, int endRecord){");
-			sourceWriter.indent();
 			if (isAutoBindEnabled)
 			{
 				sourceWriter.println("updateControllerObjects();");
 			}
 			sourceWriter.println("super.fetch(startRecord, endRecord);");
-			sourceWriter.outdent();
 			sourceWriter.println("}");
 		}
 		catch (Exception e)
@@ -402,7 +385,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * @return a sourceWriter for the proxy class
 	 */
 	@SuppressWarnings("deprecation")
-    protected SourceWriter getSourceWriter()
+    protected SourcePrinter getSourcePrinter()
 	{
 		JPackage pkg = dataSourceClass.getPackage();
 		String packageName = pkg == null ? "" : pkg.getName();
@@ -424,7 +407,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		composerFactory.setSuperclass(dataSourceClass.getParameterizedQualifiedSourceName());
 		composerFactory.addImplementedInterface(org.cruxframework.crux.core.client.screen.ScreenBindableObject.class.getCanonicalName());
 
-		return composerFactory.createSourceWriter(context, printWriter);
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 	
 	/**
@@ -485,7 +468,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * Generates the copyValueToWidget method
 	 * @param srcWriter
 	 */
-	protected void generateCopyValueToWidgetMethod(SourceWriter srcWriter)
+	protected void generateCopyValueToWidgetMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public void copyValueToWidget(HasValue<?> valueContainer, String columnKey, DataSourceRecord<?> dataSourceRecord) {");
 
@@ -506,25 +489,18 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			
 			srcWriter.println();
 			
-			srcWriter.indent();
 			if(JClassUtils.getGetterMethod(name, dtoType) != null)
 			{
 				srcWriter.println(elseStm + "if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
-				srcWriter.indent();
 				srcWriter.println("((HasValue<" + typeName + ">)valueContainer).setValue((" + typeName + ") getValue(columnKey, dataSourceRecord));");
-				srcWriter.outdent();
 				srcWriter.print("}");
 				srcWriter.println();
 				elseStm = "else ";
 			}
-			
-			srcWriter.outdent();
 		}
 		
-		srcWriter.indent();
 		srcWriter.println();
 		srcWriter.println("bindToWidget(valueContainer, columnKey, dataSourceRecord);");
-		srcWriter.outdent();
 		
 		srcWriter.println("}");
 		
@@ -534,11 +510,10 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * Generates the copyValueToWidget method
 	 * @param srcWriter
 	 */
-	protected void generateBindToWidgetMethod(SourceWriter srcWriter)
+	protected void generateBindToWidgetMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("private void bindToWidget(Object widget, final String columnKey, final DataSourceRecord<?> dataSourceRecord) {");
 		JField[] fields = JClassUtils.getDeclaredFields(dtoType);
-		srcWriter.indent();
 		
 		String elseStm = "";
 		for (int i = 0; i < fields.length; i++) 
@@ -557,26 +532,17 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			srcWriter.println();
 			
 			srcWriter.println(elseStm + "if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
-			srcWriter.indent();
 			
 			srcWriter.println("((" + HasValueChangeHandlers.class.getCanonicalName() + ") widget).addValueChangeHandler(");
-			srcWriter.indent();
 			srcWriter.println("new " + ValueChangeHandler.class.getCanonicalName()  + "<" + typeName + ">(){");
-			srcWriter.indent();
 			srcWriter.println("public void onValueChange(" + ValueChangeEvent.class.getCanonicalName() + "<" + typeName + "> event){");
-			srcWriter.indent();
 			srcWriter.println(getProxySimpleName() + ".this.setValue(event.getValue(), columnKey, dataSourceRecord);");
-			srcWriter.outdent();
 			srcWriter.println("}");
-			srcWriter.outdent();
 			srcWriter.println("});");
-			srcWriter.outdent();
 			srcWriter.println("}");
-			srcWriter.outdent();
 			elseStm = "else ";
 		}
 		
-		srcWriter.outdent();
 		srcWriter.println("}");
 	}	
 	
@@ -584,7 +550,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	 * Generates the setValue method
 	 * @param srcWriter
 	 */
-	protected void generateSetValueMethod(SourceWriter srcWriter)
+	protected void generateSetValueMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public void setValue(Object value, String columnKey, DataSourceRecord<?> dataSourceRecord) {");
 
@@ -623,9 +589,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			if(isAccessible)
 			{
 				srcWriter.println();
-				srcWriter.indent();
 				srcWriter.println("if(" + EscapeUtils.quote(name) + ".equals(columnKey)){");
-				srcWriter.indent();
 
 				if(isPublic)
 				{
@@ -638,7 +602,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 				
 				srcWriter.println("boolean changed = (value == null && field != null) || (value != null && field == null) || !field.equals(value);");
 				srcWriter.println("if(changed){");
-				srcWriter.indent();
 				
 				if(isPublic)
 				{
@@ -651,11 +614,8 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 				
 				srcWriter.println("dataSourceRecord.setDirty();");
 				srcWriter.println("return;");
-				srcWriter.outdent();
 				srcWriter.print("}");
-				srcWriter.outdent();
 				srcWriter.print("}");
-				srcWriter.outdent();
 			}
 		}
 		

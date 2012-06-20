@@ -16,6 +16,8 @@
 package org.cruxframework.crux.core.rebind.screen.widget;
 
 /**
+ * Subclasses of this interface are used to inform Crux about how a controller class must be 
+ * referenced by generated code
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -24,6 +26,12 @@ public interface ControllerAccessHandler
 	String getControllerExpression(String controller);
 	String getControllerImplClassName(String controller);
 	
+	/**
+	 * A ControllerAccessHandler that must be used when any reference to the controller printed
+	 * during the current generation cycle must point to the same controller instance. It is used
+	 * by LazyPanels discover how to access the controller.  
+	 * @author Thiago da Rosa de Bustamante
+	 */
 	public static interface SingleControllerAccessHandler extends ControllerAccessHandler
 	{
 		String getSingleControllerImplClassName();

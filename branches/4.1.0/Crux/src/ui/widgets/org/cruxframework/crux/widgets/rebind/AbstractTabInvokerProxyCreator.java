@@ -31,7 +31,6 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * TODO - Gesse - Comment this
@@ -69,7 +68,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 	 * 
 	 */
 	@Override
-	protected void generateWrapperMethod(JMethod method, SourceWriter sourceWriter) throws CruxGeneratorException
+	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
 		String name = method.getName();
 		
@@ -99,7 +98,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 	 * @throws WrapperGeneratorException 
 	 * 
 	 */
-	protected void generateMethod(JMethod method, SourceWriter sourceWriter, String tabId) throws CruxGeneratorException
+	protected void generateMethod(JMethod method, SourcePrinter sourceWriter, String tabId) throws CruxGeneratorException
 	{
 		JType returnType = method.getReturnType();
 		String methodName = method.getName();
@@ -164,7 +163,7 @@ public abstract class AbstractTabInvokerProxyCreator extends AbstractWrapperProx
 	 * @param numParams
 	 * @param returnTypeDeclaration
 	 */
-	private void generateMethodInvocation(SourceWriter sourceWriter, String controllerName, String methodName, String tabId, int numParams, String returnTypeDeclaration)
+	private void generateMethodInvocation(SourcePrinter sourceWriter, String controllerName, String methodName, String tabId, int numParams, String returnTypeDeclaration)
 	{
 		sourceWriter.println("try{");
 		boolean hasValue = numParams > 0;

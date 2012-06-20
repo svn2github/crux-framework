@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
-import org.cruxframework.crux.core.client.screen.WidgetContainer;
+import org.cruxframework.crux.core.rebind.screen.widget.WidgetContainer;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 

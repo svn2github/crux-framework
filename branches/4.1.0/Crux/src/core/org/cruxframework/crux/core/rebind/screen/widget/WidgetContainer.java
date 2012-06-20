@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
+package org.cruxframework.crux.core.rebind.screen.widget;
 
 /**
  * A marker interface to inform Crux that a {@code WidgetFactory} can contain

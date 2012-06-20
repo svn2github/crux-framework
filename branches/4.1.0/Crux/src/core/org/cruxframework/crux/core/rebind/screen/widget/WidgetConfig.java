@@ -25,7 +25,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.RequiresResizeFactory;
-import org.cruxframework.crux.core.client.screen.WidgetContainer;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
 
