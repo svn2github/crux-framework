@@ -273,7 +273,11 @@ class ViewParser
 			indent();
 			metadata.append("\"elements\":"+elementsMetadata.toString());
 			metadata.append(",\"lazyDeps\":"+new LazyWidgets(escapeXML).generateScreenLazyDeps(elementsMetadata.toString()));
-			generateCruxInnerHTMLMetadata(metadata, getPageBodyElement(view));
+		
+			this.htmlDocument = createHTMLDocument(view);
+			Element viewHtmlElement = htmlDocument.createElement("body");
+			translateDocument(getPageBodyElement(view), viewHtmlElement, true);
+			generateCruxInnerHTMLMetadata(metadata, viewHtmlElement);
 			outdent();
 			metadata.append("}");
 
