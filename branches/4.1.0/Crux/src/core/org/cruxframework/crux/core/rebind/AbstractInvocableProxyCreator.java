@@ -124,7 +124,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			String name, boolean allowProtected)
 	{
 		try
-        {
+        {   //TODO nao pode acessar objetos da tela a partir da controle diretamente por Screen.get().... tem que pegar da view corrente associada a controller
 	        String valueVariable = "__wid";
 	        sourceWriter.println(valueVariable + "= Screen.get(\""+name+"\");");
 	        sourceWriter.println("if ("+valueVariable+" != null){");

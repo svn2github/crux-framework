@@ -68,6 +68,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	protected FastList<ViewUnloadHandler> unloadHandlers = new FastList<ViewUnloadHandler>();
 	protected boolean initialized = false;
 
+	private ViewContainer viewContainer;
+
 	/**
 	 * Constructor
 	 * @param id
@@ -172,6 +174,26 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 			}
 		}
 		return widget;
+	}
+	
+	/**
+	 * Retrieve the requested controller from this view
+	 * @param <T> Controller type 
+	 * @param controller Controller name
+	 * @return
+	 */
+	public <T> T getController(String controller)
+	{
+		return getRegisteredControllers().getController(controller);
+	}
+
+	/**
+	 * Retrieve the container that holds this view 
+	 * @return Parent container or null if this view does not belong to any container.
+	 */
+	public ViewContainer getContainer()
+	{
+		return viewContainer;
 	}
 	
 	/**
@@ -877,4 +899,13 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 *  Called when the view are loaded to initialize the lazy dependencies map
 	 */
 	protected abstract Map<String> initializeLazyDependencies();
+
+	/**
+	 * Bind the view to a container. Called by the {@link ViewContainer} add method. 
+	 * @param viewContainer
+	 */
+	protected void setContainer(ViewContainer viewContainer)
+    {
+		this.viewContainer = viewContainer;
+    }
 }

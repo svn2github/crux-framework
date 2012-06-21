@@ -67,14 +67,14 @@ public interface ClientMessages extends Messages
 	String screenInvalidObjectError();
 	@DefaultMessage("Creating the view for screen {0}.")
 	String viewContainerCreatingView(String identifier);
+	@DefaultMessage("View {0} created.")
+	String viewContainerViewCreated(String identifier);
+	@DefaultMessage("View {0} rendered.")
+	String viewContainerViewRendered(String identifier);
+	@DefaultMessage("This application contains components that are not fully supported by your brownser.")
+	String viewContainerUnsupportedWidget();
 	@DefaultMessage("To use this feature you must enabled compatibility with Crux 2 old interfaces.")
 	String screenFactoryCrux2OldInterfacesCompatibilityDisabled();
-	@DefaultMessage("View {0} created.")
-	String screenFactoryViewCreated(String identifier);
-	@DefaultMessage("View {0} rendered.")
-	String screenFactoryViewRendered(String identifier);
-	@DefaultMessage("This application contains components that are not fully supported by your brownser.")
-	String screenFactoryUnsupportedWidget();
 	
 	
 	@DefaultMessage("Type ''{0}'' can not be shared between modules. Only primitives (and its wrappers), Strings, Dates, Arrays (not multidimesional) and classes implementing CruxSerializable can be used.")

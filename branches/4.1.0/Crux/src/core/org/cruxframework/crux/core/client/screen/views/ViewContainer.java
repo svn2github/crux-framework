@@ -46,6 +46,57 @@ public abstract class ViewContainer
     }
 	
 	/**
+	 * Loads a new view into the container
+	 * @param view View to be added
+	 * @return
+	 */
+	public boolean add(View view)
+	{
+		assert (view != null):"Can not add a null view to the ViewContainer";
+		if (doAdd(view))
+		{
+			view.setContainer(this);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Remove the view from this container
+	 * @param view View to be removed
+	 * @return
+	 */
+	public boolean remove(View view)
+	{
+		assert (view != null):"Can not remove a null view from the ViewContainer";
+		if (doRemove(view))
+		{
+			view.setContainer(null);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Loads a new view into the container
+	 * @param view View to be added
+	 * @param render If true, call the render method
+	 * @return
+	 */
+    public boolean add(View view, boolean render)
+    {
+		if (add(view))
+		{
+			if (render)
+			{
+				renderView(view);
+			}
+			return true;
+		}
+		return false;
+    }
+
+    /**
 	 * This method must be called by subclasses when the container is attached to DOM
 	 */
 	protected void bindToDOM()
@@ -99,27 +150,19 @@ public abstract class ViewContainer
 	public abstract View getView(String viewId);
 	
 	/**
-	 * Loads a new view into the container
-	 * @param view View to be added
-	 * @return
-	 */
-	public abstract boolean add(View view);
-	
-	/**
-	 * Loads a new view into the container
-	 * @param view View to be added
-	 * @param render If true, call the render method
-	 * @return
-	 */
-	public abstract boolean add(View view, boolean render);
-	
-	/**
 	 * Remove the view from this container
 	 * @param view View to be removed
 	 * @return
 	 */
-	public abstract boolean remove(View view);
+	protected abstract boolean doRemove(View view);
 	
+	/**
+	 * Loads a new view into the container
+	 * @param view View to be added
+	 * @return
+	 */
+	protected abstract boolean doAdd(View view);
+
 	protected abstract void renderView(View view);
 	protected abstract boolean hasResizeHandlers();
 	protected abstract boolean hasWindowCloseHandlers();

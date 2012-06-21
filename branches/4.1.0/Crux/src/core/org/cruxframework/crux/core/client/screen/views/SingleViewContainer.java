@@ -33,7 +33,7 @@ public abstract class SingleViewContainer extends ViewContainer
 	private View rootView;
 	
 	@Override
-    public boolean add(View view)
+    protected boolean doAdd(View view)
     {
 		if (rootView == null || (rootView != view && remove(rootView)))
 		{
@@ -45,7 +45,7 @@ public abstract class SingleViewContainer extends ViewContainer
     }
 
 	@Override
-    public boolean remove(View view)
+    protected boolean doRemove(View view)
     {
 		if (rootView == view)
 		{
@@ -59,21 +59,6 @@ public abstract class SingleViewContainer extends ViewContainer
 		return false;
     }
 	
-	@Override
-    public boolean add(View view, boolean render)
-    {
-		assert (view != null):"Can not add a null view to the ViewContainer";
-		if (add(view))
-		{
-			if (render)
-			{
-				renderView(view);
-			}
-			return true;
-		}
-		return false;
-    }
-
 	@Override
     protected void renderView(View view)
     {

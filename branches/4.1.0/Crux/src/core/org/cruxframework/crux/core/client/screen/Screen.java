@@ -591,15 +591,6 @@ public class Screen
 		return Screen.get().addWindowOrientationChangeOrResizeHandler(handler);
 	}
 	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	public static double getScreenZoomFactorForCurrentDevice()
-//	{
-//		return DeviceDisplayHandler.getScreenZoomFactor();
-//	}
-		
 	/**
 	 * 
 	 * @param token

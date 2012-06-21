@@ -330,7 +330,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			{
 				out.println("}");
 				out.println("else {");
-				out.println("Crux.getErrorHandler().handleError(Crux.getMessages().screenFactoryUnsupportedWidget());");
+				out.println("Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerUnsupportedWidget());");
 				out.println("}");
 			}
 			return null;

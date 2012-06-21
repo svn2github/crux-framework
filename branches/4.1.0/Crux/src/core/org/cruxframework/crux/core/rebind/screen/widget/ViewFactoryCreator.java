@@ -961,7 +961,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		}
 
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
-		printer.println(loggerVariable+".info(Crux.getMessages().screenFactoryViewCreated(getId()));");
+		printer.println(loggerVariable+".info(Crux.getMessages().viewContainerViewCreated(getId()));");
 		printer.println("}");
 		
 		printer.println("}");
@@ -992,7 +992,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("}");
 		
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
-		printer.println(loggerVariable+".info(Crux.getMessages().screenFactoryViewRendered(getId()));");
+		printer.println(loggerVariable+".info(Crux.getMessages().viewContainerViewRendered(getId()));");
 		printer.println("}");
 		
 		printer.println("}");
