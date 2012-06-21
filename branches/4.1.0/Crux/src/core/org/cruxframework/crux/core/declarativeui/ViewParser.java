@@ -804,7 +804,7 @@ class ViewParser
 					HTMLUtils.write(child, innerHTML);
 				}
 			}
-	        return HTMLUtils.escapeJavascriptString(innerHTML.toString(), escapeXML);
+	        return HTMLUtils.escapeJavascriptString(innerHTML.toString(), false);
 		}
 		catch (IOException e)
 		{
