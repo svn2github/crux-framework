@@ -18,16 +18,14 @@ package org.cruxframework.crux.core.rebind.crossdevice;
 import java.util.Map;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
+import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
+import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
-import org.json.JSONObject;
 
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 
@@ -37,6 +35,9 @@ import com.google.gwt.core.ext.TreeLogger;
  */
 public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 {
+	private final String controllerName;
+	private String controllerClass;
+
 	/**
 	 * 
 	 * @param context
@@ -48,16 +49,8 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, View view, String device, final String controllerName, String module)
     {
 	    super(context, logger, view, device, module);
-	    final String controllerClass = ClientControllers.getController(controllerName);
-		this.widgetConsumer = new WidgetConsumer()
-		{
-			@Override
-			public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
-			{
-				out.println("this._controller.addWidget("+EscapeUtils.quote(widgetId)+","+widgetVariableName+");");
-				//TODO: tratar o renderWidgetsWithIDs para este caso.
-			}
-		};
+		this.controllerName = controllerName;
+	    controllerClass = ClientControllers.getController(controllerName);
 	    controllerAccessHandler = new SingleControllerAccessHandler()
 		{
 			public String getControllerExpression(String controller)
@@ -90,73 +83,30 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 		};
     }
 
-	/**
-	 * 
-	 * @param sourceWriter
-	 * @param metaData
-	 */
-	public String generateWidgetCreation(SourcePrinter printer, JSONObject metaElement)
+	@Override
+	protected void generateProxyFields(SourcePrinter printer)
 	{
-		String widget = null;
-		
-	    createPostProcessingScope();
-
-	    if (!metaElement.has("_type"))
-	    {
-	    	throw new CruxGeneratorException("Crux Meta Data contains an invalid meta element (without type attribute).");
-	    }
-	    String type = getMetaElementType(metaElement);
-	    if (!StringUtils.unsafeEquals("screen",type))
-	    {
-	    	try 
-	    	{
-	    		widget = createWidgetForDevice(printer, metaElement, type);
-	    	}
-	    	catch (Throwable e) 
-	    	{
-	    		throw new CruxGeneratorException("Error Creating widget. See Log for more detail.", e);
-	    	}
-	    }
-
-	    if (widget != null && widget.length() > 0)
-	    {
-	    	printer.println(widget+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
-	    	printer.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
-	    	commitPostProcessing(printer);
-	    	printer.println("}");
-	    	printer.println("});");
-	    }
-		
-		return widget;
+	    super.generateProxyFields(printer);
+		printer.println("private "+controllerClass+" _controller;");
 	}
 	
 	/**
-	 * Generate the code for a widget creation, based on its metadata.
-	 * 
-	 * @param printer 
-	 * @param metaElem
-	 * @param widgetType
-	 * @return
+	 * Generate the View Constructor
 	 */
-	private String createWidgetForDevice(SourcePrinter printer, JSONObject metaElem, String widgetType) 
+	@Override
+	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		if (!metaElem.has("id"))
-		{
-			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getView().getId()+"], there is an widget of type ["+widgetType+"] without id.");
-		}
-		String widget;
+		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module).create();
+		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view).create();
 
-		String widgetId = metaElem.optString("id");
-		if (widgetId == null || widgetId.length() == 0)
-		{
-			throw new CruxGeneratorException("The id attribute is required for CRUX Widgets. " +
-					"On page ["+getView().getId()+"], there is an widget of type ["+widgetType+"] without id.");
-		}
-
-		widget = newWidget(printer, metaElem, widgetId, widgetType, this.widgetConsumer, true);
-		return widget;
+		printer.println("protected "+getProxySimpleName()+"(String id, String title){");
+		printer.println("super(id, title);");
+		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this);");
+		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this);");
+		printer.println("this._controller = ("+controllerClass+")getRegisteredController("+EscapeUtils.quote(controllerName)+");");
+		printer.println("}");
 	}
+	
 	
 	@Override
 	protected Map<String, String> getDeclaredMessages()

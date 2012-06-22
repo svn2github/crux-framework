@@ -27,9 +27,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.declarativeui.ViewProcessor;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -73,7 +72,7 @@ public class CrossDevicesTemplateParser
 			}
 		});
 		try
-		{
+		{   //TODO remover isso daqui e alterar o nome do artibuto controller pra useController.... o getView abaixo ja vai pegar certo
 			templateControllerExpression = findTemplates.compile("/x:xdevice/@controller");
 		}
 		catch (XPathExpressionException e)
@@ -111,12 +110,11 @@ public class CrossDevicesTemplateParser
 	 * @param device
 	 * @return
 	 */
-	public JSONObject getTemplateMetadata(Document template, String deviceAdaptive, Device device)
+	public View getTemplateView(Document template, String deviceAdaptive, Device device)
     {
 	    try
 	    {
-	    	JSONArray metadata = ViewProcessor.extractWidgetsMetadata(template).getJSONArray("elements");
-	    	return metadata.getJSONObject(0);
+	    	return ViewFactory.getInstance().getView(deviceAdaptive+"_"+device, template, false);
 	    }
 	    catch (Exception e)
 	    {

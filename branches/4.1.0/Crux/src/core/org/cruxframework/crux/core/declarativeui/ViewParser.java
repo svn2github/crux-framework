@@ -108,18 +108,22 @@ class ViewParser
 	private String viewId;
 	private Document htmlDocument;
 	private Document cruxPageDocument;
+	private final boolean xhtmlInput;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param escapeXML If true will escape all inner text nodes to ensure that the generated outputs will be parsed correctly by a XML parser.
 	 * @param indentOutput True makes the generated outputs be indented.
+	 * @param xhtmlInput True if the given document represents a valid XHTML page. If false, parser will assume that the input is 
+	 * composed by a root tag representing a the view.
 	 * @throws ViewParserException
 	 */
-	public ViewParser(boolean escapeXML, boolean indentOutput) throws ViewParserException
+	public ViewParser(boolean escapeXML, boolean indentOutput, boolean xhtmlInput) throws ViewParserException
     {
 		this.escapeXML = escapeXML;
 		this.indentOutput = indentOutput;
+		this.xhtmlInput = xhtmlInput;
     }
 	
 	/**
@@ -253,7 +257,7 @@ class ViewParser
 		}				
 	}
 	
-	/**
+	/**Extract the view metadata form the current document
 	 * @param element
 	 */
 	public String extractCruxMetaData(Document view) throws ViewParserException
@@ -264,7 +268,7 @@ class ViewParser
 			StringBuilder elementsMetadata = new StringBuilder();
 			elementsMetadata.append("[");
 			indent();
-			generateCruxMetaData(htmlElement, elementsMetadata);
+			generateCruxMetadataForView(htmlElement, elementsMetadata);
 			outdent();
 			elementsMetadata.append("]");
 
@@ -276,7 +280,9 @@ class ViewParser
 		
 			this.htmlDocument = createHTMLDocument(view);
 			Element viewHtmlElement = htmlDocument.createElement("body");
-			translateDocument(getPageBodyElement(view), viewHtmlElement, true);
+			
+			Element rootElement = (xhtmlInput?getPageBodyElement(view):view.getDocumentElement());
+			translateDocument(rootElement, viewHtmlElement, true);
 			generateCruxInnerHTMLMetadata(metadata, viewHtmlElement);
 			outdent();
 			metadata.append("}");
@@ -301,6 +307,10 @@ class ViewParser
 	{
 		try
         {
+			if (!xhtmlInput)
+			{
+	        	throw new ViewParserException("Can not generate an HTML host page for a non XHTML document.");
+			}
 			this.cruxPageDocument = cruxPageDocument;
 			this.htmlDocument = createHTMLDocument(cruxPageDocument);
 			translateHTMLHostDocument(viewId);
@@ -311,6 +321,26 @@ class ViewParser
         	throw new ViewParserException(e.getMessage(), e);
         }
 	}
+
+	/**
+	 * 
+	 * @param htmlElement
+	 * @param elementsMetadata
+	 * @throws ViewParserException
+	 */
+	private void generateCruxMetadataForView(Element htmlElement, StringBuilder elementsMetadata) throws ViewParserException
+    {
+		generateCruxMetaData(htmlElement, elementsMetadata);
+		if (!xhtmlInput)
+		{
+			elementsMetadata.append("{");
+			elementsMetadata.append("\"_type\":\"screen\"");
+			
+			generateCruxMetaDataAttributes(htmlElement, elementsMetadata);
+			
+			elementsMetadata.append("}");
+		}
+    }
 
 	/**
 	 * @param viewId 
@@ -494,7 +524,7 @@ class ViewParser
 		{
 			cruxArrayMetaData.append(",\"_children\":[");
 			indent();
-			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData);
+			generateCruxMetadataForView(cruxPageInnerTag, cruxArrayMetaData);
 			outdent();
 			cruxArrayMetaData.append("]");
 		}
@@ -658,14 +688,17 @@ class ViewParser
 	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData) throws ViewParserException
     {
 		writeIndentationSpaces(cruxArrayMetaData);
-		cruxArrayMetaData.append("{");
-		cruxArrayMetaData.append("\"_type\":\"screen\"");
-		
-		generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
-		
-		cruxArrayMetaData.append("}");
+		if (xhtmlInput)
+		{
+			cruxArrayMetaData.append("{");
+			cruxArrayMetaData.append("\"_type\":\"screen\"");
+			
+			generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
+			
+			cruxArrayMetaData.append("}");
+		}
 		StringBuilder childrenMetaData = new StringBuilder();
-		generateCruxMetaData(cruxPageScreen, childrenMetaData);
+		generateCruxMetadataForView(cruxPageScreen, childrenMetaData);
 		
 		if (childrenMetaData.length() > 0)
 		{

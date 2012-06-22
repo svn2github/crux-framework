@@ -99,7 +99,7 @@ public class ViewFactory
 	{
 		try 
 		{
-			JSONObject metadata = ViewProcessor.extractWidgetsMetadata(view);
+			JSONObject metadata = ViewProcessor.extractWidgetsMetadata(view, rootView);
 			return parseView(id, metadata, rootView);
 		} 
 		catch (Throwable e) 

@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.controller.ParameterObject;
 import org.cruxframework.crux.core.client.controller.ScreenBind;
 import org.cruxframework.crux.core.client.controller.ValueObject;
 import org.cruxframework.crux.core.client.datasource.DataSource;
+import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGenerator;
 import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGeneratorInitializer;
 import org.cruxframework.crux.core.utils.JClassUtils;
@@ -53,6 +54,18 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	    super(logger, context, baseProxyType);
 	    this.invocableClassType = invocableClassType;
     }
+	
+	@Override
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		srcWriter.println("private " + View.class.getCanonicalName() + " __view;");
+	}
+	
+	@Override
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		generateGetViewMethod(srcWriter);
+	}
 	
 	/**
 	 * Create objects for fields that are annotated with @Create
@@ -94,7 +107,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		sourceWriter.println("return "+autoBind+";");
 		sourceWriter.println("}");
 	}
-
+	
 	/**
 	 * 
 	 * @param controller
@@ -107,6 +120,17 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		sourceWriter.println("Object o = null;");
 		generateScreenUpdateWidgets("this", controller, sourceWriter);
 		sourceWriter.println("}");
+	}
+	
+	/**
+	 * 
+	 * @param srcWriter
+	 */
+	protected void generateGetViewMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("public "+View.class.getCanonicalName()+" getView(){");
+		srcWriter.println("return this.__view;");
+		srcWriter.println("}");
 	}
 	
 	/**

@@ -34,6 +34,8 @@ import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocument;
 import org.cruxframework.crux.core.client.event.CrossDocumentInvoker;
 import org.cruxframework.crux.core.client.event.CruxEvent;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
@@ -137,7 +139,8 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	protected void generateProxyContructor(SourcePrinter srcWriter)
 	{
 		srcWriter.println();
-		srcWriter.println("public " + getProxySimpleName() + "() {");
+		srcWriter.println("public " + getProxySimpleName() + "("+View.class.getCanonicalName()+" view) {");
+		srcWriter.println("this.__view = view;");
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, controllerClass);
 		srcWriter.println("}");
@@ -156,6 +159,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
+		super.generateProxyFields(srcWriter);
 		if (isCrossDoc)
 		{
 			String typeSerializerName = SerializationUtils.getTypeDeserializerQualifiedName(baseProxyType);
@@ -169,6 +173,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
+		super.generateProxyMethods(srcWriter);
 		
 		generateInvokeMethod(srcWriter);
 		generateControllerOverideExposedMethods(srcWriter);
@@ -298,6 +303,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		composerFactory.setSuperclass(controllerClass.getQualifiedSourceName());
         String baseInterface = isCrossDoc?CrossDocumentInvoker.class.getCanonicalName():org.cruxframework.crux.core.client.event.ControllerInvoker.class.getCanonicalName();
 		composerFactory.addImplementedInterface(baseInterface);
+		composerFactory.addImplementedInterface(ViewAware.class.getCanonicalName());
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}

@@ -331,7 +331,7 @@ public class View
 	{
 		if (!StringUtils.isEmpty(view))
 		{
-			views.add(view);
+			views.add(view); //TODO rever se isso aqui continua...acho que remove
 		}
 	}
 	

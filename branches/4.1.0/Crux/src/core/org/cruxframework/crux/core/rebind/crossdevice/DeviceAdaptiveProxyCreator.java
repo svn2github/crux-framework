@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveViewContainer;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.Screen;
@@ -30,7 +31,8 @@ import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
-import org.json.JSONObject;
+import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.w3c.dom.Document;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -59,6 +61,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	private JClassType deviceAdaptiveClass;
 	private JClassType hasHandlersClass;
 	private String controllerName;
+	private String viewClassName;
 
 	/**
 	 * 
@@ -77,7 +80,9 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    initializeTemplateParser();
 	    initializeController();
 	    org.cruxframework.crux.core.rebind.screen.Screen currentScreen = getCurrentScreen();
-		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, currentScreen.getRootView(), getDeviceFeatures(), controllerName, currentScreen.getModule());
+		View view = templateParser.getTemplateView(template,  baseIntf.getQualifiedSourceName(), device);
+		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, view, getDeviceFeatures(), controllerName, currentScreen.getModule());
+		viewClassName = viewFactoryCreator.create();
     }
 
 	/**
@@ -177,14 +182,14 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
     {
 		srcWriter.println("public " + getProxySimpleName() + "(){");
 
-		createController(srcWriter);
+		String viewVariable = ViewFactoryCreator.createVariableName("view");
+		srcWriter.println(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName() + " " + viewVariable + " = new "+viewClassName+"();");
+		createController(srcWriter, viewVariable);
 		
-		JSONObject metaData = templateParser.getTemplateMetadata(template,  baseIntf.getQualifiedSourceName(), device);
-		String widget = viewFactoryCreator.generateWidgetCreation(srcWriter, metaData);
-		
-		srcWriter.println("initWidget("+widget+");");
+		srcWriter.println("initWidget(viewContainer);");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).initWidgetDefaultStyleName();");
+		srcWriter.println("viewContainer.add("+viewVariable+", true);");
 		srcWriter.println("}");
     }
 
@@ -192,10 +197,10 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * 
 	 * @param srcWriter
 	 */
-	protected void createController(SourcePrinter srcWriter)
+	protected void createController(SourcePrinter srcWriter, String viewVariable)
 	{
 		String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
-		srcWriter.println("this._controller = new "+genClass+"();");
+		srcWriter.println("this._controller = new "+genClass+"("+viewVariable+");");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).setBoundWidget(this);");
 	}
 	
@@ -203,6 +208,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private "+controllerClass.getQualifiedSourceName()+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" _controller;");
+		srcWriter.println("private "+DeviceAdaptiveViewContainer.class.getCanonicalName()+ " viewContainer = new "+DeviceAdaptiveViewContainer.class.getCanonicalName()+"();");
 	    for (String messageClass: viewFactoryCreator.getDeclaredMessages().keySet())
 	    {
 	    	srcWriter.println("private "+messageClass+" "+viewFactoryCreator.getDeclaredMessages().get(messageClass) + " = GWT.create("+messageClass+".class);");

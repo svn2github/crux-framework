@@ -93,7 +93,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 {
 	private static NameFactory nameFactory = new NameFactory();
 
-	private final View view;
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
 	private Map<String, WidgetCreator<?>> creators = new HashMap<String, WidgetCreator<?>>();
@@ -105,8 +104,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	private String loggerVariable;
 	private String viewPanelVariable;
 	private String device;
-	private final String module;
 	private Set<String> rootPanelChildren;
+	protected final String module;
+	protected final View view;
 	protected ControllerAccessHandler controllerAccessHandler;
 	protected WidgetConsumer widgetConsumer;
 
@@ -253,8 +253,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		printer.println("protected "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
-		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"();");
-		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"();");
+		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this);");
+		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this);");
 		printer.println("}");
 	}
 	

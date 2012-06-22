@@ -26,6 +26,7 @@ import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -95,6 +96,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	{
 		srcWriter.println();
 		srcWriter.println("public " + getProxySimpleName() + "() {");
+		srcWriter.println("this.__view = view;");
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);
 		createColumnDefinitions(srcWriter);
@@ -165,6 +167,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
+		super.generateProxyMethods(srcWriter);
 		try
         {
 	        JClassType remoteDsType = dataSourceClass.getOracle().getType(RemoteDataSource.class.getCanonicalName());
@@ -406,6 +409,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 
 		composerFactory.setSuperclass(dataSourceClass.getParameterizedQualifiedSourceName());
 		composerFactory.addImplementedInterface(org.cruxframework.crux.core.client.screen.ScreenBindableObject.class.getCanonicalName());
+		composerFactory.addImplementedInterface(ViewAware.class.getCanonicalName());
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}

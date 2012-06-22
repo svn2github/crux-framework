@@ -87,7 +87,7 @@ public class ViewProcessor
 		try
 		{
 			StringWriter buff = new StringWriter();
-			ViewParser viewParser = new ViewParser(false, mustIndent());
+			ViewParser viewParser = new ViewParser(false, mustIndent(), false);
 			viewParser.generateHTMLHostPage(screenId, view, buff);
 			String result = buff.toString();
 			String outCharset = getOutputCharset();
@@ -108,13 +108,14 @@ public class ViewProcessor
 	 * Extract the widgets metadata from the  from the view page.
      *
 	 * @param viewSource
+	 * @param xhmltInput
 	 * @return
 	 */
-	public static JSONObject extractWidgetsMetadata(Document viewSource)
+	public static JSONObject extractWidgetsMetadata(Document viewSource, boolean xhmltInput)
 	{
 		try
 		{
-			ViewParser viewParser = new ViewParser(true, mustIndent());
+			ViewParser viewParser = new ViewParser(true, mustIndent(), xhmltInput);
 			String metadata = viewParser.extractCruxMetaData(viewSource);
 			return new JSONObject(metadata);
 		}

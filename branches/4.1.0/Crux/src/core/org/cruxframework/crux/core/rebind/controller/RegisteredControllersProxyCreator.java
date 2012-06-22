@@ -68,18 +68,21 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     }
 
 	/**
-	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyContructor(com.google.gwt.user.rebind.SourceWriter)
+	 * 
+	 * @param sourceWriter
+	 * @throws CruxGeneratorException
 	 */
 	@Override
-    protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
-    {
-		sourceWriter.println("public "+getProxySimpleName()+"(){");
+	protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
+	{
+		sourceWriter.println("public "+getProxySimpleName()+"("+View.class.getCanonicalName()+" view){");
+		sourceWriter.println("this.view = view;");
 		for (String controller : controllerClassNames.keySet()) 
 		{
 			JClassType controllerClass = getControllerClass(controller);
 			if (!isControllerLazy(controllerClass))
 			{
-				sourceWriter.println("controllers.put(\""+controller+"\", new " + controllerClassNames.get(controller) + "());");
+				sourceWriter.println("controllers.put(\""+controller+"\", new " + controllerClassNames.get(controller) + "(this.view));");
 			}
 		}
 		sourceWriter.println("}");
@@ -92,6 +95,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
+		srcWriter.println("private "+View.class.getCanonicalName()+" view;");
     }	
 
 	/**
@@ -102,7 +106,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     {
 		generateControllerInvokeMethod(sourceWriter);
 		generateCrossDocInvokeMethod(sourceWriter);
-		generateRegisterControllerMethod(sourceWriter);
 		generateGetControllertMethod(sourceWriter);
     }
 
@@ -333,11 +336,11 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 
 				if (isControllerStatefull(controllerClass))
 				{
-					sourceWriter.println("controllers.put("+EscapeUtils.quote(controller)+", new "+controllerClassNames.get(controller)+"());");
+					sourceWriter.println("controllers.put("+EscapeUtils.quote(controller)+", new "+controllerClassNames.get(controller)+"(this.view));");
 				}
 				else
 				{
-					sourceWriter.println("ret = (T) new "+controllerClassNames.get(controller)+"();");
+					sourceWriter.println("ret = (T) new "+controllerClassNames.get(controller)+"(this.view);");
 				}
 
 				sourceWriter.println("}");
@@ -355,18 +358,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		sourceWriter.println("}");
 	}
 
-	/**
-	 * @param sourceWriter
-	 */
-	private void generateRegisterControllerMethod(SourcePrinter sourceWriter)
-    {
-		sourceWriter.println("public void registerController(String controller, ControllerInvoker controllerInvoker){");
-		sourceWriter.println("if (!controllers.containsKey(controller)){");
-		sourceWriter.println("controllers.put(controller, controllerInvoker);");
-		sourceWriter.println("}");
-		sourceWriter.println("}");
-	}
-	
 	/**
 	 * @param controller
 	 * @return
