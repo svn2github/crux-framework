@@ -62,10 +62,24 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
     }
 
 	@Override
+	protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
+	{
+		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view){");
+		sourceWriter.println("this.view = view;");
+		sourceWriter.println("}");
+    }
+
+	@Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		generateDataSourcesForView(srcWriter, view);
     }
+	
+	@Override
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
+	}
 	
 	/**
 	 * @return
@@ -112,7 +126,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 				first = false;
 			}
 			sourceWriter.println("if(StringUtils.unsafeEquals(\""+dataSource+"\",id)){");
-			sourceWriter.println("return new " + dataSourcesClassNames.get(dataSource) + "();");
+			sourceWriter.println("return new " + dataSourcesClassNames.get(dataSource) + "(this.view);");
 			sourceWriter.println("}");
 		}
 		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");

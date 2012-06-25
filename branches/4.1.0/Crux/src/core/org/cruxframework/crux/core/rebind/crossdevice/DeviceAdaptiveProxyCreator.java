@@ -78,9 +78,9 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    hasHandlersClass = context.getTypeOracle().findType(HasHandlers.class.getCanonicalName());
 	    
 	    initializeTemplateParser();
-	    initializeController();
 	    org.cruxframework.crux.core.rebind.screen.Screen currentScreen = getCurrentScreen();
 		View view = templateParser.getTemplateView(template,  baseIntf.getQualifiedSourceName(), device);
+		initializeController(view);
 		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, view, getDeviceFeatures(), controllerName, currentScreen.getModule());
 		viewClassName = viewFactoryCreator.create();
     }
@@ -108,9 +108,9 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * 
 	 * @return
 	 */
-	protected void initializeController()
+	protected void initializeController(View view)
 	{
-		controllerName = templateParser.getTemplateController(template, baseIntf.getQualifiedSourceName(), device);
+		controllerName = templateParser.getTemplateController(view, baseIntf.getQualifiedSourceName(), device);
 		String controllerClassName = ClientControllers.getController(controllerName);
 		if (controllerClassName == null)
 		{

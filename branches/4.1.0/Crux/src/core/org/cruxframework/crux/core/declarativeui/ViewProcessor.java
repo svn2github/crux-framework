@@ -87,7 +87,7 @@ public class ViewProcessor
 		try
 		{
 			StringWriter buff = new StringWriter();
-			ViewParser viewParser = new ViewParser(false, mustIndent(), false);
+			ViewParser viewParser = new ViewParser(false, mustIndent(), true);
 			viewParser.generateHTMLHostPage(screenId, view, buff);
 			String result = buff.toString();
 			String outCharset = getOutputCharset();

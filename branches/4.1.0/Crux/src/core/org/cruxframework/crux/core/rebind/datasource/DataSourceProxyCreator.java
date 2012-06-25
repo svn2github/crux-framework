@@ -26,6 +26,7 @@ import org.cruxframework.crux.core.client.datasource.RemoteDataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecordIdentifier;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
@@ -95,7 +96,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 	protected void generateProxyContructor(SourcePrinter srcWriter)
 	{
 		srcWriter.println();
-		srcWriter.println("public " + getProxySimpleName() + "() {");
+		srcWriter.println("public " + getProxySimpleName() + "("+View.class.getCanonicalName()+" view) {");
 		srcWriter.println("this.__view = view;");
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
 		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);

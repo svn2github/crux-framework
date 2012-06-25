@@ -15,23 +15,13 @@
  */
 package org.cruxframework.crux.core.declarativeui.crossdevice;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
 /**
@@ -42,65 +32,34 @@ public class CrossDevicesTemplateParser
 {
 	private static CrossDevicesTemplateParser instance = new CrossDevicesTemplateParser();
 	
-	private XPathExpression templateControllerExpression;
-
 	/**
 	 * 
 	 */
 	private CrossDevicesTemplateParser()
     {		
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath findTemplates = factory.newXPath();
-		findTemplates.setNamespaceContext(new NamespaceContext()
-		{
-			public String getNamespaceURI(String prefix)
-			{
-				return "http://www.cruxframework.org/xdevice";
-			}
-
-			public String getPrefix(String namespaceURI)
-			{
-				return "x";
-			}
-
-			public Iterator<?> getPrefixes(String namespaceURI)
-			{
-				List<String> prefixes = new ArrayList<String>();
-				prefixes.add("x");
-
-				return prefixes.iterator();
-			}
-		});
-		try
-		{   //TODO remover isso daqui e alterar o nome do artibuto controller pra useController.... o getView abaixo ja vai pegar certo
-			templateControllerExpression = findTemplates.compile("/x:xdevice/@controller");
-		}
-		catch (XPathExpressionException e)
-		{
-			throw new CrossDevicesException("Error initializing generator.", e);
-		}
     }
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getTemplateController(Document template, String deviceAdaptive, Device device)
+	public String getTemplateController(View view, String deviceAdaptive, Device device)
     {
-		try
+		Iterator<String> controllers = view.iterateControllers();
+		String controllerName = null;
+		if (controllers.hasNext())
 		{
-			NodeList nodes = (NodeList)templateControllerExpression.evaluate(template, XPathConstants.NODESET);
-			if (nodes.getLength() > 0)
+			controllerName = controllers.next();
+			if (controllers.hasNext())
 			{
-				Node attribute = nodes.item(0);
-				return attribute.getNodeValue();
+				throw new CrossDevicesException("Cross device templates can not define more than one controller. Cross device widget["+deviceAdaptive+"]. Device ["+device.toString()+"]");
 			}
 		}
-		catch (XPathExpressionException e)
+		if (StringUtils.isEmpty(controllerName))
 		{
-			throw new CrossDevicesException("Error searching for controller associated with the deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]", e);
+			throw new CrossDevicesException("Can not find the controller attribute for deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]");
 		}
-		throw new CrossDevicesException("Can not find the controller attribute for deviceAdaptive widget ["+deviceAdaptive+"]. Device ["+device.toString()+"]");
+		return controllerName;
     }
 	
 	/**

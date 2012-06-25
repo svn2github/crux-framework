@@ -75,7 +75,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
-		sourceWriter.println("public "+getProxySimpleName()+"("+View.class.getCanonicalName()+" view){");
+		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view){");
 		sourceWriter.println("this.view = view;");
 		for (String controller : controllerClassNames.keySet()) 
 		{
@@ -95,7 +95,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
-		srcWriter.println("private "+View.class.getCanonicalName()+" view;");
+		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
     }	
 
 	/**

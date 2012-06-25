@@ -738,7 +738,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 */
 	private void generateCoreCrossDevWidgetsType(PrintStream out, Set<String> libraries, Set<String> templateLibraries)
 	{
-		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsNoTemplates", false, false);
 		generateCoreWidgetsType(out, libraries, templateLibraries, "widgetsCrossDev", false, true);
 	}
 
@@ -1133,10 +1132,11 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 
 			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" />");
 			out.println("<xs:complexType name=\"XDevice\">");
-			out.println("<xs:sequence>");
-			out.println("<xs:group ref=\"c:widgetsNoTemplates\" />");
+			out.println("<xs:choice maxOccurs=\"unbounded\">");
+			out.println("<xs:group ref=\"c:widgetsCrossDev\" />");
+			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:sequence>");
-			out.println("<xs:attribute name=\"controller\" type=\"xs:string\" use=\"required\"/>");
+			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
 			out.println("</xs:complexType>");
 	        
 	        out.println("</xs:schema>");
