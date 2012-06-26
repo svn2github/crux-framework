@@ -23,7 +23,6 @@ import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.View;
-import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.SingleControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -51,36 +50,6 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	    super(context, logger, view, device, module);
 		this.controllerName = controllerName;
 	    controllerClass = ClientControllers.getController(controllerName);
-	    controllerAccessHandler = new SingleControllerAccessHandler()
-		{
-			public String getControllerExpression(String controller)
-			{
-				if (!controllerName.equals(controller))
-				{
-					throw new CruxGeneratorException("Controller ["+controller+"] can not be used on the deviceAdaptive template. Only the bound controller ["+controllerName+"] can be refered.");
-				}
-				return getSingleControllerVariable();
-			}
-
-			public String getControllerImplClassName(String controller)
-            {
-				if (!controllerName.equals(controller))
-				{
-					throw new CruxGeneratorException("Controller ["+controller+"] can not be used on the deviceAdaptive template. Only the bound controller ["+controllerName+"] can be refered.");
-				}
-	            return controllerClass;
-            }
-
-			public String getSingleControllerImplClassName()
-			{
-				return controllerClass;
-			}
-
-			public String getSingleControllerVariable()
-            {
-				return "_controller";
-            }
-		};
     }
 
 	@Override
@@ -99,11 +68,11 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module).create();
 		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view).create();
 
-		printer.println("protected "+getProxySimpleName()+"(String id, String title){");
+		printer.println("public "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
 		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this);");
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this);");
-		printer.println("this._controller = ("+controllerClass+")getRegisteredController("+EscapeUtils.quote(controllerName)+");");
+		printer.println("this._controller = getRegisteredControllers().getController("+EscapeUtils.quote(controllerName)+");");
 		printer.println("}");
 	}
 	

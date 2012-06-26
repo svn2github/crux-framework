@@ -279,7 +279,7 @@ class ViewParser
 			metadata.append(",\"lazyDeps\":"+new LazyWidgets(escapeXML).generateScreenLazyDeps(elementsMetadata.toString()));
 		
 			this.htmlDocument = createHTMLDocument(view);
-			Element viewHtmlElement = htmlDocument.createElement("body");
+			Element viewHtmlElement = htmlDocument.createElementNS(XHTML_NAMESPACE,"body");
 			
 			Element rootElement = (xhtmlInput?getPageBodyElement(view):view.getDocumentElement());
 			translateDocument(rootElement, viewHtmlElement, true);
@@ -323,6 +323,16 @@ class ViewParser
 	}
 
 	/**
+	 * @param cruxPageScreen
+	 * @param cruxArrayMetaData
+	 * @throws ViewParserException 
+	 */
+	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData) throws ViewParserException
+    {
+		generateCruxMetadataForView(cruxPageScreen, cruxArrayMetaData, xhtmlInput);		
+    }
+
+	/**
 	 * 
 	 * @param htmlElement
 	 * @param elementsMetadata
@@ -330,15 +340,38 @@ class ViewParser
 	 */
 	private void generateCruxMetadataForView(Element htmlElement, StringBuilder elementsMetadata) throws ViewParserException
     {
-		generateCruxMetaData(htmlElement, elementsMetadata);
-		if (!xhtmlInput)
+		generateCruxMetadataForView(htmlElement, elementsMetadata, !xhtmlInput);		
+    }
+
+	/**
+	 * 
+	 * @param cruxPageScreen
+	 * @param cruxArrayMetaData
+	 * @param generateViewTag
+	 * @throws ViewParserException
+	 */
+	private void generateCruxMetadataForView(Element cruxPageScreen, StringBuilder cruxArrayMetaData, boolean generateViewTag) throws ViewParserException
+    {
+	    writeIndentationSpaces(cruxArrayMetaData);
+		if (generateViewTag)
 		{
-			elementsMetadata.append("{");
-			elementsMetadata.append("\"_type\":\"screen\"");
+			cruxArrayMetaData.append("{");
+			cruxArrayMetaData.append("\"_type\":\"screen\"");
 			
-			generateCruxMetaDataAttributes(htmlElement, elementsMetadata);
+			generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
 			
-			elementsMetadata.append("}");
+			cruxArrayMetaData.append("}");
+		}
+		StringBuilder childrenMetaData = new StringBuilder();
+		generateCruxMetaData(cruxPageScreen, childrenMetaData);
+		
+		if (childrenMetaData.length() > 0)
+		{
+			if (generateViewTag)
+			{
+				cruxArrayMetaData.append(",");
+			}
+			cruxArrayMetaData.append(childrenMetaData);
 		}
     }
 
@@ -502,7 +535,7 @@ class ViewParser
 		
 		if (isHtmlContainerWidget(cruxPageInnerTag))
 		{
-			Element htmlElement = htmlDocument.createElement("body");
+			Element htmlElement = htmlDocument.createElementNS(XHTML_NAMESPACE,"body");
 			translateDocument(cruxPageInnerTag, htmlElement, true);
 			generateCruxInnerHTMLMetadata(cruxArrayMetaData, htmlElement);
 		}
@@ -524,7 +557,7 @@ class ViewParser
 		{
 			cruxArrayMetaData.append(",\"_children\":[");
 			indent();
-			generateCruxMetadataForView(cruxPageInnerTag, cruxArrayMetaData);
+			generateCruxMetaData(cruxPageInnerTag, cruxArrayMetaData);
 			outdent();
 			cruxArrayMetaData.append("]");
 		}
@@ -541,10 +574,7 @@ class ViewParser
 	private void generateCruxInnerHTMLMetadata(StringBuilder cruxArrayMetaData, Element htmlElement) throws ViewParserException
     {
 	    String innerHTML = getHTMLFromNode(htmlElement);
-	    if (innerHTML.length() > 0)
-	    {
-	    	cruxArrayMetaData.append(",\"_html\":\""+innerHTML+"\"");
-	    }
+    	cruxArrayMetaData.append(",\"_html\":\""+innerHTML+"\"");
     }
 	
 	/**
@@ -631,7 +661,8 @@ class ViewParser
 				}
 				String attrValue = attribute.getNodeValue();
 				
-				if (!StringUtils.isEmpty(attrValue))
+				String namespaceURI = attribute.getNamespaceURI();
+				if (!StringUtils.isEmpty(attrValue) && (namespaceURI == null || !namespaceURI.endsWith("/xmlns/")))
 				{
 					cruxArrayMetaData.append(",");
 					cruxArrayMetaData.append("\""+attrName+"\":");
@@ -678,33 +709,6 @@ class ViewParser
 		{
 			throw new ViewParserException(e.getMessage(), e);
 		}
-    }
-	
-	/**
-	 * @param cruxPageScreen
-	 * @param cruxArrayMetaData
-	 * @throws ViewParserException 
-	 */
-	private void generateCruxScreenMetaData(Element cruxPageScreen, StringBuilder cruxArrayMetaData) throws ViewParserException
-    {
-		writeIndentationSpaces(cruxArrayMetaData);
-		if (xhtmlInput)
-		{
-			cruxArrayMetaData.append("{");
-			cruxArrayMetaData.append("\"_type\":\"screen\"");
-			
-			generateCruxMetaDataAttributes(cruxPageScreen, cruxArrayMetaData);
-			
-			cruxArrayMetaData.append("}");
-		}
-		StringBuilder childrenMetaData = new StringBuilder();
-		generateCruxMetadataForView(cruxPageScreen, childrenMetaData);
-		
-		if (childrenMetaData.length() > 0)
-		{
-			cruxArrayMetaData.append(",");
-			cruxArrayMetaData.append(childrenMetaData);
-		}		
     }
 	
 	/**
@@ -854,6 +858,8 @@ class ViewParser
 	}
 	
 	/**
+	 * Check if the target node is child from a rootDocument element or from a native XHTML element.
+	 * 
 	 * @param node
 	 * @return
 	 */
@@ -864,6 +870,10 @@ class ViewParser
 		if (namespaceURI == null)
 		{
 			log.warn("The view ["+this.viewId+"] contains elements that is not bound to any namespace. It can cause errors while translating to an HTML page.");
+		}
+		if (node.getOwnerDocument().getDocumentElement().equals(parentNode))
+		{
+			return true;
 		}
 		if (namespaceURI != null && namespaceURI.equals(XHTML_NAMESPACE) || isHtmlContainerWidget(parentNode))
 		{

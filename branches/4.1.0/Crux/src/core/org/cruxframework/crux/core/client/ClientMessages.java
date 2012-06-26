@@ -109,4 +109,6 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("Invalid value for style property: [{0}]:[{1}]")
 	String styleErrorInvalidProperty(String camelizedName, String value);
+	@DefaultMessage("Can not retrieve the widget [{1}] from view [{0}]. View is not initialized. Load this view into a ViewContainer first.")
+	String viewNotInitialized(String viewId, String widgetId);
 }

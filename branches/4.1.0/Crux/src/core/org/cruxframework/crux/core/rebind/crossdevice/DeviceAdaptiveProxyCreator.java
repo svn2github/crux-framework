@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.ScreenFactory;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.declarativeui.crossdevice.CrossDevices;
 import org.cruxframework.crux.core.declarativeui.crossdevice.CrossDevicesTemplateParser;
 import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
@@ -183,13 +184,14 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		srcWriter.println("public " + getProxySimpleName() + "(){");
 
 		String viewVariable = ViewFactoryCreator.createVariableName("view");
-		srcWriter.println(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName() + " " + viewVariable + " = new "+viewClassName+"();");
+		srcWriter.println(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName() + " " + 
+				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+", "+EscapeUtils.quote(device.toString())+");");
 		createController(srcWriter, viewVariable);
 		
-		srcWriter.println("initWidget(viewContainer);");
+		srcWriter.println("initWidget(viewContainer.asWidget());");
+		srcWriter.println("viewContainer.add("+viewVariable+", true);");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).initWidgetDefaultStyleName();");
-		srcWriter.println("viewContainer.add("+viewVariable+", true);");
 		srcWriter.println("}");
     }
 

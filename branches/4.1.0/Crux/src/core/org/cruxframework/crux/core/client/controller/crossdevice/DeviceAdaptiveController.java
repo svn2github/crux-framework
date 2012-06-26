@@ -15,7 +15,8 @@
  */
 package org.cruxframework.crux.core.client.controller.crossdevice;
 
-import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.EventHandler;
@@ -30,10 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class DeviceAdaptiveController
 {
-	private static final String CHILD_ID_PREFIX = "__DEV_ADTV_";
-	private static int idCounter = 0;
-	
-	private final String childPrefixId;
 	private Widget boundWidget;
 	
 	
@@ -42,7 +39,6 @@ public abstract class DeviceAdaptiveController
 	 */
 	public DeviceAdaptiveController()
     {
-		this.childPrefixId = CHILD_ID_PREFIX+(idCounter++);
     }
 
 	/**
@@ -71,7 +67,7 @@ public abstract class DeviceAdaptiveController
 	@SuppressWarnings("unchecked")
     protected <T extends IsWidget> T getChildWidget(String id)
 	{
-		return (T)Screen.get(getChildWidgetId(id));
+		return (T)getControllerView().getWidget(id);
 	}
 
 	/**
@@ -79,17 +75,13 @@ public abstract class DeviceAdaptiveController
 	 */
 	protected void addWidget(String id, Widget widget)
 	{
-		Screen.add(getChildWidgetId(id), widget);
+		getControllerView().addWidget(id, widget);
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private String getChildWidgetId(String id)
+	
+	private View getControllerView()
 	{
-		return childPrefixId+id;
+		return ((ViewAware)this).getView();
 	}
 	
 	void setBoundWidget(Widget boundWidget)

@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.client.screen.views;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
@@ -147,6 +148,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 */
 	public Widget getWidget(String id)
 	{
+		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
 		Widget widget = widgets.get(id);
 		if (widget == null)
 		{
@@ -205,6 +207,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 */
 	public Widget getWidget(String id, boolean checkLazyDependencies)
 	{
+		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
 		if (checkLazyDependencies)
 		{
 			return getWidget(id);
@@ -226,6 +229,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	@SuppressWarnings("unchecked")
 	public <T extends IsWidget> T getWidget(String id, Class<T> clazz)
 	{
+		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
 		Widget w = getWidget(id);
 		return (T) w;
 	}
