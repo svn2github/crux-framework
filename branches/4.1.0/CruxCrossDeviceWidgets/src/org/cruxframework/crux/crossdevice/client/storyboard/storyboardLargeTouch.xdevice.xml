@@ -1,6 +1,6 @@
 <x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
            xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
-           controller="storyboardLargeTouchController">
+           useController="storyboardLargeTouchController">
      <gwt:flowPanel id="storyboard" style="textAlign:center;">
      </gwt:flowPanel>      
 </x:xdevice>
