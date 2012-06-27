@@ -36,6 +36,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
@@ -137,7 +138,27 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		return widgets.containsKey(id);
 	}		
 
+	/**
+	 * Adds a new token for history control.
+	 * @param token
+	 */
+	public static void addToHistory(String token)
+	{
+		History.newItem(token, false);
+
+	}
 	
+	/**
+	 * Adds a new token for history control.
+	 * @param token
+	 * @param issueEvent
+	 */
+	public static void addToHistory(String token, boolean issueEvent)
+	{
+		History.newItem(token, issueEvent);
+
+	}
+
 	/**
 	 * Retrieve a widget contained on this view. If the the requested widget does not exists, we check if
 	 * a request for a lazy creation of this widget was previously done. If so, we initialize the wrapper 
@@ -688,15 +709,6 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	/**
-	 * Retrieve the view prefix. It is used to isolate all elements from this view on DOM
-	 * @return
-	 */
-	protected String getPrefix()
-	{
-		return "";//TODO implement this
-	}
-
-	/**
 	 * Called by the {@link ViewContainer} when the view is added to the container. 
 	 * This method creates the view widgets
 	 */
@@ -903,6 +915,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 *  Called when the view are loaded to initialize the lazy dependencies map
 	 */
 	protected abstract Map<String> initializeLazyDependencies();
+
+	/**
+	 * Retrieve the view prefix. It is used to isolate all elements from this view on DOM
+	 * @return
+	 */
+	protected abstract String getPrefix();
 
 	/**
 	 * Bind the view to a container. Called by the {@link ViewContainer} add method. 

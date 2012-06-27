@@ -30,6 +30,7 @@ class IocViewScope implements IocScope
 	
     public <T> T getValue(IocProvider<T> provider, String className, String subscope, CreateCallback<T> callback)
     {
+    	//TODO amarrar o viewscope a view
 		String viewName = "";//Screen.getCurrentView().getName();
 		IocDocumentScope scope = views.get(viewName);
 		if (scope == null)

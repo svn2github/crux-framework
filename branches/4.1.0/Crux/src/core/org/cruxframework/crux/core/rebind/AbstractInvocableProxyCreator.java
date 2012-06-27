@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.controller.ScreenBind;
 import org.cruxframework.crux.core.client.controller.ValueObject;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGenerator;
 import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGeneratorInitializer;
 import org.cruxframework.crux.core.utils.JClassUtils;
@@ -148,9 +149,9 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 			String name, boolean allowProtected)
 	{
 		try
-        {   //TODO nao pode acessar objetos da tela a partir da controle diretamente por Screen.get().... tem que pegar da view corrente associada a controller
+        {   
 	        String valueVariable = "__wid";
-	        sourceWriter.println(valueVariable + "= Screen.get(\""+name+"\");");
+	        sourceWriter.println(valueVariable + "= (("+ViewAware.class.getCanonicalName()+")this).getView().getWidget(\""+name+"\");");
 	        sourceWriter.println("if ("+valueVariable+" != null){");
 	        sourceWriter.println("if ("+valueVariable+" instanceof HasFormatter){");
 	        generateHandleHasFormatterWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, type, valueVariable, allowProtected);

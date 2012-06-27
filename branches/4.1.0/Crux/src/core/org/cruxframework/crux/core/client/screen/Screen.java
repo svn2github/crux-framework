@@ -121,7 +121,7 @@ public class Screen
 						{
 							removeControllerAccessor(Screen.this);
 						}
-					});//TODO estruturar essa parte de invocacao cross doc.... so colocar um tratador por document
+					});
 				}
 
 				Screen.this.addWindowCloseHandler(new CloseHandler<Window>()
@@ -138,10 +138,10 @@ public class Screen
 	/**
 	 * 
 	 * @param token
-	 *///TODO rever se isso permanece aqui, os tratadores de evento de history devem ir pra dentro da view, como os demais...
+	 */
 	protected void addTokenToHistory(String token)
 	{
-		History.newItem(token, false);
+		View.addToHistory(token);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class Screen
 	 */
 	protected void addTokenToHistory(String token, boolean issueEvent)
 	{
-		History.newItem(token, issueEvent);
+		View.addToHistory(token, issueEvent);
 	}
 	
 	/**

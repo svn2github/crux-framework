@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -105,7 +106,7 @@ class ViewParser
 	private final boolean indentOutput;
 	private String cruxTagName;
 	private int jsIndentationLvl;
-	private String viewId;
+	private final String viewId;
 	private Document htmlDocument;
 	private Document cruxPageDocument;
 	private final boolean xhtmlInput;
@@ -119,8 +120,9 @@ class ViewParser
 	 * composed by a root tag representing a the view.
 	 * @throws ViewParserException
 	 */
-	public ViewParser(boolean escapeXML, boolean indentOutput, boolean xhtmlInput) throws ViewParserException
+	public ViewParser(String viewId, boolean escapeXML, boolean indentOutput, boolean xhtmlInput) throws ViewParserException
     {
+		this.viewId = viewId;
 		this.escapeXML = escapeXML;
 		this.indentOutput = indentOutput;
 		this.xhtmlInput = xhtmlInput;
@@ -303,7 +305,7 @@ class ViewParser
 	 * @param out Where the generated HTML will be written.
 	 * @throws ViewParserException
 	 */
-	public void generateHTMLHostPage(String viewId, Document cruxPageDocument, Writer out) throws ViewParserException
+	public void generateHTMLHostPage(Document cruxPageDocument, Writer out) throws ViewParserException
 	{
 		try
         {
@@ -313,7 +315,7 @@ class ViewParser
 			}
 			this.cruxPageDocument = cruxPageDocument;
 			this.htmlDocument = createHTMLDocument(cruxPageDocument);
-			translateHTMLHostDocument(viewId);
+			translateHTMLHostDocument();
 	        write(htmlDocument, out);
         }
         catch (IOException e)
@@ -379,10 +381,8 @@ class ViewParser
 	 * @param viewId 
 	 * @throws ViewParserException 
 	 */
-	private void translateHTMLHostDocument(String viewId) throws ViewParserException
+	private void translateHTMLHostDocument() throws ViewParserException
     {
-		setCurrentViewId(viewId);
-
 		Element htmlHeadElement = getPageHeadElement(htmlDocument);
 		Element htmlBodyElement = getPageBodyElement(htmlDocument);
 		Element cruxHeadElement = getPageHeadElement(cruxPageDocument);
@@ -394,7 +394,6 @@ class ViewParser
 		generateCruxMetaDataElement(htmlBodyElement);
 		generateCruxModuleElement(htmlBodyElement);
 		handleCruxSplashScreen();
-		clearViewId();
     }
 	
 	/**
@@ -981,15 +980,6 @@ class ViewParser
 	{
 		this.cruxTagName = cruxTagName;
 	}
-
-	/**
-	 * 
-	 * @param viewId
-	 */
-	private void setCurrentViewId(String viewId)
-	{
-		this.viewId = viewId;
-	}
 	
 	/**
 	 * 
@@ -997,14 +987,6 @@ class ViewParser
 	private void clearCurrentWidget()
 	{
 		cruxTagName = "";
-	}
-	
-	/**
-	 * 
-	 */
-	private void clearViewId()
-	{
-		this.viewId = null;
 	}
 	
 	/**
@@ -1031,7 +1013,6 @@ class ViewParser
 	 */
 	private void translateCruxInnerTags(Element cruxPageElement, Element htmlElement, Document htmlDocument)
     {
-//		boolean htmlContainerWidget = isHtmlContainerWidget(cruxPageElement);
 		String currentWidgetTag = getCurrentWidgetTag();
 		boolean attachableWidget = isAttachableWidget(cruxPageElement);
 		if ((isWidget(currentWidgetTag)) && attachableWidget && isHTMLChild(cruxPageElement))
@@ -1048,12 +1029,7 @@ class ViewParser
 				widgetHolder = htmlElement;
 			}
 			
-			widgetHolder.setAttribute("id", "_crux_"+cruxPageElement.getAttribute("id"));
-//			translateDocument(cruxPageElement, widgetHolder, htmlDocument, htmlContainerWidget);
-		}
-		else
-		{
-//			translateDocument(cruxPageElement, htmlElement, htmlDocument, false);
+			widgetHolder.setAttribute("id", "_crux_"+ViewFactory.getInstance().getPrefixForView(viewId)+cruxPageElement.getAttribute("id"));
 		}
     }
 

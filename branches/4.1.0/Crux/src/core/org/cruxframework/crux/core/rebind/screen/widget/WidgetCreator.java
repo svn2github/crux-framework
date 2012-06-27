@@ -650,6 +650,11 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		return viewFactory.getLoggerVariable();
 	}
 	
+	protected String getViewVariable()
+	{
+		return viewFactory.getViewVariable();
+	}
+	
 	protected Map<String, String> getDeclaredMessages()
 	{
 		return viewFactory.getDeclaredMessages();

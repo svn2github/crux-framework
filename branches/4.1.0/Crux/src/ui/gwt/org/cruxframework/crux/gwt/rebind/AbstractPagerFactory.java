@@ -51,7 +51,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {
-	        printlnPostProcessing(context.getWidget()+".setDisplay(("+HasRows.class.getCanonicalName()+")Screen.get("+EscapeUtils.quote(attributeValue)+"));");
+	        printlnPostProcessing(context.getWidget()+".setDisplay(("+HasRows.class.getCanonicalName()+")getViewVariable().getWidget("+EscapeUtils.quote(attributeValue)+"));");
 	        String pageSize = context.readChildProperty("pageSize");
 	        if (!StringUtils.isEmpty(pageSize))
 	        {

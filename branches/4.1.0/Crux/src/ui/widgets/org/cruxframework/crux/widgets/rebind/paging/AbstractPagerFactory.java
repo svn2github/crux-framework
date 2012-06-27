@@ -51,7 +51,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 
 		if(pageableId != null && containsWidget(pageableId))
 		{
-			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") Screen.get("+EscapeUtils.quote(pageableId)+"));");
+			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") getViewVariable().getWidget("+EscapeUtils.quote(pageableId)+"));");
 			if(strEnabled != null && strEnabled.length() > 0)
 			{
 				printlnPostProcessing(widget+".setEnabled("+Boolean.parseBoolean(strEnabled)+");");
@@ -59,7 +59,7 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		}
 		else
 		{
-			throw new CruxGeneratorException("No pageable widget set for the pager ["+context.getWidgetId()+"], on screen ["+getView().getId()+"]."); 
+			throw new CruxGeneratorException("No pageable widget set for the pager ["+context.getWidgetId()+"], on view ["+getView().getId()+"]."); 
 		}							
 	}
 	

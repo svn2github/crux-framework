@@ -244,6 +244,7 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		srcWriter.println("return ret;");
 		srcWriter.println("}");
 	}
+	//TODO fazer um viewBinderProxyCreator
 	
 	private void checkMethodSignature(JMethod method)
     {

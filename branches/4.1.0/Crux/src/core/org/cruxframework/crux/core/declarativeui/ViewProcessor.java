@@ -78,17 +78,17 @@ public class ViewProcessor
 	/**
 	 * Generate the HTML code from the view page.
 	 * 
-	 * @param screenId
+	 * @param viewId
 	 * @param view
 	 * @param out
 	 */
-	public static void generateHTML(String screenId, Document view, OutputStream out)
+	public static void generateHTML(String viewId, Document view, OutputStream out)
 	{
 		try
 		{
 			StringWriter buff = new StringWriter();
-			ViewParser viewParser = new ViewParser(false, mustIndent(), true);
-			viewParser.generateHTMLHostPage(screenId, view, buff);
+			ViewParser viewParser = new ViewParser(viewId, false, mustIndent(), true);
+			viewParser.generateHTMLHostPage(view, buff);
 			String result = buff.toString();
 			String outCharset = getOutputCharset();
 			if (outCharset == null || outCharset.length() == 0)
@@ -107,15 +107,16 @@ public class ViewProcessor
 	/**
 	 * Extract the widgets metadata from the  from the view page.
      *
+	 * @param viewId
 	 * @param viewSource
 	 * @param xhmltInput
 	 * @return
 	 */
-	public static JSONObject extractWidgetsMetadata(Document viewSource, boolean xhmltInput)
+	public static JSONObject extractWidgetsMetadata(String viewId, Document viewSource, boolean xhmltInput)
 	{
 		try
 		{
-			ViewParser viewParser = new ViewParser(true, mustIndent(), xhmltInput);
+			ViewParser viewParser = new ViewParser(viewId, true, mustIndent(), xhmltInput);
 			String metadata = viewParser.extractCruxMetaData(viewSource);
 			return new JSONObject(metadata);
 		}

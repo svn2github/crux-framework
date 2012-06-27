@@ -270,6 +270,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateCreateWidgetsMethod(printer);
     	generateRenderMethod(printer);
     	generateInitializeLazyDependenciesMethod(printer);
+    	generateGetPrefixMethod(printer);
     }
 	
 	/**
@@ -926,6 +927,17 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	printer.println("protected native "+org.cruxframework.crux.core.client.collection.Map.class.getCanonicalName()+"<String> initializeLazyDependencies()/*-{");
     	printer.println("return "+view.getLazyDependencies().toString()+";");
     	printer.println("}-*/;");
+    }
+	
+	/**
+	 * 
+	 * @param printer
+	 */
+	private void generateGetPrefixMethod(SourcePrinter printer)
+    {
+		printer.println("protected String getPrefix(){");
+		printer.println("return "+EscapeUtils.quote(view.getPrefix())+";");
+		printer.println("}");
     }
 	
 	/**

@@ -101,9 +101,12 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * @param defaultSortingColumn the column to be used to automatically sort the grid's data when it is rendered for the first time 
 	 * @param defaultSortingType tells the grid if <code>defaultSortingColumn</code> should be used ascending or descending
 	 */
-	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType)
+	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, 
+			boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, 
+			boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType)
 	{
-		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling, fixedCellSize, defaultSortingColumn, defaultSortingType, null, false, false);
+		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling, 
+				fixedCellSize, defaultSortingColumn, defaultSortingType, null, false, false);
 	}
 	
 	/**
@@ -122,7 +125,10 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * @param rowDetailsWidgetCreator used to create on-demand row details
 	 * @param showRowDetailsIcon if <code>true</code>, the second column of the grid will contain icons for expanding or collapsing the row's details 
 	 */
-	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType, RowDetailWidgetCreator rowDetailsWidgetCreator, boolean showRowDetailsIcon, boolean freezeHeaders)
+	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing, 
+			boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling, 
+			boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType, 
+			RowDetailWidgetCreator rowDetailsWidgetCreator, boolean showRowDetailsIcon, boolean freezeHeaders)
 	{
 		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, rowDetailsWidgetCreator, showRowDetailsIcon, freezeHeaders);
 		getColumnDefinitions().setGrid(this);
@@ -789,10 +795,6 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	protected void onClearRendering()
 	{
 		this.headers = new FastList<ColumnHeader>();
-		if(hasRowDetails())
-		{
-			this.rowDetailsManager.clearRendering();
-		}		
 	}
 	
 	/**

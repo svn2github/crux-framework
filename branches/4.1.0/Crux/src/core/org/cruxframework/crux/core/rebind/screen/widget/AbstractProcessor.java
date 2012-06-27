@@ -46,4 +46,14 @@ public abstract class AbstractProcessor
 	{
 		return widgetCreator;
 	}
+	
+	protected String getLoggerVariable()
+	{
+		return widgetCreator.getLoggerVariable();
+	}
+
+	protected String getViewVariable()
+	{
+		return widgetCreator.getViewVariable();
+	}
 }

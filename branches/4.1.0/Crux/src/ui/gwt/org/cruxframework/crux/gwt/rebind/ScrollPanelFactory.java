@@ -123,7 +123,7 @@ public class ScrollPanelFactory extends PanelFactory<WidgetCreatorContext>
 					
 			String targetWidget = ViewFactoryCreator.createVariableName("c");
 			
-			printlnPostProcessing("Widget "+targetWidget+" = Screen.get("+EscapeUtils.quote(propertyValue)+");");
+			printlnPostProcessing("Widget "+targetWidget+" = getViewVariable().getWidget("+EscapeUtils.quote(propertyValue)+");");
 			printlnPostProcessing("if ("+targetWidget+" == null){");
 			String widgetId = context.getWidgetId();
 			printlnPostProcessing("throw new NullPointerException("+EscapeUtils.quote("Error in ScrollPanel ["+widgetId+"]." +

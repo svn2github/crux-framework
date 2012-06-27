@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.rebind.screen;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +48,9 @@ public class ViewFactory
 {
 	private static ViewFactory instance = new ViewFactory();
 	private static final Log logger = LogFactory.getLog(ViewFactory.class);
+	
+	private int viewPrefix = 0;
+	private Map<String, String> prefixes = new HashMap<String, String>();
 	
 	/**
 	 * Singleton Constructor
@@ -99,7 +104,7 @@ public class ViewFactory
 	{
 		try 
 		{
-			JSONObject metadata = ViewProcessor.extractWidgetsMetadata(view, rootView);
+			JSONObject metadata = ViewProcessor.extractWidgetsMetadata(id, view, rootView);
 			return parseView(id, metadata, rootView);
 		} 
 		catch (Throwable e) 
@@ -123,8 +128,22 @@ public class ViewFactory
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param viewId
+	 * @return
+	 */
+	public String getPrefixForView(String viewId)
+	{
+		if (!prefixes.containsKey(viewId))
+		{
+			prefixes.put(viewId, Integer.toString(viewPrefix++));
+		}
 		
-
+		return prefixes.get(viewId);
+	}
+	
 	/**
 	 * Creates a widget based in its metadata information.
 	 * 
@@ -262,7 +281,7 @@ public class ViewFactory
 			JSONObject lazyDependencies = metaData.getJSONObject("lazyDeps");
 			String html = metaData.getString("_html");
 			
-			View view = new View(id, elementsMetadata, lazyDependencies, html, rootView);
+			View view = new View(id, elementsMetadata, lazyDependencies, html, rootView, getPrefixForView(id));
 
 			int length = elementsMetadata.length();
 			for (int i = 0; i < length; i++) 

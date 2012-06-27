@@ -130,7 +130,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
 		sourceWriter.println("return ("+classSourceName+")Screen.get(\""+widgetName+"\");");
 		sourceWriter.println("}");
-    }
+    }//TODO fazer um viewWrapperProxyCreator
 
 	/**
 	 * @param sourceWriter
