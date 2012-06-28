@@ -127,7 +127,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 			srcWriter.println("public void onCreate("+className+" newObject){");
 			injectFields(srcWriter, context.getTypeOracle().getType(className), "newObject", new HashSet<String>());
 			srcWriter.println("}");
-			srcWriter.print("}");
+			srcWriter.println("}");
 		}
 		catch (NotFoundException e)
 		{

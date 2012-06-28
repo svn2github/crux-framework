@@ -23,10 +23,13 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
+import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -112,7 +115,7 @@ public class IocContainerManager
 		while (controllers.hasNext())
 		{
 			Class<?> controllerClass = ClientControllers.getControllerClass(controllers.next());
-			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>());
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true);
 		}
 	}
 	
@@ -125,7 +128,7 @@ public class IocContainerManager
 		while (datasources.hasNext())
 		{
 			Class<?> controllerClass = DataSources.getDataSourceClass(datasources.next());
-			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>());
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true);
 		}
 	}
 	
@@ -135,33 +138,59 @@ public class IocContainerManager
 	 * @param added
 	 * @param path
 	 */
-	private static void bindImplicityInjectcions(Class<?> type, Set<String> added, Set<String> path)
+	private static void bindImplicityInjectcions(Class<?> type, Set<String> added, Set<String> path, boolean iocRootType)
     {
-        for (Field field : type.getDeclaredFields()) 
+        if (isBindable(type, iocRootType))
         {
-        	String fieldName = field.getName();
-			if (!added.contains(fieldName))
+        	for (Field field : type.getDeclaredFields()) 
         	{
-				added.add(fieldName);
-				Class<?> fieldType = field.getType();
-				Inject inject = field.getAnnotation(Inject.class);
-				if (inject != null)
-				{
-					if (path.contains(fieldType.getCanonicalName()))
-					{
-						throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+fieldType.getCanonicalName()+"].");
-					}
-		        	Set<String> fieldPath = new HashSet<String>();
-		        	fieldPath.addAll(path);
-		        	fieldPath.add(fieldType.getCanonicalName());
-		        	IocContainerConfigurations.bindTypeImplicitly(fieldType);
-					bindImplicityInjectcions(fieldType, added, fieldPath);
-				}
+        		String fieldName = field.getName();
+        		if (!added.contains(fieldName))
+        		{
+        			added.add(fieldName);
+        			Class<?> fieldType = field.getType();
+        			if (isBindable(fieldType, false))
+        			{
+        				Inject inject = field.getAnnotation(Inject.class);
+        				if (inject != null)
+        				{
+        					if (path.contains(fieldType.getCanonicalName()))
+        					{
+        						throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+fieldType.getCanonicalName()+"].");
+        					}
+        					Set<String> fieldPath = new HashSet<String>();
+        					fieldPath.addAll(path);
+        					fieldPath.add(fieldType.getCanonicalName());
+        					IocContainerConfigurations.bindTypeImplicitly(fieldType);
+        					bindImplicityInjectcions(fieldType, new HashSet<String>(), fieldPath, false);
+        				}
+        			}
+        		}
+        	}
+        	if (type.getSuperclass() != null)
+        	{
+        		bindImplicityInjectcions(type.getSuperclass(), added, path, iocRootType);
         	}
         }
-        if (type.getSuperclass() != null)
-        {
-        	bindImplicityInjectcions(type.getSuperclass(), added, path);
-        }
+    }
+
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	private static boolean isBindable(Class<?> type, boolean iocRootType)
+    {
+	    boolean bindable = !ClassUtils.isSimpleType(type);
+	    
+	    if (bindable && !iocRootType)
+	    {
+	    	if (type.getAnnotation(Controller.class) != null || type.getAnnotation(DataSource.class) != null)
+	    	{
+	    		bindable = false;
+	    	}
+	    }
+	    
+		return bindable;
     }
 }

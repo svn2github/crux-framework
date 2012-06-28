@@ -190,7 +190,26 @@ public class ClassUtils
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static boolean isSimpleType(Class<?> type)
+	{
+		return (
+				(type.equals(Integer.TYPE)) || (type.equals(Integer.class)) 
+				|| (type.equals(Short.TYPE)) || (type.equals(Short.class)) 
+				|| (type.equals(Long.TYPE)) || (type.equals(Long.class)) 
+				|| (type.equals(Byte.TYPE)) || (type.equals(Byte.class)) 
+				|| (type.equals(Float.TYPE)) || (type.equals(Float.class)) 
+				|| (type.equals(Double.TYPE)) || (type.equals(Double.class)) 
+				|| (type.equals(Boolean.TYPE)) || (type.equals(Boolean.class)) 
+				|| (type.equals(Character.TYPE)) || (type.equals(Character.class)) 
+				|| (type.equals(String.class)) 
+		       );
+	}
 	
 	/**
 	 * @param attrType

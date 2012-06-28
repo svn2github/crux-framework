@@ -241,7 +241,7 @@ public abstract class AbstractProxyCreator
     	{
     		String line = s.trim();
     		
-			if (line.endsWith("}") || line.endsWith("});") || line.endsWith("};") || line.endsWith("}-*/;"))
+			if (line.endsWith("}") || line.endsWith("});") || line.endsWith("};") || line.endsWith("}-*/;") || line.startsWith("}"))
     		{
     			outdent();
     		}
