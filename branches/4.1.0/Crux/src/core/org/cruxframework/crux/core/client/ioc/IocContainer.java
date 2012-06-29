@@ -15,30 +15,31 @@
  */
 package org.cruxframework.crux.core.client.ioc;
 
-import org.cruxframework.crux.core.client.collection.FastMap;
-
-import com.google.gwt.core.client.GWT;
-
+import org.cruxframework.crux.core.client.ioc.Inject.Scope;
 
 /**
  * @author Thiago da Rosa de Bustamante
- *
+ * 
  */
-class IocViewScope implements IocScope
+public abstract class IocContainer
 {
-	private FastMap<IocDocumentScope> views = new FastMap<IocDocumentScope>();
-	
-    public <T> T getValue(IocProvider<T> provider, String className, String subscope, CreateCallback<T> callback)
-    {
-    	//TODO amarrar o viewscope a view
-		String viewName = "";//Screen.getCurrentView().getName();
-		IocDocumentScope scope = views.get(viewName);
-		if (scope == null)
+	private static IocLocalScope _localScope = new IocLocalScope();
+	private static IocPersistentScope _documentScope = new IocPersistentScope();
+	private IocPersistentScope _viewScope = new IocPersistentScope();
+
+	/**
+	 * Retrieve the scope controller for the requested scope
+	 * @param scope
+	 * @return
+	 */
+	protected IocScope _getScope(Scope scope)
+	{
+		switch (scope)
 		{
-			scope = GWT.create(IocDocumentScope.class);
-			views.put(viewName, scope);
+			case LOCAL: return _localScope;
+			case DOCUMENT: return _documentScope;
+			case VIEW: return this._viewScope;
+			default: return _localScope;
 		}
-		
-		return scope.getValue(provider, className, subscope, callback);
-    }
+	}
 }

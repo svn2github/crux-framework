@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
  * @author Thiago da Rosa de Bustamante
  *
  */
-class IocDocumentScope implements IocScope
+class IocPersistentScope implements IocScope
 {
 	private FastMap<FastMap<Object>> scopes = new FastMap<FastMap<Object>>();
 	

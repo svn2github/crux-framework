@@ -472,11 +472,12 @@ public class JClassUtils
 	 * Verify if the given field is a visible property
 	 * @param voClass
 	 * @param field
+	 * @param allowProtected
 	 * @return
 	 */
-	public static boolean isPropertyVisibleToRead(JClassType voClass, JField field)
+	public static boolean isPropertyVisibleToRead(JClassType voClass, JField field, boolean allowProtected)
 	{
-		if (field.isPublic() || field.isProtected())
+		if (field.isPublic() || (allowProtected && field.isProtected()))
 		{
 			return true;
 		}
@@ -490,11 +491,12 @@ public class JClassUtils
 	 * Verify if the given field is a visible property
 	 * @param voClass
 	 * @param field
+	 * @param allowProtected
 	 * @return
 	 */
-	public static boolean isPropertyVisibleToWrite(JClassType voClass, JField field)
+	public static boolean isPropertyVisibleToWrite(JClassType voClass, JField field, boolean allowProtected)
 	{
-		if ((field.isPublic() || field.isProtected()) && !field.isFinal())
+		if ((field.isPublic() || (allowProtected && field.isProtected())) && !field.isFinal())
 		{
 			return true;
 		}
@@ -503,7 +505,7 @@ public class JClassUtils
 			return hasSetMethod(field, voClass);
 		}
 	}
-	
+
 	/**
 	 * Generates a property set block. First try to set the field directly, then try to use a javabean setter method.
 	 * 

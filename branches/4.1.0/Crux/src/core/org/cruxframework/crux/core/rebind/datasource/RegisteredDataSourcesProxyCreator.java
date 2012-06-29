@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.client.GWT;
@@ -48,6 +49,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 {
 	private Map<String, String> dataSourcesClassNames = new HashMap<String, String>();
 	private final View view;
+	private String iocContainerClassName;
 
 	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view)
     {
@@ -72,6 +74,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	@Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
+	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
 		generateDataSourcesForView(srcWriter, view);
     }
 	
@@ -79,6 +82,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
+		srcWriter.println("private "+iocContainerClassName+" iocContainer = new "+iocContainerClassName+"();");
 	}
 	
 	/**
@@ -126,12 +130,33 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 				first = false;
 			}
 			sourceWriter.println("if(StringUtils.unsafeEquals(\""+dataSource+"\",id)){");
-			sourceWriter.println("return new " + dataSourcesClassNames.get(dataSource) + "(this.view);");
+			String datasourceVar = createDataSource(sourceWriter, dataSource);
+			sourceWriter.println("return "+datasourceVar+";");
 			sourceWriter.println("}");
 		}
 		sourceWriter.println("throw new DataSourceExcpetion("+EscapeUtils.quote("DataSource not found: ")+"+id);");
 		sourceWriter.println("}");
 	}
+	
+	/**
+	 * 
+	 * @param sourceWriter
+	 * @param datasource
+	 * @return
+	 */
+	private String createDataSource(SourcePrinter sourceWriter, String dataSource)
+	{
+		String datasourceClassName = dataSourcesClassNames.get(dataSource);
+		sourceWriter.println(datasourceClassName+" __dat  = new "+datasourceClassName+"(this.view);");
+		JClassType datasourceClass = context.getTypeOracle().findType(DataSources.getDataSource(dataSource));
+		if (datasourceClass == null)
+		{
+			throw new CruxGeneratorException("Can not found the datasource ["+datasourceClassName+"]. Check your classpath and the inherit modules");
+		}
+		IocContainerRebind.injectFields(sourceWriter, datasourceClass, "__dat", "iocContainer");
+		return "__dat";
+	}
+	
 	
 	/**
 	 * 

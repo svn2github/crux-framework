@@ -31,7 +31,6 @@ import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractInvocableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
@@ -99,7 +98,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println("public " + getProxySimpleName() + "("+View.class.getCanonicalName()+" view) {");
 		srcWriter.println("this.__view = view;");
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
-		IocContainerRebind.injectProxyFields(srcWriter, dataSourceClass);
 		createColumnDefinitions(srcWriter);
 		srcWriter.println("}");
 	}	
@@ -154,13 +152,6 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
     		out.println("});");
 		}
     }
-
-	@Override
-	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-	    super.generateSubTypes(srcWriter);
-	    new IocContainerRebind(logger, context).create();
-	}
 	
 	/**
 	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyMethods(com.google.gwt.user.rebind.SourcePrinter)

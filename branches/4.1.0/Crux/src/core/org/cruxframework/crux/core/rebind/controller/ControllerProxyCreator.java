@@ -43,7 +43,6 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
-import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -142,15 +141,7 @@ public class ControllerProxyCreator extends AbstractInvocableProxyCreator
 		srcWriter.println("public " + getProxySimpleName() + "("+View.class.getCanonicalName()+" view) {");
 		srcWriter.println("this.__view = view;");
 		generateAutoCreateFields(srcWriter, "this", isAutoBindEnabled);
-		IocContainerRebind.injectProxyFields(srcWriter, controllerClass);
 		srcWriter.println("}");
-	}
-	
-	@Override
-	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-	    super.generateSubTypes(srcWriter);
-	    new IocContainerRebind(logger, context).create();
 	}
 	
 	/**

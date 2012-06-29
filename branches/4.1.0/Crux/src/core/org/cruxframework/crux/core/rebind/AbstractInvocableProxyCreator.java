@@ -409,8 +409,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		dtoLooping.add(voClass.getQualifiedSourceName());
 		for (JField field : voClass.getFields()) 
 		{
-			if ((populateScreen && JClassUtils.isPropertyVisibleToRead(voClass, field)) || 
-				(!populateScreen && JClassUtils.isPropertyVisibleToWrite(voClass, field)))
+			if ((populateScreen && JClassUtils.isPropertyVisibleToRead(voClass, field, true)) || 
+				(!populateScreen && JClassUtils.isPropertyVisibleToWrite(voClass, field, true)))
 			{
 				ValueObject valueObject = voClass.getAnnotation(ValueObject.class);
 				ScreenBind screenBind = field.getAnnotation(ScreenBind.class); 

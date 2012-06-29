@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.rebind.screen.View;
 
@@ -54,6 +55,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	private Map<String, String> crossDocsClassNames = new HashMap<String, String>();
 	private final View view;
 	private final String module;
+	private String iocContainerClassName;
 	
 	/**
 	 * Constructor
@@ -82,7 +84,8 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 			JClassType controllerClass = getControllerClass(controller);
 			if (!isControllerLazy(controllerClass))
 			{
-				sourceWriter.println("controllers.put(\""+controller+"\", new " + controllerClassNames.get(controller) + "(this.view));");
+				String controllerVar = createController(sourceWriter, controller);
+				sourceWriter.println("controllers.put(\""+controller+"\", "+controllerVar+");");
 			}
 		}
 		sourceWriter.println("}");
@@ -96,6 +99,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     {
 		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
 		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
+		srcWriter.println("private "+iocContainerClassName+" iocContainer = new "+iocContainerClassName+"();");
     }	
 
 	/**
@@ -115,6 +119,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
+	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
 		Set<String> usedWidgets = new HashSet<String>();
 		generateControllersForView(view);
 		Iterator<org.cruxframework.crux.core.rebind.screen.Widget> screenWidgets = view.iterateWidgets();
@@ -334,19 +339,20 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				first = false;
 				sourceWriter.println("if ("+StringUtils.class.getCanonicalName()+".unsafeEquals(controller, "+EscapeUtils.quote(controller)+")){");
 
+				String controllerVar = createController(sourceWriter, controller);
 				if (isControllerStatefull(controllerClass))
 				{
-					sourceWriter.println("controllers.put("+EscapeUtils.quote(controller)+", new "+controllerClassNames.get(controller)+"(this.view));");
+					sourceWriter.println("controllers.put("+EscapeUtils.quote(controller)+", "+controllerVar+");");
 				}
 				else
 				{
-					sourceWriter.println("ret = (T) new "+controllerClassNames.get(controller)+"(this.view);");
+					sourceWriter.println("ret = (T) "+controllerVar+";");
 				}
 
 				sourceWriter.println("}");
 			}
         }
-
+		
 		sourceWriter.println("if (ret == null){");
 		sourceWriter.println("ret = (T)controllers.get(controller);");
 		sourceWriter.println("}");
@@ -356,6 +362,25 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		sourceWriter.println("return ret;");
 
 		sourceWriter.println("}");
+	}
+	
+	/**
+	 * 
+	 * @param sourceWriter
+	 * @param controller
+	 * @return
+	 */
+	private String createController(SourcePrinter sourceWriter, String controller)
+	{
+		String controllerClassName = controllerClassNames.get(controller);
+		sourceWriter.println(controllerClassName+" __cont  = new "+controllerClassName+"(this.view);");
+		JClassType controllerClass = getControllerClass(controller);
+		if (controllerClass == null)
+		{
+			throw new CruxGeneratorException("Can not found the controller ["+controllerClassName+"]. Check your classpath and the inherit modules");
+		}
+		IocContainerRebind.injectFields(sourceWriter, controllerClass, "__cont", "iocContainer");
+		return "__cont";
 	}
 
 	/**

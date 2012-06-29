@@ -116,7 +116,7 @@ public class ParameterBindGeneratorImpl implements ParameterBindGenerator
 		boolean hasAtLeastOneField = false;
 		for (JField field : voClass.getFields()) 
 		{
-			if (JClassUtils.isPropertyVisibleToWrite(voClass, field))
+			if (JClassUtils.isPropertyVisibleToWrite(voClass, field, true))
 			{
 				ParameterObject parameterObject = voClass.getAnnotation(ParameterObject.class);
 				Parameter parameter = field.getAnnotation(Parameter.class); 
