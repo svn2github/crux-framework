@@ -62,11 +62,12 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module)
+	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module, String iocContainerClassName)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()), false);
 		this.view = view;
 		this.module = module;
+		this.iocContainerClassName = iocContainerClassName;
     }
 
 	/**
@@ -77,8 +78,10 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
-		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view){");
+		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view, " +
+				iocContainerClassName+" iocContainer){");
 		sourceWriter.println("this.view = view;");
+		sourceWriter.println("this.iocContainer = iocContainer;");
 		for (String controller : controllerClassNames.keySet()) 
 		{
 			JClassType controllerClass = getControllerClass(controller);
@@ -99,7 +102,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
     {
 		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
 		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
-		srcWriter.println("private "+iocContainerClassName+" iocContainer = new "+iocContainerClassName+"();");
+		srcWriter.println("private "+iocContainerClassName+" iocContainer;");
     }	
 
 	/**
@@ -119,7 +122,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
 		Set<String> usedWidgets = new HashSet<String>();
 		generateControllersForView(view);
 		Iterator<org.cruxframework.crux.core.rebind.screen.Widget> screenWidgets = view.iterateWidgets();

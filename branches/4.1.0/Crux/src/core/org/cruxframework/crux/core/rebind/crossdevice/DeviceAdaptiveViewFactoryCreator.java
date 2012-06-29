@@ -65,13 +65,14 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module).create();
-		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view).create();
+		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName).create();
+		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName).create();
 
 		printer.println("public "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
-		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this);");
-		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this);");
+		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"();");
+		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
+		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
 		printer.println("this._controller = getRegisteredControllers().getController("+EscapeUtils.quote(controllerName)+");");
 		printer.println("}");
 	}

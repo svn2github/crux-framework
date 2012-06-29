@@ -51,10 +51,11 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private final View view;
 	private String iocContainerClassName;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String iocContainerClassName)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()), false);
 		this.view = view;
+		this.iocContainerClassName = iocContainerClassName;
     }
 
 	@Override
@@ -66,15 +67,16 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	protected void generateProxyContructor(SourcePrinter sourceWriter) throws CruxGeneratorException
 	{
-		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view){");
+		sourceWriter.println("public "+getProxySimpleName()+"("+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view, " +
+				iocContainerClassName+" iocContainer){");
 		sourceWriter.println("this.view = view;");
+		sourceWriter.println("this.iocContainer = iocContainer;");
 		sourceWriter.println("}");
     }
 
 	@Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
 		generateDataSourcesForView(srcWriter, view);
     }
 	
@@ -82,7 +84,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
-		srcWriter.println("private "+iocContainerClassName+" iocContainer = new "+iocContainerClassName+"();");
+		srcWriter.println("private "+iocContainerClassName+" iocContainer;");
 	}
 	
 	/**

@@ -52,6 +52,7 @@ import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -109,6 +110,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	protected final View view;
 	protected ControllerAccessHandler controllerAccessHandler;
 	protected WidgetConsumer widgetConsumer;
+
+	protected String iocContainerClassName;
 
 	/**
 	 * 
@@ -248,13 +251,14 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module).create();
-		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view).create();
+		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName).create();
+		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName).create();
 
 		printer.println("protected "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
-		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this);");
-		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this);");
+		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"();");
+		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
+		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
 		printer.println("}");
 	}
 	
@@ -273,6 +277,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateGetPrefixMethod(printer);
     }
 	
+    @Override
+    protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
+    {
+	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
+    }
+    
 	/**
 	 * Return the type of a given crux meta tag. This type could be {@code "screen"} or 
 	 * another string referencing a registered {@code WidgetFactory}.
