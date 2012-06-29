@@ -53,7 +53,7 @@ public abstract class IocContainerConfigurations implements IocConfiguration
 		String className = clazz.getCanonicalName();
 		if (configurations.containsKey(className))
 		{
-			throw new IoCException("Invalid Ioc configuration. Class "+className+" is already bound to the container.");//TODO message.
+			throw new IoCException("Invalid Ioc configuration. Class "+className+" is already bound to the container.");
 		}
 		configurations.put(className, iocConfig);
 		return iocConfig;
