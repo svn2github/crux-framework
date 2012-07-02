@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind.ioc;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.ioc.Inject;
@@ -26,6 +27,7 @@ import org.cruxframework.crux.core.client.ioc.IocContainer;
 import org.cruxframework.crux.core.client.ioc.IocProvider;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.ioc.IoCException;
+import org.cruxframework.crux.core.ioc.IocConfig;
 import org.cruxframework.crux.core.ioc.IocConfigImpl;
 import org.cruxframework.crux.core.ioc.IocContainerManager;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
@@ -49,17 +51,19 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 public class IocContainerRebind extends AbstractProxyCreator
 { 
 	private final View view;
+	private Map<String, IocConfig<?>> configurations;
 
 	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view)
     {
 	    super(logger, context);
 		this.view = view;
+		configurations = IocContainerManager.getConfigurationsForView(view);
     }
 
 	@Override
     protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-		Iterator<String> classes = IocContainerManager.iterateClasses();
+		Iterator<String> classes = configurations.keySet().iterator();
 		while (classes.hasNext())
 		{
 			String className = classes.next();
@@ -76,7 +80,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	{
 		srcWriter.println("public  "+className+" get"+className.replace('.', '_')+"("+Scope.class.getCanonicalName()+" scope, String subscope){");
 
-		IocConfigImpl<?> iocConfig = IocContainerManager.getConfigurationForType(className);
+		IocConfigImpl<?> iocConfig = (IocConfigImpl<?>) configurations.get(className);
 		Class<?> providerClass = iocConfig.getProviderClass();
 		if (providerClass != null)
 		{
@@ -121,7 +125,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 		{
 			srcWriter.println("new IocScope.CreateCallback<"+className+">(){");
 			srcWriter.println("public void onCreate("+className+" newObject){");
-			injectFields(srcWriter, context.getTypeOracle().getType(className), "newObject", new HashSet<String>(), getProxySimpleName()+".this");
+			injectFields(srcWriter, context.getTypeOracle().getType(className), "newObject", new HashSet<String>(), getProxySimpleName()+".this", configurations);
 			srcWriter.println("}");
 			srcWriter.println("}");
 		}
@@ -138,9 +142,10 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param parentVariable
 	 * @param iocContainerVariable
 	 */
-	public static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable)
+	public static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable, View view)
 	{
-		injectFields(srcWriter, type, parentVariable, new HashSet<String>(), iocContainerVariable);
+		Map<String, IocConfig<?>> configurations = IocContainerManager.getConfigurationsForView(view);
+		injectFields(srcWriter, type, parentVariable, new HashSet<String>(), iocContainerVariable, configurations);
 	}
 	
 	/**
@@ -151,7 +156,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param added
 	 * @param iocContainerVariable
 	 */
-	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable)
+	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
 	{
         for (JField field : type.getFields()) 
         {
@@ -161,7 +166,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 				JType fieldType = field.getType();
 				if ((fieldType.isPrimitive()== null))
 				{
-					String injectionExpression = getFieldInjectionExpression(field, iocContainerVariable);
+					String injectionExpression = getFieldInjectionExpression(field, iocContainerVariable, configurations);
 					if (injectionExpression != null)
 					{
 						if (JClassUtils.isPropertyVisibleToWrite(type, field, false))
@@ -187,7 +192,7 @@ public class IocContainerRebind extends AbstractProxyCreator
         }
         if (type.getSuperclass() != null)
         {
-        	injectFields(srcWriter, type.getSuperclass(), parentVariable, added, iocContainerVariable);
+        	injectFields(srcWriter, type.getSuperclass(), parentVariable, added, iocContainerVariable, configurations);
         }
 	}
 	
@@ -240,7 +245,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	    return imports;
     }
 
-	private static String getFieldInjectionExpression(JField field, String iocContainerVariable)
+	private static String getFieldInjectionExpression(JField field, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
     {
 		Inject inject = field.getAnnotation(Inject.class);
 		if (inject != null)
@@ -251,7 +256,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 				if (fieldType.isClassOrInterface() != null)
 				{
 					String fieldTypeName = fieldType.getQualifiedSourceName();
-					IocConfigImpl<?> iocConfig = IocContainerManager.getConfigurationForType(fieldTypeName);
+					IocConfigImpl<?> iocConfig = (IocConfigImpl<?>) configurations.get(fieldTypeName);
 					if (iocConfig != null)
 					{
 						return iocContainerVariable+".get"+fieldTypeName.replace('.', '_')+

@@ -83,6 +83,8 @@ implements HasHTMLFactory<RichTextAreaContext>, HasInitializeHandlersFactory<Ric
 		super.postProcess(out, context);
 		String widget = context.getWidget();
 		// We need to give UI thread time to render the textArea before try to focus it
+		String widgetClassName = getWidgetClassName();
+		printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 		printlnPostProcessing(widget+".setFocus(true);");// Necessary to work around a bug in mozzila
 		printFormatterOptions(context);
 	}

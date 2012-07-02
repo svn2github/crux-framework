@@ -99,6 +99,8 @@ public class TabLayoutPanelFactory extends CompositeFactory<TabLayoutPanelContex
 		public void processAttribute(SourcePrinter out, TabLayoutPanelContext context, final String propertyValue)
         {
 			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(propertyValue)+");");
         }
 	}

@@ -717,8 +717,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		if (!initialized)
 		{
 			createWidgets();
-			fireLoadEvent();
 			initialized = true;
+			fireLoadEvent();
 		}
 	}
 	

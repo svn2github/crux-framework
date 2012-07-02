@@ -155,7 +155,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 		{
 			throw new CruxGeneratorException("Can not found the datasource ["+datasourceClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFields(sourceWriter, datasourceClass, "__dat", "iocContainer");
+		IocContainerRebind.injectFields(sourceWriter, datasourceClass, "__dat", "iocContainer", view);
 		return "__dat";
 	}
 	

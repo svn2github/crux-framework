@@ -18,6 +18,7 @@ package org.cruxframework.crux.gwt.rebind;
 import java.util.ArrayList;
 
 import org.cruxframework.crux.core.client.screen.RequiresResizeFactory;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -97,6 +98,9 @@ public abstract class AbstractLayoutPanelFactory<C extends AbstractLayoutPanelCo
 			{
 				String layoutAnimationEvent = createVariableName("evt");
 				String eventClassName = LayoutAnimationEvent.class.getCanonicalName()+"<"+getWidgetClassName()+">";
+
+				String widgetClassName = getWidgetClassName();
+				printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 				printlnPostProcessing(eventClassName+" "+layoutAnimationEvent+" = new "+eventClassName+"("+widget+", "+context.getWidgetId()+");");
 
 				runChildProcessingAnimations(context.childProcessingAnimations);

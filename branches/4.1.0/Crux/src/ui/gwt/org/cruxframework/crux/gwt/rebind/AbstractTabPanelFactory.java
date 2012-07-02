@@ -88,6 +88,8 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		public void processAttribute(SourcePrinter out, TabPanelContext context, final String propertyValue)
         {
 			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(propertyValue)+");");
         }
 	}	

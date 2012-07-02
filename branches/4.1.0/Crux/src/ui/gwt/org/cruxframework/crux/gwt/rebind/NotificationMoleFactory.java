@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -54,7 +55,10 @@ public class NotificationMoleFactory extends WidgetCreator<WidgetCreatorContext>
 		String show = context.readChildProperty("show");
 		if (!StringUtils.isEmpty(show) && Boolean.parseBoolean(show))
 		{
-			printlnPostProcessing(context.getWidget()+".show();");
+			String widget = context.getWidget();
+			String widgetClassName = getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+			printlnPostProcessing(widget+".show();");
 		}
 	}
 }

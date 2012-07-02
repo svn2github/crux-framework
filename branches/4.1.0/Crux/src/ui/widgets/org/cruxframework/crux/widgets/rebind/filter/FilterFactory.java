@@ -72,9 +72,11 @@ public class FilterFactory extends CompositeFactory<WidgetCreatorContext>
 			String widget = context.getWidget();
 			String filterableId =context.readWidgetProperty("filterable");
 			String filterableWidget = getWidgetCreator().createVariableName("filterable");
-			
+
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 			printlnPostProcessing("Widget "+filterableWidget+" = null;");
-			printlnPostProcessing(filterableWidget+" = getViewVariable().getWidget("+EscapeUtils.quote(filterableId)+");");
+			printlnPostProcessing(filterableWidget+" = "+getViewVariable()+".getWidget("+EscapeUtils.quote(filterableId)+");");
 			printlnPostProcessing("if("+filterableWidget+" != null){");
 			printlnPostProcessing(widget+".setFilterable(("+Filterable.class.getCanonicalName()+"<?>) "+filterableWidget+");");
 			printlnPostProcessing("}");

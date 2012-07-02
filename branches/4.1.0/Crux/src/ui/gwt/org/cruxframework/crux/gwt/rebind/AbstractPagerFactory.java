@@ -51,21 +51,25 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {
-	        printlnPostProcessing(context.getWidget()+".setDisplay(("+HasRows.class.getCanonicalName()+")getViewVariable().getWidget("+EscapeUtils.quote(attributeValue)+"));");
+			String widget = context.getWidget();
+
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+	        printlnPostProcessing(widget+".setDisplay(("+HasRows.class.getCanonicalName()+")"+getViewVariable()+".getWidget("+EscapeUtils.quote(attributeValue)+"));");
 	        String pageSize = context.readChildProperty("pageSize");
 	        if (!StringUtils.isEmpty(pageSize))
 	        {
-	        	printlnPostProcessing(context.getWidget()+".setPageSize("+Integer.parseInt(pageSize)+");");
+	        	printlnPostProcessing(widget+".setPageSize("+Integer.parseInt(pageSize)+");");
 	        }
 	        String page = context.readChildProperty("page");
 	        if (!StringUtils.isEmpty(page))
 	        {
-	        	printlnPostProcessing(context.getWidget()+".setPage("+Integer.parseInt(page)+");");
+	        	printlnPostProcessing(widget+".setPage("+Integer.parseInt(page)+");");
 	        }
 	        String pageStart = context.readChildProperty("pageStart");
 	        if (!StringUtils.isEmpty(pageStart))
 	        {
-	        	printlnPostProcessing(context.getWidget()+".setPageStart("+Integer.parseInt(pageStart)+");");
+	        	printlnPostProcessing(widget+".setPageStart("+Integer.parseInt(pageStart)+");");
 	        }    
         }
 	}

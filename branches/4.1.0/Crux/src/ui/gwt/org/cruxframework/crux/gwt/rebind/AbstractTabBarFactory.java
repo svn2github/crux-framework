@@ -72,7 +72,10 @@ public abstract class AbstractTabBarFactory extends CompositeFactory<TabBarConte
 		@Override
 		public void processAttribute(SourcePrinter out, TabBarContext context, String attributeValue)
 		{
-			printlnPostProcessing(context.getWidget()+".selectTab("+Integer.parseInt(attributeValue)+");");
+			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(attributeValue)+");");
 		}
 	}
 	

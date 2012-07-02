@@ -17,8 +17,10 @@ package org.cruxframework.crux.core.ioc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -28,6 +30,7 @@ import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
+import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
@@ -68,8 +71,6 @@ public class IocContainerManager
 						}
 					}
 				}
-				bindImplicityInjectcionsForControllers();
-				bindImplicityInjectcionsForDatasources();
 			}
 			catch (Exception e)
 			{
@@ -80,55 +81,55 @@ public class IocContainerManager
 
 	/**
 	 * 
-	 * @param className
+	 * @param view
 	 * @return
 	 */
-	public static IocConfigImpl<?> getConfigurationForType(String className)
+	public static Map<String, IocConfig<?>> getConfigurationsForView(View view)
 	{
+		//TODO estudar a possibilidade de um cache para essass configuracoes.
+		
 		if (!initialized)
 		{
 			initialize();
 		}
 		
-		return (IocConfigImpl<?>) IocContainerConfigurations.getConfigurationForType(className);
+		Map<String, IocConfig<?>> globalConfigurations = IocContainerConfigurations.getConfigurations();
+		Map<String, IocConfig<?>> viewConfigurations = new HashMap<String, IocConfig<?>>();
+		viewConfigurations.putAll(globalConfigurations);
+		
+		bindImplicityInjectcionsForControllers(view, viewConfigurations);
+		bindImplicityInjectcionsForDatasources(view, viewConfigurations);
+		
+		return viewConfigurations;
 	}
 	
 	/**
-	 * 
-	 * @return
-	 */
-	public static Iterator<String> iterateClasses()
-	{
-		if (!initialized)
-		{
-			initialize();
-		}
-		return IocContainerConfigurations.iterateClasses();
-	}
-
-	/**
+	 * @param viewConfigurations 
+	 * @param view 
 	 * 
 	 */
-	private static void bindImplicityInjectcionsForControllers()
+	private static void bindImplicityInjectcionsForControllers(View view, Map<String, IocConfig<?>> viewConfigurations)
 	{
-		Iterator<String> controllers = ClientControllers.iterateControllers();
+		Iterator<String> controllers = view.iterateControllers();
 		while (controllers.hasNext())
 		{
 			Class<?> controllerClass = ClientControllers.getControllerClass(controllers.next());
-			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true);
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true, viewConfigurations);
 		}
 	}
 	
 	/**
+	 * @param viewConfigurations 
+	 * @param view 
 	 * 
 	 */
-	private static void bindImplicityInjectcionsForDatasources()
+	private static void bindImplicityInjectcionsForDatasources(View view, Map<String, IocConfig<?>> viewConfigurations)
 	{
-		Iterator<String> datasources = DataSources.iterateDataSources();
+		Iterator<String> datasources = view.iterateDataSources();
 		while (datasources.hasNext())
 		{
 			Class<?> controllerClass = DataSources.getDataSourceClass(datasources.next());
-			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true);
+			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true, viewConfigurations);
 		}
 	}
 	
@@ -138,7 +139,7 @@ public class IocContainerManager
 	 * @param added
 	 * @param path
 	 */
-	private static void bindImplicityInjectcions(Class<?> type, Set<String> added, Set<String> path, boolean iocRootType)
+	private static void bindImplicityInjectcions(Class<?> type, Set<String> added, Set<String> path, boolean iocRootType, Map<String, IocConfig<?>> configurations)
     {
         if (isBindable(type, iocRootType))
         {
@@ -161,19 +162,36 @@ public class IocContainerManager
         					Set<String> fieldPath = new HashSet<String>();
         					fieldPath.addAll(path);
         					fieldPath.add(fieldType.getCanonicalName());
-        					IocContainerConfigurations.bindTypeImplicitly(fieldType);
-        					bindImplicityInjectcions(fieldType, new HashSet<String>(), fieldPath, false);
+        					bindTypeImplicitly(fieldType, configurations);
+        					bindImplicityInjectcions(fieldType, new HashSet<String>(), fieldPath, false, configurations);
         				}
         			}
         		}
         	}
         	if (type.getSuperclass() != null)
         	{
-        		bindImplicityInjectcions(type.getSuperclass(), added, path, iocRootType);
+        		bindImplicityInjectcions(type.getSuperclass(), added, path, iocRootType, configurations);
         	}
         }
     }
 
+	/**
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @param configurations
+	 */
+	private static <T> void bindTypeImplicitly(Class<T> clazz, Map<String, IocConfig<?>> configurations)
+	{
+		String className = clazz.getCanonicalName();
+		if (!configurations.containsKey(className))
+		{
+			IocConfig<T> iocConfig = new IocConfigImpl<T>(clazz);
+			configurations.put(className, iocConfig);
+		}
+	}
+
+	
 	/**
 	 * 
 	 * @param type

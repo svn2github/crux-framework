@@ -51,7 +51,9 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 
 		if(pageableId != null && containsWidget(pageableId))
 		{
-			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") getViewVariable().getWidget("+EscapeUtils.quote(pageableId)+"));");
+			String widgetClassName = getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") "+getViewVariable()+".getWidget("+EscapeUtils.quote(pageableId)+"));");
 			if(strEnabled != null && strEnabled.length() > 0)
 			{
 				printlnPostProcessing(widget+".setEnabled("+Boolean.parseBoolean(strEnabled)+");");

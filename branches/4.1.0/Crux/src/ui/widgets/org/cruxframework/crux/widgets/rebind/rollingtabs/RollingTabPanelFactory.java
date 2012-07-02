@@ -95,6 +95,8 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		public void processAttribute(SourcePrinter out, RollingTabPanelContext context, final String propertyValue)
         {
 			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 			printlnPostProcessing(widget+".selectTab("+Integer.parseInt(propertyValue)+");");
         }
 	}	

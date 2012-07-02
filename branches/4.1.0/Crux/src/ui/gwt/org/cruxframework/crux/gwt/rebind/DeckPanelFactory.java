@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
@@ -62,6 +63,8 @@ public class DeckPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {
 			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
 			printlnPostProcessing(widget+".showWidget("+Integer.parseInt(attributeValue)+");");
         }
 	}

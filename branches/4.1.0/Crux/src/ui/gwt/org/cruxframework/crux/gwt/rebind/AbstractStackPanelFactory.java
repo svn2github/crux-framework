@@ -52,7 +52,10 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		@Override
 		public void processAttribute(SourcePrinter out, AbstractStackPanelFactoryContext context, String attributeValue)
 		{
-			printlnPostProcessing(context.getWidget()+".showStack("+Integer.parseInt(attributeValue)+");");
+			String widget = context.getWidget();
+			String widgetClassName = getWidgetCreator().getWidgetClassName();
+			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+			printlnPostProcessing(widget+".showStack("+Integer.parseInt(attributeValue)+");");
 		}		
 	}
 	
