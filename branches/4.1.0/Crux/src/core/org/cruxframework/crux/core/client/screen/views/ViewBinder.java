@@ -13,18 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
-
-import org.cruxframework.crux.core.client.screen.views.BindRootView;
-import org.cruxframework.crux.core.client.screen.views.ViewBinder;
+package org.cruxframework.crux.core.client.screen.views;
 
 /**
- * A ViewBinder bound to the rootView
+ * A marker interface used to generate value objects bound to widgets on the view. Each "get" method
+ * will read the value of a widget, and the "set" methods will write the value into the widget. The name
+ * of the property on the get or set method will be used to discover the widget on the view (view identifier)
  * @author Thiago da Rosa de Bustamante
  *
  */
-@BindRootView
-public interface ScreenBinder extends ViewBinder
+public interface ViewBinder extends ViewBindable
 {
 
 }

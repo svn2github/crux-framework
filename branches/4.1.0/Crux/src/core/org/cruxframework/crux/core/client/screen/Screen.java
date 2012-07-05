@@ -161,8 +161,17 @@ public class Screen
 	 */
 	protected void addWidget(String id, Widget widget)
 	{
-		rootViewContainer.getView().addWidget(id, widget);
+		getView().addWidget(id, widget);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected View getView()
+    {
+	    return rootViewContainer.getView();
+    }
 
 	/**
 	 * 
@@ -171,7 +180,7 @@ public class Screen
 	 */
 	protected void addWidget(String id, IsWidget widget)
 	{
-		rootViewContainer.getView().addWidget(id, widget.asWidget());
+		getView().addWidget(id, widget.asWidget());
 	}
 
 	/**
@@ -181,7 +190,7 @@ public class Screen
 	 */
 	protected HandlerRegistration addWindowCloseHandler(CloseHandler<Window> handler) 
 	{
-		return rootViewContainer.getView().addWindowCloseHandler(handler);
+		return getView().addWindowCloseHandler(handler);
 	}
 	
 	/**
@@ -191,7 +200,7 @@ public class Screen
 	 */
 	protected HandlerRegistration addWindowClosingHandler(ClosingHandler handler) 
 	{
-		return rootViewContainer.getView().addWindowClosingHandler(handler);
+		return getView().addWindowClosingHandler(handler);
 	}	
 	
 	/**
@@ -201,7 +210,7 @@ public class Screen
 	 */
 	protected HandlerRegistration addWindowHistoryChangedHandler(ValueChangeHandler<String> handler) 
 	{
-		return rootViewContainer.getView().addWindowHistoryChangedHandler(handler);
+		return getView().addWindowHistoryChangedHandler(handler);
 	}
 	
 	/**
@@ -211,7 +220,7 @@ public class Screen
 	 */
 	protected HandlerRegistration addWindowResizeHandler(ResizeHandler handler) 
 	{
-		return rootViewContainer.getView().addResizeHandler(handler);
+		return getView().addResizeHandler(handler);
 	}	
 	
 	/**
@@ -222,7 +231,7 @@ public class Screen
 	 */
 	protected HandlerRegistration addWindowOrientationChangeOrResizeHandler(OrientationChangeOrResizeHandler handler)
 	{
-		return rootViewContainer.getView().addWindowOrientationChangeOrResizeHandler(handler);
+		return getView().addWindowOrientationChangeOrResizeHandler(handler);
 	}
 		
 	@Deprecated
@@ -270,7 +279,7 @@ public class Screen
 	 */
 	protected Widget getWidget(String id)
 	{
-		return rootViewContainer.getView().getWidget(id);
+		return getView().getWidget(id);
 	}
 	
 	/**
@@ -404,17 +413,17 @@ public class Screen
 
 	protected void removeWidget(String id)
 	{
-		rootViewContainer.getView().removeWidget(id);
+		getView().removeWidget(id);
 	}
 	
 	protected void removeWidget(String id, boolean removeFromDOM)
 	{
-		rootViewContainer.getView().removeWidget(id, removeFromDOM);
+		getView().removeWidget(id, removeFromDOM);
 	}
 
 	protected boolean containsWidget(String id)
 	{
-		return rootViewContainer.getView().containsWidget(id);
+		return getView().containsWidget(id);
 	}
 	
 	protected String rewriteURL(String url)
@@ -514,7 +523,7 @@ public class Screen
 	 */
 	protected FastList<String> widgetsIdList()
 	{
-		return rootViewContainer.getView().widgetsIdList();
+		return getView().widgetsIdList();
 	}		
 	
 	/**
@@ -522,9 +531,18 @@ public class Screen
 	 */
 	protected FastList<Widget> widgetsList()
 	{
-		return rootViewContainer.getView().widgetsList();
+		return getView().widgetsList();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public static View getRootView()
+	{
+		return Screen.get().getView();
+	}
+	
 	/**
 	 * 
 	 * @param id
@@ -765,7 +783,7 @@ public class Screen
 	 */
 	public RegisteredControllers getRegisteredControllers()
     {
-	    return rootViewContainer.getView().getRegisteredControllers();
+	    return getView().getRegisteredControllers();
     }
 	
 	/**

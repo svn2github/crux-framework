@@ -13,21 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
-
-import org.cruxframework.crux.core.client.screen.views.BindRootView;
-import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
+package org.cruxframework.crux.core.client.screen.views;
 
 /**
- * A marker interface used to generate screen wrappers. These wrappers are useful 
- * to avoid reference to widgets on screen made with strings. With a wrapper, you can 
+ * A marker interface used to generate view wrappers. These wrappers are useful 
+ * to avoid reference to widgets on view made with strings. With a wrapper, you can 
  * invoke an accessor method for each widget. 
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-@BindRootView
-public interface ScreenWrapper extends ViewWrapper
+public interface ViewWrapper extends ViewBindable
 {
 
 }

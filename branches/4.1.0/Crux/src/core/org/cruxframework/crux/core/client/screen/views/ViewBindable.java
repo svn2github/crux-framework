@@ -13,18 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
-
-import org.cruxframework.crux.core.client.screen.views.BindRootView;
-import org.cruxframework.crux.core.client.screen.views.ViewBinder;
+package org.cruxframework.crux.core.client.screen.views;
 
 /**
- * A ViewBinder bound to the rootView
  * @author Thiago da Rosa de Bustamante
  *
  */
-@BindRootView
-public interface ScreenBinder extends ViewBinder
+public interface ViewBindable extends ViewAware
 {
-
+	void setView(View view);
 }

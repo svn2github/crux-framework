@@ -40,13 +40,13 @@
 	</generate-with>
 
 	<!-- Specify the generator for screen wrappers.     -->
-	<generate-with class="org.cruxframework.crux.core.rebind.screen.wrapper.ScreenWrapperGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ScreenWrapper" />
+	<generate-with class="org.cruxframework.crux.core.rebind.screen.wrapper.ViewWrapperGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewWrapper" />
 	</generate-with>
 
 	<!-- Specify the generator for screen binders.     -->
-	<generate-with class="org.cruxframework.crux.core.rebind.screen.binder.ScreenBinderGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.ScreenBinder" />
+	<generate-with class="org.cruxframework.crux.core.rebind.screen.binder.ViewBinderGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewBinder" />
 	</generate-with>
 
 	<!-- Specify the generator for client configurations .-->

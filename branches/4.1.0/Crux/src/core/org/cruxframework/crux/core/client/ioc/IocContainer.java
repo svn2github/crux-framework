@@ -16,17 +16,29 @@
 package org.cruxframework.crux.core.client.ioc;
 
 import org.cruxframework.crux.core.client.ioc.Inject.Scope;
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 
 /**
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public abstract class IocContainer
+public abstract class IocContainer implements ViewAware
 {
 	private static IocLocalScope _localScope = new IocLocalScope();
 	private static IocPersistentScope _documentScope = new IocPersistentScope();
 	private IocPersistentScope _viewScope = new IocPersistentScope();
-
+	private View view;
+	
+	/**
+	 * Constructor
+	 * @param view
+	 */
+	public IocContainer(View view)
+    {
+		this.view = view;
+    }
+	
 	/**
 	 * Retrieve the scope controller for the requested scope
 	 * @param scope
@@ -41,5 +53,11 @@ public abstract class IocContainer
 			case VIEW: return this._viewScope;
 			default: return _localScope;
 		}
+	}
+	
+	@Override
+	public View getView()
+	{
+	    return this.view;
 	}
 }

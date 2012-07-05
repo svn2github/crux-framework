@@ -27,11 +27,11 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ScreenBinderGenerator extends AbstractGenerator
+public class ViewBinderGenerator extends AbstractGenerator
 {
 	@Override
     protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf) throws UnableToCompleteException
     {
-	    return new ScreenBinderProxyCreator(logger, ctx, baseIntf);
+	    return new ViewBinderProxyCreator(logger, ctx, baseIntf);
     }
 }

@@ -88,7 +88,7 @@ public class ScreenFactory
 	@Deprecated
 	public DataSource<?> createDataSource(String dataSource)
 	{
-		return screen.createDataSource(dataSource);
+		return Screen.createDataSource(dataSource);
 	}
 
 	/**
@@ -140,14 +140,14 @@ public class ScreenFactory
 	 */
 	private void create()
 	{
-		screen = new Screen(getCurrentScreenId());
+		screen = new Screen(getCurrentScreenName());
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	private native String getCurrentScreenId()/*-{
+	private native String getCurrentScreenName()/*-{
 		return $wnd.__CruxScreen_;
 	}-*/;
 	

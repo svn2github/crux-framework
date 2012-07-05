@@ -28,7 +28,7 @@ public abstract class AbstractWrapperProxyCreator extends AbstractInterfaceWrapp
 {
 	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
     {
-	    super(logger, context, baseIntf, true);
+	    this(logger, context, baseIntf, true);
     }
 
 	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)

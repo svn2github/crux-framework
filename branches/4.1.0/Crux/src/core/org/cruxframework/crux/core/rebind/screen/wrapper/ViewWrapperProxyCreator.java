@@ -16,8 +16,7 @@
 package org.cruxframework.crux.core.rebind.screen.wrapper;
 
 import org.cruxframework.crux.core.client.Crux;
-import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
+import org.cruxframework.crux.core.rebind.AbstractViewBindableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.client.GWT;
@@ -34,7 +33,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
+public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
 {
 	private final JClassType widgetType;
 
@@ -43,7 +42,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public ScreenWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
+	public ViewWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
     {
 	    super(logger, context, invokerIntf);
 	    try
@@ -55,20 +54,12 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
         	throw new CruxGeneratorException(e.getMessage(), e);
         }
     }
-		
-	@Override
-	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-	    super.generateProxyMethods(srcWriter);
-	    generateScreenGetterMethod(srcWriter);
-	}
-
 
 	@Override
     protected String[] getImports()
     {
 		String[] imports = new String[] {
-				Screen.class.getCanonicalName(),
+				IsWidget.class.getCanonicalName(),
 				GWT.class.getCanonicalName(),
 				Crux.class.getCanonicalName(),
 				Window.class.getCanonicalName()
@@ -109,12 +100,12 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 			}
 			else
 			{
-				throw new CruxGeneratorException("The method ["+method.getName()+"] from ScreenWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
+				throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException("The method ["+method.getName()+"] from ScreenWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of com.google.gwt.user.client.ui.Widget.");
+			throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of com.google.gwt.user.client.ui.Widget.");
 		}
 	}
 
@@ -128,9 +119,9 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
     {
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
-		sourceWriter.println("return ("+classSourceName+")Screen.get(\""+widgetName+"\");");
+		sourceWriter.println("return ("+classSourceName+")view.getWidget(\""+widgetName+"\");");
 		sourceWriter.println("}");
-    }//TODO fazer um viewWrapperProxyCreator
+    }
 
 	/**
 	 * @param sourceWriter
@@ -144,25 +135,7 @@ public class ScreenWrapperProxyCreator extends AbstractWrapperProxyCreator
 		String widgetNameFirstLower = Character.toLowerCase(widgetName.charAt(0)) + widgetName.substring(1);
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
-		sourceWriter.println("return ("+classSourceName+")_getFromScreen(\""+widgetNameFirstLower+"\");");
+		sourceWriter.println("return ("+classSourceName+")_getFromView(\""+widgetNameFirstLower+"\");");
 		sourceWriter.println("}");
-	}
-
-	private void generateScreenGetterMethod(SourcePrinter srcWriter)
-	{
-		srcWriter.println("public Object _getFromScreen(String widgetName){");
-		srcWriter.println("Object ret = Screen.get(widgetName);");
-		srcWriter.println("if (ret == null){");
-		srcWriter.println("String widgetNameFirstUpper;");
-		srcWriter.println("if (widgetName.length() > 1){"); 
-		srcWriter.println("widgetNameFirstUpper = Character.toUpperCase(widgetName.charAt(0)) + widgetName.substring(1);");
-		srcWriter.println("}");
-		srcWriter.println("else{"); 
-		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
-		srcWriter.println("}");
-		srcWriter.println("ret = Screen.get(widgetNameFirstUpper);");
-		srcWriter.println("}");
-		srcWriter.println("return ret;");
-		srcWriter.println("}");
 	}
 }

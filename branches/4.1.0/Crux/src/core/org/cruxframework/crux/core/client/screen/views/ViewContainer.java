@@ -53,6 +53,7 @@ public abstract class ViewContainer
 	public boolean add(View view)
 	{
 		assert (view != null):"Can not add a null view to the ViewContainer";
+		assert (getView(view.getId()) == null):"This container already contains a view with the given identifier ["+view.getId()+"].";
 		if (doAdd(view))
 		{
 			view.setContainer(this);
@@ -191,23 +192,47 @@ public abstract class ViewContainer
 	}
 
 	/**
-	 * Creates the view referenced by the given identifier
+	 * Creates the view referenced by the given name
 	 * 
+	 * @param viewName View name
+	 * @param callback Called when the view creation is completed.
+	 */
+	public static void createView(String viewName, CreateCallback callback)
+	{
+		getViewFactory().createView(viewName, callback);
+	}
+
+	/**
+	 * Creates the view referenced by the given name and associate a custom identifier with the view created
+	 * 
+	 * @param viewName View name
 	 * @param viewId View identifier
 	 * @param callback Called when the view creation is completed.
 	 */
-	public static void createView(String viewId, CreateCallback callback)
+	public static void createView(String viewName, String viewId, CreateCallback callback)
 	{
-		getViewFactory().createView(viewId, callback);
+		getViewFactory().createView(viewName, viewId, callback);
 	}
-	
+
 	/**
 	 * Loads a view into the current container
 	 * 
+	 * @param viewName View name
+	 * @param render If true also render the view
+	 */
+	public void loadView(String viewName, final boolean render)
+	{
+		loadView(viewName, viewName, render);
+	}
+
+	/**
+	 * Loads a view into the current container
+	 * 
+	 * @param viewName View name
 	 * @param viewId View identifier
 	 * @param render If true also render the view
 	 */
-	public void loadView(final String viewId, final boolean render)
+	public void loadView(final String viewName, final String viewId, final boolean render)
 	{
 		try
 		{
@@ -215,7 +240,7 @@ public abstract class ViewContainer
 			{
 				logger.info(Crux.getMessages().viewContainerCreatingView(viewId));
 			}
-			createView(viewId, new CreateCallback()
+			createView(viewName, viewId, new CreateCallback()
 			{
 				@Override
 				public void onViewCreated(View view)

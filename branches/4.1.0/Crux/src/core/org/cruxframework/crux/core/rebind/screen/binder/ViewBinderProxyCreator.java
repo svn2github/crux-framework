@@ -17,9 +17,8 @@ package org.cruxframework.crux.core.rebind.screen.binder;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
-import org.cruxframework.crux.core.client.screen.Screen;
-import org.cruxframework.crux.core.client.screen.ScreenBinder;
-import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
+import org.cruxframework.crux.core.client.screen.views.ViewBinder;
+import org.cruxframework.crux.core.rebind.AbstractViewBindableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
@@ -39,9 +38,9 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
+public class ViewBinderProxyCreator extends AbstractViewBindableProxyCreator
 {
-	private final JClassType screenBinderType;
+	private final JClassType viewBinderType;
 	private final JClassType stringType;
 
 	/**
@@ -49,12 +48,12 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public ScreenBinderProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
+	public ViewBinderProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
     {
 	    super(logger, context, invokerIntf);
 	    try
         {
-	    	screenBinderType = invokerIntf.getOracle().getType(ScreenBinder.class.getCanonicalName());
+	    	viewBinderType = invokerIntf.getOracle().getType(ViewBinder.class.getCanonicalName());
 	    	stringType = invokerIntf.getOracle().getType(String.class.getCanonicalName());
         }
         catch (NotFoundException e)
@@ -67,14 +66,15 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 	@Override
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-    	JMethod[] methods = baseIntf.getOverridableMethods();
+    	super.generateProxyFields(srcWriter);
+		JMethod[] methods = baseIntf.getOverridableMethods();
     	for (JMethod method : methods)
     	{
     		String methodName = method.getName();
     		if (method.getName().startsWith("get"))
     		{
     			JClassType returnTypeClass = method.getReturnType().isClassOrInterface();
-    			if (returnTypeClass != null && returnTypeClass.isAssignableTo(screenBinderType))
+    			if (returnTypeClass != null && returnTypeClass.isAssignableTo(viewBinderType))
     			{
     				String sourceName = returnTypeClass.getParameterizedQualifiedSourceName();
 					srcWriter.println("private "+sourceName+" _"+methodName+" = GWT.create("+sourceName+".class);");
@@ -84,18 +84,9 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
     }
 
 	@Override
-	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-	    super.generateProxyMethods(srcWriter);
-	    generateScreenGetterMethod(srcWriter);
-	}
-
-
-	@Override
     protected String[] getImports()
     {
 		String[] imports = new String[] {
-				Screen.class.getCanonicalName(),
 				IsWidget.class.getCanonicalName(),
 				GWT.class.getCanonicalName(),
 				Crux.class.getCanonicalName(),
@@ -153,10 +144,13 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 
 		if (JClassUtils.isSimpleType(parameterType)) 
 		{
-			sourceWriter.println("IsWidget w = _getFromScreen(\""+widgetNameFirstLower+"\");");
+			sourceWriter.println("IsWidget w = _getFromView(\""+widgetNameFirstLower+"\");");
 			
 			sourceWriter.println("if (w != null) {");
-			sourceWriter.println("if (w instanceof HasFormatter) {");
+			sourceWriter.println("if (w instanceof HasValue) {");
+			sourceWriter.println("((HasValue<"+parameterClassName+">)w).setValue(value);");
+			sourceWriter.println("}");
+			sourceWriter.println("else if (w instanceof HasFormatter) {");
 			if (parameterType.isPrimitive() != null)
 			{
 				sourceWriter.println("((HasFormatter)w).setUnformattedValue(("+parameterClassName+")value);");
@@ -165,9 +159,6 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 			{
 				sourceWriter.println("((HasFormatter)w).setUnformattedValue(value);");
 			}
-			sourceWriter.println("}");
-			sourceWriter.println("else if (w instanceof HasValue) {");
-			sourceWriter.println("((HasValue<"+parameterClassName+">)w).setValue(value);");
 			sourceWriter.println("}");
 			if (parameterType.equals(stringType))
 			{
@@ -200,14 +191,14 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 
 		if (JClassUtils.isSimpleType(returnType)) 
 		{
-			sourceWriter.println("IsWidget w = _getFromScreen(\""+widgetNameFirstLower+"\");");
+			sourceWriter.println("IsWidget w = _getFromView(\""+widgetNameFirstLower+"\");");
 			
 			sourceWriter.println("if (w != null) {");
-			sourceWriter.println("if (w instanceof HasFormatter) {");
-			sourceWriter.println("return ("+returnClassName+")((HasFormatter)w).getUnformattedValue();");
-			sourceWriter.println("}");
-			sourceWriter.println("else if (w instanceof HasValue) {");
+			sourceWriter.println("if (w instanceof HasValue) {");
 			sourceWriter.println("return ((HasValue<"+returnClassName+">)w).getValue();");
+			sourceWriter.println("}");
+			sourceWriter.println("else if (w instanceof HasFormatter) {");
+			sourceWriter.println("return ("+returnClassName+")((HasFormatter)w).getUnformattedValue();");
 			sourceWriter.println("}");
 			if (returnType.equals(stringType))
 			{
@@ -227,25 +218,6 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		sourceWriter.println("}");
 	}
 
-	private void generateScreenGetterMethod(SourcePrinter srcWriter)
-	{
-		srcWriter.println("public IsWidget _getFromScreen(String widgetName){");
-		srcWriter.println("IsWidget ret = Screen.get(widgetName);");
-		srcWriter.println("if (ret == null){");
-		srcWriter.println("String widgetNameFirstUpper;");
-		srcWriter.println("if (widgetName.length() > 1){"); 
-		srcWriter.println("widgetNameFirstUpper = Character.toUpperCase(widgetName.charAt(0)) + widgetName.substring(1);");
-		srcWriter.println("}");
-		srcWriter.println("else{"); 
-		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
-		srcWriter.println("}");
-		srcWriter.println("ret = Screen.get(widgetNameFirstUpper);");
-		srcWriter.println("}");
-		srcWriter.println("return ret;");
-		srcWriter.println("}");
-	}
-	//TODO fazer um viewBinderProxyCreator
-	
 	private void checkMethodSignature(JMethod method)
     {
 		JType returnType = method.getReturnType();
@@ -254,14 +226,14 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		{
 			if (method.getParameters().length != 0)
 			{
-				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+				throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 			}
 			if (!JClassUtils.isSimpleType(returnType))
 			{
 				JClassType returnTypeClass = returnType.isClassOrInterface();
-				if (returnTypeClass == null || !returnTypeClass.isAssignableTo(screenBinderType))
+				if (returnTypeClass == null || !returnTypeClass.isAssignableTo(viewBinderType))
 				{
-					throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+					throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 				}
 			}
 		}
@@ -269,26 +241,26 @@ public class ScreenBinderProxyCreator extends AbstractWrapperProxyCreator
 		{
 			if (method.getParameters().length != 1)
 			{
-				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+				throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 			}
 			
 		    if (returnType.getErasedType() != JPrimitiveType.VOID)
 		    {
-				throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+				throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 		    }
 		    JType parameterType = method.getParameterTypes()[0];
 			if (!JClassUtils.isSimpleType(parameterType))
 			{
 				JClassType parameterTypeClass = parameterType.isClassOrInterface();
-				if (parameterTypeClass == null || !parameterTypeClass.isAssignableTo(screenBinderType))
+				if (parameterTypeClass == null || !parameterTypeClass.isAssignableTo(viewBinderType))
 				{
-					throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+					throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 				}
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException("The method ["+name+"] from ScreenBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
+			throw new CruxGeneratorException("The method ["+name+"] from ViewBinder ["+baseIntf.getQualifiedSourceName()+"] has an invalid signature.");
 		}
     }
 }

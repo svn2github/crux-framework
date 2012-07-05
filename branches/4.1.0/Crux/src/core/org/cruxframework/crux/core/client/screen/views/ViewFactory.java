@@ -29,11 +29,19 @@ import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 public interface ViewFactory 
 {
 	/**
-	 * Create the view for the informed view Id
-	 * @param viewId the view
+	 * Create the view for the informed view Name
+	 * @param viewName the view name
 	 * @param callback called when the view is created
 	 */
-	void createView(String viewId, CreateCallback callback) throws InterfaceConfigException;
+	void createView(String viewName, CreateCallback callback) throws InterfaceConfigException;
+
+	/**
+	 * Create the view for the informed view Name
+	 * @param viewName the view name
+	 * @param viewId the view identifier
+	 * @param callback called when the view is created
+	 */
+	void createView(String viewName, String viewId, CreateCallback callback) throws InterfaceConfigException;
 
 	/**
 	 * Retrieve the device that runs the application

@@ -69,7 +69,12 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 */
 	protected void generateCreateViewMethod(SourcePrinter sourceWriter)
     {
-	    sourceWriter.println("public void createView(String id, CreateCallback callback) throws InterfaceConfigException{ ");
+	    sourceWriter.println("public void createView(String name, CreateCallback callback) throws InterfaceConfigException{ ");
+	    sourceWriter.println("createView(name, name, callback);");
+	    sourceWriter.println("}");
+	    sourceWriter.println();
+
+	    sourceWriter.println("public void createView(String name, String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
 		if (Environment.isProduction())
 		{
@@ -114,7 +119,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 			}
 			first = false;
 			
-			sourceWriter.println("if (StringUtils.unsafeEquals(id, "+EscapeUtils.quote(view.getId())+")){");
+			sourceWriter.println("if (StringUtils.unsafeEquals(name, "+EscapeUtils.quote(view.getId())+")){");
 			
 			if (!StringUtils.isEmpty(view.getFragment()))
 			{
@@ -126,7 +131,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				}
 				fragment.add(view);
 				String fragmentName = view.getFragment().replaceAll("\\W", "");
-				sourceWriter.println("__load"+fragmentName+"(id);");
+				sourceWriter.println("__load"+fragmentName+"(name, id);");
 			}
 			else
 			{
@@ -148,7 +153,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		for (String viewFragment : fragmentedViews.keySet())
         {
 			String fragment = viewFragment.replaceAll("\\W", "");
-			sourceWriter.println("public void __load"+fragment+"(final String id){");
+			sourceWriter.println("public void __load"+fragment+"(final String name, final String id){");
 			sourceWriter.println("GWT.runAsync(new "+RunAsyncCallback.class.getCanonicalName()+"(){");
 			sourceWriter.println("public void onFailure(Throwable reason){");
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().viewFactoryCanNotBeLoaded(\""+fragment+"\"));");
@@ -166,7 +171,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				}
 				first = false;
 				
-				sourceWriter.println("if (StringUtils.unsafeEquals(id, "+EscapeUtils.quote(view.getId())+")){");
+				sourceWriter.println("if (StringUtils.unsafeEquals(name, "+EscapeUtils.quote(view.getId())+")){");
 				generateViewCreator(sourceWriter, view);
 				sourceWriter.println("}");
             }
@@ -187,7 +192,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		ViewFactoryCreator factoryCreator = getViewFactoryCreator(view);
 		try
 		{
-			sourceWriter.println("callback.onViewCreated(new "+ factoryCreator.create()+"("+EscapeUtils.quote(view.getId())+","+EscapeUtils.quote(factoryCreator.getDeclaredMessage(view.getTitle()))+"));");
+			sourceWriter.println("callback.onViewCreated(new "+ factoryCreator.create()+"(id,"+EscapeUtils.quote(factoryCreator.getDeclaredMessage(view.getTitle()))+"));");
 		}
 		finally
 		{

@@ -13,18 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen;
+package org.cruxframework.crux.core.client.screen.views;
 
-import org.cruxframework.crux.core.client.screen.views.BindRootView;
-import org.cruxframework.crux.core.client.screen.views.ViewBinder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A ViewBinder bound to the rootView
  * @author Thiago da Rosa de Bustamante
  *
  */
-@BindRootView
-public interface ScreenBinder extends ViewBinder
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface BindRootView
 {
-
 }

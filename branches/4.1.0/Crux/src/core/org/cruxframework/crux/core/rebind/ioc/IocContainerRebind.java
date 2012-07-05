@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.ioc.Inject.Scope;
 import org.cruxframework.crux.core.client.ioc.IocContainer;
 import org.cruxframework.crux.core.client.ioc.IocProvider;
+import org.cruxframework.crux.core.client.screen.views.ViewBindable;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.ioc.IoCException;
 import org.cruxframework.crux.core.ioc.IocConfig;
@@ -52,11 +53,13 @@ public class IocContainerRebind extends AbstractProxyCreator
 { 
 	private final View view;
 	private Map<String, IocConfig<?>> configurations;
+	private JClassType viewBindableType;
 
 	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view)
     {
 	    super(logger, context);
 		this.view = view;
+		viewBindableType = context.getTypeOracle().findType(ViewBindable.class.getCanonicalName());
 		configurations = IocContainerManager.getConfigurationsForView(view);
     }
 
@@ -71,6 +74,14 @@ public class IocContainerRebind extends AbstractProxyCreator
 		}
     }
 
+	@Override
+	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		srcWriter.println("public "+getProxySimpleName()+"(View view){");
+		srcWriter.println("super(view);");
+		srcWriter.println("}");
+	}
+	
 	/**
 	 * 
 	 * @param srcWriter
@@ -78,40 +89,55 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 */
 	private void generateContainerInstatiationMethod(SourcePrinter srcWriter, String className)
 	{
-		srcWriter.println("public  "+className+" get"+className.replace('.', '_')+"("+Scope.class.getCanonicalName()+" scope, String subscope){");
 
-		IocConfigImpl<?> iocConfig = (IocConfigImpl<?>) configurations.get(className);
-		Class<?> providerClass = iocConfig.getProviderClass();
-		if (providerClass != null)
+		try
 		{
-			srcWriter.println(className+" result = _getScope(scope).getValue(GWT.create("+providerClass.getCanonicalName()+".class), "+EscapeUtils.quote(className)+", subscope, ");
-			generateFieldsPopulationCallback(srcWriter, className);
-			srcWriter.println(");");
-		}
-		else if (iocConfig.getToClass() != null)
-		{
-			srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
-			srcWriter.println("public "+className+" get(){");
-			srcWriter.println("return GWT.create("+iocConfig.getToClass().getCanonicalName()+".class);");
-			srcWriter.println("}");
-			srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
-			generateFieldsPopulationCallback(srcWriter, className);
-			srcWriter.println(");");
-		}
-		else
-		{
-			srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
-			srcWriter.println("public "+className+" get(){");
-			srcWriter.println("return GWT.create("+className+".class);");
-			srcWriter.println("}");
-			srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
-			generateFieldsPopulationCallback(srcWriter, className);
-			srcWriter.println(");");
-		}
+			srcWriter.println("public  "+className+" get"+className.replace('.', '_')+"("+Scope.class.getCanonicalName()+" scope, String subscope){");
+			JClassType type = context.getTypeOracle().getType(className);
 
-		srcWriter.println("return result;");
+			IocConfigImpl<?> iocConfig = (IocConfigImpl<?>) configurations.get(className);
+			Class<?> providerClass = iocConfig.getProviderClass();
+			if (providerClass != null)
+			{
+				srcWriter.println(className+" result = _getScope(scope).getValue(GWT.create("+providerClass.getCanonicalName()+".class), "+EscapeUtils.quote(className)+", subscope, ");
+				generateFieldsPopulationCallback(srcWriter, type);
+				srcWriter.println(");");
+			}
+			else if (iocConfig.getToClass() != null)
+			{
+				srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
+				srcWriter.println("public "+className+" get(){");
+				srcWriter.println("return GWT.create("+iocConfig.getToClass().getCanonicalName()+".class);");
+				srcWriter.println("}");
+				srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
+				generateFieldsPopulationCallback(srcWriter, type);
+				srcWriter.println(");");
+			}
+			else
+			{
+				srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
+				srcWriter.println("public "+className+" get(){");
+				srcWriter.println("return GWT.create("+className+".class);");
+				srcWriter.println("}");
+				srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
+				generateFieldsPopulationCallback(srcWriter, type);
+				srcWriter.println(");");
+			}
+
+			if (type.isAssignableTo(viewBindableType))
+			{
+				srcWriter.println("if (scope != "+Scope.class.getCanonicalName()+ "."+Scope.DOCUMENT.name()+" && result.getView() == null){");
+				srcWriter.println("result.setView(this.getView());");
+				srcWriter.println("}");
+			}
+			srcWriter.println("return result;");
+			srcWriter.println("}");
+		}
+		catch (NotFoundException e)
+		{
+			throw new IoCException("IoC Error Class ["+className+"] not found.");
+		}
 		
-		srcWriter.println("}");
     }
 
 	/**
@@ -119,20 +145,14 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param srcWriter
 	 * @param className
 	 */
-	private void generateFieldsPopulationCallback(SourcePrinter srcWriter, String className) 
+	private void generateFieldsPopulationCallback(SourcePrinter srcWriter, JClassType type) 
     {
-		try
-		{
-			srcWriter.println("new IocScope.CreateCallback<"+className+">(){");
-			srcWriter.println("public void onCreate("+className+" newObject){");
-			injectFields(srcWriter, context.getTypeOracle().getType(className), "newObject", new HashSet<String>(), getProxySimpleName()+".this", configurations);
-			srcWriter.println("}");
-			srcWriter.println("}");
-		}
-		catch (NotFoundException e)
-		{
-			throw new IoCException("IoC Error Class ["+className+"] not found.");
-		}
+		String className = type.getQualifiedSourceName();	
+		srcWriter.println("new IocScope.CreateCallback<"+className+">(){");
+		srcWriter.println("public void onCreate("+className+" newObject){");
+		injectFields(srcWriter, type, "newObject", new HashSet<String>(), getProxySimpleName()+".this", configurations);
+		srcWriter.println("}");
+		srcWriter.println("}");
     }
 
 	/**
@@ -155,8 +175,10 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param parentVariable
 	 * @param added
 	 * @param iocContainerVariable
+	 * @param configurations
 	 */
-	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
+	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, 
+			Map<String, IocConfig<?>> configurations)
 	{
         for (JField field : type.getFields()) 
         {
@@ -240,6 +262,7 @@ public class IocContainerRebind extends AbstractProxyCreator
     protected String[] getImports()
     {
 	    String[] imports = new String[] {
+	    	org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName(),	
     		GWT.class.getCanonicalName()
 		};
 	    return imports;

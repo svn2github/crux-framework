@@ -70,7 +70,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 
 		printer.println("public "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
-		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"();");
+		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
 		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
 		printer.println("this._controller = getRegisteredControllers().getController("+EscapeUtils.quote(controllerName)+");");

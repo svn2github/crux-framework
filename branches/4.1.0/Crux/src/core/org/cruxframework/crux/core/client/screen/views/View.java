@@ -53,7 +53,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 									  HasViewLoadHandlers
 {
 	private static Logger logger = Logger.getLogger(View.class.getName());
-
+	private static FastMap<View> loadedViews = new FastMap<View>();
+	
 	private String id;
 	private String title;
 	protected Map<String> lazyWidgets = null;
@@ -716,6 +717,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	{
 		if (!initialized)
 		{
+			registerLoadedView();
 			createWidgets();
 			initialized = true;
 			fireLoadEvent();
@@ -723,13 +725,53 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	/**
+	 * Register current view into the loaded views list
+	 */
+	protected void registerLoadedView()
+    {
+		loadedViews.put(getId(), this);
+    }
+
+	/**
+	 * Remove current view from the loaded views list
+	 */
+	protected void unregisterLoadedView()
+    {
+		loadedViews.remove(getId());
+    }
+
+	/**
 	 * Called by the {@link ViewContainer} when the view is removed from the container. 
 	 * @return
 	 */
 	protected boolean unload()
 	{
-		return fireUnloadEvent();
+		boolean unloaded = fireUnloadEvent();
+		if (unloaded)
+		{
+			unregisterLoadedView();
+			unloadViewReferences();
+		}
+		return unloaded;
 	}
+	
+	/**
+	 * When view is unloaded, we must free its allocated memory. 
+	 */
+	protected void unloadViewReferences()
+    {
+	    lazyWidgets = null;
+	    widgets = null;
+	    windowClosingHandlers = null;
+	    windowCloseHandlers = null;
+	    resizeHandlers = null;
+	    attachHandlers = null;
+	    detachHandlers = null;
+	    historyHandlers = null;
+	    orientationOrResizeHandlers = null;
+	    loadHandlers = null;
+	    unloadHandlers = null;
+    }
 	
 	/**
 	 * @param widgetId
@@ -930,4 +972,14 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
     {
 		this.viewContainer = viewContainer;
     }
+	
+	/**
+	 * Retrieve the view by its identifier
+	 * @param id view identifier
+	 * @return the view or null if there is no view loaded into the screen with this identifier
+	 */
+	public static View getView(String id)
+	{
+		return loadedViews.get(id);
+	}
 }
