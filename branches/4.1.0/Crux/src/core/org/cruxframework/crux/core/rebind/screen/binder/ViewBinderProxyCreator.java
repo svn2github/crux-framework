@@ -64,6 +64,13 @@ public class ViewBinderProxyCreator extends AbstractViewBindableProxyCreator
     }
 
 	@Override
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+	    super.generateProxyMethods(srcWriter);
+		generateViewGetterMethod(srcWriter);
+	}
+	
+	@Override
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
     	super.generateProxyFields(srcWriter);

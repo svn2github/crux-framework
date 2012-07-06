@@ -67,6 +67,13 @@ public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
 		return imports;       
     }
 
+	@Override
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+	    super.generateProxyMethods(srcWriter);
+		generateViewGetterMethod(srcWriter);
+	}
+	
 	/**
 	 * @param method
 	 * @param sourceWriter

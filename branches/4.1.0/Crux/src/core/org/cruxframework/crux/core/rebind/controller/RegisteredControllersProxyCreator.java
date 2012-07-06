@@ -172,8 +172,6 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 				String controllerClassName = controllerClass.getQualifiedSourceName();
 				if (Modules.getInstance().isClassOnModulePath(controllerClassName, module))
 				{
-					//TODO passar a view pra dentro da controller pra poder fazer bind de valores na tela....
-					// fazer a controller proxy criada receber uma variavel com a view associada para referenciar por ela
 					String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
 					controllerClassNames.put(controller, genClass);
 					JClassType crossDocumentType = controllerClass.getOracle().getType(CrossDocument.class.getCanonicalName());

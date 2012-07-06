@@ -54,8 +54,6 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	{
 		super.generateProxyFields(srcWriter);
 		srcWriter.println("private "+View.class.getCanonicalName()+" view;");
-		//TODO criar um controllerWrapper que deve ser viewbindable
-		//TODO criar um viewsWrapper, para acessar as views pelo id
 	}
 	
 	@Override
@@ -108,7 +106,6 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
     protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 		super.generateProxyMethods(srcWriter);
-	    generateViewGetterMethod(srcWriter);
 	    generateViewBindableMethods(srcWriter);
     }
 	

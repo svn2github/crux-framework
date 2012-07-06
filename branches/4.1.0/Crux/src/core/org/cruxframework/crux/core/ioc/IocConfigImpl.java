@@ -37,7 +37,7 @@ public class IocConfigImpl<T> implements IocConfig<T>
 	{
 		if (this.toClass != null)
 		{
-			throw new IoCException("Invalid Ioc configuration. Class "+boundClass.getCanonicalName()+" is already bound to target class "+ toClass.getCanonicalName());//TODO message.
+			throw new IoCException("Invalid Ioc configuration. Class "+boundClass.getCanonicalName()+" is already bound to target class "+ toClass.getCanonicalName());
 		}
 		this.providerClass = providerClass;
 		return this;
@@ -47,7 +47,7 @@ public class IocConfigImpl<T> implements IocConfig<T>
 	{
 		if (this.providerClass != null)
 		{
-			throw new IoCException("Invalid Ioc configuration. Class "+boundClass.getCanonicalName()+" is already bound to target provider "+ providerClass.getCanonicalName());//TODO message.
+			throw new IoCException("Invalid Ioc configuration. Class "+boundClass.getCanonicalName()+" is already bound to target provider "+ providerClass.getCanonicalName());
 		}
 		this.toClass = toClass;
 		return this;
