@@ -16,8 +16,8 @@
 package org.cruxframework.crux.core.rebind.screen.widget;
 
 import org.cruxframework.crux.core.client.controller.Expose;
-import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.Event;
@@ -262,14 +262,20 @@ public abstract class EvtProcessor extends AbstractProcessor
     	String controller = ClientControllers.getController(event.getController());
     	if (controller == null)
     	{
-    		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on screen ["+creator.getView().getId()+"],  not found.");
+    		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on view ["+creator.getView().getId()+"], not found.");
     	}
 
     	boolean hasEventParameter = true;
     	JClassType controllerClass = creator.getContext().getTypeOracle().findType(controller);
     	if (controllerClass == null)
     	{
-    		throw new CruxGeneratorException("Controller ["+controller+"] , declared on screen ["+creator.getView().getId()+"],  not found.");
+			String message = "Controller class ["+controller+"] , declared on view ["+creator.getView().getId()+"], could not be loaded. "
+						   + "\n Possible causes:"
+						   + "\n\t 1. Check if any type or subtype used by controller refers to another module and if this module is inherited in the .gwt.xml file."
+						   + "\n\t 2. Check if your controller or its members belongs to a client package."
+						   + "\n\t 3. Check the versions of all your modules."
+						   ;
+			throw new CruxGeneratorException(message);
     	}
 
     	JMethod exposedMethod = getControllerMethodWithEvent(event.getMethod(), eventClassType, controllerClass);
@@ -278,7 +284,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 			exposedMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
     		if (exposedMethod == null)
     		{
-        		throw new CruxGeneratorException("Screen ["+creator.getView().getId()+"] tries to invoke the method ["+event.getMethod()+"] on controller ["+controller+"]. That method does not exist.");
+        		throw new CruxGeneratorException("View ["+creator.getView().getId()+"] tries to invoke the method ["+event.getMethod()+"] on controller ["+controller+"]. That method does not exist.");
     		}
     		hasEventParameter = false;
     	}
