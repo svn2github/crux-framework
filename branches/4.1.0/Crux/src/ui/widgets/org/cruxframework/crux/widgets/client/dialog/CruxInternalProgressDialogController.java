@@ -111,10 +111,11 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 		{
 			((TargetDocument)crossDoc).setTargetWindow(opener);
 			crossDoc.enableEventsOnOpener();
-			((TargetDocument)crossDoc).setTarget(Target.TOP);
-			crossDoc.hideProgressDialogBox();
-			popProgressDialogFromStack();
 		}
+		
+		((TargetDocument)crossDoc).setTarget(Target.TOP);
+		crossDoc.hideProgressDialogBox();
+		popProgressDialogFromStack();
 	}
 	
 	/**
@@ -233,7 +234,17 @@ public class CruxInternalProgressDialogController implements CruxInternalProgres
 	
 	public static native JSWindow getOpener()/*-{
 	try{
-		return $wnd.top._progressDialog_origin[$wnd.top._progressDialog_origin.length - 1];
+		var o = $wnd.top._progressDialog_origin[$wnd.top._progressDialog_origin.length - 1];
+		
+		if (o && o._cruxCrossDocumentAccessor) 
+		{
+			return o;
+		}	
+		else 
+		{
+			return null;
+		}	
+		
 	}catch(e)
 	{
 		return null;
