@@ -19,7 +19,9 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +42,7 @@ public class TemplatesHotDeploymentScanner
 
 	private ScheduledExecutorService threadPool;
 	private Map<String, Long> lastModified = new HashMap<String, Long>();
+	private Set<File> files = new HashSet<File>();
 	
 	/**
 	 * 
@@ -52,23 +55,37 @@ public class TemplatesHotDeploymentScanner
 	
 	/**
 	 * 
-	 * @param url
+	 * @param file
 	 */
-	public void startScanner(final File file)
+	public void addFile(final File file)
 	{
-		threadPool.scheduleWithFixedDelay(new Runnable(){
-			public void run()
-			{
-				try
+		this.files.add(file);
+	}
+	
+	/**
+	 * 
+	 */
+	public void startScanner()
+	{
+		if (files.size() > 0)
+		{
+			threadPool.scheduleWithFixedDelay(new Runnable(){
+				public void run()
 				{
-					scan(file);
+					for (File file : files)
+					{
+						try
+						{
+							scan(file);
+						}
+						catch (Exception e) 
+						{
+							logger.info("Error scanning dir: ["+file.getName()+"].", e);
+						}
+					}
 				}
-				catch (Exception e) 
-				{
-					logger.info("Error scanning dir: ["+file.getName()+"].", e);
-				}
-			}
-		}, 0, 5, TimeUnit.SECONDS);
+			}, 0, 5, TimeUnit.SECONDS);
+		}
 	}
 
 	/**
@@ -127,7 +144,7 @@ public class TemplatesHotDeploymentScanner
 					
 					if (file.isDirectory() || file.getName().endsWith("template.xml"))
 					{
-						scanner.startScanner(file);
+						scanner.addFile(file);
 					}
 				}
 				catch (URISyntaxException e)
@@ -136,5 +153,6 @@ public class TemplatesHotDeploymentScanner
 				}
 			}
 		}
+		scanner.startScanner();
 	}
 }

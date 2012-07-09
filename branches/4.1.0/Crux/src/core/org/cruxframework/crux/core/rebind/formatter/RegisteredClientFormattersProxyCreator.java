@@ -37,7 +37,7 @@ import com.google.gwt.core.ext.TreeLogger;
 public class RegisteredClientFormattersProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private Map<String, Boolean> formattersAdded = new HashMap<String, Boolean>();
-
+//TODO isso deve ser movido para o escopo da view
 	/**
 	 * Constructor
 	 * @param logger

@@ -55,7 +55,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private Map<String, Boolean> serializables = new HashMap<String, Boolean>();
-
+//TODO mover isso para dentro da view
 	/**
 	 * Constructor
 	 * @param logger
