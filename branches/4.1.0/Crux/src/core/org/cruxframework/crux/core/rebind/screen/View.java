@@ -191,6 +191,36 @@ public class View
 	}
 
 	/**
+	 * 
+	 * @param controller
+	 * @return
+	 */
+	public boolean useController(String controller)
+	{
+		return controllers.contains(controller);
+	}
+	
+	/**
+	 * 
+	 * @param datasource
+	 * @return
+	 */
+	public boolean useDataSource(String datasource)
+	{
+		return dataSources.contains(datasource);
+	}
+	
+	/**
+	 * 
+	 * @param formatter
+	 * @return
+	 */
+	public boolean useFormatter(String formatter)
+	{
+		return formatters.contains(formatter);
+	}
+	
+	/**
 	 * Import a serializer for a CruxSerializable into view
 	 * @param event
 	 */
@@ -333,7 +363,7 @@ public class View
 	{
 		if (!StringUtils.isEmpty(view))
 		{
-			views.add(view); //TODO rever se isso aqui continua...acho que remove
+			views.add(view); 
 		}
 	}
 	

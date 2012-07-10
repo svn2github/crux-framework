@@ -40,18 +40,36 @@ public class XPathUtils
 		{
 			public String getNamespaceURI(String prefix)
 			{
-				return "http://www.cruxframework.org/crux";
+				if (prefix.equals("c"))
+				{
+					return "http://www.cruxframework.org/crux";
+				}
+				else if (prefix.equals("v"))
+				{
+					return "http://www.cruxframework.org/view";
+				}
+				
+				return "";
 			}
 
 			public String getPrefix(String namespaceURI)
 			{
-				return "c";
+				if (namespaceURI.equals("http://www.cruxframework.org/crux"))
+				{
+					return "c";
+				}
+				else if (namespaceURI.equals("http://www.cruxframework.org/view"))
+				{
+					return "v";
+				}
+				return "";
 			}
 
 			public Iterator<?> getPrefixes(String namespaceURI)
 			{
 				List<String> prefixes = new ArrayList<String>();
 				prefixes.add("c");
+				prefixes.add("v");
 
 				return prefixes.iterator();
 			}

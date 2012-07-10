@@ -740,7 +740,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){"); 
 
 			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", 
-					CloseEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					CloseEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -761,7 +761,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){"); 
 
 			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", 
-						ClosingEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+						ClosingEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -782,7 +782,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onValueChange("+ValueChangeEvent.class.getCanonicalName()+"<String> event){");
 
 			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
-					"onHistoryChanged", ValueChangeEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					"onHistoryChanged", ValueChangeEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -803,7 +803,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onLoad("+ViewLoadEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onLoad.getController()+"."+onLoad.getMethod(), 
-					"onLoad", ViewLoadEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					"onLoad", ViewLoadEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -824,7 +824,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onUnload("+ViewUnloadEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onUnload.getController()+"."+onUnload.getMethod(), 
-					"onUnload", ViewUnloadEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					"onUnload", ViewUnloadEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -845,7 +845,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onAttach("+ViewAttachEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onAttach.getController()+"."+onAttach.getMethod(), 
-					"onAttach", ViewAttachEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					"onAttach", ViewAttachEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -866,7 +866,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onDetach("+ViewDetachEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onDetach.getController()+"."+onDetach.getMethod(), 
-					"onDetach", ViewDetachEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					"onDetach", ViewDetachEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");
@@ -888,7 +888,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){"); 
 
 			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", 
-					ResizeEvent.class, "event", context, view.getId(), getControllerAccessHandler());
+					ResizeEvent.class, "event", context, view, getControllerAccessHandler());
 			
 			printer.println("}");
 			printer.println("});");

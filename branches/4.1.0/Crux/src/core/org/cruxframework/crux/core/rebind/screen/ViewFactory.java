@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +54,9 @@ public class ViewFactory
 	private int viewPrefix = 0;
 	private Map<String, String> prefixes = new HashMap<String, String>();
 	
+	private static final Lock viewLock = new ReentrantLock();
+	private Map<String, View> viewCache = new HashMap<String, View>();
+
 	/**
 	 * Singleton Constructor
 	 */
@@ -68,7 +73,14 @@ public class ViewFactory
 		return instance;
 	}
 	
-	
+	/**
+	 * Clear the screen cache
+	 */
+	public void clearViewCache()
+	{
+		viewCache.clear();
+	}
+
 	/**
 	 * Factory method for views.
 	 * @param id viewId
@@ -78,6 +90,10 @@ public class ViewFactory
 	 */
 	public View getView(String id, String device) throws ScreenConfigException
 	{
+		if (viewCache.containsKey(id))
+		{
+			return viewCache.get(id);
+		}
 		URL view = Views.getView(id);
 		
 		URLStreamManager manager = new URLStreamManager(view);
@@ -102,14 +118,29 @@ public class ViewFactory
 	 */
 	public View getView(String id, Document view, boolean rootView) throws ScreenConfigException
 	{
+		if (viewCache.containsKey(id))
+		{
+			return viewCache.get(id);
+		}
+		viewLock.lock();
 		try 
 		{
+			if (viewCache.containsKey(id))
+			{
+				return viewCache.get(id);
+			}
 			JSONObject metadata = ViewProcessor.extractWidgetsMetadata(id, view, rootView);
-			return parseView(id, metadata, rootView);
+			View result = parseView(id, metadata, rootView);
+			viewCache.put(id, result);
+			return result;
 		} 
 		catch (Throwable e) 
 		{
 			throw new ScreenConfigException("Error retrieving view ["+id+"].", e);
+		}
+		finally
+		{
+			viewLock.unlock();
 		}
 	}
 	
@@ -549,17 +580,17 @@ public class ViewFactory
         }
 	    if (handlerStr != null)
 	    {
-	    	String[] handlers = RegexpPatterns.REGEXP_COMMA.split(handlerStr);
-	    	for (String handler : handlers)
+	    	String[] views = RegexpPatterns.REGEXP_COMMA.split(handlerStr);
+	    	for (String useView : views)
 	    	{
-	    		handler = handler.trim();
-	    		if (!StringUtils.isEmpty(handler))
+	    		useView = useView.trim();
+	    		if (!StringUtils.isEmpty(useView))
 	    		{
-	    			if (Views.getView(handler) == null)
+	    			if (Views.getView(useView) == null)
 	    			{
-	    				throw new ScreenConfigException("View ["+handler+"], declared on view ["+view.getId()+"], not found!");
+	    				throw new ScreenConfigException("View ["+useView+"], declared on view ["+view.getId()+"], not found!");
 	    			}
-	    			view.addController(handler);
+	    			view.addView(useView);
 	    		}
 	    	}
 	    }

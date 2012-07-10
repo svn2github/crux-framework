@@ -173,6 +173,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        logger.info("Generating core.xsd file");
 	        generateCoreSchema(libraries, templateLibraries);
 	        generateXDeviceSchema(libraries, templateLibraries);
+	        generateViewSchema(libraries, templateLibraries);
 	        
 	        copyXHTMLSchema();
 
@@ -645,21 +646,31 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		
 		out.println("<xs:complexType name=\"Screen\" mixed=\"true\">");
 		out.println("<xs:group ref=\"ScreenContent\" />");
-		out.println("<xs:attribute name=\"manageHistory\" type=\"xs:boolean\" default=\"false\"/>");
-		out.println("<xs:attribute name=\"title\" type=\"xs:string\"/>");
+		generateElementAttributesForAllViewElements(out);
+		out.println("</xs:complexType>");
+	}
+
+	/**
+	 * 
+	 * @param out
+	 */
+	private void generateElementAttributesForAllViewElements(PrintStream out)
+    {
+	    out.println("<xs:attribute name=\"title\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"fragment\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useController\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useSerializable\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useFormatter\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useDataSource\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"useView\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onClosing\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onClose\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onResized\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onLoad\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"enableTouchEventAdapters\" type=\"xs:boolean\" default=\"false\"/>");
-		out.println("</xs:complexType>");
-	}
+		
+    }
 
 	/**
 	 * 
@@ -1128,7 +1139,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        out.println("elementFormDefault=\"qualified\" ");
 	        out.println("targetNamespace=\"" + targetNS + "\" >");
 	        
-	        generateXDeviceSchemasImport(libraries, out);
+	        generateViewSchemasImport(libraries, out);
 
 			out.println("<xs:element name=\"xdevice\" type=\"XDevice\" />");
 			out.println("<xs:complexType name=\"XDevice\">");
@@ -1151,10 +1162,62 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	/**
 	 * 
 	 * @param libraries
+	 * @param templateLibraries
+	 */
+	private void generateViewSchema(Set<String> libraries, Set<String> templateLibraries)
+	{
+		try
+        {
+	        File coreFile = new File(destDir, "view.xsd");
+	        if (coreFile.exists())
+	        {
+	        	coreFile.delete();
+	        }
+	        coreFile.createNewFile();
+	        
+	        String targetNS = "http://www.cruxframework.org/view";
+	        registerNamespaceForCatalog(targetNS, coreFile);
+	        
+	        PrintStream out = new PrintStream(coreFile);
+	        out.println("<xs:schema ");
+	        out.println("xmlns=\"http://www.cruxframework.org/view\" ");
+	        out.println("xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" ");
+	        out.println("xmlns:c=\"http://www.cruxframework.org/crux\" ");
+	        out.println("attributeFormDefault=\"unqualified\" ");
+	        out.println("elementFormDefault=\"qualified\" ");
+	        out.println("targetNamespace=\"" + targetNS + "\" >");
+	        
+	        generateViewSchemasImport(libraries, out);
+
+			out.println("<xs:element name=\"view\" type=\"View\" />");
+			out.println("<xs:complexType name=\"View\">");
+			out.println("<xs:choice maxOccurs=\"unbounded\">");
+			out.println("<xs:element ref=\"c:crossDevice\" />");
+			out.println("<xs:group ref=\"c:widgets\" />");
+			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
+			out.println("</xs:sequence>");
+			generateElementAttributesForAllViewElements(out);
+			out.println("<xs:attribute name=\"onUnload\" type=\"xs:string\"/>");
+			out.println("<xs:attribute name=\"onAttach\" type=\"xs:string\"/>");
+			out.println("<xs:attribute name=\"onDetach\" type=\"xs:string\"/>");
+			out.println("</xs:complexType>");
+	        
+	        out.println("</xs:schema>");
+	        out.close();
+        }
+        catch (Exception e)
+        {
+        	throw new SchemaGeneratorException(e.getMessage(), e);
+        }
+	}
+	
+	/**
+	 * 
+	 * @param libraries
 	 * @param templateLibraries 
 	 * @param out
 	 */
-	private void generateXDeviceSchemasImport(Set<String> libraries, PrintStream out)
+	private void generateViewSchemasImport(Set<String> libraries, PrintStream out)
 	{
 		out.println("<xs:import schemaLocation=\"core.xsd\" namespace=\"http://www.cruxframework.org/crux\"/>");
 		for (String lib : libraries)

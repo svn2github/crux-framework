@@ -47,6 +47,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 {
 	private XPathExpression findTemplatesExpression;
 	private XPathExpression findScreensExpression;
+	private XPathExpression findViewsExpression;
 	private XPathExpression findBodyExpression;
 	private XPathExpression findCrossBrowserExpression;
 	private XPathExpression templateAttributesExpression;
@@ -65,6 +66,7 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 		{
 			findTemplatesExpression = findPath.compile(".//*[contains(namespace-uri(), 'http://www.cruxframework.org/templates/')]");
 			findScreensExpression = findPath.compile("//c:screen");
+			findViewsExpression = findPath.compile("//v:view");
 			findBodyExpression = htmlPath.compile("//h:body");
 			findCrossBrowserExpression = findPath.compile("//c:crossDevice");
 			templateAttributesExpression = findPath.compile("//@*[contains(., 'X{')] | //text()[contains(., 'X{')]");
@@ -117,12 +119,20 @@ public class TemplatesPreProcessor implements CruxXmlPreProcessor
 			}
 			else
 			{
-				screen = doc.createElementNS("http://www.cruxframework.org/crux", "c:screen");
-				NodeList bodyNodes = (NodeList)findBodyExpression.evaluate(doc, XPathConstants.NODESET);
-				if (bodyNodes.getLength() > 0)
+				nodes = (NodeList)findViewsExpression.evaluate(doc, XPathConstants.NODESET);
+				if (nodes.getLength() > 0)
 				{
-					Element body = (Element)bodyNodes.item(0);
-					body.appendChild(screen);
+					screen = (Element)nodes.item(0);
+				}
+				else
+				{
+					screen = doc.createElementNS("http://www.cruxframework.org/crux", "c:screen");
+					NodeList bodyNodes = (NodeList)findBodyExpression.evaluate(doc, XPathConstants.NODESET);
+					if (bodyNodes.getLength() > 0)
+					{
+						Element body = (Element)bodyNodes.item(0);
+						body.appendChild(screen);
+					}
 				}
 			}
 			extractScreenPropertiesFromElement(screen, controllers, dataSources, formatters, serializables);

@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
+import org.cruxframework.crux.core.declarativeui.hotdeploy.HotDeploymentScanner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -177,7 +178,7 @@ public class Templates
 		if (!hotDeploymentScannerStarted && Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableHotDeploymentForWebDirs()))
 		{
 			hotDeploymentScannerStarted = true;
-			TemplatesHotDeploymentScanner.scanWebDirs();
+			HotDeploymentScanner.scanWebDirs();
 		}
 		
 		starting = false;
@@ -220,7 +221,7 @@ public class Templates
 	/**
 	 * @return
 	 */
-	static boolean isStarting(){
+	public static boolean isStarting(){
 		return starting;
 	}
 	

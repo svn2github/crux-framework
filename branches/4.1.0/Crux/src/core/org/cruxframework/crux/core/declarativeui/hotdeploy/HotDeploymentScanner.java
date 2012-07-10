@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.declarativeui.template;
+package org.cruxframework.crux.core.declarativeui.hotdeploy;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -28,7 +28,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.declarativeui.template.Templates;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 
 
@@ -36,9 +38,9 @@ import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class TemplatesHotDeploymentScanner
+public class HotDeploymentScanner
 {
-	private static final Log logger = LogFactory.getLog(TemplatesHotDeploymentScanner.class);
+	private static final Log logger = LogFactory.getLog(HotDeploymentScanner.class);
 
 	private ScheduledExecutorService threadPool;
 	private Map<String, Long> lastModified = new HashMap<String, Long>();
@@ -48,7 +50,7 @@ public class TemplatesHotDeploymentScanner
 	 * 
 	 * @param poolSize
 	 */
-	private TemplatesHotDeploymentScanner(int poolSize)
+	private HotDeploymentScanner(int poolSize)
 	{
 		threadPool = Executors.newScheduledThreadPool(poolSize);
 	}
@@ -108,23 +110,59 @@ public class TemplatesHotDeploymentScanner
 				String fileName = file.getName();
 				if (fileName.endsWith("template.xml"))
 				{
-					long modified = file.lastModified();
-					Long templateLastModified = lastModified.get(fileName);
-					if (templateLastModified == null)
-					{
-						lastModified.put(fileName, modified);
-					}
-					else if (templateLastModified < modified)
-					{
-						lastModified.put(fileName, modified);
-						logger.info("Template file modified: ["+fileName+"].");
-						Templates.restart();
-						ScreenFactory.getInstance().clearScreenCache();
-					}
+					checkTemplateFile(file, fileName);
+				}
+				else if (fileName.endsWith("view.xml"))
+				{
+					checkViewFile(file, fileName);
 				}
 			}
 		}
 	}
+
+	/**
+	 * 
+	 * @param file
+	 * @param fileName
+	 */
+	protected void checkViewFile(File file, String fileName)
+    {
+	    long modified = file.lastModified();
+	    Long viewLastModified = lastModified.get("view_"+fileName);
+	    if (viewLastModified == null)
+	    {
+	    	lastModified.put("view_"+fileName, modified);
+	    }
+	    else if (viewLastModified < modified)
+	    {
+	    	lastModified.put("view_"+fileName, modified);
+	    	logger.info("View file modified: ["+fileName+"].");
+	    	ScreenFactory.getInstance().clearScreenCache();
+	    	ViewFactory.getInstance().clearViewCache();
+	    }
+    }
+
+	/**
+	 * 
+	 * @param file
+	 * @param fileName
+	 */
+	protected void checkTemplateFile(File file, String fileName)
+    {
+	    long modified = file.lastModified();
+	    Long templateLastModified = lastModified.get("template_"+fileName);
+	    if (templateLastModified == null)
+	    {
+	    	lastModified.put("template_"+fileName, modified);
+	    }
+	    else if (templateLastModified < modified)
+	    {
+	    	lastModified.put("template_"+fileName, modified);
+	    	logger.info("Template file modified: ["+fileName+"].");
+	    	Templates.restart();
+	    	ScreenFactory.getInstance().clearScreenCache();
+	    }
+    }
 	
 	/**
 	 * 
@@ -132,7 +170,7 @@ public class TemplatesHotDeploymentScanner
 	public static void scanWebDirs()
 	{
 		URL[] dirs = ClasspathUrlFinder.findClassPaths();
-		TemplatesHotDeploymentScanner scanner = new TemplatesHotDeploymentScanner(dirs.length);
+		HotDeploymentScanner scanner = new HotDeploymentScanner(dirs.length);
 
 		for (URL url : dirs)
 		{
@@ -142,7 +180,7 @@ public class TemplatesHotDeploymentScanner
 				{
 					final File file = new File(url.toURI());
 					
-					if (file.isDirectory() || file.getName().endsWith("template.xml"))
+					if (file.isDirectory() || file.getName().endsWith("template.xml") || file.getName().endsWith("view.xml"))
 					{
 						scanner.addFile(file);
 					}
