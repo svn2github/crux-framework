@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,6 @@ import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -46,9 +45,9 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	private String styleName;
 	private boolean animationEnabled;
 	protected static Confirm confirm;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Confirm()
 	{
@@ -56,7 +55,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public HandlerRegistration addCancelHandler(CancelHandler handler)
 	{
@@ -64,13 +63,13 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public HandlerRegistration addOkHandler(OkHandler handler)
 	{
 		return addHandler(handler, OkEvent.getType());
-	}	
-	
+	}
+
 	public String getTitle()
 	{
 		return title;
@@ -100,7 +99,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	{
 		this.styleName = styleName;
 	}
-	
+
 	public boolean isAnimationEnabled()
 	{
 		return animationEnabled;
@@ -109,35 +108,36 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	public void setAnimationEnabled(boolean animationEnabled)
 	{
 		this.animationEnabled = animationEnabled;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void show()
 	{
 		if (confirmController == null)
 		{
-			confirmController = GWT.create(CruxInternalConfirmControllerCrossDoc.class); 
+			confirmController = GWT.create(CruxInternalConfirmControllerCrossDoc.class);
 			((TargetDocument)confirmController).setTarget(Target.TOP);
 		}
 		confirm = this;
-		saveConfirmOrigin();
+		pushConfirmOnStack();
 		confirmController.showConfirm(new ConfirmData(title, message, okButtonText, cancelButtonText, styleName!=null?styleName:DEFAULT_STYLE_NAME, animationEnabled));
 	}
-	
+
 	/**
-	 * 
-	 * @param call
-	 * @param serializedData
+	 * Push the window that has invoked the confirm
 	 */
-	private native void saveConfirmOrigin()/*-{
-		$wnd.top._confirm_origin = $wnd;
+	private native void pushConfirmOnStack()/*-{
+		if($wnd.top._confirm_origin == null)
+		{
+			$wnd.top._confirm_origin = new Array();
+		}
+		$wnd.top._confirm_origin.push($wnd);
 	}-*/;
-	
-	
+
 	/**
-	 * 
+	 *
 	 * @param title
 	 * @param message
 	 * @param okCall
@@ -147,7 +147,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	{
 		show(title, message, okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
 	}
-	
+
 	/**
 	 * @param title
 	 * @param message
@@ -160,7 +160,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	{
 		show(title, message, okButtonText, cancelButtonText, okHandler, cancelHandler, null, false);
 	}
-	
+
 	/**
 	 * @param title
 	 * @param message
@@ -173,9 +173,9 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	{
 		show(title, message, null, null, okHandler, cancelHandler, styleName, animationEnabled);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param title
 	 * @param message
 	 * @param okCall
@@ -184,7 +184,7 @@ public class Confirm extends Widget implements HasCancelHandlers, HasOkHandlers,
 	 */
 	public static void show(String title, String message, String okButtonText, String cancelButtonText, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
 	{
-		Confirm confirm = new Confirm(); 
+		Confirm confirm = new Confirm();
 		confirm.setTitle(title);
 		confirm.setMessage(message);
 		confirm.setOkButtonText(okButtonText);
