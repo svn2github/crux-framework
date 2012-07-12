@@ -27,8 +27,11 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -46,7 +49,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante -
  *
  */
-@SuppressWarnings("deprecation")
 public class RollingPanel extends Composite implements InsertPanel, HasHorizontalAlignment, HasVerticalAlignment
 {
 	public static final String DEFAULT_NEXT_STYLE_NAME = "crux-RollingPanelNext";
@@ -95,13 +97,7 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		setSpacing(0);
 		setStyleName(DEFAULT_STYLE_NAME);
 		
-		Screen.addResizeHandler(new ResizeHandler()
-		{
-			public void onResize(ResizeEvent event)
-			{
-				checkNavigationButtons();
-			}
-		});
+		handleWindowResize();
 
 		maybeShowNavigationButtons();
 	}
@@ -444,6 +440,38 @@ public class RollingPanel extends Composite implements InsertPanel, HasHorizonta
 		StyleUtils.removeStyleDependentName(getWrapperElement(previousButton), "disabled");
 		StyleUtils.removeStyleDependentName(getWrapperElement(nextButton), "disabled");
 	}
+	
+	/**
+	 * 
+	 */
+	protected void handleWindowResize()
+    {
+	    addAttachHandler(new Handler()
+		{
+			HandlerRegistration registration;
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
+			{
+				if (event.isAttached())
+				{
+					registration = Screen.addResizeHandler(new ResizeHandler()
+					{
+						public void onResize(ResizeEvent event)
+						{
+							checkNavigationButtons();
+						}
+					});
+
+				}
+				else if (registration != null)
+				{
+					registration.removeHandler();
+					registration = null;
+				}
+			}
+		});
+    }
+	
 	
 	/**
 	 * @author Thiago da Rosa de Bustamante -

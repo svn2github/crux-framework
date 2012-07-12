@@ -13,6 +13,7 @@
 	<property name="gadget.src.dir" value="src/ui/gadget" />
 	<property name="gwt.src.dir" value="src/ui/gwt" />
 	<property name="widgets.src.dir" value="src/ui/widgets" />
+	<property name="views.src.dir" value="src/ui/views" />
 	<property name="themes.src.dir" value="src/ui/themes" />
 	<property name="tools.src.dir" value="src/tools" />
 
@@ -27,6 +28,7 @@
 	<property name="crux.gadgets.name" value="crux-gadgets" />
 	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
+	<property name="crux.views.name" value="crux-view-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 
 	<property name="resource.dir" value="build/resource" />
@@ -61,6 +63,7 @@
 			<fileset dir="${gadget.src.dir}" />
 			<fileset dir="${gwt.src.dir}" />
 			<fileset dir="${widgets.src.dir}" />
+			<fileset dir="${views.src.dir}" />
 			<fileset dir="${themes.src.dir}" />
 			<fileset dir="${tools.src.dir}" />
 		</javadoc>
@@ -80,6 +83,7 @@
 		<antcall target="export-crux-runtime" />
 		<antcall target="export-crux-gadgets" />
 		<antcall target="export-crux-widgets" />
+		<antcall target="export-crux-views" />
 		<antcall target="export-crux-themes" />
 
 	</target>
@@ -280,6 +284,46 @@
 		</jar>
 	</target>
 	
+	<!-- 
+	========================================================================================================
+		Export crux-view-widgets.jar
+	========================================================================================================
+	-->
+	<target name="export-crux-views" description="Creates the crux-view-widgets.jar file and exports it to the dist folder.">
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
+		<delete  file="${dist.dir}/${crux.views.name}.jar" failonerror="no" />
+		
+		<delete dir="${classes.dir}" failonerror="no" />
+		<mkdir dir="${classes.dir}" />
+		
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
+			   encoding="UTF-8">
+			<src>
+				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${gwt.src.dir}" />
+				<pathelement location="${widgets.src.dir}"/>
+				<pathelement location="${views.src.dir}"/>
+			</src>
+			<classpath refid="build.classpath" />
+		</javac>
+
+		<svn failonerror="false" javahl="false" svnkit="true">
+			<wcversion path="${basedir}" />
+		</svn>
+		
+		<jar jarfile="${dist.dir}/${crux.views.name}.jar">
+			<fileset dir="${classes.dir}" excludes="**/public/*" >
+				<include name="org/cruxframework/crux/views/**/*" />
+			</fileset>	
+			<fileset dir="${views.src.dir}" />
+			<manifest>
+				<attribute name="Build-Timestamp" value="${build.date}" />
+				<attribute name="Implementation-Version" value="${version}" />
+				<attribute name="Implementation-Revision" value="${revision.max}" />
+			</manifest>
+		</jar>
+	</target>
+
 	<!-- 
 	========================================================================================================
 		Export crux-themes.jar

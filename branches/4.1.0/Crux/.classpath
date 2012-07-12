@@ -7,6 +7,7 @@
 	<classpathentry kind="src" path="src/tools"/>
 	<classpathentry kind="src" path="src/ui/gwt"/>
 	<classpathentry kind="src" path="src/ui/gadget"/>
+	<classpathentry kind="src" path="src/ui/views"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/gwt-dev.jar" sourcepath="lib/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-user.jar"/>

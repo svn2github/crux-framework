@@ -3,11 +3,10 @@ package org.cruxframework.crux.widgets.client.layout;
 import org.cruxframework.crux.core.client.executor.ThrottleExecutor;
 import org.cruxframework.crux.core.client.screen.Screen;
 
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,22 +50,29 @@ public abstract class AutoResizableComposite extends Composite
 	@Override
 	protected void initWidget(Widget widget) 
 	{
-		final HandlerRegistration registration = Screen.addResizeHandler(new com.google.gwt.event.logical.shared.ResizeHandler() 
+		addAttachHandler(new Handler()
 		{
-			public void onResize(ResizeEvent event) 
+			HandlerRegistration registration;
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
 			{
-				resizeHandler.throttle();
+				if (event.isAttached())
+				{
+					registration = Screen.addResizeHandler(new com.google.gwt.event.logical.shared.ResizeHandler() 
+					{
+						public void onResize(ResizeEvent event) 
+						{
+							resizeHandler.throttle();
+						}
+					});
+				}
+				else if (registration != null)
+				{
+					registration.removeHandler();
+					registration = null;
+				}
 			}
 		});
-		
-		Screen.addCloseHandler(new CloseHandler<Window>() 
-		{
-			public void onClose(CloseEvent<Window> event) 
-			{
-				registration.removeHandler();
-			}
-		});
-		
 		super.initWidget(widget);
 	}	
 }

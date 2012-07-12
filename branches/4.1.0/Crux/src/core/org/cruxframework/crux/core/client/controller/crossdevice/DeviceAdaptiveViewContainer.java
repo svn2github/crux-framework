@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.client.controller.crossdevice;
 
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
+import org.cruxframework.crux.core.client.screen.views.View;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
@@ -34,6 +35,7 @@ public class DeviceAdaptiveViewContainer extends SingleViewContainer implements 
 
 	public DeviceAdaptiveViewContainer()
     {
+		super(true);
 		containerPanel = new SimplePanel();
 		containerPanel.addAttachHandler(new Handler()
 		{
@@ -53,12 +55,17 @@ public class DeviceAdaptiveViewContainer extends SingleViewContainer implements 
     }
 	
 	@Override
+    protected Panel getContainerPanel(View view)
+    {
+	    return getContainerPanel();
+    }
+
     protected Panel getContainerPanel()
     {
 	    return containerPanel;
     }
 
-	@Override
+    @Override
     protected void handleViewTitle(String title, Panel containerPanel)
     {
     }

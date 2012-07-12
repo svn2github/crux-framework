@@ -29,15 +29,10 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class SingleViewContainer extends ViewContainer
+public abstract class MultipleViewsContainer extends ViewContainer
 {
-	protected FastMap<View> views = new FastMap<View>();
-	protected View activeView = null;;
-
-	public SingleViewContainer(boolean clearPanelsForDeactivatedViews)
-    {
-	    super(clearPanelsForDeactivatedViews);
-    }
+	private FastMap<View> views = new FastMap<View>();
+	private View activeView = null;;
 
 	/**
 	 * 
@@ -46,12 +41,6 @@ public abstract class SingleViewContainer extends ViewContainer
 	public View getActiveView()
 	{
 		return activeView;
-	}
-
-	public void showView(String viewId)
-	{
-		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
-		renderView(getView(viewId));
 	}
 	
 	@Override

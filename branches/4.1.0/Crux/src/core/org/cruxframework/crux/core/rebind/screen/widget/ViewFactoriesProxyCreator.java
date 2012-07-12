@@ -140,6 +140,11 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 			sourceWriter.println("}");
         }
+		if (!first)
+		{
+			sourceWriter.println("else ");
+		}
+		sourceWriter.println("throw new InterfaceConfigException(\"View [\"+name+\"] was not found. Check if you import it using useView attribute.\");");
 	}	
 	
 	/**

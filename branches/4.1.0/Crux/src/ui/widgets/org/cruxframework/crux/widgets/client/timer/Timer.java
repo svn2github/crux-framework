@@ -18,19 +18,16 @@ package org.cruxframework.crux.widgets.client.timer;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.collection.FastList;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.timeout.HasTimeoutHandlers;
 import org.cruxframework.crux.widgets.client.event.timeout.TimeoutEvent;
 import org.cruxframework.crux.widgets.client.event.timeout.TimeoutHandler;
 
-
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 
@@ -93,16 +90,17 @@ public class Timer extends Composite implements HasTimeoutHandlers
 			start();
 		}
 		
-		Screen.addCloseHandler
-		(
-			new CloseHandler<Window>()
+		addAttachHandler(new Handler()
+		{
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
 			{
-				public void onClose(CloseEvent<Window> event)
+				if (!event.isAttached())
 				{
 					stop();
 				}
 			}
-		);
+		});
 	}	
 
 	/**

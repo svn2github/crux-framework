@@ -39,9 +39,16 @@ public abstract class ViewContainer
 {
 	private static ViewFactory viewFactory;	
 	private static Logger logger = Logger.getLogger(ViewContainer.class.getName());
+	private final boolean clearPanelsForDeactivatedViews;
 	
 	public ViewContainer()
     {
+		this(true);
+    }
+
+	public ViewContainer(boolean clearPanelsForDeactivatedViews)
+    {
+		this.clearPanelsForDeactivatedViews = clearPanelsForDeactivatedViews;
 		ViewHandlers.initializeWindowContainers();
     }
 	
@@ -136,7 +143,10 @@ public abstract class ViewContainer
     {
 		if (view.isAttached() && view.setDetached())
 		{
-			containerPanel.clear();
+			if (this.clearPanelsForDeactivatedViews)
+			{
+				containerPanel.clear();
+			}
 			ViewHandlers.removeViewContainerHandlers();
 			return true;
 		}

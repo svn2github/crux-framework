@@ -137,6 +137,21 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		this.transitionDuration = transitionDuration;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getTransitionDuration()
+	{
+		return transitionDuration;
+	}
+	
+	public void clear()
+	{
+		currentPanel.clear();
+		nextPanel.clear();
+	}
+
 	private void configureCurrentPanel() 
 	{
 		if (animation != null)
@@ -258,11 +273,5 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		configureNextPanel();
 		configureCurrentPanel();
 		concludeSlide(completeCallback);
-	}
-	
-	public void clear()
-	{
-		currentPanel.clear();
-		nextPanel.clear();
 	}
 }

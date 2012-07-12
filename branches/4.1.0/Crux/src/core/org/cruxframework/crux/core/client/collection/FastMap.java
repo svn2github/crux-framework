@@ -150,6 +150,22 @@ public class FastMap<V>
 	}
 	
 	/**
+	 * 
+	 */
+	public final boolean isEmpty()
+	{
+		if (GWT.isScript())
+		{
+			return jsMap.isEmpty();
+		}
+		else
+		{
+			return javaMap.size() == 0;
+		}
+	}
+
+	
+	/**
 	 * @param jsMap
 	 * @param keys
 	 * @param map
