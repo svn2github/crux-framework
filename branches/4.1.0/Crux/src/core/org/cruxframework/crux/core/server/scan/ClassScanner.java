@@ -279,7 +279,7 @@ public class ClassScanner
 	}
 	
 	/**
-	 * return true if the scanner was already initialized.
+	 * return true if the scanner was already loaded.
 	 * @return
 	 */
 	public static boolean isInitialized()

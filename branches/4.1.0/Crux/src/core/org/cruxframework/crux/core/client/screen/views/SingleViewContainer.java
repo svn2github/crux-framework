@@ -15,9 +15,6 @@
  */
 package org.cruxframework.crux.core.client.screen.views;
 
-import org.cruxframework.crux.core.client.collection.FastMap;
-import org.cruxframework.crux.core.client.utils.StringUtils;
-
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -31,7 +28,6 @@ import com.google.gwt.user.client.ui.Panel;
  */
 public abstract class SingleViewContainer extends ViewContainer
 {
-	protected FastMap<View> views = new FastMap<View>();
 	protected View activeView = null;;
 
 	public SingleViewContainer(boolean clearPanelsForDeactivatedViews)
@@ -48,38 +44,6 @@ public abstract class SingleViewContainer extends ViewContainer
 		return activeView;
 	}
 
-	public void showView(String viewId)
-	{
-		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
-		renderView(getView(viewId));
-	}
-	
-	@Override
-    protected boolean doAdd(View view)
-    {
-		if (!views.containsKey(view.getId()))
-		{
-			views.put(view.getId(), view);
-			view.load();
-			return true;
-		}
-		return false;
-    }
-
-	@Override
-    protected boolean doRemove(View view)
-    {
-		if (views.containsKey(view.getId()))
-		{
-			if (deactivate(view, getContainerPanel(view)) && view.unload())
-			{
-				views.remove(view.getId());
-				return true;
-			}
-		}
-		return false;
-    }
-	
 	@Override
 	protected void activate(View view, Panel containerPanel)
 	{
@@ -114,29 +78,6 @@ public abstract class SingleViewContainer extends ViewContainer
 		return deactivated;
 	}
 	
-	@Override
-    protected void renderView(View view)
-    {
-		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
-		Panel containerPanel = getContainerPanel(view);
-		activate(view, containerPanel);
-		String title = view.getTitle();
-		if (!StringUtils.isEmpty(title))
-		{
-			handleViewTitle(title, containerPanel);
-		}
-    }
-
-	@Override
-    public View getView(String viewId)
-    {
-		if (viewId == null)
-		{
-			return null;
-		}
-	    return views.get(viewId);
-    }
-
 	@Override
     protected boolean hasResizeHandlers()
     {
@@ -211,6 +152,4 @@ public abstract class SingleViewContainer extends ViewContainer
 			activeView.fireHistoryChangeEvent(event);
 		}
 	}
-
-	protected abstract Panel getContainerPanel(View view);
 }

@@ -141,7 +141,7 @@ public class Crux implements EntryPoint
 				initialized = true;
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.INFO, "Crux engine initialized.");
+					logger.log(Level.INFO, "Crux engine loaded.");
 				}
 			}
 		} 

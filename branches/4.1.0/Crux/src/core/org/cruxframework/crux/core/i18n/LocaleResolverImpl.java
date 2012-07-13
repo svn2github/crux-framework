@@ -36,7 +36,7 @@ public class LocaleResolverImpl implements LocaleResolver
 	{
 		if (userLocale == null)
 		{
-			throw new LocaleResolverException("User LocaleResolver not initialized.");
+			throw new LocaleResolverException("User LocaleResolver not loaded.");
 		}
 		return userLocale;
 	}

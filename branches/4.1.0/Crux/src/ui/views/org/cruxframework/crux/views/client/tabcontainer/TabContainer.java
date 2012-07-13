@@ -13,14 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.screen.views;
+package org.cruxframework.crux.views.client.tabcontainer;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface ViewAware
+public class TabContainer
 {
-	View getView();
-	//TODO impedir que o programador, pra facilitar a sua vida, sobrescreva o metodo getView() na sua controller....
+
 }

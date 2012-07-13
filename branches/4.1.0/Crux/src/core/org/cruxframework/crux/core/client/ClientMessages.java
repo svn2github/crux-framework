@@ -96,7 +96,7 @@ public interface ClientMessages extends Messages
 	@DefaultMessage("Empty strings can not be used as a styleName property value.")
 	String emptyStringAsStyleNameValue();
 
-	@DefaultMessage("Crux Engine is already initialized.")
+	@DefaultMessage("Crux Engine is already loaded.")
 	String cruxAlreadyInitializedError();
 	
 	@DefaultMessage("Calling a cross document method. Screen[{0}], Controller[{1}], Method[{2}], Target[{3}]")
@@ -109,6 +109,9 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("Invalid value for style property: [{0}]:[{1}]")
 	String styleErrorInvalidProperty(String camelizedName, String value);
-	@DefaultMessage("Can not retrieve the widget [{1}] from view [{0}]. View is not initialized. Load this view into a ViewContainer first.")
+	@DefaultMessage("Can not retrieve the widget [{1}] from view [{0}]. View is not loaded. Load this view into a ViewContainer first.")
 	String viewNotInitialized(String viewId, String widgetId);
+
+	@DefaultMessage("Informed object is not aware of current view. This method must be used to discover current view for controllers, datasouces or other ViewAware objects.")
+	String viewOjectIsNotAwareOfView();
 }

@@ -69,7 +69,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	protected FastList<OrientationChangeOrResizeHandler> orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
 	protected FastList<ViewLoadHandler> loadHandlers = new FastList<ViewLoadHandler>();
 	protected FastList<ViewUnloadHandler> unloadHandlers = new FastList<ViewUnloadHandler>();
-	protected boolean initialized = false;
+	protected boolean loaded = false;
 
 	private ViewContainer viewContainer;
 
@@ -81,7 +81,6 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
     {
 		this.id = id;
 		this.title = title;
-	    this.lazyWidgets = initializeLazyDependencies();
     }
 	
 	/**
@@ -101,6 +100,15 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
     {
     	return title;
     }
+	
+	/**
+	 * Return true if the view was loaded into a container. 
+	 * @return
+	 */
+	public boolean isLoaded()
+	{
+		return loaded;
+	}
 	
 	/**
 	 * Create a new DataSource instance
@@ -170,7 +178,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 */
 	public Widget getWidget(String id)
 	{
-		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
+		assert(loaded):Crux.getMessages().viewNotInitialized(getId(), id);
 		Widget widget = widgets.get(id);
 		if (widget == null)
 		{
@@ -224,12 +232,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * Retrieve a widget contained on this screen. 
 	 * 
 	 * @param id widget identifier
-	 * @param checkLazyDependencies if false, lazy dependencies will not be initialized
+	 * @param checkLazyDependencies if false, lazy dependencies will not be loaded
 	 * @return the widget
 	 */
 	public Widget getWidget(String id, boolean checkLazyDependencies)
 	{
-		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
+		assert(loaded):Crux.getMessages().viewNotInitialized(getId(), id);
 		if (checkLazyDependencies)
 		{
 			return getWidget(id);
@@ -251,7 +259,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	@SuppressWarnings("unchecked")
 	public <T extends IsWidget> T getWidget(String id, Class<T> clazz)
 	{
-		assert(initialized):Crux.getMessages().viewNotInitialized(getId(), id);
+		assert(loaded):Crux.getMessages().viewNotInitialized(getId(), id);
 		Widget w = getWidget(id);
 		return (T) w;
 	}
@@ -715,13 +723,34 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 */
 	protected void load()
 	{
-		if (!initialized)
+		if (!loaded)
 		{
+			prepareViewObjects();
 			registerLoadedView();
 			createWidgets();
-			initialized = true;
+			loaded = true;
 			fireLoadEvent();
 		}
+	}
+	
+	/**
+	 * Called by the {@link ViewContainer} when the view is removed from the container. 
+	 * @return true if the view is not loaded
+	 */
+	protected boolean unload()
+	{
+		boolean unloaded = true;
+		if (this.loaded)
+		{
+			unloaded = fireUnloadEvent();
+			if (unloaded)
+			{
+				unregisterLoadedView();
+				clearViewObjects();
+				loaded = false;
+			}
+		}
+		return unloaded;
 	}
 	
 	/**
@@ -740,27 +769,27 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		loadedViews.remove(getId());
     }
 
-	/**
-	 * Called by the {@link ViewContainer} when the view is removed from the container. 
-	 * @return
-	 */
-	protected boolean unload()
+	protected void prepareViewObjects()
 	{
-		boolean unloaded = fireUnloadEvent();
-		if (unloaded)
-		{
-			unregisterLoadedView();
-			unloadViewReferences();
-		}
-		return unloaded;
+	    lazyWidgets = initializeLazyDependencies();
+	    widgets = new FastMap<Widget>();
+	    resizeHandlers = new FastList<ResizeHandler>();
+	    windowCloseHandlers = new FastList<CloseHandler<Window>>();
+	    windowClosingHandlers = new FastList<ClosingHandler>();
+	    attachHandlers = new FastList<ViewAttachHandler>();
+	    detachHandlers = new FastList<ViewDetachHandler>();
+	    historyHandlers = new FastList<ValueChangeHandler<String>>();
+	    orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
+	    loadHandlers = new FastList<ViewLoadHandler>();
+	    unloadHandlers = new FastList<ViewUnloadHandler>();
 	}
 	
 	/**
 	 * When view is unloaded, we must free its allocated memory. 
 	 */
-	protected void unloadViewReferences()
+	protected void clearViewObjects()
     {
-	    lazyWidgets = null;
+		lazyWidgets = null;
 	    widgets = null;
 	    windowClosingHandlers = null;
 	    windowCloseHandlers = null;
@@ -795,8 +824,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 
 	/**
 	 * When we have multi-level inner lazy panels, the most inside panel is dependent from the most outside one.
-	 * If the most outside is initialized, a new dependency must be created for the inner lazy panels not yet 
-	 * initialized.
+	 * If the most outside is loaded, a new dependency must be created for the inner lazy panels not yet 
+	 * loaded.
 	 * @param id
 	 * @param lazyPanelId
 	 */
@@ -817,8 +846,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * This method can trigger other dependent lazyPanel initialization, through 
 	 * a recursive call to {@code View.getWidget(String)}.
 	 * 
-	 * @param widgetId lazyPanel to be initialized
-	 * @return true if some lazyPanel was really initialized for this request
+	 * @param widgetId lazyPanel to be loaded
+	 * @return true if some lazyPanel was really loaded for this request
 	 */
 	protected boolean initializeLazyDependentWidget(String widgetId)
 	{
@@ -849,7 +878,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 
 		if (LogConfiguration.loggingIsEnabled())
 		{
-			logger.log(Level.FINE, " Lazy dependents widgets of lazyPanel ["+widgetId+"] are now initialized.");
+			logger.log(Level.FINE, " Lazy dependents widgets of lazyPanel ["+widgetId+"] are now loaded.");
 		}
 		return ret;
 	}
@@ -981,5 +1010,16 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public static View getView(String id)
 	{
 		return loadedViews.get(id);
+	}
+	
+	/**
+	 * Retrive the current view associated with a controller, datasource, or other ViewAware object
+	 * @param viewAware
+	 * @return
+	 */
+	public static View getCurrentView(Object viewAware)
+	{
+		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
+		return ((ViewAware)viewAware).getView();
 	}
 }

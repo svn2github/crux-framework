@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.rebind;
+package org.cruxframework.crux.views.rebind.swapcontainer;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
+import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -30,7 +30,9 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.views.client.HorizontalSwapContainer;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.views.client.swapcontainer.HorizontalSwapContainer;
 
 class HorizontalSwapContainerContext extends WidgetCreatorContext
 {
@@ -48,6 +50,9 @@ class HorizontalSwapContainerContext extends WidgetCreatorContext
 })
 @TagAttributes({
 	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500")
+})
+@TagEvents({
+	@TagEvent(ChangeViewEvtBind.class)
 })
 public class HorizontalSwapContainerFactory extends WidgetCreator<HorizontalSwapContainerContext>
 {

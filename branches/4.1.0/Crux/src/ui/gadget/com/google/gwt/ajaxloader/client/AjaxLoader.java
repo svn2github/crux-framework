@@ -156,7 +156,7 @@ public class AjaxLoader {
   public static void loadApi(final String api, final String version,
       Runnable onLoad, AjaxLoaderOptions settings) {
 
-    // Initialize the API if it hasn't already been initialized.
+    // Initialize the API if it hasn't already been loaded.
     init();
 
     // Set the onLoad callback into the

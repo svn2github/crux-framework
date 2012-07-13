@@ -18,8 +18,10 @@ package org.cruxframework.crux.core.client.screen.views;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -41,11 +43,20 @@ public abstract class ViewContainer
 	private static Logger logger = Logger.getLogger(ViewContainer.class.getName());
 	private final boolean clearPanelsForDeactivatedViews;
 	
+	protected FastMap<View> views = new FastMap<View>();
+
+	/**
+	 * Constructor
+	 */
 	public ViewContainer()
     {
 		this(true);
     }
 
+	/**
+	 * Constructor
+	 * @param clearPanelsForDeactivatedViews If true, makes the container clear the container panel for a view, when the view is deactivated.
+	 */
 	public ViewContainer(boolean clearPanelsForDeactivatedViews)
     {
 		this.clearPanelsForDeactivatedViews = clearPanelsForDeactivatedViews;
@@ -105,6 +116,16 @@ public abstract class ViewContainer
     }
 
     /**
+     * Render the requested view into the container.
+     * @param viewId View identifier
+     */
+	public void showView(String viewId)
+	{
+		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
+		renderView(getView(viewId));
+	}
+
+	/**
 	 * This method must be called by subclasses when the container is attached to DOM
 	 */
 	protected void bindToDOM()
@@ -137,44 +158,90 @@ public abstract class ViewContainer
 	 * 
 	 * @param view
 	 * @param containerPanel
-	 * @return
+	 * @return True if view is deactivated
 	 */
 	protected boolean deactivate(View view, Panel containerPanel)
     {
-		if (view.isAttached() && view.setDetached())
+		if (view.isAttached())
 		{
-			if (this.clearPanelsForDeactivatedViews)
+			if (view.setDetached())
 			{
-				containerPanel.clear();
+				if (this.clearPanelsForDeactivatedViews)
+				{
+					containerPanel.clear();
+				}
+				ViewHandlers.removeViewContainerHandlers();
+				return true;
 			}
-			ViewHandlers.removeViewContainerHandlers();
-			return true;
+			return false;
 		}
-		return false;
+		return true;
     }
-	
-	/**
-	 * Retrieve the view associated to viewId
-	 * @param viewId View identifier
-	 * @return The view
-	 */
-	public abstract View getView(String viewId);
-	
-	/**
-	 * Remove the view from this container
-	 * @param view View to be removed
-	 * @return
-	 */
-	protected abstract boolean doRemove(View view);
 	
 	/**
 	 * Loads a new view into the container
 	 * @param view View to be added
 	 * @return
 	 */
-	protected abstract boolean doAdd(View view);
+    protected boolean doAdd(View view)
+    {
+		if (!views.containsKey(view.getId()))
+		{
+			views.put(view.getId(), view);
+			view.load();
+			return true;
+		}
+		return false;
+    }
 
-	protected abstract void renderView(View view);
+	/**
+	 * Remove the view from this container
+	 * @param view View to be removed
+	 * @return
+	 */
+    protected boolean doRemove(View view)
+    {
+		if (views.containsKey(view.getId()))
+		{
+			if (deactivate(view, getContainerPanel(view)) && view.unload())
+			{
+				views.remove(view.getId());
+				return true;
+			}
+		}
+		return false;
+    }
+
+    /**
+     * Render the view into the container
+     * @param view
+     */
+    protected void renderView(View view)
+    {
+		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
+		Panel containerPanel = getContainerPanel(view);
+		activate(view, containerPanel);
+		String title = view.getTitle();
+		if (!StringUtils.isEmpty(title))
+		{
+			handleViewTitle(title, containerPanel);
+		}
+    }
+
+	/**
+	 * Retrieve the view associated to viewId
+	 * @param viewId View identifier
+	 * @return The view
+	 */
+    public View getView(String viewId)
+    {
+		if (viewId == null)
+		{
+			return null;
+		}
+	    return views.get(viewId);
+    }
+
 	protected abstract boolean hasResizeHandlers();
 	protected abstract boolean hasWindowCloseHandlers();
 	protected abstract boolean hasWindowClosingHandlers();
@@ -185,6 +252,7 @@ public abstract class ViewContainer
 	protected abstract void notifyViewsAboutWindowClosing(ClosingEvent event);
 	protected abstract void notifyViewsAboutOrientationChangeOrResize();
 	protected abstract void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event);
+	protected abstract Panel getContainerPanel(View view);
 	
 	protected abstract void handleViewTitle(String title, Panel containerPanel);
 
@@ -255,7 +323,7 @@ public abstract class ViewContainer
 				@Override
 				public void onViewCreated(View view)
 				{
-					if (add(view, render))
+					if (!add(view, render))
 					{
 						Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
 					}

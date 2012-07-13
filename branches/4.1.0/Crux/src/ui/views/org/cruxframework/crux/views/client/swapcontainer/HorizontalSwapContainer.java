@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.client;
+package org.cruxframework.crux.views.client.swapcontainer;
 
-import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.views.client.SingleViewContainerWidget;
 import org.cruxframework.crux.widgets.client.animation.Animation.CompleteCallback;
 import org.cruxframework.crux.widgets.client.animation.SlidingSwapAnimation.Direction;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HorizontalSwapContainer extends SingleViewContainer implements IsWidget
+public class HorizontalSwapContainer extends SingleViewContainerWidget implements HasChangeViewHandlers
 {
 	private HorizontalSwapPanel swapPanel = new HorizontalSwapPanel();
 	private Panel active = new SimplePanel();
@@ -68,15 +67,27 @@ public class HorizontalSwapContainer extends SingleViewContainer implements IsWi
 	{
 		if (activeView == null || !activeView.getId().equals(view.getId()))
 		{
+			final View previous = activeView;
+			final View next = view;
 			super.renderView(view);
-			swapPanel.transitTo(active, direction, new CompleteCallback()
+			if (previous == null)
 			{
-				@Override
-				public void onComplete()
+				swapPanel.setCurrentWidget(active);
+				swap.clear();
+				ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);
+			}
+			else
+			{
+				swapPanel.transitTo(active, direction, new CompleteCallback()
 				{
-					swap.clear();
-				}
-			});
+					@Override
+					public void onComplete()
+					{
+						swap.clear();
+						ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);
+					}
+				});
+			}
 		}
 	}
 
@@ -134,85 +145,10 @@ public class HorizontalSwapContainer extends SingleViewContainer implements IsWi
 	{
 		swapPanel.setTransitionDuration(transitionDuration);
 	}
-	
-	/**
-	 * 
-	 * @param width
-	 */
-	public void setWidth(String width)
-	{
-		swapPanel.setWidth(width);
-	}
 
-	/**
-	 * 
-	 * @param height
-	 */
-	public void setHeight(String height)
+	@Override
+	public HandlerRegistration addChangeViewHandler(ChangeViewHandler handler)
 	{
-		swapPanel.setHeight(height);
-	}
-
-	/**
-	 * 
-	 * @param styleName
-	 */
-	public void setStyleName(String styleName)
-	{
-		swapPanel.setStyleName(styleName);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getStyleName()
-	{
-		return swapPanel.getStyleName();
-	}
-	
-	/**
-	 * 
-	 * @param title
-	 */
-	public void setTitle(String title)
-	{
-		swapPanel.setTitle(title);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getTitle()
-	{
-		return swapPanel.getTitle();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isVisible()
-	{
-		return swapPanel.isVisible();
-	}
-	
-	/**
-	 * 
-	 * @param visible
-	 */
-	public void setVisible(boolean visible)
-	{
-		swapPanel.setVisible(visible);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Element getElement()
-	{
-		return swapPanel.getElement();
+		return addHandler(handler, ChangeViewEvent.getType());
 	}
 }
