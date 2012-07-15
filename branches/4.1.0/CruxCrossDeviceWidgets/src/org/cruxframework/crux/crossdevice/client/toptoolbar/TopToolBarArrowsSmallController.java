@@ -22,8 +22,8 @@ import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.core.client.screen.views.ViewAware;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
@@ -229,7 +229,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 		floatPanel = getChildWidget("topToolBarFloatingPanel");
 		panelAnimation.prepareElement(floatPanel.getElement());
 		createPlaceHolderPanel();
-		Screen.addOrientationChangeOrResizeHandler(new OrientationChangeOrResizeHandler() 
+		((ViewAware)this).getView().addWindowOrientationChangeOrResizeHandler(new OrientationChangeOrResizeHandler() 
 		{
 			@Override
 			public void onOrientationChangeOrResize() 
