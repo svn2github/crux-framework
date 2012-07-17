@@ -29,6 +29,7 @@
 	<property name="crux.gadgets.name" value="crux-gadgets" />
 	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
+	<property name="crux.views.name" value="crux-view-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 	
 	<!-- Proporties refering Quickstart Project -->
@@ -76,6 +77,7 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.views.name}.jar" />				
 				<include name="${crux.themes.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
@@ -152,6 +154,7 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.views.name}.jar" />				
 				<include name="${crux.themes.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
@@ -172,6 +175,7 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.views.name}.jar" />				
 				<include name="${crux.themes.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
@@ -192,6 +196,7 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.views.name}.jar" />				
 				<include name="${crux.themes.name}.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
@@ -212,6 +217,7 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.views.name}.jar" />				
 				<include name="${crux.themes.name}.jar" />				
 				<include name="${crux.runtime.name}.jar" />				
 			</fileset>
