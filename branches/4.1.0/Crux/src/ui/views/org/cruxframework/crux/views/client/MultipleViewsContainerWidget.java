@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.views.client;
 
-import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
+import org.cruxframework.crux.core.client.screen.views.MultipleViewsContainer;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventHandler;
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class MultipleViewsContainerWidget extends SingleViewContainer implements IsWidget, HasHandlers
+public abstract class MultipleViewsContainerWidget extends MultipleViewsContainer implements IsWidget, HasHandlers
 {
 	private HandlerManager handlerManager;
 

@@ -65,7 +65,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 		@Override
 		public void processChildren(SourcePrinter out, AbstractStackPanelFactoryContext context) throws CruxGeneratorException 
 		{
-			context.title = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId());
+			context.title = getWidgetCreator().getDeclaredMessage(getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId()));
 			context.isHtmlTitle = false;
 		}
 	}
@@ -101,7 +101,7 @@ public abstract class AbstractStackPanelFactory extends ComplexPanelFactory<Abst
 			}
 			else
 			{
-				out.println(widget+".add("+child+", "+EscapeUtils.quote(context.title)+", "+context.isHtmlTitle+");");
+				out.println(widget+".add("+child+", "+context.title+", "+context.isHtmlTitle+");");
 			}
 			if (childPartialSupport)
 			{

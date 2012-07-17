@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
@@ -134,7 +133,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		@Override
 		public void processChildren(SourcePrinter out, MenuBarContext context) throws CruxGeneratorException
 		{
-			context.caption = context.readChildProperty("text");
+			context.caption = getWidgetCreator().getDeclaredMessage(context.readChildProperty("text"));
 			context.isHtml = false;
 		}
 	}
@@ -221,7 +220,7 @@ public class MenuBarFactory extends WidgetCreator<MenuBarContext>
 		String menuItemClass = MenuItem.class.getCanonicalName();
 		String menuItem = ViewFactoryCreator.createVariableName("menuItem");
 		out.println(menuItemClass +" "+ menuItem+"="+
-				widget+".addItem(new "+menuItemClass+"("+EscapeUtils.quote(context.caption)+", "+context.isHtml+", (Command)null));");
+				widget+".addItem(new "+menuItemClass+"("+context.caption+", "+context.isHtml+", (Command)null));");
 		return menuItem;
 	}
 

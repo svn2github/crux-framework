@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Composite;
  * TODO - Gesse - Comment this
  * @author Gesse S. F. Dafe
  */
-class FlapPanel extends Composite  implements HasBeforeFocusAndBeforeBlurHandlers, HasBeforeCloseHandlers, HasClickHandlers
+public class FlapPanel extends Composite  implements HasBeforeFocusAndBeforeBlurHandlers, HasBeforeCloseHandlers, HasClickHandlers
 {
 	private SimpleDecoratedPanel panel;
 	private FlapController flapController;	

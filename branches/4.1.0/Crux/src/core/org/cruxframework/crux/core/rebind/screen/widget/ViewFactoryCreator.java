@@ -45,6 +45,7 @@ import org.cruxframework.crux.core.client.screen.views.ViewUnloadHandler;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
+import org.cruxframework.crux.core.declarativeui.ViewParser;
 import org.cruxframework.crux.core.i18n.MessageClasses;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -93,6 +94,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class ViewFactoryCreator extends AbstractProxyCreator
 {
 	private static NameFactory nameFactory = new NameFactory();
+	private static String viewVariable = "__view";;
 
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private Map<String, String> declaredMessages = new HashMap<String, String>();
@@ -101,7 +103,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	private final LazyPanelFactory lazyFactory;
 	private final Set<String> lazyPanels = new HashSet<String>();	
 	private final LinkedList<PostProcessingPrinter> postProcessingCode = new LinkedList<PostProcessingPrinter>();
-	private String viewVariable;
 	private String loggerVariable;
 	private String viewPanelVariable;
 	private String device;
@@ -195,7 +196,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.device = device;
 		this.module = module;
 		this.lazyFactory = new LazyPanelFactory(this);
-		this.viewVariable = createVariableName("view");
 		this.loggerVariable = createVariableName("logger");
 		this.viewPanelVariable = createVariableName("viewPanel");
 		this.widgetConsumer = new ViewWidgetConsumer();
@@ -274,7 +274,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateCreateWidgetsMethod(printer);
     	generateRenderMethod(printer);
     	generateInitializeLazyDependenciesMethod(printer);
-    	generateGetPrefixMethod(printer);
     }
 	
     @Override
@@ -469,7 +468,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 * Retrieves the view variable name
 	 * @return
 	 */
-	protected String getViewVariable()
+	public static String getViewVariable()
 	{
 		return viewVariable;
 	}
@@ -940,17 +939,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     }
 	
 	/**
-	 * 
-	 * @param printer
-	 */
-	private void generateGetPrefixMethod(SourcePrinter printer)
-    {
-		printer.println("protected String getPrefix(){");
-		printer.println("return "+EscapeUtils.quote(view.getPrefix())+";");
-		printer.println("}");
-    }
-	
-	/**
 	 * @param printer
 	 */
 	private void generateCreateWidgetsMethod(SourcePrinter printer)
@@ -999,7 +987,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		printer.println("if (this."+viewPanelVariable+" == null){"); 
 		printer.println("this."+viewPanelVariable+" = new " + 
-				HTMLPanel.class.getCanonicalName() + "("+EscapeUtils.quote(view.getHtml())+");");
+				HTMLPanel.class.getCanonicalName() + "("+getViewHTML()+");");
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
     	for (String widgetId : rootPanelChildren)
         {
@@ -1018,6 +1006,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("}");
 		
 		printer.println("}");
+    }
+
+	private String getViewHTML()
+    {
+	    String html = EscapeUtils.quote(view.getHtml()).replace(ViewParser.CRUX_VIEW_PREFIX, "\"+"+getViewVariable()+".getPrefix()+\"");
+		return html;
     }	
 	
 	/**

@@ -133,10 +133,6 @@ public abstract class AbstractTabPanelFactory extends CompositeFactory<TabPanelC
 		public void processChildren(SourcePrinter out, TabPanelContext context) throws CruxGeneratorException 
 		{
 			context.title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
-			if (context.title != null)
-			{
-				context.title = EscapeUtils.quote(context.title);
-			}
 			context.isHTMLTitle = true;
 		}
 	}

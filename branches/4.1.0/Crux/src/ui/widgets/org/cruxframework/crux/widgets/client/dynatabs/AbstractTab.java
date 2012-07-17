@@ -58,7 +58,7 @@ public abstract class AbstractTab extends Widget implements HasBeforeCloseHandle
 		this.id = id;
 		this.url = url;
 		
-		this.frame = new Frame(Screen.appendDebugParameters(url));
+		this.frame = new Frame(Screen.rewriteUrl(url));
 		this.frame.setHeight("100%");
 		Element frameElement = getElement();
 		frameElement.setPropertyString("frameBorder", "no");

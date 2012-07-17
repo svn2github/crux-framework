@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.widgets.rebind.titlepanel;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
@@ -56,7 +55,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		{
 			String innerHtml = getWidgetCreator().ensureHtmlChild(context.getChildElement(),true, context.getWidgetId());
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setTitleHtml("+EscapeUtils.quote(innerHtml)+");");
+			out.println(rootWidget+".setTitleHtml("+innerHtml+");");
 		}
 	}
 
@@ -104,7 +103,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		{
 			String innerHtml = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(innerHtml)+");");
+			out.println(rootWidget+".setContentHtml("+innerHtml+");");
 		}
 	}
 

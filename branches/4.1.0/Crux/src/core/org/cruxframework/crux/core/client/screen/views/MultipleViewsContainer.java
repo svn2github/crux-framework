@@ -15,8 +15,8 @@
  */
 package org.cruxframework.crux.core.client.screen.views;
 
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
-import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -31,59 +31,21 @@ import com.google.gwt.user.client.ui.Panel;
  */
 public abstract class MultipleViewsContainer extends ViewContainer
 {
-	private FastMap<View> views = new FastMap<View>();
-	private View activeView = null;;
+	protected FastMap<View> activeViews = new FastMap<View>();;
 
-	/**
-	 * 
-	 * @return
-	 */
-	public View getActiveView()
-	{
-		return activeView;
-	}
-	
-	@Override
-    protected boolean doAdd(View view)
+	public MultipleViewsContainer(boolean clearPanelsForDeactivatedViews)
     {
-		if (!views.containsKey(view.getId()))
-		{
-			views.put(view.getId(), view);
-			view.load();
-			return true;
-		}
-		return false;
+	    super(clearPanelsForDeactivatedViews);
     }
 
-	@Override
-    protected boolean doRemove(View view)
-    {
-		if (views.containsKey(view.getId()))
-		{
-			if (deactivate(view, getContainerPanel(view)) && view.unload())
-			{
-				views.remove(view.getId());
-				return true;
-			}
-		}
-		return false;
-    }
-	
 	@Override
 	protected void activate(View view, Panel containerPanel)
 	{
-	    if (activeView != null)
-	    {
-	    	if (deactivate(activeView, getContainerPanel(activeView)))
-	    	{
-	    		super.activate(view, containerPanel);
-	    		activeView = view;
-	    	}
-	    }
-	    else
+		assert(view != null):"Can not active a null view";
+	    if (!activeViews.containsKey(view.getId()))
 	    {
     		super.activate(view, containerPanel);
-    		activeView = view;
+    		activeViews.put(view.getId(), view);
 	    }
 	}
 	
@@ -91,115 +53,140 @@ public abstract class MultipleViewsContainer extends ViewContainer
 	protected boolean deactivate(View view, Panel containerPanel)
 	{
 		assert(view != null):"Can not deactive a null view";
-		boolean deactivated = false;
-		if (activeView != null && view.getId().equals(activeView.getId()))
+		boolean deactivated = true;
+		if (activeViews.containsKey(view.getId()))
 		{
 			deactivated = super.deactivate(view, containerPanel);
 			if (deactivated)
 			{
-				activeView = null;
+				activeViews.remove(view.getId());
 			}
 		}
 		return deactivated;
 	}
 	
 	@Override
-    protected void renderView(View view)
-    {
-		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
-		Panel containerPanel = getContainerPanel(view);
-		activate(view, containerPanel);
-		String title = view.getTitle();
-		if (!StringUtils.isEmpty(title))
-		{
-			handleViewTitle(title, containerPanel);
-		}
-    }
-
-	@Override
-    public View getView(String viewId)
-    {
-		if (viewId == null)
-		{
-			return null;
-		}
-	    return views.get(viewId);
-    }
-
-	@Override
     protected boolean hasResizeHandlers()
     {
-	    return activeView!= null && activeView.hasResizeHandlers();
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
+		{
+			if (activeViews.get(keys.get(i)).hasResizeHandlers())
+			{
+				return true;
+			}
+		}
+		
+		return false;
     }
 	
 	@Override
 	protected boolean hasWindowCloseHandlers()
 	{
-	    return activeView!= null && activeView.hasWindowCloseHandlers();
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
+		{
+			if (activeViews.get(keys.get(i)).hasWindowCloseHandlers())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
 	protected boolean hasWindowClosingHandlers()
 	{
-	    return activeView!= null && activeView.hasWindowClosingHandlers();
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
+		{
+			if (activeViews.get(keys.get(i)).hasWindowClosingHandlers())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
 	protected boolean hasOrientationChangeOrResizeHandlers()
 	{
-	    return activeView!= null && activeView.hasOrientationChangeOrResizeHandlers();
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
+		{
+			if (activeViews.get(keys.get(i)).hasOrientationChangeOrResizeHandlers())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
 	protected boolean hasHistoryHandlers()
 	{
-	    return activeView!= null && activeView.hasHistoryHandlers();
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
+		{
+			if (activeViews.get(keys.get(i)).hasHistoryHandlers())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
     protected void notifyViewsAboutWindowResize(ResizeEvent event)
     {
-		if (activeView!= null)
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
 		{
-			activeView.fireResizeEvent(event);
+			activeViews.get(keys.get(i)).fireResizeEvent(event);
 		}
     }
 	
 	@Override
     protected void notifyViewsAboutWindowClose(CloseEvent<Window> event)
     {
-		if (activeView!= null)
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
 		{
-			activeView.fireWindowCloseEvent(event);
+			activeViews.get(keys.get(i)).fireWindowCloseEvent(event);
 		}
     }
 
 	@Override
     protected void notifyViewsAboutWindowClosing(ClosingEvent event)
     {
-		if (activeView!= null)
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
 		{
-			activeView.fireWindowClosingEvent(event);
+			activeViews.get(keys.get(i)).fireWindowClosingEvent(event);
 		}
     }
 	
 	@Override
 	protected void notifyViewsAboutOrientationChangeOrResize()
 	{
-		if (activeView!= null)
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
 		{
-			activeView.fireOrientationOrResizeEvent();
+			activeViews.get(keys.get(i)).fireOrientationOrResizeEvent();
 		}
 	}
 	
 	@Override
 	protected void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event)
 	{
-		if (activeView!= null)
+		FastList<String> keys = activeViews.keys();
+		for (int i = 0; i < keys.size(); i++)
 		{
-			activeView.fireHistoryChangeEvent(event);
+			activeViews.get(keys.get(i)).fireHistoryChangeEvent(event);
 		}
 	}
-
-	protected abstract Panel getContainerPanel(View view);
 }

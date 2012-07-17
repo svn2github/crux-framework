@@ -152,10 +152,6 @@ public class RollingTabPanelFactory extends CompositeFactory<RollingTabPanelCont
 		public void processChildren(SourcePrinter out, RollingTabPanelContext context) throws CruxGeneratorException 
 		{
 			context.title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
-			if (context.title != null)
-			{
-				context.title = EscapeUtils.quote(context.title);
-			}
 			context.isHTMLTitle = true;
 		}
 	}

@@ -19,7 +19,6 @@ import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -48,16 +47,6 @@ public class ViewFactoryUtils
 	    	element.setId(view.getPrefix()+widgetId);
 	    }
     }
-	
-	/**
-	 * Returns the parent element (a wrapper span element) 
-	 * @param widgetId
-	 * @return
-	 */
-	public static Element getEnclosingPanelElement(String widgetId)
-	{
-		return DOM.getElementById(ENCLOSING_PANEL_PREFIX+widgetId);
-	}	
 	
 	/**
 	 * @return

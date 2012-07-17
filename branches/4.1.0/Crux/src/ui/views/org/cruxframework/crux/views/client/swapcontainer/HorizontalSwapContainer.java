@@ -32,13 +32,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class HorizontalSwapContainer extends SingleViewContainerWidget implements HasChangeViewHandlers
 {
-	private HorizontalSwapPanel swapPanel = new HorizontalSwapPanel();
-	private Panel active = new SimplePanel();
-	private Panel swap = new SimplePanel();
+	public static final String DEFAULT_STYLE_NAME = "view-HorizontalSwapContainer";
+	private HorizontalSwapPanel swapPanel;
+	private Panel active;
+	private Panel swap;
 
 	public HorizontalSwapContainer()
 	{
 		super(false);
+		swapPanel = new HorizontalSwapPanel();
+		swapPanel.setStyleName(DEFAULT_STYLE_NAME);
+		active = new SimplePanel();
+		swap = new SimplePanel();
 	}
 
 	@Override

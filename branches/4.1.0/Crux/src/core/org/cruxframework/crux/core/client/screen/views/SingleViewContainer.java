@@ -66,7 +66,7 @@ public abstract class SingleViewContainer extends ViewContainer
 	protected boolean deactivate(View view, Panel containerPanel)
 	{
 		assert(view != null):"Can not deactive a null view";
-		boolean deactivated = false;
+		boolean deactivated = true;
 		if (activeView != null && view.getId().equals(activeView.getId()))
 		{
 			deactivated = super.deactivate(view, containerPanel);

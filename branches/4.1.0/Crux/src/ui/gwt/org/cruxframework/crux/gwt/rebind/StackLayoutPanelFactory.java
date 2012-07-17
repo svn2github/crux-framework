@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -144,10 +143,6 @@ public class StackLayoutPanelFactory extends WidgetCreator<StackLayoutContext>
 		public void processChildren(SourcePrinter out, StackLayoutContext context) throws CruxGeneratorException 
 		{
 			context.title = getWidgetCreator().ensureHtmlChild(context.getChildElement(), true, context.getWidgetId());
-			if (context.title != null)
-			{
-				context.title = EscapeUtils.quote(context.title);
-			}
 			context.isHtmlTitle = true;
 		}
 	}

@@ -50,20 +50,18 @@ public class View
 	protected List<String> views = new ArrayList<String>();
 	private ViewFactoryCreator factory = null;
 
-	protected final String prefix;
 	private final JSONArray elements;
 	private final JSONObject lazyDependencies;
 	private final boolean rootView;
 	private final String html;
 	
-	public View(String id, JSONArray elements, JSONObject lazyDependencies, String html, boolean rootView, String prefix) 
+	public View(String id, JSONArray elements, JSONObject lazyDependencies, String html, boolean rootView) 
 	{
 		this.id = id;
 		this.elements = elements;
 		this.lazyDependencies = lazyDependencies;
 		this.html = html;
 		this.rootView = rootView;
-		this.prefix = prefix;
 	}
 
 	/**
@@ -393,9 +391,4 @@ public class View
 	{
 		return html;
 	}
-
-	public String getPrefix()
-    {
-	    return prefix;
-    }
 }

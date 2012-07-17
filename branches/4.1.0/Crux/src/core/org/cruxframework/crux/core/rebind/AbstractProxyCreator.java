@@ -62,9 +62,9 @@ public abstract class AbstractProxyCreator
 		}
 
 		generateSubTypes(printer);
-		generateProxyFields(printer);
 		generateProxyContructor(printer);
 		generateProxyMethods(printer);
+		generateProxyFields(printer);
 
 		printer.commit();
 		return getProxyQualifiedName();

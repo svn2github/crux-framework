@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.widgets.rebind.decoratedpanel;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
@@ -54,8 +53,8 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentHtml("+EscapeUtils.quote(getWidgetCreator().
-					ensureHtmlChild(context.getChildElement(), true, context.getWidgetId()))+");");
+			out.println(rootWidget+".setContentHtml("+getWidgetCreator().
+					ensureHtmlChild(context.getChildElement(), true, context.getWidgetId())+");");
 		}
 	}
 
@@ -66,7 +65,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
 			String rootWidget = context.getWidget();
-			out.println(rootWidget+".setContentText("+EscapeUtils.quote(getWidgetCreator().
+			out.println(rootWidget+".setContentText("+getWidgetCreator().getDeclaredMessage(getWidgetCreator().
 					ensureTextChild(context.getChildElement(), true, context.getWidgetId()))+");");
 		}
 	}

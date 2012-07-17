@@ -70,16 +70,19 @@ public abstract class ViewContainer
 	 */
 	public boolean add(View view)
 	{
-		assert (view != null):"Can not add a null view to the ViewContainer";
-		assert (getView(view.getId()) == null):"This container already contains a view with the given identifier ["+view.getId()+"].";
-		if (doAdd(view))
-		{
-			view.setContainer(this);
-			return true;
-		}
-		return false;
+		return addView(view, false);
 	}
 
+	/**
+	 * Adds a new view into the container, but does not load the view. 
+	 * @param view View to be added
+	 * @return
+	 */
+	public boolean addLazy(View view)
+	{
+		return addView(view, true);
+	}
+	
 	/**
 	 * Remove the view from this container
 	 * @param view View to be removed
@@ -125,108 +128,7 @@ public abstract class ViewContainer
 		renderView(getView(viewId));
 	}
 
-	/**
-	 * This method must be called by subclasses when the container is attached to DOM
-	 */
-	protected void bindToDOM()
-	{
-		ViewHandlers.bindToDOM(this);
-	}
-	
-	/**
-	 * This method must be called by subclasses when the container is detached from DOM
-	 */
-	protected void unbindToDOM()
-	{
-		ViewHandlers.unbindToDOM(this);
-	}
 
-	/**
-	 * This method must be called by subclasses when any of your views is rendered.
-	 * @param view
-	 * @param containerPanel
-	 */
-	protected void activate(View view, Panel containerPanel)
-	{
-		view.render(containerPanel);
-		view.setAttached();
-		ViewHandlers.ensureViewContainerHandlers(this);
-	}
-
-	/**
-	 * This method must be called by subclasses when any of your views currently rendered is removed from view.
-	 * 
-	 * @param view
-	 * @param containerPanel
-	 * @return True if view is deactivated
-	 */
-	protected boolean deactivate(View view, Panel containerPanel)
-    {
-		if (view.isAttached())
-		{
-			if (view.setDetached())
-			{
-				if (this.clearPanelsForDeactivatedViews)
-				{
-					containerPanel.clear();
-				}
-				ViewHandlers.removeViewContainerHandlers();
-				return true;
-			}
-			return false;
-		}
-		return true;
-    }
-	
-	/**
-	 * Loads a new view into the container
-	 * @param view View to be added
-	 * @return
-	 */
-    protected boolean doAdd(View view)
-    {
-		if (!views.containsKey(view.getId()))
-		{
-			views.put(view.getId(), view);
-			view.load();
-			return true;
-		}
-		return false;
-    }
-
-	/**
-	 * Remove the view from this container
-	 * @param view View to be removed
-	 * @return
-	 */
-    protected boolean doRemove(View view)
-    {
-		if (views.containsKey(view.getId()))
-		{
-			if (deactivate(view, getContainerPanel(view)) && view.unload())
-			{
-				views.remove(view.getId());
-				return true;
-			}
-		}
-		return false;
-    }
-
-    /**
-     * Render the view into the container
-     * @param view
-     */
-    protected void renderView(View view)
-    {
-		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
-		Panel containerPanel = getContainerPanel(view);
-		activate(view, containerPanel);
-		String title = view.getTitle();
-		if (!StringUtils.isEmpty(title))
-		{
-			handleViewTitle(title, containerPanel);
-		}
-    }
 
 	/**
 	 * Retrieve the view associated to viewId
@@ -241,20 +143,6 @@ public abstract class ViewContainer
 		}
 	    return views.get(viewId);
     }
-
-	protected abstract boolean hasResizeHandlers();
-	protected abstract boolean hasWindowCloseHandlers();
-	protected abstract boolean hasWindowClosingHandlers();
-	protected abstract boolean hasOrientationChangeOrResizeHandlers();
-	protected abstract boolean hasHistoryHandlers();
-	protected abstract void notifyViewsAboutWindowResize(ResizeEvent event);
-	protected abstract void notifyViewsAboutWindowClose(CloseEvent<Window> event);
-	protected abstract void notifyViewsAboutWindowClosing(ClosingEvent event);
-	protected abstract void notifyViewsAboutOrientationChangeOrResize();
-	protected abstract void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event);
-	protected abstract Panel getContainerPanel(View view);
-	
-	protected abstract void handleViewTitle(String title, Panel containerPanel);
 
 	/**
 	 * Retrieve the views factory associated with this screen.
@@ -336,4 +224,146 @@ public abstract class ViewContainer
 		}
 
 	}
+	
+	/**
+	 * This method must be called by subclasses when the container is attached to DOM
+	 */
+	protected void bindToDOM()
+	{
+		ViewHandlers.bindToDOM(this);
+	}
+	
+	/**
+	 * This method must be called by subclasses when the container is detached from DOM
+	 */
+	protected void unbindToDOM()
+	{
+		ViewHandlers.unbindToDOM(this);
+	}
+
+	/**
+	 * This method must be called by subclasses when any of your views is rendered.
+	 * @param view
+	 * @param containerPanel
+	 */
+	protected void activate(View view, Panel containerPanel)
+	{
+		if (!view.isLoaded())
+		{
+			view.load();
+		}
+		view.render(containerPanel);
+		view.setAttached();
+		ViewHandlers.ensureViewContainerHandlers(this);
+	}
+
+	/**
+	 * This method must be called by subclasses when any of your views currently rendered is removed from view.
+	 * 
+	 * @param view
+	 * @param containerPanel
+	 * @return True if view is deactivated
+	 */
+	protected boolean deactivate(View view, Panel containerPanel)
+    {
+		if (view.isAttached())
+		{
+			if (view.setDetached())
+			{
+				if (this.clearPanelsForDeactivatedViews)
+				{
+					containerPanel.clear();
+				}
+				ViewHandlers.removeViewContainerHandlers();
+				return true;
+			}
+			return false;
+		}
+		return true;
+    }
+	
+	/**
+	 * Loads a new view into the container
+	 * @param view View to be added
+	 * @return
+	 */
+    protected boolean doAdd(View view, boolean lazy)
+    {
+		if (!views.containsKey(view.getId()))
+		{
+			views.put(view.getId(), view);
+			if (!lazy)
+			{
+				view.load();
+			}
+			return true;
+		}
+		return false;
+    }
+
+	/**
+	 * Remove the view from this container
+	 * @param view View to be removed
+	 * @return
+	 */
+    protected boolean doRemove(View view)
+    {
+		if (views.containsKey(view.getId()))
+		{
+			if (deactivate(view, getContainerPanel(view)) && view.unload())
+			{
+				views.remove(view.getId());
+				return true;
+			}
+		}
+		return false;
+    }
+
+    /**
+     * Render the view into the container
+     * @param view
+     */
+    protected void renderView(View view)
+    {
+		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
+		Panel containerPanel = getContainerPanel(view);
+		activate(view, containerPanel);
+		String title = view.getTitle();
+		if (!StringUtils.isEmpty(title))
+		{
+			handleViewTitle(title, containerPanel);
+		}
+    }	
+    
+    /**
+     * 
+     * @param view
+     * @param lazy
+     * @return
+     */
+    protected boolean addView(View view, boolean lazy)
+    {
+	    assert (view != null):"Can not add a null view to the ViewContainer";
+		assert (getView(view.getId()) == null):"This container already contains a view with the given identifier ["+view.getId()+"].";
+		if (doAdd(view, lazy))
+		{
+			view.setContainer(this);
+			return true;
+		}
+		return false;
+    }
+
+    
+	protected abstract boolean hasResizeHandlers();
+	protected abstract boolean hasWindowCloseHandlers();
+	protected abstract boolean hasWindowClosingHandlers();
+	protected abstract boolean hasOrientationChangeOrResizeHandlers();
+	protected abstract boolean hasHistoryHandlers();
+	protected abstract void notifyViewsAboutWindowResize(ResizeEvent event);
+	protected abstract void notifyViewsAboutWindowClose(CloseEvent<Window> event);
+	protected abstract void notifyViewsAboutWindowClosing(ClosingEvent event);
+	protected abstract void notifyViewsAboutOrientationChangeOrResize();
+	protected abstract void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event);
+	protected abstract Panel getContainerPanel(View view);
+	protected abstract void handleViewTitle(String title, Panel containerPanel);
 }

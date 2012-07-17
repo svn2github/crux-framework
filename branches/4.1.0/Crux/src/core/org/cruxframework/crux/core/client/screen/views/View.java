@@ -72,7 +72,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	protected boolean loaded = false;
 
 	private ViewContainer viewContainer;
-
+	private String prefix;
+	private static int prefixCounter = 0;
+	
 	/**
 	 * Constructor
 	 * @param id
@@ -81,6 +83,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
     {
 		this.id = id;
 		this.title = title;
+		this.prefix = Integer.toString(prefixCounter++);
     }
 	
 	/**
@@ -991,7 +994,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * Retrieve the view prefix. It is used to isolate all elements from this view on DOM
 	 * @return
 	 */
-	protected abstract String getPrefix();
+	protected String getPrefix()
+	{
+		return prefix;
+	}
 
 	/**
 	 * Bind the view to a container. Called by the {@link ViewContainer} add method. 

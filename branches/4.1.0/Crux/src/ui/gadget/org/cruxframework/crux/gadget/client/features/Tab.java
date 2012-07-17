@@ -19,8 +19,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
 
 /**
- * Tab class for gadgets. You create tabs using the Tabs addTab() method. 
- * To get Tab objects, use the Tabs getSelectedTab() or getTabs() methods.
+ * Flap class for gadgets. You create tabs using the Tabs addTab() method. 
+ * To get Flap objects, use the Tabs getSelectedTab() or getTabs() methods.
  * @author Thiago da Rosa de Bustamante
  *
  */

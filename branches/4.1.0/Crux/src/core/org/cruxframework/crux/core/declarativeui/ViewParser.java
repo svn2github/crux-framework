@@ -34,7 +34,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
-import org.cruxframework.crux.core.rebind.screen.ViewFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -62,8 +61,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-class ViewParser
+public class ViewParser
 {
+	public static final String CRUX_VIEW_PREFIX = "_crux_view_prefix_";
 	private static final String CRUX_CORE_NAMESPACE= "http://www.cruxframework.org/crux";
 	private static DocumentBuilder documentBuilder;
 	private static XPathExpression findCruxPagesBodyExpression;
@@ -266,6 +266,8 @@ class ViewParser
     {	
 		try
 		{
+			this.htmlDocument = createHTMLDocument(view);
+
 			Element htmlElement = view.getDocumentElement();
 			StringBuilder elementsMetadata = new StringBuilder();
 			elementsMetadata.append("[");
@@ -280,7 +282,6 @@ class ViewParser
 			metadata.append("\"elements\":"+elementsMetadata.toString());
 			metadata.append(",\"lazyDeps\":"+new LazyWidgets(escapeXML).generateScreenLazyDeps(elementsMetadata.toString()));
 		
-			this.htmlDocument = createHTMLDocument(view);
 			Element viewHtmlElement = htmlDocument.createElementNS(XHTML_NAMESPACE,"body");
 			
 			Element rootElement = (xhtmlInput?getPageBodyElement(view):view.getDocumentElement());
@@ -1029,7 +1030,7 @@ class ViewParser
 				widgetHolder = htmlElement;
 			}
 			
-			widgetHolder.setAttribute("id", "_crux_"+ViewFactory.getInstance().getPrefixForView(viewId)+cruxPageElement.getAttribute("id"));
+			widgetHolder.setAttribute("id", "_crux_"+CRUX_VIEW_PREFIX+cruxPageElement.getAttribute("id"));
 		}
     }
 

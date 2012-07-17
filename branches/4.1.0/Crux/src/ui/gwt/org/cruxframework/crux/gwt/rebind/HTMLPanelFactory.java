@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.gwt.rebind;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -44,8 +43,8 @@ public class HTMLPanelFactory extends AbstractHTMLPanelFactory
 	{
 		String className = HTMLPanel.class.getCanonicalName();
 		
-		String html = context.readWidgetProperty("_html");
-		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(html)+");");
+		String html = ensureHtmlChild(context.getWidgetElement(), false, context.getWidgetId());
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+html+");");
 		createChildren(out, context);
 	}
 

@@ -44,15 +44,19 @@ import org.cruxframework.crux.tools.parameters.ConsoleParametersProcessor;
 public class DependenciesChecker
 {
 	private static final String REPO_GWT_SERVLET_DEPS_JAR = "repo/gwt-servlet-deps.jar";
-	private static final String REPO_GWT_SERVLET_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-servlet/2.2.0/gwt-servlet-2.2.0.jar";
-	private static final String REPO_GWT_USER_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-user/2.2.0/gwt-user-2.2.0.jar";
-	private static final String REPO_GWT_DEV_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/2.2.0/gwt-dev-2.2.0.jar";
+	private static final String REPO_GWT_SERVLET_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-servlet/2.4.0/gwt-servlet-2.4.0.jar";
+	private static final String REPO_GWT_USER_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-user/2.4.0/gwt-user-2.4.0.jar";
+	private static final String REPO_GWT_DEV_JAR = "http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/2.4.0/gwt-dev-2.4.0.jar";
+	private static final String REPO_GWT_VALIDATION_JAR = "http://repo1.maven.org/maven2/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar";
+	private static final String REPO_GWT_VALIDATION_SOURCES_JAR = "http://repo2.maven.org/maven2/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA-sources.jar";
 	private static final String REPO_SHINDIG_WAR = "http://repo2.maven.org/maven2/org/apache/shindig/shindig-server/2.0.0/shindig-server-2.0.0.war";
 	private static final String REPO_JSP_API_JAR = "http://repo1.maven.org/maven2/javax/servlet/jsp/jsp-api/2.1/jsp-api-2.1.jar";
 
-	private static final int GWT_DEV_TOTAL_BYTES = 27914742;
-	private static final int GWT_USER_TOTAL_BYTES = 10682696;
-	private static final int GWT_SERVLET_TOTAL_BYTES = 4380952;
+	private static final int GWT_DEV_TOTAL_BYTES = 28313631;
+	private static final int GWT_USER_TOTAL_BYTES = 12837413;
+	private static final int GWT_SERVLET_TOTAL_BYTES = 5434137;
+	private static final int GWT_VALIDATION_TOTAL_BYTES = 47433;
+	private static final int GWT_VALIDATION_SOURCES_TOTAL_BYTES = 65220;
 	private static final int GWT_SERVLET_DEPS_TOTAL_BYTES = 84088;
 	private static final int SHINDIG_TOTAL_BYTES = 18902990;
 	private static final int JSP_API_TOTAL_BYTES = 100636;
@@ -137,6 +141,20 @@ public class DependenciesChecker
 		{
 			requiredDeps.add(new Dependency("gwt-user.jar", "./lib/build", REPO_GWT_USER_JAR, GWT_USER_TOTAL_BYTES));
 		}
+		jarFile = new File("./lib/build/validation-api-1.0.0.GA.jar");
+		if (!jarFile.exists() || jarFile.length() < GWT_VALIDATION_TOTAL_BYTES)
+		{
+			requiredDeps.add(new Dependency("validation-api-1.0.0.GA.jar", "./lib/build", REPO_GWT_VALIDATION_JAR, GWT_VALIDATION_TOTAL_BYTES));
+		}
+		jarFile = new File("./lib/build/validation-api-1.0.0.GA-sources.jar");
+		if (!jarFile.exists() || jarFile.length() < GWT_VALIDATION_SOURCES_TOTAL_BYTES)
+		{
+			requiredDeps.add(new Dependency("validation-api-1.0.0.GA-sources.jar", "./lib/build", REPO_GWT_VALIDATION_SOURCES_JAR, GWT_VALIDATION_SOURCES_TOTAL_BYTES));
+		}
+		
+		
+		
+		
 		jarFile = new File("./lib/web-inf/gwt-servlet.jar");
 		if (!jarFile.exists() || jarFile.length() < GWT_SERVLET_TOTAL_BYTES)
 		{
@@ -265,7 +283,7 @@ public class DependenciesChecker
 	        if (!downloadDependenciesIfNeeded && (gwtFolder == null || gwtFolder.length() == 0))
 	        {
 	        	System.out.println("\n=============================================================================================================\n");
-	        	System.out.println("To complete the installation, you need the GWT 2.2 jars. Type one of the following options and press [ENTER]: \n");
+	        	System.out.println("To complete the installation, you need the GWT 2.4 jars. Type one of the following options and press [ENTER]: \n");
 	        	String option = null;
 	        	
 	        	while (option == null || (!option.equals("1") && !option.equals("2")))

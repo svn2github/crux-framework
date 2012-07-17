@@ -145,7 +145,7 @@ public class RollingTabBar extends Composite implements HasBeforeSelectionHandle
 	 */
 	public void setTabEnabled(int index, boolean enabled) 
 	{
-		assert (index >= 0) && (index < getTabCount()) : "Tab index out of bounds";
+		assert (index >= 0) && (index < getTabCount()) : "Flap index out of bounds";
 
 		// Style the wrapper
 		ClickDelegatePanel delPanel = (ClickDelegatePanel) panel.getWidget(index + 1);
@@ -158,7 +158,7 @@ public class RollingTabBar extends Composite implements HasBeforeSelectionHandle
 	/**
 	 * Gets the given tab.
 	 * 
-	 * This method is final because the Tab interface will expand. Therefore
+	 * This method is final because the Flap interface will expand. Therefore
 	 * it is highly likely that subclasses which implemented this method would end up
 	 * breaking.
 	 * 

@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.core.declarativeui.ViewParser;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.View;
@@ -138,6 +139,10 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		{
 			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain an inner HTML.");
 		}
+		if (result != null)
+		{
+			result = EscapeUtils.quote(result).replace(ViewParser.CRUX_VIEW_PREFIX, "\"+"+getViewVariable()+".getPrefix()+\"");
+		}
 		return result;
 	}
 	
@@ -154,6 +159,10 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
 			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain a text node child.");
+		}
+		if (result != null)
+		{
+			result = EscapeUtils.quote(result);
 		}
 		return result;
 	}
@@ -652,7 +661,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	
 	protected String getViewVariable()
 	{
-		return viewFactory.getViewVariable();
+		return ViewFactoryCreator.getViewVariable();
 	}
 	
 	protected Map<String, String> getDeclaredMessages()
