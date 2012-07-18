@@ -21,6 +21,7 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.declarativeui.ViewProcessor;
+import org.cruxframework.crux.core.declarativeui.template.Templates;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 
 
@@ -50,6 +51,7 @@ public class DevModeInitializerListener implements ServletContextListener
 		if (!Environment.isProduction())
 		{
 			WidgetConfig.initialize();
+			Templates.initialize();
 		}
     }
 

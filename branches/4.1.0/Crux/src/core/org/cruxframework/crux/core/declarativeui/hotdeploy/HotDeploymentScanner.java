@@ -112,7 +112,7 @@ public class HotDeploymentScanner
 				{
 					checkTemplateFile(file, fileName);
 				}
-				else if (fileName.endsWith("view.xml"))
+				else if (fileName.endsWith("view.xml") || fileName.endsWith("crux.xml"))
 				{
 					checkViewFile(file, fileName);
 				}
@@ -139,6 +139,7 @@ public class HotDeploymentScanner
 	    	logger.info("View file modified: ["+fileName+"].");
 	    	ScreenFactory.getInstance().clearScreenCache();
 	    	ViewFactory.getInstance().clearViewCache();
+	    	//TODO nao funciona limpar o cache por aqui...pois o compilador roda em outra vm.... tem que usar o bridge
 	    }
     }
 
