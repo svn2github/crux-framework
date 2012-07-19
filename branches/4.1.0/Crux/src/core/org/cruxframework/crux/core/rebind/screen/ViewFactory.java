@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.declarativeui.ViewProcessor;
+import org.cruxframework.crux.core.declarativeui.template.Templates;
 import org.cruxframework.crux.core.declarativeui.view.Views;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
@@ -59,6 +60,7 @@ public class ViewFactory
 	 */
 	private ViewFactory() 
 	{
+		Templates.initialize();
 	}
 	
 	/**
