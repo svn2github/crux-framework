@@ -112,3 +112,42 @@
 {
 	font-size: 23px;
 }
+
+.xdev-SlideshowPhotoPanel .rightArrow
+{
+	width: 44px;
+	height: 65px;
+	background: url(../img/slideshow-right-arrow.png) top right no-repeat;
+	cursor: pointer;
+}
+
+.xdev-SlideshowPhotoPanel .leftArrow
+{
+	width: 40px;
+	height: 65px;
+	background: url(../img/slideshow-left-arrow.png) top right no-repeat;
+	cursor: pointer;
+}
+
+.xdev-SlideshowPlayPanel
+{
+	width: 40px;
+	height: 65px;
+	background: url(../img/slideshow-play.png) top right no-repeat;
+	cursor: pointer;
+}
+		
+.xdev-SlideshowPlayPanel-playing
+{
+	background: url(../img/slideshow-pause.png) top right no-repeat;
+}
+
+.xdev-SlideshowPhotoPanel .rightArrow-disabled, .xdev-SlideshowPhotoPanel .leftArrow-disabled, .xdev-SlideshowPlayPanel-disabled 
+{
+	opacity: .5;
+}
+
+.xdev-Slideshow DIV
+{
+	outline: none;
+}
