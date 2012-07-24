@@ -81,7 +81,7 @@ public class CruxFilter implements Filter
 		}
 		if (result != null && result.length() > 0)
 		{
-			if (!result.endsWith("hosted.html"))
+			if (!result.endsWith("hosted.html") && !result.endsWith("cache.html"))
 			{
 				if (result.startsWith("/"))
 				{
