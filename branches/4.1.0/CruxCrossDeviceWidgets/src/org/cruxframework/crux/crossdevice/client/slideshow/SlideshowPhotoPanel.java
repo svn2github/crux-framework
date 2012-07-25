@@ -15,8 +15,8 @@
  */
 package org.cruxframework.crux.crossdevice.client.slideshow;
 
-import org.cruxframework.crux.widgets.client.animation.SlidingSwapAnimation.Direction;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
