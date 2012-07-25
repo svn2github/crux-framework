@@ -125,22 +125,6 @@
 		</any>
 	</replace-with>
 	<replace-with
-		class="org.cruxframework.crux.widgets.client.animation.WebkitHorizontalSlidingSwapAnimation">
-		<when-type-assignable
-			class="org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation" />
-		<any>
-      		<when-property-is name="user.agent" value="safari" />
-		</any>
-	</replace-with>
-	<replace-with
-		class="org.cruxframework.crux.widgets.client.animation.JSHorizontalSlidingSwapAnimation">
-		<when-type-assignable
-			class="org.cruxframework.crux.widgets.client.animation.HorizontalSlidingSwapAnimation" />
-		<none>
-      		<when-property-is name="user.agent" value="safari" />
-		</none>
-	</replace-with>
-	<replace-with
 		class="org.cruxframework.crux.widgets.client.grid.AbstractTablelessGridStructure.CellRendererIE">
     	<when-type-assignable class="org.cruxframework.crux.widgets.client.grid.AbstractTablelessGridStructure.CellRenderer" />
     	<any>
@@ -149,8 +133,8 @@
     	</any>
     </replace-with>
     <replace-with
-    	class="org.cruxframework.crux.widgets.client.slider.TouchSlider.WebkitSliderHandler">
-    	<when-type-is class="org.cruxframework.crux.widgets.client.slider.TouchSlider.SliderHandler" />
+    	class="org.cruxframework.crux.widgets.client.animation.Animation.WebkitAnimationHandler">
+    	<when-type-is class="org.cruxframework.crux.widgets.client.animation.Animation.AnimationHandler" />
     	<any>
       		<when-property-is name="user.agent" value="safari" />
     	</any>

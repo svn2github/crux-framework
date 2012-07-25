@@ -17,9 +17,9 @@ package org.cruxframework.crux.views.client.swapcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.views.client.SingleViewContainerWidget;
-import org.cruxframework.crux.widgets.client.animation.Animation.CompleteCallback;
-import org.cruxframework.crux.widgets.client.animation.SlidingSwapAnimation.Direction;
+import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Panel;
@@ -83,10 +83,10 @@ public class HorizontalSwapContainer extends SingleViewContainerWidget implement
 			}
 			else
 			{
-				swapPanel.transitTo(active, direction, new CompleteCallback()
+				swapPanel.transitTo(active, direction, new Callback()
 				{
 					@Override
-					public void onComplete()
+					public void onTransitionCompleted()
 					{
 						swap.clear();
 						ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);

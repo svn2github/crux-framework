@@ -17,12 +17,12 @@ package org.cruxframework.crux.widgets.client.slider;
 
 import java.util.Date;
 
+import org.cruxframework.crux.widgets.client.animation.Animation;
+import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
 import org.cruxframework.crux.widgets.client.event.swap.SwapEvent;
 import org.cruxframework.crux.widgets.client.event.swap.SwapHandler;
-import org.cruxframework.crux.widgets.client.slider.TouchSlider.SliderHandler.Callback;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
@@ -34,7 +34,6 @@ import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -53,101 +52,9 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 		Widget loadWidget(int index);
 	}
 
-	static interface SliderHandler
-	{
-		void translateX(Widget widget, int diff, Callback callback);
-		void translateX(Widget widget, int diff, int speed, Callback callback);
-
-
-		static interface Callback
-		{
-			void onTransitionCompleted();
-		}
-
-
-		void resetTransition(Widget currentPanel);
-	}
-
-	static class WebkitSliderHandler implements SliderHandler
-	{
-		//_transitionEndLabel =  webkitTransitionEnd : transitionend
-		//_transitionPrefix =  webkitTransition : MozTransition  : transition
-		//_transformLabel =  webkitTransform : MozTransform  : transform
-
-
-		@Override
-		public void translateX(Widget widget, int diff, Callback callback)
-		{
-			Element element = widget.getElement();
-			if (callback != null)
-			{
-				addCallbackHandler(element, callback);
-			}
-			translateX(element, diff);
-		}
-
-		private native void translateX(Element el, int diff)/*-{
-			el.style.webkitTransitionProperty = 'all';//-webkit-transform
-			el.style.webkitTransitionDuration = '';
-			el.style.webkitTransitionTimingFunction = '';
-			el.style.webkitTransitionDelay = '0';
-			el.style.webkitTransform = 'translate3d(' + diff + 'px,0px,0px)';
-		}-*/;
-
-		@Override
-		public void translateX(Widget widget, int diff, int speed, Callback callback)
-		{
-			Element element = widget.getElement();
-			if (callback != null)
-			{
-				addCallbackHandler(element, callback);
-			}
-			translateX(element, diff, speed);
-		}
-
-		private native void translateX(Element el, int diff, int speed)/*-{
-			el.style.webkitTransitionProperty = 'all';//-webkit-transform
-			el.style.webkitTransitionDelay = '0';
-			if (speed == 0)
-			{
-				el.style.webkitTransitionDuration = '';
-				el.style.webkitTransitionTimingFunction = '';
-			}
-			else
-			{
-				el.style.webkitTransitionDuration = speed+'ms';
-				el.style.webkitTransitionTimingFunction = 'ease-out';
-			}
-
-			el.style.webkitTransform = 'translate3d(' + diff + 'px,0px,0px)';
-		}-*/;
-
-		private native void addCallbackHandler(Element el, Callback callback)/*-{
-			var func;
-			func = function(e) 
-			{
-				callback.@org.cruxframework.crux.widgets.client.slider.TouchSlider.SliderHandler.Callback::onTransitionCompleted()();
-				el.removeEventListener('webkitTransitionEnd', func);
-			};
- 			el.addEventListener('webkitTransitionEnd', func); 			
-		}-*/;
-
-		@Override
-		public void resetTransition(Widget widget)
-		{
-			resetTransition(widget.getElement());
-		}
-
-		private native void resetTransition(Element el)/*-{
-			el.style.webkitTransform = 'translate3d(0px,0px,0px)';
-		}-*/;
-	}
-
-
 	private static final int SWIPE_THRESHOLD = 50;
 	private static final long SWIPE_TIME_THRESHOLD = 250;
 
-	private SliderHandler sliderHandler = GWT.create(SliderHandler.class);
 	private ContentProvider contentProvider;
 	private FocusPanel touchPanel;
 	private FlowPanel contentPanel;
@@ -160,7 +67,6 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 	private HandlerRegistration touchMoveHandler;
 	private HandlerRegistration touchEndHandler;
 	private boolean circularShowing = false;
-	private boolean preventTouchEvents = true;
 
 	/**
 	 * Constructor
@@ -226,24 +132,6 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 			this.circularShowing = false;
 		}
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isPreventTouchEvents()
-    {
-    	return preventTouchEvents;
-    }
-
-	/**
-	 * 
-	 * @param preventTouchEvents
-	 */
-	public void setPreventTouchEvents(boolean preventTouchEvents)
-    {
-    	this.preventTouchEvents = preventTouchEvents;
-    }
 
 	/**
 	 * 
@@ -343,10 +231,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 		}
 		touchMoveHandler.removeHandler();
 		touchEndHandler.removeHandler();
-		if (preventTouchEvents)
-		{
-			event.preventDefault();
-		}
+		event.preventDefault();
 	}
 
 	@Override
@@ -365,31 +250,25 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 		if ((diff < 0 && hasNextPanel) || (diff > 0 && hasPreviousPanel))
 		{
 			currentTouchPosition = clientX;
-			sliderHandler.translateX(getCurrentPanel(), diff, null);
+			Animation.translateX(getCurrentPanel(), diff, null);
 			if (hasPreviousPanel)
 			{
 				Widget previousPanel = getPreviousPanel();
-				sliderHandler.translateX(previousPanel, diff-previousPanel.getOffsetWidth(), null);
+				Animation.translateX(previousPanel, diff-previousPanel.getOffsetWidth(), null);
 			}
 			if (hasNextPanel)
 			{
 				Widget nextPanel = getNextPanel();
-				sliderHandler.translateX(nextPanel, diff+nextPanel.getOffsetWidth(), null);
+				Animation.translateX(nextPanel, diff+nextPanel.getOffsetWidth(), null);
 			}
 		}
-		if (preventTouchEvents)
-		{
-			event.preventDefault();
-		}
+		event.preventDefault();
 	}
 
 	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{
-		if (preventTouchEvents)
-		{
-			event.preventDefault();
-		}
+		event.preventDefault();
 		//			this.stopSlideshow();
 		startTouchPosition = event.getTouches().get(0).getClientX();
 		currentTouchPosition = startTouchPosition;
@@ -466,7 +345,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 	private void slide(final int slideBy)
 	{
 		isSliding = true;
-		sliderHandler.translateX(getCurrentPanel(), slideBy, slideTransitionDuration, new Callback()
+		Animation.translateX(getCurrentPanel(), slideBy, slideTransitionDuration, new Callback()
 		{
 			@Override
 			public void onTransitionCompleted()
@@ -479,12 +358,12 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 		if (hasPreviousWidget())
 		{
 			Widget previousPanel = getPreviousPanel();
-			sliderHandler.translateX(previousPanel, slideBy-previousPanel.getOffsetWidth(), slideTransitionDuration, null);
+			Animation.translateX(previousPanel, slideBy-previousPanel.getOffsetWidth(), slideTransitionDuration, null);
 		}
 		if (hasNextWidget())
 		{
 			Widget nextPanel = getNextPanel();
-			sliderHandler.translateX(nextPanel, slideBy+nextPanel.getOffsetWidth(), slideTransitionDuration, null);
+			Animation.translateX(nextPanel, slideBy+nextPanel.getOffsetWidth(), slideTransitionDuration, null);
 		}
 	}
 
@@ -635,7 +514,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 	private void configureCurrentPanel() 
 	{
 		Widget currentPanel = getCurrentPanel();
-		sliderHandler.resetTransition(currentPanel);
+		Animation.resetTransition(currentPanel);
 		currentPanel.setVisible(true);
 		//-webkit-backface-visibility: hidden;
 
@@ -645,7 +524,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 	{
 		panel.setVisible(true);
 		int width = panel.getOffsetWidth();
-		sliderHandler.translateX(panel, forward?width:-width, null);
+		Animation.translateX(panel, forward?width:-width, null);
 		//-webkit-backface-visibility: hidden;
 	}
 
