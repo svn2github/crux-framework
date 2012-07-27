@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowNavigator extends SlideshowComponent
+public class SlideshowNavigator extends SlideshowBaseComponent
 {
 	private FlowPanel navigatorPanel;
 	private Label currentPhoto;
@@ -38,7 +38,7 @@ public class SlideshowNavigator extends SlideshowComponent
     }
 
 	@Override
-    protected void onAlbumLoaded()
+    public void onAlbumLoaded()
     {
 		assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
 		photoCount.setText(Integer.toString(getSlideshow().getPhotoCount()));
@@ -46,7 +46,7 @@ public class SlideshowNavigator extends SlideshowComponent
     }
 
 	@Override
-    protected void onPhotoLoaded(int previousIndex, int nextIndex)
+    public void onPhotoLoaded(int previousIndex, int nextIndex)
     {
 		assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
 		currentPhoto.setText(Integer.toString(nextIndex+1));

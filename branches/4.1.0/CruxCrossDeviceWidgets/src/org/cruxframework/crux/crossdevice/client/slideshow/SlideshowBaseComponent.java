@@ -15,37 +15,64 @@
  */
 package org.cruxframework.crux.crossdevice.client.slideshow;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface SlideshowComponent extends IsWidget
+public abstract class SlideshowBaseComponent extends Composite implements SlideshowComponent
 {
+	private Slideshow slideshow;
+
+	protected SlideshowBaseComponent()
+	{
+		initWidget(createMainWidget());
+	}
 
 	/**
 	 * Override this method to listen for AlbumLoaded events
 	 */
-	void onAlbumLoaded();
-
+	public void onAlbumLoaded()
+	{
+		
+	}
+	
 	/**
 	 * Override this method to listen for PhotoLoaded events
 	 */
-	void onPhotoLoaded(int previousIndex, int nextIndex);
+	public void onPhotoLoaded(int previousIndex, int nextIndex)
+	{
+		
+	}
 	
 	/**
 	 * Override this method to listen for StartPlaying events
 	 */
-	void onStartPlaying();
+	public void onStartPlaying()
+	{
+		
+	}
 	
 	/**
 	 * Override this method to listen for StopPlaying events
 	 */
-	void onStopPlaying();
-
-	void setSlideShow(Slideshow slideshow);
+	public void onStopPlaying()
+	{
+		
+	}
 	
-	Slideshow getSlideshow();
+	public void setSlideShow(Slideshow slideshow)
+	{
+		this.slideshow = slideshow;
+	}
+	
+	public Slideshow getSlideshow()
+	{
+		return slideshow;
+	}
+
+	protected abstract Widget createMainWidget();
 }

@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowPlayPanel extends SlideshowComponent
+public class SlideshowPlayPanel extends SlideshowBaseComponent
 {
 	private Label play;
 	
@@ -35,19 +35,19 @@ public class SlideshowPlayPanel extends SlideshowComponent
     }
 
 	@Override
-	protected void onStartPlaying()
+	public void onStartPlaying()
 	{
 		play.addStyleDependentName("playing");
 	}
 
 	@Override
-	protected void onStopPlaying()
+	public void onStopPlaying()
 	{
 		play.removeStyleDependentName("playing");
 	}
 
 	@Override
-	protected void onPhotoLoaded(int previousIndex, int nextIndex)
+	public void onPhotoLoaded(int previousIndex, int nextIndex)
 	{
 		int lastIndex = getSlideshow().getPhotoCount() -1;
 		if (previousIndex == lastIndex && nextIndex < lastIndex)

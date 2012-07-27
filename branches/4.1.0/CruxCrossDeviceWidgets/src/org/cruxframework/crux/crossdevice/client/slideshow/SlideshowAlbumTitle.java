@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowAlbumTitle extends SlideshowComponent
+public class SlideshowAlbumTitle extends SlideshowBaseComponent
 {
 	
 	private Label title;
@@ -36,7 +36,7 @@ public class SlideshowAlbumTitle extends SlideshowComponent
     }
 
 	@Override
-    protected void onAlbumLoaded()
+    public void onAlbumLoaded()
     {
 		assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
 		PhotoAlbum album = getSlideshow().getAlbum();

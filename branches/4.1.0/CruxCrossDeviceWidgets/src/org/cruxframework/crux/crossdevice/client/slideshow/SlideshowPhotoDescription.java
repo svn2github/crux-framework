@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowPhotoDescription extends SlideshowComponent
+public class SlideshowPhotoDescription extends SlideshowBaseComponent
 {
 	
 	private Label description;
@@ -36,13 +36,13 @@ public class SlideshowPhotoDescription extends SlideshowComponent
     }
 
 	@Override
-    protected void onAlbumLoaded()
+    public void onAlbumLoaded()
     {
 		description.setText("");
     }
 
 	@Override
-    protected void onPhotoLoaded(int previousIndex, int nextIndex)
+    public void onPhotoLoaded(int previousIndex, int nextIndex)
     {
 		assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
 		Photo photo = getSlideshow().getPhoto(nextIndex);
