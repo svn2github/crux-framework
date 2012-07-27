@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 cruxframework.org.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,10 +27,10 @@ import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
 import org.cruxframework.crux.core.client.screen.eventadapter.TapEventAdapter;
 import org.cruxframework.crux.core.client.screen.views.ViewAttachEvent;
 import org.cruxframework.crux.core.client.screen.views.ViewAttachHandler;
@@ -65,6 +65,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -101,7 +104,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	private Map<String, WidgetCreator<?>> creators = new HashMap<String, WidgetCreator<?>>();
 	private Map<String, WidgetCreatorHelper> creatorHelpers = new HashMap<String, WidgetCreatorHelper>();
 	private final LazyPanelFactory lazyFactory;
-	private final Set<String> lazyPanels = new HashSet<String>();	
+	private final Set<String> lazyPanels = new HashSet<String>();
 	private final LinkedList<PostProcessingPrinter> postProcessingCode = new LinkedList<PostProcessingPrinter>();
 	private String loggerVariable;
 	private String viewPanelVariable;
@@ -115,19 +118,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	protected String iocContainerClassName;
 
 	/**
-	 * 
+	 *
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public interface WidgetConsumer 
+	public interface WidgetConsumer
 	{
 		public static EmptyWidgetConsumer EMPTY_WIDGET_CONSUMER = new EmptyWidgetConsumer();
 
 		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
@@ -136,27 +139,27 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		void handleLazyWholeWidgetCreation(SourcePrinter out, String widgetId);
 		void handleLazyWrapChildrenCreation(SourcePrinter out, String widgetId);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
 	public static class EmptyWidgetConsumer implements WidgetConsumer
 	{
-		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
 		{
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
 	public class ViewWidgetConsumer implements LazyCompatibleWidgetConsumer
 	{
-		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
 		{
 			out.println(getViewVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
 			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
@@ -168,21 +171,21 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		@Override
         public void handleLazyWholeWidgetCreation(SourcePrinter out, String widgetId)
         {
-			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+ 
+			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+
 					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget)) +");");
         }
 
 		@Override
         public void handleLazyWrapChildrenCreation(SourcePrinter out, String widgetId)
         {
-			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+ 
+			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+
 					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren)) +");");
         }
 	}
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param context
 	 * @param logger
 	 * @param view
@@ -201,12 +204,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.widgetConsumer = new ViewWidgetConsumer();
 		this.rootPanelChildren = new HashSet<String>();
 		this.controllerAccessHandler = new DefaultControllerAccessor(viewVariable);
-    }	
-	
+    }
+
 	/**
      * Creates a new unique name based off of{@code varName} and adds it to
-     * the list of known names.	  
-	 * 
+     * the list of known names.
+	 *
 	 * @param varName
 	 * @return
 	 */
@@ -214,7 +217,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return nameFactory.createName(varName);
 	}
-	
+
 	/**
 	 * Retrieve the object responsible for print controller access expressions on client JS
 	 * @return
@@ -223,10 +226,10 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return this.controllerAccessHandler;
 	}
-	
+
 	/**
 	 * Generate the View fields
-	 * 
+	 *
 	 * @param printer
 	 */
 	protected void generateProxyFields(SourcePrinter printer)
@@ -244,7 +247,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    		Logger.class.getCanonicalName()+".getLogger("+getProxySimpleName()+".class.getName());");
 		printer.println("private "+HTMLPanel.class.getCanonicalName()+" "+viewPanelVariable+" = null;");
     }
-	
+
 	/**
 	 * Generate the View Constructor
 	 */
@@ -261,13 +264,13 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
 		printer.println("}");
 	}
-	
+
 	/**
 	 * Generate the View methods.
-	 * 
-     * @param printer 
+	 *
+     * @param printer
      */
-    protected void generateProxyMethods(SourcePrinter printer) 
+    protected void generateProxyMethods(SourcePrinter printer)
     {
     	generateGetRegisteredControllersMethod(printer);
     	generateCreateDataSourceMethod(printer);
@@ -275,21 +278,21 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateRenderMethod(printer);
     	generateInitializeLazyDependenciesMethod(printer);
     }
-	
+
     @Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
     }
-    
+
 	/**
-	 * Return the type of a given crux meta tag. This type could be {@code "screen"} or 
+	 * Return the type of a given crux meta tag. This type could be {@code "screen"} or
 	 * another string referencing a registered {@code WidgetFactory}.
-	 * 
+	 *
 	 * @param cruxMetaElement
 	 * @return
 	 */
-	protected String getMetaElementType(JSONObject cruxMetaElement) 
+	protected String getMetaElementType(JSONObject cruxMetaElement)
 	{
 		return cruxMetaElement.optString("_type");
 	}
@@ -320,11 +323,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
         }
 		return creators.get(widgetType);
 	}
-	
+
 	/**
-     * Returns a helper object to create the code of the widgets of the given type. 
+     * Returns a helper object to create the code of the widgets of the given type.
 	 * @param widgetType
-	 * @return a helper object to create the code of the widgets of the given type. 
+	 * @return a helper object to create the code of the widgets of the given type.
 	 */
 	protected WidgetCreatorHelper getWidgetCreatorHelper(String widgetType)
 	{
@@ -340,7 +343,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Creates a new widget based on its meta-data element.
-	 * 
+	 *
 	 * @param printer
 	 * @param metaElem
 	 * @param widgetId
@@ -354,8 +357,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Creates a new widget based on its meta-data element.
-	 *  
-	 * @param printer 
+	 *
+	 * @param printer
 	 * @param metaElem
 	 * @param widgetId
 	 * @param consumer
@@ -363,8 +366,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 * @return
 	 * @throws CruxGeneratorException
 	 */
-	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType, 
-			WidgetConsumer consumer, boolean allowWrapperForCreatedWidget) 
+	protected String newWidget(SourcePrinter printer, JSONObject metaElem, String widgetId, String widgetType,
+			WidgetConsumer consumer, boolean allowWrapperForCreatedWidget)
 				throws CruxGeneratorException
 	{
 		WidgetCreator<?> widgetFactory = getWidgetCreator(widgetType);
@@ -372,7 +375,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		{
 			throw new CruxGeneratorException("Can not found widgetFactory for type: ["+widgetType+"].");
 		}
-		
+
 		String widget;
 		if (consumer != null && consumer instanceof LazyCompatibleWidgetConsumer && mustRenderLazily(widgetType, metaElem, widgetId))
 		{
@@ -390,13 +393,13 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		{
 			throw new CruxGeneratorException("Can not create widget ["+widgetId+"]. Verify the widget type.");
 		}
-		
+
 		if (allowWrapperForCreatedWidget)
 		{
 			Class<?> widgetClass = getWidgetCreatorHelper(widgetType).getWidgetType();
 			widget = getEventTapWrapperForHasClickWidget(printer, widget, widgetClass);
 		}
-		
+
 		return widget;
 	}
 
@@ -427,7 +430,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Close the current postProcessing scope and schedule the execution of all scope commands.
-	 * 
+	 *
 	 * @param printer
 	 */
 	protected void commitPostProcessing(SourcePrinter printer)
@@ -444,18 +447,18 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("});");
 		}
 	}
-	
+
 	/**
-	 * Create a new scope for the post processing commands. All commands added by 
-	 * {@code printlnPostProcessing} method will be added to this same scope, what means 
-	 * that they will be fired together. When {@code commitPostProcessing} method is called, 
+	 * Create a new scope for the post processing commands. All commands added by
+	 * {@code printlnPostProcessing} method will be added to this same scope, what means
+	 * that they will be fired together. When {@code commitPostProcessing} method is called,
 	 * the scope is closed and all scope commands are programmed for execution.
 	 */
 	protected void createPostProcessingScope()
 	{
 		this.postProcessingCode.add(new PostProcessingPrinter());
-	} 	
-	
+	}
+
 	/**
 	 * @return
 	 */
@@ -463,7 +466,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return this.logger;
 	}
-	
+
 	/**
 	 * Retrieves the view variable name
 	 * @return
@@ -472,7 +475,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return viewVariable;
 	}
-	
+
 	/**
 	 * Retrieves the logger variable name
 	 * @return
@@ -481,7 +484,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return loggerVariable;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -489,11 +492,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return this.view;
 	}
-	
+
 	/**
      * Gets the code necessary to access a i18n declared property or the own property, if
      * it is not in declarative i18n format.
-     * 
+     *
 	 * @param title
 	 * @return
 	 */
@@ -503,9 +506,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    {
 			String[] messageParts = getKeyMessageParts(property);
 			String messageClassName = MessageClasses.getMessageClass(messageParts[0]);
-			
+
+			// Checks if declared message is valid
+			this.checkDeclaredMessage(messageClassName, messageParts[0], messageParts[1]);
+
 			String messageVariable;
-			
+
 			if (!declaredMessages.containsKey(messageClassName))
 			{
 				messageVariable= createVariableName("mesg");
@@ -522,6 +528,43 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    	return property==null?null:EscapeUtils.quote(property);
 	    }
     }
+
+	/**
+	 * Checks if declared message is valid
+	 * @param messageClassName
+	 * @param messageKey
+	 * @param messageMethod
+	 * @throws CruxGeneratorException
+	 */
+	private void checkDeclaredMessage(String messageClassName, String messageKey, String messageMethod) throws CruxGeneratorException
+	{
+		if (StringUtils.isEmpty(messageClassName))
+		{
+			throw new CruxGeneratorException("Message ["+messageKey+"] , declared on view ["+view.getId()+"], not found.");
+		}
+		else
+		{
+			JClassType messageClass = context.getTypeOracle().findType(messageClassName);
+			if (messageClass == null)
+			{
+				String message = "Message class ["+messageKey+"] , declared on view ["+view.getId()+"], could not be loaded. "
+							   + "\n Possible causes:"
+							   + "\n\t 1. Check if any type or subtype used by message refers to another module and if this module is inherited in the .gwt.xml file."
+							   + "\n\t 2. Check if your message or its members belongs to a client package."
+							   + "\n\t 3. Check the versions of all your modules."
+							   ;
+				throw new CruxGeneratorException(message);
+			}
+			else
+			{
+				JMethod method = messageClass.findMethod(messageMethod, new JType[]{});
+				if (method == null)
+				{
+					throw new CruxGeneratorException("Method ["+messageMethod+"] of message ["+messageKey+"], declared on view ["+view.getId()+"], does not exist in message class ["+messageClassName+"].");
+				}
+			}
+		}
+	}
 
     /**
      * Returns <code>true</code> if the given text is an internationalization key.
@@ -550,7 +593,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return view.getWidget(widgetId) != null;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -558,20 +601,20 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return context;
 	}
-	
+
     /**
 	 * Gets the list of classes used by the ViewFactory.
-	 * 
+	 *
      * @return
      */
     String[] getImports()
     {
 	    @SuppressWarnings("deprecation")
         String[] imports = new String[] {
-    		GWT.class.getCanonicalName(), 
+    		GWT.class.getCanonicalName(),
     		org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName(),
     		org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName(),
-    		StringUtils.class.getCanonicalName(), 
+    		StringUtils.class.getCanonicalName(),
     		Window.class.getCanonicalName(),
     		ViewFactoryUtils.class.getCanonicalName(),
     		ViewFactory.CreateCallback.class.getCanonicalName(),
@@ -580,19 +623,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     		Element.class.getCanonicalName(),
     		Node.class.getCanonicalName(),
     		org.cruxframework.crux.core.client.event.Event.class.getCanonicalName(),
-    		ViewLoadEvent.class.getCanonicalName(), 
-    		Panel.class.getCanonicalName(), 
-    		InterfaceConfigException.class.getCanonicalName(), 
-    		Widget.class.getCanonicalName(), 
+    		ViewLoadEvent.class.getCanonicalName(),
+    		Panel.class.getCanonicalName(),
+    		InterfaceConfigException.class.getCanonicalName(),
+    		Widget.class.getCanonicalName(),
     		Crux.class.getCanonicalName()
 		};
 	    return imports;
 	}
-	
+
 	/**
 	 * Create a new printer for a subType. That subType will be declared on the same package of the
-	 * {@code ViewFactory}. 
-	 * 
+	 * {@code ViewFactory}.
+	 *
      * @param subType
      * @param superClass
      * @param interfaces
@@ -603,11 +646,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     {
     	return getSubTypeWriter(subType, superClass, interfaces, imports, false);
     }
-    
+
     /**
 	 * Create a new printer for a subType. That subType will be declared on the same package of the
-	 * {@code ViewFactory}. 
-	 * 
+	 * {@code ViewFactory}.
+	 *
      * @param subType
      * @param superClass
      * @param interfaces
@@ -630,7 +673,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		{
 			composerFactory.makeInterface();
 		}
-		
+
 		if (imports != null)
 		{
 			for (String imp : imports)
@@ -643,7 +686,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		{
 			composerFactory.setSuperclass(superClass);
 		}
-		
+
 		if (interfaces != null)
 		{
 			for (String intf : interfaces)
@@ -651,13 +694,13 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 				composerFactory.addImplementedInterface(intf);
 			}
 		}
-		
-		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);       
+
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
-	
+
 	/**
 	 * Check if the given metaElement refers to a valid widget
-	 * 
+	 *
 	 * @param element
 	 * @return
 	 */
@@ -670,11 +713,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param context
 	 * @param logger
-	 * @param device 
+	 * @param device
 	 */
     protected void prepare(GeneratorContextExt context, TreeLogger logger, String device)
 	{
@@ -686,49 +729,49 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.device = device;
 		this.rootPanelChildren.clear();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
     protected String getDevice()
 	{
 		return this.device;
 	}
-	
+
 	/**
 	 * Print code that will be executed after the viewFactory completes the widgets construction.
-	 * Note that this code will be executed from inside a Command class. Any variable accessed in 
+	 * Note that this code will be executed from inside a Command class. Any variable accessed in
 	 * this code and declared outside need to be declared as final.
-	 * 
+	 *
 	 * @param s code string
 	 */
     protected void printlnPostProcessing(String s)
 	{
 		this.postProcessingCode.getLast().println(s);
 	}
-	
+
 	/**
 	 * Generate the code for the View events creation
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
-	protected void processViewEvents(SourcePrinter printer) 
+	protected void processViewEvents(SourcePrinter printer)
 	{
 		processHistoryChangedEvt(printer);
 		processClosingEvt(printer);
 		processCloseEvt(printer);
-		processResizedEvt(printer);		
+		processResizedEvt(printer);
 		processLoadEvt(printer);
 		processUnloadEvt(printer);
 		processAttachEvt(printer);
 		processDetachEvt(printer);
-	}	
+	}
 
 	/**
 	 * Processes the close event.
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processCloseEvt(SourcePrinter printer)
     {
@@ -736,11 +779,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		if (onClose != null)
 		{
 			printer.println(viewVariable+".addWindowCloseHandler(new "+CloseHandler.class.getCanonicalName()+"<Window>(){");
-			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){"); 
+			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){");
 
-			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose", 
+			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose",
 					CloseEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -748,8 +791,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the closing event.
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processClosingEvt(SourcePrinter printer)
     {
@@ -757,20 +800,20 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		if (onClosing != null)
 		{
 			printer.println(viewVariable+".addWindowClosingHandler(new Window.ClosingHandler(){");
-			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){"); 
+			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing", 
+			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing",
 						ClosingEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
     }
-	
+
 	/**
 	 * Processes the historyChanged event.
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processHistoryChangedEvt(SourcePrinter printer)
     {
@@ -780,9 +823,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println(viewVariable+".addWindowHistoryChangedHandler(new "+ValueChangeHandler.class.getCanonicalName()+"<String>(){");
 			printer.println("public void onValueChange("+ValueChangeEvent.class.getCanonicalName()+"<String> event){");
 
-			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(), 
+			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(),
 					"onHistoryChanged", ValueChangeEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -790,8 +833,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the load event.
-	 *  
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processLoadEvt(SourcePrinter printer)
 	{
@@ -801,9 +844,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println(viewVariable+".addViewLoadHandler(new "+ViewLoadHandler.class.getCanonicalName()+"(){");
 			printer.println("public void onLoad("+ViewLoadEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onLoad.getController()+"."+onLoad.getMethod(), 
+			EvtProcessor.printEvtCall(printer, onLoad.getController()+"."+onLoad.getMethod(),
 					"onLoad", ViewLoadEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -811,8 +854,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the unload event.
-	 *  
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processUnloadEvt(SourcePrinter printer)
 	{
@@ -822,9 +865,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println(viewVariable+".addViewUnloadHandler(new "+ViewUnloadHandler.class.getCanonicalName()+"(){");
 			printer.println("public void onUnload("+ViewUnloadEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onUnload.getController()+"."+onUnload.getMethod(), 
+			EvtProcessor.printEvtCall(printer, onUnload.getController()+"."+onUnload.getMethod(),
 					"onUnload", ViewUnloadEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -832,8 +875,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the attach event.
-	 *  
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processAttachEvt(SourcePrinter printer)
 	{
@@ -843,9 +886,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println(viewVariable+".addViewAttachHandler(new "+ViewAttachHandler.class.getCanonicalName()+"(){");
 			printer.println("public void onAttach("+ViewAttachEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onAttach.getController()+"."+onAttach.getMethod(), 
+			EvtProcessor.printEvtCall(printer, onAttach.getController()+"."+onAttach.getMethod(),
 					"onAttach", ViewAttachEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -853,8 +896,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the attach event.
-	 *  
-	 * @param printer 
+	 *
+	 * @param printer
 	 */
 	private void processDetachEvt(SourcePrinter printer)
 	{
@@ -864,9 +907,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println(viewVariable+".addViewDetachHandler(new "+ViewDetachHandler.class.getCanonicalName()+"(){");
 			printer.println("public void onDetach("+ViewDetachEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onDetach.getController()+"."+onDetach.getMethod(), 
+			EvtProcessor.printEvtCall(printer, onDetach.getController()+"."+onDetach.getMethod(),
 					"onDetach", ViewDetachEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
@@ -874,8 +917,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 	/**
 	 * Processes the resized event.
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 * @return
 	 */
 	private Event processResizedEvt(SourcePrinter printer)
@@ -884,26 +927,26 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		if (onResized != null)
 		{
 			printer.println("screen.addResizeHandler(new "+ResizeHandler.class.getCanonicalName()+"(){");
-			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){"); 
+			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized", 
+			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized",
 					ResizeEvent.class, "event", context, view, getControllerAccessHandler());
-			
+
 			printer.println("}");
 			printer.println("});");
 		}
 	    return onResized;
     }
-	
+
 	/**
 	 * Generate the code for a widget creation, based on its metadata.
-	 * 
-	 * @param printer 
+	 *
+	 * @param printer
 	 * @param metaElem
 	 * @param widgetType
 	 * @return
 	 */
-	private String createWidget(SourcePrinter printer, JSONObject metaElem, String widgetType) 
+	private String createWidget(SourcePrinter printer, JSONObject metaElem, String widgetType)
 	{
 		if (!metaElem.has("id"))
 		{
@@ -925,10 +968,10 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			this.rootPanelChildren.add(widgetId);
 		}
 		return widget;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @param printer
 	 */
 	private void generateInitializeLazyDependenciesMethod(SourcePrinter printer)
@@ -937,7 +980,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	printer.println("return "+view.getLazyDependencies().toString()+";");
     	printer.println("}-*/;");
     }
-	
+
 	/**
 	 * @param printer
 	 */
@@ -959,11 +1002,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			String type = getMetaElementType(metaElement);
 			if (!StringUtils.unsafeEquals("screen",type))
 			{
-				try 
+				try
 				{
 					createWidget(printer, metaElement, type);
 				}
-				catch (Throwable e) 
+				catch (Throwable e)
 				{
 					throw new CruxGeneratorException("Error Creating widget. See Log for more detail.", e);
 				}
@@ -973,9 +1016,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
 		printer.println(loggerVariable+".info(Crux.getMessages().viewContainerViewCreated(getId()));");
 		printer.println("}");
-		
+
 		printer.println("}");
-    }	
+    }
 
 	/**
 	 * @param printer
@@ -985,8 +1028,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    String rootPanelVariable = createVariableName("rootPanel");
     	printer.println("protected void render("+Panel.class.getCanonicalName()+" "+rootPanelVariable+") throws InterfaceConfigException{");
 
-		printer.println("if (this."+viewPanelVariable+" == null){"); 
-		printer.println("this."+viewPanelVariable+" = new " + 
+		printer.println("if (this."+viewPanelVariable+" == null){");
+		printer.println("this."+viewPanelVariable+" = new " +
 				HTMLPanel.class.getCanonicalName() + "("+getViewHTML()+");");
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
     	for (String widgetId : rootPanelChildren)
@@ -1000,11 +1043,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("else {");
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
 		printer.println("}");
-		
+
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
 		printer.println(loggerVariable+".info(Crux.getMessages().viewContainerViewRendered(getId()));");
 		printer.println("}");
-		
+
 		printer.println("}");
     }
 
@@ -1012,8 +1055,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     {
 	    String html = EscapeUtils.quote(view.getHtml()).replace(ViewParser.CRUX_VIEW_PREFIX, "\"+"+getViewVariable()+".getPrefix()+\"");
 		return html;
-    }	
-	
+    }
+
 	/**
 	 * @param printer
 	 */
@@ -1033,10 +1076,10 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	printer.println("return this.registeredDataSources.getDataSource(dataSource);");
     	printer.println("}");
     }
-	
+
 	/**
 	 * Split the i18n message and separate the messageClass alias from the message method
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -1054,18 +1097,18 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     {
 	    return ViewFactory.class.getPackage().getName() + "." + getProxySimpleName();
     }
-	
+
 	/**
 	 * Return the simple name of the ViewFactory class created for the associated screen
 	 * @return
 	 */
 	public String getProxySimpleName()
     {
-		String className = view.getId()+"_"+this.device; 
+		String className = view.getId()+"_"+this.device;
 		className = className.replaceAll("[\\W]", "_");
 		return className;
     }
-	
+
     /**
 	 * Creates and returns a new {@link SourceWriter}
      * @return a new {@link SourceWriter}
@@ -1083,14 +1126,14 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, getProxySimpleName());
 
 		composerFactory.setSuperclass(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName());
-		
+
 		String[] imports = getImports();
 		for (String imp : imports)
 		{
 			composerFactory.addImport(imp);
 		}
 
-		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);    
+		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 
     /**
@@ -1107,9 +1150,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		}
 		return attachToDOMfactories.get(widgetType);
 	}
-    
+
 	/**
-	 * Returns <code>true</code> if the given widget should be rendered lazily  
+	 * Returns <code>true</code> if the given widget should be rendered lazily
 	 * @param widgetType
 	 * @param metaElem
 	 * @param widgetId
@@ -1128,18 +1171,18 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		}
 		return false;
 	}
-    
+
 
     /**
      * Printer for code that should be executed after the screen creation.
-     * 
+     *
      * @author Thiago da Rosa de Bustamante
      */
     private static class PostProcessingPrinter
     {
 		private StringBuilder builder = new StringBuilder();
 		private String indentation = "";
-		
+
     	/**
     	 * @see java.lang.Object#toString()
     	 */
@@ -1147,7 +1190,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	{
     		return builder.toString();
     	}
-    	
+
     	/**
     	 * Indents the next line to be printed
     	 */
@@ -1155,7 +1198,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	{
     		indentation+="\t";
     	}
-    	
+
     	/**
     	 * Outdents the next line to be printed
     	 */
@@ -1166,9 +1209,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     			indentation = indentation.substring(1);
     		}
     	}
-    	
+
     	/**
-    	 * Prints a line of code into the output. 
+    	 * Prints a line of code into the output.
     	 * <li>If the line ends with <code>"{"</code>, indents the next line.</li>
     	 * <li>If the line ends with <code>"}"</code>, <code>"};"</code> or <code>"});"</code>, outdents the next line.</li>
     	 * @param s
@@ -1176,21 +1219,21 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	void println(String s)
     	{
     		String line = s.trim();
-    		
+
 			if (line.endsWith("}") || line.endsWith("});") || line.endsWith("};") || line.endsWith("}-*/;"))
     		{
     			outdent();
     		}
-			
+
     		builder.append(indentation+s+"\n");
-    		
+
     		if (line.endsWith("{"))
     		{
     			indent();
     		}
     	}
     }
-    
+
     private static class DefaultControllerAccessor implements ControllerAccessHandler
     {
 		private final String viewVariable;
@@ -1202,7 +1245,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		public String getControllerExpression(String controller)
         {
-			
+
 	        return "(("+getControllerImplClassName(controller)+")"+viewVariable+".getRegisteredControllers().getController("
 			+EscapeUtils.quote(controller)+"))";
         }
@@ -1213,12 +1256,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	        return controllerClass + ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX;
         }
     }
-    
+
 	/**
 	 * @return the widgetConsumer
 	 */
-	WidgetConsumer getScreenWidgetConsumer() 
+	WidgetConsumer getScreenWidgetConsumer()
 	{
 		return widgetConsumer;
-	}    
+	}
 }
