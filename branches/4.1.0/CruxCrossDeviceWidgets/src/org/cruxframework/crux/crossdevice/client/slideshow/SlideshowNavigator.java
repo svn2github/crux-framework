@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowNavigator extends SlideshowBaseComponent
+public class SlideshowNavigator extends SlideshowComponent
 {
 	private FlowPanel navigatorPanel;
 	private Label currentPhoto;

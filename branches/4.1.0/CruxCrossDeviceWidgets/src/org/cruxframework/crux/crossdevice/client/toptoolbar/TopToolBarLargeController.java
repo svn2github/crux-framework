@@ -20,8 +20,6 @@ import java.util.Iterator;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeOpenHandler;
 
@@ -167,12 +165,6 @@ public class TopToolBarLargeController extends DeviceAdaptiveController implemen
 		setStyleName("xdev-TopToolBar");
     }
 
-	@Override
-    protected void applyWidgetDependentStyleNames()
-    {
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-    }
-	
 	protected HandlerRegistration createEmptyHandlerRegistration()
 	{
 		return new HandlerRegistration()

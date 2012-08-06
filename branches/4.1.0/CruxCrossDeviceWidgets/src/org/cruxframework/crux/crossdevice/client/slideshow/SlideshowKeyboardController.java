@@ -16,13 +16,13 @@
 package org.cruxframework.crux.crossdevice.client.slideshow;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.core.client.controller.Expose;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -31,47 +31,38 @@ import com.google.gwt.user.client.ui.FocusPanel;
 @Controller("slideshowKeyboardController")
 public class SlideshowKeyboardController extends SlideshowBaseController
 {
-	@Override
-	protected void init()
+	@Expose
+	public void onFocusPanelKeyDown(KeyDownEvent event)
 	{
-	    super.init();
-	    FocusPanel focusPanel = getChildWidget("focusPanel");
-		focusPanel.addKeyDownHandler(new KeyDownHandler()
+		switch(event.getNativeKeyCode())
 		{
-			@Override
-			public void onKeyDown(KeyDownEvent event)
-			{
-				switch(event.getNativeKeyCode())
+			case KeyCodes.KEY_UP: 
+			case KeyCodes.KEY_LEFT:
+				stop();
+				previous();
+			break;
+			case KeyCodes.KEY_DOWN: 
+			case KeyCodes.KEY_RIGHT:
+				stop();
+				next();
+			case 32://SPACE
+				if (isPlaying())
 				{
-					case KeyCodes.KEY_UP: 
-					case KeyCodes.KEY_LEFT:
-						stop();
-						previous();
-					break;
-					case KeyCodes.KEY_DOWN: 
-					case KeyCodes.KEY_RIGHT:
-						stop();
-						next();
-					case 32://SPACE
-						if (isPlaying())
-						{
-							stop();
-						}
-						else
-						{
-							play();
-						}
-					break;
+					stop();
 				}
-			}
-		});
+				else
+				{
+					play();
+				}
+			break;
+		}
 	}
 	
 	@Override
-    protected void applyWidgetDependentStyleNames()
+    public void configurePhotoPanel()
     {
-		//TODO melhorar isso...da pra automatizar no rebind..... ta dando muito trabalho
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.arrows.toString());
+		table.add(photoPanel, DockPanel.CENTER);
+		setVerticalAlignment(photoPanel, HasVerticalAlignment.ALIGN_MIDDLE);
+		setHorizontalAlignment(photoPanel, HasHorizontalAlignment.ALIGN_CENTER);
     }
-
 }

@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.labeledtextbox;
 
+import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
@@ -28,7 +29,8 @@ import com.google.gwt.user.client.ui.TextBox;
 * @author    Daniel Martins - <code>daniel@cruxframework.org</code>
 *
 */
-public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveController implements LabeledTextBox
+@Controller("labeledTextBoxController")
+public class LabeledTextBoxController extends DeviceAdaptiveController implements LabeledTextBox
 {
 
 	@Create
@@ -51,7 +53,6 @@ public abstract class BaseLabeledTextBoxController extends DeviceAdaptiveControl
 	protected void initWidgetDefaultStyleName()
 	{
 		setStyleName("xdev-LabeledTextBox");
-		applyWidgetDependentStyleNames();
 	}
 
 	@Override

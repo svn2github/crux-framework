@@ -7,8 +7,8 @@
 
 
 	<!-- LabeledTextBox  placeHolder attribute -->
-	<replace-with class="org.cruxframework.crux.crossdevice.client.labeledtextbox.BaseLabeledTextBoxController.JSPlaceHolder">
-		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.labeledtextbox.BaseLabeledTextBoxController.LabeledTextBoxHandler" />
+	<replace-with class="org.cruxframework.crux.crossdevice.client.labeledtextbox.LabeledTextBoxController.JSPlaceHolder">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.labeledtextbox.LabeledTextBoxController.LabeledTextBoxHandler" />
 		<any>
 			<when-property-is name="user.agent" value="ie6" />
 			<when-property-is name="user.agent" value="ie8" />
@@ -16,8 +16,8 @@
 		</any>
 	</replace-with>
 
-	<replace-with class="org.cruxframework.crux.crossdevice.client.labeledtextbox.BaseLabeledTextBoxController.HTMLPlaceHolder">
-		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.labeledtextbox.BaseLabeledTextBoxController.LabeledTextBoxHandler" />
+	<replace-with class="org.cruxframework.crux.crossdevice.client.labeledtextbox.LabeledTextBoxController.HTMLPlaceHolder">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.labeledtextbox.LabeledTextBoxController.LabeledTextBoxHandler" />
 		<none>
 			<when-property-is name="user.agent" value="ie6" />
 			<when-property-is name="user.agent" value="ie8" />
@@ -46,4 +46,23 @@
 			<when-property-is name="user.agent" value="safari" />
 		</any>
 	</replace-with>
+	
+	
+    <!-- Sideshow -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowSwapPhotoPanel">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowPhotoPanelImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowTouchPhotoPanel">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowPhotoPanelImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+	
+	
 </module>

@@ -1,8 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.promobanner;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -76,12 +74,6 @@ public class PromoBannerLargeMouseController extends BasePromoBannerController
 				}
 			}
 		);
-	}
-
-	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
 	}
 
 	private void adjustPositions()

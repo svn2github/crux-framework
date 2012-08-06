@@ -1,8 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.promobanner;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -42,12 +40,6 @@ public class PromoBannerSmallTouchController extends BasePromoBannerController
 
 			}
 		});
-	}
-
-	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
 	}
 
 	public void addSmallBanner(String backgroundImageURL, String title, String text, String buttonLabel, ClickHandler onclick)

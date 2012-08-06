@@ -21,11 +21,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 @Templates({
-	@Template(name="labeledTextBoxLarge", device=Device.all),
-	@Template(name="labeledTextBoxLargeTouch", device=Device.largeDisplayTouch),
-	@Template(name="labeledTextBoxLargeMouse", device=Device.largeDisplayMouse),
-	@Template(name="labeledTextBoxSmall", device=Device.smallDisplayArrows),
-	@Template(name="labeledTextBoxSmallTouch", device=Device.smallDisplayTouch)
+	@Template(name="labeledTextBox", device=Device.all)
 })
 public interface LabeledTextBox extends DeviceAdaptive, HasText, HasValue<String>, HasEnabled, HasName, Focusable, HasAllFocusHandlers, HasAllMouseHandlers, HasAllKeyHandlers
 {

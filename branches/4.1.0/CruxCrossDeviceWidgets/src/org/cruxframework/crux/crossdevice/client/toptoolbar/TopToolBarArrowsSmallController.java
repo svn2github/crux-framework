@@ -21,10 +21,8 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.screen.views.ViewAware;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeOpenEvent;
@@ -286,12 +284,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
     protected void initWidgetDefaultStyleName()
     {
 		setStyleName("xdev-TopToolBar");
-    }
-
-	@Override
-    protected void applyWidgetDependentStyleNames()
-    {
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
     }
 
 	protected Widget prepareGripWidget(Widget widget)

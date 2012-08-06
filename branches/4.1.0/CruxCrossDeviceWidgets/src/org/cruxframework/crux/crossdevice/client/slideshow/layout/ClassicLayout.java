@@ -20,11 +20,9 @@ import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow.Layout;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowAlbumTitle;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowNavigator;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoDescription;
-import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -50,11 +48,6 @@ public class ClassicLayout  implements Layout
 		slideshow.addComponent(navigator, Slideshow.Position.north);
 		slideshow.setHorizontalAlignment(navigator, HasHorizontalAlignment.ALIGN_RIGHT);
 		slideshow.setHeight(navigator, "20px");
-
-		SlideshowPhotoPanel photoPanel = GWT.create(SlideshowPhotoPanel.class);
-		slideshow.addComponent(photoPanel, Slideshow.Position.center);
-		slideshow.setVerticalAlignment(photoPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		slideshow.setHorizontalAlignment(photoPanel, HasHorizontalAlignment.ALIGN_CENTER);
 
 		SlideshowPhotoDescription description = new SlideshowPhotoDescription();
 		slideshow.addComponent(description, Slideshow.Position.south);

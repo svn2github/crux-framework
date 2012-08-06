@@ -1,6 +1,0 @@
-<x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
-           xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
-           useController="slideshowPhotoPanelTouchController">
-     <gwt:simplePanel id="mainPanel"  width="100%" height="100%">
-     </gwt:simplePanel>
-</x:xdevice>

@@ -15,20 +15,242 @@
  */
 package org.cruxframework.crux.crossdevice.client.slideshow;
 
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
+import org.cruxframework.crux.crossdevice.client.slider.SlidingEvent;
+import org.cruxframework.crux.crossdevice.client.slider.SlidingHandler;
+import org.cruxframework.crux.crossdevice.client.slider.TouchSlider;
+import org.cruxframework.crux.crossdevice.client.slider.TouchSlider.ContentProvider;
+import org.cruxframework.crux.widgets.client.event.swap.SwapEvent;
+import org.cruxframework.crux.widgets.client.event.swap.SwapHandler;
+import org.cruxframework.crux.widgets.client.event.tap.TapEvent;
+import org.cruxframework.crux.widgets.client.event.tap.TapHandler;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Templates({
-	@Template(name="slideshowPhotoPanelKeyboard", device=Device.all),
-	@Template(name="slideshowPhotoPanelTouch", device=Device.smallDisplayTouch),
-	@Template(name="slideshowPhotoPanelTouch", device=Device.largeDisplayTouch)
-})
-public interface SlideshowPhotoPanel extends DeviceAdaptive, SlideshowComponent
+public class SlideshowPhotoPanel extends SlideshowComponent 
 {
+	private SlideshowComponent impl;
+
+	/**
+	 * Marker interface for swapPhotoPanel rebind
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static interface SlideshowPhotoPanelImpl
+	{
+	}
+
+	/**
+	 * Implementation for desktops and no touch devices.
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static class SlideshowSwapPhotoPanel extends SlideshowComponent implements SlideshowPhotoPanelImpl 
+	{
+		private HorizontalSwapPanel photosPanel ;
+		private FlowPanel mainPanel;
+		private Label rightArrow;
+		private Label leftArrow;
+		
+		@Override
+	    public void onAlbumLoaded()
+	    {
+			photosPanel.clear();
+	    }
+
+		@Override
+	    public void onPhotoLoaded(int previousIndex, int nextIndex)
+	    {
+			assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
+			Direction direction = (nextIndex > previousIndex)?Direction.FORWARD:Direction.BACKWARDS;
+			photosPanel.transitTo(getSlideshow().loadImage(nextIndex), direction);
+
+			if (previousIndex == 0 && nextIndex > 0)
+			{
+				leftArrow.removeStyleDependentName("disabled");
+			}
+			else if (nextIndex == 0)
+			{
+				leftArrow.addStyleDependentName("disabled");
+			}
+
+			int lastIndex = getSlideshow().getPhotoCount() -1;
+			if (previousIndex == lastIndex && nextIndex < lastIndex)
+			{
+				rightArrow.removeStyleDependentName("disabled");
+			}
+			else if (nextIndex == lastIndex)
+			{
+				rightArrow.addStyleDependentName("disabled");
+			}
+	    }
+
+		@Override
+	    public Widget createMainWidget()
+	    {
+			mainPanel = new FlowPanel();
+			mainPanel.getElement().getStyle().setPosition(Position.RELATIVE);
+			mainPanel.setWidth("100%");
+			
+			photosPanel = new HorizontalSwapPanel();
+			photosPanel.setWidth("100%");
+			photosPanel.setHeight("100%");
+			
+			leftArrow = new Label();
+			leftArrow.setStyleName("leftArrow");
+			leftArrow.getElement().getStyle().setPosition(Position.ABSOLUTE);
+			leftArrow.getElement().getStyle().setLeft(0, Unit.PX);
+			leftArrow.getElement().getStyle().setTop(50, Unit.PCT);
+			leftArrow.addClickHandler(new ClickHandler()
+			{
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					getSlideshow().stop();
+					getSlideshow().previous();
+				}
+			});
+			
+			rightArrow = new Label();
+			rightArrow.setStyleName("rightArrow");
+			rightArrow.getElement().getStyle().setPosition(Position.ABSOLUTE);
+			rightArrow.getElement().getStyle().setRight(0, Unit.PX);
+			rightArrow.getElement().getStyle().setTop(50, Unit.PCT);
+			rightArrow.addClickHandler(new ClickHandler()
+			{
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					getSlideshow().stop();
+					getSlideshow().next();
+				}
+			});
+			
+			mainPanel.add(photosPanel);
+			mainPanel.add(leftArrow);
+			mainPanel.add(rightArrow);
+
+			return mainPanel;
+	    }
+	}	
+	
+	/**
+	 * Implementation for mobiles and touch devices
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static class SlideshowTouchPhotoPanel extends SlideshowComponent implements SlideshowPhotoPanelImpl
+	{
+		private TouchSlider photosPanel ;
+		
+		@Override
+	    public void onAlbumLoaded()
+	    {
+			photosPanel.setContentProvider(new ContentProvider()
+			{
+				@Override
+				public int size()
+				{
+					return getSlideshow().getPhotoCount();
+				}
+				
+				@Override
+				public Widget loadWidget(int index)
+				{
+					return getSlideshow().loadImage(index);
+				}
+			});
+	    }
+
+		@Override
+	    public void onPhotoLoaded(int previousIndex, int nextIndex)
+	    {
+			assert(this.getSlideshow() != null):"Slideshow is not initialized. Set component's slideshow property first.";
+			
+			if (nextIndex == previousIndex + 1)
+			{
+				photosPanel.next();
+			}
+			else if (nextIndex == previousIndex - 1)
+			{
+				photosPanel.previous();
+			}
+			else if (photosPanel.getCurrentWidget() != nextIndex)
+			{
+				photosPanel.showWidget(nextIndex);
+			}
+	    }
+
+		@Override
+	    protected Widget createMainWidget()
+	    {
+			photosPanel = new TouchSlider();
+			photosPanel.setWidth("100%");
+			photosPanel.setHeight("100%");
+			photosPanel.addSwapHandler(new SwapHandler()
+			{
+				@Override
+				public void onSwap(SwapEvent event)
+				{
+					getSlideshow().showPhoto(photosPanel.getCurrentWidget());
+				}
+			});
+			photosPanel.addSlidingHandler(new SlidingHandler()
+			{
+				@Override
+				public void onSliding(SlidingEvent event)
+				{
+					getSlideshow().stop();
+				}
+			});
+			photosPanel.addTapHandler(new TapHandler()
+			{
+				@Override
+				public void onTap(TapEvent event)
+				{
+					((SlideshowBaseController)getSlideshow()).showComponents();
+				}
+			});
+			return photosPanel;
+	    }
+	}
+	
+	@Override
+    protected Widget createMainWidget()
+    {
+		impl = GWT.create(SlideshowPhotoPanelImpl.class);
+		impl.setStyleName("xdev-SlideshowPhotoPanel");
+	    return impl;
+    }
+	
+	@Override
+	protected void onAlbumLoaded()
+	{
+	    impl.onAlbumLoaded();
+	}
+	
+	@Override
+	protected void onPhotoLoaded(int previousIndex, int nextIndex)
+	{
+		impl.onPhotoLoaded(previousIndex, nextIndex);
+	}
+	
+	@Override
+	public void setSlideShow(Slideshow slideshow)
+	{
+	    super.setSlideShow(slideshow);
+	    impl.setSlideShow(slideshow);
+	}
 }

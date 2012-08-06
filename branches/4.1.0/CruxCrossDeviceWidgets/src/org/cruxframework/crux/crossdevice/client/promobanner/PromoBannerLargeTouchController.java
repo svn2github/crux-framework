@@ -46,13 +46,6 @@ public class PromoBannerLargeTouchController extends BasePromoBannerController
 	}
 
 	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-	}
-
-
-	@Override
 	public void addSmallBanner(String imageURL, String title, String text, String styleName, String buttonLabel, ClickHandler onclick)
 	{
 

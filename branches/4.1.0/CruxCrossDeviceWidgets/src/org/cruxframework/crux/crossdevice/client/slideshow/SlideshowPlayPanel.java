@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowPlayPanel extends SlideshowBaseComponent
+public class SlideshowPlayPanel extends SlideshowComponent
 {
 	private Label play;
 	

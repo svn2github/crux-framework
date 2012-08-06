@@ -22,6 +22,9 @@ import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
 import org.cruxframework.crux.widgets.client.event.swap.SwapEvent;
 import org.cruxframework.crux.widgets.client.event.swap.SwapHandler;
+import org.cruxframework.crux.widgets.client.event.tap.HasTapHandlers;
+import org.cruxframework.crux.widgets.client.event.tap.TapEvent;
+import org.cruxframework.crux.widgets.client.event.tap.TapHandler;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -44,8 +47,11 @@ import com.google.gwt.user.client.ui.Widget;
  * A panel that swaps its contents using slide animations.
  * @author Thiago da Rosa de Bustamante
  */
-public class TouchSlider extends Composite implements HasSwapHandlers, TouchStartHandler, TouchMoveHandler, TouchEndHandler
+public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidingHandlers, HasTapHandlers, 
+											TouchStartHandler, TouchMoveHandler, TouchEndHandler
 {
+	private static final int TAP_EVENT_THRESHOLD = 5;
+
 	public static interface ContentProvider
 	{
 		int size();
@@ -67,6 +73,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 	private HandlerRegistration touchMoveHandler;
 	private HandlerRegistration touchEndHandler;
 	private boolean circularShowing = false;
+	private boolean didMove;
 
 	/**
 	 * Constructor
@@ -168,6 +175,18 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 		return addHandler(handler, SwapEvent.getType());
 	}
 
+	@Override
+    public HandlerRegistration addSlidingHandler(SlidingHandler handler)
+    {
+		return addHandler(handler, SlidingEvent.getType());
+    }
+	
+	@Override
+    public HandlerRegistration addTapHandler(TapHandler handler)
+    {
+		return addHandler(handler, TapEvent.getType());
+    }
+	
 	/**
 	 * 
 	 * @param index
@@ -230,6 +249,10 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 			final int slideBy = getSlideBy();
 			slide(slideBy);
 		}
+		if (!didMove)
+		{
+			TapEvent.fire(this);
+		}
 		touchMoveHandler.removeHandler();
 		touchEndHandler.removeHandler();
 		event.preventDefault();
@@ -263,14 +286,19 @@ public class TouchSlider extends Composite implements HasSwapHandlers, TouchStar
 				Animation.translateX(nextPanel, diff+nextPanel.getOffsetWidth(), null);
 			}
 		}
+		if (!didMove && (Math.abs(diff) > TAP_EVENT_THRESHOLD))
+		{
+			didMove = true;
+		}
 		event.preventDefault();
 	}
 
 	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{
+		didMove = false;
 		event.preventDefault();
-		//			this.stopSlideshow();
+		SlidingEvent.fire(this);
 		startTouchPosition = event.getTouches().get(0).getClientX();
 		currentTouchPosition = startTouchPosition;
 		startTouchTime = new Date().getTime();

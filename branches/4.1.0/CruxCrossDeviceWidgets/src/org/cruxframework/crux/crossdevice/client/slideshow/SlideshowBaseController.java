@@ -18,35 +18,44 @@ package org.cruxframework.crux.crossdevice.client.slideshow;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Photo;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.PhotoAlbum;
 
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class SlideshowBaseController extends DeviceAdaptiveController implements Slideshow
+public abstract class SlideshowBaseController extends DeviceAdaptiveController implements Slideshow, OrientationChangeOrResizeHandler
 {
+	protected static final boolean SCALE_IMAGES = true;//TODO make this customizable
 	protected static enum SlideshowEvent{AlbumLoaded, PhotoLoaded, StartPlaying, StopPlaying}
 
-	private PhotoAlbum album;
-	private DockPanel table;
-	private FastMap<Image> imagesCache;
-	private FastList<SlideshowComponent> components;
-	private int activeImage = -1;
-	private int previousImage = -1;
-	private Timer autoPlayTimer;
-	private boolean preloadNextImages = true;
-	private int transitionDelay = 5000;
+	protected SlideshowPhotoPanel photoPanel;
+	protected PhotoAlbum album;
+	protected DockPanel table;
+	protected FastMap<Image> imagesCache;
+	protected FastList<SlideshowComponent> components;
+	protected int activeImage = -1;
+	protected int previousImage = -1;
+	protected Timer autoPlayTimer;
+	protected boolean preloadNextImages = true;
+	protected int transitionDelay = 5000;
+	private boolean useLayout = false;
 	
 	/**
 	 * 
@@ -55,6 +64,9 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	public void setLayout(Layout layout)
 	{
 		table.clear();
+		components.clear();
+		useLayout = true;
+		setPhotoPanel();
 		layout.createComponents(this);
 		if (album != null)
 		{
@@ -158,10 +170,14 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	 */
 	public void addComponent(SlideshowComponent component, Position position)
 	{
+		if (!useLayout && photoPanel == null)
+		{
+	    	setPhotoPanel();
+		}
+		
 		DockLayoutConstant direction;
 		switch (position)
         {
-        	case center: direction = DockPanel.CENTER; break;
         	case lineStart: direction = DockPanel.LINE_START; break; 
         	case lineEnd: direction = DockPanel.LINE_END; break;
         	case east: direction = DockPanel.EAST; break;
@@ -309,7 +325,13 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	 */
 	public Image loadImage(int index)
 	{
+		assert(this.album != null):"There is no photo album loaded";
 		return loadImage(index, false);
+	}
+	
+	protected void showComponents()
+	{
+		//Do nothing
 	}
 	
 	/**
@@ -367,12 +389,55 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
     }
 
 	@Override
+    public void onOrientationChangeOrResize()
+    {
+		FastList<String> keys = imagesCache.keys();
+		
+        for (int i = 0; i < keys.size(); i++)
+        {
+        	String index = keys.get(i);
+        	adjustImageSize(photoPanel, getPhoto(Integer.parseInt(index)), imagesCache.get(index));
+        }
+    }
+	
+	@Override
 	protected void init()
 	{
 		imagesCache = new FastMap<Image>();
 		components = new FastList<SlideshowComponent>();
 		table = getChildWidget("table");
+		if (SCALE_IMAGES)
+		{
+			addAttachHandler(new Handler()
+			{
+				private HandlerRegistration orientationHandlerRegistration;
+
+				@Override
+				public void onAttachOrDetach(AttachEvent event)
+				{
+					if (event.isAttached())
+					{
+						orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(SlideshowBaseController.this);
+					}
+					else if (orientationHandlerRegistration != null)
+					{
+						orientationHandlerRegistration.removeHandler();
+						orientationHandlerRegistration = null;
+					}
+				}
+			});
+		}			
 	}
+
+	private void setPhotoPanel()
+    {
+	    photoPanel = new SlideshowPhotoPanel();
+		components.add(photoPanel);
+		photoPanel.setSlideShow(this);
+		configurePhotoPanel();
+    }
+	
+	public abstract void configurePhotoPanel();
 	
 	@Override
     protected void initWidgetDefaultStyleName()
@@ -394,8 +459,7 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 		{
 			Photo photo = album.getImages().get(index);
 			image = new Image(photo.getUrl());
-			image.setWidth(photo.getWidth()+"px");
-			image.setHeight(photo.getHeight()+"px");
+			adjustImageSize(photoPanel, photo, image);
 			imagesCache.put(key, image);
 		}
 		final int nextIndex = index + 1;
@@ -414,6 +478,33 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 		return image;
     }
 
+	/**
+	 * 
+	 * @param referencePanel
+	 * @param photo
+	 * @param image
+	 */
+    protected void adjustImageSize(Widget referencePanel, Photo photo, Image image)
+    {
+		if (SCALE_IMAGES)
+		{
+			double scaleWidth = referencePanel.getOffsetWidth() / ((double)photo.getWidth());
+			double scaleHeight = referencePanel.getOffsetHeight() / ((double)photo.getHeight());
+
+			double scale = Math.min(scaleWidth, scaleHeight);
+			if (scale > 0)
+			{
+				image.setWidth(Math.round(photo.getWidth()*scale)+"px");
+				image.setHeight(Math.round(photo.getHeight()*scale)+"px");
+			}
+		}
+		else
+		{
+			image.setWidth(photo.getWidth()+"px");
+			image.setHeight(photo.getHeight()+"px");
+		}
+    }
+	
 	/**
 	 * 
 	 * @return

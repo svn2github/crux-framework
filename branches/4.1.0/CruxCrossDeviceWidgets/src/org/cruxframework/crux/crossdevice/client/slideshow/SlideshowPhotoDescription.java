@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowPhotoDescription extends SlideshowBaseComponent
+public class SlideshowPhotoDescription extends SlideshowComponent
 {
 	
 	private Label description;

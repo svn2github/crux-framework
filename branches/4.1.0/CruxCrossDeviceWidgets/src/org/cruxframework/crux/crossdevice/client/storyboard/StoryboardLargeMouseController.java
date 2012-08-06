@@ -1,8 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -33,11 +31,4 @@ public class StoryboardLargeMouseController extends StoryboardLargeController
 	    
 		return panel;
 	}
-	
-	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		super.applyWidgetDependentStyleNames();
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.mouse.toString());
-	}	
 }

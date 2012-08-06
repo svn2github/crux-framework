@@ -56,7 +56,6 @@ public abstract class BasePromoBannerController extends DeviceAdaptiveController
 	protected void initWidgetDefaultStyleName()
 	{
 		setStyleName("xdev-PromoBanner");
-		applyWidgetDependentStyleNames();
 	}
 
 	@Override

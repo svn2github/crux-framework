@@ -1,8 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,12 +24,6 @@ public class StoryboardLargeController extends StoryboardSmallController
 		return panel;
 	}
 
-	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-	}	
-	
 	@Override
     public String getLargeDeviceItemWidth()
     {

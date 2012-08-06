@@ -17,8 +17,6 @@ package org.cruxframework.crux.crossdevice.client.toptoolbar;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -42,13 +40,6 @@ public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallControl
 	@Create
 	protected GripHandler gripHandler;
 	
-	@Override
-    protected void applyWidgetDependentStyleNames()
-    {
-		super.applyWidgetDependentStyleNames();
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
-    }
-
 	@Override
 	protected void prepareGripPanel()
 	{

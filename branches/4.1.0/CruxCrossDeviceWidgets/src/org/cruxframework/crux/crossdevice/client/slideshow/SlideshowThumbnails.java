@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class SlideshowThumbnails extends SlideshowBaseComponent
+public class SlideshowThumbnails extends SlideshowComponent
 {
 	private RollingPanel thumbnails;
 	public SlideshowThumbnails()

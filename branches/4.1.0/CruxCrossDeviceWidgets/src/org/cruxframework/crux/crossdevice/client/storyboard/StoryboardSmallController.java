@@ -5,9 +5,7 @@ import java.util.NoSuchElementException;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -159,12 +157,6 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	protected void initWidgetDefaultStyleName()
 	{
 		setStyleName("xdev-Storyboard");
-	}
-
-	@Override
-	protected void applyWidgetDependentStyleNames()
-	{
-		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
 	}
 
 	@Override
