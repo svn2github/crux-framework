@@ -331,6 +331,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addResizeHandler(final ResizeHandler handler)
 	{
 		resizeHandlers.add(handler);
+		if (isAttached())
+		{	
+			ViewHandlers.ensureViewContainerResizeHandler(getContainer());
+		}
 		return new HandlerRegistration()
 		{
 			@Override
@@ -349,6 +353,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler)
 	{
 		orientationOrResizeHandlers.add(handler);
+		if (isAttached())
+		{	
+			ViewHandlers.ensureViewContainerOrientationChangeOrResizeHandler(getContainer());
+		}
 		return new HandlerRegistration()
 		{
 			@Override
@@ -372,6 +380,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowCloseHandler(final CloseHandler<Window> handler)
 	{
 		windowCloseHandlers.add(handler);
+		if (isAttached())
+		{	
+			ViewHandlers.ensureViewContainerCloseHandler(getContainer());
+		}
 		return new HandlerRegistration()
 		{
 			@Override
@@ -394,6 +406,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowClosingHandler(final ClosingHandler handler)
 	{
 		windowClosingHandlers.add(handler);
+		if (isAttached())
+		{	
+			ViewHandlers.ensureViewContainerClosingHandler(getContainer());
+		}
 		return new HandlerRegistration()
 		{
 			@Override
@@ -500,6 +516,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowHistoryChangedHandler(final ValueChangeHandler<String> handler)
 	{
 		historyHandlers.add(handler);
+		if (isAttached())
+		{	
+			ViewHandlers.ensureViewContainerHistoryHandler(getContainer());
+		}
 		return new HandlerRegistration()
 		{
 			@Override

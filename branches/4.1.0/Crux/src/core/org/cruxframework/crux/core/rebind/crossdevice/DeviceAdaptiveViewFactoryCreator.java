@@ -17,12 +17,11 @@ package org.cruxframework.crux.core.rebind.crossdevice;
 
 import java.util.Map;
 
-import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
-import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
-import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
+import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
@@ -34,7 +33,6 @@ import com.google.gwt.core.ext.TreeLogger;
  */
 public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 {
-	private final String controllerName;
 	private String controllerClass;
 
 	/**
@@ -48,15 +46,30 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, View view, String device, final String controllerName, String module)
     {
 	    super(context, logger, view, device, module);
-		this.controllerName = controllerName;
 	    controllerClass = ClientControllers.getController(controllerName);
+		this.controllerAccessHandler = new ControllerAccessHandler(){
+
+			@Override
+            public String getControllerExpression(String controller)
+            {
+	            assert(controllerName.equals(controller)):"Controller ["+controller+" not found into this view.]";
+				return getProxyQualifiedName()+".this._controller";
+            }
+
+			@Override
+            public String getControllerImplClassName(String controller)
+            {
+	            return controllerClass + ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX;
+            }
+		};
+
     }
 
 	@Override
 	protected void generateProxyFields(SourcePrinter printer)
 	{
 	    super.generateProxyFields(printer);
-		printer.println("private "+controllerClass+" _controller;");
+		printer.println("private "+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" _controller;");
 	}
 	
 	/**
@@ -65,17 +78,21 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName).create();
-		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName).create();
-
 		printer.println("public "+getProxySimpleName()+"(String id, String title){");
 		printer.println("super(id, title);");
 		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
-		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
-		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
-		printer.println("this._controller = getRegisteredControllers().getController("+EscapeUtils.quote(controllerName)+");");
 		printer.println("}");
 	}
+
+	@Override
+	protected void generateProxyMethods(SourcePrinter printer)
+	{
+	    super.generateProxyMethods(printer);
+		printer.println("public void setController("+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" controller){");
+		printer.println("this._controller = controller;");
+		printer.println("}");
+	}
+	
 	
 	
 	@Override

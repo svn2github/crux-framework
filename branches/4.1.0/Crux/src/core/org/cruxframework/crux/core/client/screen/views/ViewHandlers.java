@@ -113,7 +113,7 @@ public class ViewHandlers
 	 * 
 	 * @param viewContainer
 	 */
-	private static void ensureViewContainerResizeHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerResizeHandler(ViewContainer viewContainer)
     {
 	    if (!hasWindowResizeHandler && viewContainer.hasResizeHandlers())
 	    {
@@ -136,7 +136,7 @@ public class ViewHandlers
 	 * 
 	 * @param viewContainer
 	 */
-	private static void ensureViewContainerHistoryHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerHistoryHandler(ViewContainer viewContainer)
     {
 	    if (!hasHistoryHandler && viewContainer.hasHistoryHandlers())
 	    {
@@ -160,7 +160,7 @@ public class ViewHandlers
 	 * 
 	 * @param viewContainer
 	 */
-	private static void ensureViewContainerOrientationChangeOrResizeHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerOrientationChangeOrResizeHandler(ViewContainer viewContainer)
     {
 	    if (!hasOrientationChangeOrResizeHandler && viewContainer.hasOrientationChangeOrResizeHandlers())
 	    {
@@ -183,7 +183,7 @@ public class ViewHandlers
 	 * 
 	 * @param viewContainer
 	 */
-	private static void ensureViewContainerCloseHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerCloseHandler(ViewContainer viewContainer)
     {
 	    if (!hasWindowCloseHandler && viewContainer.hasWindowCloseHandlers())
 	    {
@@ -206,7 +206,7 @@ public class ViewHandlers
 	 * 
 	 * @param viewContainer
 	 */
-	private static void ensureViewContainerClosingHandler(ViewContainer viewContainer)
+	protected static void ensureViewContainerClosingHandler(ViewContainer viewContainer)
     {
 	    if (!hasWindowClosingHandler && viewContainer.hasWindowClosingHandlers())
 	    {

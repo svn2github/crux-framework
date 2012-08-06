@@ -15,8 +15,11 @@
  */
 package org.cruxframework.crux.core.client.controller.crossdevice;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewAware;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.EventHandler;
@@ -49,7 +52,32 @@ public abstract class DeviceAdaptiveController
 	/**
 	 * Override this method to apply dependent stylenames for the widget
 	 */
-	protected abstract void applyWidgetDependentStyleNames();
+	protected void applyWidgetDependentStyleNames()
+	{
+		switch (Screen.getCurrentDevice())
+        {
+        	case smallDisplayArrows:
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.arrows.toString());
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
+	        break;
+        	case smallDisplayTouch:
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
+	        break;
+        	case largeDisplayTouch:
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
+	        break;
+        	case largeDisplayArrows:
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.arrows.toString());
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
+	        break;
+        	case largeDisplayMouse:
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.mouse.toString());
+        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
+	        break;
+        }
+	}
 
 	/**
 	 * Override this method if you need to add some startup code for component

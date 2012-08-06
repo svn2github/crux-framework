@@ -184,9 +184,10 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		srcWriter.println("public " + getProxySimpleName() + "(){");
 
 		String viewVariable = ViewFactoryCreator.createVariableName("view");
-		srcWriter.println(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName() + " " + 
+		srcWriter.println(viewClassName + " " + 
 				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+", "+EscapeUtils.quote(device.toString())+");");
 		createController(srcWriter, viewVariable);
+		srcWriter.println(viewVariable+".setController(this._controller);");
 		
 		srcWriter.println("initWidget(viewContainer.asWidget());");
 		srcWriter.println("viewContainer.add("+viewVariable+", true);");
