@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.FocusableFactory
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllTouchHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.ClickEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.DoubleClickEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
@@ -41,6 +42,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 	@TagEvent(ClickEvtBind.class),
 	@TagEvent(DoubleClickEvtBind.class)
 })
-public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> implements FocusableFactory<C>, HasAllMouseHandlersFactory<C>, HasAllKeyHandlersFactory<C>, HasAllFocusHandlersFactory<C>
+public abstract class FocusWidgetFactory <C extends WidgetCreatorContext> extends WidgetCreator<C> 
+			implements FocusableFactory<C>, HasAllMouseHandlersFactory<C>, HasAllKeyHandlersFactory<C>, 
+			HasAllFocusHandlersFactory<C>, HasAllTouchHandlersFactory<C>
 {
 }

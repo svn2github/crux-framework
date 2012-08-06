@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllTouchHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.event.LoadErrorEvtBind;
@@ -50,7 +51,8 @@ import com.google.gwt.user.client.ui.Image;
 public class ImageFactory extends WidgetCreator<WidgetCreatorContext> 
 	   implements HasClickHandlersFactory<WidgetCreatorContext>, 
 	   			  HasAllMouseHandlersFactory<WidgetCreatorContext>, 
-	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>
+	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>, 
+	   			  HasAllTouchHandlersFactory<WidgetCreatorContext>
 {
 	public static class URLAttributeParser extends AttributeProcessor<WidgetCreatorContext>
 	{

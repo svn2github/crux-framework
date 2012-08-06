@@ -18,6 +18,7 @@ package org.cruxframework.crux.gwt.rebind;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllTouchHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionEstimatorFactory;
@@ -35,7 +36,8 @@ public abstract class AbstractLabelFactory extends WidgetCreator<WidgetCreatorCo
        implements HasDirectionFactory<WidgetCreatorContext>, HasWordWrapFactory<WidgetCreatorContext>, 
        			  HasTextFactory<WidgetCreatorContext>, HasClickHandlersFactory<WidgetCreatorContext>, 
        			  HasDoubleClickHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
-                  HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>
+                  HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, HasDirectionEstimatorFactory<WidgetCreatorContext>, 
+                  HasAllTouchHandlersFactory<WidgetCreatorContext>
 {
 	@Override
     public WidgetCreatorContext instantiateContext()

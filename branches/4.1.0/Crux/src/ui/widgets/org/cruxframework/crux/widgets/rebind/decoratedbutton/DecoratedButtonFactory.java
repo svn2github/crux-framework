@@ -27,7 +27,8 @@ import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
  * @author Gesse S. F. Dafe
  */
 @DeclarativeFactory(id="decoratedButton", library="widgets", targetWidget=DecoratedButton.class)
-public class DecoratedButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> implements HasTextFactory<WidgetCreatorContext>
+public class DecoratedButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
+			implements HasTextFactory<WidgetCreatorContext>
 {
 	@Override
     public WidgetCreatorContext instantiateContext()

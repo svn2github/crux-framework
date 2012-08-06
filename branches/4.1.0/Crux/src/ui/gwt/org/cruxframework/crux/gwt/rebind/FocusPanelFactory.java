@@ -20,6 +20,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.FocusableFactory
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllKeyHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllTouchHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
@@ -44,7 +45,8 @@ public class FocusPanelFactory extends PanelFactory<WidgetCreatorContext>
 	   			  HasAllFocusHandlersFactory<WidgetCreatorContext>, 
 	   			  HasDoubleClickHandlersFactory<WidgetCreatorContext>,
 	   			  HasAllKeyHandlersFactory<WidgetCreatorContext>, 
-	   			  FocusableFactory<WidgetCreatorContext>
+	   			  FocusableFactory<WidgetCreatorContext>, 
+	   			  HasAllTouchHandlersFactory<WidgetCreatorContext>
 	   			
 {
     
