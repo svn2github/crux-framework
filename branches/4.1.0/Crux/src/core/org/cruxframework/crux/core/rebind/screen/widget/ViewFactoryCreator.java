@@ -57,6 +57,7 @@ import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -557,7 +558,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			}
 			else
 			{
-				JMethod method = messageClass.findMethod(messageMethod, new JType[]{});
+				JMethod method = JClassUtils.getMethod(messageClass, messageMethod, new JType[]{});
 				if (method == null)
 				{
 					throw new CruxGeneratorException("Method ["+messageMethod+"] of message ["+messageKey+"], declared on view ["+view.getId()+"], does not exist in message class ["+messageClassName+"].");
