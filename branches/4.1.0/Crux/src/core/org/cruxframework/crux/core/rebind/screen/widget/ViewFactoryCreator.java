@@ -57,7 +57,6 @@ import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -558,13 +557,45 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			}
 			else
 			{
-				JMethod method = JClassUtils.getMethod(messageClass, messageMethod, new JType[]{});
-				if (method == null)
+				if (!hasMethod(messageClass, messageMethod, new JType[]{}))
 				{
 					throw new CruxGeneratorException("Method ["+messageMethod+"] of message ["+messageKey+"], declared on view ["+view.getId()+"], does not exist in message class ["+messageClassName+"].");
 				}
 			}
 		}
+	}
+
+	/**
+	 * Verifies if a method exists into a interface
+	 * @param clazz
+	 * @param methodName
+	 * @param params
+	 * @return
+	 */
+	private boolean hasMethod(JClassType clazz, String methodName, JType[] params)
+	{
+		if (clazz != null && methodName != null)
+		{
+			JMethod method = clazz.findMethod(methodName, params);
+			if (method != null)
+			{
+				return true;
+			}
+
+			JClassType[] interfaces = clazz.getImplementedInterfaces();
+			if (interfaces != null)
+			{
+				for (JClassType intf : interfaces)
+				{
+					if (hasMethod(intf, methodName, params))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
     /**
