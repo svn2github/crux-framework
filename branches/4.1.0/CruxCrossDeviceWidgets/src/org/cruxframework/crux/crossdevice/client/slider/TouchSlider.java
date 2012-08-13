@@ -333,7 +333,26 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	@Override
 	public void onOrientationChangeOrResize()
 	{
-		slide(0);
+		if (contentProvider != null && contentProvider.size() > 0)
+		{
+			boolean hasNextPanel = hasNextWidget();
+			boolean hasPreviousPanel = hasPreviousWidget();
+
+			if (hasNextPanel || hasPreviousPanel)
+			{
+				Animation.translateX(getCurrentPanel(), 0, null);
+				if (hasPreviousPanel)
+				{
+					Widget previousPanel = getPreviousPanel();
+					Animation.translateX(previousPanel, -previousPanel.getOffsetWidth(), null);
+				}
+				if (hasNextPanel)
+				{
+					Widget nextPanel = getNextPanel();
+					Animation.translateX(nextPanel, nextPanel.getOffsetWidth(), null);
+				}
+			}
+		}
 	}
 	
 	/**
