@@ -25,7 +25,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
-import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -108,7 +107,7 @@ public class ScreenFactory
 					if(screen != null)
 					{
 						screenCache.put(cacheId, screen);
-						saveScreenLastModified(id, lastModified);
+						saveScreenLastModified(cacheId, lastModified);
 					}
 				}
 			}
@@ -194,7 +193,7 @@ public class ScreenFactory
 		Screen screen = screenCache.get(cacheId);
 		if (screen != null)
 		{
-			if (mustReprocessScreen(id, lastModified))
+			if (mustReprocessScreen(cacheId, lastModified))
 			{
 				screenCache.remove(cacheId);
 				screen = null;
