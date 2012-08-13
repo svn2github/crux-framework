@@ -18,7 +18,12 @@ package org.cruxframework.crux.crossdevice.client.slideshow;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -33,12 +38,25 @@ public class SlideshowTouchController extends SlideshowBaseController
 	private SimplePanel mainPanel;
 
 	@Expose
-	public void onTouchEndDialog()
+	public void onTouchEndDialog(TouchEndEvent event)
 	{
 		if (dialog.isShowing())
 		{
 			dialog.hide();
 		}
+		event.preventDefault();
+	}
+
+	@Expose
+	public void onTouchStartDialog(TouchStartEvent event)
+	{
+		event.preventDefault();
+	}
+
+	@Expose
+	public void onTouchMoveDialog(TouchMoveEvent event)
+	{
+		event.preventDefault();
 	}
 
 	@Override
@@ -46,10 +64,17 @@ public class SlideshowTouchController extends SlideshowBaseController
 	{
 	    super.init();
 	    dialog = getChildWidget("dialog");
-	    dialog.setGlassEnabled(true);
 	    mainPanel = getChildWidget("mainPanel");
+	    adjustTableSize();
 	}
 
+	@Override
+	public void onOrientationChangeOrResize()
+	{
+	    super.onOrientationChangeOrResize();
+	    adjustTableSize();
+	}
+	
 	@Override
     public void configurePhotoPanel()
     {
@@ -60,6 +85,22 @@ public class SlideshowTouchController extends SlideshowBaseController
 	@Override
 	protected void showComponents()
 	{
-	    dialog.show();
+	    if (components.size() > 1)
+	    {
+	    	dialog.show();
+	    }
 	}
+
+	private void adjustTableSize()
+    {
+	    Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				table.setWidth(asWidget().getOffsetWidth()+"px");
+				table.setHeight(asWidget().getOffsetHeight()+"px");
+			}
+		});
+    }
 }

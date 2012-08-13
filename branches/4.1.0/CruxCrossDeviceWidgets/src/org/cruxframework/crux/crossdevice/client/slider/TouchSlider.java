@@ -17,6 +17,8 @@ package org.cruxframework.crux.crossdevice.client.slider;
 
 import java.util.Date;
 
+import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.widgets.client.animation.Animation;
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
@@ -36,6 +38,8 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -48,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Thiago da Rosa de Bustamante
  */
 public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidingHandlers, HasTapHandlers, 
-											TouchStartHandler, TouchMoveHandler, TouchEndHandler
+											TouchStartHandler, TouchMoveHandler, TouchEndHandler, OrientationChangeOrResizeHandler
 {
 	private static final int TAP_EVENT_THRESHOLD = 5;
 
@@ -93,8 +97,27 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		style.setHeight(100, Unit.PCT);
 
 		touchPanel.addTouchStartHandler(this);
-	}
+		
+		addAttachHandler(new Handler()
+		{
+			private HandlerRegistration orientationHandlerRegistration;
 
+			@Override
+			public void onAttachOrDetach(AttachEvent event)
+			{
+				if (event.isAttached())
+				{
+					orientationHandlerRegistration = Screen.addOrientationChangeOrResizeHandler(TouchSlider.this);
+				}
+				else if (orientationHandlerRegistration != null)
+				{
+					orientationHandlerRegistration.removeHandler();
+					orientationHandlerRegistration = null;
+				}
+			}
+		});
+		
+	}
 	/**
 	 * 
 	 * @return
@@ -306,6 +329,13 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		touchEndHandler = touchPanel.addTouchEndHandler(this);
 	}
 
+
+	@Override
+	public void onOrientationChangeOrResize()
+	{
+		slide(0);
+	}
+	
 	/**
 	 * Sets the duration of the slide animations in milliseconds.
 	 * @param slideTransitionDuration

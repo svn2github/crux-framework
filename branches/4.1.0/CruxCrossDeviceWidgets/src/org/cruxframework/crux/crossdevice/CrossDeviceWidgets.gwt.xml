@@ -63,6 +63,49 @@
 			<when-property-is name="device.features" value="largeDisplayTouch" />
 		</any>
 	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.ThumbnailsNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.SlideshowThumbnailsImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.ThumbnailsTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.SlideshowThumbnailsImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
 	
+    <!-- RollingPanel -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.rollingpanel.RollingPanelNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.rollingpanel.RollingPanel.PanelImplementation" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.rollingpanel.RollingPanelTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.rollingpanel.RollingPanel.PanelImplementation" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
 	
 </module>
