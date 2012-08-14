@@ -21,7 +21,7 @@ import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class PhotoAlbumService
+public abstract class PhotoAlbumService implements AlbumService
 {
 	private Callback callback;
 	private Slideshow slideshow;
@@ -157,9 +157,4 @@ public abstract class PhotoAlbumService
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static interface Callback
-	{
-		void onLoaded(PhotoAlbum album);
-		void onError(Throwable t);
-	}
 }

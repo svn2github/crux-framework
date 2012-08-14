@@ -20,6 +20,8 @@ import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
+import org.cruxframework.crux.crossdevice.client.slideshow.data.AlbumService;
+import org.cruxframework.crux.crossdevice.client.slideshow.data.AlbumService.Callback;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Photo;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.PhotoAlbum;
 
@@ -56,6 +58,7 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	protected boolean preloadNextImages = true;
 	protected int transitionDelay = 5000;
 	private boolean useLayout = false;
+	private AlbumService albumService;
 	
 	/**
 	 * 
@@ -388,6 +391,32 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
     	this.preloadNextImages = preloadNextImages;
     }
 
+	/**
+	 * 
+	 */
+	public AlbumService getAlbumService()
+	{
+		return albumService;
+	}
+	
+	/**
+	 * 
+	 */
+	public void setAlbumService(AlbumService albumService)
+	{
+		this.albumService = albumService;
+		this.albumService.setSlideshow(this);
+	}
+	
+	/**
+	 * 
+	 */
+	public void load(Callback callback)
+	{
+		assert(albumService != null):"You must initialize slideshow albumService property first."; 
+		albumService.loadAlbum(callback);
+	}
+	
 	@Override
     public void onOrientationChangeOrResize()
     {

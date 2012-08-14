@@ -16,6 +16,7 @@
 package org.cruxframework.crux.crossdevice.client.slideshow.data.picasa;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow.Name;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Entry;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Feed;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Photo;
@@ -31,20 +32,42 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Name("picasa")
 public class PicasaService extends PhotoAlbumService
 {		
 	private String albumID;
 	private String userID;
 
-	public PicasaService(String userID, String albumID)
+	public PicasaService()
     {
 		
     }
+	
 	public PicasaService(String userID, String albumID, int imagesSize, int thumbnailsSize)
     {
 		super(imagesSize, thumbnailsSize);
-		this.userID = userID;
-		this.albumID = albumID;
+		setUserID(userID);
+		setAlbumID(albumID);
+    }
+	
+	public String getAlbumID()
+    {
+    	return albumID;
+    }
+	
+	public void setAlbumID(String albumID)
+    {
+    	this.albumID = albumID;
+    }
+	
+	public String getUserID()
+    {
+    	return userID;
+    }
+	
+	public void setUserID(String userID)
+    {
+    	this.userID = userID;
     }
 	
 	@Override

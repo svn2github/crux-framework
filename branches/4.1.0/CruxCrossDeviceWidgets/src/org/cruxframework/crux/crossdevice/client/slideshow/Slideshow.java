@@ -15,16 +15,23 @@
  */
 package org.cruxframework.crux.crossdevice.client.slideshow;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
+import org.cruxframework.crux.crossdevice.client.slideshow.data.AlbumService;
+import org.cruxframework.crux.crossdevice.client.slideshow.data.AlbumService.Callback;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.Photo;
 import org.cruxframework.crux.crossdevice.client.slideshow.data.PhotoAlbum;
 
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.Image;
 
 //TODO: implementar um icone de carregando enquando baixa uma foto
 //TODO: criar css para esse componente (pedir ao Junior)
@@ -46,6 +53,13 @@ public interface Slideshow extends DeviceAdaptive
 {
 	public static enum Position{lineStart, lineEnd, east, north, south, west, none}
 	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public static @interface Name 
+	{
+		String value();
+	}
+
 	/**
 	 * 
 	 * @author Thiago da Rosa de Bustamante
@@ -79,4 +93,7 @@ public interface Slideshow extends DeviceAdaptive
 	boolean isPreloadNextImages();
 	void setPreloadNextImages(boolean preloadNextImages);
 	void setLayout(Layout layout);
+	AlbumService getAlbumService();
+	void setAlbumService(AlbumService albumService);
+	void load(Callback callback);
 }

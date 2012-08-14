@@ -17,6 +17,7 @@ package org.cruxframework.crux.crossdevice.client.slideshow.layout;
 
 import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow;
 import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow.Layout;
+import org.cruxframework.crux.crossdevice.client.slideshow.Slideshow.Name;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowAlbumTitle;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowNavigator;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoDescription;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Name("classic")
 public class ClassicLayout  implements Layout
 {
 	@Override
@@ -42,6 +44,7 @@ public class ClassicLayout  implements Layout
 
 		SlideshowThumbnails thumbnails = new SlideshowThumbnails();
 		slideshow.addComponent(thumbnails, Slideshow.Position.north);
+		slideshow.setHorizontalAlignment(thumbnails, HasHorizontalAlignment.ALIGN_CENTER);
 		slideshow.setHeight(thumbnails, "90px");
 
 		SlideshowNavigator navigator = new SlideshowNavigator();
