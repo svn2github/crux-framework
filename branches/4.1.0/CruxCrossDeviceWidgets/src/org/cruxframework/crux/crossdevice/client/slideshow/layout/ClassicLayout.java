@@ -24,6 +24,7 @@ import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoDescrip
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel;
 import org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
@@ -34,34 +35,67 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 @Name("classic")
 public class ClassicLayout  implements Layout
 {
+	private Impl impl = GWT.create(Impl.class);
+	
+	static class Impl
+	{
+		void createComponents(Slideshow slideshow)
+		{
+			SlideshowAlbumTitle title = new SlideshowAlbumTitle();
+			slideshow.addComponent(title, Slideshow.Position.north);
+			slideshow.setHorizontalAlignment(title, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(title, "40px");
+
+			SlideshowThumbnails thumbnails = new SlideshowThumbnails();
+			slideshow.addComponent(thumbnails, Slideshow.Position.north);
+			slideshow.setHorizontalAlignment(thumbnails, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(thumbnails, "90px");
+
+			SlideshowNavigator navigator = new SlideshowNavigator();
+			slideshow.addComponent(navigator, Slideshow.Position.north);
+			slideshow.setHorizontalAlignment(navigator, HasHorizontalAlignment.ALIGN_RIGHT);
+			slideshow.setHeight(navigator, "20px");
+
+			SlideshowPhotoDescription description = new SlideshowPhotoDescription();
+			slideshow.addComponent(description, Slideshow.Position.south);
+			slideshow.setVerticalAlignment(description, HasVerticalAlignment.ALIGN_MIDDLE);
+			slideshow.setHorizontalAlignment(description, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(description, "90px");
+
+			SlideshowPlayPanel play = new SlideshowPlayPanel();
+			slideshow.addComponent(play, Slideshow.Position.south);
+			slideshow.setVerticalAlignment(play, HasVerticalAlignment.ALIGN_MIDDLE);
+			slideshow.setHorizontalAlignment(play, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(play, "30px");
+		}
+	}
+	
+	static class MobileImpl extends Impl
+	{
+		void createComponents(Slideshow slideshow)
+		{
+			SlideshowThumbnails thumbnails = new SlideshowThumbnails();
+			slideshow.addComponent(thumbnails, Slideshow.Position.north);
+			slideshow.setHorizontalAlignment(thumbnails, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(thumbnails, "90px");
+
+			SlideshowPhotoDescription description = new SlideshowPhotoDescription();
+			slideshow.addComponent(description, Slideshow.Position.south);
+			slideshow.setVerticalAlignment(description, HasVerticalAlignment.ALIGN_MIDDLE);
+			slideshow.setHorizontalAlignment(description, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(description, "70px");
+
+			SlideshowPlayPanel play = new SlideshowPlayPanel();
+			slideshow.addComponent(play, Slideshow.Position.south);
+			slideshow.setVerticalAlignment(play, HasVerticalAlignment.ALIGN_MIDDLE);
+			slideshow.setHorizontalAlignment(play, HasHorizontalAlignment.ALIGN_CENTER);
+			slideshow.setHeight(play, "20px");
+		}
+	}
+
 	@Override
     public void createComponents(Slideshow slideshow)
     {
-		SlideshowAlbumTitle title = new SlideshowAlbumTitle();
-		slideshow.addComponent(title, Slideshow.Position.north);
-		slideshow.setHorizontalAlignment(title, HasHorizontalAlignment.ALIGN_CENTER);
-		slideshow.setHeight(title, "40px");
-
-		SlideshowThumbnails thumbnails = new SlideshowThumbnails();
-		slideshow.addComponent(thumbnails, Slideshow.Position.north);
-		slideshow.setHorizontalAlignment(thumbnails, HasHorizontalAlignment.ALIGN_CENTER);
-		slideshow.setHeight(thumbnails, "90px");
-
-		SlideshowNavigator navigator = new SlideshowNavigator();
-		slideshow.addComponent(navigator, Slideshow.Position.north);
-		slideshow.setHorizontalAlignment(navigator, HasHorizontalAlignment.ALIGN_RIGHT);
-		slideshow.setHeight(navigator, "20px");
-
-		SlideshowPhotoDescription description = new SlideshowPhotoDescription();
-		slideshow.addComponent(description, Slideshow.Position.south);
-		slideshow.setVerticalAlignment(description, HasVerticalAlignment.ALIGN_MIDDLE);
-		slideshow.setHorizontalAlignment(description, HasHorizontalAlignment.ALIGN_CENTER);
-		slideshow.setHeight(description, "90px");
-
-		SlideshowPlayPanel play = new SlideshowPlayPanel();
-		slideshow.addComponent(play, Slideshow.Position.south);
-		slideshow.setVerticalAlignment(play, HasVerticalAlignment.ALIGN_MIDDLE);
-		slideshow.setHorizontalAlignment(play, HasHorizontalAlignment.ALIGN_CENTER);
-		slideshow.setHeight(play, "30px");
+		impl.createComponents(slideshow);
     }
 }

@@ -91,6 +91,13 @@
 			<when-property-is name="device.features" value="largeDisplayTouch" />
 		</any>
 	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.layout.ClassicLayout.MobileImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.layout.ClassicLayout.Impl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
 	
     <!-- RollingPanel -->
 	<replace-with class="org.cruxframework.crux.crossdevice.client.rollingpanel.RollingPanelNoTouchImpl">
