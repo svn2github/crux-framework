@@ -15,8 +15,10 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -186,6 +188,64 @@ public class JClassUtils
 	    }
 	    return method;
     }
+
+	/**
+	 * 
+	 * @param clazz
+	 * @param methodName
+	 * @return
+	 */
+	public static JMethod[] findMethods(JClassType clazz, String methodName)
+	{
+		List<JMethod> result = new ArrayList<JMethod>();
+		JMethod[] methods = null;
+	    JClassType superClass = clazz;
+	    while (superClass.getSuperclass() != null)
+	    {
+	    	methods = superClass.getMethods();
+	    	if (methods != null)
+	    	{
+	    		for (JMethod method : methods)
+                {
+	                if (method.getName().equals(methodName))
+	                {
+	                	result.add(method);
+	                }
+                }
+	    	}
+	    	superClass = superClass.getSuperclass();
+	    }
+	    return result.toArray(new JMethod[result.size()]);
+	}
+	
+	/**
+	 * 
+	 * @param clazz
+	 * @param propertyName
+	 * @return
+	 */
+	public static JMethod[] findSetterMethods(JClassType clazz, String propertyName)
+	{
+		String setterMethodName = "set"+Character.toUpperCase(propertyName.charAt(0)); 
+		if (propertyName.length() > 1)
+		{
+			setterMethodName += propertyName.substring(1);
+		}
+		
+		JMethod[] methods = findMethods(clazz, setterMethodName);
+		List<JMethod> result = new ArrayList<JMethod>();
+		for (JMethod method : methods)
+        {
+	        if (method.getParameters().length == 1)
+	        {
+	        	result.add(method);
+	        }
+        }
+		return result.toArray(new JMethod[result.size()]);
+	}
+	
+
+	
 	
 	/**
 	 * 

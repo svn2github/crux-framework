@@ -51,14 +51,14 @@ public abstract class SingleViewContainer extends ViewContainer
 	    {
 	    	if (deactivate(activeView, getContainerPanel(activeView)))
 	    	{
-	    		super.activate(view, containerPanel);
 	    		activeView = view;
+	    		super.activate(view, containerPanel);
 	    	}
 	    }
 	    else
 	    {
+	    	activeView = view;
     		super.activate(view, containerPanel);
-    		activeView = view;
 	    }
 	}
 	
