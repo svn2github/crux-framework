@@ -42,7 +42,7 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		body.println("var ua = navigator.userAgent.toLowerCase();"); 
 		body.println("var supportsTouch = ('ontouchstart' in window);");
 		
-		body.println("if (ua.indexOf('googletv') != -1){");
+		body.println("if ((ua.indexOf('googletv') != -1) || (ua.indexOf('ipad;') != -1)){");
 		body.indent();
 		body.println("return 'largeDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
@@ -51,7 +51,7 @@ public class DeviceFeaturesPropertyGenerator implements PropertyProviderGenerato
 		body.indent();
 		body.println("return 'smallDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
-		body.println("} else if ((ua.indexOf('android') != -1) || (ua.indexOf('ipad;') != -1)){");
+		body.println("} else if (ua.indexOf('android') != -1){");
 		body.indent();
 		body.println("return 'largeDisplay'+(supportsTouch?'Touch':'Arrows');");
 		body.outdent();
