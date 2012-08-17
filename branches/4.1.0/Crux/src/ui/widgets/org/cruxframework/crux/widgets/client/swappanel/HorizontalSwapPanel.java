@@ -69,6 +69,9 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		configureCurrentPanel();
 		configureNextPanel();
 		
+		Animation.hideBackface(currentPanel);
+		Animation.hideBackface(nextPanel);
+		
 		contentPanel.add(currentPanel);
 		contentPanel.add(nextPanel);
 	}

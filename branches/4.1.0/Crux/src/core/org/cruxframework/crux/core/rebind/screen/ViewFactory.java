@@ -388,14 +388,6 @@ public class ViewFactory
 	        			view.setFragment(fragment);
 	        		}
 	        	}
-	        	else if (attrName.equals("enableTouchEventAdapters"))
-	        	{
-	        		String touchAdapters = elem.getString(attrName);
-	        		if (touchAdapters != null && touchAdapters.length() > 0)
-	        		{
-	        			view.setToucheEventAdaptersEnabled(Boolean.parseBoolean(touchAdapters));
-	        		}
-	        	}
 	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
 	        		if (logger.isInfoEnabled()) logger.info("Error setting property ["+attrName+"] for view ["+view.getId()+"].");

@@ -668,8 +668,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"onResized\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onLoad\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"enableTouchEventAdapters\" type=\"xs:boolean\" default=\"false\"/>");
-		
     }
 
 	/**
@@ -1146,7 +1144,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:choice maxOccurs=\"unbounded\">");
 			out.println("<xs:group ref=\"c:widgetsCrossDev\" />");
 			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
-			out.println("</xs:sequence>");
+			out.println("</xs:choice>");
 			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
 			out.println("</xs:complexType>");
 	        

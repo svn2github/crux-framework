@@ -67,6 +67,12 @@ class MozAnimationHandler implements AnimationHandler
 		setHeight(element, height+"px", duration);
     }
 
+	@Override
+	public void hideBackface(Widget widget)
+	{
+		widget.getElement().getStyle().setProperty("mozBackfaceVisibility", "hidden");
+	}
+	
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.MozTransitionProperty = 'height';
 		el.style.MozTransitionDelay = '0';

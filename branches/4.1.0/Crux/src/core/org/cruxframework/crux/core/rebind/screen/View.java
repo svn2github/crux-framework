@@ -46,7 +46,6 @@ public class View
 	protected List<String> serializers = new ArrayList<String>();
 	protected List<String> formatters = new ArrayList<String>();
 	protected List<String> dataSources = new ArrayList<String>();
-	protected boolean toucheEventAdaptersEnabled = false;
 	protected List<String> views = new ArrayList<String>();
 	private ViewFactoryCreator factory = null;
 
@@ -109,24 +108,6 @@ public class View
 		}
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isTouchEventAdaptersEnabled()
-	{
-		return this.toucheEventAdaptersEnabled;
-	}
-	
-	/**
-	 * 
-	 * @param toucheEventAdaptersEnabled
-	 */
-	public void setToucheEventAdaptersEnabled(boolean toucheEventAdaptersEnabled)
-	{
-		this.toucheEventAdaptersEnabled = toucheEventAdaptersEnabled;
-	}
-	
 	/**
 	 * Return view identifier
 	 * @return

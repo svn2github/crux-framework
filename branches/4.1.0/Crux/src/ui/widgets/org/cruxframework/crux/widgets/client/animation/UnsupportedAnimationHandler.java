@@ -78,6 +78,11 @@ class UnsupportedAnimationHandler implements AnimationHandler
 		}
     }
 
+	@Override
+	public void hideBackface(Widget widget)
+	{
+	}
+
 	private void setLeft(Element element, double left)
     {
 	    element.getStyle().setLeft(left, Unit.PX);

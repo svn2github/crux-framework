@@ -19,7 +19,6 @@ import org.cruxframework.crux.widgets.client.animation.Animation.AnimationHandle
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -66,6 +65,11 @@ class OAnimationHandler implements AnimationHandler
 		}
 		setHeight(element, height+"px", duration);
     }
+
+	@Override
+	public void hideBackface(Widget widget)
+	{
+	}
 
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.oTransitionProperty = 'height';

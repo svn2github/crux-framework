@@ -67,6 +67,12 @@ class WebkitAnimationHandler implements AnimationHandler
 		setHeight(element, height+"px", duration);
     }
 
+	@Override
+	public void hideBackface(Widget widget)
+	{
+		widget.getElement().getStyle().setProperty("webkitBackfaceVisibility", "hidden");
+	}
+
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.webkitTransitionProperty = 'height';
 		el.style.webkitTransitionDelay = '0';

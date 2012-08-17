@@ -67,6 +67,11 @@ class MSAnimationHandler implements AnimationHandler
 		setHeight(element, height+"px", duration);
     }
 
+	@Override
+	public void hideBackface(Widget widget)
+	{
+	}
+
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.msTransitionProperty = 'height';
 		el.style.msTransitionDelay = '0';

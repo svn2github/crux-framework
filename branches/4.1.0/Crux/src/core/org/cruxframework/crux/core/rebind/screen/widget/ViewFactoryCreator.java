@@ -29,9 +29,6 @@ import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
-import org.cruxframework.crux.core.client.screen.eventadapter.TapEventAdapter;
 import org.cruxframework.crux.core.client.screen.views.ViewAttachEvent;
 import org.cruxframework.crux.core.client.screen.views.ViewAttachHandler;
 import org.cruxframework.crux.core.client.screen.views.ViewDetachEvent;
@@ -71,8 +68,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.event.dom.client.HasAllTouchHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -396,37 +391,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		if (allowWrapperForCreatedWidget)
 		{
-			Class<?> widgetClass = getWidgetCreatorHelper(widgetType).getWidgetType();
-			widget = getEventTapWrapperForHasClickWidget(printer, widget, widgetClass);
+			// No wrappers 
 		}
 
 		return widget;
 	}
-
-	/**
-	 * Create a TapEventAdapter for touch devices, once click events has a delay to be fired
-	 * @param printer
-	 * @param widget
-	 * @param widgetClass
-	 * @return
-	 */
-	protected String getEventTapWrapperForHasClickWidget(SourcePrinter printer, String widget, Class<?> widgetClass)
-    {
-		if (getView().isTouchEventAdaptersEnabled())
-		{
-			Device currentDevice = Device.valueOf(getDevice());
-			if (currentDevice.getInput().equals(Input.touch))
-			{
-				if (HasClickHandlers.class.isAssignableFrom(widgetClass) && HasAllTouchHandlers.class.isAssignableFrom(widgetClass))
-				{
-					String wrapperWidget = createVariableName("widget");
-					printer.println(TapEventAdapter.class.getCanonicalName()+" "+wrapperWidget+" = new "+TapEventAdapter.class.getCanonicalName()+"("+widget+");" );
-					widget = wrapperWidget;
-				}
-			}
-		}
-	    return widget;
-    }
 
 	/**
 	 * Close the current postProcessing scope and schedule the execution of all scope commands.
@@ -1066,7 +1035,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
     	for (String widgetId : rootPanelChildren)
         {
-    		printer.println("this."+viewPanelVariable+".add(widgets.get("+EscapeUtils.quote(widgetId)+"), " +
+			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
+			String widgetViewId;
+			
+			if (lazyPanels.contains(lazyPanelId))
+			{
+				widgetViewId = lazyPanelId;
+			}
+			else
+			{
+				widgetViewId = widgetId;
+			}
+    		
+    		printer.println("this."+viewPanelVariable+".add(widgets.get("+EscapeUtils.quote(widgetViewId)+"), " +
     				"ViewFactoryUtils.getEnclosingPanelId("+EscapeUtils.quote(widgetId)+", "+viewVariable+"));");
         }
 

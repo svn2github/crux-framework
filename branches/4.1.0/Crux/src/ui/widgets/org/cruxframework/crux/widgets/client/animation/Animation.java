@@ -69,6 +69,15 @@ public class Animation
 	{
 		getAnimationHandler().resetTransition(widget);
 	}
+
+	/**
+	 * 
+	 * @param widget
+	 */
+	public static void hideBackface(Widget widget)
+	{
+		getAnimationHandler().hideBackface(widget);
+	}
 	
 	/**
 	 * 
@@ -94,7 +103,7 @@ public class Animation
 		void translateX(Widget widget, int diff, Callback callback);
 		void translateX(Widget widget, int diff, int duration, Callback callback);
 		void setHeight(Widget widget, int height, int duration, Callback callback);
-		void resetTransition(Widget currentPanel);
-		
+		void resetTransition(Widget widget);
+		void hideBackface(Widget widget);
 	}
 }
