@@ -6,14 +6,15 @@ import java.util.NoSuchElementException;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
+import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
+import org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @Controller("storyboardSmallController")
@@ -26,7 +27,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	@Override
 	public Widget getWidget(int index)
 	{
-		return ((FocusPanel)storyboard.getWidget(index)).getWidget();
+		return ((SimplePanel)storyboard.getWidget(index)).getWidget();
 	}
 
 	public void add(Widget widget)
@@ -120,7 +121,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 
 	protected Widget createClickablePanelForCell(Widget widget)
 	{
-		final FocusPanel panel = new FocusPanel();
+		final SelectablePanel panel = new SelectablePanel();
 		panel.add(widget);
 		panel.setStyleName("item");
 		if (!StringUtils.isEmpty(itemHeight))
@@ -133,10 +134,10 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 			panel.setWidth(itemWidth);
 		}
 
-		panel.addClickHandler(new ClickHandler()
+		panel.addSelectHandler(new SelectHandler()
 		{
 			@Override
-			public void onClick(ClickEvent event)
+			public void onSelect(SelectEvent event)
 			{
 				int index = storyboard.getWidgetIndex(panel);
 			    SelectionEvent.fire(StoryboardSmallController.this, index);

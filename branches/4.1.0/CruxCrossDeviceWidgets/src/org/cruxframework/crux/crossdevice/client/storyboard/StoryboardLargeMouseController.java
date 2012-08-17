@@ -1,7 +1,11 @@
 package org.cruxframework.crux.crossdevice.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
@@ -15,7 +19,29 @@ public class StoryboardLargeMouseController extends StoryboardLargeController
 	@Override
 	protected Widget createClickablePanelForCell(Widget widget)
 	{
-	    final FocusPanel panel = (FocusPanel) super.createClickablePanelForCell(widget);
+		final FocusPanel panel = new FocusPanel();
+		panel.add(widget);
+		panel.setStyleName("item");
+		if (!StringUtils.isEmpty(itemHeight))
+		{
+			panel.setHeight(itemHeight);
+		}
+		
+		if (!StringUtils.isEmpty(itemWidth))
+		{
+			panel.setWidth(itemWidth);
+		}
+
+		panel.addClickHandler(new ClickHandler()
+		{
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				int index = storyboard.getWidgetIndex(panel);
+			    SelectionEvent.fire(StoryboardLargeMouseController.this, index);
+			}
+		});
+	    panel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		panel.addKeyPressHandler(new KeyPressHandler()
 		{
 			@Override

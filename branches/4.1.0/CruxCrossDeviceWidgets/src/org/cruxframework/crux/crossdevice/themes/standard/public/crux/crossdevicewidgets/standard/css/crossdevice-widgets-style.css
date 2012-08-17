@@ -132,7 +132,7 @@
 .xdev-SlideshowPlayPanel
 {
 	width: 40px;
-	height: 65px;
+	height: 40px;
 	background: url(../img/slideshow-play.png) top right no-repeat;
 	cursor: pointer;
 }

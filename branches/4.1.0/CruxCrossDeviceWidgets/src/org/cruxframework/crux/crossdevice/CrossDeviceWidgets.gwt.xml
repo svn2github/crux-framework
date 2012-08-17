@@ -47,7 +47,38 @@
 		</any>
 	</replace-with>
 	
-	
+	<!-- Button  -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.button.Button.ButtonNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.button.Button.ButtonImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.button.Button.ButtonTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.button.Button.ButtonImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
+	<!-- SelectablePanel  -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandlerNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandler" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandlerTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandler" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
     <!-- Sideshow -->
 	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowSwapPhotoPanel">
 		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPhotoPanel.SlideshowPhotoPanelImpl" />
@@ -72,20 +103,6 @@
 	</replace-with>
 	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.ThumbnailsTouchImpl">
 		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowThumbnails.SlideshowThumbnailsImpl" />
-		<any>
-			<when-property-is name="device.features" value="smallDisplayTouch" />
-			<when-property-is name="device.features" value="largeDisplayTouch" />
-		</any>
-	</replace-with>
-	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelNoTouchImpl">
-		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelImpl" />
-		<none>
-			<when-property-is name="device.features" value="smallDisplayTouch" />
-			<when-property-is name="device.features" value="largeDisplayTouch" />
-		</none>
-	</replace-with>
-	<replace-with class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelTouchImpl">
-		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.slideshow.SlideshowPlayPanel.SlideshowPlayPanelImpl" />
 		<any>
 			<when-property-is name="device.features" value="smallDisplayTouch" />
 			<when-property-is name="device.features" value="largeDisplayTouch" />
