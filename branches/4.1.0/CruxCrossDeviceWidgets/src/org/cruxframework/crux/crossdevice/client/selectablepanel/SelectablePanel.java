@@ -51,6 +51,7 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 	static abstract class PanelEventsHandler
 	{
 		protected SelectablePanel selectablePanel;
+		protected boolean preventDefaultTouchEvents = false;
 
 		protected void setPanel(SelectablePanel selectablePanel)
 		{
@@ -61,6 +62,11 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		protected void select()
 		{
 			SelectEvent.fire(selectablePanel);
+		}
+
+		protected void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
+		{
+			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
 		}
 
 		protected abstract void handlePanel();
@@ -91,7 +97,7 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	static class PanelEventsHandlerTouchImpl extends PanelEventsHandler implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, ClickHandler
+	static class PanelEventsHandlerTouchImpl extends PanelEventsHandler implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
 	{
 		private static final int TAP_EVENT_THRESHOLD = 5;
 		private int startX;
@@ -102,20 +108,16 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		public void handlePanel()
 		{
 			selectablePanel.addTouchStartHandler(this);
-			selectablePanel.addClickHandler(this);
 		}
-
-		@Override
-        public void onClick(ClickEvent event)
-        {
-			event.preventDefault();
-			event.stopPropagation();
-        }
 
 		@Override
 		public void onTouchEnd(TouchEndEvent event)
 		{
 			event.stopPropagation();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			select();
 			resetHandlers();
 		}
@@ -123,6 +125,10 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		@Override
 		public void onTouchMove(TouchMoveEvent event)
 		{
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			Touch touch = event.getTouches().get(0);
 			if (Math.abs(touch.getClientX() - this.startX) > TAP_EVENT_THRESHOLD || Math.abs(touch.getClientY() - this.startY) > TAP_EVENT_THRESHOLD) 
 			{
@@ -134,6 +140,10 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		public void onTouchStart(TouchStartEvent event)
 		{
 			event.stopPropagation();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			Touch touch = event.getTouches().get(0);
 			startX = touch.getClientX();
 			startY = touch.getClientY();
@@ -207,6 +217,11 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		focusImpl.setTabIndex(getElement(), index);
 	}
 	
+	public void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
+	{
+		impl.setPreventDefaultTouchEvents(preventDefaultTouchEvents);
+	}
+
 	protected HandlerRegistration addTouchEndHandler(TouchEndHandler handler)
 	{
 		return addDomHandler(handler, TouchEndEvent.getType());
@@ -221,7 +236,7 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 	{
 		return addDomHandler(handler, TouchStartEvent.getType());
 	}
-
+	
 	protected HandlerRegistration addClickHandler(ClickHandler handler)
 	{
 		return addDomHandler(handler, ClickEvent.getType());

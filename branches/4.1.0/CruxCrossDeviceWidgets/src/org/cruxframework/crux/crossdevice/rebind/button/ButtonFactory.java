@@ -7,6 +7,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllFocusHandl
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasEnabledFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHTMLFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 import org.cruxframework.crux.crossdevice.client.button.Button;
@@ -19,6 +21,9 @@ import org.cruxframework.crux.crossdevice.rebind.event.SelectEvtBind;
  */
 @DeclarativeFactory(library="crossDevice", id="button", targetWidget=Button.class)
 
+@TagAttributes({
+	@TagAttribute(value="preventDefaultTouchEvents", type=Boolean.class, defaultValue="false")
+})
 @TagEvents({
 	@TagEvent(SelectEvtBind.class)
 })	

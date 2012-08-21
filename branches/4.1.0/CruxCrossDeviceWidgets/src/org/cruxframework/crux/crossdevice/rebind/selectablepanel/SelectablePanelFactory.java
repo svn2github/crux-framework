@@ -7,6 +7,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasEnabledFactor
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHTMLFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
@@ -23,6 +25,9 @@ import org.cruxframework.crux.gwt.rebind.PanelFactory;
  */
 @DeclarativeFactory(library="crossDevice", id="selectablePanel", targetWidget=SelectablePanel.class)
 
+@TagAttributes({
+	@TagAttribute(value="preventDefaultTouchEvents", type=Boolean.class, defaultValue="false")
+})
 @TagEvents({
 	@TagEvent(SelectEvtBind.class)
 })

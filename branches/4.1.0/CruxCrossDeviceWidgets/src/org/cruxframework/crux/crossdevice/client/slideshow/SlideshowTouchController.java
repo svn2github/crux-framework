@@ -45,18 +45,21 @@ public class SlideshowTouchController extends SlideshowBaseController
 			dialog.hide();
 		}
 		event.preventDefault();
+		event.stopPropagation();
 	}
 
 	@Expose
 	public void onTouchStartDialog(TouchStartEvent event)
 	{
 		event.preventDefault();
+		event.stopPropagation();
 	}
 
 	@Expose
 	public void onTouchMoveDialog(TouchMoveEvent event)
 	{
 		event.preventDefault();
+		event.stopPropagation();
 	}
 
 	@Override

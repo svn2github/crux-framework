@@ -49,12 +49,18 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 
 	static abstract class ButtonImpl extends com.google.gwt.user.client.ui.Button implements HasSelectHandlers
 	{
+		protected boolean preventDefaultTouchEvents = false;
 		protected abstract void select();
 
 		@Override
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
 		{
 			return addHandler(handler, SelectEvent.getType());
+		}
+		
+		protected void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
+		{
+			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
 		}
 	}
 
@@ -82,7 +88,6 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		{
 			click();
 		}
-
 	}
 
 	/**
@@ -112,17 +117,25 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		@Override
 		public void onTouchEnd(TouchEndEvent event)
 		{
-			event.preventDefault();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			event.stopPropagation();
-			select();
+			if (isEnabled())
+			{
+				select();
+			}
 			resetHandlers();
 		}
 
 		@Override
 		public void onTouchMove(TouchMoveEvent event)
 		{
-			event.preventDefault();
-			event.stopPropagation();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			Touch touch = event.getTouches().get(0);
 			if (Math.abs(touch.getClientX() - this.startX) > TAP_EVENT_THRESHOLD || Math.abs(touch.getClientY() - this.startY) > TAP_EVENT_THRESHOLD) 
 			{
@@ -133,8 +146,11 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		@Override
 		public void onTouchStart(TouchStartEvent event)
 		{
-			event.preventDefault();
 			event.stopPropagation();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
 			Touch touch = event.getTouches().get(0);
 			startX = touch.getClientX();
 			startY = touch.getClientY();
@@ -236,5 +252,10 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	public void setTabIndex(int index)
 	{
 		impl.setTabIndex(index);
+	}
+	
+	public void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
+	{
+		impl.setPreventDefaultTouchEvents(preventDefaultTouchEvents);
 	}
 }

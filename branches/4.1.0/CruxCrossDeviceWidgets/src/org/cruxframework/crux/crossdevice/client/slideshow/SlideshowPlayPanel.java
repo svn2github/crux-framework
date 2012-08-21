@@ -66,6 +66,7 @@ public class SlideshowPlayPanel extends SlideshowComponent
     protected Widget createMainWidget()
     {
 		play = new Button();
+		play.setPreventDefaultTouchEvents(true);
 		play.addSelectHandler(new SelectHandler()
 		{
 			@Override
