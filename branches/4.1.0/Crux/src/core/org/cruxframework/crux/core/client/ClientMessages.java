@@ -104,9 +104,6 @@ public interface ClientMessages extends Messages
 	@DefaultMessage("Cross document method executed. Screen[{0}], Controller[{1}], Method[{2}], Target[{3}]")
 	String screenAccessorCrossDocumentExecuted(String screenId, String controller, String method, String target);
 
-	@DefaultMessage("TapEventAdapter only can be used as a wrapper for subclasses of HasAllTouchHandlers and HasClickHandlers")
-	String tapEventAdapterInvalidWidget();
-
 	@DefaultMessage("Invalid value for style property: [{0}]:[{1}]")
 	String styleErrorInvalidProperty(String camelizedName, String value);
 	@DefaultMessage("Can not retrieve the widget [{1}] from view [{0}]. View is not loaded. Load this view into a ViewContainer first.")

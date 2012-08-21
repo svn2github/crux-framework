@@ -838,7 +838,10 @@ public class ViewParser
 				for (int i=0; i<children.getLength(); i++)
 				{
 					Node child = children.item(i);
-					HTMLUtils.write(child, innerHTML);
+					if (!isCruxModuleImportTag(child))
+					{
+						HTMLUtils.write(child, innerHTML);
+					}
 				}
 			}
 	        return HTMLUtils.escapeJavascriptString(innerHTML.toString(), false);
@@ -847,6 +850,24 @@ public class ViewParser
 		{
 			throw new ViewParserException(e.getMessage(), e);
 		}
+	} 
+
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private boolean isCruxModuleImportTag(Node node)
+	{
+		if (node instanceof Element)
+		{
+			Element elem = (Element)node;
+			String tagName = elem.getTagName();
+			String namespaceURI = elem.getNamespaceURI();
+			String src = elem.getAttribute("src");
+			return (namespaceURI == null || namespaceURI.equals(XHTML_NAMESPACE)) && tagName.equalsIgnoreCase("script") && (src != null && src.endsWith(".nocache.js"));
+		}
+		return false;
 	}
 	
 	/**

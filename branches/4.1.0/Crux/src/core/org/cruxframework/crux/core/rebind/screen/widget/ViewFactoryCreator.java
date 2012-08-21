@@ -40,6 +40,7 @@ import org.cruxframework.crux.core.client.screen.views.ViewLoadHandler;
 import org.cruxframework.crux.core.client.screen.views.ViewUnloadEvent;
 import org.cruxframework.crux.core.client.screen.views.ViewUnloadHandler;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.client.utils.HTMLUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.ViewParser;
@@ -68,6 +69,8 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -1030,8 +1033,23 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	printer.println("protected void render("+Panel.class.getCanonicalName()+" "+rootPanelVariable+") throws InterfaceConfigException{");
 
 		printer.println("if (this."+viewPanelVariable+" == null){");
+		String viewHTML = getViewHTML();
 		printer.println("this."+viewPanelVariable+" = new " +
-				HTMLPanel.class.getCanonicalName() + "("+getViewHTML()+");");
+				HTMLPanel.class.getCanonicalName() + "("+viewHTML+");");
+		
+		if (viewHTML.indexOf("<script") >= 0)
+		{
+			printer.println("this."+viewPanelVariable+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
+			printer.println("private boolean scriptsProcessed = false;");
+			printer.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
+			printer.println("if (event.isAttached() && !scriptsProcessed){");
+			printer.println(HTMLUtils.class.getCanonicalName()+".evaluateScripts("+getProxySimpleName()+".this."+viewPanelVariable+".getElement());");
+			printer.println("scriptsProcessed = true;");
+			printer.println("}");
+			printer.println("}");
+			printer.println("});");
+		}
+		
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
     	for (String widgetId : rootPanelChildren)
         {
