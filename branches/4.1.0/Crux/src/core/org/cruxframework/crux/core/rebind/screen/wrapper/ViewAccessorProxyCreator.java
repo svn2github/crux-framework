@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind.screen.wrapper;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -150,7 +151,7 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 	private void generateRootViewMethod(SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public View getRootView(){");
-		sourceWriter.println("return Screen.getRootView();");
+		sourceWriter.println("return "+Screen.class.getCanonicalName()+".getRootView();");
 		sourceWriter.println("}");
 	}
 
