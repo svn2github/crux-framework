@@ -71,7 +71,13 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	@Override
     public void setHeight(Widget widget, int height, int duration, Callback callback)
     {
-		widget.setHeight(height+"px");
+		setHeight(widget, height+"px", duration, callback);
+    }
+
+	@Override
+    public void setHeight(Widget widget, String height, int duration, Callback callback)
+    {
+		widget.setHeight(height);
 		if (callback != null)
 		{
 			callback.onTransitionCompleted();

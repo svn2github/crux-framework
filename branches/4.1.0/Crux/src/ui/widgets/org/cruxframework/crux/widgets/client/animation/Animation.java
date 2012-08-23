@@ -56,6 +56,18 @@ public class Animation
 	 * @param duration
 	 * @param callback
 	 */
+	public static void setHeight(Widget widget, String height, int duration, Callback callback)
+	{
+		getAnimationHandler().setHeight(widget, height, duration, callback);
+	}
+
+	/**
+	 * 
+	 * @param widget
+	 * @param height
+	 * @param duration
+	 * @param callback
+	 */
 	public static void setHeight(Widget widget, int height, int duration, Callback callback)
 	{
 		getAnimationHandler().setHeight(widget, height, duration, callback);
@@ -103,6 +115,7 @@ public class Animation
 		void translateX(Widget widget, int diff, Callback callback);
 		void translateX(Widget widget, int diff, int duration, Callback callback);
 		void setHeight(Widget widget, int height, int duration, Callback callback);
+		void setHeight(Widget widget, String height, int duration, Callback callback);
 		void resetTransition(Widget widget);
 		void hideBackface(Widget widget);
 	}

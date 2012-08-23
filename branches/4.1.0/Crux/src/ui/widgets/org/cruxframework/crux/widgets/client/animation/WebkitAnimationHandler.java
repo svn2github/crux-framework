@@ -59,12 +59,26 @@ class WebkitAnimationHandler implements AnimationHandler
 	@Override
     public void setHeight(Widget widget, int height, int duration, Callback callback)
     {
-		Element element = widget.getElement();
-		if (callback != null)
+		setHeight(widget, height+"px", duration, callback);
+    }
+
+	@Override
+    public void setHeight(Widget widget, String height, int duration, final Callback callback)
+    {
+		final Element element = widget.getElement();
+		addCallbackHandler(element, new Callback()
 		{
-			addCallbackHandler(element, callback);
-		}
-		setHeight(element, height+"px", duration);
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(element);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		setHeight(element, height, duration);
     }
 
 	@Override
@@ -90,6 +104,11 @@ class WebkitAnimationHandler implements AnimationHandler
 		el.style.height = height;
 	}-*/;
 
+	private native void clearTransitionProperties(Element el)/*-{
+		el.style.webkitTransitionProperty = 'all';//-webkit-transform
+		el.style.webkitTransitionDuration = '';
+		el.style.webkitTransitionTimingFunction = '';
+    }-*/;
 
 	private native void translateX(Element el, int diff)/*-{
 		el.style.webkitTransitionProperty = 'all';//-webkit-transform

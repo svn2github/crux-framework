@@ -166,7 +166,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setTop(0, Unit.PX);
 		style.setLeft(0, Unit.PX);
 		style.setWidth(100, Unit.PCT);
-		style.setHeight(100, Unit.PCT);
+//		style.setHeight(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setVisibility(Visibility.VISIBLE);
@@ -180,7 +180,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setLeft(0, Unit.PX);
 		style.setPosition(Position.ABSOLUTE);
 		style.setWidth(100, Unit.PCT);
-		style.setHeight(100, Unit.PCT);
+//		style.setHeight(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setVisibility(Visibility.HIDDEN);
@@ -223,7 +223,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	private void concludeSlide(final Callback completeCallback) 
 	{
 		final int HEIGHT_TRANSITION_DURATION = 200;
-		int currentPanelHeight = getCurrentWidget().getElement().getOffsetHeight();
+		int currentPanelHeight = currentPanel.getElement().getOffsetHeight();
 		if (contentPanel.getOffsetHeight() != currentPanelHeight)
 		{
 			Animation.setHeight(contentPanel, currentPanelHeight, HEIGHT_TRANSITION_DURATION, new Callback()
