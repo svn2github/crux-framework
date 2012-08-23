@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
+import org.cruxframework.crux.core.client.screen.views.View.RenderCallback;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
@@ -246,14 +247,20 @@ public abstract class ViewContainer
 	 * @param view
 	 * @param containerPanel
 	 */
-	protected void activate(View view, Panel containerPanel)
+	protected void activate(final View view, Panel containerPanel)
 	{
 		if (!view.isLoaded())
 		{
 			view.load();
 		}
-		view.render(containerPanel);
-		view.setAttached();
+		view.render(containerPanel, new RenderCallback()
+		{
+			@Override
+			public void onRendered()
+			{
+				view.setActive();
+			}
+		});
 		ViewHandlers.ensureViewContainerHandlers(this);
 	}
 
@@ -266,9 +273,9 @@ public abstract class ViewContainer
 	 */
 	protected boolean deactivate(View view, Panel containerPanel)
     {
-		if (view.isAttached())
+		if (view.isActive())
 		{
-			if (view.setDetached())
+			if (view.setDeactivated())
 			{
 				if (this.clearPanelsForDeactivatedViews)
 				{

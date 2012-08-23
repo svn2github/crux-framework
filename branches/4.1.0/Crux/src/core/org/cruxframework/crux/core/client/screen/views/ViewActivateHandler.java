@@ -15,16 +15,13 @@
  */
 package org.cruxframework.crux.core.client.screen.views;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface HasViewAttachHandlers 
+public interface ViewActivateHandler 
 {
-	HandlerRegistration addViewAttachHandler(ViewAttachHandler handler);
-	HandlerRegistration addViewDetachHandler(ViewDetachHandler handler);
-	boolean isAttached();
+	void onActivate(ViewActivateEvent event);
 }

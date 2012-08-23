@@ -122,8 +122,8 @@
 
 	<!-- Specify ie6 implementation for scriptInjector -->
 	<replace-with
-    	class="org.cruxframework.crux.core.client.utils.HTMLUtils.IEScriptInjector">
-    	<when-type-is class="org.cruxframework.crux.core.client.utils.HTMLUtils.ScriptInjector" />
+    	class="org.cruxframework.crux.core.client.utils.ScriptTagHandler.IEScriptInjector">
+    	<when-type-is class="org.cruxframework.crux.core.client.utils.ScriptTagHandler.ScriptInjector" />
 		<any>
 			<when-property-is name="user.agent" value="ie6" />
 			<when-property-is name="user.agent" value="ie8" />

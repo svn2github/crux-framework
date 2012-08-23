@@ -15,31 +15,13 @@
  */
 package org.cruxframework.crux.core.client.screen.views;
 
-import org.cruxframework.crux.core.client.event.CruxEvent;
 
-public class ViewDetachEvent extends CruxEvent<View> 
+/**
+ * 
+ * @author Thiago da Rosa de Bustamante
+ *
+ */
+public interface ViewDeactivateHandler 
 {
-	private boolean canceled = false;
-
-	/**
-	 * 
-	 */
-	protected ViewDetachEvent(View view, String viewId)
-	{
-		super(view, viewId);
-	}
-
-	public void cancel()
-	{
-		this.canceled = false;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isCanceled()
-    {
-	    return this.canceled;
-    }
+	void onDeactivate(ViewDeactivateEvent event);
 }

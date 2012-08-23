@@ -31,7 +31,7 @@ import com.google.gwt.dom.client.ScriptElement;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HTMLUtils
+public class ScriptTagHandler
 {
 	private static ScriptInjector injector = null;
 	private static ArrayList<Element> scripts;
@@ -40,7 +40,7 @@ public class HTMLUtils
 	 * Evaluates any script inserted on the given element using element.innerHTML.
 	 * @param element
 	 */
-	public static void evaluateScripts(Element element)
+	public static void evaluateScripts(Element element, ScriptLoadCallback callback)
 	{
 		if (scripts == null)
 		{
@@ -54,12 +54,11 @@ public class HTMLUtils
 			{
 				scripts.add(scriptElements.getItem(i));
 			}
-			
-			processNextScript();
 		}
+		processNextScript(callback);
 	}
 	
-	private static void processNextScript()
+	private static void processNextScript(final ScriptLoadCallback callback)
 	{
 		if (scripts.size() > 0)
 		{
@@ -71,25 +70,28 @@ public class HTMLUtils
 				@Override
 				public void execute()
 				{
-					processScriptTag(script, cloneScript);
+					processScriptTag(script, cloneScript, callback);
 				}
 			});
 		}
-		
+		else if (callback != null)
+		{
+			callback.onLoaded();
+		}
 	}
 	
-	private static void processScriptTag(final ScriptElement script, final ScriptElement cloneScript)
+	private static void processScriptTag(final ScriptElement script, final ScriptElement cloneScript, final ScriptLoadCallback callback)
     {
 		handleDocWriteFunction();
 		String src = script.getSrc();
-		ScriptLoadCallback callback = new ScriptLoadCallback()
+		ScriptLoadCallback tagCallback = new ScriptLoadCallback()
 		{
 			@Override
 			public void onLoaded()
 			{
 				String content = getDocWrittenContent();
 				restoreDocWriteFunction();
-				processNextScript();
+				processNextScript(callback);
 				final DivElement wrapperElement = Document.get().createDivElement();
 				wrapperElement.setInnerHTML(content);
 				cloneScript.getParentElement().insertAfter(wrapperElement, cloneScript);
@@ -98,7 +100,7 @@ public class HTMLUtils
 					@Override
 					public void execute()
 					{
-						evaluateScripts(wrapperElement);
+						evaluateScripts(wrapperElement, null);
 					}
 				});
 			}
@@ -108,14 +110,14 @@ public class HTMLUtils
 		boolean xDomain = isXDomain(src);
 		if (xDomain)
 		{
-			handleXDomainScriptLoad(cloneScript, callback);
+			handleXDomainScriptLoad(cloneScript, tagCallback);
 		}
 		
         script.getParentElement().replaceChild(cloneScript, script);
         
         if (!xDomain)
         {
-        	callback.onLoaded();
+        	tagCallback.onLoaded();
         }
     }
 
@@ -170,7 +172,7 @@ public class HTMLUtils
 			if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
 				if (callback)
 				{
-					callback.@org.cruxframework.crux.core.client.utils.HTMLUtils.ScriptLoadCallback::onLoaded()();
+					callback.@org.cruxframework.crux.core.client.utils.ScriptTagHandler.ScriptLoadCallback::onLoaded()();
 				}
 
 				script.onload = script.onreadystatechange = null;
@@ -188,7 +190,7 @@ public class HTMLUtils
 		return injector;
 	}
 
-	static interface ScriptLoadCallback
+	public static interface ScriptLoadCallback
 	{
 		void onLoaded();
 	}

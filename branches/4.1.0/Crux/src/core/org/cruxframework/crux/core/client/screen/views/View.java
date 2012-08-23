@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandlers, 
-									  HasViewAttachHandlers, HasOrientationChangeOrResizeHandler, 
+									  HasViewActivateHandlers, HasOrientationChangeOrResizeHandler, 
 									  HasViewLoadHandlers
 {
 	private static Logger logger = Logger.getLogger(View.class.getName());
@@ -59,12 +59,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	private String title;
 	protected Map<String> lazyWidgets = null;
 	protected FastMap<Widget> widgets = new FastMap<Widget>();
-	protected boolean attached = false;
+	protected boolean active = false;
 	protected FastList<ResizeHandler> resizeHandlers = new FastList<ResizeHandler>();
 	protected FastList<CloseHandler<Window>> windowCloseHandlers = new FastList<CloseHandler<Window>>();
 	protected FastList<ClosingHandler> windowClosingHandlers = new FastList<ClosingHandler>();
-	protected FastList<ViewAttachHandler> attachHandlers = new FastList<ViewAttachHandler>();
-	protected FastList<ViewDetachHandler> detachHandlers = new FastList<ViewDetachHandler>();
+	protected FastList<ViewActivateHandler> attachHandlers = new FastList<ViewActivateHandler>();
+	protected FastList<ViewDeactivateHandler> detachHandlers = new FastList<ViewDeactivateHandler>();
 	protected FastList<ValueChangeHandler<String>> historyHandlers = new FastList<ValueChangeHandler<String>>();
 	protected FastList<OrientationChangeOrResizeHandler> orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
 	protected FastList<ViewLoadHandler> loadHandlers = new FastList<ViewLoadHandler>();
@@ -314,12 +314,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	/**
-	 * Reads the attached property.
+	 * Reads the active property.
 	 * @return
 	 */
-	public boolean isAttached()
+	public boolean isActive()
 	{
-		return attached;
+		return active;
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addResizeHandler(final ResizeHandler handler)
 	{
 		resizeHandlers.add(handler);
-		if (isAttached())
+		if (isActive())
 		{	
 			ViewHandlers.ensureViewContainerResizeHandler(getContainer());
 		}
@@ -353,7 +353,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowOrientationChangeOrResizeHandler(final OrientationChangeOrResizeHandler handler)
 	{
 		orientationOrResizeHandlers.add(handler);
-		if (isAttached())
+		if (isActive())
 		{	
 			ViewHandlers.ensureViewContainerOrientationChangeOrResizeHandler(getContainer());
 		}
@@ -380,7 +380,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowCloseHandler(final CloseHandler<Window> handler)
 	{
 		windowCloseHandlers.add(handler);
-		if (isAttached())
+		if (isActive())
 		{	
 			ViewHandlers.ensureViewContainerCloseHandler(getContainer());
 		}
@@ -406,7 +406,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowClosingHandler(final ClosingHandler handler)
 	{
 		windowClosingHandlers.add(handler);
-		if (isAttached())
+		if (isActive())
 		{	
 			ViewHandlers.ensureViewContainerClosingHandler(getContainer());
 		}
@@ -428,7 +428,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * 
 	 */
 	@Override
-	public HandlerRegistration addViewAttachHandler(final ViewAttachHandler handler)
+	public HandlerRegistration addViewActivateHandler(final ViewActivateHandler handler)
 	{
 		attachHandlers.add(handler);
 		return new HandlerRegistration()
@@ -449,7 +449,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * 
 	 */
 	@Override
-	public HandlerRegistration addViewDetachHandler(final ViewDetachHandler handler)
+	public HandlerRegistration addViewDeactivateHandler(final ViewDeactivateHandler handler)
 	{
 		detachHandlers.add(handler);
 		return new HandlerRegistration()
@@ -516,7 +516,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public HandlerRegistration addWindowHistoryChangedHandler(final ValueChangeHandler<String> handler)
 	{
 		historyHandlers.add(handler);
-		if (isAttached())
+		if (isActive())
 		{	
 			ViewHandlers.ensureViewContainerHistoryHandler(getContainer());
 		}
@@ -705,35 +705,35 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 
 	/**
-	 * Mark this view as attached
+	 * Mark this view as active
 	 */
-	protected void setAttached()
+	protected void setActive()
 	{
-		if (!attached)
+		if (!active)
 		{
-			attached = true;
-			ViewAttachEvent event = new ViewAttachEvent(this, this.getId());
+			active = true;
+			ViewActivateEvent event = new ViewActivateEvent(this, this.getId());
 			for (int i = 0; i < attachHandlers.size(); i++)
 			{
-				ViewAttachHandler handler = attachHandlers.get(i);
-				handler.onAttach(event);
+				ViewActivateHandler handler = attachHandlers.get(i);
+				handler.onActivate(event);
 			}
 		}
 	}
 	
 	/**
-	 * Mark this view as attached
+	 * Mark this view as active
 	 */
-	protected boolean setDetached()
+	protected boolean setDeactivated()
 	{
-		if (attached)
+		if (active)
 		{
-			attached = false;
-			ViewDetachEvent event = new ViewDetachEvent(this, this.getId());
+			active = false;
+			ViewDeactivateEvent event = new ViewDeactivateEvent(this, this.getId());
 			for (int i = 0; i < detachHandlers.size(); i++)
 			{
-				ViewDetachHandler handler = detachHandlers.get(i);
-				handler.onDetach(event);
+				ViewDeactivateHandler handler = detachHandlers.get(i);
+				handler.onDeactivate(event);
 			}
 			return !event.isCanceled();
 		}
@@ -799,8 +799,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	    resizeHandlers = new FastList<ResizeHandler>();
 	    windowCloseHandlers = new FastList<CloseHandler<Window>>();
 	    windowClosingHandlers = new FastList<ClosingHandler>();
-	    attachHandlers = new FastList<ViewAttachHandler>();
-	    detachHandlers = new FastList<ViewDetachHandler>();
+	    attachHandlers = new FastList<ViewActivateHandler>();
+	    detachHandlers = new FastList<ViewDeactivateHandler>();
 	    historyHandlers = new FastList<ValueChangeHandler<String>>();
 	    orientationOrResizeHandlers = new FastList<OrientationChangeOrResizeHandler>();
 	    loadHandlers = new FastList<ViewLoadHandler>();
@@ -997,7 +997,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * Called by View container to render the view into the screen
 	 * @param rootPanel The root element where the view elements will be rendered. 
 	 */
-	protected abstract void render(Panel rootPanel);
+	protected abstract void render(Panel rootPanel, RenderCallback renderCallback);
 
 	/**
 	 * Called by View container to create the view widgets 
@@ -1047,5 +1047,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	{
 		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
 		return ((ViewAware)viewAware).getView();
+	}
+	
+	public static interface RenderCallback
+	{
+		void onRendered();
 	}
 }

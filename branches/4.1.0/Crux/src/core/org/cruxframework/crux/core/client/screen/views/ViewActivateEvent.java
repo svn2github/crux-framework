@@ -17,12 +17,12 @@ package org.cruxframework.crux.core.client.screen.views;
 
 import org.cruxframework.crux.core.client.event.CruxEvent;
 
-public class ViewAttachEvent extends CruxEvent<View> 
+public class ViewActivateEvent extends CruxEvent<View> 
 {
 	/**
 	 * 
 	 */
-	protected ViewAttachEvent(View view, String viewId)
+	protected ViewActivateEvent(View view, String viewId)
 	{
 		super(view, viewId);
 	}

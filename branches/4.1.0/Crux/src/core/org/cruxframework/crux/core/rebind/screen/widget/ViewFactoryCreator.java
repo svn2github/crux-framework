@@ -29,10 +29,11 @@ import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
-import org.cruxframework.crux.core.client.screen.views.ViewAttachEvent;
-import org.cruxframework.crux.core.client.screen.views.ViewAttachHandler;
-import org.cruxframework.crux.core.client.screen.views.ViewDetachEvent;
-import org.cruxframework.crux.core.client.screen.views.ViewDetachHandler;
+import org.cruxframework.crux.core.client.screen.views.View.RenderCallback;
+import org.cruxframework.crux.core.client.screen.views.ViewActivateEvent;
+import org.cruxframework.crux.core.client.screen.views.ViewActivateHandler;
+import org.cruxframework.crux.core.client.screen.views.ViewDeactivateEvent;
+import org.cruxframework.crux.core.client.screen.views.ViewDeactivateHandler;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory;
 import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.screen.views.ViewLoadEvent;
@@ -40,7 +41,7 @@ import org.cruxframework.crux.core.client.screen.views.ViewLoadHandler;
 import org.cruxframework.crux.core.client.screen.views.ViewUnloadEvent;
 import org.cruxframework.crux.core.client.screen.views.ViewUnloadHandler;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.client.utils.HTMLUtils;
+import org.cruxframework.crux.core.client.utils.ScriptTagHandler;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.ViewParser;
@@ -768,8 +769,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		processResizedEvt(printer);
 		processLoadEvt(printer);
 		processUnloadEvt(printer);
-		processAttachEvt(printer);
-		processDetachEvt(printer);
+		processActivateEvt(printer);
+		processDeactivateEvt(printer);
 	}
 
 	/**
@@ -882,16 +883,16 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 *
 	 * @param printer
 	 */
-	private void processAttachEvt(SourcePrinter printer)
+	private void processActivateEvt(SourcePrinter printer)
 	{
-	    Event onAttach = view.getEvent("onAttach");
-		if (onAttach != null)
+	    Event onActivate = view.getEvent("onActivate");
+		if (onActivate != null)
 		{
-			printer.println(viewVariable+".addViewAttachHandler(new "+ViewAttachHandler.class.getCanonicalName()+"(){");
-			printer.println("public void onAttach("+ViewAttachEvent.class.getCanonicalName()+" event){");
+			printer.println(viewVariable+".addViewActivateHandler(new "+ViewActivateHandler.class.getCanonicalName()+"(){");
+			printer.println("public void onActivate("+ViewActivateEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onAttach.getController()+"."+onAttach.getMethod(),
-					"onAttach", ViewAttachEvent.class, "event", context, view, getControllerAccessHandler());
+			EvtProcessor.printEvtCall(printer, onActivate.getController()+"."+onActivate.getMethod(),
+					"onActivate", ViewActivateEvent.class, "event", context, view, getControllerAccessHandler());
 
 			printer.println("}");
 			printer.println("});");
@@ -903,16 +904,16 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 *
 	 * @param printer
 	 */
-	private void processDetachEvt(SourcePrinter printer)
+	private void processDeactivateEvt(SourcePrinter printer)
 	{
-	    Event onDetach = view.getEvent("onDetach");
-		if (onDetach != null)
+	    Event onDeactivate = view.getEvent("onDeactivate");
+		if (onDeactivate != null)
 		{
-			printer.println(viewVariable+".addViewDetachHandler(new "+ViewDetachHandler.class.getCanonicalName()+"(){");
-			printer.println("public void onDetach("+ViewDetachEvent.class.getCanonicalName()+" event){");
+			printer.println(viewVariable+".addViewDeactivateHandler(new "+ViewDeactivateHandler.class.getCanonicalName()+"(){");
+			printer.println("public void onDeactivate("+ViewDeactivateEvent.class.getCanonicalName()+" event){");
 
-			EvtProcessor.printEvtCall(printer, onDetach.getController()+"."+onDetach.getMethod(),
-					"onDetach", ViewDetachEvent.class, "event", context, view, getControllerAccessHandler());
+			EvtProcessor.printEvtCall(printer, onDeactivate.getController()+"."+onDeactivate.getMethod(),
+					"onDeactivate", ViewDeactivateEvent.class, "event", context, view, getControllerAccessHandler());
 
 			printer.println("}");
 			printer.println("});");
@@ -1030,7 +1031,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	private void generateRenderMethod(SourcePrinter printer)
     {
 	    String rootPanelVariable = createVariableName("rootPanel");
-    	printer.println("protected void render("+Panel.class.getCanonicalName()+" "+rootPanelVariable+") throws InterfaceConfigException{");
+    	printer.println("protected void render("+Panel.class.getCanonicalName()+" "+rootPanelVariable+", final "+RenderCallback.class.getCanonicalName()+" renderCallback) throws InterfaceConfigException{");
 
 		printer.println("if (this."+viewPanelVariable+" == null){");
 		String viewHTML = getViewHTML();
@@ -1042,9 +1043,18 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("this."+viewPanelVariable+".addAttachHandler(new "+Handler.class.getCanonicalName()+"(){");
 			printer.println("private boolean scriptsProcessed = false;");
 			printer.println("public void onAttachOrDetach("+AttachEvent.class.getCanonicalName()+" event){");
-			printer.println("if (event.isAttached() && !scriptsProcessed){");
-			printer.println(HTMLUtils.class.getCanonicalName()+".evaluateScripts("+getProxySimpleName()+".this."+viewPanelVariable+".getElement());");
+			printer.println("if (event.isAttached()){");
+			printer.println("if (!scriptsProcessed){");
+			printer.println(ScriptTagHandler.class.getCanonicalName()+".evaluateScripts("+getProxySimpleName()+".this."+viewPanelVariable+".getElement(), " +
+					        "new " + ScriptTagHandler.ScriptLoadCallback.class.getCanonicalName()+"(){");
+			printer.println("public void onLoaded(){");
+			printer.println("renderCallback.onRendered();");
+			printer.println("}");
+			printer.println("});");
 			printer.println("scriptsProcessed = true;");
+			printer.println("} else {");
+			printer.println("renderCallback.onRendered();");
+			printer.println("}");
 			printer.println("}");
 			printer.println("}");
 			printer.println("});");
