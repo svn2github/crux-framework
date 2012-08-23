@@ -667,6 +667,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"onClose\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onResized\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onLoad\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"onActivate\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
     }
 
@@ -1196,8 +1197,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("</xs:sequence>");
 			generateElementAttributesForAllViewElements(out);
 			out.println("<xs:attribute name=\"onUnload\" type=\"xs:string\"/>");
-			out.println("<xs:attribute name=\"onAttach\" type=\"xs:string\"/>");
-			out.println("<xs:attribute name=\"onDetach\" type=\"xs:string\"/>");
+			out.println("<xs:attribute name=\"onDeactivate\" type=\"xs:string\"/>");
 			out.println("</xs:complexType>");
 	        
 	        out.println("</xs:schema>");
