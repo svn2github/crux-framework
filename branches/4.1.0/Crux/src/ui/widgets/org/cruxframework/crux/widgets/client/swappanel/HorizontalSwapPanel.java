@@ -231,6 +231,14 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 				@Override
 				public void onTransitionCompleted()
 				{
+					Scheduler.get().scheduleDeferred(new ScheduledCommand()
+					{
+						@Override
+						public void execute()
+						{
+							contentPanel.setHeight("auto");
+						}
+					});
 					if (completeCallback != null)
 					{
 						completeCallback.onTransitionCompleted();
