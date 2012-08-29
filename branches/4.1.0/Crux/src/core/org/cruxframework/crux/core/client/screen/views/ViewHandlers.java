@@ -368,7 +368,8 @@ public class ViewHandlers
 				{
 					int newClientHeight = Window.getClientHeight();
 					int newClientWidth = Window.getClientWidth();
-					if (this.clientHeight != newClientHeight && clientWidth != newClientWidth)
+
+					if (this.clientHeight != newClientHeight || clientWidth != newClientWidth)
 					{
 						handler.onOrientationChangeOrResize();
 					}

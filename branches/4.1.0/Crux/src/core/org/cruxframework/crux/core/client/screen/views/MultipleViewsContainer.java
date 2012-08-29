@@ -44,8 +44,8 @@ public abstract class MultipleViewsContainer extends ViewContainer
 		assert(view != null):"Can not active a null view";
 	    if (!activeViews.containsKey(view.getId()))
 	    {
+	    	activeViews.put(view.getId(), view);
     		super.activate(view, containerPanel);
-    		activeViews.put(view.getId(), view);
 	    }
 	}
 	
