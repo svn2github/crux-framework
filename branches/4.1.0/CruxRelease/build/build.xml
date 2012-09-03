@@ -57,6 +57,39 @@
 	
 	<!-- 
 	========================================================================================================
+		Download dependencies
+	========================================================================================================
+	-->
+	<target name="download-dependencies">
+		<property name="zipName" value="crux-developer-jars.zip"/>
+		<mkdir dir="${dist.dir}/tmp"/>
+		<get dest="${dist.dir}/tmp" src="http://crux-framework.googlecode.com/files/${zipName}" usetimestamp="true"/>
+		<unzip dest="${dist.dir}/tmp" src="${dist.dir}/tmp/${zipName}"/>
+		<copy todir="${crux.lib.dir}" flatten="yes">
+			<fileset dir="${dist.dir}/tmp">
+				<include name="lib/crux-dev-deps.jar"/>
+				<include name="lib/gwt-dev.jar"/>
+				<include name="lib/gwt-user.jar"/>
+				<include name="lib/validation-api-1.0.0.GA-sources.jar"/>
+				<include name="lib/validation-api-1.0.0.GA.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${crux.build.dir}/dependencies" flatten="yes">
+			<fileset dir="${dist.dir}/tmp">
+				<include name="dependencies/crux-runtime-deps.jar"/>
+				<include name="dependencies/gwt-servlet-deps.jar"/>
+				<include name="dependencies/gwt-servlet.jar"/>
+			</fileset>
+		</copy>
+		<delete includeemptydirs="true"> 
+			<fileset dir="${dist.dir}/tmp">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<!-- 
+	========================================================================================================
 		Dist
 	========================================================================================================
 	-->
