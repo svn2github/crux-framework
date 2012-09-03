@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 @Templates({
-	@Template(name="slideshowKeyboard", device=Device.largeDisplayArrows),
+	@Template(name="slideshowTv", device=Device.largeDisplayArrows),
 	@Template(name="slideshowKeyboard", device=Device.largeDisplayMouse),
 	@Template(name="slideshowKeyboard", device=Device.smallDisplayArrows),
 	@Template(name="slideshowTouch", device=Device.largeDisplayTouch),
