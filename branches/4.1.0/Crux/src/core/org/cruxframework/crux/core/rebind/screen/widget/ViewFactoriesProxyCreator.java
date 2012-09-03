@@ -76,14 +76,14 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 	    sourceWriter.println("public void createView(String name, String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
-		if (Environment.isProduction())
-		{
+//		if (Environment.isProduction())
+//		{
 			generateViewCreation(sourceWriter, getViews());
-		}
-		else
-		{
-			generateViewCreation(sourceWriter, getViewsForCurrentScreen());
-		}
+//		}
+//		else
+//		{
+//			generateViewCreation(sourceWriter, getViewsForCurrentScreen());
+//		}
 		
 		sourceWriter.println("}");
 

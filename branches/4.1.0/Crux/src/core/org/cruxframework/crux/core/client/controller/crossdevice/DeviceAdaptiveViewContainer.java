@@ -23,7 +23,6 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -52,6 +51,7 @@ public class DeviceAdaptiveViewContainer extends SingleViewContainer implements 
 				}
 			}
 		});
+		initWidget(containerPanel);
     }
 	
 	@Override
@@ -66,13 +66,7 @@ public class DeviceAdaptiveViewContainer extends SingleViewContainer implements 
     }
 
     @Override
-    protected void handleViewTitle(String title, Panel containerPanel)
+    protected void handleViewTitle(String title, Panel containerPanel, String viewId)
     {
-    }
-
-	@Override
-    public Widget asWidget()
-    {
-	    return getContainerPanel();
     }
 }

@@ -15,82 +15,196 @@
  */
 package org.cruxframework.crux.views.client.tabcontainer;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
+import org.cruxframework.crux.core.client.screen.views.MultipleViewsContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
-import org.cruxframework.crux.views.client.MultipleViewsContainerWidget;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
-import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
 import org.cruxframework.crux.widgets.client.rollingtabs.RollingTabPanel;
 
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class TabContainer extends MultipleViewsContainerWidget
+public class TabContainer extends MultipleViewsContainer
 {
 	public static final String DEFAULT_STYLE_NAME = "view-TabContainer";
 	private RollingTabPanel tabPanel;
 	private LinkedHashMap<String, Tab> tabs = new LinkedHashMap<String, Tab>();
 
+	/**
+	 * Constructor
+	 */
 	public TabContainer()
 	{
 		super(true);
 		tabPanel = new RollingTabPanel();
+		tabPanel.addBeforeSelectionHandler(createBeforeSelectionHandler());
 		tabPanel.setStyleName(DEFAULT_STYLE_NAME);
+		initWidget(tabPanel);
 	}
-
+	
 	/**
-	 * Closes the tab, skipping any BeforeCloseHandler registered
-	 * @param tabId
+	 * 
+	 * @param view
+	 * @param lazy
+	 * @param closeable
+	 * @return
 	 */
-	public void closeTab(String tabId)
+	public boolean add(View view, boolean lazy, boolean closeable)
 	{
-		closeTab(tabId, true);
-	}
-
-	/**
-	 * @param tabId
-	 * @param skipBeforeCloseHandlers
-	 */
-	public void closeTab(final String tabId, final boolean skipBeforeCloseHandlers)
-	{
-		if(skipBeforeCloseHandlers)
+		if (doAdd(view, lazy, closeable))
 		{
-			doCloseTab(tabId);
+			adoptView(view);
+			return true;
 		}
-		else
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param view
+	 * @param lazy
+	 * @param closeable
+	 * @param render
+	 * @return
+	 */
+    public boolean add(View view, boolean lazy, boolean closeable, boolean render)
+    {
+		if (add(view, lazy, closeable))
 		{
-			Tab tab = getTab(tabId);
-			BeforeCloseEvent evt = BeforeCloseEvent.fire(tab);
-
-			if (!evt.isCanceled())
+			if (render)
 			{
-				doCloseTab(tabId);
+				renderView(view);
 			}
+			return true;
+		}
+		return false;
+    }
+	
+	/**
+	 * Closes the tab, skipping any Unload event
+	 * @param view
+	 */
+	public void closeView(String viewId)
+	{
+		closeView(viewId, true);
+	}
+
+	/**
+	 * @param view
+	 * @param skipEvents
+	 */
+	public void closeView(String viewId, final boolean skipEvents)
+	{
+		View view = getView(viewId);
+		if (view != null)
+		{
+			remove(view, skipEvents);
 		}
 	}
 	
 	/**
-	 * @param tabId
+	 * @param viewId
 	 */
-	public void focusTab(String tabId)
+	public void focusView(String viewId)
 	{
-		this.tabPanel.selectTab(getTabIndex(tabId));
+		this.tabPanel.selectTab(getIndex(viewId));
 	}
 
 	/**
 	 * @return
 	 */
-	public Tab getFocusedTab()
+	public int getFocusedViewIndex()
+	{
+		return tabPanel.getSelectedTab();
+	}	
+
+	/**
+	 * @param viewId
+	 * @return
+	 */
+	public int getIndex(String viewId)
+	{
+		return tabPanel.getWidgetIndex(getTab(viewId));
+	}
+	
+	/**
+	 * @param tab
+	 * @return
+	 */
+	public int getIndex(View view)
+	{
+		return getIndex(view.getId());
+	}
+	
+	/**
+	 * @param tabIndex
+	 * @return
+	 */
+	public String getViewId(int tabIndex)
+	{
+		return ((Tab) tabPanel.getWidget(tabIndex)).getViewId();
+	}
+	
+	/**
+	 * @param viewId
+	 * @return
+	 */
+	public Tab getTab(String viewId)
+	{
+		return tabs.get(viewId);
+	}
+
+	@Override
+	protected boolean doAdd(View view, boolean lazy)
+	{
+		return doAdd(view, lazy, true);
+	}
+
+	protected boolean doAdd(View view, boolean lazy, boolean closeable)
+    {
+	    String tabId = view.getId();
+	    if (!views.containsKey(view.getId()))
+	    {
+	    	boolean doAdd = super.doAdd(view, lazy);
+	    	if (doAdd)
+	    	{
+	    		Flap flap = new Flap(this, view, closeable);
+	    		Tab tab = new Tab(flap, tabId);
+	    		this.tabs.put(tabId, tab);			
+	    		tabPanel.add(tab, flap);
+	    		focusView(tabId);
+	    	}
+	    	return doAdd;
+	    }
+	    else
+	    {
+	    	focusView(tabId);
+	    }
+	    return false;
+    }
+	
+	@Override
+	protected boolean doRemove(View view, boolean skipEvent)
+	{
+	    boolean doRemove = super.doRemove(view, skipEvent);
+	    if (doRemove)
+	    {
+	    	doCloseTab(view.getId());
+	    }
+		return doRemove;
+	}
+	
+	/**
+	 * @return
+	 */
+	protected Tab getFocusedTab()
 	{
 		int index = tabPanel.getSelectedTab();
 
@@ -102,72 +216,21 @@ public class TabContainer extends MultipleViewsContainerWidget
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
-	public int getFocusedTabIndex()
-	{
-		return tabPanel.getSelectedTab();
-	}	
-	
-	/**
-	 * @param tabId
-	 * @return
-	 */
-	public Tab getTab(String tabId)
-	{
-		return tabs.get(tabId);
-	}
-
-	/**
-	 * @param tabId
-	 * @return
-	 */
-	public int getTabIndex(String tabId)
-	{
-		return tabPanel.getWidgetIndex(getTab(tabId));
-	}
-	
-	/**
-	 * @param tab
-	 * @return
-	 */
-	public int getTabIndex(Tab tab)
-	{
-		return tabPanel.getWidgetIndex(tab);
-	}
-	
-	/**
-	 * @return
-	 */
-	public List<Tab> getTabs()
-	{
-		List<Tab> result = new ArrayList<Tab>(this.tabs.size());
-		for (Tab tab : this.tabs.values())
-		{
-			result.add(tab);
-		}
-		return result;
-	}
-	
-	@Override
-    public Widget asWidget()
-    {
-	    return tabPanel;
-    }
-
 	@Override
     protected Panel getContainerPanel(View view)
     {
-	    // TODO Auto-generated method stub
-	    return null;
+		Tab tab = getTab(view.getId());
+	    return tab.getContainerPanel();
     }
 
 	@Override
-    protected void handleViewTitle(String title, Panel containerPanel)
+    protected void handleViewTitle(String title, Panel containerPanel, String viewId)
     {
-	    // TODO Auto-generated method stub
-	    
+		Tab tab = getTab(viewId);
+		if (tab != null)
+		{
+			tab.setLabel(title);
+		}
     }
 
 	/**
@@ -175,7 +238,7 @@ public class TabContainer extends MultipleViewsContainerWidget
 	 */
 	private void doCloseTab(String tabId)
 	{
-		int index = getTabIndex(tabId);
+		int index = getIndex(tabId);
 		this.tabPanel.remove(index);
 		this.tabs.remove(tabId);
 		
@@ -196,41 +259,24 @@ public class TabContainer extends MultipleViewsContainerWidget
 			public void onBeforeSelection(BeforeSelectionEvent<Integer> event)
 			{
 				Tab selectedTab = getFocusedTab();
-				String tabId = getTabId(event.getItem());
-
-				if (selectedTab == null || !selectedTab.getViewId().equals(tabId))
+				String tabId = getViewId(event.getItem());
+				boolean canceled = false;
+				if (selectedTab != null && !selectedTab.getViewId().equals(tabId))
 				{
-					boolean canceled = false;
+					BeforeBlurEvent evt = BeforeBlurEvent.fire(selectedTab.getFlap());
+					canceled = evt.isCanceled();
+				}
+				if ((!canceled) && (selectedTab == null || !selectedTab.getViewId().equals(tabId)))
+				{
+					BeforeFocusEvent evt = BeforeFocusEvent.fire(getTab(tabId));
+					canceled = canceled || evt.isCanceled();
+				}
 
-					for (Tab tab : tabs.values())
-					{
-						if (!tab.getViewId().equals(tabId))
-						{
-							BeforeBlurEvent evt = BeforeBlurEvent.fire(tab.getFlap());
-							canceled = canceled || evt.isCanceled();
-						}
-						else
-						{
-							BeforeFocusEvent evt = BeforeFocusEvent.fire(tab);
-							canceled = canceled || evt.isCanceled();
-						}
-					}
-
-					if (canceled)
-					{
-						event.cancel();
-					}
+				if (canceled)
+				{
+					event.cancel();
 				}
 			}			
 		};
-	}
-	
-	/**
-	 * @param tabIndex
-	 * @return
-	 */
-	private String getTabId(int tabIndex)
-	{
-		return ((Tab) tabPanel.getWidget(tabIndex)).getViewId();
 	}
 }

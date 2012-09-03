@@ -105,6 +105,15 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
     }
 	
 	/**
+	 * 
+	 * @param title
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+	
+	/**
 	 * Return true if the view was loaded into a container. 
 	 * @return
 	 */
@@ -723,19 +732,23 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	
 	/**
 	 * Mark this view as active
+	 * @param skipEvent 
 	 */
-	protected boolean setDeactivated()
+	protected boolean setDeactivated(boolean skipEvent)
 	{
 		if (active)
 		{
 			active = false;
-			ViewDeactivateEvent event = new ViewDeactivateEvent(this, this.getId());
-			for (int i = 0; i < detachHandlers.size(); i++)
+			if (!skipEvent)
 			{
-				ViewDeactivateHandler handler = detachHandlers.get(i);
-				handler.onDeactivate(event);
+				ViewDeactivateEvent event = new ViewDeactivateEvent(this, this.getId());
+				for (int i = 0; i < detachHandlers.size(); i++)
+				{
+					ViewDeactivateHandler handler = detachHandlers.get(i);
+					handler.onDeactivate(event);
+				}
+				return !event.isCanceled();
 			}
-			return !event.isCanceled();
 		}
 		return true;
 	}

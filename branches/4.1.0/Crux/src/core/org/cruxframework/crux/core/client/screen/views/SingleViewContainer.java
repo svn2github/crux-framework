@@ -49,7 +49,7 @@ public abstract class SingleViewContainer extends ViewContainer
 	{
 	    if (activeView != null)
 	    {
-	    	if (deactivate(activeView, getContainerPanel(activeView)))
+	    	if (deactivate(activeView, getContainerPanel(activeView), false))
 	    	{
 	    		activeView = view;
 	    		super.activate(view, containerPanel);
@@ -63,13 +63,13 @@ public abstract class SingleViewContainer extends ViewContainer
 	}
 	
 	@Override
-	protected boolean deactivate(View view, Panel containerPanel)
+	protected boolean deactivate(View view, Panel containerPanel, boolean skipEvent)
 	{
 		assert(view != null):"Can not deactive a null view";
 		boolean deactivated = true;
 		if (activeView != null && view.getId().equals(activeView.getId()))
 		{
-			deactivated = super.deactivate(view, containerPanel);
+			deactivated = super.deactivate(view, containerPanel, skipEvent);
 			if (deactivated)
 			{
 				activeView = null;

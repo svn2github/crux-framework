@@ -21,9 +21,6 @@ import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusEvent;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
 import org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
-import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
-import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
-import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
 import org.cruxframework.crux.widgets.client.rollingtabs.SimpleDecoratedPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,7 +32,7 @@ import com.google.gwt.user.client.ui.Composite;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-class Flap extends Composite implements HasBeforeFocusAndBeforeBlurHandlers, HasBeforeCloseHandlers 
+class Flap extends Composite implements HasBeforeFocusAndBeforeBlurHandlers 
 {
 	private SimpleDecoratedPanel panel;
 	private FlapController flapController;	
@@ -67,14 +64,6 @@ class Flap extends Composite implements HasBeforeFocusAndBeforeBlurHandlers, Has
 	public HandlerRegistration addBeforeFocusHandler(BeforeFocusHandler handler)
 	{
 		return addHandler(handler, BeforeFocusEvent.getType());
-	}
-
-	/**
-	 * @see org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers#addBeforeCloseHandler(org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler)
-	 */
-	public HandlerRegistration addBeforeCloseHandler(BeforeCloseHandler handler)
-	{
-		return addHandler(handler, BeforeCloseEvent.getType());
 	}
 
 	/**

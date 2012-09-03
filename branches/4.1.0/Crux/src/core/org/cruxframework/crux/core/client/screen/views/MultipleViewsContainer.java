@@ -50,13 +50,13 @@ public abstract class MultipleViewsContainer extends ViewContainer
 	}
 	
 	@Override
-	protected boolean deactivate(View view, Panel containerPanel)
+	protected boolean deactivate(View view, Panel containerPanel, boolean skipEvent)
 	{
 		assert(view != null):"Can not deactive a null view";
 		boolean deactivated = true;
 		if (activeViews.containsKey(view.getId()))
 		{
-			deactivated = super.deactivate(view, containerPanel);
+			deactivated = super.deactivate(view, containerPanel, skipEvent);
 			if (deactivated)
 			{
 				activeViews.remove(view.getId());

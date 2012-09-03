@@ -31,6 +31,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
 
 
@@ -38,12 +39,12 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class ViewContainer
+public abstract class ViewContainer extends Composite
 {
 	private static ViewFactory viewFactory;	
-	private static Logger logger = Logger.getLogger(ViewContainer.class.getName());
 	private final boolean clearPanelsForDeactivatedViews;
 	
+	protected static Logger logger = Logger.getLogger(ViewContainer.class.getName());
 	protected FastMap<View> views = new FastMap<View>();
 
 	/**
@@ -91,8 +92,19 @@ public abstract class ViewContainer
 	 */
 	public boolean remove(View view)
 	{
+		return remove(view, false);
+	}
+	
+	/**
+	 * Remove the view from this container
+	 * @param view View to be removed
+	 * @param skipEvents skip the events fired during view removal
+	 * @return
+	 */
+	public boolean remove(View view, boolean skipEvents)
+	{
 		assert (view != null):"Can not remove a null view from the ViewContainer";
-		if (doRemove(view))
+		if (doRemove(view, skipEvents))
 		{
 			view.setContainer(null);
 			return true;
@@ -223,7 +235,6 @@ public abstract class ViewContainer
 		{
 			Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId), e);
 		}
-
 	}
 	
 	/**
@@ -269,13 +280,14 @@ public abstract class ViewContainer
 	 * 
 	 * @param view
 	 * @param containerPanel
+	 * @param skipEvent
 	 * @return True if view is deactivated
 	 */
-	protected boolean deactivate(View view, Panel containerPanel)
+	protected boolean deactivate(View view, Panel containerPanel, boolean skipEvent)
     {
 		if (view.isActive())
 		{
-			if (view.setDeactivated())
+			if (view.setDeactivated(skipEvent))
 			{
 				if (this.clearPanelsForDeactivatedViews)
 				{
@@ -308,16 +320,17 @@ public abstract class ViewContainer
 		return false;
     }
 
-	/**
-	 * Remove the view from this container
-	 * @param view View to be removed
-	 * @return
-	 */
-    protected boolean doRemove(View view)
+    /**
+     * 
+     * @param view
+     * @param skipEvent
+     * @return
+     */
+	protected boolean doRemove(View view, boolean skipEvent)
     {
-		if (views.containsKey(view.getId()))
+	    if (views.containsKey(view.getId()))
 		{
-			if (deactivate(view, getContainerPanel(view)) && view.unload())
+			if (deactivate(view, getContainerPanel(view), skipEvent) && (skipEvent || view.unload()))
 			{
 				views.remove(view.getId());
 				return true;
@@ -338,7 +351,7 @@ public abstract class ViewContainer
 		String title = view.getTitle();
 		if (!StringUtils.isEmpty(title))
 		{
-			handleViewTitle(title, containerPanel);
+			handleViewTitle(title, containerPanel, view.getId());
 		}
     }	
     
@@ -354,12 +367,20 @@ public abstract class ViewContainer
 		assert (getView(view.getId()) == null):"This container already contains a view with the given identifier ["+view.getId()+"].";
 		if (doAdd(view, lazy))
 		{
-			view.setContainer(this);
+			adoptView(view);
 			return true;
 		}
 		return false;
     }
 
+    /**
+     * 
+     * @param view
+     */
+    protected void adoptView(View view)
+    {
+    	view.setContainer(this);
+    }
     
 	protected abstract boolean hasResizeHandlers();
 	protected abstract boolean hasWindowCloseHandlers();
@@ -372,5 +393,5 @@ public abstract class ViewContainer
 	protected abstract void notifyViewsAboutOrientationChangeOrResize();
 	protected abstract void notifyViewsAboutHistoryChange(ValueChangeEvent<String> event);
 	protected abstract Panel getContainerPanel(View view);
-	protected abstract void handleViewTitle(String title, Panel containerPanel);
+	protected abstract void handleViewTitle(String title, Panel containerPanel, String viewId);
 }

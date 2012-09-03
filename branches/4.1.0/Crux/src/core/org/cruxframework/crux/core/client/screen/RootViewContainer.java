@@ -58,9 +58,9 @@ class RootViewContainer extends SingleViewContainer
 	}
 	
 	@Override
-	protected boolean doRemove(View view)
+	protected boolean doRemove(View view, boolean skipEvents)
 	{
-	    boolean removed = super.doRemove(view);
+	    boolean removed = super.doRemove(view, skipEvents);
 	    if (removed)
 	    {
 	    	rootView = null;
@@ -80,7 +80,7 @@ class RootViewContainer extends SingleViewContainer
     }
 	
 	@Override
-	protected void handleViewTitle(String title, Panel containerPanel)
+	protected void handleViewTitle(String title, Panel containerPanel, String viewId)
 	{
 		Window.setTitle(title);
 	}

@@ -15,8 +15,8 @@
  */
 package org.cruxframework.crux.views.client.swapcontainer;
 
+import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
-import org.cruxframework.crux.views.client.SingleViewContainerWidget;
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
@@ -24,13 +24,12 @@ import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direc
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HorizontalSwapContainer extends SingleViewContainerWidget implements HasChangeViewHandlers
+public class HorizontalSwapContainer extends SingleViewContainer implements HasChangeViewHandlers
 {
 	public static final String DEFAULT_STYLE_NAME = "view-HorizontalSwapContainer";
 	private HorizontalSwapPanel swapPanel;
@@ -44,12 +43,7 @@ public class HorizontalSwapContainer extends SingleViewContainerWidget implement
 		swapPanel.setStyleName(DEFAULT_STYLE_NAME);
 		active = new SimplePanel();
 		swap = new SimplePanel();
-	}
-
-	@Override
-	public Widget asWidget()
-	{
-		return swapPanel;
+		initWidget(swapPanel);
 	}
 
 	/**
@@ -121,7 +115,7 @@ public class HorizontalSwapContainer extends SingleViewContainerWidget implement
 	}
 
 	@Override
-	protected void handleViewTitle(String title, Panel containerPanel)
+	protected void handleViewTitle(String title, Panel containerPanel, String viewId)
 	{
 		// Do nothing
 	}

@@ -60,7 +60,7 @@ public class FlapController extends Composite
 				public void onClick(ClickEvent event)
 				{
 					event.stopPropagation();
-					tabs.closeTab(tabId, false);
+					tabs.closeView(tabId, false);
 				}
 			});
 
@@ -71,7 +71,7 @@ public class FlapController extends Composite
 					if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
 					{
 						event.stopPropagation();
-						tabs.closeTab(tabId, false);
+						tabs.closeView(tabId, false);
 					}
 				}
 			});

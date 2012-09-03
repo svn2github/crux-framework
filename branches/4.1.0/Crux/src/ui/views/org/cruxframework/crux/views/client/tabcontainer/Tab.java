@@ -18,8 +18,6 @@ package org.cruxframework.crux.views.client.tabcontainer;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurHandler;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeFocusHandler;
 import org.cruxframework.crux.widgets.client.event.focusblur.HasBeforeFocusAndBeforeBlurHandlers;
-import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseHandler;
-import org.cruxframework.crux.widgets.client.event.openclose.HasBeforeCloseHandlers;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
@@ -30,7 +28,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Tab extends Composite implements HasBeforeFocusAndBeforeBlurHandlers, HasBeforeCloseHandlers
+public class Tab extends Composite implements HasBeforeFocusAndBeforeBlurHandlers
 {
 	private final Flap flap;
 	private SimplePanel containerPanel;
@@ -56,12 +54,6 @@ public class Tab extends Composite implements HasBeforeFocusAndBeforeBlurHandler
 	    return flap.addBeforeFocusHandler(handler);
     }
 	
-	@Override
-    public HandlerRegistration addBeforeCloseHandler(BeforeCloseHandler handler)
-    {
-	    return flap.addBeforeCloseHandler(handler);
-    }
-
 	public void setLabel(String label)
 	{
 		flap.setLabel(label);

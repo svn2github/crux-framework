@@ -139,7 +139,6 @@ public class HotDeploymentScanner
 	    	logger.info("View file modified: ["+fileName+"].");
 	    	ScreenFactory.getInstance().clearScreenCache();
 	    	ViewFactory.getInstance().clearViewCache();
-	    	//TODO nao funciona limpar o cache por aqui...pois o compilador roda em outra vm.... tem que usar o bridge
 	    }
     }
 
