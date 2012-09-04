@@ -57,13 +57,26 @@
 	
 	<!-- 
 	========================================================================================================
+		Checks the presence of jars which Crux depends on  
+	========================================================================================================
+	-->
+	<target name="check-dependencies">
+		<condition property="must.download.deps">
+			<not>
+				<available file="${crux.dependencies.dir}/crux-runtime-deps.jar" type="file"/>
+			</not>
+		</condition>
+	</target>
+	
+	<!-- 
+	========================================================================================================
 		Download dependencies
 	========================================================================================================
 	-->
-	<target name="download-dependencies">
+	<target name="download-dependencies" depends="check-dependencies" if="must.download.deps">
 		<property name="zipName" value="crux-developer-jars.zip"/>
 		<mkdir dir="${dist.dir}/tmp"/>
-		<get dest="${dist.dir}/tmp" src="http://crux-framework.googlecode.com/files/${zipName}" usetimestamp="true"/>
+		<get dest="${dist.dir}/tmp" src="http://crux-framework.googlecode.com/files/${zipName}"/>
 		<unzip dest="${dist.dir}/tmp" src="${dist.dir}/tmp/${zipName}"/>
 		<copy todir="${crux.lib.dir}" flatten="yes">
 			<fileset dir="${dist.dir}/tmp">
@@ -84,6 +97,7 @@
 		<delete includeemptydirs="true"> 
 			<fileset dir="${dist.dir}/tmp">
 				<include name="**/*"/>
+				<include name="*"/>
 			</fileset>
 		</delete>
 	</target>
@@ -93,7 +107,9 @@
 		Dist
 	========================================================================================================
 	-->
-	<target name="dist" >
+	<target name="dist" depends="download-dependencies" 
+		description="Compiles Crux and generates the installer (zip file) for distribution.">
+		
 		<delete dir="${dist.dir}" failonerror="no" includeemptydirs="true" />
 		<mkdir dir="${expanded.dir}" />
 
