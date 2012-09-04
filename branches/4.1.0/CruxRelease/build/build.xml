@@ -115,7 +115,7 @@
 
 		<!-- Run Crux distribution tasks -->
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
-		<ant inheritall="false" target="generate-javadoc" antfile="${crux.build.dir}/build.xml" />
+		<subant inheritall="false" target="generate-javadoc" antfile="${crux.build.dir}/build.xml" failonerror="false" buildpath="."/>
 		<copy todir="${expanded.dir}/docs">
 			<fileset dir="${crux.dist.dir}/docs" includes="**/*"/>
 		</copy>	
@@ -159,8 +159,8 @@
 		<copy todir="${expanded.dir}" file="${launcher.sh.file}" />
 		<copy todir="${expanded.dir}" file="${launcher.cmd.file}" />
 		
-		<exec command="chmod 755 ${expanded.dir}/projectGenerator.sh" />
-		<exec command="chmod 755 ${expanded.dir}/start.sh" />
+		<exec command="chmod 755 ${expanded.dir}/projectGenerator.sh" failonerror="false" failifexecutionfails="false"/>
+		<exec command="chmod 755 ${expanded.dir}/start.sh" failonerror="false" failifexecutionfails="false"/>
 
 		<copy todir="${expanded.dir}">
 			<fileset dir="${resource.dir}/static" includes="*" />
