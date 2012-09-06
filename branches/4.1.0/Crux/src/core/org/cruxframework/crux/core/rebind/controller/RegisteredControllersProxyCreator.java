@@ -379,7 +379,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		{
 			throw new CruxGeneratorException("Can not found the controller ["+controllerClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFields(sourceWriter, controllerClass, "__cont", "iocContainer", view);
+		IocContainerRebind.injectFieldsAndMethods(sourceWriter, controllerClass, "__cont", "iocContainer", view);
 		return "__cont";
 	}
 

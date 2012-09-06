@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(value={ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
 public @interface Inject 
 {
 	public static enum Scope{LOCAL, DOCUMENT, VIEW}

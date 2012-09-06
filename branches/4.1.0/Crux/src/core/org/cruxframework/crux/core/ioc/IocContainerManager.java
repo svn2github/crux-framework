@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.ioc;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -144,36 +145,88 @@ public class IocContainerManager
     {
         if (isBindable(type, iocRootType))
         {
-        	for (Field field : type.getDeclaredFields()) 
-        	{
-        		String fieldName = field.getName();
-        		if (!added.contains(fieldName))
-        		{
-        			added.add(fieldName);
-        			Class<?> fieldType = field.getType();
-        			if (isBindable(fieldType, false))
-        			{
-        				Inject inject = field.getAnnotation(Inject.class);
-        				if (inject != null)
-        				{
-        					if (path.contains(fieldType.getCanonicalName()))
-        					{
-        						throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+fieldType.getCanonicalName()+"].");
-        					}
-        					Set<String> fieldPath = new HashSet<String>();
-        					fieldPath.addAll(path);
-        					fieldPath.add(fieldType.getCanonicalName());
-        					bindTypeImplicitly(fieldType, configurations);
-        					bindImplicityInjectcions(fieldType, new HashSet<String>(), fieldPath, false, configurations);
-        				}
-        			}
-        		}
-        	}
+        	bindImplicityInjectionsForFields(type, added, path, configurations);
+        	bindImplicityInjectionsForMethods(type, added, path, configurations);
         	if (type.getSuperclass() != null)
         	{
         		bindImplicityInjectcions(type.getSuperclass(), added, path, iocRootType, configurations);
         	}
         }
+    }
+
+	/**
+	 * 
+	 * @param type
+	 * @param added
+	 * @param path
+	 * @param configurations
+	 */
+	private static void bindImplicityInjectionsForFields(Class<?> type, Set<String> added, Set<String> path, Map<String, IocConfig<?>> configurations)
+    {
+	    for (Field field : type.getDeclaredFields()) 
+	    {
+	    	String fieldName = field.getName();
+	    	if (!added.contains(fieldName))
+	    	{
+	    		added.add(fieldName);
+	    		Class<?> fieldType = field.getType();
+	    		if (isBindable(fieldType, false))
+	    		{
+	    			Inject inject = field.getAnnotation(Inject.class);
+	    			if (inject != null)
+	    			{
+	    				if (path.contains(fieldType.getCanonicalName()))
+	    				{
+	    					throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+fieldType.getCanonicalName()+"].");
+	    				}
+	    				Set<String> fieldPath = new HashSet<String>();
+	    				fieldPath.addAll(path);
+	    				fieldPath.add(fieldType.getCanonicalName());
+	    				bindTypeImplicitly(fieldType, configurations);
+	    				bindImplicityInjectcions(fieldType, new HashSet<String>(), fieldPath, false, configurations);
+	    			}
+	    		}
+	    	}
+	    }
+    }
+
+	/**
+	 * 
+	 * @param type
+	 * @param added
+	 * @param path
+	 * @param configurations
+	 */
+	private static void bindImplicityInjectionsForMethods(Class<?> type, Set<String> added, Set<String> path, Map<String, IocConfig<?>> configurations)
+    {
+	    for (Method method : type.getDeclaredMethods()) 
+	    {
+	    	Inject inject = method.getAnnotation(Inject.class);
+	    	Class<?>[] parameterTypes = method.getParameterTypes();
+			if (inject != null && !Modifier.isAbstract(method.getModifiers()) && parameterTypes != null && parameterTypes.length > 0)
+	    	{
+		    	if (!added.contains(method.toString()))
+		    	{
+		    		added.add(method.toString());
+		    		for (int i=0; i< parameterTypes.length; i++)
+		    		{
+		    			Class<?> parameterType = parameterTypes[i];
+		    			if (isBindable(parameterType, false))
+		    			{
+		    				if (path.contains(parameterType.getCanonicalName()))
+		    				{
+		    					throw new IoCException("IoC Create Looping Error between classes ["+type.getCanonicalName()+"] and ["+parameterType.getCanonicalName()+"].");
+		    				}
+		    				Set<String> methodPath = new HashSet<String>();
+		    				methodPath.addAll(path);
+		    				methodPath.add(parameterType.getCanonicalName());
+		    				bindTypeImplicitly(parameterType, configurations);
+		    				bindImplicityInjectcions(parameterType, new HashSet<String>(), methodPath, false, configurations);
+		    			}
+		    		}
+		    	}
+	    	}
+	    }
     }
 
 	/**

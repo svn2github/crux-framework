@@ -16,8 +16,10 @@
 package org.cruxframework.crux.core.rebind.ioc;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +43,8 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -150,7 +154,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 		String className = type.getQualifiedSourceName();	
 		srcWriter.println("new IocScope.CreateCallback<"+className+">(){");
 		srcWriter.println("public void onCreate("+className+" newObject){");
-		injectFields(srcWriter, type, "newObject", new HashSet<String>(), getProxySimpleName()+".this", configurations);
+		injectFieldsAndMethods(srcWriter, type, "newObject", new HashSet<String>(), getProxySimpleName()+".this", configurations);
 		srcWriter.println("}");
 		srcWriter.println("}");
     }
@@ -162,10 +166,10 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param parentVariable
 	 * @param iocContainerVariable
 	 */
-	public static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable, View view)
+	public static void injectFieldsAndMethods(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable, View view)
 	{
 		Map<String, IocConfig<?>> configurations = IocContainerManager.getConfigurationsForView(view);
-		injectFields(srcWriter, type, parentVariable, new HashSet<String>(), iocContainerVariable, configurations);
+		injectFieldsAndMethods(srcWriter, type, parentVariable, new HashSet<String>(), iocContainerVariable, configurations);
 	}
 	
 	/**
@@ -177,10 +181,29 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param iocContainerVariable
 	 * @param configurations
 	 */
-	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, 
+	private static void injectFieldsAndMethods(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, 
 			Map<String, IocConfig<?>> configurations)
 	{
-        for (JField field : type.getFields()) 
+        injectFields(srcWriter, type, parentVariable, added, iocContainerVariable, configurations);
+        injectMethods(srcWriter, type, parentVariable, added, iocContainerVariable, configurations);
+        if (type.getSuperclass() != null)
+        {
+        	injectFieldsAndMethods(srcWriter, type.getSuperclass(), parentVariable, added, iocContainerVariable, configurations);
+        }
+	}
+
+	/**
+	 * 
+	 * @param srcWriter
+	 * @param type
+	 * @param parentVariable
+	 * @param added
+	 * @param iocContainerVariable
+	 * @param configurations
+	 */
+	private static void injectFields(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
+    {
+	    for (JField field : type.getFields()) 
         {
         	String fieldName = field.getName();
 			if (!added.contains(fieldName))
@@ -212,12 +235,60 @@ public class IocContainerRebind extends AbstractProxyCreator
 				}
         	}
         }
-        if (type.getSuperclass() != null)
-        {
-        	injectFields(srcWriter, type.getSuperclass(), parentVariable, added, iocContainerVariable, configurations);
-        }
-	}
+    }
 	
+	/**
+	 * 
+	 * @param srcWriter
+	 * @param type
+	 * @param parentVariable
+	 * @param added
+	 * @param iocContainerVariable
+	 * @param configurations
+	 */
+	private static void injectMethods(SourcePrinter srcWriter, JClassType type, String parentVariable, Set<String> added, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
+    {
+	    for (JMethod method : type.getMethods()) 
+        {
+        	Inject inject = method.getAnnotation(Inject.class);
+        	if (inject != null && !method.isStatic())
+        	{
+		    	String methodName = method.getName();
+				if (!added.contains(methodName))
+	        	{
+					JParameter[] parameters = method.getParameters();
+					List<String> params = new ArrayList<String>();
+					for (JParameter parameter : parameters)
+	                {
+						JType parameterType = parameter.getType();
+						if ((parameterType.isPrimitive()!= null))
+						{
+							throw new IoCException("IoC Error Method ["+methodName+"] from class ["+type.getQualifiedSourceName()+"] declares an invalid parameter. Primitive types are not allowed here");
+						}
+						String variableName = "parameter_"+methodName+"_"+parameter.getName();
+						params.add(variableName);
+						String injectionExpression = getParameterInjectionExpression(parameter, iocContainerVariable, configurations);
+						srcWriter.println(parameterType.getQualifiedSourceName()+" "+variableName+" = "+ injectionExpression+";");
+	                }
+					srcWriter.print(parentVariable+"."+methodName+"(");
+					boolean first = true;
+					for (String param : params)
+                    {
+						if (!first)
+						{
+							srcWriter.print(", ");
+						}
+						first = false;
+						srcWriter.print(param);
+	                    
+                    }
+					srcWriter.println(");");
+					
+	        	}
+        	}
+        }
+    }
+
 	@Override
     public String getProxyQualifiedName()
     {
@@ -301,5 +372,39 @@ public class IocContainerRebind extends AbstractProxyCreator
 			}
 		}
 	    return null;
+    }	
+
+	private static String getParameterInjectionExpression(JParameter parameter, String iocContainerVariable, Map<String, IocConfig<?>> configurations)
+    {
+		JType parameterType = parameter.getType();
+		if (parameterType.isClassOrInterface() != null)
+		{
+			String fieldTypeName = parameterType.getQualifiedSourceName();
+			IocConfigImpl<?> iocConfig = (IocConfigImpl<?>) configurations.get(fieldTypeName);
+			if (iocConfig != null)
+			{
+				Inject inject = getInjectAnnotation(parameter);
+				return iocContainerVariable+".get"+fieldTypeName.replace('.', '_')+
+				"("+Scope.class.getCanonicalName()+"."+inject.scope().name()+", "+EscapeUtils.quote(inject.subscope())+")";
+			}
+			else
+			{
+				return "GWT.create("+fieldTypeName+".class)";
+			}
+		}
+		else
+		{
+			throw new IoCException("Error injecting parameter ["+parameter.getName()+"] from method ["+parameter.getEnclosingMethod().getReadableDeclaration()+"]. Primitive fields can not be handled by ioc container.");
+		}
+    }
+
+	private static Inject getInjectAnnotation(JParameter parameter)
+    {
+		Inject result = parameter.getAnnotation(Inject.class);
+		if (result == null)
+		{
+			result = parameter.getEnclosingMethod().getAnnotation(Inject.class);
+		}
+		return result;
     }	
 }
