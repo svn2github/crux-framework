@@ -127,7 +127,7 @@ class ChildrenAnnotationScanner
 			 */
 			private void processAnyWidgetChild(SourcePrinter out, WidgetCreatorContext context)
             {
-				String childWidget; //TODO validar se o lazyCondition esta sendo usado sempre com widgets na factory
+				String childWidget;
 				WidgetConsumer consumer = widgetCreator.getViewFactory().getScreenWidgetConsumer();
 				if (consumer != null && consumer instanceof LazyCompatibleWidgetConsumer && lazyChecker != null && lazyChecker.isLazy(context.getWidgetElement()))
 				{

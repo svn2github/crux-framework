@@ -87,7 +87,7 @@ public class ConsoleParametersProcessor
 	{
 		showCommandLineDescription();
 		out.println("--------------------");
-		out.println("Program parameters:"); //TODO - I18N
+		out.println("Program parameters:"); 
 		for (ConsoleParameter parameter : orderedParameters)
 		{
 			String name = parameter.getName();
@@ -250,7 +250,7 @@ public class ConsoleParametersProcessor
 	 */
 	private void showCommandLineDescription()
 	{
-		out.print("Usage: "+programName+ " "); //TODO - I18N
+		out.print("Usage: "+programName+ " "); 
 		
 		boolean first = true;
 		for (ConsoleParameter parameter : orderedParameters)

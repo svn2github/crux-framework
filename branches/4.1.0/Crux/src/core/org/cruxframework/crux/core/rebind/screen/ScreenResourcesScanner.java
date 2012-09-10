@@ -69,7 +69,7 @@ public abstract class ScreenResourcesScanner
 			try
 			{
 				URLIterator it = IteratorFactory.create(url, filter);
-				while (it.next() != null); // TODO retornar Set<URL>
+				while (it.next() != null); 
 
 			}
 			catch (IOException e)
