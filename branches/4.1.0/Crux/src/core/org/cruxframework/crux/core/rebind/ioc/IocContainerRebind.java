@@ -219,9 +219,13 @@ public class IocContainerRebind extends AbstractProxyCreator
 						{
 							if (JClassUtils.hasSetMethod(field, type))
 							{
-								srcWriter.println(fieldType.getQualifiedSourceName()+" field_"+fieldName+" = "+ injectionExpression+";");
 								String setterMethodName = "set"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1);
-								srcWriter.println(parentVariable+"."+setterMethodName+"(field_"+ fieldName+");");
+                                JMethod method = type.findMethod(setterMethodName, new JType[]{field.getType()});
+                                if (method.getAnnotation(Inject.class) == null) // Annotated methods are handled apart
+                                {
+                                	srcWriter.println(fieldType.getQualifiedSourceName()+" field_"+fieldName+" = "+ injectionExpression+";");
+                                	srcWriter.println(parentVariable+"."+setterMethodName+"(field_"+ fieldName+");");
+                                }
 							}
 							else
 							{
