@@ -208,6 +208,7 @@ public class IocContainerRebind extends AbstractProxyCreator
         	String fieldName = field.getName();
 			if (!added.contains(fieldName))
         	{
+				added.add(fieldName);
 				JType fieldType = field.getType();
 				if ((fieldType.isPrimitive()== null))
 				{
@@ -254,8 +255,9 @@ public class IocContainerRebind extends AbstractProxyCreator
         	if (inject != null && !method.isStatic())
         	{
 		    	String methodName = method.getName();
-				if (!added.contains(methodName))
+				if (!added.contains(methodName+"()"))
 	        	{
+					added.add(methodName+"()");
 					JParameter[] parameters = method.getParameters();
 					List<String> params = new ArrayList<String>();
 					for (JParameter parameter : parameters)

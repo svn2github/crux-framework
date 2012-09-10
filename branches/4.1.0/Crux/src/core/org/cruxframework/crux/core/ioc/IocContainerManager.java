@@ -45,7 +45,6 @@ public class IocContainerManager
 
 	private static boolean initialized = false;
 	
-	//TODO permitir adiciona a anotacao @Inject em metodos, construtores e parametros tbm....nao so em campos
 	public synchronized static void initialize()
 	{
 		if (!initialized)
