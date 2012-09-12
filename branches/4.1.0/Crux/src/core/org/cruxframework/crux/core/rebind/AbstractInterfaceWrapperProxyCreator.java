@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.cruxframework.crux.core.declarativeui.view.Views;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
@@ -75,12 +76,6 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		return super.create();
 	}
 	
-	
-	/**
-	 * @return the list of imports required by proxy
-	 */
-	protected abstract String[] getImports();
-	
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
@@ -99,29 +94,6 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		JClassType enclosingType = baseIntf.getEnclosingType();
 		String enclosingTypeName = (enclosingType==null?"":enclosingType.getSimpleSourceName()+"_");
 		return enclosingTypeName+baseIntf.getSimpleSourceName() + PROXY_SUFFIX;
-	}
-	
-	/**
-	 * 
-	 * @param logger
-	 * @return
-	 * @throws CruxGeneratorException
-	 * @throws ScreenConfigException
-	 */
-	private Screen getRequestedScreen() throws CruxGeneratorException, ScreenConfigException
-	{
-		String screenID; 
-		try
-		{
-			screenID = CruxBridge.getInstance().getLastPageRequested();
-		}
-		catch (Throwable e) 
-		{
-			throw new CruxGeneratorException("Error retrieving screen Identifier.");
-		}
-		
-        Screen screen = ScreenFactory.getInstance().getScreen(screenID, getDeviceFeatures());
-        return screen;
 	}
 
 	/**
@@ -273,53 +245,6 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	}
 	
 	/**
-	 * 
-	 * @param screen
-	 * @param views
-	 * @param added
-	 */
-	private void findViews(Screen screen, List<View> views, Set<String> added) 
-	{
-		View rootView = screen.getRootView();
-		if (!added.contains(rootView.getId()))
-		{
-			added.add(rootView.getId());
-			views.add(rootView);
-			findViews(rootView, views, added);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param view
-	 * @param views
-	 * @param added
-	 */
-	private void findViews(View view, List<View> views, Set<String> added) 
-	{
-		try
-		{
-			Iterator<String> iterator = view.iterateViews();
-			while (iterator.hasNext())
-			{
-				String viewName = iterator.next();
-				if (!added.contains(viewName))
-				{
-					added.add(viewName);
-					View innerView = ViewFactory.getInstance().getView(viewName, getDeviceFeatures());
-					views.add(innerView);
-					findViews(innerView, views, added);
-				}
-			}
-		}
-		catch (ScreenConfigException e)
-		{
-			logger.log(TreeLogger.ERROR, "Error Generating registered element. Can not retrieve screen's list of views.",e);
-			throw new CruxGeneratorException();
-		}
-	}
-	
-	/**
 	 * @return a sourceWriter for the proxy class
 	 */
 	@Override
@@ -398,4 +323,84 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	{
 		return cacheableVersionFound;
 	}
+	
+	/**
+	 * 
+	 * @param screen
+	 * @param views
+	 * @param added
+	 */
+	private void findViews(Screen screen, List<View> views, Set<String> added) 
+	{
+		View rootView = screen.getRootView();
+		if (!added.contains(rootView.getId()))
+		{
+			added.add(rootView.getId());
+			views.add(rootView);
+			findViews(rootView, views, added);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param view
+	 * @param views
+	 * @param added
+	 */
+	private void findViews(View view, List<View> views, Set<String> added) 
+	{
+		try
+		{
+			Iterator<String> iterator = view.iterateViews();
+			while (iterator.hasNext())
+			{
+				String viewLocator = iterator.next();
+				if (!added.contains(viewLocator))
+				{
+					added.add(viewLocator);
+					
+					List<String> viewList = Views.getViews(viewLocator);
+					for (String viewName : viewList)
+                    {
+						View innerView = ViewFactory.getInstance().getView(viewName, getDeviceFeatures());
+						views.add(innerView);
+						findViews(innerView, views, added);
+                    }
+				}
+			}
+		}
+		catch (ScreenConfigException e)
+		{
+			logger.log(TreeLogger.ERROR, "Error Generating registered element. Can not retrieve screen's list of views.",e);
+			throw new CruxGeneratorException();
+		}
+	}
+
+	/**
+	 * 
+	 * @param logger
+	 * @return
+	 * @throws CruxGeneratorException
+	 * @throws ScreenConfigException
+	 */
+	private Screen getRequestedScreen() throws CruxGeneratorException, ScreenConfigException
+	{
+		String screenID; 
+		try
+		{
+			screenID = CruxBridge.getInstance().getLastPageRequested();
+		}
+		catch (Throwable e) 
+		{
+			throw new CruxGeneratorException("Error retrieving screen Identifier.");
+		}
+		
+        Screen screen = ScreenFactory.getInstance().getScreen(screenID, getDeviceFeatures());
+        return screen;
+	}
+	
+	/**
+	 * @return the list of imports required by proxy
+	 */
+	protected abstract String[] getImports();
 }

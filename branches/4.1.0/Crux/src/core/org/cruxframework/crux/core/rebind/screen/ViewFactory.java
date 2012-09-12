@@ -562,7 +562,7 @@ public class ViewFactory
 	    		useView = useView.trim();
 	    		if (!StringUtils.isEmpty(useView))
 	    		{
-	    			if (Views.getView(useView) == null)
+	    			if (Views.isViewName(useView) && Views.getView(useView) == null)
 	    			{
 	    				throw new ScreenConfigException("View ["+useView+"], declared on view ["+view.getId()+"], not found!");
 	    			}

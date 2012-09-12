@@ -16,13 +16,21 @@
 package org.cruxframework.crux.core.declarativeui.view;
  
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.classpath.URLResourceHandler;
+import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
+import org.cruxframework.crux.core.rebind.module.Module;
+import org.cruxframework.crux.core.rebind.module.Modules;
+import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.core.utils.FilePatternHandler;
 
 
 /**
@@ -84,6 +92,119 @@ public class Views
 		initialize();
 	}
 	
+	/**
+	 * 
+	 * @param viewsLocator
+	 * @return
+	 */
+	public static List<String> getViews(String viewsLocator)
+	{
+		if (views == null)
+		{
+			initialize();
+		}
+		List<String> result = new ArrayList<String>();
+		if (isViewName(viewsLocator))
+		{
+			result.add(viewsLocator);
+		}
+		else if (isModuleLocator(viewsLocator))
+		{
+			extractModuleViews(viewsLocator, result);
+		}
+		else if (isFolderLocator(viewsLocator))
+		{
+			URL[] webBaseDirs = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+			FilePatternHandler handler = new FilePatternHandler(viewsLocator, null);
+			for (URL url : webBaseDirs)
+            {
+				extractFolderViews(result, url, handler);
+            }
+		}
+			
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param viewsLocator
+	 * @return
+	 */
+	public static boolean isViewName(String viewsLocator)
+	{
+		return (viewsLocator != null && viewsLocator.matches("[\\w\\.]*"));
+	}
+	
+	/**
+	 * 
+	 * @param viewsLocator
+	 * @return
+	 */
+	public static boolean isModuleLocator(String viewsLocator)
+	{
+		return (viewsLocator != null && viewsLocator.startsWith("/") && viewsLocator.lastIndexOf("/") > 1);
+	}
+
+	/**
+	 * 
+	 * @param viewsLocator
+	 * @return
+	 */
+	public static boolean isFolderLocator(String viewsLocator)
+	{
+		return (viewsLocator != null && viewsLocator.indexOf('/') > 0);
+	}
+	
+	private static void extractModuleViews(String viewsLocator, List<String> result)
+    {
+	    viewsLocator = viewsLocator.substring(1);
+	    int index = viewsLocator.indexOf("/");
+	    String moduleId = viewsLocator.substring(0, index);
+	    Module module = Modules.getInstance().getModule(moduleId);
+	    if (module == null)
+	    {
+	    	throw new ViewException("Invalid module ["+moduleId+"] referenced by the view locator expression ["+viewsLocator+"]");
+	    }
+	    if (viewsLocator.length() > index +1)
+	    {
+	    	viewsLocator = viewsLocator.substring(index+1);
+	    	if (isViewName(viewsLocator))
+	    	{
+	    		if (Modules.getInstance().isResourceOnModulePath(getView(viewsLocator), moduleId))
+	    		{
+	    			result.add(viewsLocator);
+	    		}
+	    	}
+	    	else
+	    	{
+	    		URL rootURL = Modules.getInstance().getModuleRootURL(moduleId);
+	    		URLResourceHandler urlResourceHandler = URLResourceHandlersRegistry.getURLResourceHandler(rootURL.getProtocol());
+	    		FilePatternHandler handler = new FilePatternHandler(viewsLocator, null);
+	    		for (String path : module.getPublicPaths())
+	            {
+	    			URL modulePublicPath = urlResourceHandler.getChildResource(rootURL, path);
+	    			extractFolderViews(result, modulePublicPath, handler);
+	            }
+	    	}
+	    }
+    }
+	
+	private static void extractFolderViews(List<String> result, URL baseFolder, FilePatternHandler handler)
+	{
+		for (String viewId : views.keySet())
+        {
+			URL view = views.get(viewId);
+	        if (view.toString().startsWith(baseFolder.toString()))
+	        {
+	        	String relativePath = view.toString().substring(baseFolder.toString().length()+1);
+	        	if (handler.isValidEntry(relativePath))
+	        	{
+	        		result.add(viewId);
+	        	}
+	        }
+        }
+	}
+
 	/**
 	 * 
 	 */

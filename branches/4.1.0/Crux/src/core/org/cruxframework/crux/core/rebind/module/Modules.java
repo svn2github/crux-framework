@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.classpath.URLResourceHandler;
 import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
@@ -128,6 +129,105 @@ public class Modules
 
 	/**
 	 * 
+	 * @param url
+	 * @param moduleId
+	 * @return
+	 */
+	public boolean isResourceOnModulePath(URL url, String moduleId)
+	{
+		return isResourceOnModulePath(url, moduleId, new HashSet<String>());
+	}
+	
+	/**
+	 * @param module
+	 * @return
+	 */
+	public String[] searchModulePages(Module module)
+	{
+		String[] pages = null;
+		try
+		{
+			Set<String> allScreenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(module.getName());
+			if (allScreenIDs != null)
+			{
+				URL location = getModuleRootURL(module);
+				pages = new String[allScreenIDs.size()];
+				int i=0;
+				for (String screenID : allScreenIDs)
+				{
+					screenID = getRelativeScreenId(module, screenID, location);
+					pages[i++] = screenID;
+				}
+			}
+			else 
+			{
+				pages = new String[0];
+			}
+		}
+		catch (ScreenConfigException e)
+		{
+			throw new ModuleException("Error searching for module pages. Module Name ["+module.getName()+"]", e);
+		}
+		return pages;
+	}
+
+	/**
+	 * @param module
+	 * @param screenID
+	 * @return
+	 */
+	public String getRelativeScreenId(Module module, String screenID)
+	{
+		URL location = getModuleRootURL(module);
+		return getRelativeScreenId(module, screenID, location);
+	}
+
+	/**
+	 * 
+	 * @param module
+	 * @param path
+	 * @return
+	 */
+	public URL getModuleRelativeURL(Module module, String path)
+    {
+	    URL moduleRoot = module.getDescriptorURL();
+		URLResourceHandler urlResourceHandler = URLResourceHandlersRegistry.getURLResourceHandler(moduleRoot.getProtocol());
+		moduleRoot = urlResourceHandler.getParentDir(moduleRoot);
+		urlResourceHandler.getChildResource(moduleRoot, path);
+	    return moduleRoot;
+    }
+
+	/**
+	 * 
+	 * @param module
+	 * @return
+	 */
+	public URL getModuleRootURL(Module module)
+    {
+	    URL location = module.getDescriptorURL();
+		location = URLResourceHandlersRegistry.getURLResourceHandler(location.getProtocol()).getParentDir(location);
+	    return location;
+    }
+
+	/**
+	 * 
+	 * @param module
+	 * @return
+	 */
+	public URL getModuleRootURL(String moduleId)
+    {
+		Module module = getModule(moduleId);
+		if (module != null)
+		{
+			URL location = module.getDescriptorURL();
+			location = URLResourceHandlersRegistry.getURLResourceHandler(location.getProtocol()).getParentDir(location);
+			return location;
+		}
+		return null;
+    }
+
+	/**
+	 * 
 	 * @param controller
 	 * @param module
 	 * @return
@@ -161,7 +261,43 @@ public class Modules
 		
 		return false;
 	}	
-	
+
+	/**
+	 * 
+	 * @param view
+	 * @param module
+	 * @return
+	 */
+	protected boolean isResourceOnModulePath(URL view, String moduleId, Set<String> alreadySearched)
+	{
+		if (alreadySearched.contains(moduleId))
+		{
+			return false;
+		}
+		alreadySearched.add(moduleId);
+		Module module = getModule(moduleId);
+		if (module != null)
+		{
+			
+			for(String path: module.getPublicPaths())
+			{
+				URL relativeURL = getModuleRelativeURL(module, path);
+				if (view.toString().startsWith(relativeURL.toString()))
+				{
+					return true;
+				}
+			}
+			for (String inheritModule : module.getInherits())
+			{
+				if (isResourceOnModulePath(view, inheritModule, alreadySearched))
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}	
 
 	/**
 	 * 
@@ -312,52 +448,6 @@ public class Modules
 		{
 			return new String[]{"public"};
 		}
-	}
-
-	/**
-	 * @param module
-	 * @return
-	 */
-	public String[] searchModulePages(Module module)
-	{
-		String[] pages = null;
-		try
-		{
-			Set<String> allScreenIDs = ScreenResourceResolverInitializer.getScreenResourceResolver().getAllScreenIDs(module.getName());
-			if (allScreenIDs != null)
-			{
-				URL location = module.getDescriptorURL();
-				location = URLResourceHandlersRegistry.getURLResourceHandler(location.getProtocol()).getParentDir(location);
-				pages = new String[allScreenIDs.size()];
-				int i=0;
-				for (String screenID : allScreenIDs)
-				{
-					screenID = getRelativeScreenId(module, screenID, location);
-					pages[i++] = screenID;
-				}
-			}
-			else 
-			{
-				pages = new String[0];
-			}
-		}
-		catch (ScreenConfigException e)
-		{
-			throw new ModuleException("Error searching for module pages. Module Name ["+module.getName()+"]", e);
-		}
-		return pages;
-	}
-
-	/**
-	 * @param module
-	 * @param screenID
-	 * @return
-	 */
-	public String getRelativeScreenId(Module module, String screenID)
-	{
-		URL location = module.getDescriptorURL();
-		location = URLResourceHandlersRegistry.getURLResourceHandler(location.getProtocol()).getParentDir(location);
-		return getRelativeScreenId(module, screenID, location);
 	}
 
 	/**
