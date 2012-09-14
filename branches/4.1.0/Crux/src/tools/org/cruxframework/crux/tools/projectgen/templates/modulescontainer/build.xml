@@ -61,6 +61,7 @@
 		<delete>
 			<fileset dir="${temp.dir}/webroot">
 				<include name="**/*.crux.xml"/>
+				<include name="**/*.view.xml"/>
 				<include name="**/*.template.xml"/>
 			</fileset>
 		</delete>
