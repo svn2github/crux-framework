@@ -220,7 +220,10 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			String recordTypeDeclaration = recordType.getQualifiedSourceName();
 			
 			sourceWriter.println("public void updateData("+dtoType.getParameterizedQualifiedSourceName()+"[] data){");
-			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[(data!=null?data.length:0)];");
+			sourceWriter.println("if (data == null){");
+			sourceWriter.println("update(new "+recordTypeDeclaration+"[0]);");
+			sourceWriter.println("} else {");
+			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[data.length];");
 			sourceWriter.println("for (int i=0; i<data.length; i++){");
 			sourceWriter.print("ret[i] = new "+recordType.getParameterizedQualifiedSourceName()+"(this,");
 			sourceWriter.print(getIdentifierDeclaration("data[i]"));
@@ -229,9 +232,13 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			sourceWriter.println("}");
 			sourceWriter.println("update(ret);");
 			sourceWriter.println("}");
+			sourceWriter.println("}");
 
 			sourceWriter.println("public void updateData(java.util.List<"+dtoType.getParameterizedQualifiedSourceName()+"> data){");
-			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[(data!=null?data.size():0)];");
+			sourceWriter.println("if (data == null){");
+			sourceWriter.println("update(new "+recordTypeDeclaration+"[0]);");
+			sourceWriter.println("} else {");
+			sourceWriter.println(recordTypeDeclaration+"[] ret = new "+recordTypeDeclaration+"[data.size()];");
 			sourceWriter.println("for (int i=0; i<data.size(); i++){");
 			sourceWriter.print("ret[i] = new "+recordType.getParameterizedQualifiedSourceName()+"(this,");
 			sourceWriter.print(getIdentifierDeclaration("data.get(i)"));
@@ -239,6 +246,7 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 			sourceWriter.println("ret[i].setRecordObject(data.get(i));");
 			sourceWriter.println("}");
 			sourceWriter.println("update(ret);");
+			sourceWriter.println("}");
 			sourceWriter.println("}");
 		
 		}

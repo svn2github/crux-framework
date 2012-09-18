@@ -56,7 +56,7 @@ public class ViewsScanner extends AbstractScanner
 	private void scanArchives(URL... urls)
 	{
 		// used to handle duplicated entries on classpath
-		Set<String> foundTemplates = new HashSet<String>();
+		Set<String> foundViews = new HashSet<String>();
 		
 		for (final URL url : urls)
 		{
@@ -82,9 +82,9 @@ public class ViewsScanner extends AbstractScanner
 				while ((found = it.next()) != null)
 				{
 					String urlString = found.toString();
-					if (!foundTemplates.contains(urlString))
+					if (!foundViews.contains(urlString))
 					{
-						foundTemplates.add(urlString);
+						foundViews.add(urlString);
 						Views.registerView(getViewId(urlString), found);
 					}
 				}
