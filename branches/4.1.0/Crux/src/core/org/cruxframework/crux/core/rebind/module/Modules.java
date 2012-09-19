@@ -33,6 +33,7 @@ import org.cruxframework.crux.classpath.URLResourceHandlersRegistry;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
+import org.cruxframework.crux.core.utils.URLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -264,11 +265,11 @@ public class Modules
 
 	/**
 	 * 
-	 * @param view
+	 * @param resource
 	 * @param module
 	 * @return
 	 */
-	protected boolean isResourceOnModulePath(URL view, String moduleId, Set<String> alreadySearched)
+	protected boolean isResourceOnModulePath(URL resource, String moduleId, Set<String> alreadySearched)
 	{
 		if (alreadySearched.contains(moduleId))
 		{
@@ -282,14 +283,14 @@ public class Modules
 			for(String path: module.getPublicPaths())
 			{
 				URL relativeURL = getModuleRelativeURL(module, path);
-				if (view.toString().startsWith(relativeURL.toString()))
+				if (resource.toString().startsWith(relativeURL.toString()))
 				{
 					return true;
 				}
 			}
 			for (String inheritModule : module.getInherits())
 			{
-				if (isResourceOnModulePath(view, inheritModule, alreadySearched))
+				if (isResourceOnModulePath(resource, inheritModule, alreadySearched))
 				{
 					return true;
 				}
@@ -317,19 +318,31 @@ public class Modules
 	 */
 	protected Module registerModule(URL moduleDescriptor, String moduleFullName, Document moduleDocument)
 	{
-		Module module = new Module();
-		
-		Element element = moduleDocument.getDocumentElement();
-		
-		module.setFullName(moduleFullName);
-		module.setName(getModuleName(moduleFullName, element));
-		module.setSources(getModuleSources(element));
-		module.setPublicPaths(getModulePublicPaths(element));
-		module.setRootPath(getModuleRootPath(moduleFullName));
-		module.setInherits(getModuleInherits(element));
-		module.setDescriptorURL(moduleDescriptor);
-		modules.put(module.getName(), module);
-		moduleAliases.put(moduleFullName, module.getName());
+		Module module;;
+		if (moduleAliases.containsKey(moduleFullName))
+		{
+			module = getModule(moduleFullName);
+			if (!URLUtils.isIdenticResource(moduleDescriptor, module.getDescriptorURL(), moduleFullName+".gwt.xml"))
+			{
+				throw new ModuleException("Duplicated module descriptor. Module ["+moduleFullName+"] is already registered.");
+			}
+		}
+		else
+		{
+			module = new Module();
+
+			Element element = moduleDocument.getDocumentElement();
+
+			module.setFullName(moduleFullName);
+			module.setName(getModuleName(moduleFullName, element));
+			module.setSources(getModuleSources(element));
+			module.setPublicPaths(getModulePublicPaths(element));
+			module.setRootPath(getModuleRootPath(moduleFullName));
+			module.setInherits(getModuleInherits(element));
+			module.setDescriptorURL(moduleDescriptor);
+			modules.put(module.getName(), module);
+			moduleAliases.put(moduleFullName, module.getName());
+		}
 		return module;
 	}
 

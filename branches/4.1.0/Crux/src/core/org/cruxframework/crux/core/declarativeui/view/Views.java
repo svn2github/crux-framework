@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.declarativeui.view;
  
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ import org.cruxframework.crux.core.rebind.module.Module;
 import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.server.classpath.ClassPathResolverInitializer;
 import org.cruxframework.crux.core.utils.FilePatternHandler;
-import org.cruxframework.crux.core.utils.FileUtils;
+import org.cruxframework.crux.core.utils.URLUtils;
 
 
 /**
@@ -44,7 +43,7 @@ public class Views
 {
 	private static final Lock lock = new ReentrantLock();
 	private static final Log logger = LogFactory.getLog(Views.class);
-	private static Map<String, URL> views = null;
+	private static Map<String, List<URL>> views = null;
 	
 	/**
 	 * 
@@ -57,7 +56,8 @@ public class Views
 		{
 			initialize();
 		}
-		return views.get(id);
+		List<URL> urls = views.get(id);
+		return (urls != null && urls.size() > 0)?urls.get(0):null;
 	}
 	
 	/**
@@ -172,9 +172,16 @@ public class Views
 	    	viewsLocator = viewsLocator.substring(index+1);
 	    	if (isViewName(viewsLocator))
 	    	{
-	    		if (Modules.getInstance().isResourceOnModulePath(getView(viewsLocator), moduleId))
+	    		List<URL> urls = views.get(viewsLocator);
+	    		if (urls != null)
 	    		{
-	    			result.add(viewsLocator);
+	    			for(URL url: urls)
+	    			{
+	    				if (Modules.getInstance().isResourceOnModulePath(url, moduleId))
+	    				{
+	    					result.add(viewsLocator);
+	    				}
+	    			}
 	    		}
 	    	}
 	    	else
@@ -192,20 +199,27 @@ public class Views
     }
 	
 	private static void extractFolderViews(List<String> result, URL baseFolder, FilePatternHandler handler)
-	{//TODO modificar a inicializacao dos scanners para nao procurar no classes nem no /war/moduleoutput
+	{
 	//TODO modificar o scanner de templates para identificar duplicatas....assim como o de views	
 		for (String viewId : views.keySet())
         {
-			URL view = views.get(viewId);
-	        if (view.toString().startsWith(baseFolder.toString()))
-	        {
-	        	String relativePath = view.toString().substring(baseFolder.toString().length());
-	        	if (handler.isValidEntry(relativePath))
-	        	{
-	        		result.add(viewId);
-	        	}
-	        }
-        }
+			List<URL> urls = views.get(viewId);
+			if (urls != null)
+			{
+				for (URL view : urls)
+                {
+					if (view.toString().startsWith(baseFolder.toString()))
+					{
+						String relativePath = view.toString().substring(baseFolder.toString().length());
+						if (handler.isValidEntry(relativePath))
+						{
+							result.add(viewId);
+							break;
+						}
+					}
+                }
+			}
+		}
 	}
 
 	/**
@@ -213,7 +227,7 @@ public class Views
 	 */
 	protected static void initializeViews()
 	{
-		views = new HashMap<String, URL>();
+		views = new HashMap<String, List<URL>>();
 		logger.info("Searching for view files.");
 		ViewsScanner.getInstance().scanArchives();
 	}
@@ -227,60 +241,21 @@ public class Views
 	{
 		if (views.containsKey(viewId))
 		{
-			checkIdentity(views.get(viewId), view, viewId);
+			List<URL> urls = views.get(viewId);
+			if (urls.size() > 0)
+			{
+				if (!URLUtils.isIdenticResource(urls.get(0), view, viewId+".view.xml"))
+				{
+					throw new ViewException("Duplicated view identifier. View ["+viewId+"] is already registered.");
+				}
+			}
+			urls.add(view);
 		}
 		else
 		{
-			views.put(viewId, view);
-		}
-	}
-	
-	private static void checkIdentity(URL view1, URL view2, String viewId)
-	{
-		if (!view1.toString().equals(view2.toString()))
-		{
-			if (view1.getProtocol().equals(view2.getProtocol()) && view1.getProtocol().equals("file"))
-			{
-				File file1;
-				File file2;
-				try
-                {
-	                file1 = new File(view1.toURI());
-	                file2 = new File(view2.toURI());
-                }
-                catch (Exception e)
-                {
-    				throw new ViewException("Invalid url for view ["+viewId+"].");
-                }
-	                
-                if (file1.length() == file2.length())
-                {
-					String view1Content;
-					String view2Content;
-    				try
-                    {
-    					view1Content = FileUtils.read(file1);
-    					view2Content = FileUtils.read(file1);
-                    }
-                    catch (Exception e)
-                    {
-        				throw new ViewException("Can not read the view file. View ID["+viewId+"].");
-                    }
-
-                	if (!view1Content.equals(view2Content))
-                	{
-                		throw new ViewException("Duplicated view identifier. View ["+viewId+"] is already registered.");
-                	}
-                }
-                else
-                {
-                	throw new ViewException("Duplicated view identifier. View ["+viewId+"] is already registered.");
-                }
-			}
-			else
-			{
-				throw new ViewException("Duplicated view identifier. View ["+viewId+"] is already registered.");
-			}
+			List<URL> urls = new ArrayList<URL>();
+			urls.add(view);
+			views.put(viewId, urls);
 		}
 	}
 }

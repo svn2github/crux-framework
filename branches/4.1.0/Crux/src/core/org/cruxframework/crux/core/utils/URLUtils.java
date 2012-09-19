@@ -81,4 +81,63 @@ public class URLUtils
 		}
 	}
 	
+	public static boolean isIdenticResource(URL view1, URL view2, String resourceId)
+	{
+		if (!view1.toString().equals(view2.toString()))
+		{
+			if (view1.getProtocol().equals(view2.getProtocol()) && view1.getProtocol().equals("file"))
+			{
+				File file1;
+				File file2;
+				try
+                {
+	                file1 = new File(view1.toURI());
+	                file2 = new File(view2.toURI());
+                }
+                catch (Exception e)
+                {
+    				throw new ResourceException("Invalid url for resource ["+resourceId+"].", e);
+                }
+	                
+                if (file1.length() == file2.length())
+                {
+					String view1Content;
+					String view2Content;
+    				try
+                    {
+    					view1Content = FileUtils.read(file1);
+    					view2Content = FileUtils.read(file1);
+                    }
+                    catch (Exception e)
+                    {
+        				throw new ResourceException("Can not read the resource file. View ID["+resourceId+"].", e);
+                    }
+
+                	if (!view1Content.equals(view2Content))
+                	{
+                		return false;
+                	}
+                }
+                else
+                {
+            		return false;
+                }
+			}
+			else
+			{
+        		return false;
+			}
+		}
+		return true;
+	}
+	
+	public static class ResourceException extends RuntimeException
+	{
+        private static final long serialVersionUID = -2282344306575624565L;
+
+        public ResourceException(String message, Throwable cause)
+        {
+        	super(message, cause);
+        }
+	}
 }
