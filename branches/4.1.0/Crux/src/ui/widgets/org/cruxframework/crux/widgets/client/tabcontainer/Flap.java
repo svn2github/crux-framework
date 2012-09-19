@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.client.tabcontainer;
+package org.cruxframework.crux.widgets.client.tabcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.widgets.client.event.focusblur.BeforeBlurEvent;

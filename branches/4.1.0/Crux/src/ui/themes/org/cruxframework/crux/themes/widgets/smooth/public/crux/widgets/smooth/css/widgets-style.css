@@ -1697,3 +1697,87 @@ SPAN, DIV, TD, LI, STRONG, UL
 	text-shadow: #FFFFFF 1px 1px 0;
 	border: solid 1px #BBBBBB;
 }
+
+
+/******************************************************************************
+	TabContainer
+*******************************************************************************/
+.crux-TabContainer .crux-TabBarItem
+{
+	margin-right: 2px;
+}
+.crux-TabContainer .crux-TabBarItem .flapLeft
+{
+	padding:1px !important;
+	font-family:monospace;
+	font-size:9px;
+	width:9px !important;
+	height:29px;
+	background-image: url(../img/dyna-tabs-tab-left.gif);
+	background-repeat: no-repeat;
+	background-position: top left;
+	margin-right: 2px;
+}
+.crux-TabContainer .crux-TabBarItem .flapRight
+{
+	padding:1px !important;
+	font-family:monospace;
+	font-size:9px;
+	width:9px !important;
+	height:29px;
+	background-image: url(../img/dyna-tabs-tab-right.gif);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+.crux-TabContainer .crux-TabBarItem .flapCenter
+{
+	background-image: url(../img/dyna-tabs-tab-bg.gif);
+	background-position: top;
+	background-repeat: repeat-x;
+}
+.crux-TabContainer .crux-TabBarItem .flapLabel
+{
+	cursor:default;
+	font-family:arial;
+	font-weight:bold;
+	font-size:11px;
+	color:#FFFFFF;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-left:5px;
+	padding-right:5px;
+	white-space:nowrap;
+}
+.crux-TabContainer .crux-TabBarItem-selected .flapLeft
+{
+	background-image: url(../img/dyna-tabs-tab-left-selected.gif);
+}
+.crux-TabContainer .crux-TabBarItem-selected .flapRight
+{
+	background-image: url(../img/dyna-tabs-tab-right-selected.gif);
+}
+.crux-TabContainer .crux-TabBarItem-selected .flapCenter
+{
+	background-image: url(../img/dyna-tabs-tab-bg-selected.gif);
+}
+.crux-TabContainer .crux-TabBarItem-selected .flapLabel
+{
+	color:#7b8287;
+}
+.crux-TabContainer .crux-TabBarItem .flapCloseButton
+{
+	background-image: url(../img/dyna-tabs-close.png);
+	background-position: middle right;
+	background-repeat: no-repeat;
+	width: 14px;
+	height: 14px;
+	margin-top: 4px;
+	cursor: pointer;
+	margin-right: 0px;
+	font-family: monospace;
+	font-size: 0px;
+}
+.crux-TabContainer .flapCloseButton-disable
+{
+	cursor: wait;
+}

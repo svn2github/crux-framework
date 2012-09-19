@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.client.swapcontainer;
+package org.cruxframework.crux.widgets.client.swapcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.View;
 

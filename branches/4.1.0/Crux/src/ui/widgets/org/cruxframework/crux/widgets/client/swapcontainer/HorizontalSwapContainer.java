@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.client.swapcontainer;
+package org.cruxframework.crux.widgets.client.swapcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class HorizontalSwapContainer extends SingleViewContainer implements HasChangeViewHandlers
 {
-	public static final String DEFAULT_STYLE_NAME = "view-HorizontalSwapContainer";
+	public static final String DEFAULT_STYLE_NAME = "crux-HorizontalSwapContainer";
 	private HorizontalSwapPanel swapPanel;
 	private Panel active;
 	private Panel swap;

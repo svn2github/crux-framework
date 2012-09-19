@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.rebind.swapcontainer;
+package org.cruxframework.crux.widgets.rebind.swapcontainer;
 
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -32,7 +32,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
-import org.cruxframework.crux.views.client.swapcontainer.HorizontalSwapContainer;
+import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 
 class HorizontalSwapContainerContext extends WidgetCreatorContext
 {
@@ -44,7 +44,7 @@ class HorizontalSwapContainerContext extends WidgetCreatorContext
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="horizontalSwapViewContainer", library="views", targetWidget=HorizontalSwapContainer.class)
+@DeclarativeFactory(id="horizontalSwapViewContainer", library="widgets", targetWidget=HorizontalSwapContainer.class)
 @TagChildren({
 	@TagChild(HorizontalSwapContainerFactory.ViewProcessor.class)
 })

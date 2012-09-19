@@ -1,4 +1,4 @@
-package org.cruxframework.crux.views.client.tabcontainer;
+package org.cruxframework.crux.widgets.client.tabcontainer;
 
 import org.cruxframework.crux.core.client.screen.Screen;
 
@@ -46,7 +46,7 @@ public class FlapController extends Composite
 		{
 			title = new Label(tabLabel);
 		}
-		title.setStyleName("tabLabel");
+		title.setStyleName("flapLabel");
 		flap.add(title);
 
 		if (closeable)
@@ -54,7 +54,7 @@ public class FlapController extends Composite
 			closeButton = new FocusWidget(new Label(" ").getElement()) {};
 
 
-			closeButton.setStyleName("tabCloseButton");
+			closeButton.setStyleName("flapCloseButton");
 			closeButton.addClickHandler(new ClickHandler()
 			{
 				public void onClick(ClickEvent event)

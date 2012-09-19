@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.client.tabcontainer;
+package org.cruxframework.crux.widgets.client.tabcontainer;
 
 import java.util.LinkedHashMap;
 
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Panel;
  */
 public class TabContainer extends MultipleViewsContainer
 {
-	public static final String DEFAULT_STYLE_NAME = "view-TabContainer";
+	public static final String DEFAULT_STYLE_NAME = "crux-TabContainer";
 	private RollingTabPanel tabPanel;
 	private LinkedHashMap<String, Tab> tabs = new LinkedHashMap<String, Tab>();
 

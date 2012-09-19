@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.rebind.tabcontainer;
+package org.cruxframework.crux.widgets.rebind.tabcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
@@ -32,8 +32,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
-import org.cruxframework.crux.views.client.tabcontainer.Tab;
-import org.cruxframework.crux.views.client.tabcontainer.TabContainer;
+import org.cruxframework.crux.widgets.client.tabcontainer.Tab;
+import org.cruxframework.crux.widgets.client.tabcontainer.TabContainer;
 import org.cruxframework.crux.widgets.rebind.event.BeforeBlurEvtBind;
 import org.cruxframework.crux.widgets.rebind.event.BeforeFocusEvtBind;
 
@@ -42,7 +42,7 @@ import org.cruxframework.crux.widgets.rebind.event.BeforeFocusEvtBind;
  * @author Thiago Bustamante
  *
  */
-@DeclarativeFactory(id="tabViewContainer", library="views", targetWidget=TabContainer.class)
+@DeclarativeFactory(id="tabViewContainer", library="widgets", targetWidget=TabContainer.class)
 @TagChildren({
 	@TagChild(TabContainerFactory.TabsProcessor.class)
 })

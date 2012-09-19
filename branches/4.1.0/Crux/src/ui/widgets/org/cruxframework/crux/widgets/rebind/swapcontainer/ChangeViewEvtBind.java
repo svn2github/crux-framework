@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.views.rebind.swapcontainer;
+package org.cruxframework.crux.widgets.rebind.swapcontainer;
 
 import org.cruxframework.crux.core.rebind.screen.widget.EvtProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
-import org.cruxframework.crux.views.client.swapcontainer.ChangeViewEvent;
-import org.cruxframework.crux.views.client.swapcontainer.ChangeViewHandler;
+import org.cruxframework.crux.widgets.client.swapcontainer.ChangeViewEvent;
+import org.cruxframework.crux.widgets.client.swapcontainer.ChangeViewHandler;
 
 
 /**
