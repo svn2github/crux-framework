@@ -197,7 +197,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		ViewFactoryCreator factoryCreator = getViewFactoryCreator(view);
 		try
 		{
-			sourceWriter.println("callback.onViewCreated(new "+ factoryCreator.create()+"(id,"+EscapeUtils.quote(factoryCreator.getDeclaredMessage(view.getTitle()))+"));");
+			sourceWriter.println("callback.onViewCreated(new "+ factoryCreator.create()+"(id,"+factoryCreator.getDeclaredMessage(view.getTitle())+"));");
 		}
 		finally
 		{
