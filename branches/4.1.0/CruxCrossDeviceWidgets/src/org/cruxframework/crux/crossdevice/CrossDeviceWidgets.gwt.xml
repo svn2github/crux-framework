@@ -5,6 +5,12 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.themes.standard.Standard'/>
 
+	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
+
+	<extend-property name="device.features" values="largeDisplayTouch" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="largeDisplayArrows" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="smallDisplayArrows" fallback-value="largeDisplayMouse" />
+	<extend-property name="device.features" values="smallDisplayTouch" fallback-value="smallDisplayArrows" />
 
 	<!-- LabeledTextBox  placeHolder attribute -->
 	<replace-with class="org.cruxframework.crux.crossdevice.client.labeledtextbox.LabeledTextBoxController.JSPlaceHolder">
