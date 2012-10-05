@@ -78,8 +78,9 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		printer.println("public "+getProxySimpleName()+"(String id, String title){");
-		printer.println("super(id, title);");
+		printer.println("public "+getProxySimpleName()+"(String id){");
+		printer.println("super(id);");
+		printer.println("setTitle("+getDeclaredMessage(view.getTitle())+");");
 		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
 		printer.println("}");
 	}

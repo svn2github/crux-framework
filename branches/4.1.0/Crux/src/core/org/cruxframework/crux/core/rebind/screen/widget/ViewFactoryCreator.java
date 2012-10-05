@@ -256,8 +256,9 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName).create();
 		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName).create();
 
-		printer.println("protected "+getProxySimpleName()+"(String id, String title){");
-		printer.println("super(id, title);");
+		printer.println("protected "+getProxySimpleName()+"(String id){");
+		printer.println("super(id);");
+		printer.println("setTitle("+getDeclaredMessage(view.getTitle())+");");
 		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
 		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");

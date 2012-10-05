@@ -79,10 +79,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * Constructor
 	 * @param id
 	 */
-	public View(String id, String title)
+	public View(String id)
     {
 		this.id = id;
-		this.title = title;
 		this.prefix = Integer.toString(prefixCounter++);
     }
 	
