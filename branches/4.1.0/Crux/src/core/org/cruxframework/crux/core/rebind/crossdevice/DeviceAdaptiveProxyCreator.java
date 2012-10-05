@@ -185,7 +185,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 
 		String viewVariable = ViewFactoryCreator.createVariableName("view");
 		srcWriter.println(viewClassName + " " + 
-				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+", "+EscapeUtils.quote(device.toString())+");");
+				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+");");
 		createController(srcWriter, viewVariable);
 		srcWriter.println(viewVariable+".setController(this._controller);");
 		
