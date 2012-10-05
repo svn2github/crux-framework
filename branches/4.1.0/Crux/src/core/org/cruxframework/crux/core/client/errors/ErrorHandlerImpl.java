@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.cruxframework.crux.core.client.Crux;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 
@@ -59,6 +60,7 @@ public class ErrorHandlerImpl implements ErrorHandler, ValidationErrorHandler
 			{
 				logger.log(Level.SEVERE, errorMessage==null?"":errorMessage, t);
 			}
+			GWT.log(errorMessage, t);
 		}
 		if (errorMessage != null)
 		{
