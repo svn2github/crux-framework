@@ -42,6 +42,15 @@ public class GadgetsGwtRpc {
     });
   }
 
+  public static void redirectThroughProxy(ServiceDefTarget serviceDef, final String deployURL) {
+	  serviceDef.setRpcRequestBuilder(new RpcRequestBuilder() {
+		  @Override
+		  protected RequestBuilder doCreate(String serviceEntryPoint) {
+			  return new GadgetsRequestBuilder(RequestBuilder.POST, deployURL + serviceEntryPoint);
+		  }
+	  });
+  }
+
   /**
    * This class is not meant to be instantiated.
    */

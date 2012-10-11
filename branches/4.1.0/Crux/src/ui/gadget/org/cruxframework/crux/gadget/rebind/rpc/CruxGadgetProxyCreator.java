@@ -17,7 +17,9 @@ package org.cruxframework.crux.gadget.rebind.rpc;
 
 import java.io.PrintWriter;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.rpc.CruxProxyCreator;
+import org.cruxframework.crux.gadget.util.HangoutUtils;
 
 
 import com.google.gwt.core.ext.GeneratorContext;
@@ -102,11 +104,18 @@ public class CruxGadgetProxyCreator extends CruxProxyCreator
 		srcWriter.indent();
 
 		srcWriter.println("super();");
-		srcWriter.println("GadgetsGwtRpc.redirectThroughProxy((ServiceDefTarget) this);");
+		
+		if (HangoutUtils.isHangoutGadget())
+		{
+			srcWriter.println("GadgetsGwtRpc.redirectThroughProxy((ServiceDefTarget) this, "+EscapeUtils.quote(HangoutUtils.getDeployURL())+");");
+		}
+		else
+		{
+			srcWriter.println("GadgetsGwtRpc.redirectThroughProxy((ServiceDefTarget) this);");
+		}
 		
 		srcWriter.outdent();
 		srcWriter.println("}");
-		
 	}
 
 	/**

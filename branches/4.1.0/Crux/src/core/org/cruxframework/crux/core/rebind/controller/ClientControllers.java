@@ -30,7 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.WidgetController;
+import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
@@ -95,20 +97,33 @@ public class ClientControllers
 				try 
 				{
 					Class<?> controllerClass = Class.forName(controller);
-					Controller annot = controllerClass.getAnnotation(Controller.class);
-					if (controllersCanonicalNames.containsKey(annot.value()))
+					boolean validController = true;
+					if (controllerClass.getAnnotation(RequiresCrossDocumentSupport.class) != null)
 					{
-						throw new CruxGeneratorException("Duplicated Client Controller: ["+annot.value()+"].");
+						String enableCrossDocumentSupport = ConfigurationFactory.getConfigurations().enableCrossDocumentSupport();
+						if (enableCrossDocumentSupport == null || !enableCrossDocumentSupport.equals("true"))
+						{
+							validController = false;
+						}
+						
 					}
-					
-					controllersCanonicalNames.put(annot.value(), controllerClass.getCanonicalName());
-					controllersNames.put(annot.value(), controllerClass.getName());
-					if (controllerClass.getAnnotation(Global.class) != null)
+					if (validController)
 					{
-						globalControllers.add(annot.value());
+						Controller annot = controllerClass.getAnnotation(Controller.class);
+						if (controllersCanonicalNames.containsKey(annot.value()))
+						{
+							throw new CruxGeneratorException("Duplicated Client Controller: ["+annot.value()+"].");
+						}
+
+						controllersCanonicalNames.put(annot.value(), controllerClass.getCanonicalName());
+						controllersNames.put(annot.value(), controllerClass.getName());
+						if (controllerClass.getAnnotation(Global.class) != null)
+						{
+							globalControllers.add(annot.value());
+						}
+						initWidgetControllers(controllerClass, annot);
+						//					Fragments.registerFragment(annot.fragment(), controllerClass);
 					}
-					initWidgetControllers(controllerClass, annot);
-//					Fragments.registerFragment(annot.fragment(), controllerClass);
 				} 
 				catch (ClassNotFoundException e) 
 				{

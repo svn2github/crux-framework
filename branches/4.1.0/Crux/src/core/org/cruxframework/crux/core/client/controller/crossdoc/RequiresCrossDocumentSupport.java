@@ -13,25 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.gadget.config;
+package org.cruxframework.crux.core.client.controller.crossdoc;
 
-import org.cruxframework.crux.core.i18n.DefaultServerMessage;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface CruxGadgetConfig
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface RequiresCrossDocumentSupport
 {
-	@DefaultServerMessage("/META-INF/defaultGadgetTemplate.xml")
-	String gadgetTemplateFile();
 
-	@DefaultServerMessage("")
-	String gadgetDeployURL();
-
-	@DefaultServerMessage("false")
-	String hangoutGadget();
-	
-	@DefaultServerMessage("false")
-	String useHangoutSandbox();
 }

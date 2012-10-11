@@ -19,6 +19,7 @@ import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
+import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
 import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
 import org.cruxframework.crux.core.client.screen.JSWindow;
@@ -43,6 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 @Global
 @Controller(value="__popup", lazy=false)
+@RequiresCrossDocumentSupport
 public class CruxInternalPopupController implements CruxInternalPopupControllerCrossDoc
 {
 	protected CruxInternalPopupControllerCrossDoc crossDoc = GWT.create(CruxInternalPopupControllerCrossDoc.class);

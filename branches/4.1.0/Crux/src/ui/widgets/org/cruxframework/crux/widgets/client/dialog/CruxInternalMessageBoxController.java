@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.dialog;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
+import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
 import org.cruxframework.crux.core.client.controller.crossdoc.Target;
 import org.cruxframework.crux.core.client.controller.crossdoc.TargetDocument;
 import org.cruxframework.crux.core.client.screen.JSWindow;
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.Label;
  */
 @Global
 @Controller(value="__messageBox")
+@RequiresCrossDocumentSupport
 public class CruxInternalMessageBoxController implements CruxInternalMessageBoxControllerCrossDoc
 {
 	protected DialogMessages messages = GWT.create(DialogMessages.class);

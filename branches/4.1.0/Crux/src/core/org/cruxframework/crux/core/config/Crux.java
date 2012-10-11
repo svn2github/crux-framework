@@ -52,12 +52,16 @@ public interface Crux
 	@DefaultServerMessage("false")
 	String useCompileTimeClassScanningForDevelopment();
 
+	@DefaultServerMessage("true")
+	String enableCrossDocumentSupport();
+
 	void setEnableWebRootScannerCache(Boolean value);
 	void setEnableChildrenWindowsDebug(Boolean value);
 	void setEnableHotDeploymentForWebDirs(Boolean value);
 	void setRenderWidgetsWithIDs(Boolean value);
 	void setUseCompileTimeClassScanning(Boolean value);
 	void setEnableCrux2OldInterfacesCompatibility(Boolean value);
+	void setEnableCrossDocumentSupport(Boolean value);
 	void setClassPathResolver(String value);
 	void setScreenResourceResolver(String value);
 	void setLocaleResolver(String value);

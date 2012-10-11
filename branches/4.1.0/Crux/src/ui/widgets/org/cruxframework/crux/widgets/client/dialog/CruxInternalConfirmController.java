@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.dialog;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
+import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
 import org.cruxframework.crux.core.client.screen.JSWindow;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.Label;
  */
 @Global
 @Controller("__confirm")
+@RequiresCrossDocumentSupport
 public class CruxInternalConfirmController implements CruxInternalConfirmControllerCrossDoc
 {
 	protected DialogMessages messages = GWT.create(DialogMessages.class);

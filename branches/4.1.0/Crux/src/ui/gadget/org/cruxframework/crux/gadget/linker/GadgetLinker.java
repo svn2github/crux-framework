@@ -17,6 +17,8 @@ package org.cruxframework.crux.gadget.linker;
 
 import java.util.Iterator;
 
+import org.cruxframework.crux.gadget.util.HangoutUtils;
+
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -25,8 +27,8 @@ import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
 import com.google.gwt.core.ext.linker.LinkerOrder;
-import com.google.gwt.core.ext.linker.Shardable;
 import com.google.gwt.core.ext.linker.LinkerOrder.Order;
+import com.google.gwt.core.ext.linker.Shardable;
 import com.google.gwt.core.linker.CrossSiteIframeLinker;
 
 /**
@@ -42,6 +44,8 @@ import com.google.gwt.core.linker.CrossSiteIframeLinker;
 @Shardable
 public final class GadgetLinker extends CrossSiteIframeLinker
 {
+	private static final String SCRIPT_SRC_HANGOUTSAPI_SANDBOX = "<script src=\"//hangoutsapi.talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2\" type=\"text/javascript\"></script>";
+	private static final String SCRIPT_SRC_HANGOUTSAPI = "<script src=\"//talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2\" type=\"text/javascript\"></script>";
 	private static final String GADGET_LINKER_TEMPLATE_JS = "org/cruxframework/crux/gadget/linker/GadgetTemplate.js";
 	private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "org/cruxframework/crux/gadget/linker/computeScriptBase.js";
 	private static final String GADGET_INSTALL_SCRIPT_JS = "org/cruxframework/crux/gadget/linker/installScriptEarlyDownload.js";
@@ -49,6 +53,7 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	private static final String GADGET_WAIT_FOR_BODY_LOADED_JS = "org/cruxframework/crux/gadget/linker/waitForBodyLoaded.js";
 	private static final String GADGET_SET_LOCALE_JS = "org/cruxframework/crux/gadget/linker/setGadgetLocale.js";
 	private static final String GADGET_COMPUT_URL_FOR_RESOURCE_JS = "org/cruxframework/crux/gadget/linker/computeUrlForGadgetResource.js";
+	private static final String HANGOUT_GADGET_COMPUT_URL_FOR_RESOURCE_JS = "org/cruxframework/crux/gadget/linker/computeUrlForHangoutGadgetResource.js";
 
 	private ArtifactSet toLink;
 
@@ -116,6 +121,19 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 
 		String bootstrap = "<script>" + generateSelectionScript(logger, context, artifacts) + 
 		"</script>";
+		if (HangoutUtils.isHangoutGadget())
+		{
+			if (HangoutUtils.useHangoutSandbox())
+			{
+				bootstrap = SCRIPT_SRC_HANGOUTSAPI_SANDBOX + bootstrap;
+			}
+			else
+			{
+				bootstrap = SCRIPT_SRC_HANGOUTSAPI + bootstrap;
+			}
+
+		}
+		
 		StringBuffer manifest = new StringBuffer();
 		
 		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, context.getModuleName());
@@ -144,6 +162,14 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 		 * ($wnd.__gwt_Locale is read by the property provider in I18N.gwt.xml)
 		 */
 		includeJs(selectionScript, logger, getJsSetGadgetLocale(context), "__GADGET_SET_LOCALE__");
+		/*
+		 * Hangout gadgets need to use absolute urls for any script or css inclusions. 
+		 */
+		if (HangoutUtils.isHangoutGadget())
+		{
+			String gadgetDeployURL = HangoutUtils.getDeployURL();
+			replaceAll(selectionScript, "__DEPLOY_URL__", gadgetDeployURL);
+		}
 		return selectionScript.toString();
 	}
 
@@ -153,7 +179,14 @@ public final class GadgetLinker extends CrossSiteIframeLinker
 	@Override
 	protected String getJsComputeUrlForResource(LinkerContext context) 
 	{
-		return GADGET_COMPUT_URL_FOR_RESOURCE_JS;
+		if (HangoutUtils.isHangoutGadget())
+		{
+			return HANGOUT_GADGET_COMPUT_URL_FOR_RESOURCE_JS;
+		}
+		else
+		{
+			return GADGET_COMPUT_URL_FOR_RESOURCE_JS;
+		}
 	}
 	
 	/**

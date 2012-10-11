@@ -36,7 +36,12 @@ public class GadgetViewFactoriesProxyCreator extends ViewFactoriesProxyCreator
 	@Override
 	protected void generateCreateViewMethod(SourcePrinter sourceWriter)
     {
-	    sourceWriter.println("public void createView(String id, CreateCallback callback) throws InterfaceConfigException{ ");
+	    sourceWriter.println("public void createView(String name, CreateCallback callback) throws InterfaceConfigException{ ");
+	    sourceWriter.println("createView(name, name, callback);");
+	    sourceWriter.println("}");
+	    sourceWriter.println();
+
+	    sourceWriter.println("public void createView(String name, String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
 		generateViewCreation(sourceWriter, getViews());
 		
