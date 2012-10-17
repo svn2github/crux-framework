@@ -44,8 +44,8 @@ import com.google.gwt.core.linker.CrossSiteIframeLinker;
 @Shardable
 public final class GadgetLinker extends CrossSiteIframeLinker
 {
-	private static final String SCRIPT_SRC_HANGOUTSAPI_SANDBOX = "<script src=\"//hangoutsapi.talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2\" type=\"text/javascript\"></script>";
-	private static final String SCRIPT_SRC_HANGOUTSAPI = "<script src=\"//talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2\" type=\"text/javascript\"></script>";
+	private static final String SCRIPT_SRC_HANGOUTSAPI_SANDBOX = "<script src=\"//hangoutsapi.talkgadget.google.com/hangouts/_/api/hangout.js?v=1.3\" type=\"text/javascript\"></script>";
+	private static final String SCRIPT_SRC_HANGOUTSAPI = "<script src=\"//talkgadget.google.com/hangouts/_/api/hangout.js?v=1.3\" type=\"text/javascript\"></script>";
 	private static final String GADGET_LINKER_TEMPLATE_JS = "org/cruxframework/crux/gadget/linker/GadgetTemplate.js";
 	private static final String GADGET_COMPUTE_SCRIPT_BASE_JS = "org/cruxframework/crux/gadget/linker/computeScriptBase.js";
 	private static final String GADGET_INSTALL_SCRIPT_JS = "org/cruxframework/crux/gadget/linker/installScriptEarlyDownload.js";
