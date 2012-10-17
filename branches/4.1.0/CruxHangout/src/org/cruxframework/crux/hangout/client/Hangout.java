@@ -16,6 +16,7 @@
 package org.cruxframework.crux.hangout.client;
 
 import org.cruxframework.crux.core.client.collection.Array;
+import org.cruxframework.crux.hangout.client.data.Participant;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -127,6 +128,74 @@ public class Hangout extends JavaScriptObject
 		};
 	}
 	
+	public final HandlerRegistration addParticipantsAddedHandler(ParticipantsAddedHandler handler){
+		final JavaScriptObject func = nativeAddParticipantsAddedHandler(handler);
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				nativeRemoveParticipantsAddedHandler(func);
+			}
+		};
+	}
+	
+	public final HandlerRegistration addParticipantsRemovedHandler(ParticipantsRemovedHandler handler){
+		final JavaScriptObject func = nativeAddParticipantsRemovedHandler(handler);
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				nativeRemoveParticipantsRemovedHandler(func);
+			}
+		};
+	}
+	
+	public final HandlerRegistration addPreferredLocaleChangedHandler(PreferredLocaleChangedHandler handler){
+		final JavaScriptObject func = nativeAddPreferredLocaleChangedHandler(handler);
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				nativeRemovePreferredLocaleChangedHandler(func);
+			}
+		};
+	}
+	
+	public final HandlerRegistration addPublicChangedHandler(PublicChangedHandler handler){
+		final JavaScriptObject func = nativeAddPublicChangedHandler(handler);
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				nativeRemovePublicChangedHandler(func);
+			}
+		};
+	}
+	
+	public final HandlerRegistration addTopicChangedHandler(TopicChangedHandler handler){
+		final JavaScriptObject func = nativeAddTopicChangedHandler(handler);
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				nativeRemoveTopicChangedHandler(func);
+			}
+		};
+	}
+	
+	public native final HangoutData getHangoutData()/*-{
+		return $wnd.gapi.hangout.data;
+	}-*/;
+	
+	public native final HangoutLayout getHangoutLayout()/*-{
+		return $wnd.gapi.hangout.layout;
+	}-*/;
+
 	private static void loadHangoutApi(final ApiReadyHandler handler, final Hangout hangout)
     {
 		if (hangout == null)
@@ -208,6 +277,66 @@ public class Hangout extends JavaScriptObject
 		return f;
 	}-*/;
 	
+	private native void nativeRemoveParticipantsAddedHandler(JavaScriptObject func)/*-{
+		this.onParticipantsAdded.remove(func);
+	}-*/;
+	
+	private native JavaScriptObject nativeAddParticipantsAddedHandler(ParticipantsAddedHandler handler)/*-{
+		var f = function(eventObj) {
+		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsAddedHandler::onParticipantsAdded(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.addedParticipants);
+		};
+		this.onParticipantsAdded.add(f);
+		return f;
+	}-*/;
+	
+	private native void nativeRemoveParticipantsRemovedHandler(JavaScriptObject func)/*-{
+		this.onParticipantsRemoved.remove(func);
+	}-*/;
+	
+	private native JavaScriptObject nativeAddParticipantsRemovedHandler(ParticipantsRemovedHandler handler)/*-{
+		var f = function(eventObj) {
+		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsRemovedHandler::onParticipantsRemoved(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.removedParticipants);
+		};
+		this.onParticipantsRemoved.add(f);
+		return f;
+	}-*/;
+
+	private native void nativeRemovePreferredLocaleChangedHandler(JavaScriptObject func)/*-{
+		this.onPreferredLocaleChanged.remove(func);
+	}-*/;
+	
+	private native JavaScriptObject nativeAddPreferredLocaleChangedHandler(PreferredLocaleChangedHandler handler)/*-{
+		var f = function(eventObj) {
+		  handler.@org.cruxframework.crux.hangout.client.Hangout.PreferredLocaleChangedHandler::onPreferredLocaleChanged(Ljava/lang/String;)(eventObj.preferredLocale);
+		};
+		this.onPreferredLocaleChanged.add(f);
+		return f;
+	}-*/;
+	
+	private native void nativeRemovePublicChangedHandler(JavaScriptObject func)/*-{
+		this.onPublicChanged.remove(func);
+	}-*/;
+	
+	private native JavaScriptObject nativeAddPublicChangedHandler(PublicChangedHandler handler)/*-{
+		var f = function(eventObj) {
+		  handler.@org.cruxframework.crux.hangout.client.Hangout.PublicChangedHandler::onPublicChanged(Z)(eventObj.isPublic);
+		};
+		this.onPublicChanged.add(f);
+		return f;
+	}-*/;
+	
+	private native void nativeRemoveTopicChangedHandler(JavaScriptObject func)/*-{
+		this.onTopicChanged.remove(func);
+	}-*/;
+	
+	private native JavaScriptObject nativeAddTopicChangedHandler(TopicChangedHandler handler)/*-{
+		var f = function(eventObj) {
+		  handler.@org.cruxframework.crux.hangout.client.Hangout.TopicChangedHandler::onTopicChanged(Ljava/lang/String;)(eventObj.topic);
+		};
+		this.onTopicChanged.add(f);
+		return f;
+	}-*/;
+	
 	public static interface ApiReadyHandler
 	{
 		void onApiReady(Hangout hangout);
@@ -226,5 +355,30 @@ public class Hangout extends JavaScriptObject
 	public static interface ParticipantsDisabledHandler
 	{
 		void onParticipantsDisabled(Array<Participant> participants);
+	}
+
+	public static interface ParticipantsAddedHandler
+	{
+		void onParticipantsAdded(Array<Participant> participants);
+	}
+
+	public static interface ParticipantsRemovedHandler
+	{
+		void onParticipantsRemoved(Array<Participant> participants);
+	}
+
+	public static interface PreferredLocaleChangedHandler
+	{
+		void onPreferredLocaleChanged(String preferredLocale);
+	}
+
+	public static interface PublicChangedHandler
+	{
+		void onPublicChanged(boolean isPublic);
+	}
+
+	public static interface TopicChangedHandler
+	{
+		void onTopicChanged(String topic);
 	}
 }
