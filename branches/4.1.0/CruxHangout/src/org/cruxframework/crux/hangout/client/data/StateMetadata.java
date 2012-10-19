@@ -33,11 +33,11 @@ public class StateMetadata extends JavaScriptObject
 		return this.value;
 	}-*/;
 
-	public final native long getTimestamp()/*-{
+	public final native double getTimestamp()/*-{
 		return this.timestamp;
 	}-*/;
 
-	public final native long getTimeDiff()/*-{
+	public final native double getTimeDiff()/*-{
 		return this.timediff;
 	}-*/;
 }

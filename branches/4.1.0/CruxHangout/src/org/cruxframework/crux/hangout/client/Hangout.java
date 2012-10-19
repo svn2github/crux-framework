@@ -37,59 +37,59 @@ public class Hangout extends JavaScriptObject
 	}
 	
 	public final native Array<Participant> getAppEnabledParticipants()/*-{
-		return this.getEnabledParticipants();
+		return $wnd.gapi.hangout.getEnabledParticipants();
 	}-*/;
 
 	public final native String getHangoutURL()/*-{
-		return this.getHangoutUrl();
+		return $wnd.gapi.hangout.getHangoutUrl();
 	}-*/;
 
 	public final native String getHangoutIdentifier()/*-{
-		return this.getHangoutId();
+		return $wnd.gapi.hangout.getHangoutId();
 	}-*/;
 	
 	public final native String getCurrentParticipantLocale()/*-{
-		return this.getLocalParticipantLocale();
+		return $wnd.gapi.hangout.getLocalParticipantLocale();
 	}-*/;
 	
 	public final native String getPreferredHangoutLocale()/*-{
-		return this.getPreferredLocale();
+		return $wnd.gapi.hangout.getPreferredLocale();
 	}-*/;
 	
 	public final native Participant getParticipant(String participantId)/*-{
-		return this.getParticipantById(participantId);
+		return $wnd.gapi.hangout.getParticipantById(participantId);
 	}-*/;
 	
 	public final native Participant getCurrentParticipant()/*-{
-		return this.getLocalParticipant();
+		return $wnd.gapi.hangout.getLocalParticipant();
 	}-*/;
 	
 	public final native String getCurrentParticipantId()/*-{
-		return this.getLocalParticipantId();
+		return $wnd.gapi.hangout.getLocalParticipantId();
 	}-*/;
 	
 	public final native Array<Participant> getHangoutParticipants()/*-{
-		return this.getParticipants();
+		return $wnd.gapi.hangout.getParticipants();
 	}-*/;
 
 	public final native String getHangoutTopic()/*-{
-		return this.getTopic();
+		return $wnd.gapi.hangout.getTopic();
 	}-*/;
 
 	public final native void hideApplication()/*-{
-		this.hideApp();
+		$wnd.gapi.hangout.hideApp();
 	}-*/;
 	
 	public final native boolean isHangoutApiReady()/*-{
-		return (this.isApiReady()?true:false);
+		return ($wnd.gapi.hangout.isApiReady()?true:false);
 	}-*/;
 	
 	public final native boolean isApplicationVisible()/*-{
-		return (this.isAppVisible()?true:false);
+		return ($wnd.gapi.hangout.isAppVisible()?true:false);
 	}-*/;
 
 	public final native boolean isHangoutPublic()/*-{
-		return (this.isPublic()?true:false);
+		return ($wnd.gapi.hangout.isPublic()?true:false);
 	}-*/;
 		
 	public final HandlerRegistration addAppVisibleHandler(AppVisibleHandler handler){
@@ -189,11 +189,11 @@ public class Hangout extends JavaScriptObject
 	}
 	
 	public native final HangoutData getHangoutData()/*-{
-		return $wnd.gapi.hangout.data;
+		return [];
 	}-*/;
 	
 	public native final HangoutLayout getHangoutLayout()/*-{
-		return $wnd.gapi.hangout.layout;
+		return [];
 	}-*/;
 
 	private static void loadHangoutApi(final ApiReadyHandler handler, final Hangout hangout)
@@ -232,108 +232,108 @@ public class Hangout extends JavaScriptObject
     }
 	
 	private static native Hangout getHagoutObject()/*-{
-		return $wnd.gapi.hangout;
+		return [];
 	}-*/;
 
 	private native void nativeAddApiReadyHandler(ApiReadyHandler handler)/*-{
-		this.onApiReady.add(function(eventObj) {
+		$wnd.gapi.hangout.onApiReady.add(function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.ApiReadyHandler::onApiReady(Lorg/cruxframework/crux/hangout/client/Hangout;)(this);
 		});
 	}-*/;
 
 	private native void nativeRemoveAppVisibleHandler(JavaScriptObject func)/*-{
-		this.onAppVisible.remove(func);
+		$wnd.gapi.hangout.onAppVisible.remove(func);
 	}-*/;
 
 	private native JavaScriptObject nativeAddAppVisibleHandler(AppVisibleHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.AppVisibleHandler::onAppVisibilityChange(Z)(eventObj.isAppVisible);
 		};
-		this.onAppVisible.add(f);
+		$wnd.gapi.hangout.onAppVisible.add(f);
 		return f;
 	}-*/;
 
 	private native void nativeRemoveParticipantsEnabledHandler(JavaScriptObject func)/*-{
-		this.onParticipantsEnabled.remove(func);
+		$wnd.gapi.hangout.onParticipantsEnabled.remove(func);
 	}-*/;
 
 	private native JavaScriptObject nativeAddParticipantsEnabledHandler(ParticipantsEnabledHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsEnabledHandler::onParticipantsEnabled(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.enabledParticipants);
 		};
-		this.onParticipantsEnabled.add(f);
+		$wnd.gapi.hangout.onParticipantsEnabled.add(f);
 		return f;
 	}-*/;
 	
 	private native void nativeRemoveParticipantsDisabledHandler(JavaScriptObject func)/*-{
-		this.onParticipantsDisabled.remove(func);
+		$wnd.gapi.hangout.onParticipantsDisabled.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddParticipantsDisabledHandler(ParticipantsDisabledHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsDisabledHandler::onParticipantsDisabled(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.disabledParticipants);
 		};
-		this.onParticipantsDisabled.add(f);
+		$wnd.gapi.hangout.onParticipantsDisabled.add(f);
 		return f;
 	}-*/;
 	
 	private native void nativeRemoveParticipantsAddedHandler(JavaScriptObject func)/*-{
-		this.onParticipantsAdded.remove(func);
+		$wnd.gapi.hangout.onParticipantsAdded.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddParticipantsAddedHandler(ParticipantsAddedHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsAddedHandler::onParticipantsAdded(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.addedParticipants);
 		};
-		this.onParticipantsAdded.add(f);
+		$wnd.gapi.hangout.onParticipantsAdded.add(f);
 		return f;
 	}-*/;
 	
 	private native void nativeRemoveParticipantsRemovedHandler(JavaScriptObject func)/*-{
-		this.onParticipantsRemoved.remove(func);
+		$wnd.gapi.hangout.onParticipantsRemoved.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddParticipantsRemovedHandler(ParticipantsRemovedHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.ParticipantsRemovedHandler::onParticipantsRemoved(Lorg/cruxframework/crux/core/client/collection/Array;)(eventObj.removedParticipants);
 		};
-		this.onParticipantsRemoved.add(f);
+		$wnd.gapi.hangout.onParticipantsRemoved.add(f);
 		return f;
 	}-*/;
 
 	private native void nativeRemovePreferredLocaleChangedHandler(JavaScriptObject func)/*-{
-		this.onPreferredLocaleChanged.remove(func);
+		$wnd.gapi.hangout.onPreferredLocaleChanged.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddPreferredLocaleChangedHandler(PreferredLocaleChangedHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.PreferredLocaleChangedHandler::onPreferredLocaleChanged(Ljava/lang/String;)(eventObj.preferredLocale);
 		};
-		this.onPreferredLocaleChanged.add(f);
+		$wnd.gapi.hangout.onPreferredLocaleChanged.add(f);
 		return f;
 	}-*/;
 	
 	private native void nativeRemovePublicChangedHandler(JavaScriptObject func)/*-{
-		this.onPublicChanged.remove(func);
+		$wnd.gapi.hangout.onPublicChanged.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddPublicChangedHandler(PublicChangedHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.PublicChangedHandler::onPublicChanged(Z)(eventObj.isPublic);
 		};
-		this.onPublicChanged.add(f);
+		$wnd.gapi.hangout.onPublicChanged.add(f);
 		return f;
 	}-*/;
 	
 	private native void nativeRemoveTopicChangedHandler(JavaScriptObject func)/*-{
-		this.onTopicChanged.remove(func);
+		$wnd.gapi.hangout.onTopicChanged.remove(func);
 	}-*/;
 	
 	private native JavaScriptObject nativeAddTopicChangedHandler(TopicChangedHandler handler)/*-{
 		var f = function(eventObj) {
 		  handler.@org.cruxframework.crux.hangout.client.Hangout.TopicChangedHandler::onTopicChanged(Ljava/lang/String;)(eventObj.topic);
 		};
-		this.onTopicChanged.add(f);
+		$wnd.gapi.hangout.onTopicChanged.add(f);
 		return f;
 	}-*/;
 	
