@@ -53,7 +53,7 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		super.generateProxyFields(srcWriter);
-		srcWriter.println("private "+View.class.getCanonicalName()+" view;");
+		srcWriter.println("private "+View.class.getCanonicalName()+" __view;");
 	}
 	
 	@Override
@@ -76,12 +76,12 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	    }
 	    if (bindRootView != null)
 	    {
-	    	srcWriter.println("this.view = "+Screen.class.getCanonicalName()+".getRootView();");
+	    	srcWriter.println("this.__view = "+Screen.class.getCanonicalName()+".getRootView();");
 	    	ret = true;
 	    }
 	    else if (bindView != null)
 	    {
-	    	srcWriter.println("this.view = "+View.class.getCanonicalName()+".getView("+EscapeUtils.quote(bindView.value())+");");
+	    	srcWriter.println("this.__view = "+View.class.getCanonicalName()+".getView("+EscapeUtils.quote(bindView.value())+");");
 	    	ret = true;
 	    }
 	    else
@@ -125,12 +125,12 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
     
 	protected void generateViewBindableMethods(SourcePrinter sourceWriter)
     {
-		sourceWriter.println("public "+View.class.getCanonicalName()+" getView(){");
-		sourceWriter.println("return this.view;");
+		sourceWriter.println("public "+View.class.getCanonicalName()+" getBoundCruxView(){");
+		sourceWriter.println("return this.__view;");
 		sourceWriter.println("}");
 		sourceWriter.println();
-		sourceWriter.println("public void setView("+View.class.getCanonicalName()+" view){");
-		sourceWriter.println("this.view = view;");
+		sourceWriter.println("public void bindCruxView("+View.class.getCanonicalName()+" view){");
+		sourceWriter.println("this.__view = view;");
 		sourceWriter.println("}");
 		sourceWriter.println();
     }
@@ -138,7 +138,7 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	protected void generateViewGetterMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public IsWidget _getFromView(String widgetName){");
-		srcWriter.println("IsWidget ret = view.getWidget(widgetName);");
+		srcWriter.println("IsWidget ret = __view.getWidget(widgetName);");
 		srcWriter.println("if (ret == null){");
 		srcWriter.println("String widgetNameFirstUpper;");
 		srcWriter.println("if (widgetName.length() > 1){"); 
@@ -147,7 +147,7 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 		srcWriter.println("else{"); 
 		srcWriter.println("widgetNameFirstUpper = \"\"+Character.toUpperCase(widgetName.charAt(0));");
 		srcWriter.println("}");
-		srcWriter.println("ret = view.getWidget(widgetNameFirstUpper);");
+		srcWriter.println("ret = __view.getWidget(widgetNameFirstUpper);");
 		srcWriter.println("}");
 		srcWriter.println("return ret;");
 		srcWriter.println("}");

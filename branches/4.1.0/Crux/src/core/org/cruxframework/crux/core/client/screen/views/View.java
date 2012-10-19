@@ -895,6 +895,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		LazyPanel lazyPanel = (LazyPanel) widgets.get(widgetId);
 		if (lazyPanel == null)
 		{
+			//TODO: stackoverflow error when trying to access widgets on onLoad from a view (inside an HTMLPanel) 
 			if (getWidget(ViewFactoryUtils.getWrappedWidgetIdFromLazyPanel(widgetId)) != null)
 			{
 				lazyPanel = (LazyPanel) widgets.get(widgetId);
@@ -1058,7 +1059,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public static View of(Object viewAware)
 	{
 		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
-		return ((ViewAware)viewAware).getView();
+		return ((ViewAware)viewAware).getBoundCruxView();
 	}
 	
 	public static interface RenderCallback

@@ -129,7 +129,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 */
 	protected void generateGetViewMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("public "+View.class.getCanonicalName()+" getView(){");
+		srcWriter.println("public "+View.class.getCanonicalName()+" getBoundCruxView(){");
 		srcWriter.println("return this.__view;");
 		srcWriter.println("}");
 	}
@@ -151,7 +151,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 		try
         {   
 	        String valueVariable = "__wid";
-	        sourceWriter.println(valueVariable + "= (("+ViewAware.class.getCanonicalName()+")this).getView().getWidget(\""+name+"\");");
+	        sourceWriter.println(valueVariable + "= (("+ViewAware.class.getCanonicalName()+")this).getBoundCruxView().getWidget(\""+name+"\");");
 	        sourceWriter.println("if ("+valueVariable+" != null){");
 	        sourceWriter.println("if ("+valueVariable+" instanceof HasFormatter){");
 	        generateHandleHasFormatterWidgets(parentVariable, voClass, field, sourceWriter, populateScreen, type, valueVariable, allowProtected);

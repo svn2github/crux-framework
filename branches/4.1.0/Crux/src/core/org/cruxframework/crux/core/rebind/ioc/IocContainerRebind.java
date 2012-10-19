@@ -130,8 +130,8 @@ public class IocContainerRebind extends AbstractProxyCreator
 
 			if (type.isAssignableTo(viewBindableType))
 			{
-				srcWriter.println("if (scope != "+Scope.class.getCanonicalName()+ "."+Scope.DOCUMENT.name()+" && result.getView() == null){");
-				srcWriter.println("result.setView(this.getView());");
+				srcWriter.println("if (scope != "+Scope.class.getCanonicalName()+ "."+Scope.DOCUMENT.name()+" && result.getBoundCruxView() == null){");
+				srcWriter.println("result.bindCruxView(this.getBoundCruxView());");
 				srcWriter.println("}");
 			}
 			srcWriter.println("return result;");

@@ -126,7 +126,7 @@ public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
     {
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + name+"(){");
-		sourceWriter.println("return ("+classSourceName+")view.getWidget(\""+widgetName+"\");");
+		sourceWriter.println("return ("+classSourceName+")__view.getWidget(\""+widgetName+"\");");
 		sourceWriter.println("}");
     }
 

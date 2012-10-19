@@ -21,5 +21,5 @@ package org.cruxframework.crux.core.client.screen.views;
  */
 public interface ViewBindable extends ViewAware
 {
-	void setView(View view);
+	void bindCruxView(View view);
 }

@@ -1080,10 +1080,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     				"ViewFactoryUtils.getEnclosingPanelId("+EscapeUtils.quote(widgetId)+", "+viewVariable+"));");
         }
 
+		if (viewHTML.indexOf("<script") < 0)
+		{
+			printer.println("renderCallback.onRendered();");
+		}
+
 		commitPostProcessing(printer);
 		printer.println("}");
 		printer.println("else {");
 		printer.println(rootPanelVariable+".add(this."+viewPanelVariable+");");
+		if (viewHTML.indexOf("<script") < 0)
+		{
+			printer.println("renderCallback.onRendered();");
+		}
 		printer.println("}");
 
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");

@@ -21,6 +21,5 @@ package org.cruxframework.crux.core.client.screen.views;
  */
 public interface ViewAware
 {
-	View getView();
-	//TODO impedir que o programador, pra facilitar a sua vida, sobrescreva o metodo getView() na sua controller....
+	View getBoundCruxView();
 }
