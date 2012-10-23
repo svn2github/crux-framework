@@ -568,6 +568,19 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	/**
+	 * Remove the current view from its container, if the view is loaded into a container
+	 * @return true if the view is unloaded
+	 */
+	public boolean removeFromContainer()
+	{
+		if (viewContainer != null)
+		{
+			return viewContainer.remove(this);
+		}
+		return false;
+	}
+	
+	/**
 	 * 
 	 * @return
 	 */

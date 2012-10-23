@@ -1194,7 +1194,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:element ref=\"c:crossDevice\" />");
 			out.println("<xs:group ref=\"c:widgets\" />");
 			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
-			out.println("</xs:sequence>");
+			out.println("</xs:choice>");
 			generateElementAttributesForAllViewElements(out);
 			out.println("<xs:attribute name=\"onUnload\" type=\"xs:string\"/>");
 			out.println("<xs:attribute name=\"onDeactivate\" type=\"xs:string\"/>");

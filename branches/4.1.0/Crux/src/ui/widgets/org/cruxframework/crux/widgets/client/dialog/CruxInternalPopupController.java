@@ -264,7 +264,7 @@ public class CruxInternalPopupController implements CruxInternalPopupControllerC
 			dialogBox.setWidth(data.getWidth());
 			dialogBox.setHeight(data.getHeight());
 			
-			Frame frame = new Frame(Screen.appendDebugParameters(data.getUrl()));
+			Frame frame = new Frame(Screen.rewriteUrl(data.getUrl()));
 			frame.setStyleName("frame");
 			frame.setHeight("100%");
 			frame.setWidth("100%");
