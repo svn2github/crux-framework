@@ -138,7 +138,11 @@ public abstract class ViewContainer extends Composite
 	public void showView(String viewId)
 	{
 		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
-		renderView(getView(viewId));
+		View view = getView(viewId);
+		if (!view.isActive())
+		{
+			renderView(view);
+		}
 	}
 
 

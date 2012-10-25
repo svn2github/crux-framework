@@ -23,6 +23,7 @@ import org.cruxframework.crux.widgets.client.dialog.CustomDialogBox;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
 /**
@@ -49,7 +50,6 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		DialogViewContainer container = new DialogViewContainer(closeable, modal);
 		container.loadView(viewName, viewId, true);
-		container.showView(viewId);
 		if (!StringUtils.isEmpty(width) && !StringUtils.isEmpty(height))
 		{
 			container.setSize(width, height);
@@ -88,7 +88,7 @@ public class DialogViewContainer extends SingleViewContainer
 			containerPanel.setTopRightWidget(focusPanel);
 		}
 		
-		initWidget(containerPanel);
+		initWidget(new Label());
 	}
 
 	public void setModal(boolean modal)
@@ -105,12 +105,49 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		containerPanel.setSize(width, height);
 	}
+
+	@Override
+	public void setWidth(String width)
+	{
+		containerPanel.setWidth(width);
+	}
+
+	@Override
+	public void setHeight(String height)
+	{
+		containerPanel.setHeight(height);
+	}
 	
 	public void setPosition(int left, int top)
 	{
 		containerPanel.setPopupPosition(left, top);
 	}
 	
+	
+	@Override
+	public void setStyleName(String style)
+	{
+		containerPanel.setStyleName(style);
+	}
+
+	@Override
+	public void setStyleDependentName(String styleSuffix, boolean add)
+	{
+		containerPanel.setStyleDependentName(styleSuffix, add);
+	}
+	
+	@Override
+	public void setStyleName(String style, boolean add)
+	{
+		containerPanel.setStyleName(style, add);
+	}
+
+	@Override
+	public void setStylePrimaryName(String style)
+	{
+		containerPanel.setStylePrimaryName(style);
+	}
+
 	public void center()
 	{
 		containerPanel.center();
@@ -123,6 +160,7 @@ public class DialogViewContainer extends SingleViewContainer
 	
 	public void openDialog()
 	{
+		assert(innerView != null):"There is no View loaded into this container.";
 		containerPanel.show();
 	}
 	

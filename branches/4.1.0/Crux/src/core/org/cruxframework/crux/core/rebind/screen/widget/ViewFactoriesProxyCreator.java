@@ -131,7 +131,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				}
 				fragment.add(view);
 				String fragmentName = view.getFragment().replaceAll("\\W", "");
-				sourceWriter.println("__load"+fragmentName+"(name, id);");
+				sourceWriter.println("__load"+fragmentName+"(name, id, callback);");
 			}
 			else
 			{
@@ -158,7 +158,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 		for (String viewFragment : fragmentedViews.keySet())
         {
 			String fragment = viewFragment.replaceAll("\\W", "");
-			sourceWriter.println("public void __load"+fragment+"(final String name, final String id){");
+			sourceWriter.println("public void __load"+fragment+"(final String name, final String id, final CreateCallback callback){");
 			sourceWriter.println("GWT.runAsync(new "+RunAsyncCallback.class.getCanonicalName()+"(){");
 			sourceWriter.println("public void onFailure(Throwable reason){");
 			sourceWriter.println("Crux.getErrorHandler().handleError(Crux.getMessages().viewFactoryCanNotBeLoaded(\""+fragment+"\"));");

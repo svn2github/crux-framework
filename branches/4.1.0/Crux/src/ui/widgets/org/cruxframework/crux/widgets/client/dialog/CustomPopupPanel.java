@@ -21,6 +21,7 @@ import org.cruxframework.crux.widgets.client.decoratedpanel.DecoratedPanel;
 
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -73,7 +74,7 @@ public class CustomPopupPanel extends PopupPanel
 	@Override
 	public Widget getWidget()
 	{
-		return panel;
+		return panel.getContentWidget();
 	}
 
 	@Override
@@ -92,6 +93,12 @@ public class CustomPopupPanel extends PopupPanel
 	public void setWidget(Widget w)
 	{
 		panel.setContentWidget(w);
+	}
+	
+	@Override
+	public void setWidget(IsWidget w)
+	{
+		panel.setContentWidget(asWidgetOrNull(w));
 	}
 	
 	/**

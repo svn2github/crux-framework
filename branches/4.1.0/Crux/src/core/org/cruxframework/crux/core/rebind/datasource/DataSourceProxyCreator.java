@@ -429,6 +429,10 @@ public class DataSourceProxyCreator extends AbstractInvocableProxyCreator
 
 		org.cruxframework.crux.core.client.datasource.annotation.DataSourceBinding typeAnnot = 
 			dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.DataSourceBinding.class);
+		if (typeAnnot == null)
+		{
+			throw new CruxGeneratorException("Error Generating DataSource ["+dataSourceClass.getName()+"]. No identifier selected. Use the @DataSourceRecordIdentifier annotation to inform the identifier");
+		}
 		return typeAnnot.identifier();
     }
 	

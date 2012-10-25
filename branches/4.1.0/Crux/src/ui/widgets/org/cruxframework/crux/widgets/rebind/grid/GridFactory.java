@@ -617,7 +617,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			String className = PagedDataSource.class.getCanonicalName()+"<"+dtoClassName+">";
 			String dataSource = getWidgetCreator().createVariableName("dataSource");
 			String columnDefinitionsClassName = org.cruxframework.crux.core.client.datasource.ColumnDefinitions.class.getCanonicalName()+"<"+dtoClassName+">";
-			out.println(className+" "+dataSource+" = ("+className+") Screen.createDataSource("+EscapeUtils.quote(propertyValue)+");");
+			out.println(className+" "+dataSource+" = ("+className+") "+getViewVariable()+".createDataSource("+EscapeUtils.quote(propertyValue)+");");
 
 			if (columnDefinitionsAnot != null)
 			{
