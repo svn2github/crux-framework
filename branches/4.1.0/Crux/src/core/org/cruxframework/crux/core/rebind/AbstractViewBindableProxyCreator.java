@@ -53,7 +53,7 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		super.generateProxyFields(srcWriter);
-		srcWriter.println("private "+View.class.getCanonicalName()+" __view;");
+		srcWriter.println("private String __view;");
 	}
 	
 	@Override
@@ -76,12 +76,12 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	    }
 	    if (bindRootView != null)
 	    {
-	    	srcWriter.println("this.__view = "+Screen.class.getCanonicalName()+".getRootView();");
+	    	srcWriter.println("this.__view = "+Screen.class.getCanonicalName()+".getRootView().getId();");
 	    	ret = true;
 	    }
 	    else if (bindView != null)
 	    {
-	    	srcWriter.println("this.__view = "+View.class.getCanonicalName()+".getView("+EscapeUtils.quote(bindView.value())+");");
+	    	srcWriter.println("this.__view = "+EscapeUtils.quote(bindView.value())+";");
 	    	ret = true;
 	    }
 	    else
@@ -125,11 +125,11 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
     
 	protected void generateViewBindableMethods(SourcePrinter sourceWriter)
     {
-		sourceWriter.println("public "+View.class.getCanonicalName()+" getBoundCruxView(){");
+		sourceWriter.println("public String getBoundCruxView(){");
 		sourceWriter.println("return this.__view;");
 		sourceWriter.println("}");
 		sourceWriter.println();
-		sourceWriter.println("public void bindCruxView("+View.class.getCanonicalName()+" view){");
+		sourceWriter.println("public void bindCruxView(String view){");
 		sourceWriter.println("this.__view = view;");
 		sourceWriter.println("}");
 		sourceWriter.println();
@@ -138,6 +138,8 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
 	protected void generateViewGetterMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public IsWidget _getFromView(String widgetName){");
+		srcWriter.println(View.class.getCanonicalName()+" __view = "+View.class.getCanonicalName()+".getView(this.__view);");
+		srcWriter.println("assert (__view != null):"+EscapeUtils.quote("No view loaded with desired identifier.")+";");
 		srcWriter.println("IsWidget ret = __view.getWidget(widgetName);");
 		srcWriter.println("if (ret == null){");
 		srcWriter.println("String widgetNameFirstUpper;");

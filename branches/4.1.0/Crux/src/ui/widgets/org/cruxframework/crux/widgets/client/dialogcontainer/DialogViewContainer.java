@@ -35,18 +35,19 @@ public class DialogViewContainer extends SingleViewContainer
 	public static final String DEFAULT_STYLE_NAME = "crux-DialogViewContainer";
 	private CustomDialogBox containerPanel;
 	private View innerView;
+	private boolean unloadViewOnClose;
 	
 	public static DialogViewContainer openDialog(String viewName)
 	{
-		return openDialog(viewName, viewName, true);
+		return createDialog(viewName, viewName, true);
 	}
 	
-	public static DialogViewContainer openDialog(String viewName, String viewId, boolean closeable)
+	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable)
 	{
-		return openDialog(viewName, viewName, true, true, null, null, -1, -1);
+		return createDialog(viewName, viewName, true, true, null, null, -1, -1);
 	}
 	
-	public static DialogViewContainer openDialog(String viewName, String viewId, boolean closeable, boolean modal, String width, String height, int left, int top)
+	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable, boolean modal, String width, String height, int left, int top)
 	{
 		DialogViewContainer container = new DialogViewContainer(closeable, modal);
 		container.loadView(viewName, viewId, true);
@@ -90,6 +91,16 @@ public class DialogViewContainer extends SingleViewContainer
 		
 		initWidget(new Label());
 	}
+
+	public boolean isUnloadViewOnClose()
+    {
+    	return unloadViewOnClose;
+    }
+
+	public void setUnloadViewOnClose(boolean unloadViewOnClose)
+    {
+    	this.unloadViewOnClose = unloadViewOnClose;
+    }
 
 	public void setModal(boolean modal)
 	{
@@ -166,7 +177,7 @@ public class DialogViewContainer extends SingleViewContainer
 	
 	public void closeDialog()
 	{
-		closeDialog(false);
+		closeDialog(unloadViewOnClose);
 	}
 	
 	public boolean closeDialog(boolean unloadView)

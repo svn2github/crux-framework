@@ -96,7 +96,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 public class ViewFactoryCreator extends AbstractProxyCreator
 {
 	private static NameFactory nameFactory = new NameFactory();
-	private static String viewVariable = "__view";;
+	private static String viewVariable = "__view";
 
 	private Map<String, Boolean> attachToDOMfactories = new HashMap<String, Boolean>();
 	private Map<String, String> declaredMessages = new HashMap<String, String>();

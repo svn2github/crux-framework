@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.rebind.screen.wrapper;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewContainer;
+import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
@@ -26,6 +28,7 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.user.client.Window;
@@ -37,6 +40,7 @@ import com.google.gwt.user.client.Window;
 public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 {
 	private final JClassType viewType;
+	private JClassType createCallbackType;
 
 	/**
 	 * Constructor
@@ -49,6 +53,7 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 	    try
         {
 	        viewType = invokerIntf.getOracle().getType(View.class.getCanonicalName());
+	        createCallbackType = invokerIntf.getOracle().getType(CreateCallback.class.getCanonicalName());
         }
         catch (NotFoundException e)
         {
@@ -85,18 +90,19 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 	protected void generateWrapperMethod(JMethod method, SourcePrinter sourceWriter)
 	{
 		String name = method.getName();
-		if (name.equals("getRootView") && method.getParameters().length == 0)
+		JParameter[] parameters = method.getParameters();
+		if (name.equals("getRootView") && parameters.length == 0)
 		{
 			return; //Ignore
 		}
 		JType returnType = method.getReturnType();
 		JClassType returnTypeClass = returnType.isClassOrInterface();
-		if (viewType.isAssignableFrom(returnTypeClass))
-		{
-			if(method.getParameters().length == 0)
+		if (returnTypeClass!= null && viewType.isAssignableFrom(returnTypeClass))
+		{	
+			if(parameters.length == 0)
 			{
 				String widgetName;
-				if (returnTypeClass != null && name.startsWith("get"))
+				if (name.startsWith("get"))
 				{
 					widgetName = name.substring(3);
 					if (widgetName.length() > 0)
@@ -115,6 +121,10 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 				throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
 			}
 		}
+		else if (returnTypeClass == null && parameters.length == 1 && parameters[0].getType().isInterface() != null && parameters[0].getType().isInterface().isAssignableTo(createCallbackType))
+		{
+			generateLoaderMethod(sourceWriter, name);
+		}
 		else
 		{
 			throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of View.");
@@ -130,6 +140,25 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
     {
 		sourceWriter.println("public View " + name+"(){");
 		sourceWriter.println("return View.getView(\""+viewName+"\");");
+		sourceWriter.println("}");
+    }
+
+	/**
+	 * @param sourceWriter
+	 * @param name
+	 * @param viewName
+	 */
+	private void generateLoaderMethod(SourcePrinter sourceWriter, String name)
+    {
+		sourceWriter.println("public void " + name+"("+CreateCallback.class.getCanonicalName()+" callback){");
+		sourceWriter.println("if (callback != null) {");
+		sourceWriter.println("View ret = View.getView(\""+name+"\");");
+		sourceWriter.println("if (ret != null) {");
+		sourceWriter.println("callback.onViewCreated(ret);");
+		sourceWriter.println("} else {");
+		sourceWriter.println(ViewContainer.class.getCanonicalName()+".createView(\""+name+"\", callback);");
+		sourceWriter.println("}");
+		sourceWriter.println("}");
 		sourceWriter.println("}");
     }
 
