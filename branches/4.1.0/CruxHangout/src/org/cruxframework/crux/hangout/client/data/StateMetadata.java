@@ -40,4 +40,19 @@ public class StateMetadata extends JavaScriptObject
 	public final native double getTimeDiff()/*-{
 		return this.timediff;
 	}-*/;
+	
+	public final StateMetadata clone()
+	{
+		return createMetadata(getKey(), getValue(), getTimestamp(), getTimeDiff());
+	}
+	
+	private native StateMetadata createMetadata(String key, String value, double timestamp, double timediff)/*-{
+		var ret = [];
+		ret.key = key;
+		ret.value = value;
+		ret.timestamp = timestamp;
+		ret.timediff = timediff;
+	    return ret;
+	}-*/;
+
 }

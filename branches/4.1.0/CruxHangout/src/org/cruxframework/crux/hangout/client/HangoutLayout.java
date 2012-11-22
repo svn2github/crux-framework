@@ -19,96 +19,24 @@ import org.cruxframework.crux.hangout.client.data.DefaultVideoFeed;
 import org.cruxframework.crux.hangout.client.data.VideoCanvas;
 import org.cruxframework.crux.hangout.client.data.VideoFeed;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HangoutLayout extends JavaScriptObject
+public interface HangoutLayout
 {
-	protected HangoutLayout(){}
-	
-	public final native VideoFeed createParticipantVideoFeed(String participantId)/*-{
-		return $wnd.gapi.hangout.layout.createParticipantVideoFeed(participantId);
-	}-*/;
-	
-	public final native DefaultVideoFeed getDefaultVideoFeed()/*-{
-		return $wnd.gapi.hangout.layout.getDefaultVideoFeed();
-	}-*/;
-	
-	public final native VideoCanvas getVideoCanvas()/*-{
-		return $wnd.gapi.hangout.layout.getVideoCanvas();
-	}-*/;
-
-	public final native void dismissNotice()/*-{
-		$wnd.gapi.hangout.layout.dismissNotice();
-	}-*/;
-
-	public final native void displayNotice(String message, boolean permanent)/*-{
-		$wnd.gapi.hangout.layout.displayNotice(message, permanent);
-	}-*/;
-
-	public final native boolean hasNotice()/*-{
-		return $wnd.gapi.hangout.layout.hasNotice();
-	}-*/;
-
-	public final native boolean isChatPaneVisible()/*-{
-		return $wnd.gapi.hangout.layout.isChatPaneVisible();
-	}-*/;
-	
-	public final native void setChatPaneVisible(boolean visible)/*-{
-		$wnd.gapi.hangout.layout.setChatPaneVisible(visible);
-	}-*/;
-
-	public final HandlerRegistration addChatPaneVisibleHandler(ChatPaneVisibleHandler handler){
-		final JavaScriptObject func = nativeAddChatPaneVisibleHandler(handler);
-		return new HandlerRegistration()
-		{
-			@Override
-			public void removeHandler()
-			{
-				nativeRemoveChatPaneVisibleHandler(func);
-			}
-		};
-	}
-	
-	public final HandlerRegistration addHasNoticeHandler(HasNoticeHandler handler){
-		final JavaScriptObject func = nativeAddHasNoticeHandler(handler);
-		return new HandlerRegistration()
-		{
-			@Override
-			public void removeHandler()
-			{
-				nativeRemoveHasNoticeHandler(func);
-			}
-		};
-	}
-	
-	private native void nativeRemoveChatPaneVisibleHandler(JavaScriptObject func)/*-{
-		$wnd.gapi.hangout.layout.onChatPaneVisible.remove(func);
-	}-*/;
-	
-	private native JavaScriptObject nativeAddChatPaneVisibleHandler(ChatPaneVisibleHandler handler)/*-{
-		var f = function(eventObj) {
-		  handler.@org.cruxframework.crux.hangout.client.HangoutLayout.ChatPaneVisibleHandler::onChatPaneVisible(Z)(eventObj.isChatPaneVisible);
-		};
-		$wnd.gapi.hangout.layout.onChatPaneVisible.add(f);
-		return f;
-	}-*/;
-
-	private native void nativeRemoveHasNoticeHandler(JavaScriptObject func)/*-{
-		$wnd.gapi.hangout.layout.onHasNotice.remove(func);
-	}-*/;
-	
-	private native JavaScriptObject nativeAddHasNoticeHandler(HasNoticeHandler handler)/*-{
-		var f = function(eventObj) {
-		  handler.@org.cruxframework.crux.hangout.client.HangoutLayout.HasNoticeHandler::onHasNotice(Z)(eventObj.hasNotice);
-		};
-		$wnd.gapi.hangout.layout.onHasNotice.add(f);
-		return f;
-	}-*/;
+	VideoFeed createParticipantVideoFeed(String participantId);
+	DefaultVideoFeed getDefaultVideoFeed();
+	VideoCanvas getVideoCanvas();
+	void dismissNotice();
+	void displayNotice(String message, boolean permanent);
+	boolean hasNotice();
+	boolean isChatPaneVisible();
+	void setChatPaneVisible(boolean visible);
+	HandlerRegistration addChatPaneVisibleHandler(ChatPaneVisibleHandler handler);
+	HandlerRegistration addHasNoticeHandler(HasNoticeHandler handler);
 
 	public static interface ChatPaneVisibleHandler
 	{
@@ -119,5 +47,4 @@ public class HangoutLayout extends JavaScriptObject
 	{
 		void onHasNotice(boolean hasNotice);
 	}
-	
 }

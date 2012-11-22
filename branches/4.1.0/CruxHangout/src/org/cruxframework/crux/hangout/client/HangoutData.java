@@ -18,97 +18,25 @@ package org.cruxframework.crux.hangout.client;
 import org.cruxframework.crux.core.client.collection.Array;
 import org.cruxframework.crux.core.client.collection.Map;
 import org.cruxframework.crux.hangout.client.data.StateMetadata;
-//
-import com.google.gwt.core.client.JavaScriptObject;
+
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class HangoutData extends JavaScriptObject
+public interface HangoutData
 {
-	protected HangoutData(){}
-	
-	public final native void clearValue(String key)/*-{
-		$wnd.gapi.hangout.data.clearValue(key);
-	}-*/;
-	
-	public final native Array<String> getKeys()/*-{
-		return $wnd.gapi.hangout.data.getKeys();
-	}-*/;
-
-	public final native String getValue(String key)/*-{
-		return $wnd.gapi.hangout.data.getValue(key);
-	}-*/;
-
-	public final native Map<String> getState()/*-{
-		return $wnd.gapi.hangout.data.getState();
-	}-*/;
-
-	public final native Map<StateMetadata> getStateMetadata()/*-{
-		return $wnd.gapi.hangout.data.getStateMetadata();
-	}-*/;
-
-	public final native void setValue(String key, String value)/*-{
-		$wnd.gapi.hangout.data.setValue(key, value);
-	}-*/;
-
-	public final native void submitDelta(Map<String> updates, Array<String> removes)/*-{
-		$wnd.gapi.hangout.data.submitDelta(updates, removes);
-	}-*/;
-	
-	public final native void sendMessage(String message)/*-{
-		$wnd.gapi.hangout.data.sendMessage(message);
-	}-*/;
-	
-	public final HandlerRegistration addMessageReceivedHandler(MessageReceivedHandler handler){
-		final JavaScriptObject func = nativeAddMessageReceivedHandler(handler);
-		return new HandlerRegistration()
-		{
-			@Override
-			public void removeHandler()
-			{
-				nativeRemoveMessageReceivedHandler(func);
-			}
-		};
-	}
-
-	public final HandlerRegistration addStateChangedHandler(StateChangedHandler handler){
-		final JavaScriptObject func = nativeAddStateChangedHandler(handler);
-		return new HandlerRegistration()
-		{
-			@Override
-			public void removeHandler()
-			{
-				nativeRemoveStateChangedHandler(func);
-			}
-		};
-	}
-
-	private native void nativeRemoveMessageReceivedHandler(JavaScriptObject func)/*-{
-		$wnd.gapi.hangout.data.onMessageReceived.remove(func);
-	}-*/;
-	
-	private native JavaScriptObject nativeAddMessageReceivedHandler(MessageReceivedHandler handler)/*-{
-		var f = function(eventObj) {
-		  handler.@org.cruxframework.crux.hangout.client.HangoutData.MessageReceivedHandler::onMessageReceived(Ljava/lang/String;Ljava/lang/String;)(eventObj.senderId,eventObj.message);
-		};
-		$wnd.gapi.hangout.data.onMessageReceived.add(f);
-		return f;
-	}-*/;
-
-	private native void nativeRemoveStateChangedHandler(JavaScriptObject func)/*-{
-		$wnd.gapi.hangout.data.onStateChanged.remove(func);
-	}-*/;
-	
-	private native JavaScriptObject nativeAddStateChangedHandler(StateChangedHandler handler)/*-{
-		var f = function(eventObj) {
-		  handler.@org.cruxframework.crux.hangout.client.HangoutData.StateChangedHandler::onStateChanged(Lorg/cruxframework/crux/core/client/collection/Array;Lorg/cruxframework/crux/core/client/collection/Map;Lorg/cruxframework/crux/core/client/collection/Array;Lorg/cruxframework/crux/core/client/collection/Map;)(eventObj.addedKeys,eventObj.metadata,eventObj.removedKeys,eventObj.state);
-		};
-		$wnd.gapi.hangout.data.onStateChanged.add(f);
-		return f;
-	}-*/;
+	void clearValue(String key);
+	Array<String> getKeys();
+	String getValue(String key);
+	Map<String> getState();
+	Map<StateMetadata> getStateMetadata();
+	void setValue(String key, String value);
+	void submitDelta(Map<String> updates, Array<String> removes);
+	void sendMessage(String message);
+	HandlerRegistration addMessageReceivedHandler(MessageReceivedHandler handler);
+	HandlerRegistration addStateChangedHandler(StateChangedHandler handler);
 
 	public static interface MessageReceivedHandler
 	{
