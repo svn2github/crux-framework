@@ -1,0 +1,56 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/crux/site" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:c="http://www.cruxframework.org/crux" 
+xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
+xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/crux/site" >
+<xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
+<xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
+<xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:import schemaLocation="siteTemplates.xsd" namespace="http://www.cruxframework.org/templates/siteTemplates"/>
+<xs:element name="rssPanel" type="TrssPanel"/>
+<xs:complexType name="TrssPanel">
+<xs:attribute name="maxTitleSize" type="xs:int" />
+<xs:attribute name="title" type="xs:string" use="required" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="promoBanner" type="TpromoBanner"/>
+<xs:complexType name="TpromoBanner">
+<xs:sequence>
+<xs:element name="banner" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_cruxsite_rebind_PromoBannerFactory_BannerProcessor"/>
+</xs:sequence>
+<xs:attribute name="bannersHeight" type="xs:string" use="required" />
+<xs:attribute name="transitionDuration" type="xs:int" default="150" />
+<xs:attribute name="autoTransitionInterval" type="xs:int" default="5000" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_cruxsite_rebind_PromoBannerFactory_BannerProcessor">
+<xs:attribute name="backgroundImageURL" type="xs:string" use="required" />
+<xs:attribute name="title" type="xs:string" use="required" />
+<xs:attribute name="text" type="xs:string" use="required" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="buttonLabel" type="xs:string" use="required" />
+<xs:attribute name="onClick" />
+</xs:complexType>
+</xs:schema>

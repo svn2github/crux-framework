@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
+>
+
+<tmp:mainPage>
+
+	<tmp:screenSection>
+		<c:screen title="${siteMessages.siteTitle}"/>
+	</tmp:screenSection>
+	
+	<tmp:contentSection>
+		<gwt:flexTable id="compareContent" width="900px">
+			<gwt:row>
+				<gwt:cell>
+					<gwt:html id="htmlContentCompare">
+						<h1>Lean more from Crux</h1>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
+						<div class="Risk"></div>
+					</gwt:html>
+				</gwt:cell>
+			</gwt:row>
+			<gwt:row>
+				<gwt:cell>
+					<gwt:widget>
+						<gwt:flexTable id="tableBodyCompare">
+							<gwt:row>
+								<gwt:cell rowSpan="2" verticalAlignment="top">
+									<gwt:widget>
+										<gwt:flexTable id="table" width="627" styleName="TableCompareHeader" cellPadding="0" cellSpacing="0">
+											<gwt:row styleName="Header">
+												<gwt:cell styleName="first"><gwt:text>Features</gwt:text></gwt:cell>
+												<gwt:cell><gwt:text>Crux 4.0</gwt:text></gwt:cell>
+												<gwt:cell><gwt:text>Vaadin 6.8</gwt:text></gwt:cell>
+												<gwt:cell><gwt:text>Zk 8.0.1</gwt:text></gwt:cell>
+												<gwt:cell styleName="last"><gwt:text>Smart GWT 2.0</gwt:text></gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell styleName="CellFirst">
+													<gwt:text>
+														Template Support
+													</gwt:text>
+												</gwt:cell>
+												<gwt:cell>
+													<gwt:html>
+														<img src="../img/icon_compare_check.png" />
+													</gwt:html>
+												</gwt:cell>
+												<gwt:cell>
+													<gwt:html>
+														<img src="../img/icon_compare_false.png" />
+													</gwt:html>
+												</gwt:cell>
+												<gwt:cell>
+													<gwt:html>
+														<img src="../img/icon_compare_check.png" />
+													</gwt:html>
+												</gwt:cell>
+												<gwt:cell>
+													<gwt:html>
+														<img src="../img/icon_compare_check.png" />
+													</gwt:html>
+												</gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell styleName="CellFirst"></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell styleName="CellFirst"></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+												<gwt:cell></gwt:cell>
+											</gwt:row>
+										</gwt:flexTable>
+									</gwt:widget>
+								</gwt:cell>
+								<gwt:cell>
+									<gwt:widget>
+										<gwt:simplePanel id="baloonCompare" styleName="baloon">
+											<gwt:label id="baloonCompareText" text="As you can see, we choose the best Java frameworks in market to show you the effectivity of Crux."/>
+										</gwt:simplePanel>
+									</gwt:widget>
+								</gwt:cell>
+							</gwt:row>
+							<gwt:row>
+								<gwt:cell>
+									<gwt:widget>
+										<gwt:simplePanel id="blackPanel" styleName="BgBlack">
+											<gwt:flexTable id="fxTableAol">
+												<gwt:row>
+													<gwt:cell verticalAlignment="top">
+														<gwt:widget id="templateMechanism">
+															<gwt:horizontalPanel id="templateMechanism2" verticalAlignment="top">
+																<gwt:image id="a" url="../img/icon_ex1.png" style="float:left;"/>
+																<gwt:HTML id="templateMechanism3" styleName="features">
+																	<h2>Template Mechanism</h2>
+																	<p>Awesome template system to use in your projects</p>
+																</gwt:HTML>
+															</gwt:horizontalPanel>	
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell verticalAlignment="top">
+														<gwt:widget id="1templateMechanism">
+															<gwt:horizontalPanel id="1templateMechanism2" verticalAlignment="top">
+																<gwt:image id="a" url="../img/icon_ex2.png" style="float:left;"/>
+																<gwt:HTML id="1templateMechanism3" styleName="features">
+																	<h2>Template Mechanism</h2>
+																	<p>Awesome template system to use in your projects</p>
+																</gwt:HTML>
+															</gwt:horizontalPanel>	
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell verticalAlignment="top">
+														<gwt:widget id="2templateMechanism">
+															<gwt:horizontalPanel id="2templateMechanism2" verticalAlignment="top">
+																<gwt:image id="a" url="../img/icon_ex3.png" style="float:left;"/>
+																<gwt:HTML id="2templateMechanism3" styleName="features">
+																	<h2>Template Mechanism</h2>
+																	<p>Awesome template system to use in your projects</p>
+																</gwt:HTML>
+															</gwt:horizontalPanel>	
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+												<gwt:row>
+													<gwt:cell verticalAlignment="top">
+														<gwt:widget id="3templateMechanism">
+															<gwt:horizontalPanel id="3templateMechanism2" verticalAlignment="top">
+																<gwt:image id="a" url="../img/icon_ex1.png" style="float:left;"/>
+																<gwt:HTML id="3templateMechanism3" styleName="features">
+																	<h2>Template Mechanism</h2>
+																	<p>Awesome template system to use in your projects</p>
+																</gwt:HTML>
+															</gwt:horizontalPanel>	
+														</gwt:widget>
+													</gwt:cell>
+												</gwt:row>
+											</gwt:flexTable>
+										</gwt:simplePanel>
+									</gwt:widget>
+								</gwt:cell>
+							</gwt:row>
+						</gwt:flexTable>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+		</gwt:flexTable>
+	</tmp:contentSection>
+	
+</tmp:mainPage>
+
+</html>
