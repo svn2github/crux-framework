@@ -1,0 +1,98 @@
+<v:view 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:v="http://www.cruxframework.org/view" 
+	xmlns:core="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+	title="${siteMessages.downloadPageTitle}">
+	<gwt:flexTable id="insideContentDown">
+		<gwt:row>
+			<gwt:cell>
+				<gwt:widget>
+					<gwt:flexTable id="mainDownloadMessagePanel">
+						<gwt:row>
+							<gwt:cell>
+								<gwt:widget>
+							 		<gwt:label id="downloadPageSecondaryTitle" text="${siteMessages.downloadPageSecondaryTitle}" styleName="h1"/>
+							 	</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell>
+							 	<gwt:widget>
+							 		<gwt:label id="downloadPageSecondaryTitleMessage" text="${siteMessages.downloadPageSecondaryTitleMessage}" styleName="p"/>
+						 		</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+					</gwt:flexTable>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+		<gwt:row>
+			<gwt:cell>
+				<gwt:html><div class="Risk"/></gwt:html>
+			</gwt:cell>
+		</gwt:row>
+		<gwt:row>
+			<gwt:cell>
+				<gwt:widget>
+					<gwt:grid id="downloadPanel" width="100%">
+						<gwt:row>
+							<gwt:cell width="50%" verticalAlignment="top">
+								<gwt:widget>
+									<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
+										<gwt:row>
+											<gwt:cell rowSpan="2">
+												<gwt:html>
+													<a href="http://crux-framework.googlecode.com/files/crux-4.0.1.zip">
+														<img src="../img/icon_download.png" />
+													</a>			
+												</gwt:html>
+											</gwt:cell>
+											<gwt:cell styleName="h1"><gwt:text>${siteMessages.downloadPageVersionName}</gwt:text></gwt:cell>
+										</gwt:row>
+										<gwt:row>
+											<gwt:cell styleName="p"><gwt:text>${siteMessages.downloadPageVersionDetails}</gwt:text></gwt:cell>
+										</gwt:row>
+										<gwt:row>
+											<gwt:cell colSpan="2" styleName="p" horizontalAlignment="center">
+												<gwt:widget>
+													<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
+														<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
+														<gwt:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+														<gwt:label styleName="ShyText" id="areYoulookingLabel2" text="?"/>
+													</gwt:horizontalPanel>
+												</gwt:widget>
+											</gwt:cell>
+										</gwt:row>
+									</gwt:flexTable>
+								</gwt:widget>
+							</gwt:cell>
+							<gwt:cell width="50%" verticalAlignment="top" horizontalAlignment="left">
+								<gwt:widget>
+									<gwt:verticalPanel id="releaseFeatures" styleName="divDownTxt" horizontalAlignment="left">
+										<gwt:label id="releaseTitle" text="${siteMessages.releaseFeatures}" styleName="divDownTxtTitle"/>
+										<gwt:HTML id="releaseFeatsListPanel">
+											<ul>
+												<li><span style="text-decoration:underline; margin-right:10px">2X faster:</span> user interface code is now generated during the compilation process. No more metadata interpretation occurs in runtime.</li>
+												<li><span style="text-decoration:underline; margin-right:10px">Auto-lazy:</span> invisible or collapsed widgets are only loaded when needed, saving memory and speeding up the rendering;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">Nested data fields:</span> nested data fields are now allowed in Crux Grid, through the usage of dot notation;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">GWT Compatibility:</span> compatible with GWT 2.2;</li>
+											</ul>
+										</gwt:HTML>
+									</gwt:verticalPanel>
+								</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+					</gwt:grid>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+		<gwt:row>
+			<gwt:cell>
+				<gwt:html><div class="Risk"/></gwt:html>
+			</gwt:cell>
+		</gwt:row>
+	</gwt:flexTable>
+</v:view>

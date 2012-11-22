@@ -1,8 +1,64 @@
 <v:view 
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:v="http://www.cruxframework.org/view" 
-	xmlns:c="http://www.cruxframework.org/crux" 
-	xmlns:a="http://www.cruxframework.org/crux/widgets"
-	xmlns:b="http://www.cruxframework.org/crux/gwt"
-	onLoad="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}">
+	xmlns:core="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+	onActivate="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}">
+	
+	<gwt:grid id="contentAreas" styleName="ContentAreas" cellPadding="0" cellSpacing="0">
+		<gwt:row>
+			<gwt:cell styleName="ContentLeft"><gwt:html>.</gwt:html></gwt:cell>
+			<gwt:cell styleName="ContentCenter">
+				<gwt:widget>
+					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="BannerAndNews">
+						<gwt:row>
+							<gwt:cell styleName="BannerArea" colSpan="3">
+								<gwt:widget>
+									 <site:promoBanner id="banner" bannersHeight="300px" width="900px" transitionDuration="400" autoTransitionInterval="10000">
+									 	<site:banner backgroundImageURL="../img/banner-fast.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" text="${siteMessages.bannerFastText}" onClick="bannerController.onClickBannerFast"/>
+									 	<site:banner backgroundImageURL="../img/banner-social.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" text="${siteMessages.bannerSocialText}"  onClick="bannerController.onClickBannerSocial" styleName="longText"/>
+									 	<site:banner backgroundImageURL="../img/banner-java.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" text="${siteMessages.bannerJavaText}" onClick="bannerController.onClickBannerJava"/>
+									 	<site:banner backgroundImageURL="../img/banner-cross-device.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" text="${siteMessages.bannerCrossDeviceText}" onClick="bannerController.onClickBannerCrossDevice"/>
+									 	<!-- 
+									 	<site:banner backgroundImageURL="../img/banner-triggo.jpg" buttonLabel="${siteMessages.bannerActionVisitNow}" title="${siteMessages.bannerTriggoTitle}" text="${siteMessages.bannerTriggoText}" onClick="bannerController.onClickBannerTriggo"/>
+									 	 -->
+									 </site:promoBanner>
+								</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell styleName="ContentHorizontalSeparator" colSpan="3">
+								<gwt:text>.</gwt:text>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell colSpan="3" height="50px">
+								<gwt:text></gwt:text>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell styleName="NewsArea">
+								<gwt:widget>
+									<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
+								</gwt:widget>
+							</gwt:cell>
+							
+							<gwt:cell styleName="NewsSeparator">
+								<gwt:html>.</gwt:html>
+							</gwt:cell>
+							
+							<gwt:cell styleName="FeedsArea">
+								<gwt:widget>
+									<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" width="100%"/>
+								</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+					</gwt:flexTable>
+				</gwt:widget>														
+			</gwt:cell>
+			<gwt:cell styleName="ContentRight"><gwt:html>.</gwt:html></gwt:cell>
+		</gwt:row>
+	</gwt:grid>	
 </v:view>

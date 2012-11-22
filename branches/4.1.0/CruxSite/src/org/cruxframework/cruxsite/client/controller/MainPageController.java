@@ -14,6 +14,12 @@ public class MainPageController extends CruxSiteController
 	protected SiteConstants constants;
 	
 	@Expose
+	public void onLoad()
+	{
+		
+	}
+	
+	@Expose
 	public void onClickGoBlog()
 	{
 		openNewWindow(constants.blogUrl(), "blog");
