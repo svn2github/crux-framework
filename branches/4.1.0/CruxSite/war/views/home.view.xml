@@ -1,0 +1,8 @@
+<v:view 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:v="http://www.cruxframework.org/view" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:a="http://www.cruxframework.org/crux/widgets"
+	xmlns:b="http://www.cruxframework.org/crux/gwt"
+	onLoad="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}">
+</v:view>

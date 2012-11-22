@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="build/lib/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="build/lib/gwt-user.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="build/lib/crux-cross-device-widgets.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

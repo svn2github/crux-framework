@@ -15,10 +15,7 @@
 	</head>
 	
 	<body>
-	
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
-		
-		<t:section name="screenSection"/>
 		
 		<div class="UnderConstructionTag"/>
 		
