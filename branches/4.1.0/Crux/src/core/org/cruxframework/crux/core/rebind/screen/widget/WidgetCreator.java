@@ -153,14 +153,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 * @return
 	 * @throws CruxGeneratorException 
 	 */
-	public String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId) throws CruxGeneratorException
+	public String ensureTextChild(JSONObject metaElem, boolean acceptsNoChild, String parentWidgetId, boolean addQuotes) throws CruxGeneratorException
 	{
 		String result = metaElem.optString("_text");
 		if (!acceptsNoChild && (result == null || result.length() == 0))
 		{
 			throw new CruxGeneratorException("The widget ["+parentWidgetId+"], declared on View ["+getView().getId()+"], must contain a text node child.");
 		}
-		if (result != null)
+		if (result != null && addQuotes)
 		{
 			result = EscapeUtils.quote(result);
 		}

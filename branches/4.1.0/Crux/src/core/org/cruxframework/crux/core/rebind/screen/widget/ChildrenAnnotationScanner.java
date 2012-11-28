@@ -225,7 +225,7 @@ class ChildrenAnnotationScanner
 		{
 			public void processChildren(SourcePrinter out, WidgetCreatorContext context)
 			{
-				String child = widgetCreator.ensureTextChild(context.getChildElement(), acceptNoChildren, context.getWidgetId());
+				String child = widgetCreator.ensureTextChild(context.getChildElement(), acceptNoChildren, context.getWidgetId(), false);
 				if (!StringUtils.isEmpty(child))
 				{
 					if (!StringUtils.isEmpty(widgetProperty))
