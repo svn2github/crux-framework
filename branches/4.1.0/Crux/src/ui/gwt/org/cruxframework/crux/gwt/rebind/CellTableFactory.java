@@ -368,7 +368,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId(), false);
 			context.header = "new "+TextHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -379,7 +379,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId(), false);
 			context.header = "new "+SafeHtmlHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -422,7 +422,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId(), false);
 			context.footer = "new "+TextHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}
 	}
@@ -433,7 +433,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 		@Override
 		public void processChildren(SourcePrinter out, CellTableContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId(), false);
 			context.footer = "new "+SafeHtmlHeader.class.getCanonicalName()+"("+getWidgetCreator().getDeclaredMessage(innerText)+")";
 		}		
 	}

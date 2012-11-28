@@ -66,7 +66,7 @@ public class DecoratedPanelFactory extends AbstractDecoratedPanelFactory
 		{
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setContentText("+getWidgetCreator().getDeclaredMessage(getWidgetCreator().
-					ensureTextChild(context.getChildElement(), true, context.getWidgetId()))+");");
+					ensureTextChild(context.getChildElement(), true, context.getWidgetId(), false))+");");
 		}
 	}
 	

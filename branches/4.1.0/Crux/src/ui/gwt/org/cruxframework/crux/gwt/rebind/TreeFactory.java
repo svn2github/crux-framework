@@ -170,7 +170,7 @@ public class TreeFactory extends WidgetCreator<TreeContext>
 		@Override
 		public void processChildren(SourcePrinter out, TreeContext context) throws CruxGeneratorException 
 		{
-			String textCaption = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId());
+			String textCaption = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId(), false);
 			
 			String parent = context.itemStack.peek();
 			String rootWidget = context.getWidget();

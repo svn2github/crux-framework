@@ -302,8 +302,8 @@ public abstract class AbstractCellFactory<C extends WidgetCreatorContext> extend
 	    	for (int i=0; i< children.length(); i++)
 	    	{
 	    		JSONObject optionElement = children.optJSONObject(i);
-	    		String textOption = ensureTextChild(optionElement, true, parentWidgetId);
-	    		out.println(options+".add("+EscapeUtils.quote(textOption)+");");
+	    		String textOption = ensureTextChild(optionElement, true, parentWidgetId, true);
+	    		out.println(options+".add("+textOption+");");
 	    	}
 	    }
 	    out.println("new "+SelectionCell.class.getCanonicalName()+"("+options+");");

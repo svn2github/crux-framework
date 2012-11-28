@@ -72,7 +72,7 @@ public class CaptionPanelFactory extends CompositeFactory<WidgetCreatorContext>
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException 
 		{
 			String title = getWidgetCreator().getDeclaredMessage(getWidgetCreator().
-					ensureTextChild(context.getChildElement(), false, context.getWidgetId()));
+					ensureTextChild(context.getChildElement(), false, context.getWidgetId(), false));
 			out.println(context.getWidget()+".setCaptionText("+title+");");
 		}
 	}

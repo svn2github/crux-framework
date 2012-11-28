@@ -170,7 +170,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setText("+context.rowIndex+", "+context.colIndex+", "+
 					getWidgetCreator().getDeclaredMessage(getWidgetCreator().
-							ensureTextChild(context.getChildElement(), true, context.getWidgetId()))+");");
+							ensureTextChild(context.getChildElement(), true, context.getWidgetId(), false))+");");
 		}
 	}
 	

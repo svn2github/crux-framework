@@ -65,7 +65,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(),true, context.getWidgetId(), false);
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setTitleText("+i18nText+");");
@@ -113,7 +113,7 @@ public abstract class AbstractTitlePanelFactory extends AbstractDecoratedPanelFa
 		@Override
 		public void processChildren(SourcePrinter out, CellPanelContext context) throws CruxGeneratorException
 		{
-			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId());
+			String innerText = getWidgetCreator().ensureTextChild(context.getChildElement(), true, context.getWidgetId(), false);
 			String i18nText = getWidgetCreator().getDeclaredMessage(innerText);
 			String rootWidget = context.getWidget();
 			out.println(rootWidget+".setContentText("+i18nText+");");
