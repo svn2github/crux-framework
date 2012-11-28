@@ -15,7 +15,7 @@
 	</listAttribute>
 	<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false" />
 	<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode" />
-	<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-startupUrl index.html org.cruxframework.cruxsite.CruxSite -server org.cruxframework.crux.core.server.launcher.CruxJettyLauncher -logLevel WARN" />
+	<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-startupUrl index.html org.cruxframework.cruxsite.CruxSite -server org.cruxframework.crux.core.server.launcher.CruxJettyLauncher -logLevel WARN -gen generated" />
 	<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CruxSite" />
 	<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms64M -Xmx256M -DCrux.dev=true" />
 </launchConfiguration>  
