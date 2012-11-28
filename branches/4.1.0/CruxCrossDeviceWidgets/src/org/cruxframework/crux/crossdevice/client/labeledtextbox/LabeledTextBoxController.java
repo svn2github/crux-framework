@@ -1,8 +1,8 @@
 package org.cruxframework.crux.crossdevice.client.labeledtextbox;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class LabeledTextBoxController extends DeviceAdaptiveController implements LabeledTextBox
 {
 
-	@Create
+	@Inject
 	protected LabeledTextBoxHandler labeledTextBoxHandler;
 
 	FlowPanel flowPanel;
@@ -282,6 +282,11 @@ public class LabeledTextBoxController extends DeviceAdaptiveController implement
 	{
 		return this.textBox.addKeyDownHandler(handler);
 	}
+	
+	public void setLabeledTextBoxHandler(LabeledTextBoxHandler labeledTextBoxHandler)
+    {
+    	this.labeledTextBoxHandler = labeledTextBoxHandler;
+    }
 
 	@Override
 	public HandlerRegistration addKeyPressHandler(KeyPressHandler handler)

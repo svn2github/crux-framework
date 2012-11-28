@@ -171,7 +171,7 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	{
 		impl = GWT.create(ButtonImpl.class);
 		initWidget(impl.asWidget());
-		setStyleName("xdev-SelectablePanel");
+		setStyleName("xdev-Button");
 	}
 
 	@Override

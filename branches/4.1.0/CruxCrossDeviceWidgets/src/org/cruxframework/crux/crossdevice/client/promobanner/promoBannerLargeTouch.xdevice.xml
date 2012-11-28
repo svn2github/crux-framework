@@ -1,6 +1,6 @@
 <x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
            xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-           controller="promoBannerLargeTouchController">
+           useController="promoBannerLargeTouchController">
     <gwt:verticalPanel id="promoBanner" width="100%" >
     	<gwt:focusPanel id="focusPanel">
     		<gwt:flowPanel id="banners" styleName="bannersArea" style="position: relative;"/>
