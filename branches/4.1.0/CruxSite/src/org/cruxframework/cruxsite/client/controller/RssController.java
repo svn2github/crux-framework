@@ -18,16 +18,18 @@ package org.cruxframework.cruxsite.client.controller;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.views.BindView;
+import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
 import org.cruxframework.cruxsite.client.SiteConstants;
 import org.cruxframework.cruxsite.client.feed.Error;
 import org.cruxframework.cruxsite.client.feed.Feed;
 import org.cruxframework.cruxsite.client.feed.FeedApi;
 import org.cruxframework.cruxsite.client.feed.FeedCallback;
 import org.cruxframework.cruxsite.client.feed.Loader;
+import org.cruxframework.cruxsite.client.widget.RssPanel;
 
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -38,13 +40,13 @@ import com.google.gwt.logging.client.LogConfiguration;
 @Controller("rssController")
 public class RssController
 {
-	private static Logger logger = Logger.getLogger(Crux.class.getName());
+	private static Logger logger = Logger.getLogger(RssController.class.getName());
 
-	@Create
-	protected SiteConstants constants;
+	@Inject
+	private SiteConstants constants;
 	
-	@Create
-	protected MainScreen screen;
+	@Inject
+	private HomeView view;
 	
 	@Expose
 	public void onLoad()
@@ -81,7 +83,7 @@ public class RssController
 			@Override
 			public void onLoad(Feed feed)
 			{
-				screen.getBlogFeeds().setFeed(feed);
+				view.blogFeeds().setFeed(feed);
 			}
 			
 			@Override
@@ -103,7 +105,7 @@ public class RssController
 			@Override
 			public void onLoad(Feed feed)
 			{
-				screen.getProjectFeeds().setFeed(feed);
+				view.projectFeeds().setFeed(feed);
 			}
 			
 			@Override
@@ -112,5 +114,22 @@ public class RssController
 				logger.log(Level.SEVERE, "Error loading Crux Blog Feed API...");
 			}
 		});
+	}
+	
+	public void setConstants(SiteConstants constants)
+    {
+    	this.constants = constants;
+    }
+
+	public void setView(HomeView view)
+    {
+    	this.view = view;
+    }
+
+	@BindView("home")
+	public static interface HomeView extends ViewWrapper
+	{
+		RssPanel blogFeeds();
+		RssPanel projectFeeds();
 	}
 }

@@ -15,7 +15,8 @@
 	<body>
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
 		
-		<c:screen useController="mainPageController" onActivate="mainPageController.onLoad" useView="**/views/*" ></c:screen>
+		<c:screen useController="mainPageController" onHistoryChanged="mainPageController.onHistoryChanged" onActivate="mainPageController.onLoad" 
+				  useView="**/views/*" />
 		
 		<div class="UnderConstructionTag"/>
 		
@@ -97,9 +98,9 @@
 						<gwt:widget>
 							<gwt:horizontalPanel id="contentMargins" width="900px">
 								<gwt:cell horizontalAlignment="center" verticalAlignment="top">
-									<crux:simpleViewContainer id="viewContainer" height="100%" width="100%" >
-										<crux:view name="home" />									
-									</crux:simpleViewContainer>
+									<crux:swapViewContainer id="viewContainer" height="100%" width="100%" >
+										<crux:view name="home" active="true"/>									
+									</crux:swapViewContainer>
 								</gwt:cell>
 							</gwt:horizontalPanel>
 						</gwt:widget>

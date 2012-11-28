@@ -16,8 +16,8 @@
 package org.cruxframework.cruxsite.client.controller;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.cruxsite.client.SiteConstants;
 
 import com.google.gwt.core.client.GWT;
@@ -30,8 +30,8 @@ import com.google.gwt.core.client.GWT;
 @Controller("analyticsController")
 public class AnalyticsController
 {
-	@Create
-	protected SiteConstants consts;
+	@Inject
+	private SiteConstants consts;
 	
 	@Expose
 	public void load()
@@ -54,4 +54,9 @@ public class AnalyticsController
 			var s = $doc.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	}-*/;
+
+	public void setConsts(SiteConstants consts)
+    {
+    	this.consts = consts;
+    }
 }

@@ -1,97 +1,110 @@
 package org.cruxframework.cruxsite.client.controller;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.views.BindRootView;
+import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.widgets.client.swapcontainer.SwapContainer;
 import org.cruxframework.cruxsite.client.SiteConstants;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.Window;
 
 @Controller("mainPageController")
-public class MainPageController extends CruxSiteController
+public class MainPageController
 {
-	@Create
-	protected SiteConstants constants;
+	@Inject
+	private SiteConstants constants;
 	
+	@Inject
+	private MainScreen screen;
+
 	@Expose
 	public void onLoad()
 	{
-		
+		View.addToHistory("home");
 	}
 	
 	@Expose
 	public void onClickGoBlog()
 	{
-		openNewWindow(constants.blogUrl(), "blog");
+		Window.open(constants.blogUrl(), "blog", null);
 	}
 	
 	@Expose
 	public void onClickGoProject()
 	{
-		openNewWindow(constants.projectUrl(), "project");
+		Window.open(constants.projectUrl(), "project", null);
 	}
 	
 	@Expose
 	public void onClickGoIndex()
 	{
-		goToPage("index.html");
+		showView("home");
 	}
-	
-	private native void openNewWindow(String url, String windowName) /*-{
-		$wnd.open(url, 'target=_blank').focus();
-	}-*/;
-	
-	
+
 	@Expose
 	public void onClickMenuDownload()
 	{
-		goToPage("download.html");
+		showView("download");
 	}
 	
 	@Expose
 	public void onClickMenuLearn()
 	{
+		showView("learn");
 	}
 	
 	@Expose
 	public void onClickMenuCompare()
 	{
+		showView("compare");
 	}
 
 	@Expose
 	public void onClickMenuContribute()
 	{
+		showView("contribute");
 	}
 	
 	@Expose
 	public void onClickMenuCommunity()
 	{
+		showView("community");
 	}
 	
 	@Expose
-	public void onClickEnglish()
+	public void onHistoryChanged(ValueChangeEvent<String> event)
 	{
-		goToPage(getCurrentPageName(), "en");
-	}
-	
-	@Expose
-	public void onClickPortuguese()
-	{
-		goToPage(getCurrentPageName(), "pt");
-	}
-	
-	private String getCurrentPageName()
-	{
-		String pageName = "index.html";
-		String url = Window.Location.getHref();
-		String pageExt = ".html";
-		int indexHtml = url.lastIndexOf(pageExt);
-		if(indexHtml > 0)
+		String viewId = event.getValue();
+		if (!StringUtils.isEmpty(viewId))
 		{
-			pageName = url.substring(url.lastIndexOf("/", indexHtml) + 1, indexHtml + pageExt.length());
-			pageName = pageName.replace("-en" + pageExt, pageExt);
-			pageName = pageName.replace("-pt" + pageExt, pageExt);
+		    screen.viewContainer().showView(viewId);
 		}
-		return pageName;
+	}
+	
+	public void setConstants(SiteConstants constants)
+    {
+    	this.constants = constants;
+    }
+
+	public void setScreen(MainScreen screen)
+    {
+    	this.screen = screen;
+    }
+
+	private void showView(String viewName)
+    {
+	    screen.viewContainer().showView(viewName);
+	    View.addToHistory(viewName);
+    }
+	
+	@BindRootView
+	public static interface MainScreen extends ViewWrapper
+	{
+		SwapContainer viewContainer();
 	}
 }

@@ -78,6 +78,7 @@ public class RssPanel extends Composite
 	public void clear()
 	{
 		body.clear();
+		body.resizeRows(0);
 	}
 	
 	/**
