@@ -33,7 +33,7 @@ class RootViewContainer extends SingleViewContainer
 
 	public RootViewContainer()
     {
-		super(true);
+		super(null, true);
 		containerPanel = RootPanel.get();
 		bindToDOM();
     }

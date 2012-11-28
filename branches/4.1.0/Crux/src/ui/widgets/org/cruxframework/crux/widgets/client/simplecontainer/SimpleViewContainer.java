@@ -33,10 +33,9 @@ public class SimpleViewContainer extends SingleViewContainer
 	
 	public SimpleViewContainer()
 	{
-		super(true);
-		containerPanel = new SimplePanel();
+		super(new SimplePanel(), true);
+		containerPanel = getMainWidget();
 		containerPanel.setStyleName(DEFAULT_STYLE_NAME);
-		initWidget(containerPanel);
 	}
 
 	public View getView()

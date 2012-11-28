@@ -42,11 +42,10 @@ public class TabContainer extends MultipleViewsContainer
 	 */
 	public TabContainer()
 	{
-		super(true);
-		tabPanel = new RollingTabPanel();
+		super(new RollingTabPanel(), true);
+		tabPanel = getMainWidget();
 		tabPanel.addBeforeSelectionHandler(createBeforeSelectionHandler());
 		tabPanel.setStyleName(DEFAULT_STYLE_NAME);
-		initWidget(tabPanel);
 	}
 	
 	/**

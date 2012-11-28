@@ -38,12 +38,11 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 
 	public HorizontalSwapContainer()
 	{
-		super(false);
-		swapPanel = new HorizontalSwapPanel();
+		super(new HorizontalSwapPanel(), false);
+		swapPanel = getMainWidget();
 		swapPanel.setStyleName(DEFAULT_STYLE_NAME);
 		active = new SimplePanel();
 		swap = new SimplePanel();
-		initWidget(swapPanel);
 	}
 
 	/**

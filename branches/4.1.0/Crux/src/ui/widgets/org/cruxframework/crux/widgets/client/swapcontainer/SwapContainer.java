@@ -13,12 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.controller.crossdevice;
+package org.cruxframework.crux.widgets.client.swapcontainer;
 
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -26,29 +25,33 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class DeviceAdaptiveViewContainer extends SingleViewContainer implements IsWidget
+public class SwapContainer extends SingleViewContainer
 {
+	public static final String DEFAULT_STYLE_NAME = "crux-SwapContainer";
 	private SimplePanel containerPanel;
+	private View innerView;
 
-	public DeviceAdaptiveViewContainer()
-    {
+	public SwapContainer()
+	{
 		super(new SimplePanel(), true);
 		containerPanel = getMainWidget();
-    }
+		containerPanel.setStyleName(DEFAULT_STYLE_NAME);
+	}
+
+	public View getView()
+	{
+		return innerView;
+	}
 	
 	@Override
     protected Panel getContainerPanel(View view)
     {
-	    return getContainerPanel();
-    }
-
-    protected Panel getContainerPanel()
-    {
 	    return containerPanel;
     }
 
-    @Override
-    protected void handleViewTitle(String title, Panel containerPanel, String viewId)
-    {
-    }
+	@Override
+	protected void handleViewTitle(String title, Panel containerPanel, String viewId)
+	{
+		// Do nothing
+	}
 }

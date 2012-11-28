@@ -69,7 +69,7 @@ public class DialogViewContainer extends SingleViewContainer
 	
 	public DialogViewContainer(boolean closeable, boolean modal)
 	{
-		super(true);
+		super(null, true);
 		containerPanel = new CustomDialogBox(false, true, modal);
 		containerPanel.setStyleName(DEFAULT_STYLE_NAME);
 		
@@ -172,6 +172,7 @@ public class DialogViewContainer extends SingleViewContainer
 	public void openDialog()
 	{
 		assert(innerView != null):"There is no View loaded into this container.";
+		bindToDOM();
 		containerPanel.show();
 	}
 	
@@ -190,6 +191,7 @@ public class DialogViewContainer extends SingleViewContainer
 			}
 		}
 		containerPanel.hide();
+		unbindToDOM();
 		return true;
 	}
 	

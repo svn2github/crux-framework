@@ -24,6 +24,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -33,9 +34,9 @@ public abstract class MultipleViewsContainer extends ViewContainer
 {
 	protected FastMap<View> activeViews = new FastMap<View>();;
 
-	public MultipleViewsContainer(boolean clearPanelsForDeactivatedViews)
+	public MultipleViewsContainer(Widget mainWidget, boolean clearPanelsForDeactivatedViews)
     {
-	    super(clearPanelsForDeactivatedViews);
+	    super(mainWidget, clearPanelsForDeactivatedViews);
     }
 
 	@Override

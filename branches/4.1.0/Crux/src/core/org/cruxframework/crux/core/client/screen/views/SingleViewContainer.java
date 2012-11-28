@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -30,9 +31,9 @@ public abstract class SingleViewContainer extends ViewContainer
 {
 	protected View activeView = null;;
 
-	public SingleViewContainer(boolean clearPanelsForDeactivatedViews)
+	public SingleViewContainer(Widget mainWidget, boolean clearPanelsForDeactivatedViews)
     {
-	    super(clearPanelsForDeactivatedViews);
+	    super(mainWidget, clearPanelsForDeactivatedViews);
     }
 
 	/**
@@ -43,7 +44,7 @@ public abstract class SingleViewContainer extends ViewContainer
 	{
 		return activeView;
 	}
-
+	
 	@Override
 	protected void activate(View view, Panel containerPanel)
 	{

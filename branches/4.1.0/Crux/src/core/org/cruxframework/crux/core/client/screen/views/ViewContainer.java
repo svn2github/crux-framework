@@ -25,14 +25,17 @@ import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallbac
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -46,21 +49,43 @@ public abstract class ViewContainer extends Composite
 	
 	protected static Logger logger = Logger.getLogger(ViewContainer.class.getName());
 	protected FastMap<View> views = new FastMap<View>();
+	private final Widget mainWidget;
 
 	/**
 	 * Constructor
 	 */
-	public ViewContainer()
+	public ViewContainer(Widget mainWidget)
     {
-		this(true);
+		this(mainWidget, true);
     }
 
 	/**
 	 * Constructor
 	 * @param clearPanelsForDeactivatedViews If true, makes the container clear the container panel for a view, when the view is deactivated.
 	 */
-	public ViewContainer(boolean clearPanelsForDeactivatedViews)
+	public ViewContainer(Widget mainWidget, boolean clearPanelsForDeactivatedViews)
     {
+		this.mainWidget = mainWidget;
+		if (mainWidget != null)
+		{
+			this.mainWidget.addAttachHandler(new Handler()
+			{
+				@Override
+				public void onAttachOrDetach(AttachEvent event)
+				{
+					if (event.isAttached())
+					{
+						bindToDOM();
+					}
+					else
+					{
+						unbindToDOM();
+					}
+				}
+			});
+			initWidget(this.mainWidget);
+		}
+		
 		this.clearPanelsForDeactivatedViews = clearPanelsForDeactivatedViews;
 		ViewHandlers.initializeWindowContainers();
     }
@@ -135,17 +160,31 @@ public abstract class ViewContainer extends Composite
      * Render the requested view into the container.
      * @param viewId View identifier
      */
-	public void showView(String viewId)
+	public void showView(String viewName)
 	{
-		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
-		View view = getView(viewId);
-		if (!view.isActive())
-		{
-			renderView(view);
-		}
+		showView(viewName, viewName);
 	}
 
-
+	/**
+     * Render the requested view into the container.
+     * @param viewId View identifier
+	 * @param viewId View name
+	 */
+	public void showView(String viewName, String viewId)
+	{
+		View view = getView(viewId);
+		if (view != null)
+		{
+			if (!view.isActive())
+			{
+				renderView(view);
+			}
+		}
+		else
+		{
+			loadView(viewName, viewId, true);
+		}
+	}
 
 	/**
 	 * Retrieve the view associated to viewId
@@ -239,6 +278,12 @@ public abstract class ViewContainer extends Composite
 		{
 			Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId), e);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+    protected <T extends Widget> T getMainWidget()
+	{
+		return (T) mainWidget;
 	}
 	
 	/**
