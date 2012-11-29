@@ -25,6 +25,7 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -54,29 +55,7 @@ public abstract class DeviceAdaptiveController
 	 */
 	protected void applyWidgetDependentStyleNames()
 	{
-		switch (Screen.getCurrentDevice())
-        {
-        	case smallDisplayArrows:
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.arrows.toString());
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
-	        break;
-        	case smallDisplayTouch:
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.small.toString());
-	        break;
-        	case largeDisplayTouch:
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-	        break;
-        	case largeDisplayArrows:
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.arrows.toString());
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-	        break;
-        	case largeDisplayMouse:
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.mouse.toString());
-        		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Size.large.toString());
-	        break;
-        }
+		applyWidgetDependentStyleNames(getElement());
 	}
 
 	/**
@@ -159,7 +138,7 @@ public abstract class DeviceAdaptiveController
 		boundWidget.setHeight(height);
 	}
 		
-	public com.google.gwt.user.client.Element getElement()
+	public Element getElement()
 	{
 		return boundWidget.getElement();
 	}
@@ -182,5 +161,36 @@ public abstract class DeviceAdaptiveController
 	public Widget asWidget()
 	{
 		return boundWidget;
+	}
+	
+	/**
+	 * Apply dependent style name on element, based on current device
+	 * @param element
+	 */
+	public static void applyWidgetDependentStyleNames(Element element)
+	{
+		switch (Screen.getCurrentDevice())
+        {
+        	case smallDisplayArrows:
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.arrows.toString());
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.small.toString());
+	        break;
+        	case smallDisplayTouch:
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.touch.toString());
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.small.toString());
+	        break;
+        	case largeDisplayTouch:
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.touch.toString());
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
+	        break;
+        	case largeDisplayArrows:
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.arrows.toString());
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
+	        break;
+        	case largeDisplayMouse:
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.mouse.toString());
+        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
+	        break;
+        }
 	}
 }
