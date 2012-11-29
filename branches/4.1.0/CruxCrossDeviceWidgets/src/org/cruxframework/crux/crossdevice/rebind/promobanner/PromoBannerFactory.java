@@ -60,9 +60,6 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
-			String handler = getWidgetCreator().createVariableName("selectHandler");
-			processEvent(out, context.readChildProperty("onSelect"), getWidgetCreator(), handler);
-
 			String styleName = context.readChildProperty("styleName");
 			styleName = StringUtils.isEmpty(styleName) ? null : EscapeUtils.quote(styleName);
 
@@ -72,17 +69,17 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 
 			if(hasSmallImage)
 			{
-				out.println(context.getWidget() + ".addSmallBanner("
+				out.print(context.getWidget() + ".addSmallBanner("
 						+ EscapeUtils.quote(context.readChildProperty("smallImage")));
 			}
 			if(hasLargeImage)
 			{
-				out.println(context.getWidget() + ".addLargeBanner("
+				out.print(context.getWidget() + ".addLargeBanner("
 						+ EscapeUtils.quote(context.readChildProperty("largeImage")));
 			}
 			if (hasDefaultImage)
 			{
-				out.println(context.getWidget() + ".addDefaultBanner("
+				out.print(context.getWidget() + ".addDefaultBanner("
 						+ EscapeUtils.quote(context.readChildProperty("image")));
 			}
 			if ((hasDefaultImage && (hasLargeImage || hasSmallImage)) || (hasLargeImage && !hasSmallImage) 
@@ -91,12 +88,13 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 				throw new CruxGeneratorException("You must inform a small image and a large image, or a defaultImage");
 			}
 
-			out.println(", " + getWidgetCreator().getDeclaredMessage(context.readChildProperty("title"))
+			out.print(", " + getWidgetCreator().getDeclaredMessage(context.readChildProperty("title"))
 					  + ", " + getWidgetCreator().getDeclaredMessage(context.readChildProperty("text"))
 					  + ", " + styleName
 					  + ", " + getWidgetCreator().getDeclaredMessage(context.readChildProperty("buttonLabel"))
-					  + ", " + handler
-					  + ");");
+					  + ", ");
+			processEvent(out, context.readChildProperty("onSelect"), getWidgetCreator());			
+			out.println(");");
 		}
 	}
 
@@ -113,19 +111,19 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @param creator
 	 * @param handlerVarName
 	 */
-	private static void processEvent(SourcePrinter out, String selectEventAttribute, WidgetCreator<?> creator, String handlerVarName)
+	private static void processEvent(SourcePrinter out, String selectEventAttribute, WidgetCreator<?> creator)
     {
 		if(!StringUtils.isEmpty(selectEventAttribute))
 		{
-			out.println(SelectHandler.class.getCanonicalName() + " " + handlerVarName + " = new " + SelectHandler.class.getCanonicalName()+"(){");
+			out.println("new " + SelectHandler.class.getCanonicalName()+"(){");
 			out.println("public void onSelect("+SelectEvent.class.getCanonicalName()+" event){");
 			EvtProcessor.printEvtCall(out, selectEventAttribute, "onSelect", SelectEvent.class, "event", creator);
 			out.println("}");
-			out.println("};");
+			out.println("}");
 		}
 		else
 		{
-			out.println(SelectHandler.class.getCanonicalName() + " " + handlerVarName + " = null;");
+			out.print("null");
 		}
     }
 }

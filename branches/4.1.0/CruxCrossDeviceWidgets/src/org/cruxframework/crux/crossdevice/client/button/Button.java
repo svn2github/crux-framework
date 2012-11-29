@@ -77,7 +77,6 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	{
 		public ButtonNoTouchImpl()
 		{
-    		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
 			addClickHandler(new ClickHandler()
 			{
 				@Override
