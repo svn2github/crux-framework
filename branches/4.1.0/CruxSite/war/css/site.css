@@ -238,7 +238,7 @@ p, .p{
 	padding-left:10px;
 }
 
-.crux-PromoBanner .rightArrow
+.xdev-PromoBanner .rightArrow
 {
 	width: 44px;
 	height: 65px;
@@ -246,7 +246,7 @@ p, .p{
 	cursor: pointer;
 }
 
-.crux-PromoBanner .leftArrow
+.xdev-PromoBanner .leftArrow
 {
 	width: 40px;
 	height: 65px;
@@ -254,7 +254,12 @@ p, .p{
 	cursor: pointer;
 }
 
-.crux-PromoBanner .bullet
+.xdev-PromoBanner .leftArrow-disabled, .xdev-PromoBanner .rightArrow-disabled
+{
+	opacity: .5;
+}
+
+.xdev-PromoBanner .bullet
 {
 	width: 10px;
 	height: 10px;
@@ -268,21 +273,21 @@ p, .p{
 	margin-top: 30px;
 }
 
-.crux-PromoBanner .bullet-active
+.xdev-PromoBanner .bullet-active
 {
 	-webkit-transition: all 0.25s linear;
 	box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
 	background: white !important;
 }
 
-.crux-PromoBanner .messagePanel
+.xdev-PromoBanner .messagePanel
 {
 	padding-top: 20px;
 	padding-left: 35px;
 	height: 100%;
 }
 
-.crux-PromoBanner button
+.xdev-PromoBanner button
 {
 	cursor: pointer;
 	-webkit-transition: box-shadow 0.3s linear;
@@ -301,18 +306,18 @@ p, .p{
 	margin-top: 5px;
 }
 
-.crux-PromoBanner button:active 
+.xdev-PromoBanner button:active 
 {
 	background: -webkit-linear-gradient(#004A5D 0%, #006778 100%);
 }
 
-.crux-PromoBanner button:hover 
+.xdev-PromoBanner button:hover 
 {
 	-webkit-transition: all 0.3s linear;
 	box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset !important;
 }
 
-.crux-PromoBanner .title
+.xdev-PromoBanner .title
 {
 	font-size: 43px;
 	color: #222;
@@ -321,7 +326,7 @@ p, .p{
 	font-weight: bold;
 }
 	
-.crux-PromoBanner .text
+.xdev-PromoBanner .text
 {
 	background-attachment: scroll;
 	color: #153A42;
@@ -334,7 +339,7 @@ p, .p{
 	width: 360px;
 }
 
-.crux-PromoBanner .longText .text
+.xdev-PromoBanner .longText .text
 {
 	font-size: 23px;
 }
