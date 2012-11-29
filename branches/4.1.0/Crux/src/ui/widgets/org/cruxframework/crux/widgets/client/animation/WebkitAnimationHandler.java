@@ -87,6 +87,114 @@ class WebkitAnimationHandler implements AnimationHandler
 		widget.getElement().getStyle().setProperty("webkitBackfaceVisibility", "hidden");
 	}
 
+	@Override
+	public void fade(Widget outWidget, Widget inWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+			}
+		});
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, (duration/2.0));
+		fadeIn(inElement, (duration/2.0), (duration/2.0));
+	}
+	
+	@Override
+	public void fadeOut(Widget outWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, duration);
+	}
+
+	@Override
+	public void fadeIn(Widget inWidget, int duration, final Callback callback)
+	{
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeIn(inElement, duration, 0);
+	}
+
+	@Override
+	public void clearFadeTransitions(Widget widget)
+	{
+		widget.getElement().getStyle().setOpacity(1);
+	}
+	
+	private native void fadeOut(Element el, double duration)/*-{
+		el.style.webkitTransitionProperty = 'opacity';
+		el.style.webkitTransitionDelay = '0';
+		if (duration == 0)
+		{
+			el.style.webkitTransitionDuration = '';
+			el.style.webkitTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.webkitTransitionDuration = duration+'ms';
+			el.style.webkitTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 0;
+	}-*/;
+
+	private native void fadeIn(Element el, double duration, double delay)/*-{
+		el.style.webkitTransitionProperty = 'opacity';
+		if (duration == 0)
+		{
+			el.style.webkitTransitionDelay = '0';
+			el.style.webkitTransitionDuration = '';
+			el.style.webkitTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.webkitTransitionDelay = ''+delay;
+			el.style.webkitTransitionDuration = duration+'ms';
+			el.style.webkitTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 1;
+	}-*/;
+
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.webkitTransitionProperty = 'height';
 		el.style.webkitTransitionDelay = '0';

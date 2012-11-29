@@ -16,6 +16,8 @@
 package org.cruxframework.crux.widgets.client.animation;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -93,6 +95,66 @@ public class Animation
 	
 	/**
 	 * 
+	 * @param outWidget
+	 * @param inWidget
+	 * @param duration
+	 * @param callback
+	 */
+	public static void fade(final Widget outWidget, final Widget inWidget, final int duration, final Callback callback)
+	{
+		inWidget.getElement().getStyle().setOpacity(0);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				getAnimationHandler().fade(outWidget, inWidget, duration, callback);
+			}
+		});
+	}
+	
+	/**
+	 * 
+	 * @param outWidget
+	 * @param duration
+	 * @param callback
+	 */
+	public static void fadeOut(Widget outWidget, int duration, Callback callback)
+	{
+		getAnimationHandler().fadeOut(outWidget, duration, callback);
+	}
+	
+	/**
+	 * 
+	 * @param widget
+	 */
+	public static void clearFadeTransitions(Widget widget)
+    {
+		getAnimationHandler().clearFadeTransitions(widget);
+    }
+	
+	/**
+	 * 
+	 * @param inWidget
+	 * @param duration
+	 * @param callback
+	 */
+	public static void fadeIn(final Widget inWidget, final int duration, final Callback callback)
+	{
+		inWidget.getElement().getStyle().setOpacity(0);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				getAnimationHandler().fadeIn(inWidget, duration, callback);
+			}
+		});
+	}
+
+	
+	/**
+	 * 
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
@@ -118,5 +180,9 @@ public class Animation
 		void setHeight(Widget widget, String height, int duration, Callback callback);
 		void resetTransition(Widget widget);
 		void hideBackface(Widget widget);
+		void fade(Widget outWidget, Widget inWidget, int duration, Callback callback);
+		void fadeOut(Widget outWidget, int duration, Callback callback);
+		void fadeIn(Widget InWidget, int duration, Callback callback);
+		void clearFadeTransitions(Widget widget);
 	}
 }

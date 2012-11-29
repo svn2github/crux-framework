@@ -39,7 +39,8 @@ import org.cruxframework.crux.widgets.rebind.event.SwapEvtBind;
 	@TagChild(HorizontalSwapPanelFactory.WidgetContentProcessor.class)
 })
 @TagAttributes({
-	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500")
+	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500"),
+	@TagAttribute(value="useFadeTransitions", type=Boolean.class, required=false, defaultValue="false")
 })
 @TagEvents({
 	@TagEvent(SwapEvtBind.class)

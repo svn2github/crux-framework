@@ -86,6 +86,114 @@ class MSAnimationHandler implements AnimationHandler
 	{
 	}
 
+	@Override
+	public void fade(Widget outWidget, Widget inWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+			}
+		});
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, (duration/2.0));
+		fadeIn(inElement, (duration/2.0), (duration/2.0));
+	}
+	
+	@Override
+	public void fadeOut(Widget outWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, duration);
+	}
+
+	@Override
+	public void fadeIn(Widget inWidget, int duration, final Callback callback)
+	{
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeIn(inElement, duration, 0);
+	}
+
+	@Override
+	public void clearFadeTransitions(Widget widget)
+	{
+		widget.getElement().getStyle().setOpacity(1);
+	}
+	
+	private native void fadeOut(Element el, double duration)/*-{
+		el.style.msTransitionProperty = 'opacity';
+		el.style.msTransitionDelay = '0';
+		if (duration == 0)
+		{
+			el.style.msTransitionDuration = '';
+			el.style.msTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.msTransitionDuration = duration+'ms';
+			el.style.msTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 0;
+	}-*/;
+
+	private native void fadeIn(Element el, double duration, double delay)/*-{
+		el.style.msTransitionProperty = 'opacity';
+		if (duration == 0)
+		{
+			el.style.msTransitionDelay = '0';
+			el.style.msTransitionDuration = '';
+			el.style.msTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.msTransitionDelay = ''+delay;
+			el.style.msTransitionDuration = duration+'ms';
+			el.style.msTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 1;
+	}-*/;
+
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.msTransitionProperty = 'height';
 		el.style.msTransitionDelay = '0';

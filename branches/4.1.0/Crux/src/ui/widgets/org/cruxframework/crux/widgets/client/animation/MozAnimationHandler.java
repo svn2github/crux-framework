@@ -87,6 +87,114 @@ class MozAnimationHandler implements AnimationHandler
 		widget.getElement().getStyle().setProperty("mozBackfaceVisibility", "hidden");
 	}
 	
+	@Override
+	public void fade(Widget outWidget, Widget inWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+			}
+		});
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, (duration/2.0));
+		fadeIn(inElement, (duration/2.0), (duration/2.0));
+	}
+	
+	@Override
+	public void fadeOut(Widget outWidget, int duration, final Callback callback)
+	{
+		final Element outElement = outWidget.getElement();
+		addCallbackHandler(outElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(outElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeOut(outElement, duration);
+	}
+
+	@Override
+	public void fadeIn(Widget inWidget, int duration, final Callback callback)
+	{
+		final Element inElement = inWidget.getElement();
+		addCallbackHandler(inElement, new Callback()
+		{
+			@Override
+			public void onTransitionCompleted()
+			{
+				clearTransitionProperties(inElement);
+				if (callback != null)
+				{
+					callback.onTransitionCompleted();
+				}
+			}
+		});
+		fadeIn(inElement, duration, 0);
+	}
+
+	@Override
+	public void clearFadeTransitions(Widget widget)
+	{
+		widget.getElement().getStyle().setOpacity(1);
+	}
+	
+	private native void fadeOut(Element el, double duration)/*-{
+		el.style.MozTransitionProperty = 'opacity';
+		el.style.MozTransitionDelay = '0';
+		if (duration == 0)
+		{
+			el.style.MozTransitionDuration = '';
+			el.style.MozTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.MozTransitionDuration = duration+'ms';
+			el.style.MozTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 0;
+	}-*/;
+
+	private native void fadeIn(Element el, double duration, double delay)/*-{
+		el.style.MozTransitionProperty = 'opacity';
+		if (duration == 0)
+		{
+			el.style.MozTransitionDelay = '0';
+			el.style.MozTransitionDuration = '';
+			el.style.MozTransitionTimingFunction = '';
+		}
+		else
+		{
+			el.style.MozTransitionDelay = ''+delay;
+			el.style.MozTransitionDuration = duration+'ms';
+			el.style.MozTransitionTimingFunction = 'ease-out';
+		}
+	
+		el.style.opacity = 1;
+	}-*/;
+
 	private native void setHeight(Element el, String height, int duration)/*-{
 		el.style.MozTransitionProperty = 'height';
 		el.style.MozTransitionDelay = '0';

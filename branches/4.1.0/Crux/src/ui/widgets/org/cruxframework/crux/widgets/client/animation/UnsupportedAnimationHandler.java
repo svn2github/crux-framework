@@ -83,6 +83,43 @@ class UnsupportedAnimationHandler implements AnimationHandler
 			callback.onTransitionCompleted();
 		}
     }
+	
+	@Override
+    public void fade(Widget outWidget, Widget inWidget, int duration, Callback callback)
+    {
+		outWidget.getElement().getStyle().setOpacity(0);
+		inWidget.getElement().getStyle().setOpacity(1);
+		if (callback != null)
+		{
+			callback.onTransitionCompleted();
+		}
+    }
+	
+	@Override
+    public void fadeOut(Widget outWidget, int duration, Callback callback)
+    {
+		outWidget.getElement().getStyle().setOpacity(0);
+		if (callback != null)
+		{
+			callback.onTransitionCompleted();
+		}
+    }
+
+	@Override
+    public void fadeIn(Widget inWidget, int duration, Callback callback)
+    {
+		inWidget.getElement().getStyle().setOpacity(1);
+		if (callback != null)
+		{
+			callback.onTransitionCompleted();
+		}
+    }
+	
+	@Override
+	public void clearFadeTransitions(Widget widget)
+	{
+		widget.getElement().getStyle().setOpacity(1);
+	}
 
 	@Override
 	public void hideBackface(Widget widget)

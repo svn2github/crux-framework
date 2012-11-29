@@ -48,6 +48,8 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	private SimplePanel nextPanel = new SimplePanel();
 	
 	private int transitionDuration = 500;
+
+	private boolean useFadeTransitions = false;
 	
 	/**
 	 * Constructor
@@ -62,7 +64,6 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setPosition(Position.RELATIVE);
 		style.setOverflow(Overflow.HIDDEN);
 		style.setWidth(100, Unit.PCT);
-//		style.setHeight(100, Unit.PCT);
 		style.setVisibility(Visibility.VISIBLE);
 		style.setOpacity(1);
 		
@@ -86,11 +87,59 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	 * Sets the widget that will be initially visible on this panel. 
 	 * @param widget
 	 */
-	public void setCurrentWidget(Widget widget) 
+	public void setCurrentWidget(final Widget widget) 
 	{
-		this.currentPanel.clear();
-		this.currentPanel.add(widget);
+		if (this.useFadeTransitions)
+		{
+			final Widget outWidget = this.currentPanel.getWidget();
+			if (outWidget != null)
+			{
+				final int duration = transitionDuration / 2;
+				Animation.fadeOut(outWidget, duration, new Callback()
+				{
+					@Override
+					public void onTransitionCompleted()
+					{
+						currentPanel.clear();
+						currentPanel.add(widget);
+						Animation.clearFadeTransitions(outWidget);
+						Animation.fadeIn(widget, duration, null);
+					}
+				});
+			}
+			else
+			{
+				this.currentPanel.clear();
+				this.currentPanel.add(widget);
+			}
+		}
+		else
+		{
+			this.currentPanel.clear();
+			this.currentPanel.add(widget);
+		}
 	}
+	
+	/**
+	 * Get the useFadeTransitions property. When this property is true, this panel will 
+	 * use a fade animation when setCurrentWidget is called
+	 * @return
+	 */
+	public boolean isUseFadeTransitions()
+    {
+    	return useFadeTransitions;
+    }
+
+	/**
+	 * Set the useFadeTransitions property. When this property is true, this panel will 
+	 * use a fade animation when setCurrentWidget is called
+	 * 
+	 * @param useFadeTransitions
+	 */
+	public void setUseFadeTransitions(boolean useFadeTransitions)
+    {
+    	this.useFadeTransitions = useFadeTransitions;
+    }
 
 	/**
 	 * 
