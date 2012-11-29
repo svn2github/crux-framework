@@ -26,26 +26,30 @@
 	cursor: pointer;
 }
 
+.xdev-PromoBanner .leftArrow-disabled, .xdev-PromoBanner .rightArrow-disabled
+{
+	opacity: .5;
+}
+
 .xdev-PromoBanner .bullet
 {
 	width: 10px;
 	height: 10px;
-	background: rgba(30, 30, 30, 0.5);
+	background: rgba(0, 0, 0, 0.5);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.2) inset;
-	border: 1px solid rgb(75,115,150);
+	border: 1px solid white;
 	border-radius: 10px;
 	margin-right: 15px;
 	float: left;
 	cursor: pointer;
 	margin-top: 30px;
-	text-align: center;
 }
 
 .xdev-PromoBanner .bullet-active
 {
 	-webkit-transition: all 0.25s linear;
-	box-shadow: 0 0 3px rgba(70,115,150,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
-	background: rgb(75,115,150) !important;
+	box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
+	background: white !important;
 }
 
 .xdev-PromoBanner .messagePanel

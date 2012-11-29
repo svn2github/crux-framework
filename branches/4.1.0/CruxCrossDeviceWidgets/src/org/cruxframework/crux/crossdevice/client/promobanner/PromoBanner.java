@@ -1,10 +1,14 @@
 package org.cruxframework.crux.crossdevice.client.promobanner;
 
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.crossdevice.client.button.Button;
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
-import org.cruxframework.crux.crossdevice.client.slidingdeck.SlidingDeckPanel;
+import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
+import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -69,6 +73,7 @@ public class PromoBanner extends Composite
 			
 			promoBanner.add(focusPanel);
 			promoBanner.add(bullets);
+			promoBanner.setCellHorizontalAlignment(bullets, HasHorizontalAlignment.ALIGN_CENTER);
 			
 			autoTransiteTimer = new AutoTransiteTimer(this);
 			autoTransiteTimer.reschedule();
@@ -131,7 +136,7 @@ public class PromoBanner extends Composite
 			}
 
 			panel.getElement().getStyle().setBackgroundImage("url(" + imageURL + ")");
-			panel.setHeight("100%");
+			panel.setHeight(getBannersHeight());
 			panel.setWidth("100%");
 
 			boolean hasTitle = !StringUtils.isEmpty(title);
@@ -267,31 +272,39 @@ public class PromoBanner extends Composite
 	 */
 	static abstract class BannerImplNoTouch extends BannerImpl
 	{
-		protected SlidingDeckPanel slidingDeckPanel;
+		protected HorizontalSwapPanel swapPanel;
 		protected Label leftArrow;
 		protected Label rightArrow;
-
+		protected int visibleBanner = -1;
+		protected FastList<SimplePanel> panels = new FastList<SimplePanel>();
+		protected boolean controlsEnabled;
+		
+		
 		protected BannerImplNoTouch()
 		{
 			super();
-			slidingDeckPanel = new SlidingDeckPanel();
-			banners.add(slidingDeckPanel);
+			swapPanel = new HorizontalSwapPanel();
+			swapPanel.setUseFadeTransitions(true);
+			banners.add(swapPanel);
 
-			slidingDeckPanel.setHeight("100%");
-			slidingDeckPanel.setWidth("100%");
+			swapPanel.setHeight("100%");
+			swapPanel.setWidth("100%");
 
 			focusPanel.addKeyDownHandler(new KeyDownHandler()
 			{
 				@Override
 				public void onKeyDown(KeyDownEvent event)
 				{
-					if(event.isLeftArrow())
+					if (controlsEnabled)
 					{
-						showBanner(slidingDeckPanel.getVisibleWidget() - 1, false);
-					}
-					else if(event.isRightArrow())
-					{
-						showBanner(slidingDeckPanel.getVisibleWidget() + 1, true);
+						if(event.isLeftArrow())
+						{
+							showBanner(visibleBanner - 1, false);
+						}
+						else if(event.isRightArrow())
+						{
+							showBanner(visibleBanner + 1, true);
+						}
 					}
 				}
 			});
@@ -303,7 +316,10 @@ public class PromoBanner extends Composite
 			{
 				public void onClick(ClickEvent event)
 				{
-					showBanner(slidingDeckPanel.getVisibleWidget() - 1, false);
+					if (controlsEnabled)
+					{
+						showBanner(visibleBanner - 1, false);
+					}
 				}
 			});
 
@@ -314,7 +330,10 @@ public class PromoBanner extends Composite
 			{
 				public void onClick(ClickEvent event)
 				{
-					showBanner(slidingDeckPanel.getVisibleWidget() + 1, true);
+					if (controlsEnabled)
+					{
+						showBanner(visibleBanner + 1, true);
+					}
 				}
 			});
 
@@ -336,56 +355,85 @@ public class PromoBanner extends Composite
 		@Override
 		public void doAddBanner(SimplePanel panel)
 		{
-	        slidingDeckPanel.add(panel);
+			panels.add(panel);
 		}
 		
 		@Override
 		public int getNextBanner()
 		{
-			return slidingDeckPanel.getVisibleWidget() + 1;
+			return visibleBanner + 1;
 		}
 		
 		@Override
 		public boolean hasVisibleBanner()
 		{
-		    return slidingDeckPanel.getVisibleWidget() >= 0;
+		    return visibleBanner >= 0;
 		}
 		
 		@Override
 		public void showWidget(int i)
 		{
-			slidingDeckPanel.showWidget(i);
+			assert(i >= 0 && i < panels.size()) : "Invalid index";
+			visibleBanner = i;
+			swapPanel.setCurrentWidget(panels.get(i));
 		}
 
 		@Override
 		public void showWidget(int i, boolean slideToRight)
 		{
-			slidingDeckPanel.showWidget(i, slideToRight);
+			assert(i >= 0 && i < panels.size()) : "Invalid index";
+			visibleBanner = i;
+			setControlsEnabled(false);
+			swapPanel.transitTo(panels.get(i), slideToRight?Direction.FORWARD:Direction.BACKWARDS, new Callback()
+			{
+				
+				@Override
+				public void onTransitionCompleted()
+				{
+					setControlsEnabled(true);
+				}
+			});
 		}
 		
+		protected void setControlsEnabled(boolean controlsEnabled)
+        {
+	       this.controlsEnabled = controlsEnabled; 
+	       if (this.controlsEnabled)
+	       {
+	    	   StyleUtils.removeStyleDependentName(leftArrow.getElement(), "disabled");
+	    	   StyleUtils.removeStyleDependentName(rightArrow.getElement(), "disabled");
+	       }
+	       else
+	       {
+	    	   autoTransiteTimer.reschedule();
+	    	   StyleUtils.addStyleDependentName(leftArrow.getElement(), "disabled");
+	    	   StyleUtils.addStyleDependentName(rightArrow.getElement(), "disabled");
+	       }
+        }
+
 		@Override
 		public int getBannersCount()
 		{
-			return slidingDeckPanel.getWidgetCount();			
+			return panels.size();			
 		}
 		
 		@Override
 		public void setTransitionDuration(int transitionDuration)
 		{
-			this.slidingDeckPanel.setTransitionDuration(transitionDuration);
+			this.swapPanel.setTransitionDuration(transitionDuration);
 		}
 
 		@Override
 		public int getTransitionDuration()
 		{
-			return slidingDeckPanel.getTransitionDuration();
+			return swapPanel.getTransitionDuration();
 		}
 		
 		@Override
 		protected void setBannersHeight(String height)
 		{
 			super.setBannersHeight(height);
-			slidingDeckPanel.setHeight(height);
+			swapPanel.setHeight(height);
 		}
 		
 		protected void adjustPositions()
