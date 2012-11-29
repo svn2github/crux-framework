@@ -69,6 +69,33 @@
 		</any>
 	</replace-with>
 
+	<!-- PromoBanner  -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImplLargeNoTouch">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayArrows" />
+			<when-property-is name="device.features" value="largeDisplayMouse" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImplSmallNoTouch">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImplSmallTouch">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImplLargeTouch">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
 	<!-- SelectablePanel  -->
 	<replace-with class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandlerNoTouchImpl">
 		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.selectablepanel.SelectablePanel.PanelEventsHandler" />

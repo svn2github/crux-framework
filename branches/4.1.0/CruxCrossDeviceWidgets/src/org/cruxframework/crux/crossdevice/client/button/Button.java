@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.crossdevice.client.button;
 
+import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.crossdevice.client.event.HasSelectHandlers;
 import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
@@ -40,6 +43,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasHTML;
 
 /**
+ * A cross device button, that use touch events on touch enabled devices to implement Google Fast Buttons
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -51,7 +55,7 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	{
 		protected boolean preventDefaultTouchEvents = false;
 		protected abstract void select();
-
+		
 		@Override
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
 		{
@@ -73,6 +77,7 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	{
 		public ButtonNoTouchImpl()
 		{
+    		StyleUtils.addStyleDependentName(getElement(), DeviceAdaptive.Input.touch.toString());
 			addClickHandler(new ClickHandler()
 			{
 				@Override
@@ -170,10 +175,24 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	public Button()
 	{
 		impl = GWT.create(ButtonImpl.class);
-		initWidget(impl.asWidget());
+		initWidget(impl);
 		setStyleName("xdev-Button");
 	}
 
+	@Override
+	public void setStyleName(String style)
+	{
+	    super.setStyleName(style);
+	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
+	}
+	
+	@Override
+	public void setStyleName(String style, boolean add)
+	{
+	    super.setStyleName(style, add);
+	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
+	}
+	
 	@Override
 	public HandlerRegistration addSelectHandler(SelectHandler handler)
 	{

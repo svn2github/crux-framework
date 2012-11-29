@@ -17,10 +17,11 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
+import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
+import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 import org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * Factory for PromoBanner widgets
@@ -28,7 +29,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
  */
 @DeclarativeFactory(id="promoBanner", library="crossDevice", targetWidget=PromoBanner.class)
 @TagAttributes({
-	@TagAttribute(value="bannersHeight", required=true),
+	@TagAttribute(value="largeBannersHeight", required=true),
+	@TagAttribute(value="smallBannersHeight", required=true),
 	@TagAttribute(value="transitionDuration", type=Integer.class, defaultValue="150"),
 	@TagAttribute(value="autoTransitionInterval", type=Integer.class, defaultValue="5000")
 
@@ -49,36 +51,44 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 		@TagAttributeDeclaration("styleName"),
 		@TagAttributeDeclaration(value="buttonLabel", required=true)
 	})
+	@TagEventsDeclaration({
+		@TagEventDeclaration("onSelect")
+	})
 	public static class BannerProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 										implements HasClickHandlersFactory<WidgetCreatorContext>
 	{
 		@Override
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
-			String handler = getWidgetCreator().createVariableName("clickHandler");
-			processEvent(out, context.readChildProperty("onClick"), getWidgetCreator(), handler);
+			String handler = getWidgetCreator().createVariableName("selectHandler");
+			processEvent(out, context.readChildProperty("onSelect"), getWidgetCreator(), handler);
 
 			String styleName = context.readChildProperty("styleName");
 			styleName = StringUtils.isEmpty(styleName) ? null : EscapeUtils.quote(styleName);
 
-			if(!StringUtils.isEmpty(context.readChildProperty("smallImage")))
+			boolean hasSmallImage = !StringUtils.isEmpty(context.readChildProperty("smallImage"));
+			boolean hasLargeImage = !StringUtils.isEmpty(context.readChildProperty("largeImage"));
+			boolean hasDefaultImage = !StringUtils.isEmpty(context.readChildProperty("image"));
+
+			if(hasSmallImage)
 			{
 				out.println(context.getWidget() + ".addSmallBanner("
 						+ EscapeUtils.quote(context.readChildProperty("smallImage")));
 			}
-			else if(!StringUtils.isEmpty(context.readChildProperty("largeImage")))
+			if(hasLargeImage)
 			{
 				out.println(context.getWidget() + ".addLargeBanner("
 						+ EscapeUtils.quote(context.readChildProperty("largeImage")));
 			}
-			else if (!StringUtils.isEmpty(context.readChildProperty("image")))
+			if (hasDefaultImage)
 			{
 				out.println(context.getWidget() + ".addDefaultBanner("
 						+ EscapeUtils.quote(context.readChildProperty("image")));
 			}
-			else
+			if ((hasDefaultImage && (hasLargeImage || hasSmallImage)) || (hasLargeImage && !hasSmallImage) 
+				|| (hasSmallImage && !hasLargeImage) || (hasSmallImage && hasLargeImage && hasDefaultImage))
 			{
-				throw new CruxGeneratorException("The attribute image, smallImage or largeImage is required for Banner.");
+				throw new CruxGeneratorException("You must inform a small image and a large image, or a defaultImage");
 			}
 
 			out.println(", " + getWidgetCreator().getDeclaredMessage(context.readChildProperty("title"))
@@ -97,32 +107,25 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
     }
 
 	/**
-	 * Creates the declaration of a clickHandler
+	 * Creates the declaration of a selectHandler
 	 * @param out
-	 * @param clickEventAttribute
+	 * @param selectEventAttribute
 	 * @param creator
 	 * @param handlerVarName
 	 */
-	private static void processEvent(SourcePrinter out, String clickEventAttribute, WidgetCreator<?> creator, String handlerVarName)
+	private static void processEvent(SourcePrinter out, String selectEventAttribute, WidgetCreator<?> creator, String handlerVarName)
     {
-		if(!StringUtils.isEmpty(clickEventAttribute))
+		if(!StringUtils.isEmpty(selectEventAttribute))
 		{
-			out.println(ClickHandler.class.getCanonicalName() + " " + handlerVarName + " = new " + ClickHandler.class.getCanonicalName()+"(){");
-			out.println("public void onClick("+ClickEvent.class.getCanonicalName()+" event){");
-			EvtProcessor.printEvtCall(out, clickEventAttribute, "onClick", ClickEvent.class, "event", creator);
+			out.println(SelectHandler.class.getCanonicalName() + " " + handlerVarName + " = new " + SelectHandler.class.getCanonicalName()+"(){");
+			out.println("public void onSelect("+SelectEvent.class.getCanonicalName()+" event){");
+			EvtProcessor.printEvtCall(out, selectEventAttribute, "onSelect", SelectEvent.class, "event", creator);
 			out.println("}");
 			out.println("};");
 		}
 		else
 		{
-			out.println(ClickHandler.class.getCanonicalName() + " " + handlerVarName + " = null;");
+			out.println(SelectHandler.class.getCanonicalName() + " " + handlerVarName + " = null;");
 		}
     }
-
-	@Override
-	public void instantiateWidget(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
-	{
-		String className = getWidgetClassName();
-		out.println("final "+className + " " + context.getWidget()+" = GWT.create("+className+".class);");
-	}
 }
