@@ -16,8 +16,6 @@
 					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="BannerAndNews">
 						<gwt:row>
 							<gwt:cell styleName="BannerArea" colSpan="3">
-								
-							Can not find the controller attribute for deviceAdaptive widget [org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner]. Device [largeDisplayMouse] 	at org.cruxframework.crux.core.declarativeui.crossdevice.CrossDevicesTemplateParser.getTemplateController(CrossDevicesTemplateParser.java:60) 	at org.cruxframework.crux.core.rebind.crossdevice.DeviceAdaptiveProxy	
 								<gwt:widget>
 									 <xdev:promoBanner id="banner" bannersHeight="300px" width="900px" transitionDuration="400" autoTransitionInterval="10000">
 									 	<xdev:banner largeImage="../img/banner-fast.jpg"  buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" text="${siteMessages.bannerFastText}" />
