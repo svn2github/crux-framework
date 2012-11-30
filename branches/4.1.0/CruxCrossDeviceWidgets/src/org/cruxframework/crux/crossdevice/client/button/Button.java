@@ -16,8 +16,6 @@
 package org.cruxframework.crux.crossdevice.client.button;
 
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.crossdevice.client.event.HasSelectHandlers;
 import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;

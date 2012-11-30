@@ -26,11 +26,14 @@ public class SlidingEvent extends GwtEvent<SlidingHandler>
 {
 	private static Type<SlidingHandler> TYPE = new Type<SlidingHandler>();
 
+	private boolean movementStarted;
+	
 	/**
 	 * 
 	 */
-	public SlidingEvent()
+	protected SlidingEvent(boolean movementStarted)
 	{
+		this.movementStarted = movementStarted;
 	}
 
 	/**
@@ -53,11 +56,16 @@ public class SlidingEvent extends GwtEvent<SlidingHandler>
 		return TYPE;
 	}
 
-	public static <T> void fire(HasSlidingHandlers source) 
+	public boolean isMovementStarted()
+	{
+		return movementStarted;
+	}
+	
+	public static <T> void fire(HasSlidingHandlers source, boolean movementStarted) 
 	{
 		if (TYPE != null) 
 		{
-			SlidingEvent event = new SlidingEvent();
+			SlidingEvent event = new SlidingEvent(movementStarted);
 			source.fireEvent(event);
 		}
 	}	

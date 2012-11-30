@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.LazyPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -166,6 +167,26 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 
 	/**
 	 * 
+	 * @param widget
+	 */
+	public void add(Widget widget)
+	{
+		SimplePanel itemWrapper = new SimplePanel();
+		itemWrapper.add(widget);
+		itemWrapper.setStyleName("touchSliderItem");
+		Style style = itemWrapper.getElement().getStyle();
+		style.setPosition(Position.ABSOLUTE);
+		style.setTop(0, Unit.PX);
+		style.setLeft(0, Unit.PX);
+		style.setWidth(100, Unit.PCT);
+		style.setHeight(100, Unit.PCT);
+		style.setOverflowX(Overflow.HIDDEN);
+		style.setOverflowY(Overflow.VISIBLE);
+		contentPanel.add(itemWrapper);
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
 	public boolean isCircularShowing()
@@ -217,8 +238,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	 */
 	public Widget getWidget(int index)
 	{
-		assert(contentProvider != null):"You must define a contentProvider first";// TODO message
-		return contentProvider.loadWidget(index);
+		return (contentProvider != null?contentProvider.loadWidget(index):contentPanel.getWidget(index));
 	}
 
 	/**
@@ -227,8 +247,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	 */
 	public int getWidgetCount()
 	{
-		assert(contentProvider != null):"You must define a contentProvider first";// TODO message
-		return contentProvider.size();
+		return (contentProvider != null?contentProvider.size():contentPanel.getWidgetCount());
 	}
 
 	/**
@@ -270,7 +289,11 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		if (currentTouchPosition != startTouchPosition)
 		{
 			final int slideBy = getSlideBy();
-			slide(slideBy);
+			slide(slideBy, false);
+		}
+		else
+		{
+			SlidingEvent.fire(this, false);
 		}
 		if (!didMove)
 		{
@@ -321,7 +344,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	{
 		didMove = false;
 		event.preventDefault();
-		SlidingEvent.fire(this);
+		SlidingEvent.fire(this, true);
 		startTouchPosition = event.getTouches().get(0).getClientX();
 		currentTouchPosition = startTouchPosition;
 		startTouchTime = new Date().getTime();
@@ -333,7 +356,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	@Override
 	public void onOrientationChangeOrResize()
 	{
-		if (contentProvider != null && contentProvider.size() > 0)
+		if (getWidgetCount() > 0)
 		{
 			boolean hasNextPanel = hasNextWidget();
 			boolean hasPreviousPanel = hasPreviousWidget();
@@ -400,7 +423,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		}
 		else if (hasNextWidget())
 		{
-			slide(-contentPanel.getElement().getOffsetWidth());
+			slide(-contentPanel.getElement().getOffsetWidth(), true);
 		}
 	}
 
@@ -412,7 +435,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 		}
 		else if (hasPreviousWidget())
 		{
-			slide(contentPanel.getElement().getOffsetWidth());
+			slide(contentPanel.getElement().getOffsetWidth(), true);
 		}
 	}
 
@@ -420,9 +443,13 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	 * 
 	 * @param slideBy
 	 */
-	private void slide(final int slideBy)
+	private void slide(final int slideBy, boolean fireSlidingStartEvent)
 	{
 		isSliding = true;
+		if (fireSlidingStartEvent)
+		{
+			SlidingEvent.fire(this, true);
+		}
 		Animation.translateX(getCurrentPanel(), slideBy, slideTransitionDuration, new Callback()
 		{
 			@Override
@@ -431,6 +458,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 				int nextIndex = getNextIndexAfterSlide(slideBy);
 				isSliding = false;
 				setCurrentWidget(nextIndex);
+				SlidingEvent.fire(TouchSlider.this, false);
 			}
 		});
 		if (hasPreviousWidget())
@@ -622,7 +650,7 @@ public class TouchSlider extends Composite implements HasSwapHandlers, HasSlidin
 	 */
 	private void setCurrentWidget(final int index) 
 	{
-		assert(index >=0 && index < contentProvider.size()):"Invalid index";//TODO message
+		assert(index >=0 && index < getWidgetCount()):"Invalid index";//TODO message
 		if (currentWidget != index)
 		{
 			this.currentWidget = index;
