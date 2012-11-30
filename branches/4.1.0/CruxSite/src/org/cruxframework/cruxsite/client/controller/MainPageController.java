@@ -25,7 +25,13 @@ public class MainPageController
 	@Expose
 	public void onLoad()
 	{
-		View.addToHistory("home");
+		String subsection = Window.Location.getHash();
+		if(StringUtils.isEmpty(subsection))
+		{
+			subsection = "home";
+		}
+		subsection = subsection.replace("#", "");
+		showView(subsection);			
 	}
 	
 	@Expose

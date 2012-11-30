@@ -99,7 +99,6 @@
 							<gwt:horizontalPanel id="contentMargins" width="900px">
 								<gwt:cell horizontalAlignment="center" verticalAlignment="top">
 									<crux:swapViewContainer id="viewContainer" height="100%" width="100%" >
-										<crux:view name="home" active="true"/>									
 									</crux:swapViewContainer>
 								</gwt:cell>
 							</gwt:horizontalPanel>
