@@ -4,6 +4,9 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>
 	
+    <!-- set-property name="user.agent" value="ie8" /-->
+    <set-property name="device.features" value="smallDisplayTouch"/>
+
 	<!-- To enable logging -->
 	<!-- 
 	<inherits name="com.google.gwt.logging.Logging"/>
