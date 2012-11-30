@@ -11,6 +11,7 @@ import org.cruxframework.crux.widgets.client.swapcontainer.SwapContainer;
 import org.cruxframework.cruxsite.client.SiteConstants;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 @Controller("mainPageController")
@@ -30,7 +31,14 @@ public class MainPageController
 		{
 			subsection = "home";
 		}
-		subsection = subsection.replace("#", "");
+		else
+		{
+			subsection = getViewName(subsection);
+			if(StringUtils.isEmpty(subsection))
+			{
+				subsection = "home";
+			}
+		}
 		showView(subsection);			
 	}
 	
@@ -85,7 +93,7 @@ public class MainPageController
 	@Expose
 	public void onHistoryChanged(ValueChangeEvent<String> event)
 	{
-		String viewId = event.getValue();
+		String viewId = getViewName(event.getValue());
 		if (!StringUtils.isEmpty(viewId))
 		{
 		    screen.viewContainer().showView(viewId);
@@ -107,6 +115,30 @@ public class MainPageController
 	    screen.viewContainer().showView(viewName);
 	    View.addToHistory(viewName);
     }
+	
+	private String getViewName(String hash)
+	{
+		if (StringUtils.isEmpty(hash))
+		{
+			return null;
+		}
+		String viewName = hash.replaceAll("[#!]", "");
+		if (viewName.indexOf('=') > 0 || viewName.indexOf('&') > 0)
+		{
+			for (String kvPair : viewName.split("&")) 
+			{
+				String[] kv = kvPair.split("=", 2);
+				if (kv.length > 1 && StringUtils.unsafeEquals(kv[0], "section")) 
+				{
+					return URL.decodeQueryString(kv[1]);
+				} 
+			}
+			return null;
+		}
+		
+		return viewName;
+	}
+	
 	
 	@BindRootView
 	public static interface MainScreen extends ViewWrapper
