@@ -13,14 +13,13 @@
 	<static-files> 
 	    <include path="**.nocache.*" expiration="1s"/> 
 	    <include path="**" expiration="30d"/> 
+		<exclude path="index.html" />
 	</static-files> 
     
-    <!-- 
     <static-error-handlers>
-        <handler file="default_error.html"/>
-        <handler file="over_quota.html" error-code="over_quota"/>
+        <handler file="defaultError.html"/>
+        <handler file="overQuota.html" error-code="over_quota"/>
     </static-error-handlers>
-     -->
      
      <sessions-enabled>false</sessions-enabled>
 </appengine-web-app>

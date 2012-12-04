@@ -217,4 +217,35 @@
 		 </java>	
 	</target>	
 
+	<!-- 
+	========================================================================================================
+		Generate Snapshot
+	========================================================================================================
+	-->
+	<target name="generateHTMLSnapshots">		
+		<java classname="org.cruxframework.crux.tools.crawling.CrawlingTool" fork="true">
+			<classpath>
+				<pathelement path="${build/htmlunit}" />
+				<path refid="build.classpath" />
+				<pathelement path="${target.classes.dir}" />
+				<pathelement path="${web.root}" />
+				<pathelement location="${src.dir}" />
+			</classpath>
+			<!--jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
+
+			<arg value="outputDir" />
+		     <arg value="${target.classes.dir}" />
+		     <arg value="applicationBaseURL" />
+		     <arg value="http://localhost:8888/" />
+		     <arg value="javascriptTime" />
+		     <arg value="30000" />
+		     <arg value="urls" />
+		     <arg value="build/urlsSnapshot.txt" />
+		     <arg value="stopOnErrors" />
+		     <arg value="false" />
+		 </java>	
+	</target>	
+
+	
 </project>

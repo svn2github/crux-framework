@@ -10,6 +10,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.swapcontainer.SwapContainer;
 import org.cruxframework.cruxsite.client.SiteConstants;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
@@ -55,39 +56,44 @@ public class MainPageController
 	}
 	
 	@Expose
-	public void onClickGoIndex()
+	public void onClickGoIndex(ClickEvent event)
 	{
 		showView("home");
 	}
 
 	@Expose
-	public void onClickMenuDownload()
+	public void onClickMenuDownload(ClickEvent event)
 	{
 		showView("download");
+		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuLearn()
+	public void onClickMenuLearn(ClickEvent event)
 	{
 		showView("learn");
+		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuCompare()
+	public void onClickMenuCompare(ClickEvent event)
 	{
 		showView("compare");
+		event.preventDefault();
 	}
 
 	@Expose
-	public void onClickMenuContribute()
+	public void onClickMenuContribute(ClickEvent event)
 	{
 		showView("contribute");
+		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuCommunity()
+	public void onClickMenuCommunity(ClickEvent event)
 	{
 		showView("community");
+		event.preventDefault();
 	}
 	
 	@Expose

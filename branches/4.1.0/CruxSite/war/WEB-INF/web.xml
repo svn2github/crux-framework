@@ -24,6 +24,20 @@
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
 	
+	<filter>
+		<display-name>CrawlingFilter</display-name>
+		<filter-name>CrawlingFilter</filter-name>
+		<filter-class>org.cruxframework.crux.core.server.crawling.CrawlingFilter</filter-class>
+<!-- 		<init-param> -->
+<!--         	<param-name>defaultSnaphot</param-name> -->
+<!--         	<param-value>section=home</param-value> -->
+<!--     	</init-param> -->
+    </filter>
+	<filter-mapping>
+		<filter-name>CrawlingFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+
 	<!--antReplacementBlockBegin-->
 	<!--
 	===========================================================================
