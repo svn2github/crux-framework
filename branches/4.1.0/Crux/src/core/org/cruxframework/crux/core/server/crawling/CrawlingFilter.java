@@ -36,7 +36,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.StreamUtils;
+
 
 /**
  * Filter to serve search engines, sending static snapshots in the place of DHTML based pages.
@@ -60,6 +62,11 @@ public final class CrawlingFilter implements Filter
 	{
 		try
 		{
+			if (!Environment.isProduction())
+			{
+				chain.doFilter(req, res);
+				return;
+			}
 			HttpServletRequest request = (HttpServletRequest) req;
 			HttpServletResponse response;
 			String ae = request.getHeader("accept-encoding");
