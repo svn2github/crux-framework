@@ -567,7 +567,7 @@ p, .p{
 	margin-top: 10px;
 }
 
-.BgBlack
+.site-Tutorial-large .contentPanel, .site-Tutorial-large .time, .site-Tutorial-large .learnPanel 
 {
 	background:#333;
  	background:rgba(0,0,0,0.2);
@@ -578,23 +578,23 @@ p, .p{
  	text-shadow:0 1px 1px rgba(0,0,0,0.5);
  	margin-bottom:7px;
 }
-.BgBlack span
-{
-	font-size:13px;
-}
-.BgBlack img
-{
-	margin-right:10px;
-}
-.BgBlack h1
-{
-	margin-top:-4px;
-}
-.MarginRight
+.site-Tutorial-large .contentPanel
 {
 	margin-right:6px;
 }
-.SilverButton
+.site-Tutorial-large .time, .site-Tutorial-large .learnPanel
+{
+	font-size:13px;
+}
+.site-Tutorial-large .tutorialImage
+{
+	margin-right:10px;
+}
+.site-Tutorial-large .tutorialTitle
+{
+	margin-top:-4px;
+}
+.site-Tutorial-large .openTutorialButton
 {
 	background:#eee;
 	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);

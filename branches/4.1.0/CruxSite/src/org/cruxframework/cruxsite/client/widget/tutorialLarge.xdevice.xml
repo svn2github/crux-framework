@@ -1,0 +1,64 @@
+<x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
+           xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+           useController="tutorialLargeController">
+	<gwt:flexTable id="flexTlable" width="100%">
+		<gwt:row>
+			<gwt:cell rowSpan="3" width="80%"  verticalAlignment="top">
+				<gwt:widget>
+					<gwt:simplePanel id="simplePanel" styleName="contentPanel" >
+						<gwt:flexTable id="Table" >
+							<gwt:row>
+								<gwt:cell>
+									<gwt:widget>
+										<gwt:image id="tutorialImage" styleName="tutorialImage" />
+									</gwt:widget>
+								</gwt:cell>
+								<gwt:cell verticalAlignment="top">
+									<gwt:widget>
+										<gwt:flowPanel id="contentPanel">
+											<gwt:HTML id="title" styleName="tutorialTitle"></gwt:HTML>
+											<gwt:HTML id="subtitle" styleName="tutorialSubtitle"></gwt:HTML>
+										</gwt:flowPanel>
+									</gwt:widget>
+								</gwt:cell>
+							</gwt:row>
+<!-- 							<gwt:row> -->
+<!-- 								<gwt:cell colSpan="2"> -->
+<!-- 									<gwt:widget> -->
+<!-- 										<gwt:simplePanel id="controlsPanelWrapper" styleName="controlsPanel" style="margin-bottom:0;"> -->
+<!-- 											<gwt:horizontalPanel id="controlsPanel" width="100%" style="padding:4px;"></gwt:horizontalPanel>										 -->
+<!-- 										</gwt:simplePanel>									 -->
+<!-- 									</gwt:widget> -->
+<!-- 								</gwt:cell> -->
+<!-- 							</gwt:row> -->
+						</gwt:flexTable>
+					</gwt:simplePanel>
+				</gwt:widget>
+			</gwt:cell>
+			<gwt:cell>
+				<gwt:widget>
+					<gwt:label id="time" styleName="time"/>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+		<gwt:row>
+			<gwt:cell>
+				<gwt:widget>
+					<gwt:flowPanel id="learnPanel" styleName="learnPanel">
+						<gwt:HTML id="whatTitle" ><b>What will be learned:</b></gwt:HTML>
+						<gwt:label id="separator" text=" "/>
+						<gwt:label id="learnDescription" />
+					</gwt:flowPanel>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+		<gwt:row>
+			<gwt:cell>
+				<gwt:widget>
+					<xdev:button id="openTutorial" onSelect="tutorialLargeController.openTutorialClick" styleName="openTutorialButton" text="Go to Tutorial"/>
+				</gwt:widget>
+			</gwt:cell>
+		</gwt:row>
+	</gwt:flexTable>
+</x:xdevice>

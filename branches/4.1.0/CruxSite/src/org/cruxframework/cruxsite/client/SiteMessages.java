@@ -89,7 +89,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Social")
 	String bannerSocialTitle();
 	
-	@DefaultMessage("How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Chrome Web Store and many others.")
+	@DefaultMessage("How about running your applications on social platforms and web portals? Crux is ready for Facebook, iGoogle, Orkut, Google Plus and many others.")
 	String bannerSocialText();
 	
 	@DefaultMessage("CAFEBABE")
@@ -128,7 +128,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Crux Framework 4")
 	String downloadPageVersionName();
 	
-	@DefaultMessage("Version 4.0.1, All platforms - ZIP File, 12.5MB")
+	@DefaultMessage("Version 4.1.0, All platforms - ZIP File, 12.5MB")
 	String downloadPageVersionDetails();	
 	
 	@DefaultMessage("Main features in this version:")
