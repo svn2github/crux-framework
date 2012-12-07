@@ -36,6 +36,7 @@ import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.w3c.dom.Document;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -174,7 +175,8 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
     {
 	    return new String[]{
 	    		ScreenFactory.class.getCanonicalName(),
-	    		Screen.class.getCanonicalName()
+	    		Screen.class.getCanonicalName(), 
+	    		GWT.class.getCanonicalName()
 	    };
     }
 
