@@ -1,0 +1,114 @@
+<x:xdevice xmlns="http://www.w3.org/1999/xhtml"
+		   xmlns:x="http://www.cruxframework.org/xdevice"
+           xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+		   xmlns:crux="http://www.cruxframework.org/crux/widgets"
+		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+           useController="siteFaceLargeController">
+	<div id="canvas" style="height:100%">
+		<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
+			<gwt:row>
+				<gwt:cell styleName="Header" >
+					<gwt:widget>
+						<gwt:grid id="headerAreas" styleName="HeaderAreas" cellSpacing="0" cellPadding="0">
+							<gwt:row>
+								<gwt:cell styleName="HeaderMenuLeft">
+									<gwt:html>.</gwt:html>
+								</gwt:cell>
+								<gwt:cell styleName="HeaderMenu" verticalAlignment="bottom">
+									<gwt:widget>
+										<gwt:grid id="headerGrid" width="100%" styleName="HeaderMenuGrid">
+											<gwt:row>
+												<gwt:cell height="100" verticalAlignment="top" horizontalAlignment="right">
+													<gwt:widget>
+														<gwt:horizontalPanel id="shortcutsPanel" styleName="ShortcutsPanel">
+															<gwt:image id="iconBlog" url="img/icon-blog.gif" onClick="siteFaceLargeController.onClickGoBlog"/>
+															<gwt:label id="labelBlog" text="${siteMessages.blogShortcut}" styleName="MenuShortcut" onClick="siteFaceLargeController.onClickGoBlog"/>
+															<gwt:label id="iconsSeparator2" text="" width="20px"/>
+															<gwt:image id="iconProject" url="img/icon-home.gif" onClick="siteFaceLargeController.onClickGoProject" />
+															<gwt:label id="labelProject" text="${siteMessages.projectShortcut}" styleName="MenuShortcut" onClick="siteFaceLargeController.onClickGoProject"/>
+														</gwt:horizontalPanel>
+													</gwt:widget>
+												</gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell height="50" verticalAlignment="bottom" styleName="HeaderMenuLabel">
+													<gwt:widget>
+														<gwt:label id="sloganLabel" text="${siteMessages.headerLabel}" style="padding-bottom:10px" horizontalAlignment="right" width="100%"/>
+													</gwt:widget>
+												</gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell height="50px" verticalAlignment="middle" styleName="HeaderMenuItems" horizontalAlignment="center">
+													<gwt:widget>
+														<gwt:horizontalPanel id="menuBar" verticalAlignment="middle">
+															<gwt:simplePanel id="logoClickableAreaBottom" width="165px" height="50px" />
+														</gwt:horizontalPanel>
+													</gwt:widget>
+												</gwt:cell>
+											</gwt:row>
+										</gwt:grid>
+									</gwt:widget>
+								</gwt:cell>
+								<gwt:cell styleName="HeaderMenuRight">
+									<gwt:html>.</gwt:html>
+								</gwt:cell>
+							</gwt:row>
+						</gwt:grid>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+			<gwt:row>
+				<gwt:cell styleName="Content" horizontalAlignment="center" verticalAlignment="top">
+					<gwt:widget>
+						<gwt:horizontalPanel id="contentMargins" width="900px">
+							<gwt:cell horizontalAlignment="center" verticalAlignment="top">
+								<crux:swapViewContainer id="viewContainer" height="100%" width="100%" >
+								</crux:swapViewContainer>
+							</gwt:cell>
+						</gwt:horizontalPanel>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+			<gwt:row>
+				<gwt:cell styleName="Footer" >
+					<gwt:widget>
+							<gwt:grid id="footerItems" styleName="FooterContent" cellPadding="0" cellSpacing="0">
+								<gwt:row>
+									<gwt:cell styleName="CruxLabelFooter" verticalAlignment="middle">
+										<gwt:text>Cruxframework.org</gwt:text>
+									</gwt:cell>
+									<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="middle">
+										<gwt:text>Powered by:</gwt:text>
+									</gwt:cell>
+								</gwt:row>
+								<gwt:row>
+									<gwt:cell styleName="CruxLabelFooter3">
+										<gwt:widget>
+											<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks" width="250" horizontalAlignment="right">
+												<gwt:anchor id="about" href="#" text="About" />
+												<gwt:label id="separator1" styleName="LinkSeparator"/>
+												<gwt:anchor id="services" href="#" text="Services" />
+												<gwt:label id="separator2" styleName="LinkSeparator"/>
+												<gwt:anchor id="contact" href="#" text="Contact" />
+												<gwt:label id="separator3" styleName="LinkSeparator"/>
+												<gwt:anchor id="contribute" href="#" text="Contribute" />
+											</gwt:horizontalPanel>
+										</gwt:widget>
+									</gwt:cell>
+									<gwt:cell styleName="CruxLabelFooter4">
+										<gwt:widget>
+											<gwt:horizontalPanel id="rowImgsFooter" width="156" style="width:156px;">
+												<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
+												<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
+												<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
+											</gwt:horizontalPanel>
+										</gwt:widget>
+									</gwt:cell>
+								</gwt:row>
+							</gwt:grid>
+					</gwt:widget>
+				</gwt:cell>
+			</gwt:row>
+		</gwt:grid>
+	</div>
+</x:xdevice>

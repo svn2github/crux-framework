@@ -1,0 +1,82 @@
+html,body{
+	overflow:hidden;
+}
+body{
+	margin:0;
+}
+
+.header{
+	width:auto;
+	height:45px;
+	border-top:2px solid #779bd4;
+	border-bottom:2px solid #213c66;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
+	background:-moz-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
+	color:#fff;
+	-webkit-transition:all 0.2s ease-in-out;
+	-moz-transition:all 0.2s ease-in-out;
+}
+.header .buttonMenu{
+	float:left;
+	width:60px;
+	height:38px;
+	border:1px solid #1f3961;
+	border-top:1px solid #152640;
+	margin-top:2px;
+	margin-left:5px;
+	border-radius:6px;
+	box-shadow:0 2px 0 #638dce inset, 0 1px 0 #3b6cb9;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
+	background:-moz-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
+	text-align:center;
+	padding:0;
+}
+.header .buttonMenu div{
+	width:auto;
+	margin:4px 14px 0px 14px;
+	background:white;
+	box-shadow:0 1px 2px rgba(0,0,0,0.9);
+	border-radius:4px;
+	height:3px;
+}
+.header .buttonMenu div:first-child{
+	margin-top:10px;
+}
+.header .buttonMenu:active{
+	box-shadow:0 2px 3px rgba(0,0,0,0.5) inset, 0 1px 0 #3b6cb9;
+	background:-webkit-linear-gradient(90deg, #618bcd,#2b4f87);
+	background:-moz-linear-gradient(90deg, #618bcd,#2b4f87);
+}
+.cruxLabel{
+	width:100px;
+	margin-top:10px;
+	font-weight:bolder;
+	font-size:25px;
+	margin:0 auto;
+	margin-top:8px;
+	padding-left:30px;
+	text-shadow:0 1px 2px rgba(0,0,0,0.7);
+}
+.cruxLogo{
+	float:right;
+	height:45px;
+	margin-top:-40px;
+}
+.header.open{
+	-webkit-transform:translateX(250px);
+	-moz-transform:translateX(250px);
+}
+.menu{
+	width:320px;
+	height:480px;
+	background:#333;
+	-webkit-transform:translateX(-320px);
+	-moz-transform:translateX(-320px);
+	-webkit-transition:all 0.2s ease-in-out;
+	-moz-transition:all 0.2s ease-in-out;
+	position:absolute;
+}
+.menu.open{
+	-webkit-transform:translateX(-70px);
+	-moz-transform:translateX(-70px);
+}

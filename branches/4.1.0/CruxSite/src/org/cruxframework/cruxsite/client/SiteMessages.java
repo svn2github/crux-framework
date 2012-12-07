@@ -43,42 +43,6 @@ public interface SiteMessages extends Messages
 	
 	@DefaultMessage("perfomance, maintainability, usability. simpler than ever.")
 	String headerLabel();
-	
-	@DefaultMessage("Demo")
-	String demoMenuItem();
-	
-	@DefaultMessage("Click to see a live example of powers of Crux.")
-	String demoMenuItemTooltip();
-	
-	@DefaultMessage("Download")
-	String downloadMenuItem();
-	
-	@DefaultMessage("Click to get the newest version of Crux SDK.")
-	String downloadMenuItemTooltip();
-	
-	@DefaultMessage("Learn")
-	String learnMenuItem();
-	
-	@DefaultMessage("Here you find tutorials, videos and other technical documentation about Crux.")
-	String learnMenuItemTooltip();
-
-	@DefaultMessage("Compare")
-	String whyCruxMenuItem();
-	
-	@DefaultMessage("Compare Crux with other frameworks and discover why you should use it.")
-	String whyCruxMenuItemTooltip();
-	
-	@DefaultMessage("Contribute")
-	String contributeMenuItem();
-	
-	@DefaultMessage("Discover how you can join the Crux team and colaborate with this exciting project.")
-	String contributeMenuItemTooltip();
-	
-	@DefaultMessage("Add-Ons")
-	String addOnsMenuItem();
-	
-	@DefaultMessage("Enhance your Crux application with aditional 3rd party features. (coming soon)")
-	String addOnsMenuItemTooltip();
 
 	@DefaultMessage("Fast")
 	String bannerFastTitle();

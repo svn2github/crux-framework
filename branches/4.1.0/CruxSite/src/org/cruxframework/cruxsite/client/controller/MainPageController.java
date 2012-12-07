@@ -7,10 +7,10 @@ import org.cruxframework.crux.core.client.screen.views.BindRootView;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.widgets.client.swapcontainer.SwapContainer;
-import org.cruxframework.cruxsite.client.SiteConstants;
+import org.cruxframework.cruxsite.client.device.CssLoader;
+import org.cruxframework.cruxsite.client.device.MobileDisplayHandler;
+import org.cruxframework.cruxsite.client.widget.SiteFace;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
@@ -19,14 +19,14 @@ import com.google.gwt.user.client.Window;
 public class MainPageController
 {
 	@Inject
-	private SiteConstants constants;
-	
-	@Inject
 	private MainScreen screen;
 
 	@Expose
 	public void onLoad()
 	{
+		String appVersion = "";
+		MobileDisplayHandler.configureMetatags(appVersion);
+		CssLoader.loadCssForDevice(appVersion);
 		String subsection = Window.Location.getHash();
 		if(StringUtils.isEmpty(subsection))
 		{
@@ -44,56 +44,39 @@ public class MainPageController
 	}
 	
 	@Expose
-	public void onClickGoBlog()
-	{
-		Window.open(constants.blogUrl(), "blog", null);
-	}
-	
-	@Expose
-	public void onClickGoProject()
-	{
-		Window.open(constants.projectUrl(), "project", null);
-	}
-	
-	@Expose
-	public void onClickGoIndex(ClickEvent event)
+	public void onClickGoIndex()
 	{
 		showView("home");
 	}
 
 	@Expose
-	public void onClickMenuDownload(ClickEvent event)
+	public void onClickMenuDownload()
 	{
 		showView("download");
-		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuLearn(ClickEvent event)
+	public void onClickMenuLearn()
 	{
 		showView("learn");
-		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuCompare(ClickEvent event)
+	public void onClickMenuCompare()
 	{
 		showView("compare");
-		event.preventDefault();
 	}
 
 	@Expose
-	public void onClickMenuContribute(ClickEvent event)
+	public void onClickMenuContribute()
 	{
 		showView("contribute");
-		event.preventDefault();
 	}
 	
 	@Expose
-	public void onClickMenuCommunity(ClickEvent event)
+	public void onClickMenuCommunity()
 	{
 		showView("community");
-		event.preventDefault();
 	}
 	
 	@Expose
@@ -102,15 +85,10 @@ public class MainPageController
 		String viewId = getViewName(event.getValue());
 		if (!StringUtils.isEmpty(viewId))
 		{
-		    screen.viewContainer().showView(viewId);
+		    screen.site().showView(viewId, viewId);
 		}
 	}
 	
-	public void setConstants(SiteConstants constants)
-    {
-    	this.constants = constants;
-    }
-
 	public void setScreen(MainScreen screen)
     {
     	this.screen = screen;
@@ -118,7 +96,7 @@ public class MainPageController
 
 	private void showView(String viewName)
     {
-	    screen.viewContainer().showView(viewName);
+	    screen.site().showView(viewName, viewName);
 	    View.addToHistory(viewName);
     }
 	
@@ -149,6 +127,6 @@ public class MainPageController
 	@BindRootView
 	public static interface MainScreen extends ViewWrapper
 	{
-		SwapContainer viewContainer();
+		SiteFace site();
 	}
 }

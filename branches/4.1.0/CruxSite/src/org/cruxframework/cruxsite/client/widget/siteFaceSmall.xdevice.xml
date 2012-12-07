@@ -1,0 +1,19 @@
+<x:xdevice xmlns="http://www.w3.org/1999/xhtml"
+		   xmlns:x="http://www.cruxframework.org/xdevice"
+           xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+		   xmlns:crux="http://www.cruxframework.org/crux/widgets"
+		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+           useController="siteFaceSmallController">
+	<gwt:flowPanel id="canvas" height="100%">
+		<gwt:flowPanel id="menu" styleName="menu"></gwt:flowPanel>
+		<gwt:flowPanel id="header" styleName="header">
+			<xdev:button id="menuButton" styleName="buttonMenu" >
+	        	<div></div>
+	            <div></div>
+	            <div></div>
+	        </xdev:button>
+	        <gwt:label id="cruxLabel" text="CRUX" styleName="cruxLabel"/>
+	        <gwt:image id="cruxLogo" url="img/cruxdude.png" styleName="cruxLogo"/>
+	    </gwt:flowPanel>
+	</gwt:flowPanel>
+</x:xdevice>
