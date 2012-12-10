@@ -68,7 +68,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 			final View previous = activeView;
 			final View next = view;
 			super.renderView(view);
-			if (previous == null)
+			if (previous == null || direction == null)
 			{
 				swapPanel.setCurrentWidget(active);
 				swap.clear();
