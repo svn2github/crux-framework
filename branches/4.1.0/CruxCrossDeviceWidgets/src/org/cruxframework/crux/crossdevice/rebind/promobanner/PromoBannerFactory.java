@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.rebind.promobanner;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
@@ -29,8 +30,8 @@ import org.cruxframework.crux.crossdevice.client.promobanner.PromoBanner;
  */
 @DeclarativeFactory(id="promoBanner", library="crossDevice", targetWidget=PromoBanner.class)
 @TagAttributes({
-	@TagAttribute(value="largeBannersHeight", required=true),
-	@TagAttribute(value="smallBannersHeight", required=true),
+	@TagAttribute(value="largeBannersHeight", required=true, supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch}),
+	@TagAttribute(value="smallBannersHeight", required=true, supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch}),
 	@TagAttribute(value="transitionDuration", type=Integer.class, defaultValue="150"),
 	@TagAttribute(value="autoTransitionInterval", type=Integer.class, defaultValue="5000")
 
