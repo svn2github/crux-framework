@@ -24,7 +24,7 @@ public class MainPageController
 	@Expose
 	public void onLoad()
 	{
-		String appVersion = "";
+		String appVersion = "";//TODO pegar a versao
 		MobileDisplayHandler.configureMetatags(appVersion);
 		CssLoader.loadCssForDevice(appVersion);
 		String subsection = Window.Location.getHash();
@@ -40,7 +40,7 @@ public class MainPageController
 				subsection = "home";
 			}
 		}
-		showView(subsection);			
+		showView(subsection);
 	}
 	
 	@Expose
@@ -85,7 +85,7 @@ public class MainPageController
 		String viewId = getViewName(event.getValue());
 		if (!StringUtils.isEmpty(viewId))
 		{
-		    screen.site().showView(viewId, viewId);
+		    screen.site().showView(viewId, viewId, true);
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class MainPageController
 
 	private void showView(String viewName)
     {
-	    screen.site().showView(viewName, viewName);
+	    screen.site().showView(viewName, viewName, false);
 	    View.addToHistory(viewName);
     }
 	
@@ -122,8 +122,7 @@ public class MainPageController
 		
 		return viewName;
 	}
-	
-	
+			
 	@BindRootView
 	public static interface MainScreen extends ViewWrapper
 	{

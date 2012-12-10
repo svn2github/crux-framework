@@ -144,26 +144,14 @@ p, .p{
 {
 }
 
-.NewsArea
+
+.newsBoard .item
 {
 	background: url(../img/content-box-bg.png) top no-repeat;
 	background-size: 100% 100%; 
 	padding-bottom: 40px;
-	padding-right: 2px;
-}
-
-.FeedsArea
-{
-	background: url(../img/content-box-bg.png) top no-repeat;
-	background-size: 100% 100%;
-	padding-bottom: 40px;
-}
-
-.NewsSeparator
-{
-	width: 20px;
-	font-family: monospace;
-	color: #CCCCCC;
+	margin-left: 10px;
+    margin-right: 10px;
 }
 
 .ContentAreas

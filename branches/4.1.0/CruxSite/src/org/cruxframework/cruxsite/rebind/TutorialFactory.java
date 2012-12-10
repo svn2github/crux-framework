@@ -1,5 +1,6 @@
 package org.cruxframework.cruxsite.rebind;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -19,8 +20,8 @@ import org.cruxframework.cruxsite.client.widget.Tutorial;
 @TagAttributes({
 	@TagAttribute(value="learnDescription", supportsI18N=true),
 	@TagAttribute("estimatedTime"),
-	@TagAttribute("largeImage"),
-	@TagAttribute("smallImage"),
+	@TagAttribute(value="largeImage", supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch}),
+	@TagAttribute(value="smallImage", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch}),
 	@TagAttribute(value="tutorialUrl", required=true),
 	@TagAttribute(value="tutorialTitle", supportsI18N=true),
 	@TagAttribute(value="tutorialSubtitle", supportsI18N=true)

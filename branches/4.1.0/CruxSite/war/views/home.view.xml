@@ -37,21 +37,30 @@
 							</gwt:cell>
 						</gwt:row>
 						<gwt:row>
-							<gwt:cell styleName="NewsArea">
+							<gwt:cell>
 								<gwt:widget>
-									<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
+									<xdev:storyboard id="newsBoard" largeDeviceItemWidth="430px" largeDeviceItemHeight="220px" 
+													width="100%" styleName="newsBoard" smallDeviceItemHeight="300px">
+										<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/>
+										<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" width="100%"/>
+									</xdev:storyboard>
 								</gwt:widget>
 							</gwt:cell>
+<!-- 							<gwt:cell styleName="NewsArea"> -->
+<!-- 								<gwt:widget> -->
+<!-- 									<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" width="100%"/> -->
+<!-- 								</gwt:widget> -->
+<!-- 							</gwt:cell> -->
 							
-							<gwt:cell styleName="NewsSeparator">
-								<gwt:html>.</gwt:html>
-							</gwt:cell>
+<!-- 							<gwt:cell styleName="NewsSeparator"> -->
+<!-- 								<gwt:html>.</gwt:html> -->
+<!-- 							</gwt:cell> -->
 							
-							<gwt:cell styleName="FeedsArea">
-								<gwt:widget>
-									<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" width="100%"/>
-								</gwt:widget>
-							</gwt:cell>
+<!-- 							<gwt:cell styleName="FeedsArea"> -->
+<!-- 								<gwt:widget> -->
+<!-- 									<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" width="100%"/> -->
+<!-- 								</gwt:widget> -->
+<!-- 							</gwt:cell> -->
 						</gwt:row>
 					</gwt:flexTable>
 				</gwt:widget>														

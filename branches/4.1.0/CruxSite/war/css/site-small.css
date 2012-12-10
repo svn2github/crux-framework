@@ -5,18 +5,16 @@ body{
 	margin:0;
 }
 
-.header{
+.site-SiteFace .header{
 	width:auto;
 	height:45px;
 	border-top:2px solid #779bd4;
 	border-bottom:2px solid #213c66;
 	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
-	background:-moz-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
 	color:#fff;
 	-webkit-transition:all 0.2s ease-in-out;
-	-moz-transition:all 0.2s ease-in-out;
 }
-.header .buttonMenu{
+.site-SiteFace .header .buttonMenu{
 	float:left;
 	width:60px;
 	height:38px;
@@ -27,11 +25,10 @@ body{
 	border-radius:6px;
 	box-shadow:0 2px 0 #638dce inset, 0 1px 0 #3b6cb9;
 	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
-	background:-moz-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
 	text-align:center;
 	padding:0;
 }
-.header .buttonMenu div{
+.site-SiteFace .header .buttonMenu div{
 	width:auto;
 	margin:4px 14px 0px 14px;
 	background:white;
@@ -39,15 +36,14 @@ body{
 	border-radius:4px;
 	height:3px;
 }
-.header .buttonMenu div:first-child{
+.site-SiteFace .header .buttonMenu div:first-child{
 	margin-top:10px;
 }
-.header .buttonMenu:active{
+.site-SiteFace .header .buttonMenu:active{
 	box-shadow:0 2px 3px rgba(0,0,0,0.5) inset, 0 1px 0 #3b6cb9;
 	background:-webkit-linear-gradient(90deg, #618bcd,#2b4f87);
-	background:-moz-linear-gradient(90deg, #618bcd,#2b4f87);
 }
-.cruxLabel{
+.site-SiteFace .cruxLabel{
 	width:100px;
 	margin-top:10px;
 	font-weight:bolder;
@@ -57,26 +53,48 @@ body{
 	padding-left:30px;
 	text-shadow:0 1px 2px rgba(0,0,0,0.7);
 }
-.cruxLogo{
+.site-SiteFace .cruxLogo{
 	float:right;
 	height:45px;
 	margin-top:-40px;
 }
-.header.open{
+.site-SiteFace .header-opened{
 	-webkit-transform:translateX(250px);
-	-moz-transform:translateX(250px);
 }
-.menu{
+.site-SiteFace .menu{
 	width:320px;
 	height:480px;
 	background:#333;
 	-webkit-transform:translateX(-320px);
-	-moz-transform:translateX(-320px);
 	-webkit-transition:all 0.2s ease-in-out;
-	-moz-transition:all 0.2s ease-in-out;
 	position:absolute;
+	z-Index: 100;
 }
-.menu.open{
+.site-SiteFace .menu .MenuItem{
+	color: #FFFFFF;
+	font-family: Helvetica, Sans-serif;
+	font-size: 18px;
+	text-decoration: none;
+	cursor: pointer;
+	text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+	padding-left: 75px;
+	display: block;
+	width: 245px;
+}
+.site-SiteFace .menu-opened{
 	-webkit-transform:translateX(-70px);
-	-moz-transform:translateX(-70px);
+}
+.site-SiteFace .view{
+	-webkit-transition:all 0.2s ease-in-out;
+}
+.site-SiteFace .view-opened{
+	-webkit-transform:translateX(250px);
+}
+.ContentLeft, .ContentRight{
+	font-family: monospace;
+	color: #CCCCCC;
+	width: 1px;
+}
+.ContentCenter{
+	width: 318px;
 }

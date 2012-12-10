@@ -96,6 +96,12 @@ public class SiteFaceLargeController extends DeviceAdaptiveController implements
 		viewContainer.showView(viewName, viewId);
     }
 
+	@Override
+    public void showView(String viewName, String viewId, boolean animated)
+    {
+		showView(viewName, viewId); // no animation for large devices
+    }
+
 	public void setConstants(SiteConstants constants)
     {
     	this.constants = constants;

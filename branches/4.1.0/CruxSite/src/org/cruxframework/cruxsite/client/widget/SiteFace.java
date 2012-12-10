@@ -28,10 +28,11 @@ import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 @Templates({
 	@Template(name="siteFaceLarge", device=Device.all),
 	@Template(name="siteFaceSmall", device=Device.smallDisplayArrows),
-	@Template(name="siteFaceSmall", device=Device.smallDisplayTouch),
+	@Template(name="siteFaceSmall", device=Device.smallDisplayTouch)
 })
 public interface SiteFace extends DeviceAdaptive
 {
 	void showView(String viewName, String viewId);
+	void showView(String viewName, String viewId, boolean animated);
 	void addMenuEntry(String label, String crwalerUrl, String tooltip, SelectHandler selectHandler);
 }

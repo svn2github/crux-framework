@@ -35,7 +35,7 @@ public class SiteFaceFactory extends WidgetCreator<WidgetCreatorContext>
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", tagName="menuEntry")
 	@TagAttributesDeclaration({
 		@TagAttributeDeclaration(value="label", required=true, supportsI18N=true),
-		@TagAttributeDeclaration(value="crwalerUrl", required=true),
+		@TagAttributeDeclaration(value="url", required=true),
 		@TagAttributeDeclaration(value="tooltip", supportsI18N=true)
 	})
 	@TagEventsDeclaration({
@@ -47,12 +47,12 @@ public class SiteFaceFactory extends WidgetCreator<WidgetCreatorContext>
 		public void processChildren(SourcePrinter out, WidgetCreatorContext context) throws CruxGeneratorException
 		{
 			String label = context.readChildProperty("label");
-			String crwalerUrl = context.readChildProperty("crwalerUrl");
+			String url = context.readChildProperty("url");
 			String tooltip = context.readChildProperty("tooltip");
 			String onSelect = context.readChildProperty("onSelect");
 
 			out.print(context.getWidget() + ".addMenuEntry(" + getWidgetCreator().getDeclaredMessage(label)
-					  + ", " + EscapeUtils.quote(crwalerUrl)
+					  + ", " + EscapeUtils.quote(url)
 					  + ", " + getWidgetCreator().getDeclaredMessage(tooltip)
 					  + ", ");
 			processEvent(out, onSelect, getWidgetCreator());			

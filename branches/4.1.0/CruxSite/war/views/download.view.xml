@@ -5,7 +5,7 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
-	title="${siteMessages.downloadPageTitle}">
+	title="Crux Framework - Download">
 	<gwt:flexTable id="insideContentDown">
 		<gwt:row>
 			<gwt:cell>

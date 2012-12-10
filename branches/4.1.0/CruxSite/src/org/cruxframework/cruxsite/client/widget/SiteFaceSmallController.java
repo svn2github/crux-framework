@@ -17,20 +17,19 @@ package org.cruxframework.cruxsite.client.widget;
 
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
-import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StyleUtils;
+import org.cruxframework.crux.crossdevice.client.button.Button;
 import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -42,46 +41,65 @@ public class SiteFaceSmallController extends DeviceAdaptiveController implements
 	private FlowPanel menu;
 	private HorizontalSwapContainer viewContainer;
 	private int currentView = -1;
+	private FlowPanel header;
 	private static FastList<String> availableViews;
+	private boolean menuOpened = false;
+	
+	@Expose
+	public void openOrCloseMenu()
+	{
+		menuOpened = !menuOpened;
+		if (menuOpened)
+		{
+			StyleUtils.addStyleDependentName(header.getElement(), "opened");
+			StyleUtils.addStyleDependentName(menu.getElement(), "opened");
+			StyleUtils.addStyleDependentName(viewContainer.getElement(), "opened");
+		}
+		else
+		{
+			StyleUtils.removeStyleDependentName(header.getElement(), "opened");
+			StyleUtils.removeStyleDependentName(menu.getElement(), "opened");
+			StyleUtils.removeStyleDependentName(viewContainer.getElement(), "opened");
+		}
+	}
 	
 	@Override
-	public void addMenuEntry(String label, String crwalerUrl, String tooltip, final SelectHandler selectHandler)
+	public void addMenuEntry(String label, final String url, String tooltip, final SelectHandler selectHandler)
 	{
-		if (menu.getWidgetCount() > 1)
-		{
-			Label separator = new Label();
-			separator.setStyleName("MenuSeparator");
-			menu.add(separator);
-		}
-		
-		Anchor menuItem = new Anchor();
+		Button menuItem = new Button();
+		menuItem.setPreventDefaultTouchEvents(true);
 		menuItem.setText(label);
 		menuItem.setStyleName("MenuItem");
-		menuItem.setHref(crwalerUrl);
-		if (!StringUtils.isEmpty(tooltip))
+		menuItem.addSelectHandler(new SelectHandler()
 		{
-			menuItem.setTitle(tooltip);
-		}
-		if (selectHandler != null)
-		{
-			menuItem.addClickHandler(new ClickHandler()
+			@Override
+			public void onSelect(SelectEvent event)
 			{
-				@Override
-				public void onClick(ClickEvent event)
+				if (selectHandler != null)
 				{
-					selectHandler.onSelect(new SelectEvent());
-					event.preventDefault();
+					selectHandler.onSelect(event);
+					openOrCloseMenu();
 				}
-			});
-		}
+				else
+				{
+					Window.open(url, "_blank", null);
+				}
+			}
+		});
 		menu.add(menuItem);
 	}
 
 	@Override
-    public void showView(String viewName, final String viewId)
+	public void showView(String viewName, final String viewId)
+	{
+		showView(viewName, viewId, false);
+	}
+	
+	@Override
+    public void showView(String viewName, final String viewId, boolean animated)
     {
 		final int viewOrder = getViewOrder(viewId);
-		final Direction direction = (currentView < viewOrder)?Direction.FORWARD:Direction.BACKWARDS; 
+		final Direction direction = (animated?((currentView < viewOrder)?Direction.FORWARD:Direction.BACKWARDS):null); 
 		if (viewContainer.getView(viewId) != null)
 		{
 			viewContainer.showView(viewId, direction);
@@ -134,6 +152,7 @@ public class SiteFaceSmallController extends DeviceAdaptiveController implements
 	{
 		menu = getChildWidget("menu");
 		viewContainer = getChildWidget("viewContainer");
+		header = getChildWidget("header");
 	}
 
 	@Override
