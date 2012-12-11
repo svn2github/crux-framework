@@ -15,9 +15,11 @@
  */
 package org.cruxframework.cruxsite.client.widget;
 
+import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.cruxsite.client.feed.Entry;
 import org.cruxframework.cruxsite.client.feed.Feed;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,6 +27,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -36,40 +39,229 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class RssPanel extends Composite
 {
-	private VerticalPanel rssPanel;
-	private HTML title;
-	private Grid body;
-	private DateTimeFormat dateTimeFormat;
-	private int maxTitleSize;
+	private RssPanelImpl panelImpl;
 	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static abstract class RssPanelImpl extends Composite
+	{
+		protected VerticalPanel rssPanel;
+		protected HTML title;
+		protected Grid body;
+		protected DateTimeFormat dateTimeFormat;
+		protected int maxTitleSize;
+		
+		public abstract void addEntry(final Entry entry);
+
+		public RssPanelImpl()
+        {
+			setMaxTitleSize(100);
+			dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
+			
+			rssPanel = new VerticalPanel();
+			title = new HTML();
+			title.setStyleName("rssPanelTitle");
+			
+			rssPanel.add(title);
+			
+			body = new Grid();
+			body.setStyleName("rssPanelBody");
+			body.setCellSpacing(0);
+			
+			rssPanel.add(body);
+			initWidget(rssPanel);
+			
+			setStyleName("site-RssPanel");
+        }
+		
+		/**
+		 * 
+		 * @param feed
+		 */
+		public void setFeed(Feed feed)
+		{
+			clear();
+			if (feed != null)
+			{
+				JsArray<Entry> entries = feed.getEntries();
+				if (entries != null)
+				{
+					for (int i=0; i< entries.length(); i++)
+					{
+						addEntry(entries.get(i));
+					}
+				}
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public void clear()
+		{
+			body.clear();
+			body.resizeRows(0);
+		}
+
+		/**
+		 * 
+		 */
+		public String getTitle()
+		{
+			return title.getHTML();
+		}
+		
+		/**
+		 * 
+		 */
+		public void setTitle(String html)
+		{
+			title.setHTML(html);
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public int getMaxTitleSize()
+		{
+			return maxTitleSize;
+		}
+		
+		/**
+		 * 
+		 * @param maxTitleSize
+		 */
+		public void setMaxTitleSize(int maxTitleSize)
+		{
+			this.maxTitleSize = maxTitleSize;
+		}
+		
+		/**
+		 * 
+		 * @param title
+		 * @return
+		 */
+		protected String getClipedTitle(String title)
+		{
+			if (title==null)
+			{
+				return null;
+			}
+			if (title.length() > maxTitleSize)
+			{
+				title = title.substring(0, maxTitleSize-4) + "...";
+			}
+			
+			return title;
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static class RssPanelLargeImpl extends RssPanelImpl
+	{
+		public RssPanelLargeImpl()
+		{
+			super();
+			body.resizeColumns(2);
+			StyleUtils.addStyleDependentName(getElement(), "large");
+		}
+		
+		/**
+		 * 
+		 * @param entry
+		 */
+		public void addEntry(final Entry entry)
+		{
+			int row = body.insertRow(body.getRowCount());
+			HTML entryTitle = new HTML(getClipedTitle(entry.getTitle()));
+			entryTitle.addClickHandler(new ClickHandler()
+			{
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					Window.open(entry.getLink(), "", null);
+				}
+			});
+			entryTitle.setStyleName("entryTitle");
+			entryTitle.setTitle(entry.getTitle());
+			
+			Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
+			entryDate.setStyleName("entryDate");
+			
+			body.setWidget(row, 0, entryTitle);
+			body.setWidget(row, 1, entryDate);
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	static class RssPanelSmallImpl extends RssPanelImpl
+	{
+		public RssPanelSmallImpl()
+		{
+			super();
+			body.resizeColumns(1);
+			StyleUtils.addStyleDependentName(getElement(), "small");
+		}
+		
+		/**
+		 * 
+		 * @param entry
+		 */
+		public void addEntry(final Entry entry)
+		{
+			int row = body.insertRow(body.getRowCount());
+			HTML entryTitle = new HTML(getClipedTitle(entry.getTitle()));
+			entryTitle.addClickHandler(new ClickHandler()
+			{
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					Window.open(entry.getLink(), "", null);
+				}
+			});
+			entryTitle.setStyleName("entryTitle");
+			entryTitle.setTitle(entry.getTitle());
+			
+			Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
+			entryDate.setStyleName("entryDate");
+			
+			FlowPanel entryPanel = new FlowPanel();
+			entryPanel.add(entryTitle);
+			entryPanel.add(entryDate);
+			
+			body.setWidget(row, 0, entryPanel);
+		}
+	}
+
+	/**
+	 * 
+	 */
 	public RssPanel()
     {
 	    this(100);
     }
-	
+
 	/**
 	 * 
+	 * @param maxTitleSize
 	 */
 	public RssPanel(int maxTitleSize)
     {
-		setMaxTitleSize(maxTitleSize);
-		dateTimeFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM);
-
-		rssPanel = new VerticalPanel();
-		title = new HTML();
-		title.setStyleName("rssPanelTitle");
-
-		rssPanel.add(title);
-		
-		body = new Grid();
-		body.resizeColumns(2);
-		body.setStyleName("rssPanelBody");
-		body.setCellSpacing(0);
-		
-		rssPanel.add(body);
-		initWidget(rssPanel);
-		
-		setStyleName("rssPanel");
+	    this.panelImpl = GWT.create(RssPanelImpl.class);
+	    panelImpl.setMaxTitleSize(maxTitleSize);
+	    initWidget(panelImpl);
     }
 	
 	/**
@@ -77,72 +269,16 @@ public class RssPanel extends Composite
 	 */
 	public void clear()
 	{
-		body.clear();
-		body.resizeRows(0);
+		panelImpl.clear();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getMaxTitleSize()
-    {
-    	return maxTitleSize;
-    }
-
-	/**
-	 * 
-	 * @param maxTitleSize
-	 */
-	public void setMaxTitleSize(int maxTitleSize)
-    {
-    	this.maxTitleSize = maxTitleSize;
-    }
-
 	/**
 	 * 
 	 * @param entry
 	 */
 	public void addEntry(final Entry entry)
 	{
-		int row = body.insertRow(body.getRowCount());
-		HTML entryTitle = new HTML(getClipedTitle(entry.getTitle()));
-		entryTitle.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				Window.open(entry.getLink(), "", null);
-			}
-		});
-		entryTitle.setStyleName("entryTitle");
-		entryTitle.setTitle(entry.getTitle());
-		
-		Label entryDate = new Label(dateTimeFormat.format(entry.getPublishedDate()));
-		entryDate.setStyleName("entryDate");
-		
-		body.setWidget(row, 0, entryTitle);
-		body.setWidget(row, 1, entryDate);
-	}
-	
-	/**
-	 * 
-	 * @param feed
-	 */
-	public void setFeed(Feed feed)
-	{
-		clear();
-		if (feed != null)
-		{
-			JsArray<Entry> entries = feed.getEntries();
-			if (entries != null)
-			{
-				for (int i=0; i< entries.length(); i++)
-				{
-					addEntry(entries.get(i));
-				}
-			}
-		}
+		panelImpl.addEntry(entry);
 	}
 	
 	/**
@@ -150,7 +286,7 @@ public class RssPanel extends Composite
 	 */
 	public String getTitle()
 	{
-		return title.getHTML();
+		return panelImpl.getTitle();
 	}
 	
 	/**
@@ -158,24 +294,33 @@ public class RssPanel extends Composite
 	 */
 	public void setTitle(String html)
 	{
-		title.setHTML(html);
+		panelImpl.setTitle(html);
+	}
+
+	/**
+	 * 
+	 * @param feed
+	 */
+	public void setFeed(Feed feed)
+	{
+		panelImpl.setFeed(feed);
 	}
 	
 	/**
 	 * 
-	 * @param title
 	 * @return
 	 */
-	private String getClipedTitle(String title)
+	public int getMaxTitleSize()
 	{
-		if (title==null)
-		{
-			return null;
-		}
-		if (title.length() > maxTitleSize)
-		{
-			title = title.substring(0, maxTitleSize-4) + "...";
-		}
-		
-		return title;
-	}}
+		return panelImpl.getMaxTitleSize();
+	}
+	
+	/**
+	 * 
+	 * @param maxTitleSize
+	 */
+	public void setMaxTitleSize(int maxTitleSize)
+	{
+		panelImpl.setMaxTitleSize(maxTitleSize);
+	}
+}

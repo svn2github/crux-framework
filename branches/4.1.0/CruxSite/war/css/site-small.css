@@ -3,8 +3,9 @@ html,body{
 }
 body{
 	margin:0;
+	background:url(../img/bg-mobile.png);
+	background-size:100% auto;
 }
-
 .site-SiteFace .header{
 	width:auto;
 	height:45px;
@@ -23,7 +24,7 @@ body{
 	margin-top:2px;
 	margin-left:5px;
 	border-radius:6px;
-	box-shadow:0 2px 0 #638dce inset, 0 1px 0 #3b6cb9;
+	-webkit-box-shadow:0 2px 0 #638dce inset, 0 1px 0 #3b6cb9;
 	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, #618bcd),color-stop(1, #2b4f87));
 	text-align:center;
 	padding:0;
@@ -32,7 +33,7 @@ body{
 	width:auto;
 	margin:4px 14px 0px 14px;
 	background:white;
-	box-shadow:0 1px 2px rgba(0,0,0,0.9);
+	-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.9);
 	border-radius:4px;
 	height:3px;
 }
@@ -40,7 +41,7 @@ body{
 	margin-top:10px;
 }
 .site-SiteFace .header .buttonMenu:active{
-	box-shadow:0 2px 3px rgba(0,0,0,0.5) inset, 0 1px 0 #3b6cb9;
+	-webkit-box-shadow:0 2px 3px rgba(0,0,0,0.5) inset, 0 1px 0 #3b6cb9;
 	background:-webkit-linear-gradient(90deg, #618bcd,#2b4f87);
 }
 .site-SiteFace .cruxLabel{
@@ -90,6 +91,12 @@ body{
 .site-SiteFace .view-opened{
 	-webkit-transform:translateX(250px);
 }
+.BannerArea{
+	width: 308px;
+}
+.ContentAreas{
+	width: 100%;
+}
 .ContentLeft, .ContentRight{
 	font-family: monospace;
 	color: #CCCCCC;
@@ -97,4 +104,176 @@ body{
 }
 .ContentCenter{
 	width: 318px;
+}
+.ContentHorizontalSeparator{
+	color: #AAAAAA;
+}
+.newsBoard{
+	width: 318px;
+}
+.newsBoard .item
+{
+	background: url(../img/content-box-bg.png) top no-repeat;
+	background-size: 308px 100%;
+	background-position-x: 0; 
+	padding-bottom: 40px;
+}
+.site-RssPanel
+{
+	width: 285px;
+}
+
+.site-RssPanel .rssPanelTitle
+{
+	margin-top: 0;
+	height: 50px;
+	margin-left: 12px;
+	font-weight: bold;	
+	font-size:22px;
+	text-shadow:0 2px 0 rgba(255,255,255,0.5);
+}
+.site-RssPanel .rssPanelBody{
+	margin:12px;
+	border-radius:6px;
+	background:rgba(0,0,0,0.2);
+	-webkit-box-shadow:0 1px 4px rgba(0,0,0,0.5) inset, 0 2px 0 rgba(255,255,255,0.5);
+	overflow:hidden;
+	width: 100%;
+}
+.site-RssPanel .rssPanelBody TD{
+	height: 40px;
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0, rgba(0,0,0,0.2)),color-stop(1, rgba(0,0,0,0)));
+	border-bottom:1px solid #777;
+	-webkit-box-shadow: 0 1px rgba(255,255,255,0.3);
+}
+.site-RssPanel .rssPanelBody TD:last-child{
+	border-bottom:none;
+}
+
+.site-RssPanel .entryTitle{
+	margin:0;
+	color:#fff;
+	text-shadow:0 2px 2px rgba(0,0,0,0.4);
+	font-size:13px;
+	padding-top:10px;
+	padding-left:10px;
+	width:100%;
+}
+.site-RssPanel .entryDate{
+	color:#fff;
+	text-shadow:0 2px 2px rgba(0,0,0,0.4);
+	padding-left:10px;
+	font-size:9px;
+}
+.xdev-PromoBanner .bannersArea{
+	margin: 10px;
+	margin-left: 0px;
+	border-radius:6px;
+	background:#333;
+	-webkit-box-shadow:0 2px 4px #000 inset, 0 2px 0 rgba(255,255,255,0.5);
+	padding:6px;
+}
+.xdev-PromoBanner .leftArrow-disabled, .xdev-PromoBanner .rightArrow-disabled
+{
+	opacity: .5;
+}
+
+.xdev-PromoBanner .bullet
+{
+	width: 10px;
+	height: 10px;
+	background: rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.2) inset;
+	border: 1px solid white;
+	border-radius: 8px;
+	margin-right: 10px;
+	float: left;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+.xdev-PromoBanner .bullet-active
+{
+	-webkit-transition: all 0.25s linear;
+	-moz-transition: all 0.25s linear;
+	-o-transition: all 0.25s linear;
+	-ms-transition: all 0.25s linear;
+	-webkit-box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
+	background: white !important;
+}
+
+.xdev-PromoBanner .messagePanel
+{
+	padding-top: 15px;
+	padding-left: 15px;
+	height: 100%;
+}
+
+.xdev-PromoBanner button
+{
+	cursor: pointer;
+	-webkit-transition: box-shadow 0.3s linear;
+	-moz-transition: box-shadow 0.3s linear;
+	-o-transition: box-shadow 0.3s linear;
+	-ms-transition: box-shadow 0.3s linear;
+	width: 75px;
+	height: 25px;
+	background: #005266;
+	-webkit-box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset;
+	background: -webkit-linear-gradient(#006778 0%, #004A5D 100%);
+	background: -moz-linear-gradient(#006778 0%, #004A5D 100%);
+	background: -o-linear-gradient(#006778 0%, #004A5D 100%);
+	background: -ms-linear-gradient(#006778 0%, #004A5D 100%);
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: white;
+	font-size: 10px;
+	float: right;
+	margin-right: 10px;
+	margin-top: 4px;
+}
+
+.xdev-PromoBanner button:active 
+{
+	background: -webkit-linear-gradient(#004A5D 0%, #006778 100%);
+	background: -moz-linear-gradient(#004A5D 0%, #006778 100%);
+	background: -o-linear-gradient(#004A5D 0%, #006778 100%);
+	background: -ms-linear-gradient(#004A5D 0%, #006778 100%);
+}
+
+.xdev-PromoBanner button:hover 
+{
+	-webkit-transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	-ms-transition: all 0.3s linear;
+	-webkit-box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset !important;
+}
+
+.xdev-PromoBanner .title
+{
+	font-size: 21px;
+	color: #222;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	font-family: Helvetica;
+	font-weight: bold;
+}
+	
+.xdev-PromoBanner .text
+{
+	background-attachment: scroll;
+	color: #153A42;
+	font-family: Helvetica;
+	font-size: 12px;
+	margin-left: 0px;
+	margin-right: 0px;
+	text-align: justify;
+	text-shadow: rgba(255, 255, 255, 0.496094) 0px 1px 0px;
+	width: 150px;
+}
+
+.xdev-PromoBanner .longText .text
+{
+	font-size: 11px;
 }

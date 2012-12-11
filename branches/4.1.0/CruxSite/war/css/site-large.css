@@ -142,9 +142,13 @@ p, .p{
 
 .BannerArea
 {
+	width: 900px;
 }
 
-
+.newsBoard
+{
+	width: 100%;
+}
 .newsBoard .item
 {
 	background: url(../img/content-box-bg.png) top no-repeat;
@@ -347,7 +351,11 @@ p, .p{
 	font-size: 23px;
 }
 
-.rssPanelTitle
+.site-RssPanel
+{
+	width: 100%;
+}
+.site-RssPanel .rssPanelTitle
 {
 	margin-top: 0;
 	color: #004F5E;
@@ -358,21 +366,21 @@ p, .p{
 	font-weight: bold;	
 }
 
-.rssPanelBody
+.site-RssPanel .rssPanelBody
 {
 	padding-left: 12px;
 	padding-right: 12px;
 	width: 100%;
 }
 
-.rssPanelBody TD
+.site-RssPanel .rssPanelBody TD
 {
 	height: 40px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	box-shadow: 0 1px rgba(255,255,255,0.3);
 }
 
-.entryTitle
+.site-RssPanel .entryTitle
 {
 	color: #333;
 	font-size: 15px;
@@ -380,7 +388,7 @@ p, .p{
 	cursor: pointer;
 }
 
-.entryDate
+.site-RssPanel .entryDate
 {
 	font-size: 11px;
 	background: rgba(0, 0, 0, 0.2);

@@ -4,8 +4,25 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>
 	
-<!--     <set-property name="user.agent" value="safari" /> -->
-<!--     <set-property name="device.features" value="smallDisplayTouch"/> -->
+    <set-property name="user.agent" value="safari" />
+    <set-property name="device.features" value="smallDisplayTouch"/>
+
+	<!-- RssPanel widget -->
+	<replace-with class="org.cruxframework.cruxsite.client.widget.RssPanel.RssPanelLargeImpl">
+		<when-type-assignable class="org.cruxframework.cruxsite.client.widget.RssPanel.RssPanelImpl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayMouse" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayArrows" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.cruxsite.client.widget.RssPanel.RssPanelSmallImpl">
+		<when-type-assignable class="org.cruxframework.cruxsite.client.widget.RssPanel.RssPanelImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
 
 	<!-- To enable logging -->
 	<!-- 
