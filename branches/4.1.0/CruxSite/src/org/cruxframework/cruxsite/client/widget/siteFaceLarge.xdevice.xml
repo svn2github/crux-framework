@@ -84,24 +84,12 @@
 								<gwt:row>
 									<gwt:cell styleName="CruxLabelFooter3">
 										<gwt:widget>
-											<gwt:horizontalPanel id="footerLinks" styleName="FooterLinks" width="250" horizontalAlignment="right">
-												<gwt:anchor id="about" href="#" text="About" />
-												<gwt:label id="separator1" styleName="LinkSeparator"/>
-												<gwt:anchor id="services" href="#" text="Services" />
-												<gwt:label id="separator2" styleName="LinkSeparator"/>
-												<gwt:anchor id="contact" href="#" text="Contact" />
-												<gwt:label id="separator3" styleName="LinkSeparator"/>
-												<gwt:anchor id="contribute" href="#" text="Contribute" />
-											</gwt:horizontalPanel>
+											<gwt:label id="rights" text="Copyright © 2012 Crux Framework, Licensed under the Apache License 2.0." horizontalAlignment="right"/>
 										</gwt:widget>
 									</gwt:cell>
 									<gwt:cell styleName="CruxLabelFooter4">
 										<gwt:widget>
-											<gwt:horizontalPanel id="rowImgsFooter" width="156" style="width:156px;">
-												<gwt:image id="imgIconFooter1" url="img/icons_powered_1.png"/>
-												<gwt:image id="imgIconFooter2" url="img/icons_powered_2.png"/>
-												<gwt:image id="imgIconFooter3" url="img/icons_powered_3.png"/>
-											</gwt:horizontalPanel>
+											<gwt:image id="imgIconFooter1" url="img/icons_powered.png"/>
 										</gwt:widget>
 									</gwt:cell>
 								</gwt:row>

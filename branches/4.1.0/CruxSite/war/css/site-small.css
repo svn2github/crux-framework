@@ -277,3 +277,25 @@ body{
 {
 	font-size: 11px;
 }
+
+.footer{
+	background:url(../img/rodapebg.png) no-repeat;
+	background-size:100% auto;
+	height:80px;
+	margin-top:40px;
+	padding-top:25px;
+	position:relative;
+	z-index:3;
+	text-align:center;
+}
+
+.footer .poweredLabel{
+	font-size:15px;
+	color:#fff;
+	text-shadow:0 2px 2px #000;
+	text-align:center;
+}
+
+.footer .poweredImage{
+	margin-top: 10px;
+}

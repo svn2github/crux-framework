@@ -210,9 +210,10 @@ p, .p{
 	border-right:1px solid #001B20;
 	padding-right:10px;
 }
-.CruxLabelFooter3 a{
+.CruxLabelFooter3 .gwt-Label{
 	color:#fff;
 	text-decoration:none;
+	font-size:12px;
 }
 
 .CruxLabelFooter2

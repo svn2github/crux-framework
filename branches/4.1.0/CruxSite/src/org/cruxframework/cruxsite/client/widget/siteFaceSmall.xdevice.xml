@@ -17,5 +17,9 @@
 	    </gwt:flowPanel>
 	    <crux:horizontalSwapViewContainer id="viewContainer" width="100%" height="100%" styleName="view">
 	    </crux:horizontalSwapViewContainer>
+	    <gwt:flowPanel id="footer" styleName="footer">
+	    	<gwt:label id="poweredLabel" styleName="poweredLabel" text="Powered By"/>
+	    	<gwt:image id="poweredImage" url="img/icons-powered-mobile.png" styleName="poweredImage"/>
+	    </gwt:flowPanel>
 	</gwt:flowPanel>
 </x:xdevice>
