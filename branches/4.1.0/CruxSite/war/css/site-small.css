@@ -6,6 +6,18 @@ body{
 	background:url(../img/bg-mobile.png);
 	background-size:100% auto;
 }
+h1, .h1{
+	margin-top: 10px;
+	color: #004F5E;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom:10px;
+}
+p, .p{
+	color:#333;
+	text-shadow:0 1px 0 #fff;
+}
 .site-SiteFace .header{
 	width:auto;
 	height:45px;
@@ -299,3 +311,46 @@ body{
 .footer .poweredImage{
 	margin-top: 10px;
 }
+.divDownTxt
+{
+ 	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	height:150px;
+ 	padding:10px;
+ 	text-align: left;
+}
+.divDownTxt .divDownTxtTitle 
+{
+	font-size:19px;
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.4);
+	text-align: left;
+	font-weight: bold;	
+}
+.divDownTxt li 
+{
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+	text-align: left;
+	margin-top: 10px;
+}
+.ShyLink, .ShyText 
+{
+	color: rgba(0, 0, 0, 0.4);
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 1);
+	font-size: 12px;
+	padding: 2px;
+}
+
+.ShyLink
+{
+	text-decoration: underline;
+}
+
+.ShyText
+{
+	margin-top: 1px;
+}
+

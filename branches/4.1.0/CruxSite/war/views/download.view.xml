@@ -75,10 +75,10 @@
 										<gwt:label id="releaseTitle" text="${siteMessages.releaseFeatures}" styleName="divDownTxtTitle"/>
 										<gwt:HTML id="releaseFeatsListPanel">
 											<ul>
-												<li><span style="text-decoration:underline; margin-right:10px">2X faster:</span> user interface code is now generated during the compilation process. No more metadata interpretation occurs in runtime.</li>
-												<li><span style="text-decoration:underline; margin-right:10px">Auto-lazy:</span> invisible or collapsed widgets are only loaded when needed, saving memory and speeding up the rendering;</li>
-												<li><span style="text-decoration:underline; margin-right:10px">Nested data fields:</span> nested data fields are now allowed in Crux Grid, through the usage of dot notation;</li>
-												<li><span style="text-decoration:underline; margin-right:10px">GWT Compatibility:</span> compatible with GWT 2.2;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">Views:</span> support for nested views into a single document;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">Client IoC:</span> a new IoC container for client side code;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">Cross-Device:</span> new widgets that can adapt its rendering, according to the running device;</li>
+												<li><span style="text-decoration:underline; margin-right:10px">GWT Compatibility:</span> compatible with GWT 2.4;</li>
 											</ul>
 										</gwt:HTML>
 									</gwt:verticalPanel>
