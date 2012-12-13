@@ -708,4 +708,8 @@ p, .p{
 	top: 0px;
 	left: 0px;
 	background: url(../img/under-construction.png) top left no-repeat;
+}
+.communityContent
+{
+	width: 900px;
 }	

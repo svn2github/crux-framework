@@ -1,0 +1,21 @@
+<t:template 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:t="http://www.cruxframework.org/templates"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+	library="siteTemplates">
+	<gwt:HTMLPanel id="#{id}Panel">
+		<div class="#{styleName}">
+			<div class="BlockImg">
+				<img src="#{image}" />
+			</div>
+			<div class="BlockText">
+				<h1>#{siteTitle}</h1>
+				<p>#{siteDescription}</p>
+			</div>
+			<div class="clear"></div>
+			<xdev:button id="#{id}Btn" onSelect="#{onSelect}" >#{buttonLabel}</xdev:button>
+			<div class="Risk"></div>
+		</div>
+	</gwt:HTMLPanel>
+</t:template>

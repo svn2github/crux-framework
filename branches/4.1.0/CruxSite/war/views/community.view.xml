@@ -5,9 +5,11 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
+	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
 	title="Community">
 
-	<gwt:grid id="insideContent" width="900px">
+	<gwt:grid id="insideContent" styleName="communityContent">
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html id="htmlContent">
@@ -20,77 +22,21 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<gwt:grid id="gridCommunitySpots" width="100%">
-						<gwt:row>
-							<gwt:cell width="50%">
-								<gwt:html>
-									<div class="BlockTypes">
-										<div class="BlockImg">
-											<img src="../img/icon_blogger.png" />
-										</div>
-										<div class="BlockText">
-											<h1>Crux's Blog</h1>
-											<p>Visit our blog, there you can find helpful video tutorials, tips and news.</p>
-										</div>
-										<div class="clear"></div>
-										<button>Visit the Blog</button>
-										<div class="Risk"></div>
-									</div>
-								</gwt:html>
-							</gwt:cell>
-							<gwt:cell width="50%">
-							<gwt:html>
-								<div class="BlockTypes b2">
-									<div class="BlockImg">
-										<img src="../img/icon_google.png" />
-									</div>
-									<div class="BlockText">
-										<h1>code.google.com</h1>
-										<p>Wiki,Issues, commit road and much more can be found on our Google Code page, check!.</p>
-									</div>
-									<div class="clear"></div>
-									<button>Visit the Page</button>
-									<div class="Risk"></div>
-								</div>
-							</gwt:html>
-							</gwt:cell>
-						</gwt:row>
-						<gwt:row>
-							<gwt:cell width="50%">
-								<gwt:html>
-									<div class="BlockTypes">
-										<div class="BlockImg">
-											<img src="../img/icon_forum.png" />
-										</div>
-										<div class="BlockText">
-											<h1>Crux's Forum</h1>
-											<p>Visit our blog, there you can find helpful video tutorials, tips and news.</p>
-										</div>
-										<div class="clear"></div>
-										<button>Visit the Forum</button>
-										<div class="Risk"></div>
-									</div>
-								</gwt:html>
-							</gwt:cell>
-							<gwt:cell width="50%">
-							<gwt:html>
-								<div class="BlockTypes b2">
-									<div class="BlockImg">
-										<img src="" />
-									</div>
-									<div class="BlockText">
-										<h1>Crux's Team</h1>
-										<p>Want talk to us?<br /> team@cruxframework.org</p>
-									</div>
-									<div class="clear"></div>
-									<button>Talk to us</button>
-									<div class="Risk"></div>
-								</div>
-							</gwt:html>
-							</gwt:cell>
-						</gwt:row>
-					</gwt:grid>
-				
+					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="230px">
+						<tmp:siteReference onSelect="" styleName="BlockTypes" siteTitle="Crux's Blog" 
+										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
+										   image="../img/icon_blogger.png" buttonLabel="Visit the Blog" id="blogSite"/>
+						<tmp:siteReference onSelect="" styleName="BlockTypes b2" siteTitle="Crux's Project" 
+										   siteDescription="Wiki,Issues, commit road and much more can be found on our Google Code page." 
+										   image="../img/icon_google.png" buttonLabel="Visit the Page" id="projectSite"/>
+						<tmp:siteReference onSelect="" styleName="BlockTypes" siteTitle="Crux's Forum" 
+										   siteDescription="Our forum. There you can post question about Crux usage." 
+										   image="../img/icon_forum.png" buttonLabel="Visit the Forum" id="forumSite"/>
+						<tmp:siteReference onSelect="" styleName="BlockTypes b2" siteTitle="Crux's Team" 
+										   siteDescription="Our contact: team@cruxframework.org" 
+										   image="" buttonLabel="Talk to us" id="talkSite"/>
+					
+					</xdev:storyboard>
 				</gwt:widget>
 			</gwt:cell>
 		</gwt:row>

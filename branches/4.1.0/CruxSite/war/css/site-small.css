@@ -353,4 +353,72 @@ p, .p{
 {
 	margin-top: 1px;
 }
-
+.communityContent
+{
+	width: 320px;
+}	
+.BlockImg
+{
+	float:left;
+	margin-bottom:8px;
+}
+.BlockText
+{
+	float:left;
+	width:200px;
+	margin-left:10px;
+}
+.BlockTypes
+{
+	margin-right:10px;
+	height:200px;
+}
+.BlockTypes button
+{
+	cursor: pointer;
+	-webkit-transition: box-shadow 0.3s linear;
+	-moz-transition: box-shadow 0.3s linear;
+	-o-transition: box-shadow 0.3s linear;
+	-ms-transition: box-shadow 0.3s linear;
+	padding:0 25px;
+	height: 40px;
+	background: #005266;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 0 1px rgba(0,0,0,0.2) inset;
+	background: -webkit-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	background: -moz-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	background: -o-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	background: -ms-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: #DDDDDD;
+	text-shadow:0 1px 0 #fff;
+	font-size: 17px;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+.BlockTypes button:hover
+{
+ 	-webkit-transition: box-shadow 0.3s linear;
+ 	-moz-transition: box-shadow 0.3s linear;
+ 	-o-transition: box-shadow 0.3s linear;
+ 	-ms-transition: box-shadow 0.3s linear;
+ 	box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 1px rgba(0,0,0,0.3) inset;
+}
+.BlockTypes button:active
+{
+ 	background: -webkit-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+ 	background: -moz-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+ 	background: -o-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+ 	background: -ms-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+}
+.BlockText h1
+{
+ 	font-size:23px;
+ 	letter-spacing:-1px;
+ 	margin-top:0;
+}
+.BlockText p
+{
+ 	font-size:14px;
+}

@@ -4,6 +4,7 @@
 	xmlns:core="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	title="Crux Framework - Download">
 	<gwt:flexTable id="insideContentDown">
@@ -14,15 +15,17 @@
 						<gwt:row>
 							<gwt:cell>
 								<gwt:widget>
-							 		<gwt:label id="downloadPageSecondaryTitle" text="${siteMessages.downloadPageSecondaryTitle}" styleName="h1"/>
+							 		<gwt:label id="downloadPageSecondaryTitle" text="Dowload the lastest version of Crux" styleName="h1"/>
 							 	</gwt:widget>
 							</gwt:cell>
 						</gwt:row>
 						<gwt:row>
 							<gwt:cell>
-							 	<gwt:widget>
-							 		<gwt:label id="downloadPageSecondaryTitleMessage" text="${siteMessages.downloadPageSecondaryTitleMessage}" styleName="p"/>
-						 		</gwt:widget>
+							 	<gwt:html>
+							 		<p>Click the icon below and download the lastest version of Crux Framework. 
+							 		The distribution comes with sample projects, API JavaDocs, visual installer and project generator. 
+							 		Give it a try!</p>
+						 		</gwt:html>
 							</gwt:cell>
 						</gwt:row>
 					</gwt:flexTable>
@@ -39,49 +42,47 @@
 				<gwt:widget>
 					<gwt:grid id="downloadPanel" width="100%">
 						<gwt:row>
-							<gwt:cell width="50%" verticalAlignment="top">
+							<gwt:cell verticalAlignment="top">
 								<gwt:widget>
-									<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
-										<gwt:row>
-											<gwt:cell rowSpan="2">
-												<gwt:html>
-													<a href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
-														<img src="../img/icon_download.png" />
-													</a>			
-												</gwt:html>
-											</gwt:cell>
-											<gwt:cell styleName="h1"><gwt:text>${siteMessages.downloadPageVersionName}</gwt:text></gwt:cell>
-										</gwt:row>
-										<gwt:row>
-											<gwt:cell styleName="p"><gwt:text>${siteMessages.downloadPageVersionDetails}</gwt:text></gwt:cell>
-										</gwt:row>
-										<gwt:row>
-											<gwt:cell colSpan="2" styleName="p" horizontalAlignment="center">
-												<gwt:widget>
-													<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
-														<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
-														<gwt:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
-														<gwt:label styleName="ShyText" id="areYoulookingLabel2" text="?"/>
-													</gwt:horizontalPanel>
-												</gwt:widget>
-											</gwt:cell>
-										</gwt:row>
-									</gwt:flexTable>
-								</gwt:widget>
-							</gwt:cell>
-							<gwt:cell width="50%" verticalAlignment="top" horizontalAlignment="left">
-								<gwt:widget>
-									<gwt:verticalPanel id="releaseFeatures" styleName="divDownTxt" horizontalAlignment="left">
-										<gwt:label id="releaseTitle" text="${siteMessages.releaseFeatures}" styleName="divDownTxtTitle"/>
-										<gwt:HTML id="releaseFeatsListPanel">
-											<ul>
-												<li><span style="text-decoration:underline; margin-right:10px">Views:</span> support for nested views into a single document;</li>
-												<li><span style="text-decoration:underline; margin-right:10px">Client IoC:</span> a new IoC container for client side code;</li>
-												<li><span style="text-decoration:underline; margin-right:10px">Cross-Device:</span> new widgets that can adapt its rendering, according to the running device;</li>
-												<li><span style="text-decoration:underline; margin-right:10px">GWT Compatibility:</span> compatible with GWT 2.4;</li>
-											</ul>
-										</gwt:HTML>
-									</gwt:verticalPanel>
+									<xdev:storyboard id="downloadBoard" styleName="downloadBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" smallDeviceItemHeight="170px">
+										<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
+											<gwt:row>
+												<gwt:cell rowSpan="2">
+													<gwt:widget>
+														<gwt:anchor id="downloadAnchor" href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
+															<img src="../img/icon_download.png" />
+														</gwt:anchor>			
+													</gwt:widget>
+												</gwt:cell>
+												<gwt:cell><gwt:html><h1>Crux Framework 4</h1></gwt:html></gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell><gwt:html>Version 4.1.0, All platforms - ZIP File, 12.5MB</gwt:html></gwt:cell>
+											</gwt:row>
+											<gwt:row>
+												<gwt:cell colSpan="2" styleName="p" horizontalAlignment="center">
+													<gwt:widget>
+														<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
+															<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
+															<gwt:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+															<gwt:label styleName="ShyText" id="areYoulookingLabel2" text="?"/>
+														</gwt:horizontalPanel>
+													</gwt:widget>
+												</gwt:cell>
+											</gwt:row>
+										</gwt:flexTable>
+										<gwt:verticalPanel id="releaseFeatures" styleName="divDownTxt" horizontalAlignment="left">
+											<gwt:label id="releaseTitle" text="Main features in this version:" styleName="divDownTxtTitle"/>
+											<gwt:HTML id="releaseFeatsListPanel">
+												<ul>
+													<li><span style="text-decoration:underline; margin-right:10px">Views:</span> support for nested views into a single document;</li>
+													<li><span style="text-decoration:underline; margin-right:10px">Client IoC:</span> a new IoC container for client side code;</li>
+													<li><span style="text-decoration:underline; margin-right:10px">Cross-Device:</span> new widgets that can adapt its rendering, according to the running device;</li>
+													<li><span style="text-decoration:underline; margin-right:10px">GWT Compatibility:</span> compatible with GWT 2.4;</li>
+												</ul>
+											</gwt:HTML>
+										</gwt:verticalPanel>
+									</xdev:storyboard>
 								</gwt:widget>
 							</gwt:cell>
 						</gwt:row>
