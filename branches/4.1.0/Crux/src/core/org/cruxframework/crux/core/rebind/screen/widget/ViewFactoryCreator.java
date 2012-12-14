@@ -1102,6 +1102,10 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("}");
     }
 
+	/**
+	 * 
+	 * @return
+	 */
 	private String getViewHTML()
     {
 	    String html = EscapeUtils.quote(view.getHtml()).replace(ViewParser.CRUX_VIEW_PREFIX, "\"+"+getViewVariable()+".getPrefix()+\"");
