@@ -69,6 +69,22 @@
 		</any>
 	</replace-with>
 
+	<!-- Anchor  -->
+	<replace-with class="org.cruxframework.crux.crossdevice.client.anchor.Anchor.AnchorNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.anchor.Anchor.AnchorImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.crossdevice.client.anchor.Anchor.AnchorTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.anchor.Anchor.AnchorImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
 	<!-- PromoBanner  -->
 	<replace-with class="org.cruxframework.crux.crossdevice.client.promobanner.BannerImplLargeNoTouch">
 		<when-type-assignable class="org.cruxframework.crux.crossdevice.client.promobanner.BannerImpl" />

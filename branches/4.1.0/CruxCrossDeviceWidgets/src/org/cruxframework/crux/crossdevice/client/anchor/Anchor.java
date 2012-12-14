@@ -13,9 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.crossdevice.client.button;
+package org.cruxframework.crux.crossdevice.client.anchor;
 
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.crossdevice.client.event.HasSelectHandlers;
 import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
@@ -36,23 +37,23 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasHTML;
 
 /**
- * A cross device button, that use touch events on touch enabled devices to implement Google Fast Buttons
+ * A cross device anchor, that use touch events on touch enabled devices to implement Google Fast Buttons
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Button extends Composite implements HasSelectHandlers, HasHTML, HasSafeHtml, HasAllFocusHandlers, HasEnabled
+public class Anchor extends Composite implements HasSelectHandlers, HasHTML, HasSafeHtml, HasAllFocusHandlers, HasEnabled
 {
-	private ButtonImpl impl;
+	private AnchorImpl impl;
 
-	static abstract class ButtonImpl extends com.google.gwt.user.client.ui.Button implements HasSelectHandlers
+	static abstract class AnchorImpl extends com.google.gwt.user.client.ui.Anchor implements HasSelectHandlers
 	{
 		protected boolean preventDefaultTouchEvents = false;
-		protected abstract void select();
 		
 		@Override
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
@@ -64,6 +65,26 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		{
 			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
 		}
+
+		protected SelectEvent select()
+		{
+			if (getHandlerCount(SelectEvent.getType()) > 0)
+			{
+				return SelectEvent.fire(this);
+			}
+			else if (!StringUtils.isEmpty(getHref()))
+			{
+				if (!StringUtils.isEmpty(getTarget()))
+				{
+					Window.open(getHref(), getTarget(), null);
+				}
+				else
+				{
+					Window.Location.assign(getHref());
+				}
+			}
+			return null;
+		}
 	}
 
 	/**
@@ -71,28 +92,22 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	static class ButtonNoTouchImpl extends ButtonImpl
+	static class AnchorNoTouchImpl extends AnchorImpl
 	{
-		public ButtonNoTouchImpl()
+		public AnchorNoTouchImpl()
 		{
 			addClickHandler(new ClickHandler()
 			{
 				@Override
 				public void onClick(ClickEvent event)
 				{
-					SelectEvent selectEvent = SelectEvent.fire(ButtonNoTouchImpl.this);
-					if (selectEvent.isCanceled())
+					SelectEvent selectEvent = select();
+					if (selectEvent!= null && selectEvent.isCanceled())
 					{
 						event.preventDefault();
 					}
 				}
 			});
-		}
-
-		@Override
-		protected void select()
-		{
-			click();
 		}
 	}
 
@@ -101,7 +116,7 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	static class ButtonTouchImpl extends ButtonImpl implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
+	static class AnchorTouchImpl extends AnchorImpl implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
 	{
 		private static final int TAP_EVENT_THRESHOLD = 5;
 		private int startX;
@@ -109,15 +124,9 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		private HandlerRegistration touchMoveHandler;
 		private HandlerRegistration touchEndHandler;
 
-		public ButtonTouchImpl()
+		public AnchorTouchImpl()
 		{
 			addTouchStartHandler(this);
-		}
-
-		@Override
-		protected void select()
-		{
-			SelectEvent.fire(this);
 		}
 
 		@Override
@@ -173,9 +182,9 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		}
 	}
 
-	public Button()
+	public Anchor()
 	{
-		impl = GWT.create(ButtonImpl.class);
+		impl = GWT.create(AnchorImpl.class);
 		initWidget(impl);
 		setStyleName("xdev-Anchor");
 	}
@@ -264,6 +273,11 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 		impl.setFocus(focused);
 	}
 	
+	public void setHref(String url)
+	{
+		impl.setHref(url);
+	}
+	
 	public void setAccessKey(char key)
 	{
 		impl.setAccessKey(key);
@@ -277,5 +291,15 @@ public class Button extends Composite implements HasSelectHandlers, HasHTML, Has
 	public void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
 	{
 		impl.setPreventDefaultTouchEvents(preventDefaultTouchEvents);
+	}
+	
+	public void setTarget(String target)
+	{
+		impl.setTarget(target);
+	}
+	
+	public String getTarget()
+	{
+		return impl.getTarget();
 	}
 }

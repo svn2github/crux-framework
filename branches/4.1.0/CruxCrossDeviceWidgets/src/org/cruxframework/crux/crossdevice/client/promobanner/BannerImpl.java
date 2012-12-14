@@ -188,7 +188,7 @@ abstract class BannerImpl extends Composite
 	    {
 	    	final Button btn = new Button();
 	    	boolean iosDevice = isIos();
-	    	btn.setPreventDefaultTouchEvents(!iosDevice); //iOS bug when using Fast Button on a TouchSlider
+	    	btn.setPreventDefaultTouchEvents(!iosDevice); //iOS bug when using Fast Anchor on a TouchSlider
 	    	btn.setStyleName("button");
 	    	btn.setText(buttonLabel);
 	    	if (iosDevice)

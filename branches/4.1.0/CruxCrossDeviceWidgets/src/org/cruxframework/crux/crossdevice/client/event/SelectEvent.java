@@ -25,7 +25,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class SelectEvent extends GwtEvent<SelectHandler>
 {
 	private static Type<SelectHandler> TYPE = new Type<SelectHandler>();
-
+	private boolean canceled = false;
+	
 	/**
 	 * 
 	 */
@@ -53,12 +54,24 @@ public class SelectEvent extends GwtEvent<SelectHandler>
 		return TYPE;
 	}
 
-	public static <T> void fire(HasSelectHandlers source) 
+	public static <T> SelectEvent fire(HasSelectHandlers source) 
 	{
 		if (TYPE != null) 
 		{
 			SelectEvent event = new SelectEvent();
 			source.fireEvent(event);
+			return event;
 		}
-	}	
+		return null;
+	}
+
+	public boolean isCanceled()
+    {
+    	return canceled;
+    }
+
+	public void setCanceled(boolean canceled)
+    {
+    	this.canceled = canceled;
+    }
 }
