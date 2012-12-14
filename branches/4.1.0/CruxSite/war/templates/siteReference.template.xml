@@ -14,7 +14,11 @@
 				<p>#{siteDescription}</p>
 			</div>
 			<div class="clear"></div>
-			<xdev:button id="#{id}Btn" onSelect="#{onSelect}" >#{buttonLabel}</xdev:button>
+			<div class="BlockText">
+				<xdev:anchor id="#{id}Btn" href="#{href}" target="_blank" preventDefaultTouchEvents="true" >
+					<div class="refButton">#{buttonLabel}</div>
+				</xdev:anchor>
+			</div>
 			<div class="Risk"></div>
 		</div>
 	</gwt:HTMLPanel>

@@ -14,7 +14,8 @@
 			<gwt:cell>
 				<gwt:html id="htmlContent">
 					<h1>Crux Community</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
+					<p>Crux is an open source project licensed under the Apache License 2.0. 
+					To learn more about the project, report problems, suggest modifications, or get support, please visit our links targeted to the community.</p>
 					<div class="Risk"></div>
 				</gwt:html>
 			</gwt:cell>
@@ -22,20 +23,19 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="230px">
-						<tmp:siteReference onSelect="" styleName="BlockTypes" siteTitle="Crux's Blog" 
+					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
+						<tmp:siteReference href="http://blog.cruxframework.org" styleName="BlockTypes" siteTitle="Crux's Blog" 
 										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
 										   image="../img/icon_blogger.png" buttonLabel="Visit the Blog" id="blogSite"/>
-						<tmp:siteReference onSelect="" styleName="BlockTypes b2" siteTitle="Crux's Project" 
+						<tmp:siteReference href="http://crux-framework.googlecode.com" styleName="BlockTypes b2" siteTitle="Crux's Project" 
 										   siteDescription="Wiki,Issues, commit road and much more can be found on our Google Code page." 
 										   image="../img/icon_google.png" buttonLabel="Visit the Page" id="projectSite"/>
-						<tmp:siteReference onSelect="" styleName="BlockTypes" siteTitle="Crux's Forum" 
+						<tmp:siteReference href="http://groups.google.com/group/crux-framework" styleName="BlockTypes" siteTitle="Crux's Forum" 
 										   siteDescription="Our forum. There you can post question about Crux usage." 
 										   image="../img/icon_forum.png" buttonLabel="Visit the Forum" id="forumSite"/>
-						<tmp:siteReference onSelect="" styleName="BlockTypes b2" siteTitle="Crux's Team" 
+						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="BlockTypes b2" siteTitle="Crux's Team" 
 										   siteDescription="Our contact: team@cruxframework.org" 
-										   image="" buttonLabel="Talk to us" id="talkSite"/>
-					
+										   image="../img/icon_forum.png" buttonLabel="Talk to us" id="talkSite"/>
 					</xdev:storyboard>
 				</gwt:widget>
 			</gwt:cell>

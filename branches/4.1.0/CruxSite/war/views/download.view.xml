@@ -49,9 +49,9 @@
 											<gwt:row>
 												<gwt:cell rowSpan="2">
 													<gwt:widget>
-														<gwt:anchor id="downloadAnchor" href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
+														<xdev:anchor id="downloadAnchor" href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
 															<img src="../img/icon_download.png" />
-														</gwt:anchor>			
+														</xdev:anchor>			
 													</gwt:widget>
 												</gwt:cell>
 												<gwt:cell><gwt:html><h1>Crux Framework 4</h1></gwt:html></gwt:cell>
@@ -64,7 +64,7 @@
 													<gwt:widget>
 														<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
 															<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
-															<gwt:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+															<xdev:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
 															<gwt:label styleName="ShyText" id="areYoulookingLabel2" text="?"/>
 														</gwt:horizontalPanel>
 													</gwt:widget>

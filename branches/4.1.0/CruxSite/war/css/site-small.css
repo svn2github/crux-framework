@@ -373,15 +373,15 @@ p, .p{
 	margin-right:10px;
 	height:200px;
 }
-.BlockTypes button
+.BlockTypes .refButton
 {
+	display:inline;
 	cursor: pointer;
 	-webkit-transition: box-shadow 0.3s linear;
 	-moz-transition: box-shadow 0.3s linear;
 	-o-transition: box-shadow 0.3s linear;
 	-ms-transition: box-shadow 0.3s linear;
-	padding:0 25px;
-	height: 40px;
+	padding: 10px 25px;
 	background: #005266;
 	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 0 1px rgba(0,0,0,0.2) inset;
 	background: -webkit-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
@@ -394,10 +394,8 @@ p, .p{
 	color: #DDDDDD;
 	text-shadow:0 1px 0 #fff;
 	font-size: 17px;
-	margin-right: 10px;
-	margin-top: 5px;
 }
-.BlockTypes button:hover
+.BlockTypes .refButton:hover
 {
  	-webkit-transition: box-shadow 0.3s linear;
  	-moz-transition: box-shadow 0.3s linear;
@@ -405,12 +403,18 @@ p, .p{
  	-ms-transition: box-shadow 0.3s linear;
  	box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 1px rgba(0,0,0,0.3) inset;
 }
-.BlockTypes button:active
+.BlockTypes .refButton:active
 {
  	background: -webkit-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
  	background: -moz-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
  	background: -o-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
  	background: -ms-linear-gradient(#c5cdd3 0%, #eff6f8 100%);
+}
+.BlockTypes a 
+{
+	margin-right: 10px;
+	margin-top: 5px;
+	text-decoration: none;
 }
 .BlockText h1
 {
