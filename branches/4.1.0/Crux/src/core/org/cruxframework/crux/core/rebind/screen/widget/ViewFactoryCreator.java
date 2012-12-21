@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind.screen.widget;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -53,8 +54,10 @@ import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
+import org.cruxframework.crux.core.rebind.resources.ResourcesRebind;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -283,6 +286,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
+	    Iterator<Resources> resources = view.iterateResources();
+	    while (resources.hasNext())
+	    {
+	    	String resourcesClass = new ResourcesRebind(logger, context, view, this.device, resources.next()).create();
+	    	//TODO add resources class
+	    }
     }
 
 	/**

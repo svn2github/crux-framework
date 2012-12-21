@@ -33,6 +33,7 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
+import org.cruxframework.crux.core.rebind.screen.resources.ResourcesFactory;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.scannotation.URLStreamManager;
 import org.json.JSONArray;
@@ -249,7 +250,7 @@ public class ViewFactory
 	            		}
 	    				else if (isResourcesDefinition(childElem))
 	    				{
-	    					//TODO: parseResources
+	    					parseResourcesElement(view, childElem);
 	    				}
 	            	}
 	            }
@@ -329,7 +330,7 @@ public class ViewFactory
 				}
 				else if (isResourcesDefinition(compCandidate))
 				{
-					//TODO: parseResources
+					parseResourcesElement(view, compCandidate);
 				}
 				else if (isValidWidget(compCandidate))
 				{
@@ -351,6 +352,17 @@ public class ViewFactory
 		}
 	}
 
+	/**
+	 * Parse resources element
+	 * @param view
+	 * @param elem
+	 * @throws ScreenConfigException 
+	 */
+	private void parseResourcesElement(View view, JSONObject elem) throws ScreenConfigException 
+	{
+		view.addResources(ResourcesFactory.getResources(view, elem));
+	}
+	
 	/**
 	 * Parse view element
 	 * @param view

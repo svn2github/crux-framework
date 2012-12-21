@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.screen.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,6 +41,7 @@ public class View
 	protected String title;
 	protected String fragment;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
+	protected Map<String, Resources> resources = new HashMap<String, Resources>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
 	protected List<String> controllers = new ArrayList<String>();
@@ -64,7 +66,7 @@ public class View
 	}
 
 	/**
-	 * Return DeclarativeFactory associated with the given id
+	 * Return DeclarativeFactory associated to the given id
 	 * @param widgetId
 	 * @return
 	 */
@@ -74,6 +76,17 @@ public class View
 		return widgets.get(widgetId);
 	}
 
+	/**
+	 * Return the resources bundle associated to the given id
+	 * @param resourceId
+	 * @return
+	 */
+	public Resources getResources(String resourceId)
+	{
+		if (resourceId == null) return null;
+		return resources.get(resourceId);
+	}
+	
 	/**
 	 * Return a Set containing all types of widgets found on this view
 	 * @return
@@ -105,6 +118,27 @@ public class View
 			{
 				widgetTypes.add(widget.getType());
 			}
+		}
+	}
+
+	/**
+	 * Iterate over resources
+	 * @return
+	 */
+	public Iterator<Resources> iterateResources() 
+	{
+		return resources.values().iterator();
+	}
+
+	/**
+	 * Add a new resources to view
+	 * @param widget
+	 */
+	protected void addResources(Resources resources)
+	{
+		if (resources != null)
+		{
+			this.resources.put(resources.getId(), resources);
 		}
 	}
 

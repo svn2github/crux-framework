@@ -712,6 +712,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("</xs:element>");
 		out.println("</xs:choice>");
 		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
+		out.println("<xs:attribute name=\"shared\" type=\"xs:boolean\"/>");
 		out.println("<xs:attribute name=\"packageName\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
 		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
@@ -791,10 +792,10 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	private void generateSimpleResourceElement(PrintStream out)
     {
 	    out.println("<xs:complexType name=\"SimpleResource\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
+		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"1\">");
 		out.println("<xs:element name=\"set\" >");
 		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"file\" type=\"xs:string\" use=\"required\"/>");
 		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
 		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
 		out.println("</xs:complexType>");
