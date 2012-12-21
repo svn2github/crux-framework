@@ -154,11 +154,27 @@ public class ViewFactory
 		if (cruxObject.has("_type"))
 		{
 			String type = cruxObject.getString("_type");
-			return (type != null && !"screen".equals(type));
+			return (type != null && !"screen".equals(type) && !"resources".equals(type));
 		}
 		return false;
 	}
 		
+	/**
+	 * Test if a target json object represents a resources definition for Crux.
+	 * @param cruxObject
+	 * @return
+	 * @throws JSONException
+	 */
+	public boolean isResourcesDefinition(JSONObject cruxObject) throws JSONException
+	{
+		if (cruxObject.has("_type"))
+		{
+			String type = cruxObject.getString("_type");
+			return (type != null && "resources".equals(type));
+		}
+		return false;
+	}
+
 	/**
 	 * Creates a widget based in its metadata information.
 	 * 
@@ -227,10 +243,14 @@ public class ViewFactory
 	            			Widget child = createWidget(childElem, view);
 	            			child.setParent(widget);
 	            		}
-	            		else
+	            		else if (isScreenDefinition(childElem))
 	            		{
-	            			createWidgetChildren(childElem, view, widgetId, widget);
+	    					parseViewElement(view,childElem);
 	            		}
+	    				else if (isResourcesDefinition(childElem))
+	    				{
+	    					//TODO: parseResources
+	    				}
 	            	}
 	            }
             }
@@ -306,6 +326,10 @@ public class ViewFactory
 				if (isScreenDefinition(compCandidate))
 				{
 					parseViewElement(view,compCandidate);
+				}
+				else if (isResourcesDefinition(compCandidate))
+				{
+					//TODO: parseResources
 				}
 				else if (isValidWidget(compCandidate))
 				{

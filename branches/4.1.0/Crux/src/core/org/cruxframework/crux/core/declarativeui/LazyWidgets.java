@@ -355,7 +355,7 @@ public class LazyWidgets
 				checkChildrenLazyDeps(dependencies, widget);
 			}
 		}
-		else
+		else if (!ViewFactory.getInstance().isResourcesDefinition(widget))
 		{
 			checkChildrenLazyDeps(dependencies, widget);
 		}

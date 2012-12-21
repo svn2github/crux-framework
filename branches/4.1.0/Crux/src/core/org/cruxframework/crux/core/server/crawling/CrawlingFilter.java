@@ -44,6 +44,7 @@ import org.cruxframework.crux.core.utils.StreamUtils;
  * Filter to serve search engines, sending static snapshots in the place of DHTML based pages.
  * See this {@link https://developers.google.com/webmasters/ajax-crawling/} 
  * 
+ * The filter also ensure that the responses uses gzip compression and configure a cache for the snapshots.
  * 
  * @author Thiago da Rosa de Bustamante
  * 

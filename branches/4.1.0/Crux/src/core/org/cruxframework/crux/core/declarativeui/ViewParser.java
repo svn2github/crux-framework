@@ -64,6 +64,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class ViewParser
 {
 	public static final String CRUX_VIEW_PREFIX = "_crux_view_prefix_";
+	private static final String CRUX_CORE_SCREEN = "screen";
+	private static final String CRUX_CORE_SPLASH_SCREEN = "splashScreen";
+	private static final String CRUX_CORE_RESOURCES = "resources";
 	private static final String CRUX_CORE_NAMESPACE= "http://www.cruxframework.org/crux";
 	private static DocumentBuilder documentBuilder;
 	private static XPathExpression findCruxPagesBodyExpression;
@@ -325,6 +328,42 @@ public class ViewParser
         }
 	}
 
+	/**
+	 * 
+	 * @param cruxPageScreen
+	 * @param cruxArrayMetaData
+	 * @throws ViewParserException
+	 */
+	private void generateCruxResourcesMetaData(Element cruxPageResources, StringBuilder cruxArrayMetaData) throws ViewParserException
+	{
+	    writeIndentationSpaces(cruxArrayMetaData);
+		String nodeName = cruxPageResources.getLocalName(); 
+		cruxArrayMetaData.append("{");
+		cruxArrayMetaData.append("\"_type\":\""+nodeName+"\"");
+		generateCruxMetaDataAttributes(cruxPageResources, cruxArrayMetaData);
+		cruxArrayMetaData.append(", \"_children\":[");
+		NodeList childNodes = cruxPageResources.getChildNodes();
+		if (childNodes != null)
+		{
+			boolean needsComma = false;
+			for (int i=0; i<childNodes.getLength(); i++)
+			{
+				Node child = childNodes.item(i);
+				if (child instanceof Element)
+				{
+					if (needsComma)
+					{
+						cruxArrayMetaData.append(",");
+					}
+					generateCruxResourcesMetaData((Element)child, cruxArrayMetaData);
+					needsComma = true;
+				}
+			}
+		}
+		cruxArrayMetaData.append("]");
+		cruxArrayMetaData.append("}");
+	}
+	
 	/**
 	 * @param cruxPageScreen
 	 * @param cruxArrayMetaData
@@ -603,13 +642,20 @@ public class ViewParser
 				String namespaceURI = child.getNamespaceURI();
 				String nodeName = child.getLocalName(); 
 					
-				if (namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE) && nodeName.equals("screen"))
+				if (namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE) && !nodeName.equals(CRUX_CORE_SPLASH_SCREEN))
 				{
 					if (needsComma)
 					{
 						cruxArrayMetaData.append(",");
 					}
-					generateCruxScreenMetaData((Element)child, cruxArrayMetaData);
+					if (nodeName.equals(CRUX_CORE_SCREEN))
+					{
+						generateCruxScreenMetaData((Element)child, cruxArrayMetaData);
+					}
+					else if (nodeName.equals(CRUX_CORE_RESOURCES))
+					{
+						generateCruxResourcesMetaData((Element)child, cruxArrayMetaData);
+					}
 					needsComma = true;
 				}
 				else if (namespaceURI != null && namespaceURI.startsWith(WIDGETS_NAMESPACE_PREFIX))
@@ -900,7 +946,7 @@ public class ViewParser
 		{
 			return true;
 		}
-		if (parentNode instanceof Element && namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE) && parentNode.getLocalName().equals("screen"))
+		if (parentNode instanceof Element && namespaceURI != null && namespaceURI.equals(CRUX_CORE_NAMESPACE) && parentNode.getLocalName().equals(CRUX_CORE_SCREEN))
 		{
 			return isHTMLChild(parentNode);
 		}
@@ -1018,14 +1064,11 @@ public class ViewParser
 	private void translateCruxCoreElements(Element cruxPageElement, Element htmlElement, Document htmlDocument)
     {
 	    String nodeName = cruxPageElement.getLocalName();
-	    if (nodeName.equals("splashScreen"))
-	    {
-	    	//IGNORE
-	    }
-	    else if (nodeName.equals("screen"))
+	    if (nodeName.equals(CRUX_CORE_SCREEN))
 	    {
 	    	translateDocument(cruxPageElement, htmlElement, true);
 	    }
+    	// else IGNORE
     }
 	
 	/**

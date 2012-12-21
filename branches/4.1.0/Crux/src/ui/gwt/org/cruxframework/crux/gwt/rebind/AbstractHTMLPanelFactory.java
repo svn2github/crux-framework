@@ -54,18 +54,21 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 			for(int i=0; i< children.length(); i++)
 			{
 				JSONObject child = children.optJSONObject(i);
-				String childWidget = createChildWidget(out, child, context);
-				boolean childPartialSupport = hasChildPartialSupport(child);
-				if (childPartialSupport)
+				if (isWidget(child))
 				{
-					out.println("if ("+getChildWidgetClassName(child)+".isSupported()){");
-				}
+					String childWidget = createChildWidget(out, child, context);
+					boolean childPartialSupport = hasChildPartialSupport(child);
+					if (childPartialSupport)
+					{
+						out.println("if ("+getChildWidgetClassName(child)+".isSupported()){");
+					}
 
-				out.println(context.getWidget()+".add("+childWidget+", "+EscapeUtils.quote(ViewFactoryUtils.getEnclosingPanelPrefix())+
-						"+"+getViewVariable()+".getPrefix()+"+EscapeUtils.quote(child.optString("id"))+");");
-				if (childPartialSupport)
-				{
-					out.println("}");
+					out.println(context.getWidget()+".add("+childWidget+", "+EscapeUtils.quote(ViewFactoryUtils.getEnclosingPanelPrefix())+
+							"+"+getViewVariable()+".getPrefix()+"+EscapeUtils.quote(child.optString("id"))+");");
+					if (childPartialSupport)
+					{
+						out.println("}");
+					}
 				}
 			}
 		}

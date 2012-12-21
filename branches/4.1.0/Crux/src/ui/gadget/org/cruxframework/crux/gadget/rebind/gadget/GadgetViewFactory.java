@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.gadget.rebind.gadget;
 
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
@@ -48,8 +49,8 @@ public class GadgetViewFactory extends AbstractHTMLPanelFactory
 	{
 		String className = GadgetView.class.getCanonicalName();
 		
-		String html = ensureHtmlChild(context.getWidgetElement(), false, context.getWidgetId());
-		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+html+");");
+		String html = ensureHtmlChild(context.getWidgetElement(), true, context.getWidgetId());
+		out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+((html==null)?EscapeUtils.quote(""):html)+");");
 		createChildren(out, context);
 	}
 	

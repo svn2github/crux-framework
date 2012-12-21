@@ -286,8 +286,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     }
 
 	/**
-	 * Return the type of a given crux meta tag. This type could be {@code "screen"} or
-	 * another string referencing a registered {@code WidgetFactory}.
+	 * Return the type of a given crux meta tag. This type could be {@code "screen"}, 
+	 * {@code "resources"} or another string referencing a registered {@code WidgetFactory}.
 	 *
 	 * @param cruxMetaElement
 	 * @return
@@ -713,7 +713,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     protected boolean isValidWidget(JSONObject metaElem)
 	{
 		String type =  metaElem.optString("_type");
-		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
+		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type) && !StringUtils.unsafeEquals("resources",type))
 		{
 			return true;
 		}
@@ -1005,11 +1005,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			{
 				throw new CruxGeneratorException("Crux Meta Data contains an invalid meta element (without type attribute). View ID["+view.getId()+"]");
 			}
-			String type = getMetaElementType(metaElement);
-			if (!StringUtils.unsafeEquals("screen",type))
+			if (isValidWidget(metaElement))
 			{
 				try
 				{
+					String type = getMetaElementType(metaElement);
 					createWidget(printer, metaElement, type);
 				}
 				catch (Throwable e)
