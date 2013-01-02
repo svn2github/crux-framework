@@ -820,6 +820,9 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:complexType>");
 		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"flipRtl\" type=\"xs:boolean\"/>");
+		out.println("<xs:attribute name=\"preventInlining\" type=\"xs:boolean\"/>");
+		out.println("<xs:attribute name=\"width\" type=\"xs:integer\"/>");
+		out.println("<xs:attribute name=\"height\" type=\"xs:integer\"/>");
 		out.println("<xs:attribute name=\"repeatStyle\" type=\"RepeatStyle\"/>");
 		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
 		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
@@ -829,6 +832,9 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
 		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"flipRtl\" type=\"xs:boolean\"/>");
+		out.println("<xs:attribute name=\"preventInlining\" type=\"xs:boolean\"/>");
+		out.println("<xs:attribute name=\"width\" type=\"xs:integer\"/>");
+		out.println("<xs:attribute name=\"height\" type=\"xs:integer\"/>");
 		out.println("<xs:attribute name=\"repeatStyle\" type=\"RepeatStyle\"/>");
 		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
 		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
@@ -838,6 +844,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:restriction base=\"xs:string\">");
 		out.println("<xs:enumeration value=\"horizontal\" />");
 		out.println("<xs:enumeration value=\"vertical\" />");
+		out.println("<xs:enumeration value=\"both\" />");
 		out.println("</xs:restriction>");
 		out.println("</xs:simpleType>");
     }

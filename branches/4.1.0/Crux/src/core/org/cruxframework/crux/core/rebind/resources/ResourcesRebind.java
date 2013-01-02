@@ -16,28 +16,22 @@
 package org.cruxframework.crux.core.rebind.resources;
 
 import java.io.PrintWriter;
-import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.View;
-import org.cruxframework.crux.core.rebind.screen.resources.Data;
-import org.cruxframework.crux.core.rebind.screen.resources.ExternalText;
 import org.cruxframework.crux.core.rebind.screen.resources.Resources;
-import org.cruxframework.crux.core.rebind.screen.resources.SimpleResource;
-import org.cruxframework.crux.core.rebind.screen.resources.Text;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ClientBundle.Source;
-import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource.ImageOptions;
-import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -49,51 +43,43 @@ public class ResourcesRebind extends AbstractProxyCreator
 	private final Resources resources;
 	private final View view;
 	private final Device device;
+	private SimpleResourcesRebind simpleResourcesRebind;
+	private ImageResourcesRebind imageResourcesRebind;
 
 	public ResourcesRebind(TreeLogger logger, GeneratorContextExt context, View view, String device, Resources resources)
     {
 	    super(logger, context);
 		this.view = view;
 		this.device = Device.valueOf(device);
-		this.resources = resources;
+		this.resources = resolveResources(resources);
+		this.simpleResourcesRebind = new SimpleResourcesRebind(this.view, this.device, this.resources);
+		this.imageResourcesRebind = new ImageResourcesRebind(this.view, this.device, this.resources);
     }
+	
+	@Override
+	public String create() throws CruxGeneratorException
+	{
+		if (resources == null)
+		{
+			return null;
+		}
+		
+		return super.create();
+	}
 
 	@Override
     protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-		Iterator<Data> datas = resources.iterateDatas();
-		while (datas.hasNext())
-		{
-			Data data = resolveSimleResource(datas.next());
-			srcWriter.println("@Source("+data.getFile()+")");
-			srcWriter.println(DataResource.class.getCanonicalName() + " " + data.getId() + "();");
-		}
-		Iterator<Text> texts = resources.iterateTexts();
-		while (texts.hasNext())
-		{
-			Text text = resolveSimleResource(texts.next());
-			srcWriter.println("@Source("+text.getFile()+")");
-			srcWriter.println(TextResource.class.getCanonicalName() + " " + text.getId() + "();");
-		}
-		Iterator<ExternalText> externalTexts = resources.iterateExternalTexts();
-		while (externalTexts.hasNext())
-		{
-			ExternalText externalText = resolveSimleResource(externalTexts.next());
-			srcWriter.println("@Source("+externalText.getFile()+")");
-			srcWriter.println(TextResource.class.getCanonicalName() + " " + externalText.getId() + "();");
-		}
-		
+		simpleResourcesRebind.generateSimpleResourceMethods(srcWriter);
+		imageResourcesRebind.generateImageResourceMethods(srcWriter);
     }
 
-	@SuppressWarnings("unchecked")
-	private <T extends SimpleResource> T  resolveSimleResource(T resource)
+	private Resources resolveResources(Resources resource)
 	{
-		
-		
-        T result;
+		Resources result;
         try
         {
-	        result = (T) resource.clone();
+	        result = (Resources) resource.clone();
         }
         catch (CloneNotSupportedException e)
         {
@@ -110,30 +96,57 @@ public class ResourcesRebind extends AbstractProxyCreator
 			return null;
 		}
 		
-		if (result.getDefinitions().size() > 1)
+		resolveResourcesDefinitions(resource, result);
+        return result;
+	}
+
+	private void resolveResourcesDefinitions(Resources resource, Resources result)
+    {
+	    for (int i = 0; i < result.getDefinitions().size(); i++)
 		{
-			throw new CruxGeneratorException("Only one definition is allowed for text, data and externalText resources.");
-		}
-			
-		if (result.getDefinitions().size() > 1)
-		{
-			SimpleResource.Definition definition = result.getDefinitions().get(0);
+			Resources.Definition definition = result.getDefinitions().get(i);
 		
-			if (definition.getDeviceSize() == null && definition.getDeviceInput() == null)
+			Size deviceSize = definition.getDeviceSize();
+			Input deviceInput = definition.getDeviceInput();
+			if (deviceSize == null && deviceInput == null)
 			{
 				throw new CruxGeneratorException("Invalid resource declaration on view ["+view.getId()+"]. You must inform a deviceSize or a deviceInput for a set declaration.");
 			}
-			if (definition.getDeviceSize() != null && definition.getDeviceInput() != null)
-			{
-				throw new CruxGeneratorException("Invalid resource declaration on view ["+view.getId()+"]. You can not inform both deviceSize and deviceInput for a set declaration.");
-			}
 			
-			result.setFile(resource.getFile());
+			int numMatches = 0;
+			if (deviceSize != null)
+			{
+				if (device.getSize().equals(deviceSize))
+				{
+					numMatches++;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			if (deviceInput != null)
+			{
+				if (device.getInput().equals(deviceInput))
+				{
+					numMatches++;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			if (!StringUtils.isEmpty(definition.getPackageName()))
+			{
+				result.setPackageName(definition.getPackageName());
+			}
+			if (numMatches==2)
+			{
+				break;
+			}
 		}
-		
-		return result;
-	}
-	
+    }
+
 	@Override
     public String getProxyQualifiedName()
     {

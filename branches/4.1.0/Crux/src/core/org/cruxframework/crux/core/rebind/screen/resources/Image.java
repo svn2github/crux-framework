@@ -26,19 +26,23 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Image
+public class Image implements Cloneable
 {
 	private String id;
 	private String file;
 	private boolean flipRtl;
+	private boolean preventInlining;
 	private RepeatStyle repeatStyle;
+	private int width;
+	private int height;
 	private Size deviceSize;
 	private Input deviceInput;
 	private List<Definition> definitions = new ArrayList<Definition>();
 
-	public Image(String id, String file, boolean flipRtl, RepeatStyle repeatStyle, Size deviceSize, Input deviceInput)
+	public Image(String id, String file, boolean flipRtl, boolean preventInlining, RepeatStyle repeatStyle, int width, int height, 
+				Size deviceSize, Input deviceInput)
     {
-        Matcher matcher = SimpleResource.id_pattern.matcher(id);
+		Matcher matcher = SimpleResource.id_pattern.matcher(id);
 
         if (matcher.find()) 
         {
@@ -48,7 +52,10 @@ public class Image
         this.id = id;
 		this.file = file;
 		this.flipRtl = flipRtl;
+		this.preventInlining = preventInlining;
 		this.repeatStyle = repeatStyle;
+		this.width = width;
+		this.height = height;
 		this.deviceSize = deviceSize;
 		this.deviceInput = deviceInput;
     }
@@ -62,6 +69,11 @@ public class Image
     {
     	return file;
     }
+
+	public void setFile(String file)
+	{
+		this.file = file;
+	}
 
 	public Size getDeviceSize()
     {
@@ -78,10 +90,51 @@ public class Image
     	return flipRtl;
     }
 
+	public void setFlipRtl(boolean flipRtl)
+    {
+    	this.flipRtl = flipRtl;
+    }
+
+	public void setPreventInlining(boolean preventInlining)
+    {
+    	this.preventInlining = preventInlining;
+    }
+
+	public boolean isPreventInlining()
+    {
+    	return preventInlining;
+    }
+
+	public int getWidth()
+    {
+    	return width;
+    }
+
+	public void setWidth(int width)
+    {
+		this.width = width;
+    }
+
+	public int getHeight()
+    {
+    	return height;
+    }
+
+	public void setHeight(int height)
+    {
+		this.height = height;
+    }
+
 	public RepeatStyle getRepeatStyle()
     {
     	return repeatStyle;
     }
+	
+	public void setRepeatStyle(RepeatStyle repeatStyle)
+	{
+		this.repeatStyle = repeatStyle;
+		
+	}
 
 	public List<Definition> getDefinitions()
     {
@@ -96,16 +149,23 @@ public class Image
 	public static class Definition
 	{
 		private String file;
-		private boolean flipRtl;
+		private Boolean flipRtl;
+		private Boolean preventInlining;
 		private RepeatStyle repeatStyle;
+		private int width;
+		private int height;
 		private Size deviceSize;
 		private Input deviceInput;
 		
-		public Definition(String file, boolean flipRtl, RepeatStyle repeatStyle, Size deviceSize, Input deviceInput)
+		public Definition(String file, Boolean flipRtl, Boolean preventInlining, RepeatStyle repeatStyle, 
+						int width, int height, Size deviceSize, Input deviceInput)
         {
 			this.file = file;
 			this.flipRtl = flipRtl;
+			this.preventInlining = preventInlining;
 			this.repeatStyle = repeatStyle;
+			this.width = width;
+			this.height = height;
 			this.deviceSize = deviceSize;
 			this.deviceInput = deviceInput;
         }
@@ -122,7 +182,7 @@ public class Image
         {
         	return deviceInput;
         }
-		public boolean isFlipRtl()
+		public Boolean isFlipRtl()
 	    {
 	    	return flipRtl;
 	    }
@@ -130,11 +190,28 @@ public class Image
 	    {
 	    	return repeatStyle;
 	    }
+		public Boolean isPreventInlining()
+        {
+        	return preventInlining;
+        }
+		public int getWidth()
+        {
+        	return width;
+        }
+		public int getHeight()
+        {
+        	return height;
+        }
 	}
 
-	public static enum RepeatStyle
+	@Override
+    public Image clone() throws CloneNotSupportedException
 	{
-		vertical, horizontal
+	    return (Image) super.clone();
 	}
 	
+	public static enum RepeatStyle
+	{
+		vertical, horizontal, both
+	}
 }

@@ -28,7 +28,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Resources
+public class Resources implements Cloneable
 {
 	private String id;
 	private boolean shared;
@@ -62,6 +62,11 @@ public class Resources
     	return packageName;
     }
 
+	public void setPackageName(String packageName)
+	{
+		this.packageName = packageName;
+	}
+	
 	public Size getDeviceSize()
     {
     	return deviceSize;
@@ -163,4 +168,11 @@ public class Resources
         	return deviceInput;
         }
 	}
+	
+	@Override
+    public Resources clone() throws CloneNotSupportedException
+	{
+	    return (Resources) super.clone();
+	}
+	
 }

@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.screen.resources;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.resources.Image.RepeatStyle;
@@ -209,7 +210,9 @@ public class ResourcesFactory
 	 */
 	private static Image getImageResourceElement(JSONObject elem) throws JSONException
     {
-		Image result = new Image(elem.getString("id"), elem.optString("file"), elem.optBoolean("flipRtl"), getRepeatStyle(elem), getResourceSize(elem), getResourceInput(elem));
+		Image result = new Image(elem.getString("id"), elem.optString("file"), elem.optBoolean("flipRtl"), 
+				       elem.optBoolean("preventInlining"), getRepeatStyle(elem), elem.optInt("width", -1), 
+				       elem.optInt("height", -1), getResourceSize(elem), getResourceInput(elem));
 	    JSONArray children = elem.optJSONArray("_children");
     	if (children != null)
     	{
@@ -219,7 +222,9 @@ public class ResourcesFactory
     			String type = child.getString("_type");
     			if ("set".equals(type))
     			{
-    				result.addDefinition(new Image.Definition(child.optString("file"), child.optBoolean("flipRtl"), getRepeatStyle(child), getResourceSize(child), getResourceInput(child)));
+    				result.addDefinition(new Image.Definition(child.optString("file"), child.has("flipRtl")?child.optBoolean("flipRtl"):null, 
+    						child.has("preventInlining")?child.optBoolean("preventInlining"):null, getRepeatStyle(child), child.optInt("width", -1), 
+    						child.optInt("height", -1), getResourceSize(child), getResourceInput(child)));
     			}
     		}
     	}
@@ -229,7 +234,7 @@ public class ResourcesFactory
 	private static RepeatStyle getRepeatStyle(JSONObject elem)
     {
     	String repeatStyle = elem.optString("repeatStyle");
-		return (repeatStyle==null)?null:RepeatStyle.valueOf(repeatStyle);
+		return (StringUtils.isEmpty(repeatStyle)?null:RepeatStyle.valueOf(repeatStyle));
     }
 
 	/**
@@ -240,7 +245,7 @@ public class ResourcesFactory
 	private static Size getResourceSize(JSONObject elem)
 	{
     	String deviceSize = elem.optString("deviceSize");
-		return (deviceSize==null)?null:Size.valueOf(deviceSize);
+		return (StringUtils.isEmpty(deviceSize)?null:Size.valueOf(deviceSize));
 	}
 	
 	/**
@@ -251,6 +256,6 @@ public class ResourcesFactory
 	private static Input getResourceInput(JSONObject elem)
 	{
     	String deviceInput = elem.optString("deviceInput");
-		return (deviceInput==null)?null:Input.valueOf(deviceInput);
+		return (StringUtils.isEmpty(deviceInput)?null:Input.valueOf(deviceInput));
 	}
 }
