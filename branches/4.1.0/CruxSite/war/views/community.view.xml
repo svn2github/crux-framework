@@ -7,7 +7,7 @@
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
-	title="Community">
+	title="Community" useResource="communityResources">
 
 	<gwt:grid id="insideContent" styleName="communityContent">
 		<gwt:row>
@@ -26,16 +26,16 @@
 					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
 						<tmp:siteReference href="http://blog.cruxframework.org" styleName="BlockTypes" siteTitle="Crux's Blog" 
 										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
-										   image="../img/icon_blogger.png" buttonLabel="Visit the Blog" id="blogSite"/>
+										   image="${communityResources.iconBlogger}" buttonLabel="Visit the Blog" id="blogSite"/>
 						<tmp:siteReference href="http://crux-framework.googlecode.com" styleName="BlockTypes b2" siteTitle="Crux's Project" 
 										   siteDescription="Wiki,Issues, commit road and much more can be found on our Google Code page." 
-										   image="../img/icon_google.png" buttonLabel="Visit the Page" id="projectSite"/>
+										   image="${communityResources.iconGoogle}" buttonLabel="Visit the Page" id="projectSite"/>
 						<tmp:siteReference href="http://groups.google.com/group/crux-framework" styleName="BlockTypes" siteTitle="Crux's Forum" 
 										   siteDescription="Our forum. There you can post question about Crux usage." 
-										   image="../img/icon_forum.png" buttonLabel="Visit the Forum" id="forumSite"/>
+										   image="${communityResources.iconForum}" buttonLabel="Visit the Forum" id="forumSite"/>
 						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="BlockTypes b2" siteTitle="Crux's Team" 
 										   siteDescription="Our contact: team@cruxframework.org" 
-										   image="../img/icon_forum.png" buttonLabel="Talk to us" id="talkSite"/>
+										   image="${communityResources.iconForum}" buttonLabel="Talk to us" id="talkSite"/>
 					</xdev:storyboard>
 				</gwt:widget>
 			</gwt:cell>

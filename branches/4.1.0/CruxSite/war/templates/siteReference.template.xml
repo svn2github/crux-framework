@@ -7,7 +7,7 @@
 	<gwt:HTMLPanel id="#{id}Panel">
 		<div class="#{styleName}">
 			<div class="BlockImg">
-				<img src="#{image}" />
+				<gwt:image id="#{id}" url="#{image}"/>
 			</div>
 			<div class="BlockText">
 				<h1>#{siteTitle}</h1>

@@ -6,7 +6,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:site="http://www.cruxframework.org/crux/site"
-	title="Crux Framework - Download">
+	title="Crux Framework - Download" useResource="downloadResources">
 	<gwt:flexTable id="insideContentDown">
 		<gwt:row>
 			<gwt:cell>
@@ -50,7 +50,7 @@
 												<gwt:cell rowSpan="2">
 													<gwt:widget>
 														<xdev:anchor id="downloadAnchor" href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
-															<img src="../img/icon_download.png" />
+															<img src="${downloadResources.iconDownload}" />
 														</xdev:anchor>			
 													</gwt:widget>
 												</gwt:cell>

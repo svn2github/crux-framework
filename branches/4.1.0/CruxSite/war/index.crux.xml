@@ -5,7 +5,6 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
-	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
 >
 	<head>
 		<title>Crux Framework</title>
@@ -15,9 +14,9 @@
 	<body>
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
 		
-		<c:screen useController="mainPageController" onHistoryChanged="mainPageController.onHistoryChanged" onActivate="mainPageController.onLoad" 
-				  useView="**/views/*" />
-		
+		<c:screen useController="mainPageController,analyticsController" onHistoryChanged="mainPageController.onHistoryChanged" 
+				  onActivate="mainPageController.onLoad" useView="**/views/*" onLoad="analyticsController.load" />
+
 		<site:siteFace id="site">
 			<site:menuEntry label="Home" url="index.html#!section=home" tooltip="Main Page" onSelect="mainPageController.onClickGoIndex" />
 			<site:menuEntry label="Demo" url="http://showcase.cruxframework.org/" tooltip="Click to see the Crux components showcase."/>
@@ -27,7 +26,5 @@
 			<site:menuEntry label="Compare" url="index.html#!section=compare" tooltip="Compare Crux with other web frameworks" onSelect="mainPageController.onClickMenuCompare" />
 			<site:menuEntry label="Contribute" url="index.html#!section=contribute" tooltip="Contribute with Crux" onSelect="mainPageController.onClickMenuContribute" />
 		</site:siteFace>
-		
-		<tmp:analytics/>
 	</body>
 </html>

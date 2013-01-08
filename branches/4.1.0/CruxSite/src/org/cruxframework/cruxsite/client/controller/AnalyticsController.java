@@ -42,7 +42,6 @@ public class AnalyticsController
 		}
 	}
 	
-	@Expose
 	public native void loadAnalytics(String analyticsCode) /*-{			
 		$wnd._gaq = $wnd._gaq || [];
 		$wnd._gaq.push(['_setAccount', analyticsCode]);

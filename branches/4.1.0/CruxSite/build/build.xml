@@ -14,7 +14,8 @@
 	<property name="xsd.dir" value="xsd" />
 	<property file="build/build.properties" />
 	<property file="build/version.properties" />
-
+	<property name="snapshots.dir" value="snapshots" />
+	
 	<path id="build.classpath">
 		<fileset dir="${web.lib.dir}">
 			<include name="**/*.jar" />
@@ -77,6 +78,9 @@
 			</classpath>
 		</serviceMapper>
 
+		<copydir dest="${temp.dir}/webroot/WEB-INF/classes" src="${snapshots.dir}" />
+		
+		
 		<war basedir="${temp.dir}/webroot" destfile="${temp.dir}/${final.name}.war" webxml="${web.inf.dir}/web.xml">
 			<manifest>
 				<attribute name="Class-Path" value="${final.name}.war" />
@@ -223,6 +227,9 @@
 	========================================================================================================
 	-->
 	<target name="generateHTMLSnapshots">		
+		<delete dir="${snapshots.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
+		<mkdir dir="${snapshots.dir}" />
+
 		<java classname="org.cruxframework.crux.tools.crawling.CrawlingTool" fork="true">
 			<classpath>
 				<pathelement path="${build/htmlunit}" />
@@ -234,16 +241,16 @@
 			<!--jvmarg value="-Xdebug" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
 
-			<arg value="outputDir" />
-		     <arg value="${target.classes.dir}" />
-		     <arg value="applicationBaseURL" />
-		     <arg value="http://localhost:8888/" />
-		     <arg value="javascriptTime" />
-		     <arg value="30000" />
-		     <arg value="urls" />
-		     <arg value="build/urlsSnapshot.txt" />
-		     <arg value="stopOnErrors" />
-		     <arg value="false" />
+		    <arg value="outputDir" />
+		    <arg value="${snapshots.dir}" />
+		    <arg value="applicationBaseURL" />
+		    <arg value="http://localhost:8888/" />
+		    <arg value="javascriptTime" />
+		    <arg value="30000" />
+		    <arg value="urls" />
+		    <arg value="build/urlsSnapshot.txt" />
+		    <arg value="stopOnErrors" />
+		    <arg value="false" />
 		 </java>	
 	</target>	
 
