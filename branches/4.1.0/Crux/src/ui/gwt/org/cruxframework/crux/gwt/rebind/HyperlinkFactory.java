@@ -31,7 +31,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
 import com.google.gwt.user.client.ui.Hyperlink;
 
 /**
- * Represents a HyperlinkFactory component
+ * Factory for Hyperlink widget
  * @author Thiago Bustamante
  */
 @DeclarativeFactory(id="hyperlink", library="gwt", targetWidget=Hyperlink.class)

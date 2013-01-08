@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.collection.Map;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
+import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 
@@ -36,6 +37,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -54,6 +56,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 {
 	private static Logger logger = Logger.getLogger(View.class.getName());
 	private static FastMap<View> loadedViews = new FastMap<View>();
+	private static FastMap<ClientBundle> resources = new FastMap<ClientBundle>();
 	
 	private String id;
 	private String title;
@@ -1065,7 +1068,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	}
 	
 	/**
-	 * Retrive the current view associated with a controller, datasource, or other ViewAware object
+	 * Retrieve the current view associated with a controller, datasource, or other ViewAware object
 	 * @param viewAware
 	 * @return
 	 */
@@ -1074,6 +1077,37 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
 		String view = ((ViewAware)viewAware).getBoundCruxView();
 		return getView(view);
+	}
+
+	/**
+	 * Retrieve the client bundle associated with the given id. To map a client bundle interface to an identifier, use
+	 * the {@link Resource} annotation
+	 * @param id
+	 * @return
+	 */
+	public static ClientBundle getResource(String id)
+	{
+		return resources.get(id);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param resource
+	 */
+	protected static void addResource(String id, ClientBundle resource)
+	{
+		resources.put(id, resource);
+	}
+	
+	/**
+	 * Returns true if a resource associated with the given identifiers was loaded by application
+	 * @param id
+	 * @return
+	 */
+	public static boolean containsResource(String id)
+	{
+		return resources.containsKey(id);
 	}
 	
 	public static interface RenderCallback

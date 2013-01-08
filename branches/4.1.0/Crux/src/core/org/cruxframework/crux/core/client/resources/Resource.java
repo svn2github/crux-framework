@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 cruxframework.org.
+ * Copyright 2013 cruxframework.org.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,19 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.screen.resources;
+package org.cruxframework.crux.core.client.resources;
 
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Text extends SimpleResource
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Resource
 {
-	public Text(String id, String file, Size deviceSize, Input deviceInput)
-    {
-	    super(id, file, deviceSize, deviceInput);
-    }
+	String value();
 }

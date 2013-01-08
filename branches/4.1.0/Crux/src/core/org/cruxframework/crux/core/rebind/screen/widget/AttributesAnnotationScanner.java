@@ -228,9 +228,9 @@ class AttributesAnnotationScanner
 		final boolean supportsI18N = isStringExpression && attr.supportsI18N();
 		final boolean isEnumExpression = type.isEnum();
 		final boolean isPrimitiveExpression = type.isPrimitive();
-			
+		final boolean supportsResources = attr.supportsResources();
 		return doCreateAutomaticAttributeProcessor(attrName, setterMethod, type.getCanonicalName(), 
-												   isStringExpression, supportsI18N, isEnumExpression, 
+												   isStringExpression, supportsI18N, supportsResources, isEnumExpression, 
 												   isPrimitiveExpression, attr.supportedDevices());
     }
 
@@ -246,7 +246,7 @@ class AttributesAnnotationScanner
 	 */
 	private AttributeCreator doCreateAutomaticAttributeProcessor(final String attrName, final String setterMethod, 
 																 final String typeName, final boolean isStringExpression, 
-																 final boolean supportsI18N, final boolean isEnumExpression, 
+																 final boolean supportsI18N, final boolean supportsResources, final boolean isEnumExpression, 
 																 final boolean isPrimitiveExpression, final Device[] supportedDevices)
     {
 	    return new AttributeCreator()
@@ -278,6 +278,10 @@ class AttributesAnnotationScanner
 				else if (supportsI18N)
 				{
 					expression = widgetCreator.getDeclaredMessage(attrValue);
+				}
+				else if (supportsResources)
+				{
+					expression = widgetCreator.getResourceAccessExpression(attrValue);
 				}
 				else if (isStringExpression)
 				{

@@ -38,6 +38,7 @@ public @interface TagAttribute
 	String property() default "";
 	boolean required() default false;
 	boolean supportsI18N() default false;
+	boolean supportsResources() default false;
 	Class<?> processor() default AttributeProcessor.NoParser.class;
 	boolean xsdIgnore() default false;
 	Device[] supportedDevices() default {Device.all};

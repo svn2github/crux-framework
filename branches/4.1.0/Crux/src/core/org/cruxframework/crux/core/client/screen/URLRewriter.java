@@ -32,7 +32,7 @@ public class URLRewriter
     {
 		if (Crux.getConfig().enableDebugForURL(url))
 		{
-			if (!StringUtils.isEmpty(url) && !url.contains("gwt.codesvr="))
+			if (!StringUtils.isEmpty(url) && !url.contains("gwt.codesvr=") && !url.startsWith("data:"))
 			{
 				String debugSvr = Window.Location.getParameter("gwt.codesvr");
 				if (!StringUtils.isEmpty(debugSvr))

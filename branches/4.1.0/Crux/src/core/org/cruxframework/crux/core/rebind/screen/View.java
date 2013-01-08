@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.rebind.screen.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +40,6 @@ public class View
 	protected String title;
 	protected String fragment;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
-	protected Map<String, Resources> resources = new HashMap<String, Resources>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
 	protected List<String> controllers = new ArrayList<String>();
@@ -49,6 +47,7 @@ public class View
 	protected List<String> formatters = new ArrayList<String>();
 	protected List<String> dataSources = new ArrayList<String>();
 	protected List<String> views = new ArrayList<String>();
+	protected List<String> resources = new ArrayList<String>();
 	private ViewFactoryCreator factory = null;
 
 	private final JSONArray elements;
@@ -76,17 +75,6 @@ public class View
 		return widgets.get(widgetId);
 	}
 
-	/**
-	 * Return the resources bundle associated to the given id
-	 * @param resourceId
-	 * @return
-	 */
-	public Resources getResources(String resourceId)
-	{
-		if (resourceId == null) return null;
-		return resources.get(resourceId);
-	}
-	
 	/**
 	 * Return a Set containing all types of widgets found on this view
 	 * @return
@@ -118,27 +106,6 @@ public class View
 			{
 				widgetTypes.add(widget.getType());
 			}
-		}
-	}
-
-	/**
-	 * Iterate over resources
-	 * @return
-	 */
-	public Iterator<Resources> iterateResources() 
-	{
-		return resources.values().iterator();
-	}
-
-	/**
-	 * Add a new resources to view
-	 * @param widget
-	 */
-	protected void addResources(Resources resources)
-	{
-		if (resources != null)
-		{
-			this.resources.put(resources.getId(), resources);
 		}
 	}
 
@@ -211,6 +178,37 @@ public class View
 	public boolean useController(String controller)
 	{
 		return controllers.contains(controller);
+	}
+	
+	/**
+	 * Import a resources into view
+	 * @param event
+	 */
+	protected void addResource(String resource)
+	{
+		if (!StringUtils.isEmpty(resource))
+		{
+			resources.add(resource);
+		}
+	}
+	
+	/**
+	 * Iterate over view resources
+	 * @return
+	 */
+	public Iterator<String> iterateResources()
+	{
+		return resources.iterator();
+	}
+
+	/**
+	 * 
+	 * @param resource
+	 * @return
+	 */
+	public boolean useResource(String resource)
+	{
+		return resources.contains(resource);
 	}
 	
 	/**

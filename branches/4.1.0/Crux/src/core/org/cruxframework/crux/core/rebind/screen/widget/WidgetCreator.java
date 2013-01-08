@@ -56,7 +56,7 @@ import com.google.gwt.dom.client.PartialSupport;
 @TagAttributes({
 	@TagAttribute("width"),
 	@TagAttribute("height"),
-	@TagAttribute("styleName"),
+	@TagAttribute(value="styleName", supportsResources=true),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
@@ -423,6 +423,26 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public String getDeclaredMessage(String property)
 	{
 		return viewFactory.getDeclaredMessage(property);
+	}
+	
+	/**
+	 * 
+	 * @param property
+	 * @return
+	 */
+	public String getResourceAccessExpression(String property)
+	{
+		return viewFactory.getResourceAccessExpression(property);
+	}
+	
+	/**
+	 * 
+	 * @param property
+	 * @return
+	 */
+	public boolean isResourceReference(String property)
+	{
+		return viewFactory.isResourceReference(property);
 	}
 	
 	/**

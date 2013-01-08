@@ -19,6 +19,7 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHTMLFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
@@ -27,6 +28,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 class CustomButtonContext extends WidgetCreatorContext
@@ -127,7 +129,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 	
 	@TagConstraints(tagName="imageFace")
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="url", required=true),
+		@TagAttributeDeclaration(value="url", required=true, supportsResources=true),
 		@TagAttributeDeclaration("visibleRect")
 	})
 	abstract static class AbstractImageFaceProcessor extends WidgetChildProcessor<CustomButtonContext>
@@ -139,8 +141,20 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 
 			if (StringUtils.isEmpty(visibleRect))
 			{
-				out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
-						"(Screen.rewriteUrl("+EscapeUtils.quote(context.readChildProperty("url"))+")));");
+				String url = context.readChildProperty("url");
+				if (getWidgetCreator().isResourceReference(url))
+				{				
+			    	String resource = ViewFactoryCreator.createVariableName("resource");
+			    	out.println(ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(url)+";");
+					out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
+							"(Screen.rewriteUrl("+resource+".getSafeUri().asString())), "+resource+".getLeft(), "+
+							resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight());");
+				}
+				else
+				{
+					out.println(context.getWidget()+"get"+context.face+"().setImage(new "+Image.class.getCanonicalName()+
+							"(Screen.rewriteUrl("+EscapeUtils.quote(url)+")));");
+				}
 			}
 			else
 			{
@@ -156,7 +170,7 @@ public abstract class CustomButtonFactory extends FocusWidgetFactory<CustomButto
 			}
 		}
 	}
-	
+		
 	@Override
 	public CustomButtonContext instantiateContext()
 	{

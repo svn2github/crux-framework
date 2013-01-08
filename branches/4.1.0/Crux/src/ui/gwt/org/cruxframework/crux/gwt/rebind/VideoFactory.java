@@ -41,7 +41,7 @@ import com.google.gwt.media.client.Video;
 	@TagAttribute(value="muted", type=Boolean.class, property="videoElement.muted"),
 	@TagAttribute(value="playbackRate", type=Double.class, property="videoElement.playbackRate"),
 	@TagAttribute(value="preload", type=VideoFactory.PreLoadType.class, processor=VideoFactory.PreLoadAttributeProcessor.class),
-	@TagAttribute(value="src", type=String.class, property="videoElement.src"),
+	@TagAttribute(value="src", type=String.class, property="videoElement.src", supportsResources=true),
 	@TagAttribute(value="volume", type=Double.class, property="videoElement.volume"),
 	@TagAttribute(value="poster", type=String.class, property="videoElement.poster")
 })

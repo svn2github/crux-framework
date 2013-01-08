@@ -33,4 +33,5 @@ public @interface TagAttributeDeclaration
 	String defaultValue() default "";
 	boolean required() default false;
 	boolean supportsI18N() default false;
+	boolean supportsResources() default false;
 }

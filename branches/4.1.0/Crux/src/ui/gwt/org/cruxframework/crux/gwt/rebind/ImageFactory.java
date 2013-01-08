@@ -18,6 +18,7 @@ package org.cruxframework.crux.gwt.rebind;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.screen.widget.AttributeProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandlersFactory;
@@ -32,6 +33,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -40,7 +42,7 @@ import com.google.gwt.user.client.ui.Image;
  */
 @DeclarativeFactory(id="image", library="gwt", targetWidget=Image.class)
 @TagAttributes({
-	@TagAttribute(value="url", processor=ImageFactory.URLAttributeParser.class),
+	@TagAttribute(value="url", processor=ImageFactory.URLAttributeParser.class, supportsResources=true),
 	@TagAttribute(value="altText"),
 	@TagAttribute(value="visibleRect", processor=ImageFactory.VisibleRectAttributeParser.class)
 })	
@@ -64,7 +66,17 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 		@Override
         public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
         {
-	        out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+EscapeUtils.quote(context.readWidgetProperty("url"))+"));");
+			String property = context.readWidgetProperty("url");
+	        if (getWidgetCreator().isResourceReference(property))
+	        {
+	        	String resource = ViewFactoryCreator.createVariableName("resource");
+	        	out.println(ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(property)+";");
+	        	out.println(context.getWidget()+".setUrlAndVisibleRect(Screen.rewriteUrl("+resource+".getSafeUri().asString()), "+resource+".getLeft(), "+resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight());");
+	        }
+	        else
+	        {
+	        	out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+EscapeUtils.quote(property)+"));");
+	        }
         }
 	}
 	

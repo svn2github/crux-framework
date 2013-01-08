@@ -29,8 +29,6 @@ import java.util.Stack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Input;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.template.TemplateParser;
 import org.cruxframework.crux.core.declarativeui.template.Templates;
@@ -600,7 +598,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        
 	        generateCoreSchemasImport(libraries, templateLibraries, out);
 	        generateCoreSplashScreenElement(out);
-	        generateCoreResourcesElement(out);
 	        generateCoreScreenElement(out);
 	        generateCoreCrossDeviceElement(out);
 	        generateCoreWidgetsType(out, libraries, templateLibraries);	
@@ -662,6 +659,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	    out.println("<xs:attribute name=\"title\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"fragment\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useController\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"useResource\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useSerializable\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useFormatter\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useDataSource\" type=\"xs:string\"/>");
@@ -687,167 +685,6 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"transactionDelay\" type=\"xs:integer\"/>");
 		out.println("</xs:complexType>");
 	}
-
-	/**
-	 * 
-	 * @param out
-	 */
-	private void generateCoreResourcesElement(PrintStream out)
-	{
-		out.println("<xs:element name=\"resources\" type=\"Resources\"/>");
-
-		out.println("<xs:complexType name=\"Resources\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"image\" type=\"Image\" />");
-		out.println("<xs:element name=\"text\" type=\"SimpleResource\" />");
-		out.println("<xs:element name=\"externalText\" type=\"SimpleResource\" />");
-		out.println("<xs:element name=\"data\" type=\"SimpleResource\" />");
-		out.println("<xs:element name=\"css\" type=\"Css\" />");
-		out.println("<xs:element name=\"set\" >");
-		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"packageName\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		out.println("</xs:element>");
-		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"shared\" type=\"xs:boolean\"/>");
-		out.println("<xs:attribute name=\"packageName\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		
-		generateSimpleResourceElement(out);
-		generateImageResourceElement(out);
-	    generateCssResourceElement(out);
-
-		out.println("<xs:simpleType name=\"DeviceSize\">");
-		out.println("<xs:restriction base=\"xs:string\">");
-		Size[] sizeValues = Size.values();
-		for (Size size : sizeValues)
-        {
-			out.println("<xs:enumeration value=\""+size.toString()+"\" />");
-        }
-		out.println("</xs:restriction>");
-		out.println("</xs:simpleType>");
-
-		out.println("<xs:simpleType name=\"DeviceInput\">");
-		out.println("<xs:restriction base=\"xs:string\">");
-		Input[] inputValues = Input.values();
-		for (Input input : inputValues)
-        {
-			out.println("<xs:enumeration value=\""+input.toString()+"\" />");
-        }
-		out.println("</xs:restriction>");
-		out.println("</xs:simpleType>");
-	}
-
-	/**
-	 * 
-	 * @param out
-	 */
-	private void generateCssResourceElement(PrintStream out)
-    {
-	    out.println("<xs:complexType name=\"Css\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"cssAlias\" type=\"CssAlias\" />");
-		out.println("<xs:element name=\"set\" >");
-		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"importPrefix\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		out.println("</xs:element>");
-		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"importPrefix\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-
-	    out.println("<xs:complexType name=\"CssAlias\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"set\" >");
-		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"className\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		out.println("</xs:element>");
-		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"name\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"className\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-    }
-
-	/**
-	 * 
-	 * @param out
-	 */
-	private void generateSimpleResourceElement(PrintStream out)
-    {
-	    out.println("<xs:complexType name=\"SimpleResource\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"1\">");
-		out.println("<xs:element name=\"set\" >");
-		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		out.println("</xs:element>");
-		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-    }
-
-	/**
-	 * 
-	 * @param out
-	 */
-	private void generateImageResourceElement(PrintStream out)
-    {
-	    out.println("<xs:complexType name=\"Image\">");
-		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
-		out.println("<xs:element name=\"set\" >");
-		out.println("<xs:complexType>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"flipRtl\" type=\"xs:boolean\"/>");
-		out.println("<xs:attribute name=\"preventInlining\" type=\"xs:boolean\"/>");
-		out.println("<xs:attribute name=\"width\" type=\"xs:integer\"/>");
-		out.println("<xs:attribute name=\"height\" type=\"xs:integer\"/>");
-		out.println("<xs:attribute name=\"repeatStyle\" type=\"RepeatStyle\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-		out.println("</xs:element>");
-		out.println("</xs:choice>");
-		out.println("<xs:attribute name=\"id\" type=\"xs:string\" use=\"required\"/>");
-		out.println("<xs:attribute name=\"file\" type=\"xs:string\"/>");
-		out.println("<xs:attribute name=\"flipRtl\" type=\"xs:boolean\"/>");
-		out.println("<xs:attribute name=\"preventInlining\" type=\"xs:boolean\"/>");
-		out.println("<xs:attribute name=\"width\" type=\"xs:integer\"/>");
-		out.println("<xs:attribute name=\"height\" type=\"xs:integer\"/>");
-		out.println("<xs:attribute name=\"repeatStyle\" type=\"RepeatStyle\"/>");
-		out.println("<xs:attribute name=\"deviceSize\" type=\"DeviceSize\"/>");
-		out.println("<xs:attribute name=\"deviceInput\" type=\"DeviceInput\"/>");
-		out.println("</xs:complexType>");
-
-		out.println("<xs:simpleType name=\"RepeatStyle\">");
-		out.println("<xs:restriction base=\"xs:string\">");
-		out.println("<xs:enumeration value=\"horizontal\" />");
-		out.println("<xs:enumeration value=\"vertical\" />");
-		out.println("<xs:enumeration value=\"both\" />");
-		out.println("</xs:restriction>");
-		out.println("</xs:simpleType>");
-    }
 
 	/**
 	 * 
@@ -1268,6 +1105,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("</xs:choice>");
 		out.println("<xs:attribute name=\"library\" type=\"xs:string\" use=\"required\"/>");
 		out.println("<xs:attribute name=\"useController\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"useResource\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useSerializable\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useFormatter\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"useDataSource\" type=\"xs:string\"/>");
@@ -1311,6 +1149,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("<xs:any targetNamespace=\"http://www.w3.org/1999/xhtml\"/>");
 			out.println("</xs:choice>");
 			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
+			out.println("<xs:attribute name=\"useResource\" type=\"xs:string\"/>");
 			out.println("</xs:complexType>");
 	        
 	        out.println("</xs:schema>");

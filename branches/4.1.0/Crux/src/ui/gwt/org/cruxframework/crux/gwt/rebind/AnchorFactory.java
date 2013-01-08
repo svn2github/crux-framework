@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.Anchor;
  */
 @DeclarativeFactory(id="anchor", library="gwt", targetWidget=Anchor.class)
 @TagAttributes({
-	@TagAttribute("href"),
+	@TagAttribute(value="href", supportsResources=true),
 	@TagAttribute("target")
 })
 @TagChildren({

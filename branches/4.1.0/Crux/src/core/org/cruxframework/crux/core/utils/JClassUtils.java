@@ -85,7 +85,15 @@ public class JClassUtils
         		String getterMethod = JClassUtils.getGetterMethod(prop, baseClassType);
         		if (getterMethod == null)
         		{
-        			throw new NoSuchFieldException(colKey);
+        			JMethod method = getMethod(baseClassType, prop, new JType[]{});
+        			if (method == null)
+        			{
+        				throw new NoSuchFieldException(colKey);
+        			}
+        			else
+        			{
+        				getterMethod = prop;
+        			}
         		}
         		getExpression.append("."+getterMethod+"()");
         		baseType = JClassUtils.getReturnTypeFromMethodClass(baseClassType, getterMethod, new JType[]{});
@@ -181,7 +189,7 @@ public class JClassUtils
     {
 	    JMethod method = null;
 	    JClassType superClass = clazz;
-	    while (method == null && superClass.getSuperclass() != null)
+	    while (method == null && superClass != null)
 	    {
 	    	method = superClass.findMethod(methodName, params);
 	    	superClass = superClass.getSuperclass();

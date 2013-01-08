@@ -33,7 +33,7 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.formatter.Formatters;
-import org.cruxframework.crux.core.rebind.screen.resources.ResourcesFactory;
+import org.cruxframework.crux.core.rebind.resources.Resources;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.scannotation.URLStreamManager;
 import org.json.JSONArray;
@@ -155,27 +155,11 @@ public class ViewFactory
 		if (cruxObject.has("_type"))
 		{
 			String type = cruxObject.getString("_type");
-			return (type != null && !"screen".equals(type) && !"resources".equals(type));
+			return (type != null && !"screen".equals(type));
 		}
 		return false;
 	}
 		
-	/**
-	 * Test if a target json object represents a resources definition for Crux.
-	 * @param cruxObject
-	 * @return
-	 * @throws JSONException
-	 */
-	public boolean isResourcesDefinition(JSONObject cruxObject) throws JSONException
-	{
-		if (cruxObject.has("_type"))
-		{
-			String type = cruxObject.getString("_type");
-			return (type != null && "resources".equals(type));
-		}
-		return false;
-	}
-
 	/**
 	 * Creates a widget based in its metadata information.
 	 * 
@@ -248,10 +232,6 @@ public class ViewFactory
 	            		{
 	    					parseViewElement(view,childElem);
 	            		}
-	    				else if (isResourcesDefinition(childElem))
-	    				{
-	    					parseResourcesElement(view, childElem);
-	    				}
 	            	}
 	            }
             }
@@ -328,10 +308,6 @@ public class ViewFactory
 				{
 					parseViewElement(view,compCandidate);
 				}
-				else if (isResourcesDefinition(compCandidate))
-				{
-					parseResourcesElement(view, compCandidate);
-				}
 				else if (isValidWidget(compCandidate))
 				{
 					try 
@@ -353,17 +329,6 @@ public class ViewFactory
 	}
 
 	/**
-	 * Parse resources element
-	 * @param view
-	 * @param elem
-	 * @throws ScreenConfigException 
-	 */
-	private void parseResourcesElement(View view, JSONObject elem) throws ScreenConfigException 
-	{
-		view.addResources(ResourcesFactory.getResources(view, elem));
-	}
-	
-	/**
 	 * Parse view element
 	 * @param view
 	 * @param elem
@@ -383,6 +348,10 @@ public class ViewFactory
 	        	if(attrName.equals("useController"))
 	        	{
 	        		parseViewUseControllerAttribute(view, elem);
+	        	}
+	        	else if(attrName.equals("useResource"))
+	        	{
+	        		parseViewUseResourceAttribute(view, elem);
 	        	}
 	        	else if(attrName.equals("useSerializable"))
 	        	{
@@ -573,6 +542,40 @@ public class ViewFactory
 	    }
     }
 	
+	/**
+	 * @param view
+	 * @param elem
+	 * @throws ScreenConfigException 
+	 */
+	private void parseViewUseResourceAttribute(View view, JSONObject elem) throws ScreenConfigException
+    {
+	    String handlerStr;
+        try
+        {
+	        handlerStr = elem.getString("useResource");
+        }
+        catch (JSONException e)
+        {
+        	throw new ScreenConfigException(e);
+        }
+	    if (handlerStr != null)
+	    {
+	    	String[] handlers = RegexpPatterns.REGEXP_COMMA.split(handlerStr);
+	    	for (String res : handlers)
+	    	{
+	    		res = res.trim();
+	    		if (!StringUtils.isEmpty(res))
+	    		{
+	    			if (Resources.getResource(res) == null)
+	    			{
+	    				throw new ScreenConfigException("Resource ["+res+"], declared on view ["+view.getId()+"], not found!");
+	    			}
+	    			view.addResource(res);
+	    		}
+	    	}
+	    }
+    }
+
 	/**
 	 * 
 	 * @param view

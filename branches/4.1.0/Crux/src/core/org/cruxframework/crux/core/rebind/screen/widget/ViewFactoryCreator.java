@@ -54,11 +54,11 @@ import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
 import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
-import org.cruxframework.crux.core.rebind.resources.ResourcesRebind;
+import org.cruxframework.crux.core.rebind.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
-import org.cruxframework.crux.core.rebind.screen.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.utils.JClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -265,8 +265,30 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
 		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
+		generateResources(printer);
 		printer.println("}");
 	}
+
+	/**
+	 * Create ClientBundles for the declared resources on View
+	 * @param printer
+	 */
+	protected void generateResources(SourcePrinter printer)
+    {
+	    Iterator<String> resources = view.iterateResources();
+	    while (resources.hasNext())
+	    {
+	    	String resourceKey = resources.next();
+	    	String resourceClass = Resources.getResource(resourceKey);
+	    	if (resourceClass == null)
+	    	{
+	    		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
+	    	}
+	    	printer.println("if (!containsResource("+EscapeUtils.quote(resourceKey)+")){");
+	    	printer.println("addResource("+EscapeUtils.quote(resourceKey)+", ("+resourceClass+")GWT.create("+resourceClass+".class));");
+	    	printer.println("}");
+	    }
+    }
 
 	/**
 	 * Generate the View methods.
@@ -286,17 +308,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
-	    Iterator<Resources> resources = view.iterateResources();
-	    while (resources.hasNext())
-	    {
-	    	String resourcesClass = new ResourcesRebind(logger, context, view, this.device, resources.next()).create();
-	    	//TODO add resources class
-	    }
     }
 
 	/**
-	 * Return the type of a given crux meta tag. This type could be {@code "screen"}, 
-	 * {@code "resources"} or another string referencing a registered {@code WidgetFactory}.
+	 * Return the type of a given crux meta tag. This type could be {@code "screen"} 
+	 *  or another string referencing a registered {@code WidgetFactory}.
 	 *
 	 * @param cruxMetaElement
 	 * @return
@@ -480,31 +496,38 @@ public class ViewFactoryCreator extends AbstractProxyCreator
      * Gets the code necessary to access a i18n declared property or the own property, if
      * it is not in declarative i18n format.
      *
-	 * @param title
+	 * @param property
 	 * @return
 	 */
 	protected String getDeclaredMessage(String property)
     {
 	    if (isKeyReference(property))
 	    {
-			String[] messageParts = getKeyMessageParts(property);
-			String messageClassName = MessageClasses.getMessageClass(messageParts[0]);
-
-			// Checks if declared message is valid
-			this.checkDeclaredMessage(messageClassName, messageParts[0], messageParts[1]);
-
-			String messageVariable;
-
-			if (!declaredMessages.containsKey(messageClassName))
+			if (isResourceReference(property))
 			{
-				messageVariable= createVariableName("mesg");
-				declaredMessages.put(messageClassName, messageVariable);
+				return getResourceAccessExpression(property);
 			}
 			else
 			{
-				messageVariable = declaredMessages.get(messageClassName);
+				String[] messageParts = getKeyMessageParts(property);
+				String messageClassName = MessageClasses.getMessageClass(messageParts[0]);
+
+				// Checks if declared message is valid
+				this.checkDeclaredMessage(messageClassName, messageParts[0], messageParts[1]);
+
+				String messageVariable;
+
+				if (!declaredMessages.containsKey(messageClassName))
+				{
+					messageVariable= createVariableName("mesg");
+					declaredMessages.put(messageClassName, messageVariable);
+				}
+				else
+				{
+					messageVariable = declaredMessages.get(messageClassName);
+				}
+				return messageVariable+"."+messageParts[1]+"()";
 			}
-			return messageVariable+"."+messageParts[1]+"()";
 	    }
 	    else
 	    {
@@ -512,6 +535,56 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    }
     }
 
+	/**
+     * Gets the code necessary to access a resource property or the own property, if
+     * it is not in a resource reference format.
+     *
+	 * @param property
+	 * @return
+	 */
+	protected String getResourceAccessExpression(String property)
+	{
+	    if (isResourceReference(property))
+	    {
+	    	String[] resourceParts = getResourceParts(property);
+	    	String resourceKey = resourceParts[0];
+	    	String resourceProperty = resourceParts[1];
+	    	String resourceClassName = Resources.getResource(resourceKey);
+	    	
+	    	if (!view.useResource(resourceKey))
+	    	{
+				throw new CruxGeneratorException("The resource ["+resourceKey+"] is not imported into view ["+view.getId()+"]. Use the useResource atribute of view tag to import it first.");
+	    	}
+	    	String resourceObject = "(("+resourceClassName+")getResource("+EscapeUtils.quote(resourceKey)+"))";
+	    	
+	    	StringBuilder out = new StringBuilder();
+			JClassType resourceType = context.getTypeOracle().findType(resourceClassName);
+			if (resourceType == null)
+			{
+				String message = "Resource ["+resourceKey+"] , declared on view ["+view.getId()+"], could not be loaded. "
+				   + "\n Possible causes:"
+				   + "\n\t 1. Check if any type or subtype used by resource refers to another module and if this module is inherited in the .gwt.xml file."
+				   + "\n\t 2. Check if your resource or its members belongs to a client package."
+				   + "\n\t 3. Check the versions of all your modules."
+				   ;
+				throw new CruxGeneratorException(message);
+			}
+            try
+            {
+	            JClassUtils.buildGetValueExpression(out, resourceType, resourceProperty, resourceObject, false);
+            }
+            catch (NoSuchFieldException e)
+            {
+				throw new CruxGeneratorException("Resource ["+resourceKey+"] , declared on view ["+view.getId()+"], has an invalid expression ["+resourceProperty+"]", e);
+            }
+			return out.toString();
+	    }
+	    else
+	    {
+	    	return property==null?null:EscapeUtils.quote(property);
+	    }
+	}
+	
 	/**
 	 * Checks if declared message is valid
 	 * @param messageClassName
@@ -589,6 +662,21 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	protected boolean isKeyReference(String text)
 	{
 		return text!= null && text.matches("\\$\\{\\w+\\.\\w+\\}");
+	}
+
+    /**
+     * Returns <code>true</code> if the given text is a reference to a resource.
+	 * @param text
+	 * @return <code>true</code> if the given text is a reference to a resource.
+	 */
+	protected boolean isResourceReference(String text)
+	{
+		if (text!= null && text.matches("\\$\\{\\w[\\.\\w]+\\}"))
+		{
+			String[] parts = getResourceParts(text);
+			return (view.useResource(parts[0]));
+		}
+		return false;
 	}
 
 	/**
@@ -722,7 +810,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     protected boolean isValidWidget(JSONObject metaElem)
 	{
 		String type =  metaElem.optString("_type");
-		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type) && !StringUtils.unsafeEquals("resources",type))
+		if (type != null && type.length() > 0 && !StringUtils.unsafeEquals("screen",type))
 		{
 			return true;
 		}
@@ -1151,6 +1239,22 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		text = text.substring(2, text.length()-1);
 		return text.split("\\.");
+	}
+
+	/**
+	 * Split the resourceReference and separate the resourceClass alias from the requested property
+	 *
+	 * @param text
+	 * @return
+	 */
+	protected  String[] getResourceParts(String text)
+	{
+		text = text.substring(2, text.length()-1);
+		int index = text.indexOf('.');
+		String[] result = new String[2];
+		result[0] = text.substring(0, index);
+		result[1] = text.substring(index+1, text.length());
+		return result;
 	}
 
 	/**
