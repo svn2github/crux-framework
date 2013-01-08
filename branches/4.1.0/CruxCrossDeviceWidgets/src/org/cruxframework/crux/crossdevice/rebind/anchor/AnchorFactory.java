@@ -28,7 +28,7 @@ import org.cruxframework.crux.crossdevice.rebind.event.SelectEvtBind;
 
 @TagAttributes({
 	@TagAttribute(value="preventDefaultTouchEvents", type=Boolean.class, defaultValue="false"),
-	@TagAttribute("href"), 
+	@TagAttribute(value="href", supportsResources=true), 
 	@TagAttribute("target") 
 })
 @TagEvents({
