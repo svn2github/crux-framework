@@ -44,9 +44,9 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 	@TagConstraints(minOccurs="0",maxOccurs="unbounded",tagName="banner")
 
 	@TagAttributesDeclaration({
-		@TagAttributeDeclaration(value="image", required=false),
-		@TagAttributeDeclaration(value="smallImage", required=false),
-		@TagAttributeDeclaration(value="largeImage", required=false),
+		@TagAttributeDeclaration(value="image", required=false, supportsResources=true),
+		@TagAttributeDeclaration(value="smallImage", required=false, supportsResources=true),
+		@TagAttributeDeclaration(value="largeImage", required=false, supportsResources=true),
 		@TagAttributeDeclaration(value="title", required=true),
 		@TagAttributeDeclaration(value="text", required=true),
 		@TagAttributeDeclaration("styleName"),
@@ -71,17 +71,17 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 			if(hasSmallImage)
 			{
 				out.print(context.getWidget() + ".addSmallBanner("
-						+ EscapeUtils.quote(context.readChildProperty("smallImage")));
+						+ getWidgetCreator().getResourceAccessExpression(context.readChildProperty("smallImage")));
 			}
 			if(hasLargeImage)
 			{
 				out.print(context.getWidget() + ".addLargeBanner("
-						+ EscapeUtils.quote(context.readChildProperty("largeImage")));
+						+ getWidgetCreator().getResourceAccessExpression(context.readChildProperty("largeImage")));
 			}
 			if (hasDefaultImage)
 			{
 				out.print(context.getWidget() + ".addDefaultBanner("
-						+ EscapeUtils.quote(context.readChildProperty("image")));
+						+ getWidgetCreator().getResourceAccessExpression(context.readChildProperty("image")));
 			}
 			if ((hasDefaultImage && (hasLargeImage || hasSmallImage)) || (hasLargeImage && !hasSmallImage) 
 				|| (hasSmallImage && !hasLargeImage) || (hasSmallImage && hasLargeImage && hasDefaultImage))

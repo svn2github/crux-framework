@@ -2,6 +2,8 @@ package org.cruxframework.crux.crossdevice.client.promobanner;
 
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 
+import com.google.gwt.resources.client.ImageResource;
+
 /**
  * PromoBanner implementation for small devices with touch
  * @author Thiago da Rosa de Bustamante
@@ -41,6 +43,18 @@ class BannerImplSmallTouch extends BannerImplTouch
 
 	@Override
     public void addLargeBanner(String imageURL, String title, String text, String styleName, String buttonLabel, SelectHandler onclick)
+    {
+		// Do nothing
+    }
+
+	@Override
+    public void addSmallBanner(ImageResource image, String title, String text, String styleName, String buttonLabel, SelectHandler onclick)
+    {
+		addBanner(image, title, text, styleName, buttonLabel, onclick);
+    }
+
+	@Override
+    public void addLargeBanner(ImageResource image, String title, String text, String styleName, String buttonLabel, SelectHandler onclick)
     {
 		// Do nothing
     }

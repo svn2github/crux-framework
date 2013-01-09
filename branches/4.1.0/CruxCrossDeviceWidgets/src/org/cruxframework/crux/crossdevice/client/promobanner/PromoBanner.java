@@ -4,6 +4,7 @@ import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveC
 import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -93,5 +94,20 @@ public class PromoBanner extends Composite
 	public void addDefaultBanner(String imageURL, String title, String text,  String styleName, String buttonLabel, SelectHandler onclick)
 	{
 		impl.addDefaultBanner(imageURL, title, text, styleName, buttonLabel, onclick);
+	}
+
+	public void addSmallBanner(ImageResource image, String title, String text,  String styleName, String buttonLabel, SelectHandler onclick)
+	{
+		impl.addSmallBanner(image, title, text, styleName, buttonLabel, onclick);
+	}
+	
+	public void addLargeBanner(ImageResource image, String title, String text,  String styleName, String buttonLabel, SelectHandler onclick)
+	{
+		impl.addLargeBanner(image, title, text, styleName, buttonLabel, onclick);
+	}
+	
+	public void addDefaultBanner(ImageResource image, String title, String text,  String styleName, String buttonLabel, SelectHandler onclick)
+	{
+		impl.addDefaultBanner(image, title, text, styleName, buttonLabel, onclick);
 	}
 }

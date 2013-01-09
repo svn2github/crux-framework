@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.client.promobanner;
 
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.crossdevice.client.button.Button;
 import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
@@ -7,11 +8,13 @@ import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -82,6 +85,11 @@ abstract class BannerImpl extends Composite
 		addBanner(imageURL, title, text, styleName, buttonLabel, onclick);
 	}
 
+	public void addDefaultBanner(ImageResource image, String title, String text, String styleName, String buttonLabel, SelectHandler onclick)
+	{
+		addBanner(image, title, text, styleName, buttonLabel, onclick);
+	}
+
 	public void setAutoTransitionInterval(int autoTransitionInterval)
 	{
 		this.autoTransitionInterval = autoTransitionInterval;
@@ -122,16 +130,41 @@ abstract class BannerImpl extends Composite
         return banners.getElement().getStyle().getHeight();
     }
 	
+	protected void addBanner(ImageResource image, String title, String text,  String styleName, String buttonLabel, final SelectHandler selectHandler)
+	{
+		SimplePanel panel = new SimplePanel();
+		Style style = panel.getElement().getStyle();
+		style.setProperty("background", "url(" + Screen.rewriteUrl(image.getSafeUri().asString()) + ") no-repeat " + (-image.getLeft() + "px ") + (-image.getTop() + "px"));
+		style.setPropertyPx("width", image.getWidth());
+		style.setPropertyPx("height", image.getHeight());
+		
+		doAddBanner(title, text, styleName, buttonLabel, selectHandler, panel);
+	}
+	
 	protected void addBanner(String imageURL, String title, String text,  String styleName, String buttonLabel, final SelectHandler selectHandler)
 	{
 		SimplePanel panel = new SimplePanel();
+		panel.getElement().getStyle().setBackgroundImage("url(" + Screen.rewriteUrl(imageURL) + ")");
 
-		if(styleName != null)
+		doAddBanner(title, text, styleName, buttonLabel, selectHandler, panel);
+	}
+
+	/**
+	 * 
+	 * @param title
+	 * @param text
+	 * @param styleName
+	 * @param buttonLabel
+	 * @param selectHandler
+	 * @param panel
+	 */
+	private void doAddBanner(String title, String text, String styleName, String buttonLabel, final SelectHandler selectHandler, SimplePanel panel)
+    {
+	    if(styleName != null)
 		{
 			panel.setStyleName(styleName);
 		}
 
-		panel.getElement().getStyle().setBackgroundImage("url(" + imageURL + ")");
 		panel.setHeight(getBannersHeight());
 		panel.setWidth("100%");
 
@@ -163,7 +196,7 @@ abstract class BannerImpl extends Composite
 		{
 			showBanner(0);
 		}
-	}
+    }
 
 	protected VerticalPanel createMessagePanel(String title, String text, String buttonLabel, final SelectHandler selectHandler, boolean hasTitle, 
 											boolean hasText, boolean hasButtonLabel)
@@ -285,6 +318,8 @@ abstract class BannerImpl extends Composite
 	public abstract void doAddBanner(SimplePanel panel);
 	public abstract void addSmallBanner(String imageURL, String title, String text, String styleName, String buttonLabel, SelectHandler onclick);
 	public abstract void addLargeBanner(String imageURL, String title, String text, String styleName, String buttonLabel, SelectHandler onclick);
+	public abstract void addSmallBanner(ImageResource image, String title, String text, String styleName, String buttonLabel, SelectHandler onclick);
+	public abstract void addLargeBanner(ImageResource image, String title, String text, String styleName, String buttonLabel, SelectHandler onclick);
 	public abstract boolean hasVisibleBanner();
 
 	protected static class AutoTransiteTimer extends Timer
