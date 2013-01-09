@@ -54,6 +54,9 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<arg value="-localWorkers" />
+			<arg value="2" />
+
 			<!-- use these parameters if you want to modify GWT output settings
 			<arg value="-style"/>
 			<arg value="DETAILED"/>
@@ -110,6 +113,8 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<arg value="-localWorkers" />
+			<arg value="2" />
 			<arg value="-gen"/>
 			<arg value="generated"/>
 			<!-- use these parameters if you want to modify GWT output settings

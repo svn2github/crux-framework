@@ -6,7 +6,8 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
-	onLoad="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}">
+	onLoad="rssController.onLoad" useController="rssController,bannerController" 
+	useResource="homeResources" title="${siteMessages.siteTitle}">
 	
 	<gwt:grid id="contentAreas" styleName="ContentAreas" cellPadding="0" cellSpacing="0">
 		<gwt:row>
@@ -18,10 +19,10 @@
 							<gwt:cell styleName="BannerArea" colSpan="3">
 								<gwt:widget>
 									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" transitionDuration="400" autoTransitionInterval="10000">
-									 	<xdev:banner image="../img/banner-fast.jpg"  buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
-									 	<xdev:banner image="../img/banner-cross-device.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
-									 	<xdev:banner image="../img/banner-social.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
-									 	<xdev:banner image="../img/banner-java.jpg" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
+									 	<xdev:banner image="${homeResources.bannerFast}"  buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
+									 	<xdev:banner image="${homeResources.bannerCrossDevice}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
+									 	<xdev:banner image="${homeResources.bannerSocial}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
+									 	<xdev:banner image="${homeResources.bannerJava}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
 									 </xdev:promoBanner>
 								</gwt:widget>
 							</gwt:cell>

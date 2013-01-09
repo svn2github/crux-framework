@@ -23,7 +23,6 @@
 			<when-property-is name="device.features" value="smallDisplayArrows" />
 		</any>
 	</replace-with>
-
 	<!-- To enable logging -->
 	<!-- 
 	<inherits name="com.google.gwt.logging.Logging"/>
