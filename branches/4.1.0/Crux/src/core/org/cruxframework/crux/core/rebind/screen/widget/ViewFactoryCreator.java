@@ -82,6 +82,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -118,6 +119,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	protected WidgetConsumer widgetConsumer;
 
 	protected String iocContainerClassName;
+	private JClassType cssResourceType;
 
 	/**
 	 *
@@ -206,6 +208,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.widgetConsumer = new ViewWidgetConsumer();
 		this.rootPanelChildren = new HashSet<String>();
 		this.controllerAccessHandler = new DefaultControllerAccessor(viewVariable);
+		this.cssResourceType = context.getTypeOracle().findType(CssResource.class.getCanonicalName());
+
     }
 
 	/**
@@ -275,6 +279,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	protected void generateResources(SourcePrinter printer)
     {
+		//TODO: extrair essse codigo para um sub-tipo...com base no nome do resource e do device... para evitar duplicidade de codigo
+		//em casos de resources importadas em multiplas views.
 	    Iterator<String> resources = view.iterateResources();
 	    while (resources.hasNext())
 	    {
@@ -285,9 +291,42 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
 	    	}
 	    	printer.println("if (!containsResource("+EscapeUtils.quote(resourceKey)+")){");
-	    	printer.println("addResource("+EscapeUtils.quote(resourceKey)+", ("+resourceClass+")GWT.create("+resourceClass+".class));");
+	    	String resourceVariable = createVariableName("resource");
+	    	printer.println(resourceClass + " " + resourceVariable + "= GWT.create("+resourceClass+".class);");
+	    	generateCssInjectionResources(printer, resourceVariable, resourceKey, resourceClass);
+	    	printer.println("addResource("+EscapeUtils.quote(resourceKey)+", "+resourceVariable+");");
 	    	printer.println("}");
 	    }
+    }
+
+	/**
+	 * 
+	 * @param printer
+	 * @param resourceVariable
+	 * @param resourceKey
+	 * @param resourceClass
+	 */
+	private void generateCssInjectionResources(SourcePrinter printer, String resourceVariable, String resourceKey, String resourceClass)
+    {
+		JClassType resourceType = context.getTypeOracle().findType(resourceClass);
+		
+		
+    	if (resourceClass == null)
+    	{
+    		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
+    	}
+    	
+    	JMethod[] methods = resourceType.getOverridableMethods();
+    	if (methods != null)
+    	{
+    		for (JMethod method : methods)
+            {
+	            if (method.getReturnType().isClassOrInterface().isAssignableFrom(cssResourceType))
+	            {
+	    	    	printer.println(resourceVariable+"."+method.getName()+"().ensureInjected();");
+	            }
+            }
+    	}
     }
 
 	/**
