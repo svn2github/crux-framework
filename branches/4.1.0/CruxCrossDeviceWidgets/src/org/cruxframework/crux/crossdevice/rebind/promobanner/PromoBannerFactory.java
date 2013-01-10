@@ -1,5 +1,6 @@
 package org.cruxframework.crux.crossdevice.rebind.promobanner;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -68,12 +69,13 @@ public class PromoBannerFactory extends WidgetCreator<WidgetCreatorContext>
 			boolean hasLargeImage = !StringUtils.isEmpty(context.readChildProperty("largeImage"));
 			boolean hasDefaultImage = !StringUtils.isEmpty(context.readChildProperty("image"));
 
-			if(hasSmallImage)
+			Device device = getWidgetCreator().getDevice();
+			if(hasSmallImage && device!= null && device.getSize().equals(DeviceAdaptive.Size.small))
 			{
 				out.print(context.getWidget() + ".addSmallBanner("
 						+ getWidgetCreator().getResourceAccessExpression(context.readChildProperty("smallImage")));
 			}
-			if(hasLargeImage)
+			if(hasLargeImage && device!= null && device.getSize().equals(DeviceAdaptive.Size.large))
 			{
 				out.print(context.getWidget() + ".addLargeBanner("
 						+ getWidgetCreator().getResourceAccessExpression(context.readChildProperty("largeImage")));
