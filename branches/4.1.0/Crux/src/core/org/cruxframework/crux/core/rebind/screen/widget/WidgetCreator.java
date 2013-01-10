@@ -460,6 +460,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	{
 		return viewFactory.getView();
 	}
+	
+	/**
+	 * @return
+	 */
+	public Device getDevice()
+	{
+		return (viewFactory.getDevice() == null?null:Device.valueOf(viewFactory.getDevice()));
+	}
 
 	/**
 	 * @return

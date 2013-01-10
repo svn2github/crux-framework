@@ -57,8 +57,10 @@ import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.Event;
 import org.cruxframework.crux.core.rebind.screen.View;
+import org.cruxframework.crux.core.rebind.screen.resources.ResourcesHandlerProxyCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.utils.JClassUtils;
+import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -82,7 +84,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -113,13 +114,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	private String viewPanelVariable;
 	private String device;
 	private Set<String> rootPanelChildren;
+	private Set<String> resources;
 	protected final String module;
 	protected final View view;
 	protected ControllerAccessHandler controllerAccessHandler;
 	protected WidgetConsumer widgetConsumer;
-
 	protected String iocContainerClassName;
-	private JClassType cssResourceType;
 
 	/**
 	 *
@@ -208,7 +208,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.widgetConsumer = new ViewWidgetConsumer();
 		this.rootPanelChildren = new HashSet<String>();
 		this.controllerAccessHandler = new DefaultControllerAccessor(viewVariable);
-		this.cssResourceType = context.getTypeOracle().findType(CssResource.class.getCanonicalName());
 
     }
 
@@ -279,54 +278,10 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	protected void generateResources(SourcePrinter printer)
     {
-		//TODO: extrair essse codigo para um sub-tipo...com base no nome do resource e do device... para evitar duplicidade de codigo
-		//em casos de resources importadas em multiplas views.
-	    Iterator<String> resources = view.iterateResources();
-	    while (resources.hasNext())
+	   for (String resourceClass : resources)
 	    {
-	    	String resourceKey = resources.next();
-	    	String resourceClass = Resources.getResource(resourceKey);
-	    	if (resourceClass == null)
-	    	{
-	    		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
-	    	}
-	    	printer.println("if (!containsResource("+EscapeUtils.quote(resourceKey)+")){");
-	    	String resourceVariable = createVariableName("resource");
-	    	printer.println(resourceClass + " " + resourceVariable + "= GWT.create("+resourceClass+".class);");
-	    	generateCssInjectionResources(printer, resourceVariable, resourceKey, resourceClass);
-	    	printer.println("addResource("+EscapeUtils.quote(resourceKey)+", "+resourceVariable+");");
-	    	printer.println("}");
+	    	printer.println(resourceClass+".init();");
 	    }
-    }
-
-	/**
-	 * 
-	 * @param printer
-	 * @param resourceVariable
-	 * @param resourceKey
-	 * @param resourceClass
-	 */
-	private void generateCssInjectionResources(SourcePrinter printer, String resourceVariable, String resourceKey, String resourceClass)
-    {
-		JClassType resourceType = context.getTypeOracle().findType(resourceClass);
-		
-		
-    	if (resourceClass == null)
-    	{
-    		throw new CruxGeneratorException("Resource ["+resourceKey+"], declared on View ["+view.getId()+"] could not be found.");
-    	}
-    	
-    	JMethod[] methods = resourceType.getOverridableMethods();
-    	if (methods != null)
-    	{
-    		for (JMethod method : methods)
-            {
-	            if (method.getReturnType().isClassOrInterface().isAssignableFrom(cssResourceType))
-	            {
-	    	    	printer.println(resourceVariable+"."+method.getName()+"().ensureInjected();");
-	            }
-            }
-    	}
     }
 
 	/**
@@ -347,6 +302,13 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
 	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
+	    resources = new HashSet<String>();
+	    Iterator<String> resources = view.iterateResources();
+	    while (resources.hasNext())
+	    {
+	    	String resourceKey = resources.next();
+	    	this.resources.add(new ResourcesHandlerProxyCreator(logger, context, resourceKey, view).create());
+	    }
     }
 
 	/**
@@ -700,7 +662,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	protected boolean isKeyReference(String text)
 	{
-		return text!= null && text.matches("\\$\\{\\w+\\.\\w+\\}");
+		return text!= null && RegexpPatterns.REGEXP_CRUX_MESSAGE.matcher(text).matches(); 
 	}
 
     /**
@@ -710,7 +672,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	protected boolean isResourceReference(String text)
 	{
-		if (text!= null && text.matches("\\$\\{\\w[\\.\\w]+\\}"))
+		if (text!= null &&  RegexpPatterns.REGEXP_CRUX_RESOURCE.matcher(text).matches())
 		{
 			String[] parts = getResourceParts(text);
 			return (view.useResource(parts[0]));

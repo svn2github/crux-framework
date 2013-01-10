@@ -27,5 +27,9 @@ public class RegexpPatterns {
     public static final Pattern REGEXP_COMMA = Pattern.compile(",");
     public static final Pattern REGEXP_INVALID_HTML_CHARS = Pattern.compile("[<>\\&\\\"\\']");
     public static final Pattern REGEXP_WORD = Pattern.compile("\\w*");
+    public static final Pattern REGEXP_CRUX_MESSAGE = Pattern.compile("\\$\\{\\w+\\.\\w+\\}");
+    public static final Pattern REGEXP_CRUX_RESOURCE = Pattern.compile("\\$\\{\\w[\\.\\w]+\\}");
+    
+    
 
 }
