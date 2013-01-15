@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.datasource.DataSourceExcpetion;
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord;
 import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
@@ -50,12 +51,14 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private Map<String, String> dataSourcesClassNames = new HashMap<String, String>();
 	private final View view;
 	private String iocContainerClassName;
+	private Device device;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String iocContainerClassName)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String iocContainerClassName, String device)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()), false);
 		this.view = view;
 		this.iocContainerClassName = iocContainerClassName;
+		this.device = Device.valueOf(device);
     }
 
 	@Override
@@ -150,12 +153,12 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	{
 		String datasourceClassName = dataSourcesClassNames.get(dataSource);
 		sourceWriter.println(datasourceClassName+" __dat  = new "+datasourceClassName+"(this.view);");
-		JClassType datasourceClass = context.getTypeOracle().findType(DataSources.getDataSource(dataSource));
+		JClassType datasourceClass = context.getTypeOracle().findType(DataSources.getDataSource(dataSource, device));
 		if (datasourceClass == null)
 		{
 			throw new CruxGeneratorException("Can not found the datasource ["+datasourceClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFieldsAndMethods(sourceWriter, datasourceClass, "__dat", "iocContainer", view);
+		IocContainerRebind.injectFieldsAndMethods(sourceWriter, datasourceClass, "__dat", "iocContainer", view, device);
 		return "__dat";
 	}
 	
@@ -183,11 +186,11 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	 */
 	private void generateDataSourceClassBlock(SourcePrinter sourceWriter, String dataSource)
 	{
-		if (!dataSourcesClassNames.containsKey(dataSource) && DataSources.getDataSource(dataSource)!= null)
+		if (!dataSourcesClassNames.containsKey(dataSource) && !DataSources.hasDataSource(dataSource))
 		{
 			try
             {
-	            JClassType dataSourceClass = baseIntf.getOracle().getType(DataSources.getDataSource(dataSource));
+	            JClassType dataSourceClass = baseIntf.getOracle().getType(DataSources.getDataSource(dataSource, device));
 	            String genClass = new DataSourceProxyCreator(logger, context, dataSourceClass).create(); 
 	            dataSourcesClassNames.put(dataSource, genClass);
             }
@@ -201,7 +204,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	public String getProxySimpleName()
 	{
-		String className = view.getId(); 
+		String className = view.getId()+"_"+device.toString(); 
 		className = className.replaceAll("[\\W]", "_");
 		return "RegisteredDataSources_"+className;
 	}

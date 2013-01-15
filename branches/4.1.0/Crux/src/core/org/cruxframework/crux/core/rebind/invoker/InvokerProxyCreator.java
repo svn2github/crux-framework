@@ -61,7 +61,7 @@ public class InvokerProxyCreator extends AbstractWrapperProxyCreator
 		if (annotation != null)
 		{
 			name = annotation.value();
-			if (ClientControllers.getController(name) == null)
+			if (!ClientControllers.hasController(name))
 			{
 				throw new CruxGeneratorException("Error generating invoker. Controller ["+name+"] not found.");
 			}

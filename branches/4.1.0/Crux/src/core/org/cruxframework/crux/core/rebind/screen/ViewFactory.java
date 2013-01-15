@@ -429,7 +429,7 @@ public class ViewFactory
 	    		datasource = datasource.trim();
 	    		if (!StringUtils.isEmpty(datasource))
 	    		{
-	    			if (DataSources.getDataSource(datasource) == null)
+	    			if (!DataSources.hasDataSource(datasource))
 	    			{
 	    				throw new ScreenConfigException("Datasource ["+datasource+"], declared on view ["+view.getId()+"], not found!");
 	    			}
@@ -532,7 +532,7 @@ public class ViewFactory
 	    		handler = handler.trim();
 	    		if (!StringUtils.isEmpty(handler))
 	    		{
-	    			if (ClientControllers.getController(handler) == null)
+	    			if (!ClientControllers.hasController(handler))
 	    			{
 	    				throw new ScreenConfigException("Controller ["+handler+"], declared on view ["+view.getId()+"], not found!");
 	    			}

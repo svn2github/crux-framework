@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.datasource.annotation.DataSource;
 import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.datasource.DataSources;
 import org.cruxframework.crux.core.rebind.screen.View;
@@ -85,7 +86,7 @@ public class IocContainerManager
 	 * @param view
 	 * @return
 	 */
-	public static Map<String, IocConfig<?>> getConfigurationsForView(View view)
+	public static Map<String, IocConfig<?>> getConfigurationsForView(View view, Device device)
 	{
 		//TODO estudar a possibilidade de um cache para essass configuracoes.
 		
@@ -98,8 +99,8 @@ public class IocContainerManager
 		Map<String, IocConfig<?>> viewConfigurations = new HashMap<String, IocConfig<?>>();
 		viewConfigurations.putAll(globalConfigurations);
 		
-		bindImplicityInjectcionsForControllers(view, viewConfigurations);
-		bindImplicityInjectcionsForDatasources(view, viewConfigurations);
+		bindImplicityInjectcionsForControllers(view, viewConfigurations, device);
+		bindImplicityInjectcionsForDatasources(view, viewConfigurations, device);
 		
 		return viewConfigurations;
 	}
@@ -109,12 +110,12 @@ public class IocContainerManager
 	 * @param view 
 	 * 
 	 */
-	private static void bindImplicityInjectcionsForControllers(View view, Map<String, IocConfig<?>> viewConfigurations)
+	private static void bindImplicityInjectcionsForControllers(View view, Map<String, IocConfig<?>> viewConfigurations, Device device)
 	{
 		Iterator<String> controllers = view.iterateControllers();
 		while (controllers.hasNext())
 		{
-			Class<?> controllerClass = ClientControllers.getControllerClass(controllers.next());
+			Class<?> controllerClass = ClientControllers.getControllerClass(controllers.next(), device);
 			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true, viewConfigurations);
 		}
 	}
@@ -124,12 +125,12 @@ public class IocContainerManager
 	 * @param view 
 	 * 
 	 */
-	private static void bindImplicityInjectcionsForDatasources(View view, Map<String, IocConfig<?>> viewConfigurations)
+	private static void bindImplicityInjectcionsForDatasources(View view, Map<String, IocConfig<?>> viewConfigurations, Device device)
 	{
 		Iterator<String> datasources = view.iterateDataSources();
 		while (datasources.hasNext())
 		{
-			Class<?> controllerClass = DataSources.getDataSourceClass(datasources.next());
+			Class<?> controllerClass = DataSources.getDataSourceClass(datasources.next(), device);
 			bindImplicityInjectcions(controllerClass, new HashSet<String>(), new HashSet<String>(), true, viewConfigurations);
 		}
 	}

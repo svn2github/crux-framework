@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.ioc.Inject.Scope;
 import org.cruxframework.crux.core.client.ioc.IocContainer;
 import org.cruxframework.crux.core.client.ioc.IocProvider;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.views.ViewBindable;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.ioc.IoCException;
@@ -58,13 +59,15 @@ public class IocContainerRebind extends AbstractProxyCreator
 	private final View view;
 	private Map<String, IocConfig<?>> configurations;
 	private JClassType viewBindableType;
+	private Device device;
 
-	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view)
+	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view, String device)
     {
 	    super(logger, context);
 		this.view = view;
 		viewBindableType = context.getTypeOracle().findType(ViewBindable.class.getCanonicalName());
-		configurations = IocContainerManager.getConfigurationsForView(view);
+		this.device = Device.valueOf(device);
+		configurations = IocContainerManager.getConfigurationsForView(view, this.device);
     }
 
 	@Override
@@ -165,10 +168,13 @@ public class IocContainerRebind extends AbstractProxyCreator
 	 * @param type
 	 * @param parentVariable
 	 * @param iocContainerVariable
+	 * @param view
+	 * @param device
 	 */
-	public static void injectFieldsAndMethods(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable, View view)
+	public static void injectFieldsAndMethods(SourcePrinter srcWriter, JClassType type, String parentVariable, String iocContainerVariable, 
+			View view, Device device)
 	{
-		Map<String, IocConfig<?>> configurations = IocContainerManager.getConfigurationsForView(view);
+		Map<String, IocConfig<?>> configurations = IocContainerManager.getConfigurationsForView(view, device);
 		injectFieldsAndMethods(srcWriter, type, parentVariable, new HashSet<String>(), iocContainerVariable, configurations);
 	}
 	
@@ -304,7 +310,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	@Override
 	public String getProxySimpleName()
 	{
-		String className = view.getId(); 
+		String className = view.getId()+"_"+device.toString(); 
 		className = className.replaceAll("[\\W]", "_");
 		return "IocContainer_"+className;
 	}

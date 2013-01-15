@@ -126,7 +126,7 @@ public class CellTableFactory extends AbstractHasDataFactory<CellTableContext>
 	    out.println(context.dataProvider+".addDataDisplay("+context.getWidget()+");");
 
     	Event event = EventFactory.getEvent("loadDataProvider", dataProviderFactoryMethod);
-    	String controller = ClientControllers.getController(event.getController());
+    	String controller = ClientControllers.getController(event.getController(), getDevice());
     	JClassType controllerClass = getContext().getTypeOracle().findType(controller);
 	    JMethod loadDataProviderMethod = JClassUtils.getMethod(controllerClass, event.getMethod(), new JType[]{});
 	    if (loadDataProviderMethod == null)

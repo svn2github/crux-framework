@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+
 /**
  * This annotation can be used to expose a class as a Crux controller.
  * <p>
@@ -78,17 +80,25 @@ public @interface Controller
 	 */
 	boolean stateful() default true;
 	/**
+	 * If this property is true, the controller is only instantiated by Crux engine when 
+	 * it is first required to handle an event.
+	 */
+	boolean lazy() default true;
+	/**
+	 * You can choose to use the annotated class only for a restricted list of devices. This allow
+	 * you to create two different classes using the same controller name, but one target a collection 
+	 * of devices and the other targets a different collection.
+	 * @return
+	 */
+	Device[] supportedDevices() default {Device.all};
+	/**
 	 * This property enables the auto binding support for this controller. When it is
 	 * enabled, all fields, injected through {@code @}{@link Create} annotation, of a 
 	 * type annotated with {@code @}{@link ValueObject} annotation is automatically bound
 	 * with the values coming from the screen.
 	 */
+	@Deprecated
 	boolean autoBind() default true;
-	/**
-	 * If this property is true, the controller is only instantiated by Crux engine when 
-	 * it is first required to handle an event.
-	 */
-	boolean lazy() default true;
 	/**
 	 * Since Crux 4.0, it became useless.
 	 */

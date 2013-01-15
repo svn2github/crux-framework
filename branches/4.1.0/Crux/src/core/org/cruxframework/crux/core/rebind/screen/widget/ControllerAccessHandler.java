@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.rebind.screen.widget;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+
 /**
  * Subclasses of this interface are used to inform Crux about how a controller class must be 
  * referenced by generated code
@@ -23,8 +25,8 @@ package org.cruxframework.crux.core.rebind.screen.widget;
  */
 public interface ControllerAccessHandler
 {
-	String getControllerExpression(String controller);
-	String getControllerImplClassName(String controller);
+	String getControllerExpression(String controller, Device device);
+	String getControllerImplClassName(String controller, Device device);
 	
 	/**
 	 * A ControllerAccessHandler that must be used when any reference to the controller printed

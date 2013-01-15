@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocument;
 import org.cruxframework.crux.core.client.event.CrossDocumentInvoker;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
@@ -56,18 +57,20 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	private final View view;
 	private final String module;
 	private String iocContainerClassName;
+	private Device device;
 	
 	/**
 	 * Constructor
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module, String iocContainerClassName)
+	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module, String iocContainerClassName, String device)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()), false);
 		this.view = view;
 		this.module = module;
 		this.iocContainerClassName = iocContainerClassName;
+		this.device = Device.valueOf(device);
     }
 
 	/**
@@ -379,7 +382,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		{
 			throw new CruxGeneratorException("Can not found the controller ["+controllerClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFieldsAndMethods(sourceWriter, controllerClass, "__cont", "iocContainer", view);
+		IocContainerRebind.injectFieldsAndMethods(sourceWriter, controllerClass, "__cont", "iocContainer", view, device);
 		return "__cont";
 	}
 
@@ -392,7 +395,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		TypeOracle typeOracle = context.getTypeOracle();
 		assert (typeOracle != null);
 
-		return typeOracle.findType(ClientControllers.getController(controller));
+		return typeOracle.findType(ClientControllers.getController(controller, device));
 	}
 
 	/**
@@ -420,7 +423,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
 	public String getProxySimpleName()
 	{
-		String className = view.getId(); 
+		String className = view.getId() + "_" + device.toString(); 
 		className = className.replaceAll("[\\W]", "_");
 		return "RegisteredControllers_"+className;
 	}	

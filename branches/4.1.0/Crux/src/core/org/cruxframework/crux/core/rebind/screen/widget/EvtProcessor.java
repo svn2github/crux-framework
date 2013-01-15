@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind.screen.widget;
 
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
@@ -93,7 +94,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, String eventClassName,
     								String cruxEvent, WidgetCreator<?> creator)
     {
-    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext(), creator.getView(), creator.getControllerAccessorHandler());
+    	printEvtCall(out, eventValue, eventName, eventClassName, cruxEvent, creator.getContext(), creator.getView(), creator.getControllerAccessorHandler(), creator.getDevice());
     }
 
     /**
@@ -108,9 +109,9 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param controllerAccessHandler
      */
     public static void printEvtCall(SourcePrinter out, String eventValue, String eventName, Class<?> eventClass,
-    		                        String cruxEvent, GeneratorContext context, View view, ControllerAccessHandler controllerAccessHandler)
+    		                        String cruxEvent, GeneratorContext context, View view, ControllerAccessHandler controllerAccessHandler, Device device)
     {
-    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context, view, controllerAccessHandler);
+    	printEvtCall(out, eventValue, eventName, eventClass!= null? eventClass.getCanonicalName():null, cruxEvent, context, view, controllerAccessHandler, device);
     }
 
     /**
@@ -125,7 +126,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param controllerAccessHandler
      */
     public static void printEvtCall(SourcePrinter out, String eventValue, String eventName,String eventClassName,
-    		                        String cruxEvent, GeneratorContext context, View view, ControllerAccessHandler controllerAccessHandler)
+    		                        String cruxEvent, GeneratorContext context, View view, ControllerAccessHandler controllerAccessHandler, Device device)
     {
     	Event event = EventFactory.getEvent(eventName, eventValue);
 
@@ -136,7 +137,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     		throw new CruxGeneratorException("Controller ["+event.getController()+"] , used on view ["+view.getId()+"], was not declared on this view. Use the useController attribute to import the controller into this view.");
     	}
     	
-    	String controller = ClientControllers.getController(event.getController());
+    	String controller = ClientControllers.getController(event.getController(), device);
     	if (controller == null)
     	{
     		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on view ["+view.getId()+"], not found.");
@@ -168,7 +169,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 
     	checkExposedMethod(event, controller, exposedMethod, context);
 
-    	out.print(controllerAccessHandler.getControllerExpression(event.getController())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
+    	out.print(controllerAccessHandler.getControllerExpression(event.getController(), device)+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
 
     	if (hasEventParameter)
     	{
@@ -251,7 +252,7 @@ public abstract class EvtProcessor extends AbstractProcessor
      * @param eventValue
      * @param cruxEvent
      */
-    public void printPostProcessingEvtCall(String eventValue, String cruxEvent)
+    public void printPostProcessingEvtCall(String eventValue, String cruxEvent, Device device)
     {
     	printPostProcessingEvtCall(eventValue, getEventName(), getEventClass(), cruxEvent, getWidgetCreator());
     }
@@ -273,7 +274,7 @@ public abstract class EvtProcessor extends AbstractProcessor
     	{
     		throw new CruxGeneratorException("Controller ["+event.getController()+"] , used on view ["+creator.getView().getId()+"], was not declared on this view. Use the useController attribute to import the controller into this view.");
     	}
-    	String controller = ClientControllers.getController(event.getController());
+    	String controller = ClientControllers.getController(event.getController(), creator.getDevice());
     	if (controller == null)
     	{
     		throw new CruxGeneratorException("Controller ["+event.getController()+"] , declared on view ["+creator.getView().getId()+"], not found.");
@@ -305,7 +306,7 @@ public abstract class EvtProcessor extends AbstractProcessor
 
     	checkExposedMethod(event, controller, exposedMethod, creator.getContext());
 
-        creator.printlnPostProcessing(creator.getControllerAccessorHandler().getControllerExpression(event.getController())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
+        creator.printlnPostProcessing(creator.getControllerAccessorHandler().getControllerExpression(event.getController(), creator.getDevice())+"."+event.getMethod()+ControllerProxyCreator.EXPOSED_METHOD_SUFFIX+"(");
 
     	if (hasEventParameter)
     	{

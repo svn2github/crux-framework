@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.WidgetController;
 import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -49,8 +50,8 @@ public class ClientControllers
 {
 	private static final Log logger = LogFactory.getLog(ClientControllers.class);
 	private static final Lock lock = new ReentrantLock();
-	private static Map<String, String> controllersCanonicalNames;
-	private static Map<String, String> controllersNames;
+	private static Map<String, Map<String, String>> controllersCanonicalNames;
+	private static Map<String, Map<String, String>> controllersNames;
 	private static List<String> globalControllers;
 	private static Map<String, Set<String>> widgetControllers;
 	
@@ -84,8 +85,8 @@ public class ClientControllers
 	 */
 	protected static void initializeControllers()
 	{
-		controllersCanonicalNames = new HashMap<String, String>();
-		controllersNames = new HashMap<String, String>();
+		controllersCanonicalNames = new HashMap<String, Map<String, String>>();
+		controllersNames = new HashMap<String, Map<String, String>>();
 		globalControllers = new ArrayList<String>();
 		widgetControllers = new HashMap<String, Set<String>>();
 		
@@ -110,19 +111,24 @@ public class ClientControllers
 					if (validController)
 					{
 						Controller annot = controllerClass.getAnnotation(Controller.class);
-						if (controllersCanonicalNames.containsKey(annot.value()))
+						Device[] devices = annot.supportedDevices();
+						String resourceKey = annot.value();
+						if (devices == null || devices.length ==0)
 						{
-							throw new CruxGeneratorException("Duplicated Client Controller: ["+annot.value()+"].");
+							addResource(controllerClass, resourceKey, Device.all);
 						}
-
-						controllersCanonicalNames.put(annot.value(), controllerClass.getCanonicalName());
-						controllersNames.put(annot.value(), controllerClass.getName());
+						else
+						{
+							for (Device device : devices)
+                            {
+								addResource(controllerClass, resourceKey, device);
+                            }
+						}
 						if (controllerClass.getAnnotation(Global.class) != null)
 						{
 							globalControllers.add(annot.value());
 						}
 						initWidgetControllers(controllerClass, annot);
-						//					Fragments.registerFragment(annot.fragment(), controllerClass);
 					}
 				} 
 				catch (ClassNotFoundException e) 
@@ -133,6 +139,31 @@ public class ClientControllers
 		}
 	}
 
+	/**
+	 * 
+	 * @param controllerClass
+	 * @param controllerKey
+	 * @param device
+	 */
+	private static void addResource(Class<?> controllerClass, String controllerKey, Device device)
+    {
+	    if (!controllersCanonicalNames.containsKey(controllerKey))
+	    {
+	    	controllersCanonicalNames.put(controllerKey, new HashMap<String, String>());
+	    	controllersNames.put(controllerKey, new HashMap<String, String>());
+	    }
+	    Map<String, String> canonicallCassNamesByDevice = controllersCanonicalNames.get(controllerKey);
+	    Map<String, String> classNamesByDevice = controllersNames.get(controllerKey);
+	    
+	    String deviceKey = device.toString();
+		if (controllersCanonicalNames.containsKey(deviceKey))
+	    {
+	    	throw new CruxGeneratorException("Duplicated Client Controller: ["+controllerKey+"].");
+	    }
+		canonicallCassNamesByDevice.put(deviceKey, controllerClass.getCanonicalName());
+		classNamesByDevice.put(deviceKey, controllerClass.getName());
+    }
+	
 	/**
 	 * @param controllerClass
 	 * @param annot
@@ -165,21 +196,41 @@ public class ClientControllers
 	 * @param name
 	 * @return
 	 */
-	public static String getController(String name)
+	public static String getController(String name, Device device)
 	{
 		if (controllersCanonicalNames == null)
 		{
 			initialize();
 		}
-		return controllersCanonicalNames.get(name);
+		Map<String, String> map = controllersCanonicalNames.get(name);
+		String result = map.get(device.toString());
+		if (result == null && !device.equals(Device.all))
+		{
+			result = map.get(Device.all.toString());
+		}
+		return result;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static boolean hasController(String name)
+	{
+		if (controllersCanonicalNames == null)
+		{
+			initialize();
+		}
+		return (name != null && controllersCanonicalNames.containsKey(name));
+	}
+	
 	/**
 	 * 
 	 * @param controller
 	 * @return
 	 */
-	public static Class<?> getControllerClass(String controller)
+	public static Class<?> getControllerClass(String controller, Device device)
 	{
 		try
         {
@@ -187,7 +238,13 @@ public class ClientControllers
 			{
 				initialize();
 			}
-	        return Class.forName(controllersNames.get(controller));
+			Map<String, String> map = controllersNames.get(controller);
+			String result = map.get(device.toString());
+			if (result == null && !device.equals(Device.all))
+			{
+				result = map.get(Device.all.toString());
+			}
+	        return Class.forName(result);
         }
         catch (Exception e)
         {

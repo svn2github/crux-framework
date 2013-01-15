@@ -113,7 +113,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	protected void initializeController(View view)
 	{
 		controllerName = templateParser.getTemplateController(view, baseIntf.getQualifiedSourceName(), device);
-		String controllerClassName = ClientControllers.getController(controllerName);
+		String controllerClassName = ClientControllers.getController(controllerName, device);
 		if (controllerClassName == null)
 		{
 			throw new CruxGeneratorException("Error generating invoker. Controller ["+controllerName+"] not found.");

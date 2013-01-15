@@ -260,8 +260,8 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	@Override
 	protected void generateProxyContructor(SourcePrinter printer) throws CruxGeneratorException
 	{
-		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName).create();
-		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName).create();
+		String regsiteredControllersClass = new RegisteredControllersProxyCreator(logger, context, view, module, iocContainerClassName, device).create();
+		String regsiteredDataSourcesClass = new RegisteredDataSourcesProxyCreator(logger, context, view, iocContainerClassName, device).create();
 
 		printer.println("protected "+getProxySimpleName()+"(String id){");
 		printer.println("super(id);");
@@ -302,7 +302,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     @Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-	    iocContainerClassName = new IocContainerRebind(logger, context, view).create();
+	    iocContainerClassName = new IocContainerRebind(logger, context, view, device).create();
 	    resources = new HashSet<String>();
 	    Iterator<String> resources = view.iterateResources();
 	    while (resources.hasNext())
@@ -887,7 +887,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onClose("+CloseEvent.class.getCanonicalName()+"<Window> event){");
 
 			EvtProcessor.printEvtCall(printer, onClose.getController()+"."+onClose.getMethod(), "onClose",
-					CloseEvent.class, "event", context, view, getControllerAccessHandler());
+					CloseEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -908,7 +908,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onWindowClosing("+ClosingEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onClosing.getController()+"."+onClosing.getMethod(), "onClosing",
-						ClosingEvent.class, "event", context, view, getControllerAccessHandler());
+						ClosingEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -929,7 +929,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onValueChange("+ValueChangeEvent.class.getCanonicalName()+"<String> event){");
 
 			EvtProcessor.printEvtCall(printer, onHistoryChanged.getController()+"."+onHistoryChanged.getMethod(),
-					"onHistoryChanged", ValueChangeEvent.class, "event", context, view, getControllerAccessHandler());
+					"onHistoryChanged", ValueChangeEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -950,7 +950,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onLoad("+ViewLoadEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onLoad.getController()+"."+onLoad.getMethod(),
-					"onLoad", ViewLoadEvent.class, "event", context, view, getControllerAccessHandler());
+					"onLoad", ViewLoadEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -971,7 +971,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onUnload("+ViewUnloadEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onUnload.getController()+"."+onUnload.getMethod(),
-					"onUnload", ViewUnloadEvent.class, "event", context, view, getControllerAccessHandler());
+					"onUnload", ViewUnloadEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -992,7 +992,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onActivate("+ViewActivateEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onActivate.getController()+"."+onActivate.getMethod(),
-					"onActivate", ViewActivateEvent.class, "event", context, view, getControllerAccessHandler());
+					"onActivate", ViewActivateEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -1013,7 +1013,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onDeactivate("+ViewDeactivateEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onDeactivate.getController()+"."+onDeactivate.getMethod(),
-					"onDeactivate", ViewDeactivateEvent.class, "event", context, view, getControllerAccessHandler());
+					"onDeactivate", ViewDeactivateEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -1035,7 +1035,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			printer.println("public void onResize("+ResizeEvent.class.getCanonicalName()+" event){");
 
 			EvtProcessor.printEvtCall(printer, onResized.getController()+"."+onResized.getMethod(), "onResized",
-					ResizeEvent.class, "event", context, view, getControllerAccessHandler());
+					ResizeEvent.class, "event", context, view, getControllerAccessHandler(), Device.valueOf(device));
 
 			printer.println("}");
 			printer.println("});");
@@ -1413,16 +1413,16 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			this.viewVariable = viewVariable;
         }
 
-		public String getControllerExpression(String controller)
+		public String getControllerExpression(String controller, Device device)
         {
 
-	        return "(("+getControllerImplClassName(controller)+")"+viewVariable+".getRegisteredControllers().getController("
+	        return "(("+getControllerImplClassName(controller, device)+")"+viewVariable+".getRegisteredControllers().getController("
 			+EscapeUtils.quote(controller)+"))";
         }
 
-		public String getControllerImplClassName(String controller)
+		public String getControllerImplClassName(String controller, Device device)
         {
-			String controllerClass = ClientControllers.getController(controller);
+			String controllerClass = ClientControllers.getController(controller, device);
 	        return controllerClass + ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX;
         }
     }

@@ -25,6 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.datasource.DataSource;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
@@ -38,8 +39,8 @@ public class DataSources
 {
 	private static final Log logger = LogFactory.getLog(DataSources.class);
 	private static final Lock lock = new ReentrantLock();
-	private static Map<String, String> dataSourcesCanonicalNames;
-	private static Map<String, String> dataSourcesClassNames;
+	private static Map<String, Map<String, String>> dataSourcesCanonicalNames;
+	private static Map<String, Map<String, String>> dataSourcesClassNames;
 	
 	/**
 	 * 
@@ -72,8 +73,8 @@ public class DataSources
 	@SuppressWarnings("unchecked")
 	protected static void initializeDataSources()
 	{
-		dataSourcesCanonicalNames = new HashMap<String, String>();
-		dataSourcesClassNames = new HashMap<String, String>();
+		dataSourcesCanonicalNames = new HashMap<String, Map<String, String>>();
+		dataSourcesClassNames = new HashMap<String, Map<String, String>>();
 		Set<String> dataSourceNames =  ClassScanner.searchClassesByInterface(DataSource.class);
 		if (dataSourceNames != null)
 		{
@@ -86,12 +87,19 @@ public class DataSources
 								dataSourceClass.getAnnotation(org.cruxframework.crux.core.client.datasource.annotation.DataSource.class);
 					if (annot != null)
 					{
-						if (dataSourcesCanonicalNames.containsKey(annot.value()))
+						Device[] devices = annot.supportedDevices();
+						String resourceKey = annot.value();
+						if (devices == null || devices.length ==0)
 						{
-							throw new CruxGeneratorException("Duplicated datasource: ["+annot.value()+"].");
+							addResource(dataSourceClass, resourceKey, Device.all);
 						}
-						dataSourcesCanonicalNames.put(annot.value(), dataSourceClass.getCanonicalName());
-						dataSourcesClassNames.put(annot.value(), dataSourceClass.getName());
+						else
+						{
+							for (Device device : devices)
+                            {
+								addResource(dataSourceClass, resourceKey, device);
+                            }
+						}
 					}
 					else
 					{
@@ -104,12 +112,7 @@ public class DataSources
 						{
 							simpleName = simpleName.toLowerCase();
 						}
-						if (dataSourcesCanonicalNames.containsKey(simpleName))
-						{
-							throw new CruxGeneratorException("Duplicated datasource: ["+simpleName+"].");
-						}
-						dataSourcesCanonicalNames.put(simpleName, dataSourceClass.getCanonicalName());
-						dataSourcesClassNames.put(simpleName, dataSourceClass.getName());
+						addResource(dataSourceClass, simpleName, Device.all);
 					}
 				} 
 				catch (Throwable e) 
@@ -122,17 +125,48 @@ public class DataSources
 
 	/**
 	 * 
+	 * @param datasourceClass
+	 * @param datasourceKey
+	 * @param device
+	 */
+	private static void addResource(Class<?> datasourceClass, String datasourceKey, Device device)
+    {
+	    if (!dataSourcesCanonicalNames.containsKey(datasourceKey))
+	    {
+	    	dataSourcesCanonicalNames.put(datasourceKey, new HashMap<String, String>());
+	    	dataSourcesClassNames.put(datasourceKey, new HashMap<String, String>());
+	    }
+	    Map<String, String> canonicallCassNamesByDevice = dataSourcesCanonicalNames.get(datasourceKey);
+	    Map<String, String> classNamesByDevice = dataSourcesClassNames.get(datasourceKey);
+	    
+	    String deviceKey = device.toString();
+		if (dataSourcesCanonicalNames.containsKey(deviceKey))
+	    {
+	    	throw new CruxGeneratorException("Duplicated Datasource: ["+datasourceKey+"].");
+	    }
+		canonicallCassNamesByDevice.put(deviceKey, datasourceClass.getCanonicalName());
+		classNamesByDevice.put(deviceKey, datasourceClass.getName());
+    }
+	
+	/**
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public static String getDataSource(String name)
+	public static String getDataSource(String name, Device device)
 	{
 		if (dataSourcesCanonicalNames == null)
 		{
 			initialize();
 		}
 		
-		return dataSourcesCanonicalNames.get(name);
+		Map<String, String> map = dataSourcesCanonicalNames.get(name);
+		String result = map.get(device.toString());
+		if (result == null && !device.equals(Device.all))
+		{
+			result = map.get(Device.all.toString());
+		}
+		return result;
 	}
 	
 	/**
@@ -140,7 +174,21 @@ public class DataSources
 	 * @param name
 	 * @return
 	 */
-	public static Class<?> getDataSourceClass(String name)
+	public static boolean hasDataSource(String name)
+	{
+		if (dataSourcesCanonicalNames == null)
+		{
+			initialize();
+		}
+		return (name != null && dataSourcesCanonicalNames.containsKey(name));
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static Class<?> getDataSourceClass(String name, Device device)
 	{
 		try
         {
@@ -148,7 +196,13 @@ public class DataSources
 			{
 				initialize();
 			}
-	        return Class.forName(dataSourcesClassNames.get(name));
+			Map<String, String> map = dataSourcesClassNames.get(name);
+			String result = map.get(device.toString());
+			if (result == null && !device.equals(Device.all))
+			{
+				result = map.get(Device.all.toString());
+			}
+	        return Class.forName(result);
         }
         catch (Exception e)
         {

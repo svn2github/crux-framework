@@ -46,7 +46,7 @@ public class LoadWidgetEvtProcessor extends EvtProcessor
 	@Override
     public void processEvent(SourcePrinter out, String eventValue, String widget, String widgetId)
     {
-		printPostProcessingEvtCall(eventValue, "new WidgetLoadEvent("+widget+","+EscapeUtils.quote(widgetId)+")");
+		printPostProcessingEvtCall(eventValue, "new WidgetLoadEvent("+widget+","+EscapeUtils.quote(widgetId)+")", getWidgetCreator().getDevice());
     }	
 	
 	@Override
