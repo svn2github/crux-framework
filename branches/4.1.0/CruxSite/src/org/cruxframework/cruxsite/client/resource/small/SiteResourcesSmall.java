@@ -17,10 +17,11 @@ package org.cruxframework.cruxsite.client.resource.small;
 
 import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.cruxsite.client.resource.CssCruxSite;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -29,12 +30,16 @@ import com.google.gwt.resources.client.ImageResource;
 @Resource(value="siteResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
 public interface SiteResourcesSmall extends ClientBundle
 {
-//	@Source("cssCruxSite.css")
-//	CssCruxSite css();
+	@Source("cssCruxSiteSmall.css")
+	CssCruxSiteSmall css();
 
 	@Source("cruxdude.png")
-	ImageResource cruxLogoMobile();
+	ImageResource cruxLogo();
 
 	@Source("icons-powered-mobile.png")
-	ImageResource iconPoweredMobile();
+	ImageResource iconPowered();
+
+	@Source("rodapebg.png")
+	@ImageOptions(repeatStyle=RepeatStyle.None)
+	ImageResource rodapeBg();
 }

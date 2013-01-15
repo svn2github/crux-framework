@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.cruxsite.client.resource;
+package org.cruxframework.cruxsite.client.resource.small;
 
 import com.google.gwt.resources.client.CssResource;
 
@@ -21,12 +21,21 @@ import com.google.gwt.resources.client.CssResource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface CssCruxSite extends CssResource
+public interface CssCruxSiteSmall extends CssResource
 {
-	String frame();
 	String header();
-	String headerAreas();
 	String headerMenu();
+	String buttonMenu();
+	String cruxLabel();
+	String cruxLogo();
+	String view();
+	String footer();
+	String poweredLabel();
+	String poweredImage();
+	String bannerArea();
+
+
+	
 	String shortcutsPanel();
 	String menuShortcut();
 	String headerMenuLabel();
@@ -42,7 +51,6 @@ public interface CssCruxSite extends CssResource
 	String contentCenter();
 	String contentRight();
 	String bannerAndNews();
-	String bannerArea();
 	String contentHorizontalSeparator();
 	String promoBanner();
 	String newsBoard();

@@ -17,7 +17,6 @@ package org.cruxframework.cruxsite.client.resource.large;
 
 import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-import org.cruxframework.cruxsite.client.resource.CssCruxSite;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -32,7 +31,7 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 public interface SiteResourcesLarge extends ClientBundle
 {
 	@Source("cssCruxSiteLarge.css")
-	CssCruxSite css();
+	CssCruxSiteLarge css();
 
 	@Source("icon-blog.gif")
 	ImageResource iconBlog();
