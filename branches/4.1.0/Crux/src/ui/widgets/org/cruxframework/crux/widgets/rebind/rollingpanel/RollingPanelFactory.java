@@ -57,9 +57,9 @@ class RollingPanelContext extends WidgetCreatorContext
  */
 @DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=RollingPanel.class)
 @TagAttributes({
-	@TagAttribute("nextButtonStyleName"),
-	@TagAttribute("previousButtonStyleName"),
-	@TagAttribute("bodyStyleName"),
+	@TagAttribute(value="nextButtonStyleName", supportsResources=true),
+	@TagAttribute(value="previousButtonStyleName", supportsResources=true),
+	@TagAttribute(value="bodyStyleName", supportsResources=true),
 	@TagAttribute(value="scrollToAddedWidgets", type=Boolean.class),
 	@TagAttribute(value="spacing", type=Integer.class)
 })

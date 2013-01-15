@@ -25,6 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.resources.Resource;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 
@@ -38,8 +39,8 @@ public class Resources
 {
 	private static final Log logger = LogFactory.getLog(Resources.class);
 	private static final Lock lock = new ReentrantLock();
-	private static Map<String, String> resourcesCanonicalNames;
-	private static Map<String, String> resourcesClassNames;
+	private static Map<String, Map<String, String>> resourcesCanonicalNames;
+	private static Map<String, Map<String, String>> resourcesClassNames;
 	
 	/**
 	 * 
@@ -71,8 +72,8 @@ public class Resources
 	 */
 	protected static void initializeResources()
 	{
-		resourcesCanonicalNames = new HashMap<String, String>();
-		resourcesClassNames = new HashMap<String, String>();
+		resourcesCanonicalNames = new HashMap<String, Map<String, String>>();
+		resourcesClassNames = new HashMap<String, Map<String, String>>();
 		Set<String> resourceNames =  ClassScanner.searchClassesByAnnotation(Resource.class);
 		if (resourceNames != null)
 		{
@@ -84,12 +85,19 @@ public class Resources
 					Resource annot = resourceClass.getAnnotation(Resource.class);
 					if (annot != null)
 					{
-						if (resourcesCanonicalNames.containsKey(annot.value()))
+						Device[] devices = annot.supportedDevices();
+						String resourceKey = annot.value();
+						if (devices == null || devices.length ==0)
 						{
-							throw new CruxGeneratorException("Duplicated resource: ["+annot.value()+"].");
+							addResource(resourceClass, resourceKey, Device.all);
 						}
-						resourcesCanonicalNames.put(annot.value(), resourceClass.getCanonicalName());
-						resourcesClassNames.put(annot.value(), resourceClass.getName());
+						else
+						{
+							for (Device device : devices)
+                            {
+								addResource(resourceClass, resourceKey, device);
+                            }
+						}
 					}
 				} 
 				catch (Throwable e) 
@@ -102,17 +110,48 @@ public class Resources
 
 	/**
 	 * 
+	 * @param resourceClass
+	 * @param resourceKey
+	 * @param device
+	 */
+	private static void addResource(Class<?> resourceClass, String resourceKey, Device device)
+    {
+	    if (!resourcesCanonicalNames.containsKey(resourceKey))
+	    {
+	    	resourcesCanonicalNames.put(resourceKey, new HashMap<String, String>());
+	    	resourcesClassNames.put(resourceKey, new HashMap<String, String>());
+	    }
+	    Map<String, String> canonicallCassNamesByDevice = resourcesCanonicalNames.get(resourceKey);
+	    Map<String, String> classNamesByDevice = resourcesClassNames.get(resourceKey);
+	    
+	    String deviceKey = device.toString();
+		if (resourcesCanonicalNames.containsKey(deviceKey))
+	    {
+	    	throw new CruxGeneratorException("Duplicated resource: ["+resourceKey+"].");
+	    }
+		canonicallCassNamesByDevice.put(deviceKey, resourceClass.getCanonicalName());
+		classNamesByDevice.put(deviceKey, resourceClass.getName());
+    }
+
+	/**
+	 * 
 	 * @param name
+	 * @param device
 	 * @return
 	 */
-	public static String getResource(String name)
+	public static String getResource(String name, Device device)
 	{
 		if (resourcesCanonicalNames == null)
 		{
 			initialize();
 		}
-		
-		return resourcesCanonicalNames.get(name);
+		Map<String, String> map = resourcesCanonicalNames.get(name);
+		String result = map.get(device.toString());
+		if (result == null && !device.equals(Device.all))
+		{
+			result = map.get(Device.all.toString());
+		}
+		return result;
 	}
 	
 	/**
@@ -120,7 +159,22 @@ public class Resources
 	 * @param name
 	 * @return
 	 */
-	public static Class<?> getResourceClass(String name)
+	public static boolean hasResource(String name)
+	{
+		if (resourcesCanonicalNames == null)
+		{
+			initialize();
+		}
+		return (name != null && resourcesCanonicalNames.containsKey(name));
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param device
+	 * @return
+	 */
+	public static Class<?> getResourceClass(String name, Device device)
 	{
 		try
         {
@@ -128,7 +182,13 @@ public class Resources
 			{
 				initialize();
 			}
-	        return Class.forName(resourcesClassNames.get(name));
+			Map<String, String> map = resourcesClassNames.get(name);
+			String result = map.get(device.toString());
+			if (result == null && !device.equals(Device.all))
+			{
+				result = map.get(Device.all.toString());
+			}
+	        return Class.forName(result);
         }
         catch (Exception e)
         {

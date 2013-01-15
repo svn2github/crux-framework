@@ -566,7 +566,7 @@ public class ViewFactory
 	    		res = res.trim();
 	    		if (!StringUtils.isEmpty(res))
 	    		{
-	    			if (Resources.getResource(res) == null)
+	    			if (!Resources.hasResource(res))
 	    			{
 	    				throw new ScreenConfigException("Resource ["+res+"], declared on view ["+view.getId()+"], not found!");
 	    			}

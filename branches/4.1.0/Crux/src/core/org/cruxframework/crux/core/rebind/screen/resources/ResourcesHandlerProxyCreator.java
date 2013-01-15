@@ -16,7 +16,10 @@
 package org.cruxframework.crux.core.rebind.screen.resources;
 
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
@@ -30,6 +33,7 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
@@ -42,19 +46,30 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
 
 	private final String resourceId;
 	private final View view;
+	private String loggerVariable;
+	private final Device device;
 
-	public ResourcesHandlerProxyCreator(TreeLogger logger, GeneratorContextExt context, String resourceId, View view)
+	public ResourcesHandlerProxyCreator(TreeLogger logger, GeneratorContextExt context, String resourceId, View view, String devive)
     {
 	    super(logger, context);
 		this.resourceId = resourceId;
 		this.view = view;
+		this.device = Device.valueOf(devive);
+		this.loggerVariable = ViewFactoryCreator.createVariableName("logger");
 		
     }
 	
 	@Override
+	protected void generateProxyFields(SourcePrinter printer) throws CruxGeneratorException
+	{
+		printer.println("private static "+Logger.class.getCanonicalName()+" "+loggerVariable+" = "+
+	    		Logger.class.getCanonicalName()+".getLogger("+getProxySimpleName()+".class.getName());");
+	}
+	
+	@Override
 	protected void generateProxyMethods(SourcePrinter printer) throws CruxGeneratorException
 	{
-    	String resourceClass = Resources.getResource(resourceId);
+    	String resourceClass = Resources.getResource(resourceId, device);
     	if (resourceClass == null)
     	{
     		throw new CruxGeneratorException("Resource ["+resourceId+"], declared on View ["+view.getId()+"] could not be found.");
@@ -66,7 +81,12 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
     	printer.println(resourceClass + " " + resourceVariable + "= GWT.create("+resourceClass+".class);");
     	generateCssInjectionResources(printer, resourceVariable, resourceId, resourceClass);
     	printer.println("View.addResource("+EscapeUtils.quote(resourceId)+", "+resourceVariable+");");
-    	printer.println("}");
+
+    	printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
+		printer.println(loggerVariable+".info(Crux.getMessages().resourcesInitialized("+EscapeUtils.quote(resourceId)+"));");
+		printer.println("}");
+    	
+		printer.println("}");
     	printer.println("}");
     }
 
@@ -92,9 +112,12 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
     		JClassType cssResourceType = context.getTypeOracle().findType(CssResource.class.getCanonicalName());		
     		for (JMethod method : methods)
             {
-	            if (method.getReturnType().isClassOrInterface().isAssignableFrom(cssResourceType))
+	            if (method.getReturnType().isClassOrInterface().isAssignableTo(cssResourceType))
 	            {
 	    	    	printer.println(resourceVariable+"."+method.getName()+"().ensureInjected();");
+	    	    	printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
+	    			printer.println(loggerVariable+".info(Crux.getMessages().resourceCsssInjected("+EscapeUtils.quote(method.getReturnType().getSimpleSourceName())+"));");
+	    			printer.println("}");
 	            }
             }
     	}
@@ -109,7 +132,7 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
 	@Override
     public String getProxySimpleName()
     {
-		String className = this.resourceId;
+		String className = this.resourceId+"_"+device.toString();
 		className = className.replaceAll("[\\W]", "_");
 		return className;
     }
@@ -144,6 +167,7 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
     String[] getImports()
     {
         String[] imports = new String[] {
+        	Crux.class.getCanonicalName(),	
     		GWT.class.getCanonicalName(),
     		org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()
 		};

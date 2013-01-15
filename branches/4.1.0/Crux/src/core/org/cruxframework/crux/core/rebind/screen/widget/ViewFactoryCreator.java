@@ -28,6 +28,7 @@ import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.event.RegisteredControllers;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
 import org.cruxframework.crux.core.client.screen.views.View.RenderCallback;
@@ -307,7 +308,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    while (resources.hasNext())
 	    {
 	    	String resourceKey = resources.next();
-	    	this.resources.add(new ResourcesHandlerProxyCreator(logger, context, resourceKey, view).create());
+	    	this.resources.add(new ResourcesHandlerProxyCreator(logger, context, resourceKey, view, device).create());
 	    }
     }
 
@@ -550,7 +551,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    	String[] resourceParts = getResourceParts(property);
 	    	String resourceKey = resourceParts[0];
 	    	String resourceProperty = resourceParts[1];
-	    	String resourceClassName = Resources.getResource(resourceKey);
+	    	String resourceClassName = Resources.getResource(resourceKey, Device.valueOf(device));
 	    	
 	    	if (!view.useResource(resourceKey))
 	    	{

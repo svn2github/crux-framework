@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -29,4 +31,5 @@ import java.lang.annotation.Target;
 public @interface Resource
 {
 	String value();
+	Device[] supportedDevices() default {Device.all};
 }

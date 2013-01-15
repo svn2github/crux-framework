@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 @TagAttributes({
 	@TagAttribute(value="previewingAllNativeEvents", type=Boolean.class),
 	@TagAttribute(value="autoHideOnHistoryEventsEnabled", type=Boolean.class),
-	@TagAttribute("glassStyleName"),
+	@TagAttribute(value="glassStyleName", supportsResources=true),
 	@TagAttribute(value="glassEnabled", type=Boolean.class),
 	@TagAttribute(value="modal", type=Boolean.class),
 	@TagAttribute(value="autoHide", type=Boolean.class, property="autoHideEnabled")

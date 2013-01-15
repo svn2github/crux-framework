@@ -75,7 +75,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 
 				if (styleName != null && styleName.length() > 0)
 				{
-					out.println(context.rowFormatter+".setStyleName("+context.rowIndex+", "+EscapeUtils.quote(styleName)+");");
+					out.println(context.rowFormatter+".setStyleName("+context.rowIndex+", "+getWidgetCreator().getResourceAccessExpression(styleName)+");");
 				}
 				String visible = context.readChildProperty("visible");
 				if (visible != null && visible.length() > 0)
@@ -123,7 +123,7 @@ public abstract class HTMLTableFactory <C extends HTMLTableFactoryContext> exten
 
 			if (styleName != null && styleName.length() > 0)
 			{
-				out.println(context.cellFormatter+".setStyleName("+context.rowIndex+", "+context.colIndex+", "+EscapeUtils.quote(styleName)+");");
+				out.println(context.cellFormatter+".setStyleName("+context.rowIndex+", "+context.colIndex+", "+getWidgetCreator().getResourceAccessExpression(styleName)+");");
 			}
 			String visible = context.readChildProperty("visible");
 			if (visible != null && visible.length() > 0)

@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.SuggestOracle;
 	@TagAttribute(value="autoSelectEnabled", type=Boolean.class),
 	@TagAttribute(value="focus", type=Boolean.class),
 	@TagAttribute(value="limit", type=Integer.class),
-	@TagAttribute("popupStyleName"),
+	@TagAttribute(value="popupStyleName", supportsResources=true),
 	@TagAttribute(value="tabIndex", type=Integer.class),
 	@TagAttribute("value")
 })

@@ -111,4 +111,10 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("Informed object is not aware of current view. This method must be used to discover current view for controllers, datasouces or other ViewAware objects.")
 	String viewOjectIsNotAwareOfView();
+
+	@DefaultMessage("Resources [{0}] initialized.")
+	String resourcesInitialized(String resourceId);
+	
+	@DefaultMessage("Css Resource [{0}] injected.")
+	String resourceCsssInjected(String cssClassName);
 }
