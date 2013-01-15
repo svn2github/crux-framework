@@ -33,7 +33,6 @@ public class TutorialLargeController extends DeviceAdaptiveController implements
 {
 	private String tutorialUrl;
 	private Image tutorialImage;
-//	private HorizontalPanel controlsPanel;
 	private Label time;
 	private Label learnDescription;
 	private String estimatedTime;
@@ -75,7 +74,6 @@ public class TutorialLargeController extends DeviceAdaptiveController implements
 	protected void init()
 	{
 		tutorialImage = getChildWidget("tutorialImage");
-//		controlsPanel = getChildWidget("controlsPanel");
 		time = getChildWidget("time");
 		learnDescription = getChildWidget("learnDescription");
 		title = getChildWidget("title");

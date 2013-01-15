@@ -6,20 +6,20 @@
 	library="siteTemplates">
 	<gwt:HTMLPanel id="#{id}Panel">
 		<div class="#{styleName}">
-			<div class="BlockImg">
+			<div class="blockImg">
 				<gwt:image id="#{id}" url="#{image}"/>
 			</div>
-			<div class="BlockText">
+			<div class="blockText">
 				<h1>#{siteTitle}</h1>
 				<p>#{siteDescription}</p>
 			</div>
 			<div class="clear"></div>
-			<div class="BlockText">
+			<div class="blockText">
 				<xdev:anchor id="#{id}Btn" href="#{href}" target="_blank" preventDefaultTouchEvents="true" >
 					<div class="refButton">#{buttonLabel}</div>
 				</xdev:anchor>
 			</div>
-			<div class="Risk"></div>
+			<div class="risk"></div>
 		</div>
 	</gwt:HTMLPanel>
 </t:template>

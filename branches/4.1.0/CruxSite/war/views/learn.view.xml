@@ -6,7 +6,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
-	onLoad="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}">
+	onLoad="rssController.onLoad" useController="rssController,bannerController" title="${siteMessages.siteTitle}" useResource="siteResources">
 	
 	<gwt:flexTable id="learnContent" width="900px">
 		<gwt:row>
@@ -14,7 +14,7 @@
 				<gwt:html id="htmlContentLearn">
 					<h1>Lean more from Crux</h1>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
-					<div class="Risk"></div>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
@@ -22,7 +22,7 @@
 			<gwt:cell>
 				<gwt:widget>
 					<site:tutorial id="quickstart" estimatedTime="3 min" width="900px" largeImage="../img/img_example_learn.png" 
-								   tutorialTitle="Using Project Generator" 
+								   tutorialTitle="Using Project Generator" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="This is a video lesson that shows how to use the project generator tool to create a basic Crux Project"
 								   learnDescription="How to start a project with Crux and Eclipse and how to make a simple Hello World."
 								   tutorialUrl="http://blog.cruxframework.org/2011/05/creating-your-first-application-with.html"/>
@@ -33,7 +33,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html>
-					<div class="Risk"></div>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
@@ -41,7 +41,7 @@
 			<gwt:cell>
 				<gwt:widget>
 					<site:tutorial id="gadget" estimatedTime="6 min" width="900px" largeImage="../img/img_opensocial.png" 
-								   tutorialTitle="Creating Gadgets" 
+								   tutorialTitle="Creating Gadgets" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="This is a video lesson that shows how to create google gadgets using Crux"
 								   learnDescription="How to make a simple Hello World gadget."
 								   tutorialUrl="http://blog.cruxframework.org/2011/05/creating-gadgets-with-crux.html"/>
@@ -51,7 +51,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html>
-					<div class="Risk"></div>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
@@ -59,7 +59,7 @@
 			<gwt:cell>
 				<gwt:widget>
 					<site:tutorial id="example" estimatedTime="6 min" width="900px" largeImage="../img/img_example_learn.png" 
-								   tutorialTitle="Creating Gadgets" 
+								   tutorialTitle="Creating Gadgets" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="Another example"
 								   learnDescription="Example description."
 								   tutorialUrl="http://blog.cruxframework.org/2011/05/creating-gadgets-with-crux.html"/>
@@ -69,7 +69,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html>
-					<div class="Risk"></div>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>

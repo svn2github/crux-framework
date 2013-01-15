@@ -26,7 +26,7 @@ public class MainPageController
 	{
 		String appVersion = "";//TODO pegar a versao
 		MobileDisplayHandler.configureMetatags(appVersion);
-		CssLoader.loadCssForDevice(appVersion);
+//		CssLoader.loadCssForDevice(appVersion);
 		String subsection = Window.Location.getHash();
 		if(StringUtils.isEmpty(subsection))
 		{

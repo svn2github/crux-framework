@@ -38,4 +38,16 @@ public interface HomeResources extends ClientBundle
 	
 	@Source("large/banner-social.jpg")
 	ImageResource bannerSocial();
+
+	@Source("small/banner-cross-device.jpg")
+	ImageResource bannerCrossDeviceMobile();
+	
+	@Source("small/banner-fast.jpg")
+	ImageResource bannerFastMobile();
+	
+	@Source("small/banner-java.jpg")
+	ImageResource bannerJavaMobile();
+	
+	@Source("small/banner-social.jpg")
+	ImageResource bannerSocialMobile();
 }

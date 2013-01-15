@@ -7,16 +7,16 @@
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates"
-	title="Community" useResource="communityResources">
+	title="Community" useResource="siteResources,communityResources">
 
-	<gwt:grid id="insideContent" styleName="communityContent">
+	<gwt:grid id="insideContent" styleName="${siteResources.css.communityContent}">
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html id="htmlContent">
 					<h1>Crux Community</h1>
 					<p>Crux is an open source project licensed under the Apache License 2.0. 
 					To learn more about the project, report problems, suggest modifications, or get support, please visit our links targeted to the community.</p>
-					<div class="Risk"></div>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
@@ -24,16 +24,16 @@
 			<gwt:cell>
 				<gwt:widget>
 					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
-						<tmp:siteReference href="http://blog.cruxframework.org" styleName="BlockTypes" siteTitle="Crux's Blog" 
+						<tmp:siteReference href="http://blog.cruxframework.org" styleName="${siteResources.css.blockTypes}" siteTitle="Crux's Blog" 
 										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
 										   image="${communityResources.iconBlogger}" buttonLabel="Visit the Blog" id="blogSite"/>
-						<tmp:siteReference href="http://crux-framework.googlecode.com" styleName="BlockTypes b2" siteTitle="Crux's Project" 
+						<tmp:siteReference href="http://crux-framework.googlecode.com" styleName="${siteResources.css.blockTypes2}" siteTitle="Crux's Project" 
 										   siteDescription="Wiki,Issues, commit road and much more can be found on our Google Code page." 
 										   image="${communityResources.iconGoogle}" buttonLabel="Visit the Page" id="projectSite"/>
-						<tmp:siteReference href="http://groups.google.com/group/crux-framework" styleName="BlockTypes" siteTitle="Crux's Forum" 
+						<tmp:siteReference href="http://groups.google.com/group/crux-framework" styleName="${siteResources.css.blockTypes}" siteTitle="Crux's Forum" 
 										   siteDescription="Our forum. There you can post question about Crux usage." 
 										   image="${communityResources.iconForum}" buttonLabel="Visit the Forum" id="forumSite"/>
-						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="BlockTypes b2" siteTitle="Crux's Team" 
+						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="${siteResources.css.blockTypes2}" siteTitle="Crux's Team" 
 										   siteDescription="Our contact: team@cruxframework.org" 
 										   image="${communityResources.iconForum}" buttonLabel="Talk to us" id="talkSite"/>
 					</xdev:storyboard>

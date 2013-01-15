@@ -13,20 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.cruxsite.client.resource;
+package org.cruxframework.cruxsite.client.controller;
 
-import org.cruxframework.crux.core.client.resources.Resource;
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.cruxsite.client.SiteConstants;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Resource("downloadResources")
-public interface DownloadResources extends ClientBundle
+@Controller("downloadController")
+public class DownloadController
 {
-	@Source("icon-download.png")
-	ImageResource iconDownload();
+	@Inject
+	private SiteConstants consts;
+
+	@Expose
+	public void download()
+	{
+		Window.open(consts.downloadUrl(), "_blank", null);
+	}
+	
+	public void setConsts(SiteConstants consts)
+    {
+    	this.consts = consts;
+    }
 }

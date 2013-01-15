@@ -6,7 +6,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:site="http://www.cruxframework.org/crux/site"
-	title="Crux Framework - Download" useResource="downloadResources">
+	title="Crux Framework - Download" useResource="siteResources" useController="downloadController">
 	<gwt:flexTable id="insideContentDown">
 		<gwt:row>
 			<gwt:cell>
@@ -15,7 +15,7 @@
 						<gwt:row>
 							<gwt:cell>
 								<gwt:widget>
-							 		<gwt:label id="downloadPageSecondaryTitle" text="Dowload the lastest version of Crux" styleName="h1"/>
+							 		<gwt:label id="downloadPageSecondaryTitle" text="Dowload the lastest version of Crux" styleName="${siteResources.css.h1}"/>
 							 	</gwt:widget>
 							</gwt:cell>
 						</gwt:row>
@@ -34,7 +34,7 @@
 		</gwt:row>
 		<gwt:row>
 			<gwt:cell>
-				<gwt:html><div class="Risk"/></gwt:html>
+				<gwt:html><div class="risk"/></gwt:html>
 			</gwt:cell>
 		</gwt:row>
 		<gwt:row>
@@ -44,14 +44,12 @@
 						<gwt:row>
 							<gwt:cell verticalAlignment="top">
 								<gwt:widget>
-									<xdev:storyboard id="downloadBoard" styleName="downloadBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" smallDeviceItemHeight="170px">
+									<xdev:storyboard id="downloadBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" smallDeviceItemHeight="170px">
 										<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
 											<gwt:row>
 												<gwt:cell rowSpan="2">
 													<gwt:widget>
-														<xdev:anchor id="downloadAnchor" href="http://crux-framework.googlecode.com/files/crux-4.1.0.zip">
-															<img src="${downloadResources.iconDownload}" />
-														</xdev:anchor>			
+														<xdev:button id="downloadButton" styleName="${siteResources.css.donwloadButton}" onSelect="downloadController.download" />
 													</gwt:widget>
 												</gwt:cell>
 												<gwt:cell><gwt:html><h1>Crux Framework 4</h1></gwt:html></gwt:cell>
@@ -63,16 +61,16 @@
 												<gwt:cell colSpan="2" styleName="p" horizontalAlignment="center">
 													<gwt:widget>
 														<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
-															<gwt:label styleName="ShyText" id="areYoulookingLabel" text="... or are you looking for"/>
-															<xdev:anchor styleName="ShyLink" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
-															<gwt:label styleName="ShyText" id="areYoulookingLabel2" text="?"/>
+															<gwt:label styleName="${siteResources.css.shyText}" id="areYoulookingLabel" text="... or are you looking for"/>
+															<xdev:anchor styleName="${siteResources.css.shyLink}" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+															<gwt:label styleName="${siteResources.css.shyText}" id="areYoulookingLabel2" text="?"/>
 														</gwt:horizontalPanel>
 													</gwt:widget>
 												</gwt:cell>
 											</gwt:row>
 										</gwt:flexTable>
-										<gwt:verticalPanel id="releaseFeatures" styleName="divDownTxt" horizontalAlignment="left">
-											<gwt:label id="releaseTitle" text="Main features in this version:" styleName="divDownTxtTitle"/>
+										<gwt:verticalPanel id="releaseFeatures" styleName="${siteResources.css.divDownTxt}" horizontalAlignment="left">
+											<gwt:label id="releaseTitle" text="Main features in this version:" styleName="${siteResources.css.divDownTxtTitle}"/>
 											<gwt:HTML id="releaseFeatsListPanel">
 												<ul>
 													<li><span style="text-decoration:underline; margin-right:10px">Views:</span> support for nested views into a single document;</li>
@@ -92,7 +90,7 @@
 		</gwt:row>
 		<gwt:row>
 			<gwt:cell>
-				<gwt:html><div class="Risk"/></gwt:html>
+				<gwt:html><div class="risk"/></gwt:html>
 			</gwt:cell>
 		</gwt:row>
 	</gwt:flexTable>

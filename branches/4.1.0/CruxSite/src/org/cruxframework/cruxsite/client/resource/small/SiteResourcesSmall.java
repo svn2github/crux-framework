@@ -16,6 +16,8 @@
 package org.cruxframework.cruxsite.client.resource.small;
 
 import org.cruxframework.crux.core.client.resources.Resource;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.cruxsite.client.resource.CssCruxSite;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -24,12 +26,15 @@ import com.google.gwt.resources.client.ImageResource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Resource("siteSmallResources")
-public interface SiteSmallResources extends ClientBundle
+@Resource(value="siteResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
+public interface SiteResourcesSmall extends ClientBundle
 {
+//	@Source("cssCruxSite.css")
+//	CssCruxSite css();
+
 	@Source("cruxdude.png")
-	ImageResource cruxLogo();
+	ImageResource cruxLogoMobile();
 
 	@Source("icons-powered-mobile.png")
-	ImageResource iconPowered();
+	ImageResource iconPoweredMobile();
 }

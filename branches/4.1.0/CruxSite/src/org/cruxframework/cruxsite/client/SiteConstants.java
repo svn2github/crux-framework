@@ -43,4 +43,7 @@ public interface SiteConstants extends Constants
 	
 	@DefaultStringValue("http://code.google.com/p/crux-framework/")
 	String projectUrl();
+	
+	@DefaultStringValue("http://crux-framework.googlecode.com/files/crux-4.1.0.zip")
+	String downloadUrl();
 }

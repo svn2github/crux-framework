@@ -3,42 +3,42 @@
            xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 		   xmlns:crux="http://www.cruxframework.org/crux/widgets"
 		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
-           useController="siteFaceLargeController" useResource="siteLargeResources">
+           useController="siteFaceLargeController" useResource="siteResources">
 	<div id="canvas" style="height:100%">
-		<gwt:grid id="frame" styleName="Frame" cellSpacing="0" cellPadding="0">
+		<gwt:grid id="frame" styleName="${siteResources.css.frame}" cellSpacing="0" cellPadding="0">
 			<gwt:row>
-				<gwt:cell styleName="Header" >
+				<gwt:cell styleName="${siteResources.css.header}" >
 					<gwt:widget>
-						<gwt:grid id="headerAreas" styleName="HeaderAreas" cellSpacing="0" cellPadding="0">
+						<gwt:grid id="headerAreas" styleName="${siteResources.css.headerAreas}" cellSpacing="0" cellPadding="0">
 							<gwt:row>
-								<gwt:cell styleName="HeaderMenuLeft">
+								<gwt:cell>
 									<gwt:html>.</gwt:html>
 								</gwt:cell>
-								<gwt:cell styleName="HeaderMenu" verticalAlignment="bottom">
+								<gwt:cell styleName="${siteResources.css.headerMenu}" verticalAlignment="bottom">
 									<gwt:widget>
-										<gwt:grid id="headerGrid" width="100%" styleName="HeaderMenuGrid">
+										<gwt:grid id="headerGrid" width="100%">
 											<gwt:row>
 												<gwt:cell height="100" verticalAlignment="top" horizontalAlignment="right">
 													<gwt:widget>
-														<gwt:horizontalPanel id="shortcutsPanel" styleName="ShortcutsPanel">
-															<gwt:image id="iconBlog" url="${siteLargeResources.iconBlog}" onClick="siteFaceLargeController.onClickGoBlog"/>
-															<gwt:label id="labelBlog" text="${siteMessages.blogShortcut}" styleName="MenuShortcut" onClick="siteFaceLargeController.onClickGoBlog"/>
+														<gwt:horizontalPanel id="shortcutsPanel" styleName="${siteResources.css.shortcutsPanel}">
+															<gwt:image id="iconBlog" url="${siteResources.iconBlog}" onClick="siteFaceLargeController.onClickGoBlog"/>
+															<gwt:label id="labelBlog" text="${siteMessages.blogShortcut}" styleName="${siteResources.css.menuShortcut}" onClick="siteFaceLargeController.onClickGoBlog"/>
 															<gwt:label id="iconsSeparator2" text="" width="20px"/>
-															<gwt:image id="iconProject" url="${siteLargeResources.iconHome}" onClick="siteFaceLargeController.onClickGoProject" />
-															<gwt:label id="labelProject" text="${siteMessages.projectShortcut}" styleName="MenuShortcut" onClick="siteFaceLargeController.onClickGoProject"/>
+															<gwt:image id="iconProject" url="${siteResources.iconHome}" onClick="siteFaceLargeController.onClickGoProject" />
+															<gwt:label id="labelProject" text="${siteMessages.projectShortcut}" styleName="${siteResources.css.menuShortcut}" onClick="siteFaceLargeController.onClickGoProject"/>
 														</gwt:horizontalPanel>
 													</gwt:widget>
 												</gwt:cell>
 											</gwt:row>
 											<gwt:row>
-												<gwt:cell height="50" verticalAlignment="bottom" styleName="HeaderMenuLabel">
+												<gwt:cell height="50" verticalAlignment="bottom" styleName="${siteResources.css.headerMenuLabel}">
 													<gwt:widget>
 														<gwt:label id="sloganLabel" text="${siteMessages.headerLabel}" style="padding-bottom:10px" horizontalAlignment="right" width="100%"/>
 													</gwt:widget>
 												</gwt:cell>
 											</gwt:row>
 											<gwt:row>
-												<gwt:cell height="50px" verticalAlignment="middle" styleName="HeaderMenuItems" horizontalAlignment="center">
+												<gwt:cell height="50px" verticalAlignment="middle" horizontalAlignment="center">
 													<gwt:widget>
 														<gwt:horizontalPanel id="menuBar" verticalAlignment="middle">
 															<gwt:simplePanel id="logoClickableAreaBottom" width="165px" height="50px" />
@@ -49,7 +49,7 @@
 										</gwt:grid>
 									</gwt:widget>
 								</gwt:cell>
-								<gwt:cell styleName="HeaderMenuRight">
+								<gwt:cell>
 									<gwt:html>.</gwt:html>
 								</gwt:cell>
 							</gwt:row>
@@ -58,7 +58,7 @@
 				</gwt:cell>
 			</gwt:row>
 			<gwt:row>
-				<gwt:cell styleName="Content" horizontalAlignment="center" verticalAlignment="top">
+				<gwt:cell styleName="${siteResources.css.siteContent}" horizontalAlignment="center" verticalAlignment="top">
 					<gwt:widget>
 						<gwt:horizontalPanel id="contentMargins" width="900px">
 							<gwt:cell horizontalAlignment="center" verticalAlignment="top">
@@ -70,26 +70,26 @@
 				</gwt:cell>
 			</gwt:row>
 			<gwt:row>
-				<gwt:cell styleName="Footer" >
+				<gwt:cell styleName="${siteResources.css.siteFooter}" >
 					<gwt:widget>
-							<gwt:grid id="footerItems" styleName="FooterContent" cellPadding="0" cellSpacing="0">
+							<gwt:grid id="footerItems" styleName="${siteResources.css.footerContent}" cellPadding="0" cellSpacing="0">
 								<gwt:row>
-									<gwt:cell styleName="CruxLabelFooter" verticalAlignment="middle">
+									<gwt:cell styleName="${siteResources.css.cruxLabelFooter}" verticalAlignment="middle">
 										<gwt:text>Cruxframework.org</gwt:text>
 									</gwt:cell>
-									<gwt:cell styleName="CruxLabelFooter2" verticalAlignment="middle">
+									<gwt:cell styleName="${siteResources.css.cruxLabelFooter2}" verticalAlignment="middle">
 										<gwt:text>Powered by:</gwt:text>
 									</gwt:cell>
 								</gwt:row>
 								<gwt:row>
-									<gwt:cell styleName="CruxLabelFooter3">
+									<gwt:cell styleName="${siteResources.css.cruxLabelFooter3}">
 										<gwt:widget>
-											<gwt:label id="rights" text="Copyright © 2012 Crux Framework, Licensed under the Apache License 2.0." horizontalAlignment="right"/>
+											<gwt:label id="rights" text="Copyright © 2012 Crux Framework, Licensed under the Apache License 2.0." horizontalAlignment="right" styleName="${siteResources.css.labelFooter}"/>
 										</gwt:widget>
 									</gwt:cell>
-									<gwt:cell styleName="CruxLabelFooter4">
+									<gwt:cell styleName="${siteResources.css.cruxLabelFooter4}">
 										<gwt:widget>
-											<gwt:image id="imgIconFooter1" url="${siteLargeResources.iconPowered}"/>
+											<gwt:image id="imgIconFooter1" url="${siteResources.iconPowered}"/>
 										</gwt:widget>
 									</gwt:cell>
 								</gwt:row>

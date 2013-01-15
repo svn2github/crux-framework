@@ -1,0 +1,683 @@
+@sprite BODY 
+{
+	gwt-image: "bodyTexture";
+	background-position: 0px 224px;
+	background-color: #B8BCBD;
+	overflow: auto;
+}
+
+BODY, HTML
+{
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-family:Helvetica, Sans-serif;
+}
+
+H1, .h1
+{
+	margin-top: 10px;
+	color: #004F5E;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom:10px;
+}
+P, .p
+{
+	color:#333;
+	text-shadow:0 1px 0 #fff;
+}
+@external clear;
+.clear
+{
+	clear:both;
+}
+
+.frame
+{
+	width: 100%;
+	height: 100%;
+}
+
+.header
+{
+	height: 224px;
+	background-color: #00242C;
+}
+.headerAreas
+{
+	width: 100%;
+	height: 224px;
+}
+
+@sprite .headerMenu
+{
+	gwt-image: "headerLogo";
+	background-position: top left;
+	width: 900px;
+	height: 224px;
+}
+
+.headerMenuLabel
+{
+	font-size: 15px;
+	color: white;
+	opacity: 0.7;
+	padding-bottom: 5px;
+	text-align: right;
+}
+
+.shortcutsPanel IMG, .shortcutsPanel DIV 
+{
+	cursor: pointer;
+}
+
+.menuShortcut
+{
+	font-size: 12px;
+	color: white;
+	opacity: 0.7;
+}
+@external MenuItem, MenuItem-disabled, MenuSeparator;
+.MenuItem, .MenuItem-disabled
+{
+	color: #FFFFFF;
+	font-family: Helvetica, Sans-serif;
+	font-size: 18px;
+	text-decoration: none;
+	cursor: pointer;
+	text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+.MenuItem-disabled
+{
+	color: #336200;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.MenuSeparator
+{
+	margin-left: 15px;
+	margin-right: 15px;
+	height: 30px;
+	border-right: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 1px 0px rgba(255,255,255,0.2);
+}
+
+@sprite .siteContent
+{
+	gwt-image: "bodyMountains";
+	background-position: bottom;
+	padding-top: 10px;
+}
+
+@sprite .siteFooter
+{
+	gwt-image: "footerBg";
+	height: 104px;
+	width: 100%;
+}
+
+@sprite .footerContent
+{
+	width: 100%;
+	gwt-image: "footerTexture";
+	background-position: center 12px;
+	height: 97px;
+	padding-top:11px;
+	margin-top:5px;
+	margin-bottom:1px;
+}
+
+.footerContent TD{
+	width:50%;
+	/*box-shadow:0 0 0 1px red inset;*/
+}
+
+.bannerAndNews
+{
+	width: 100%;
+}						
+
+.bannerArea
+{
+	width: 900px;
+}
+
+.newsBoard
+{
+	width: 100%;
+}
+@external item;
+@sprite .newsBoard .item
+{
+	gwt-image: "contentBoxBg";
+	background-position: top;
+	background-size: 100% 100%; 
+	padding-bottom: 40px;
+	margin-left: 10px;
+    margin-right: 10px;
+}
+
+.contentAreas
+{
+	width: 100%;
+	padding-top: 10px;
+}
+
+.contentLeft, .contentRight
+{
+	font-family: monospace;
+	color: #CCCCCC;
+}
+
+.contentCenter
+{
+	width: 900px;
+}
+
+.cruxLabelFooter, .cruxLabelFooter2
+{
+	color:#ccc;
+}
+
+.cruxLabelFooter
+{
+	text-align:right;
+	border-right:1px solid #001B20;
+	padding-right:10px;
+	padding-top:10px;
+	font-size:12px;
+}
+
+.cruxLabelFooter3
+{
+	text-align:right;
+	border-right:1px solid #001B20;
+	padding-right:10px;
+}
+.cruxLabelFooter3 .labelFooter{
+	color:#fff;
+	text-decoration:none;
+	font-size:12px;
+}
+
+.cruxLabelFooter2
+{
+	border-left:1px solid #005C6C;
+	padding-left:10px;
+	padding-top:10px;
+	font-size:12px;
+	font-weight:normal;
+}
+
+.cruxLabelFooter4
+{
+	border-left:1px solid #005C6C;
+	padding-left:10px;
+}
+@external rightArrow, leftArrow, leftArrow-disabled, rightArrow-disabled, bullet, bullet-active, messagePanel, title, text, longText;
+
+@sprite .promoBanner .rightArrow
+{
+	width: 44px;
+	height: 65px;
+	gwt-image: "bannerRightArrow";
+	/*background-position: top right;*/
+	cursor: pointer;
+}
+
+@sprite .promoBanner .leftArrow
+{
+	width: 40px;
+	height: 65px;
+	gwt-image: "bannerLeftArrow";
+	/*background-position: top right;*/
+	cursor: pointer;
+}
+
+.promoBanner .leftArrow-disabled, .promoBanner .rightArrow-disabled
+{
+	opacity: .5;
+}
+
+.promoBanner .bullet
+{
+	width: 10px;
+	height: 10px;
+	background: rgba(0, 0, 0, 0.5);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.2) inset;
+	border: 1px solid white;
+	border-radius: 10px;
+	margin-right: 15px;
+	float: left;
+	cursor: pointer;
+	margin-top: 30px;
+}
+
+@if user.agent safari
+{
+	.promoBanner .bullet-active {-webkit-transition: all 0.25s linear; }
+	.promoBanner button:active { background: -webkit-linear-gradient(#004A5D 0%, #006778 100%);}
+	.promoBanner button:hover{-webkit-transition: all 0.3s linear;}
+	.promoBanner button
+	{	
+		-webkit-transition: box-shadow 0.3s linear;
+		background: -webkit-linear-gradient(#006778 0%, #004A5D 100%);
+	}
+} 
+@if user.agent gecko gecko1_8
+{
+	.promoBanner button:active {background: -moz-linear-gradient(#004A5D 0%, #006778 100%);}
+	.promoBanner button:hover{-moz-transition: all 0.3s linear;}
+	.promoBanner button
+	{
+		-moz-transition: box-shadow 0.3s linear;
+		background: -moz-linear-gradient(#006778 0%, #004A5D 100%);
+	}
+	.promoBanner .bullet-active {-moz-transition: all 0.25s linear; }
+} 
+@if user.agent opera
+{
+	.promoBanner button:active {background: -o-linear-gradient(#004A5D 0%, #006778 100%);}
+	.promoBanner button:hover{-o-transition: all 0.3s linear;}
+	.promoBanner .bullet-active {-o-transition: all 0.25s linear; }
+	.promoBanner button
+	{
+		-o-transition: box-shadow 0.3s linear;
+		background: -o-linear-gradient(#006778 0%, #004A5D 100%);
+	}
+} 
+@if user.agent ie9
+{
+	.promoBanner .bullet-active {-ms-transition: all 0.25s linear; }
+	.promoBanner button:active {background: -ms-linear-gradient(#004A5D 0%, #006778 100%);}
+	.promoBanner button:hover{-ms-transition: all 0.3s linear;}
+	.promoBanner button
+	{
+		-ms-transition: box-shadow 0.3s linear;
+		background: -ms-linear-gradient(#006778 0%, #004A5D 100%);
+	}
+}
+.promoBanner .bullet-active
+{
+	box-shadow: 0 0 3px rgba(255,255,255,0.5) inset, 0 0 5px rgba(0,0,0,0.4) !important;
+	background: white !important;
+}
+
+.promoBanner .messagePanel
+{
+	padding-top: 20px;
+	padding-left: 35px;
+	height: 100%;
+}
+
+.promoBanner button
+{
+	cursor: pointer;
+	width: 200px;
+	height: 40px;
+	background: #005266;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset;
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: white;
+	font-size: 17px;
+	float: right;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+
+.promoBanner button:hover 
+{
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 5px 2px rgba(0,0,0,0.4), 0 1px 0 #0096af inset !important;
+}
+
+.promoBanner .title
+{
+	font-size: 43px;
+	color: #222;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	font-family: Helvetica;
+	font-weight: bold;
+}
+	
+.promoBanner .text
+{
+	background-attachment: scroll;
+	color: #153A42;
+	font-family: Helvetica;
+	font-size: 28px;
+	margin-left: 0px;
+	margin-right: 0px;
+	text-align: justify;
+	text-shadow: rgba(255, 255, 255, 0.496094) 0px 1px 0px;
+	width: 360px;
+}
+
+.promoBanner .longText .text
+{
+	font-size: 23px;
+}
+
+@external rssPanelTitle, rssPanelBody, entryTitle, entryDate;
+.rssPanel
+{
+	width: 100%;
+}
+.rssPanel .rssPanelTitle
+{
+	margin-top: 0;
+	color: #004F5E;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+	font-size: 1.5em;
+	height: 50px;
+	margin-left: 10px;
+	font-weight: bold;	
+}
+
+.rssPanel .rssPanelBody
+{
+	padding-left: 12px;
+	padding-right: 12px;
+	width: 100%;
+}
+
+.rssPanel .rssPanelBody TD
+{
+	height: 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px rgba(255,255,255,0.3);
+}
+
+.rssPanel .entryTitle
+{
+	color: #333;
+	font-size: 15px;
+	font-family: Helvetica;
+	cursor: pointer;
+}
+
+.rssPanel .entryDate
+{
+	font-size: 11px;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 20px;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.4) inset, 0 1px 0 rgba(255,255,255,0.5);
+	color: white;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+	float: right;
+	padding: 3px 8px;
+}
+
+.contentHorizontalSeparator
+{
+	width: 20px;
+	font-family: monospace;
+	color: #CCCCCC;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px rgba(255,255,255,0.4);
+	padding-top: 20px;
+}
+@external risk;
+.risk{
+	height:1px;
+	background:#555;
+	background:rgba(0,0,0,0.15);
+	border-bottom:1px solid #f0f0f0;
+	border-bottom:1px solid rgba(255,255,255,0.8);
+	margin:20px 0;
+}
+.shyLink, .shyText 
+{
+	color: rgba(0, 0, 0, 0.4);
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 1);
+	font-size: 12px;
+	padding: 2px;
+}
+
+.shyLink
+{
+	text-decoration: underline;
+}
+
+.shyText
+{
+	margin-top: 1px;
+}
+
+.communityContent
+{
+	width: 900px;
+}	
+@external blockImg, blockText;
+.blockImg
+{
+	float:left;
+	height:94px;
+	margin-bottom:8px;
+}
+.blockText
+{
+	float:left;
+	width:300px;
+	margin-left:10px;
+}
+.blockTypes
+{
+	margin-right:10px;
+	height:200px;
+}
+.blockTypes2
+{
+	margin-right:0;
+	height:200px;
+	margin-left:10px;
+}
+@external refButton;
+
+@if user.agent safari
+{
+	.blockTypes .refButton, .blockTypes2 .refButton
+	{
+		-webkit-transition: box-shadow 0.3s linear;
+		background: -webkit-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	}
+ 	.blockTypes .refButton:hover, .blockTypes2 .refButton:hover{ -webkit-transition: box-shadow 0.3s linear;}
+ 	.blockTypes .refButton:active, .blockTypes2 .refButton:active{ background: -webkit-linear-gradient(#c5cdd3 0%, #eff6f8 100%);}
+} 
+@if user.agent gecko gecko1_8
+{
+	.blockTypes .refButton, .blockTypes2 .refButton
+	{
+		-moz-transition: box-shadow 0.3s linear;
+		background: -moz-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	}
+ 	.blockTypes .refButton:hover, .blockTypes2 .refButton:hover{ -moz-transition: box-shadow 0.3s linear;}
+ 	.blockTypes .refButton:active, .blockTypes2 .refButton:active{ background: -moz-linear-gradient(#c5cdd3 0%, #eff6f8 100%);}
+} 
+@if user.agent opera
+{
+	.blockTypes .refButton, .blockTypes2 .refButton
+	{
+		-o-transition: box-shadow 0.3s linear;
+		background: -o-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	}
+ 	.blockTypes .refButton:hover, .blockTypes2 .refButton:hover{ -o-transition: box-shadow 0.3s linear;}
+ 	.blockTypes .refButton:active, .blockTypes2 .refButton:active{ background: -o-linear-gradient(#c5cdd3 0%, #eff6f8 100%);}
+} 
+@if user.agent ie9
+{
+	.blockTypes .refButton, .blockTypes2 .refButton
+	{
+		-ms-transition: box-shadow 0.3s linear;
+		background: -ms-linear-gradient(#eff6f8 0%, #c5cdd3 100%);
+	}
+ 	.blockTypes .refButton:hover, .blockTypes2 .refButton:hover{ -ms-transition: box-shadow 0.3s linear;}
+ 	.blockTypes .refButton:active, .blockTypes2 .refButton:active{ background: -ms-linear-gradient(#c5cdd3 0%, #eff6f8 100%);}
+}
+
+.blockTypes .refButton, .blockTypes2 .refButton
+{
+	display:inline;
+	cursor: pointer;
+	padding: 10px 25px;
+	box-shadow: 0 0 0 3px rgba(255,255,255,0.2), 0 0 0 1px rgba(0,0,0,0.2) inset;
+	border-radius: 4px;
+	border: solid 0px;
+	text-align: center;
+	color: #444;
+	text-shadow:0 1px 0 #fff;
+	font-size: 17px;
+}
+.blockTypes .refButton:hover, .blockTypes2 .refButton:hover
+{
+ 	box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 1px rgba(0,0,0,0.3) inset;
+}
+.blockTypes a, .blockTypes2 a 
+{
+	margin-right: 10px;
+	margin-top: 5px;
+	text-decoration: none;
+}
+.blockText h1, .blockTypes2 h1
+{
+ 	font-size:23px;
+ 	letter-spacing:-1px;
+ 	margin-top:0;
+}
+.blockText p, .blockTypes2 p
+{
+ 	font-size:14px;
+}
+.divDownTxt
+{
+ 	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	height:150px;
+ 	padding:10px;
+ 	text-align: left;
+}
+.divDownTxt .divDownTxtTitle 
+{
+	font-size:19px;
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.4);
+	text-align: left;
+	font-weight: bold;	
+}
+.divDownTxt li 
+{
+	color:#fff;
+	text-shadow:0 1px 1px rgba(0,0,0,0.3);
+	text-align: left;
+	margin-top: 10px;
+}
+/*
+.site-Tutorial-large .contentPanel, .site-Tutorial-large .time, .site-Tutorial-large .learnPanel 
+{
+	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	padding:10px;
+ 	color:#fff;
+ 	text-shadow:0 1px 1px rgba(0,0,0,0.5);
+ 	margin-bottom:7px;
+}
+.site-Tutorial-large .contentPanel
+{
+	margin-right:6px;
+}
+.site-Tutorial-large .time, .site-Tutorial-large .learnPanel
+{
+	font-size:13px;
+}
+.site-Tutorial-large .tutorialImage
+{
+	margin-right:10px;
+}
+.site-Tutorial-large .tutorialTitle
+{
+	margin-top:-4px;
+}
+.site-Tutorial-large .openTutorialButton
+{
+	background:#eee;
+	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
+	background:-moz-linear-gradient(#fff 0%, #ccc 100%);
+	background:-o-linear-gradient(#fff 0%, #ccc 100%);
+	background:-ms-linear-gradient(#fff 0%, #ccc 100%);
+	padding:7px 10px;
+	font-size:17px;
+	color:green;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.4), 0 0 0 3px rgba(0,0,0,0.1);
+	border-radius:5px;
+	text-align:center;
+}
+.SilverButton2
+{
+	background:#eee;
+	background:-webkit-linear-gradient(#fff 0%, #ccc 100%);
+	background:-moz-linear-gradient(#fff 0%, #ccc 100%);
+	background:-o-linear-gradient(#fff 0%, #ccc 100%);
+	background:-ms-linear-gradient(#fff 0%, #ccc 100%);
+	padding:7px 10px;
+	font-size:14px;
+	color:#333;
+	box-shadow:0 0 0 1px rgba(0,0,0,0.4), 0 0 0 3px rgba(0,0,0,0.1);
+	border-radius:5px;
+	text-align:center;
+	text-shadow:0 1px 0 #fff;
+	margin:0 5px;
+}
+.CellFirst
+{
+	background:#738c99;
+	border-right:1px solid #fff;
+	font-size:13px;
+	color:#fff;
+	text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+.baloon
+{
+	width:295px;
+	height:50px;
+	background:url(../img/baloon.png) no-repeat;
+	font-size:12px;
+	padding:10px 10px 5px 13px;
+}
+.features
+{
+	text-align:left;
+}
+.features h2
+{
+	margin:0;
+	font-size:15px;
+	font-weight:normal;
+	color:#222;
+	text-shadow:0 1px 0 rgba(255,255,255,0.5);
+}
+.features p
+{
+	margin:0;
+	color:#fff;
+	text-shadow:0 1px 0 rgba(0,0,0,0.4);
+	font-size:13px;
+}
+.UnderConstructionTag
+{
+	width: 115px;
+	height: 115px;
+	position: absolute;
+	z-index: 2;
+	top: 0px;
+	left: 0px;
+	background: url(../img/under-construction.png) top left no-repeat;
+}
+*/

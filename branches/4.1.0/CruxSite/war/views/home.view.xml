@@ -7,28 +7,37 @@
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	onLoad="rssController.onLoad" useController="rssController,bannerController" 
-	useResource="homeResources" title="${siteMessages.siteTitle}">
+	useResource="siteResources,homeResources" title="${siteMessages.siteTitle}">
 	
-	<gwt:grid id="contentAreas" styleName="ContentAreas" cellPadding="0" cellSpacing="0">
+	<gwt:grid id="contentAreas" styleName="${siteResources.css.contentAreas}" cellPadding="0" cellSpacing="0">
 		<gwt:row>
-			<gwt:cell styleName="ContentLeft"><gwt:html>.</gwt:html></gwt:cell>
-			<gwt:cell styleName="ContentCenter">
+			<gwt:cell styleName="${siteResources.css.contentLeft}"><gwt:html>.</gwt:html></gwt:cell>
+			<gwt:cell styleName="${siteResources.css.contentCenter}">
 				<gwt:widget>
-					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="BannerAndNews">
+					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="${siteResources.css.bannerAndNews}">
 						<gwt:row>
-							<gwt:cell styleName="BannerArea" colSpan="3">
+							<gwt:cell styleName="${siteResources.css.bannerArea}" colSpan="3">
 								<gwt:widget>
-									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" transitionDuration="400" autoTransitionInterval="10000">
-									 	<xdev:banner image="${homeResources.bannerFast}"  buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
-									 	<xdev:banner image="${homeResources.bannerCrossDevice}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
-									 	<xdev:banner image="${homeResources.bannerSocial}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
-									 	<xdev:banner image="${homeResources.bannerJava}" buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
+									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" 
+									 				   transitionDuration="400" autoTransitionInterval="10000" styleName="${siteResources.css.promoBanner}">
+									 	<xdev:banner largeImage="${homeResources.bannerFast}" smallImage="${homeResources.bannerFastMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" 
+									 				 text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
+									 	<xdev:banner largeImage="${homeResources.bannerCrossDevice}" smallImage="${homeResources.bannerCrossDeviceMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" 
+									 				 text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
+									 	<xdev:banner largeImage="${homeResources.bannerSocial}" smallImage="${homeResources.bannerSocialMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" 
+									 				 text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
+									 	<xdev:banner largeImage="${homeResources.bannerJava}" smallImage="${homeResources.bannerJavaMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" 
+									 				 text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
 									 </xdev:promoBanner>
 								</gwt:widget>
 							</gwt:cell>
 						</gwt:row>
 						<gwt:row>
-							<gwt:cell styleName="ContentHorizontalSeparator" colSpan="3">
+							<gwt:cell styleName="${siteResources.css.contentHorizontalSeparator}" colSpan="3">
 								<gwt:text>.</gwt:text>
 							</gwt:cell>
 						</gwt:row>
@@ -40,9 +49,9 @@
 						<gwt:row>
 							<gwt:cell>
 								<gwt:widget>
-									<xdev:storyboard id="newsBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" styleName="newsBoard" smallDeviceItemHeight="240px">
-										<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" />
-										<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" />
+									<xdev:storyboard id="newsBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" styleName="${siteResources.css.newsBoard}" smallDeviceItemHeight="240px">
+										<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" styleName="${siteResources.css.rssPanel}"/>
+										<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" styleName="${siteResources.css.rssPanel}"/>
 									</xdev:storyboard>
 								</gwt:widget>
 							</gwt:cell>
@@ -50,7 +59,7 @@
 					</gwt:flexTable>
 				</gwt:widget>														
 			</gwt:cell>
-			<gwt:cell styleName="ContentRight"><gwt:html>.</gwt:html></gwt:cell>
+			<gwt:cell styleName="${siteResources.css.contentRight}"><gwt:html>.</gwt:html></gwt:cell>
 		</gwt:row>
 	</gwt:grid>	
 </v:view>
