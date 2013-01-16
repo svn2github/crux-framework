@@ -72,7 +72,8 @@ public class ShowcaseErrorHandler implements ErrorHandler, ValidationErrorHandle
 		MessageBox.show("Oops...", errorMessage, null);
 	}
 
-	public void handleError(Throwable t, boolean uncaught)
+	@Override
+    public void handleError(Throwable t, boolean uncaught)
     {
 		handleError(t.getMessage(), t);
     }
