@@ -57,7 +57,7 @@ public class TabContainerFactory extends WidgetCreator<WidgetCreatorContext>
 	})
 	@TagEventsDeclaration({
 		@TagEventDeclaration("onBeforeFocus"),
-		@TagEventDeclaration("onBeforeBlur"),
+		@TagEventDeclaration("onBeforeBlur")
 	})
 	public static class TabsProcessor extends WidgetChildProcessor<WidgetCreatorContext>
 	{

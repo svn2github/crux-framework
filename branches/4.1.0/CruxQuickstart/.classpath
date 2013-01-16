@@ -12,7 +12,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/crux-runtime.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet-deps.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
-	<classpathentry kind="lib" path="build/lib/crux-view-widgets.jar"/>
 	<classpathentry kind="lib" path="build/lib/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="lib" path="build/lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
