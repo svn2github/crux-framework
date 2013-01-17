@@ -57,6 +57,8 @@
 	<!-- Properties refering CruxCrossDevice Project -->
 	<property name="crossdevice.build" value="../CruxCrossDeviceWidgets" />
 	<property name="crossdevice.build.dir" value="${crossdevice.build}/build" />
+	<property name="crossdevice.dist.dir" value="${crossdevice.build}/dist" />
+	<property name="crossdevice.name" value="crux-cross-device-widgets" />
 	
 	<!-- 
 	========================================================================================================
@@ -118,6 +120,7 @@
 
 		<!-- Run Crux distribution tasks -->
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
+		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<subant inheritall="false" target="generate-javadoc" antfile="${crux.build.dir}/build.xml" failonerror="false" buildpath="."/>
 		<copy todir="${expanded.dir}/docs">
 			<fileset dir="${crux.dist.dir}/docs" includes="**/*"/>
@@ -129,7 +132,10 @@
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />				
 				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />
+			</fileset>
+			<fileset dir="${crossdevice.dist.dir}">
+			    <include name="${crossdevice.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="${crux.dev.deps.name}.jar" />
@@ -190,6 +196,7 @@
 	-->
 	<target name="compile-update-applications-jars" >
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
+		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<antcall target="update-applications-jars" />
 	</target>
 	
@@ -250,6 +257,9 @@
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
+			<fileset dir="${crossdevice.dist.dir}">
+				<include name="*.jar"/>			    
+			</fileset>
 		</copy>
 		<copy todir="${showcase.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
@@ -285,6 +295,9 @@
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${crossdevice.dist.dir}">
+				<include name="*.jar"/>			    
 			</fileset>
 		</copy>
 		<copy todir="${site.webinf.dir}/lib">
