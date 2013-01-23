@@ -38,10 +38,10 @@
 												</gwt:cell>
 											</gwt:row>
 											<gwt:row>
-												<gwt:cell height="50px" verticalAlignment="middle" horizontalAlignment="center">
+												<gwt:cell height="50px" verticalAlignment="middle" horizontalAlignment="left">
 													<gwt:widget>
 														<gwt:horizontalPanel id="menuBar" verticalAlignment="middle">
-															<gwt:simplePanel id="logoClickableAreaBottom" width="165px" height="50px" />
+															<gwt:simplePanel id="logoClickableAreaBottom" width="190px" height="50px" />
 														</gwt:horizontalPanel>
 													</gwt:widget>
 												</gwt:cell>
