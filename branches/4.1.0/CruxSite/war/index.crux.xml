@@ -22,9 +22,6 @@
 			<site:menuEntry label="Demo" url="http://showcase.cruxframework.org/" tooltip="Click to see the Crux components showcase."/>
 			<site:menuEntry label="Download" url="index.html#!section=download" tooltip="Click to get the newest version of Crux SDK." onSelect="mainPageController.onClickMenuDownload"/>
 			<site:menuEntry label="Learn" url="index.html#!section=learn" tooltip="Click to see tutorials and technical documentation" onSelect="mainPageController.onClickMenuLearn"/>
-			<site:menuEntry label="Community" url="index.html#!section=community" tooltip="Our community" onSelect="mainPageController.onClickMenuCommunity" />
-			<site:menuEntry label="Compare" url="index.html#!section=compare" tooltip="Compare Crux with other web frameworks" onSelect="mainPageController.onClickMenuCompare" />
-			<site:menuEntry label="Contribute" url="index.html#!section=contribute" tooltip="Contribute with Crux" onSelect="mainPageController.onClickMenuContribute" />
 		</site:siteFace>
 	</body>
 </html>

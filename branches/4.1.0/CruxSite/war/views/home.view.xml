@@ -16,16 +16,44 @@
 				<gwt:widget>
 					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="${siteResources.css.bannerAndNews}">
 						<gwt:row>
+							<gwt:cell>
+								<gwt:html>
+								<h1>
+									Crux is...
+								</h1>
+								</gwt:html>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell>
+								<gwt:html>
+								<h2>
+								a Java rapid development framework that extends GWT and 
+								let you create powerful cutting-edge web applications 
+								and web sites.
+								</h2>
+								</gwt:html>
+							</gwt:cell>
+							<gwt:cell width="350px">
+								<gwt:html></gwt:html>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell height="20px">
+								<gwt:html></gwt:html>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
 							<gwt:cell styleName="${siteResources.css.bannerArea}" colSpan="3">
 								<gwt:widget>
 									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" 
 									 				   transitionDuration="400" autoTransitionInterval="10000" styleName="${siteResources.css.promoBanner}">
-									 	<xdev:banner largeImage="${homeResources.bannerFast}" smallImage="${homeResources.bannerFastMobile}"
-									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" 
-									 				 text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
 									 	<xdev:banner largeImage="${homeResources.bannerCrossDevice}" smallImage="${homeResources.bannerCrossDeviceMobile}"
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" 
 									 				 text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
+									 	<xdev:banner largeImage="${homeResources.bannerFast}" smallImage="${homeResources.bannerFastMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" 
+									 				 text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
 									 	<xdev:banner largeImage="${homeResources.bannerSocial}" smallImage="${homeResources.bannerSocialMobile}"
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" 
 									 				 text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
@@ -47,7 +75,7 @@
 							</gwt:cell>
 						</gwt:row>
 						<gwt:row>
-							<gwt:cell>
+							<gwt:cell colSpan="3">
 								<gwt:widget>
 									<xdev:storyboard id="newsBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" styleName="${siteResources.css.newsBoard}" smallDeviceItemHeight="240px">
 										<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" styleName="${siteResources.css.rssPanel}"/>
