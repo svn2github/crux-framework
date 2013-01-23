@@ -47,13 +47,13 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("Fast")
 	String bannerFastTitle();
 	
-	@DefaultMessage("Web Applications running faster than ever. As well as your development process.")
+	@DefaultMessage("Web Applications running faster than ever. As well as your development team.")
 	String bannerFastText();
 	
 	@DefaultMessage("Social")
 	String bannerSocialTitle();
 	
-	@DefaultMessage("You can run your applications on social platforms and web portals! Crux is ready for iGoogle, Orkut, Google Plus and many others.")
+	@DefaultMessage("You can run your applications on social platforms and web portals! Crux is ready for Google+, Facebook, Twitter, Pinterest and many others.")
 	String bannerSocialText();
 	
 	@DefaultMessage("CAFEBABE")
