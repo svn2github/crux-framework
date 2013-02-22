@@ -647,6 +647,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:complexType name=\"Screen\" mixed=\"true\">");
 		out.println("<xs:group ref=\"ScreenContent\" />");
 		generateElementAttributesForAllViewElements(out);
+		out.println("<xs:attribute name=\"smallViewport\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"largeViewport\" type=\"xs:string\"/>");
 		out.println("</xs:complexType>");
 	}
 

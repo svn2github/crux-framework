@@ -338,7 +338,8 @@ public class ViewFactory
 	{
 		try
         {
-	        String[] attributes = JSONObject.getNames(elem);
+	        view.setViewElement(elem);
+			String[] attributes = JSONObject.getNames(elem);
 	        int length = attributes.length;
 	        
 	        for (int i = 0; i < length; i++) 

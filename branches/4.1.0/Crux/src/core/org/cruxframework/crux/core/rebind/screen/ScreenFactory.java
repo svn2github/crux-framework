@@ -276,6 +276,7 @@ public class ScreenFactory
 		{
 			String relativeScreenId = getRelativeScreenId(id, screenModule);
 			View rootView = ViewFactory.getInstance().getView(screenModule+"/"+relativeScreenId, screenView, true);
+			
 			screen = new Screen(id, relativeScreenId, screenModule, rootView);
 		}
 		else

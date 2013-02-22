@@ -52,6 +52,7 @@ public class View
 
 	private final JSONArray elements;
 	private final JSONObject lazyDependencies;
+	private JSONObject viewElement;
 	private final boolean rootView;
 	private final String html;
 	
@@ -404,4 +405,22 @@ public class View
 	{
 		return html;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public JSONObject getViewElement()
+    {
+    	return viewElement;
+    }
+
+	/**
+	 * 
+	 * @param viewElement
+	 */
+	void setViewElement(JSONObject viewElement)
+    {
+    	this.viewElement = viewElement;
+    }
 }

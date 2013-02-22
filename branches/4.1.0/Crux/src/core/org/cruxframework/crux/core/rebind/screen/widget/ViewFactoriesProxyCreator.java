@@ -24,6 +24,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.DisplayHandler;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
@@ -138,6 +139,17 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				generateViewCreator(sourceWriter, view);
 			}
 
+			if (view.isRootView())
+			{
+				String smallViewport = view.getViewElement().optString("smallViewport");
+				String largeViewport = view.getViewElement().optString("largeViewport");
+				if ((smallViewport != null && smallViewport.length() > 0) || (largeViewport != null && largeViewport.length() > 0))
+				{
+					sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(smallViewport, false)+
+							","+EscapeUtils.quote(largeViewport, false)+");");
+				}
+			}
+			
 			sourceWriter.println("}");
         }
 		if (!first)

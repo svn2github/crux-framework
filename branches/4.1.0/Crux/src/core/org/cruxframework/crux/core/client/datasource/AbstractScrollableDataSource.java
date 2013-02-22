@@ -152,7 +152,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 				return compareNonNullValuesByType(value1,value2,ascending);
 			}
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending)
 			{
 				if (ascending)
@@ -196,7 +196,8 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#getValue(java.lang.String, org.cruxframework.crux.core.client.datasource.DataSourceRecord)
 	 */
-	public Object getValue(String columnName, DataSourceRecord<?> dataSourceRecord)
+	@SuppressWarnings("unchecked")
+    public Object getValue(String columnName, DataSourceRecord<?> dataSourceRecord)
 	{
 		ColumnDefinition<?, E> column = definitions.getColumn(columnName);
 		if (column != null)
