@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.module.filter;
 
+import org.cruxframework.crux.core.client.Legacy;
+
 
 /**
  * Used to locate the resources inside the modules structure. Used only for development. When this filter is used, you need 
@@ -24,6 +26,7 @@ package org.cruxframework.crux.module.filter;
  * @deprecated - Use ModulesDeclarativeUIFilter instead
  */
 @Deprecated
+@Legacy
 public class ModulesHtmlTagsFilter extends ModulesDeclarativeUIFilter
 {
 }

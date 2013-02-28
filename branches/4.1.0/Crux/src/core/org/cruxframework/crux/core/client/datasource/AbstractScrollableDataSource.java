@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import org.cruxframework.crux.core.client.ClientMessages;
+import org.cruxframework.crux.core.client.Legacy;
 
 
 import com.google.gwt.core.client.GWT;
@@ -212,6 +213,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	 * @deprecated Use getBoundObject instead
 	 */
 	@Deprecated
+	@Legacy
 	public E getBindedObject()
 	{
 		return getBindedObject(getRecord());
@@ -223,6 +225,7 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	 * @deprecated Use getBoundObject instead
 	 */
 	@Deprecated
+	@Legacy
 	public E getBindedObject(DataSourceRecord<E> record)
 	{
 		return getBoundObject(record);

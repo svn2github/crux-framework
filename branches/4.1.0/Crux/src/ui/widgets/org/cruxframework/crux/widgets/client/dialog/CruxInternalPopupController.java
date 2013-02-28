@@ -16,6 +16,7 @@
 package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
@@ -45,6 +46,8 @@ import com.google.gwt.user.client.ui.Widget;
 @Global
 @Controller(value="__popup", lazy=false)
 @RequiresCrossDocumentSupport
+@Legacy
+@Deprecated
 public class CruxInternalPopupController implements CruxInternalPopupControllerCrossDoc
 {
 	protected CruxInternalPopupControllerCrossDoc crossDoc = GWT.create(CruxInternalPopupControllerCrossDoc.class);

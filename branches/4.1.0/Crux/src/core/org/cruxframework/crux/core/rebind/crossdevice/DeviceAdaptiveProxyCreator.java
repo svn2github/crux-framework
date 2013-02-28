@@ -32,6 +32,7 @@ import org.cruxframework.crux.core.rebind.AbstractWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
+import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.w3c.dom.Document;
@@ -64,6 +65,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	private JClassType hasHandlersClass;
 	private String controllerName;
 	private String viewClassName;
+	private View view;
 
 	/**
 	 * 
@@ -81,7 +83,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    
 	    initializeTemplateParser();
 	    org.cruxframework.crux.core.rebind.screen.Screen currentScreen = getCurrentScreen();
-		View view = templateParser.getTemplateView(template,  baseIntf.getQualifiedSourceName(), device);
+		view = templateParser.getTemplateView(template,  baseIntf.getQualifiedSourceName(), device);
 		initializeController(view);
 		viewFactoryCreator = new DeviceAdaptiveViewFactoryCreator(context, logger, view, getDeviceFeatures(), controllerName, currentScreen.getModule());
 		viewClassName = viewFactoryCreator.create();
@@ -207,6 +209,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		String genClass = new ControllerProxyCreator(logger, context, controllerClass).create();
 		srcWriter.println("this._controller = new "+genClass+"("+viewVariable+");");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).setBoundWidget(this);");
+		IocContainerRebind.injectFieldsAndMethods(srcWriter, controllerClass, "this._controller", viewVariable+".getIocContainer()", view, device);
 	}
 	
 	@Override

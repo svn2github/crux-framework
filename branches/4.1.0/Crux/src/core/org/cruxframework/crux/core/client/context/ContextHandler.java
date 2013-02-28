@@ -15,10 +15,13 @@
  */
 package org.cruxframework.crux.core.client.context;
 
+import org.cruxframework.crux.core.client.Legacy;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Legacy
 public interface ContextHandler
 {
 	void initializeContext();

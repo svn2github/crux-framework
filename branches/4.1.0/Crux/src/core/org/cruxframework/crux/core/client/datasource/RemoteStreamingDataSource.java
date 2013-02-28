@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.cruxframework.crux.core.client.ClientMessages;
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.datasource.DataSourceRecord.DataSourceRecordState;
 
 import com.google.gwt.core.client.GWT;
@@ -620,6 +621,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	 * @deprecated Use getBoundObject instead
 	 */
 	@Deprecated
+	@Legacy
 	public T getBindedObject()
 	{
 		return getBindedObject(getRecord());
@@ -631,6 +633,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	 * @deprecated Use getBoundObject instead
 	 */
 	@Deprecated
+	@Legacy
 	public T getBindedObject(DataSourceRecord<T> record)
 	{
 		return getBoundObject(record);

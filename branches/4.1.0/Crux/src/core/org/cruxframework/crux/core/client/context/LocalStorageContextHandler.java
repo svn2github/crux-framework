@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.client.context;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -24,6 +25,7 @@ import com.google.gwt.storage.client.Storage;
 /**
  * @author Thiago da Rosa de Bustamante
  */
+@Legacy
 public class LocalStorageContextHandler implements ContextHandler, HasContextChangeHandlers
 {
 	private Storage localStorage;

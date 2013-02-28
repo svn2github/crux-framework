@@ -25,9 +25,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.controller.RegisteredControllers;
 import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
-import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
@@ -243,6 +243,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		printer.println("private "+RegisteredControllers.class.getCanonicalName()+" registeredControllers;");
 		printer.println("private "+RegisteredDataSources.class.getCanonicalName()+" registeredDataSources;");
+		printer.println("protected "+ iocContainerClassName +" iocContainer;");
 
 		for (String messageClass: declaredMessages.keySet())
 	    {
@@ -266,7 +267,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("protected "+getProxySimpleName()+"(String id){");
 		printer.println("super(id);");
 		printer.println("setTitle("+getDeclaredMessage(view.getTitle())+");");
-		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
+		printer.println("this.iocContainer = new "+iocContainerClassName+"(this);");
 		printer.println("this.registeredControllers = new "+regsiteredControllersClass+"(this, iocContainer);");
 		printer.println("this.registeredDataSources = new "+regsiteredDataSourcesClass+"(this, iocContainer);");
 		generateResources(printer);
@@ -297,7 +298,16 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateCreateWidgetsMethod(printer);
     	generateRenderMethod(printer);
     	generateInitializeLazyDependenciesMethod(printer);
+    	generateGetIocContainerMethod(printer);
     }
+    
+    protected void generateGetIocContainerMethod(SourcePrinter printer)
+    {
+    	printer.println("public "+ iocContainerClassName +" getIocContainer(){");
+    	printer.println("return iocContainer;");
+    	printer.println("}");
+    }
+
 
     @Override
     protected void generateSubTypes(SourcePrinter srcWriter) throws CruxGeneratorException

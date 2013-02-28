@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Parameter;
 import org.cruxframework.crux.core.client.controller.ParameterObject;
@@ -45,6 +46,8 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
  *
  */
 @SuppressWarnings("deprecation")
+@Deprecated
+@Legacy
 public abstract class AbstractInvocableProxyCreator extends AbstractSerializableProxyCreator
 {
 	protected JClassType invocableClassType;
@@ -88,6 +91,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
+	@Deprecated
 	protected void generateControllerUpdateObjectsFunction(JClassType controller, SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public void updateControllerObjects(){");
@@ -101,6 +105,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param sourceWriter
 	 * @param autoBind
 	 */
+	@Deprecated
 	protected void generateIsAutoBindEnabledMethod(SourcePrinter sourceWriter, boolean autoBind)
 	{
 		sourceWriter.println("public boolean isAutoBindEnabled(){");
@@ -113,6 +118,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
+	@Deprecated
 	protected void generateScreenUpdateWidgetsFunction(JClassType controller, SourcePrinter sourceWriter)
 	{
 		sourceWriter.println("public void updateScreenWidgets(){");
@@ -179,6 +185,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
+	@Deprecated
+	@Legacy
 	private void generateAutoCreateFields(JClassType classType, SourcePrinter sourceWriter, String parentVariable, Set<String> added)
 	{
 		try
@@ -244,6 +252,8 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 	 * @param controller
 	 * @param sourceWriter
 	 */
+	@Deprecated
+	@Legacy
 	private void generateControllerUpdateObjects(String controllerVariable, JClassType controller, SourcePrinter sourceWriter)
 	{
 		for (JField field : controller.getFields()) 

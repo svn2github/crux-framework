@@ -81,7 +81,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	{
 		printer.println("public "+getProxySimpleName()+"(String id){");
 		printer.println("super(id);");
-		printer.println(iocContainerClassName +" iocContainer = new "+iocContainerClassName+"(this);");
+		printer.println("this.iocContainer = new "+iocContainerClassName+"(this);");
 		generateResources(printer);
 		printer.println("}");
 	}

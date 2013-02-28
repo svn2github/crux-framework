@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 
@@ -28,6 +29,7 @@ import com.google.gwt.user.client.Cookies;
  * @author Thiago da Rosa de Bustamante
  * @author Gesse S. F. Dafe 
  */
+@Legacy
 public class CookieContextHandler implements ContextHandler
 {
 	private static final String CONTEXT_PREFIX = "__cruxContext";

@@ -18,8 +18,9 @@ package org.cruxframework.crux.core.client.screen;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.Legacy;
+import org.cruxframework.crux.core.client.controller.RegisteredControllers;
 import org.cruxframework.crux.core.client.datasource.DataSource;
-import org.cruxframework.crux.core.client.event.RegisteredControllers;
 import org.cruxframework.crux.core.client.formatter.Formatter;
 import org.cruxframework.crux.core.client.formatter.RegisteredClientFormatters;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
@@ -63,57 +64,6 @@ public class ScreenFactory
 	}
 	
 	/**
-	 * 
-	 * @param formatter
-	 * @return
-	 */
-	@Deprecated
-	public Formatter getClientFormatter(String formatter)
-	{
-		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
-		if (this.registeredClientFormatters == null)
-		{
-			this.registeredClientFormatters = (RegisteredClientFormatters) GWT.create(RegisteredClientFormatters.class);
-		}
-
-		return this.registeredClientFormatters.getClientFormatter(formatter);
-	}//TODO mover os formatters pra dentro da view, assim como controllers e datasource ja estao.
-	
-	/**
-	 * Create a new DataSource instance
-	 * @param dataSource dataSource name, declared with <code>@DataSource</code> annotation
-	 * @return new dataSource instance
-	 * @deprecated Use {@link View}.createDataSource()
-	 */
-	@Deprecated
-	public DataSource<?> createDataSource(String dataSource)
-	{
-		return Screen.createDataSource(dataSource);
-	}
-
-	/**
-	 * @deprecated - Use createDataSource(java.lang.String) instead.
-	 * @param dataSource
-	 * @return
-	 */
-	@Deprecated
-	public DataSource<?> getDataSource(String dataSource)
-	{
-		return createDataSource(dataSource);
-	}
-	
-	/**
-	 * Retrieve the list of controllers registered into this screen
-	 * @return
-	 * @deprecated Use {@link View}.getRegisteredControllers()
-	 */
-	@Deprecated
-	public RegisteredControllers getRegisteredControllers()
-    {
-    	return screen.getRegisteredControllers();
-    }
-
-	/**
 	 * Get the screen associated with current page. If not created yet, create it.
 	 * @return
 	 */
@@ -151,4 +101,58 @@ public class ScreenFactory
 		return $wnd.__CruxScreen_;
 	}-*/;
 	
+	/**
+	 * 
+	 * @param formatter
+	 * @return
+	 */
+	@Legacy
+	@Deprecated
+	public Formatter getClientFormatter(String formatter)
+	{
+		assert(Crux.getConfig().enableCrux2OldInterfacesCompatibility()):Crux.getMessages().screenFactoryCrux2OldInterfacesCompatibilityDisabled();
+		if (this.registeredClientFormatters == null)
+		{
+			this.registeredClientFormatters = (RegisteredClientFormatters) GWT.create(RegisteredClientFormatters.class);
+		}
+
+		return this.registeredClientFormatters.getClientFormatter(formatter);
+	}//TODO mover os formatters pra dentro da view, assim como controllers e datasource ja estao.
+	
+	/**
+	 * Create a new DataSource instance
+	 * @param dataSource dataSource name, declared with <code>@DataSource</code> annotation
+	 * @return new dataSource instance
+	 * @deprecated Use {@link View}.createDataSource()
+	 */
+	@Legacy
+	@Deprecated
+	public DataSource<?> createDataSource(String dataSource)
+	{
+		return Screen.createDataSource(dataSource);
+	}
+
+	/**
+	 * @deprecated - Use createDataSource(java.lang.String) instead.
+	 * @param dataSource
+	 * @return
+	 */
+	@Legacy
+	@Deprecated
+	public DataSource<?> getDataSource(String dataSource)
+	{
+		return createDataSource(dataSource);
+	}
+	
+	/**
+	 * Retrieve the list of controllers registered into this screen
+	 * @return
+	 * @deprecated Use {@link View}.getRegisteredControllers()
+	 */
+	@Legacy
+	@Deprecated
+	public RegisteredControllers getRegisteredControllers()
+    {
+    	return screen.getRegisteredControllers();
+    }
 }

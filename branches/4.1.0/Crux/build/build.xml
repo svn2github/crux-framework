@@ -9,6 +9,7 @@
 	<property file="build/version.properties" />
 	
 	<property name="core.src.dir" value="src/core" />
+	<property name="legacy.core.src.dir" value="src/legacy/core" />
 	<property name="module.src.dir" value="src/module" />
 	<property name="gadget.src.dir" value="src/ui/gadget" />
 	<property name="gwt.src.dir" value="src/ui/gwt" />
@@ -103,6 +104,7 @@
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${legacy.core.src.dir}"/>
 				<pathelement location="${module.src.dir}"/>
 				<pathelement location="${gwt.src.dir}"/>
 				<pathelement location="${tools.src.dir}"/>
@@ -117,6 +119,7 @@
 		<jar jarfile="${dist.dir}/${crux.dev.name}.jar">
 			<fileset dir="${classes.dir}" excludes="**/public/*" />
 			<fileset dir="${core.src.dir}" />
+			<fileset dir="${legacy.core.src.dir}" />
 			<fileset dir="${module.src.dir}" />
 			<fileset dir="${gwt.src.dir}" />
 			<fileset dir="${tools.src.dir}" />
@@ -144,6 +147,7 @@
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${legacy.core.src.dir}"/>
 			</src>
 			<classpath refid="build.classpath" />
 		</javac>
@@ -178,6 +182,17 @@
 				<exclude name="org/cruxframework/crux/core/server/launcher" />
 				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
 			</fileset>
+			<fileset dir="${legacy.core.src.dir}" >
+				<exclude name="org/cruxframework/crux/core/client/**/*" />
+				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
+				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
+				<exclude name="org/cruxframework/crux/core/client" />
+				<exclude name="org/cruxframework/crux/core/rebind" />
+				<exclude name="org/cruxframework/crux/core/declarativeui" />
+				<exclude name="org/cruxframework/crux/core/server/launcher" />
+				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
+			</fileset>
 			<manifest>
 				<attribute name="Build-Timestamp" value="${build.date}" />
 				<attribute name="Implementation-Version" value="${version}" />
@@ -202,6 +217,7 @@
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${legacy.core.src.dir}"/>
 				<pathelement location="${module.src.dir}"/>
 				<pathelement location="${tools.src.dir}"/>
 				<pathelement location="${gwt.src.dir}" />
@@ -259,6 +275,7 @@
 			   encoding="UTF-8">
 			<src>
 				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${legacy.core.src.dir}"/>
 				<pathelement location="${gwt.src.dir}" />
 				<pathelement location="${widgets.src.dir}"/>
 			</src>

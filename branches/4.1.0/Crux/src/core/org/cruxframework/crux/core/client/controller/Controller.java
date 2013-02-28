@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 /**
@@ -98,10 +99,12 @@ public @interface Controller
 	 * with the values coming from the screen.
 	 */
 	@Deprecated
+	@Legacy
 	boolean autoBind() default true;
 	/**
 	 * Since Crux 4.0, it became useless.
 	 */
 	@Deprecated
+	@Legacy
 	String fragment() default "";
 }
