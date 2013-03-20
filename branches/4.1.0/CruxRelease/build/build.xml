@@ -160,6 +160,11 @@
 				<include name="${crux.gadgets.runtime.name}.jar" />				
 			</fileset>
 		</copy>
+		<copy todir="${expanded.dir}/lib/legacy">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="*-legacy.jar" />				
+			</fileset>
+		</copy>
 		
 		<copy todir="${expanded.dir}" file="${project.config}" />
 		<copy todir="${expanded.dir}" file="${cmd.file}" />
