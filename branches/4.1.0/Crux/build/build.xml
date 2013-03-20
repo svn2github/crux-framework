@@ -57,6 +57,7 @@
 		</fileset>
 	</path>
 
+	<mkdir dir="${build.lib.dir}"  />
 	<taskdef resource="org/cruxframework/crux/tools/build/crux-build.xml">
 		<classpath>
 			<path refid="build.classpath" />
