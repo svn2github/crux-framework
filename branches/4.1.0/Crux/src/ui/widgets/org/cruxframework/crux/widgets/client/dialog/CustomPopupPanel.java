@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import org.cruxframework.crux.widgets.client.decoratedpanel.DecoratedPanel;
 
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;

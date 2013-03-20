@@ -23,9 +23,12 @@ import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
  */
 public class DataSourceAsyncCallbackAdapter<T> extends AsyncCallbackAdapter<T[]>
 {
+	private final Object ds;
+
 	public DataSourceAsyncCallbackAdapter(Object dataSource)
 	{
-		super(dataSource);
+		super();
+		this.ds = dataSource;
 	}
 
 	/**
@@ -35,13 +38,13 @@ public class DataSourceAsyncCallbackAdapter<T> extends AsyncCallbackAdapter<T[]>
 	@Override
 	public void onComplete(T[] result)
 	{
-		if (this.caller instanceof RemoteDataSource)
+		if (this.ds instanceof RemoteDataSource)
 		{
-			((RemoteDataSource<T>)this.caller).updateData(result);
+			((RemoteDataSource<T>)this.ds).updateData(result);
 		}
 		else
 		{
-			((LocalDataSource<T>)this.caller).updateData(result);
+			((LocalDataSource<T>)this.ds).updateData(result);
 		}
 	}
 	
@@ -52,9 +55,9 @@ public class DataSourceAsyncCallbackAdapter<T> extends AsyncCallbackAdapter<T[]>
 	@SuppressWarnings("unchecked")
 	public void onError(Throwable e)
 	{
-		if (this.caller instanceof RemoteDataSource)
+		if (this.ds instanceof RemoteDataSource)
 		{
-			((RemoteDataSource<T>)this.caller).cancelFetching();
+			((RemoteDataSource<T>)this.ds).cancelFetching();
 		}
 		
 		super.onError(e);

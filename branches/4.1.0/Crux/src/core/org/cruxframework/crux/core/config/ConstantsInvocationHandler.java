@@ -104,7 +104,6 @@ public abstract class ConstantsInvocationHandler implements InvocationHandler
 	 * @param name
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	protected String getMessageFromAnnotation(Method method, Object[] args, String name)
 	{
 		DefaultServerMessage serverAnnot = method.getAnnotation(DefaultServerMessage.class);
@@ -116,19 +115,6 @@ public abstract class ConstantsInvocationHandler implements InvocationHandler
 				resolvedConstants.put(name, value);
 			}
 			return value;
-		}
-		else
-		{
-			org.cruxframework.crux.core.i18n.DefaultMessage annot = method.getAnnotation(org.cruxframework.crux.core.i18n.DefaultMessage.class);
-			if (annot != null)
-			{
-				String value = MessageFormat.format(annot.value(),args);
-				if (this.isCacheable)
-				{
-					resolvedConstants.put(name, value);
-				}
-				return value;
-			}
 		}
 		return null;
 	}

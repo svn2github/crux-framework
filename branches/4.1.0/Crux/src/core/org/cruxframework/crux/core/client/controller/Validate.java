@@ -20,7 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.cruxframework.crux.core.client.controller.crossdoc.CrossDocument;
 import org.cruxframework.crux.core.client.errors.ValidationErrorHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,7 +57,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
  * </pre>
  * Any call made to the previous controller method ({@code myEventHandler}) will be preceded 
  * by a call to validation method ({@code validateMyEventHandler}). It applies to any event 
- * triggered by a {@code .crux.xml} page or a {@link CrossDocument} method called 
+ * triggered by a {@code .crux.xml} page or a method called 
  * programatically.    
  * <p>
  * Validation method must obey the following constraints:  

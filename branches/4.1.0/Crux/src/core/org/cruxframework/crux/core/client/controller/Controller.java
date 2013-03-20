@@ -20,7 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 /**
@@ -92,19 +91,4 @@ public @interface Controller
 	 * @return
 	 */
 	Device[] supportedDevices() default {Device.all};
-	/**
-	 * This property enables the auto binding support for this controller. When it is
-	 * enabled, all fields, injected through {@code @}{@link Create} annotation, of a 
-	 * type annotated with {@code @}{@link ValueObject} annotation is automatically bound
-	 * with the values coming from the screen.
-	 */
-	@Deprecated
-	@Legacy
-	boolean autoBind() default true;
-	/**
-	 * Since Crux 4.0, it became useless.
-	 */
-	@Deprecated
-	@Legacy
-	String fragment() default "";
 }

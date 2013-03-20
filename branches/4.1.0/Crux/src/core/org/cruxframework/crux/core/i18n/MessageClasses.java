@@ -53,7 +53,6 @@ public class MessageClasses
 	/**
 	 * @param urls
 	 */
-	@SuppressWarnings("deprecation")
 	public static void initialize()
 	{
 		if (messagesClasses == null)
@@ -71,7 +70,6 @@ public class MessageClasses
 						{
 							Class<?> messageClass = Class.forName(message);
 							MessageName messageNameAnnot = messageClass.getAnnotation(MessageName.class);
-							org.cruxframework.crux.core.client.i18n.Name nameAnnot = messageClass.getAnnotation(org.cruxframework.crux.core.client.i18n.Name.class);
 							if (messageNameAnnot!= null)
 							{
 								if (messagesClasses.containsKey(messageNameAnnot.value()))
@@ -79,14 +77,6 @@ public class MessageClasses
 									throw new CruxGeneratorException("Duplicated Message Key: ["+messageNameAnnot.value()+"].");
 								}
 								messagesClasses.put(messageNameAnnot.value(), messageClass.getCanonicalName());
-							}
-							else if (nameAnnot!= null)
-							{
-								if (messagesClasses.containsKey(nameAnnot.value()))
-								{
-									throw new CruxGeneratorException("Duplicated Message Key: ["+nameAnnot.value()+"].");
-								}
-								messagesClasses.put(nameAnnot.value(), messageClass.getCanonicalName());
 							}
 							else
 							{

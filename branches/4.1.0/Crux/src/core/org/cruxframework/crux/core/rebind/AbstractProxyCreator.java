@@ -25,6 +25,8 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
 /**
@@ -71,6 +73,14 @@ public abstract class AbstractProxyCreator
 	}
 
 	/**
+	 * @param srcWriter
+	 */
+	protected void generateLoggerField(SourcePrinter srcWriter)
+    {
+	    srcWriter.println("private static Logger _logger_ = Logger.getLogger("+getProxySimpleName()+".class.getName());");
+    }	
+	
+	/**
 	 * Generate the proxy constructor and delegate to the superclass constructor
 	 * using the default address for the
 	 * {@link com.google.gwt.user.client.rpc.RemoteService RemoteService}.
@@ -108,6 +118,17 @@ public abstract class AbstractProxyCreator
 	{
 		
 	}
+	
+	/**
+	 * @param sourcePrinter
+	 * @param message
+	 */
+	protected void logDebugMessage(SourcePrinter sourcePrinter, String message)
+    {
+	    sourcePrinter.println("if (LogConfiguration.loggingIsEnabled()){");
+		sourcePrinter.println("_logger_.log(Level.FINE, "+message+");");
+		sourcePrinter.println("}");
+    }
 	
 	/**
 	 * @param method
@@ -166,6 +187,66 @@ public abstract class AbstractProxyCreator
             value = ConfigurationFactory.getConfigurations().enableCrux2OldInterfacesCompatibility();
         }
         return Boolean.parseBoolean(value);
+    }
+	
+	/**
+	 * @param w
+	 * @param nameFactory
+	 * @param method
+	 */
+	protected void generateMethodParameters(SourcePrinter w, NameFactory nameFactory, JMethod method)
+	{
+		boolean needsComma = false;
+		JParameter[] params = method.getParameters();
+		for (int i = 0; i < params.length; ++i)
+		{
+			JParameter param = params[i];
+
+			if (needsComma)
+			{
+				w.print(", ");
+			}
+			else
+			{
+				needsComma = true;
+			}
+
+			JType paramType = param.getType();
+			paramType = paramType.getErasedType();
+
+			w.print(paramType.getQualifiedSourceName());
+			w.print(" ");
+
+			String paramName = param.getName();
+			nameFactory.addName(paramName);
+			w.print(paramName);
+		}
+	}
+
+	/**
+	 * @param w
+	 * @param methodThrows
+	 */
+	protected void generateMethodTrhowsClause(SourcePrinter w, JMethod method)
+    {
+	    boolean needsComma = false;
+	    JType[] methodThrows = method.getThrows();
+		
+		if (methodThrows != null)
+		for (JType methodThrow : methodThrows)
+        {
+			if (needsComma)
+			{
+				w.print(", ");
+			}
+			else
+			{
+				w.print(" throws ");
+				needsComma = true;
+			}
+			JType throwType = methodThrow.getErasedType();
+			w.print(throwType.getQualifiedSourceName());
+        }
     }
 	
 	/**

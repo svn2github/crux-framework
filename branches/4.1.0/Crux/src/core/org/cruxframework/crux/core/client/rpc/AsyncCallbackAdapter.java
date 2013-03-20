@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.client.rpc;
 
 import org.cruxframework.crux.core.client.Crux;
-import org.cruxframework.crux.core.client.screen.ScreenBindableObject;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -29,41 +28,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public abstract class AsyncCallbackAdapter<T> implements AsyncCallback<T>
 {
-	protected ScreenBindableObject caller;
-	public AsyncCallbackAdapter(Object eventHandler)
-	{
-		assert ((eventHandler instanceof ScreenBindableObject)): Crux.getMessages().asyncCallbackInvalidHandlerError();
-		this.caller = (ScreenBindableObject) eventHandler;
-	}
-	
 	public final void onSuccess(T result)
 	{
-		try
-		{
-			onComplete(result);
-		}
-		finally
-		{
-			if (caller.isAutoBindEnabled())
-			{
-				this.caller.updateScreenWidgets();
-			}
-		}
+		onComplete(result);
 	}
 	
 	public final void onFailure(Throwable e) 
 	{
-		try
-		{
-			onError(e);
-		}
-		finally
-		{
-			if (caller.isAutoBindEnabled())
-			{
-				this.caller.updateScreenWidgets();
-			}
-		}
+		onError(e);
 	}
 	
 	/**

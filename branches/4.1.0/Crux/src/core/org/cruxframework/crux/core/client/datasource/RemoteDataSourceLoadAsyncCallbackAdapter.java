@@ -23,9 +23,11 @@ import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
  */
 public class RemoteDataSourceLoadAsyncCallbackAdapter extends AsyncCallbackAdapter<RemoteDataSourceConfiguration>
 {
+	protected RemoteDataSource<?> ds;
 	public RemoteDataSourceLoadAsyncCallbackAdapter(RemoteDataSource<?> dataSource)
 	{
-		super(dataSource);
+		super();
+		this.ds = dataSource;
 	}
 
 	/**
@@ -34,14 +36,10 @@ public class RemoteDataSourceLoadAsyncCallbackAdapter extends AsyncCallbackAdapt
 	@Override
 	public void onComplete(RemoteDataSourceConfiguration result)
 	{
-		if (this.caller instanceof RemoteDataSource<?>)
+		if (this.ds instanceof MeasurableRemoteDataSource<?>)
 		{
-			if (this.caller instanceof MeasurableRemoteDataSource<?>)
-			{
-				((MeasurableRemoteDataSource<?>)this.caller).setLoadData(result);
-			}
+			((MeasurableRemoteDataSource<?>)this.ds).setLoadData(result);
 		}
-
 	}
 
 }

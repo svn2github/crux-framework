@@ -224,6 +224,20 @@ public class StringUtils
 		return false;
 	}
 		
+	public static String rTrim(String value)
+	{
+		if (value==null)
+		{
+			return null;
+		}
+		int index = value.length();  
+		while (index > 0 && Character.isWhitespace(value.charAt(index - 1)))  
+		{  
+		    index--;  
+		}  
+		return value.substring(0, index);  		
+	}
+	
 	/**
 	 *
 	 * <p>Find the Levenshtein distance between two Strings.</p>

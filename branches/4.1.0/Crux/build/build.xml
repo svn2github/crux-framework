@@ -9,7 +9,6 @@
 	<property file="build/version.properties" />
 	
 	<property name="core.src.dir" value="src/core" />
-	<property name="legacy.core.src.dir" value="src/legacy/core" />
 	<property name="module.src.dir" value="src/module" />
 	<property name="gadget.src.dir" value="src/ui/gadget" />
 	<property name="gwt.src.dir" value="src/ui/gwt" />
@@ -18,6 +17,7 @@
 	<property name="tools.src.dir" value="src/tools" />
 
 	<property name="lib.dir" value="lib" />
+	<property name="build.lib.dir" value="build/lib" />
 	<property name="classes.dir" value="bin/classes" />
 	<property name="dist.dir" value="dist" />
 	<property name="javadoc.dir" value="${dist.dir}/docs" />
@@ -38,16 +38,64 @@
 	<property name="launcher.cmd.file" value="${resource.dir}/projectgen/start.cmd" />
 	<property name="samples.dir" value="${resource.dir}/samples" />
 	
-	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/gwt-servlet-deps.jar" dest="${dependencies.dir}/gwt-servlet-deps.jar" verbose="true" usetimestamp="yes"/>
-	<get src="http:/repoGesse/crux-runtime-deps.jar" dest="${dependencies.dir}/crux-runtime-deps.jar" verbose="true" usetimestamp="yes"/-->
-
+	<property name="work.dir" value="tmp" />
+	<property name="legacy.src.dir" value="tmp.legacy" />
+	<property name="legacy.core.src.dir" value="src/legacy/core" />
+	<property name="legacy.widgets.src.dir" value="src/legacy/ui/widgets" />
+	<property name="legacy.themes.src.dir" value="src/legacy/ui/themes" />
+	
+		
 	<path id="build.classpath">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
+
+	<path id="crux.build.classpath">
+		<fileset dir="${build.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="org/cruxframework/crux/tools/build/crux-build.xml">
+		<classpath>
+			<path refid="build.classpath" />
+			<path refid="crux.build.classpath" />
+		</classpath>
+	</taskdef>
+
+	<!-- 
+	========================================================================================================
+		Export crux-dev.jar (Creates the crux-dev.jar file and exports it to the dist folder)
+	========================================================================================================
+	-->
+	<target name="export-crux-build-tool">
+		
+		<delete dir="${build.lib.dir}" failonerror="no" />
+		<mkdir dir="${build.lib.dir}"  />
+		
+		<delete dir="${classes.dir}" failonerror="no" />
+		<mkdir dir="${classes.dir}" />
+		
+		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
+			   encoding="UTF-8">
+			<src>
+				<pathelement location="${core.src.dir}"/>
+				<pathelement location="${module.src.dir}"/>
+				<pathelement location="${tools.src.dir}"/>
+			</src>
+			<classpath refid="build.classpath" />
+		</javac>
+
+		<jar jarfile="${build.lib.dir}/crux.build.jar">
+			<fileset dir="${classes.dir}" excludes="**/public/*" />
+			<fileset dir="${core.src.dir}" />
+			<fileset dir="${module.src.dir}" />
+			<fileset dir="${tools.src.dir}" />
+			<manifest>
+			</manifest>
+		</jar>
+	</target>
 
 	<!-- 
 	========================================================================================================
@@ -78,14 +126,73 @@
 		<mkdir dir="${dist.dir}" />
 		
 		<!-- Export all crux jars -->
+		<antcall target="dist-legacy" />
+		<antcall target="dist-no-legacy" />
+	</target>
+	
+	<target name="dist-legacy">
+		<!-- Export all crux jars -->
+		<antcall target="export-crux-dev-legacy" />
+		<antcall target="export-crux-runtime-legacy" />
+		<antcall target="export-crux-gadgets-legacy" />
+		<antcall target="export-crux-widgets-legacy" />
+		<antcall target="export-crux-themes-legacy" />
+	</target>
+
+	<target name="dist-no-legacy">			
+		<!-- Export all crux jars -->
 		<antcall target="export-crux-dev" />
 		<antcall target="export-crux-runtime" />
 		<antcall target="export-crux-gadgets" />
 		<antcall target="export-crux-widgets" />
 		<antcall target="export-crux-themes" />
-
 	</target>
 
+	<!-- 
+	========================================================================================================
+		Macro used to export crux jar artifacts
+	========================================================================================================
+	-->
+	<macrodef name="exportCruxUnpackagedJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputDir"/>
+		<sequential>
+			<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
+			
+			<delete dir="@{outputDir}" failonerror="no" />
+			<mkdir dir="@{outputDir}" />
+			
+			<javac destdir="@{outputDir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
+				   encoding="UTF-8">
+				<src>
+					<pathelement location="@{sourcedir}"/>
+				</src>
+				<classpath refid="build.classpath" />
+			</javac>
+
+			<svn failonerror="false" javahl="false" svnkit="true">
+				<wcversion path="${basedir}" />
+			</svn>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="exportCruxJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputFileName"/>
+		<sequential>
+			<delete  file="${dist.dir}@{outputFileName}" failonerror="no" />
+			<exportCruxUnpackagedJar sourcedir="@{sourceDir}" outputdir="${classes.dir}"/>			
+			<jar jarfile="${dist.dir}/@{outputFileName}">
+				<fileset dir="${classes.dir}" excludes="**/public/*" />
+				<fileset dir="@{sourcedir}" />
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
 	
 	<!-- 
 	========================================================================================================
@@ -93,42 +200,32 @@
 	========================================================================================================
 	-->
 	<target name="export-crux-dev">
-		
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-		<delete  file="${dist.dir}/${crux.dev.name}.jar" failonerror="no" />
-		
-		<delete dir="${classes.dir}" failonerror="no" />
-		<mkdir dir="${classes.dir}" />
-		
-		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
-			   encoding="UTF-8">
-			<src>
-				<pathelement location="${core.src.dir}"/>
-				<pathelement location="${legacy.core.src.dir}"/>
-				<pathelement location="${module.src.dir}"/>
-				<pathelement location="${gwt.src.dir}"/>
-				<pathelement location="${tools.src.dir}"/>
-			</src>
-			<classpath refid="build.classpath" />
-		</javac>
-
-		<svn failonerror="false" javahl="false" svnkit="true">
-			<wcversion path="${basedir}" />
-		</svn>
-		
-		<jar jarfile="${dist.dir}/${crux.dev.name}.jar">
-			<fileset dir="${classes.dir}" excludes="**/public/*" />
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<copy todir="${work.dir}">
 			<fileset dir="${core.src.dir}" />
-			<fileset dir="${legacy.core.src.dir}" />
 			<fileset dir="${module.src.dir}" />
 			<fileset dir="${gwt.src.dir}" />
-			<fileset dir="${tools.src.dir}" />
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
+			<fileset dir="${tools.src.dir}" >
+				<exclude name="org/cruxframework/crux/tools/build/**/*" />
+			</fileset>
+		</copy>
+		<exportCruxJar sourcedir="${work.dir}" outputfilename="${crux.dev.name}.jar"/>
+		<delete dir="${work.dir}" failonerror="no" />
+    </target>
+
+	<target name="export-crux-dev-legacy">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<legacyHandler destinationfolder="${work.dir}">
+			<sourcefolder file="${core.src.dir}"/>
+			<sourcefolder file="${legacy.core.src.dir}"/>
+			<sourcefolder file="${module.src.dir}"/>
+			<sourcefolder file="${gwt.src.dir}"/>
+			<sourcefolder file="${tools.src.dir}"/>
+		</legacyHandler>
+		<exportCruxJar sourcedir="${work.dir}" outputfilename="${crux.dev.name}-legacy.jar"/>		
+		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 
 	<!-- 
@@ -136,69 +233,65 @@
 		Export crux-runtime.jar (Creates the crux-runtime.jar file and exports it to the dist folder)
 	========================================================================================================
 	-->
+	<macrodef name="packageCruxRuntimeJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputFileName"/>
+		<sequential>
+			<exportCruxUnpackagedJar sourcedir="@{sourceDir}" outputdir="${classes.dir}"/>
+			<jar jarfile="${dist.dir}/@{outputFileName}">
+				<fileset dir="${classes.dir}" >
+					<exclude name="**/public/*" />
+					<exclude name="org/cruxframework/crux/core/client/**/*" />
+					<exclude name="org/cruxframework/crux/core/rebind/**/*" />
+					<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+					<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
+					<exclude name="org/cruxframework/crux/core/client" />
+					<exclude name="org/cruxframework/crux/core/rebind" />
+					<exclude name="org/cruxframework/crux/core/declarativeui" />
+					<exclude name="org/cruxframework/crux/core/server/launcher" />
+				</fileset>
+				<fileset dir="${classes.dir}">
+					<include name="org/cruxframework/crux/core/client/rpc/**/*" />
+				</fileset>
+				<fileset dir="@{sourceDir}" >
+					<exclude name="org/cruxframework/crux/core/client/**/*" />
+					<exclude name="org/cruxframework/crux/core/rebind/**/*" />
+					<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
+					<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
+					<exclude name="org/cruxframework/crux/core/client" />
+					<exclude name="org/cruxframework/crux/core/rebind" />
+					<exclude name="org/cruxframework/crux/core/declarativeui" />
+					<exclude name="org/cruxframework/crux/core/server/launcher" />
+					<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
+				</fileset>
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	
 	<target name="export-crux-runtime">
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-		<delete  file="${dist.dir}/${crux.runtime.name}.jar" failonerror="no" />
-		
-		<delete dir="${classes.dir}" failonerror="no" />
-		<mkdir dir="${classes.dir}" />
-		
-		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
-			   encoding="UTF-8">
-			<src>
-				<pathelement location="${core.src.dir}"/>
-				<pathelement location="${legacy.core.src.dir}"/>
-			</src>
-			<classpath refid="build.classpath" />
-		</javac>
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<copy todir="${work.dir}">
+			<fileset dir="${core.src.dir}" />
+		</copy>
+		<packageCruxRuntimeJar sourcedir="${work.dir}" outputfilename="${crux.runtime.name}.jar"/>
+	    <delete dir="${work.dir}" failonerror="no" />
+    </target>
 
-		<svn failonerror="false" javahl="false" svnkit="true">
-			<wcversion path="${basedir}" />
-		</svn>
-		
-		<jar jarfile="${dist.dir}/${crux.runtime.name}.jar">
-			<fileset dir="${classes.dir}" >
-				<exclude name="**/public/*" />
-				<exclude name="org/cruxframework/crux/core/client/**/*" />
-				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
-				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
-				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
-				<exclude name="org/cruxframework/crux/core/client" />
-				<exclude name="org/cruxframework/crux/core/rebind" />
-				<exclude name="org/cruxframework/crux/core/declarativeui" />
-				<exclude name="org/cruxframework/crux/core/server/launcher" />
-			</fileset>
-			<fileset dir="${classes.dir}">
-				<include name="org/cruxframework/crux/core/client/rpc/**/*" />
-			</fileset>
-			<fileset dir="${core.src.dir}" >
-				<exclude name="org/cruxframework/crux/core/client/**/*" />
-				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
-				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
-				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
-				<exclude name="org/cruxframework/crux/core/client" />
-				<exclude name="org/cruxframework/crux/core/rebind" />
-				<exclude name="org/cruxframework/crux/core/declarativeui" />
-				<exclude name="org/cruxframework/crux/core/server/launcher" />
-				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
-			</fileset>
-			<fileset dir="${legacy.core.src.dir}" >
-				<exclude name="org/cruxframework/crux/core/client/**/*" />
-				<exclude name="org/cruxframework/crux/core/rebind/**/*" />
-				<exclude name="org/cruxframework/crux/core/declarativeui/**/*" />
-				<exclude name="org/cruxframework/crux/core/server/launcher/**/*" />
-				<exclude name="org/cruxframework/crux/core/client" />
-				<exclude name="org/cruxframework/crux/core/rebind" />
-				<exclude name="org/cruxframework/crux/core/declarativeui" />
-				<exclude name="org/cruxframework/crux/core/server/launcher" />
-				<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
-			</fileset>
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
+	<target name="export-crux-runtime-legacy">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<legacyHandler destinationfolder="${work.dir}">
+			<sourcefolder file="${core.src.dir}"/>
+			<sourcefolder file="${legacy.core.src.dir}"/>
+		</legacyHandler>
+		<packageCruxRuntimeJar sourcedir="${work.dir}" outputfilename="${crux.runtime.name}-legacy.jar"/>
+		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 	
 	<!-- 
@@ -206,97 +299,122 @@
 		Export crux-gadget.jar (Creates the crux-gadgets.jar file and exports it to the dist folder)
 	========================================================================================================
 	-->
-	<target name="export-crux-gadgets" >
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-		<delete  file="${dist.dir}/${crux.gadgets.name}.jar" failonerror="no" />
-		
-		<delete dir="${classes.dir}" failonerror="no" />
-		<mkdir dir="${classes.dir}" />
-		
-		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
-			   encoding="UTF-8">
-			<src>
-				<pathelement location="${core.src.dir}"/>
-				<pathelement location="${legacy.core.src.dir}"/>
-				<pathelement location="${module.src.dir}"/>
-				<pathelement location="${tools.src.dir}"/>
-				<pathelement location="${gwt.src.dir}" />
-				<pathelement location="${gadget.src.dir}"/>
-			</src>
-			<classpath refid="build.classpath" />
-		</javac>
+	<macrodef name="packageCruxGadgetJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputFileName"/>
+		<attribute name="outputRuntimeFileName"/>
+		<sequential>
+			<exportCruxUnpackagedJar sourcedir="@{sourceDir}" outputdir="${classes.dir}"/>
+			<jar jarfile="${dist.dir}/@{outputFileName}">
+				<fileset dir="${classes.dir}" >
+					<include name="org/cruxframework/crux/gadget/**/*" />
+					<include name="org/cruxframework/crux/tools/projectgen/templates/gadget/**/*" />
+					<include name="com/google/gwt/gadgets/**/*" />
+					<include name="com/google/gwt/ajaxloader/**/*" />
+				</fileset>
+				<fileset dir="@{sourceDir}" >
+					<include name="org/cruxframework/crux/gadgets/**/*" />
+					<include name="com/google/gwt/gadgets/**/*" />
+					<include name="com/google/gwt/ajaxloader/**/*" />
+				</fileset>	
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+			<jar jarfile="${dist.dir}/@{outputRuntimeFileName}">
+				<fileset dir="${classes.dir}" >
+					<include name="org/cruxframework/crux/gadget/server/dispatch/**/*" />
+				</fileset>
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	
+	<target name="export-crux-gadgets">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
 
-		<svn failonerror="false" javahl="false" svnkit="true">
-			<wcversion path="${basedir}" />
-		</svn>
-		
-		<jar jarfile="${dist.dir}/${crux.gadgets.name}.jar">
-			<fileset dir="${classes.dir}" excludes="**/public/*" >
-				<include name="org/cruxframework/crux/gadget/**/*" />
-				<include name="org/cruxframework/crux/tools/projectgen/templates/gadget/**/*" />
-				<include name="com/google/gwt/gadgets/**/*" />
-				<include name="com/google/gwt/ajaxloader/**/*" />
-			</fileset>	
+		<copy todir="${work.dir}">
+			<fileset dir="${core.src.dir}" />
+			<fileset dir="${module.src.dir}" />
+			<fileset dir="${tools.src.dir}" />
+			<fileset dir="${gwt.src.dir}" />
 			<fileset dir="${gadget.src.dir}" />
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
-		<jar jarfile="${dist.dir}/${crux.gadgets.runtime.name}.jar">
-			<fileset dir="${classes.dir}" excludes="**/public/*" >
-				<include name="org/cruxframework/crux/gadget/server/dispatch/**/*" />
-			</fileset>	
-			<fileset dir="${gadget.src.dir}" >
-				<include name="org/cruxframework/crux/gadget/server/dispatch/**/*" />
-			</fileset>	
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
+		</copy>
+		<packageCruxGadgetJar sourcedir="${work.dir}" outputfilename="${crux.gadgets.name}.jar" outputruntimefilename="${crux.gadgets.runtime.name}.jar"/>
+	    <delete dir="${work.dir}" failonerror="no" />
+    </target>
+
+	<target name="export-crux-gadgets-legacy">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<legacyHandler destinationfolder="${work.dir}">
+			<sourcefolder file="${core.src.dir}"/>
+			<sourcefolder file="${legacy.core.src.dir}"/>
+			<sourcefolder file="${module.src.dir}"/>
+			<sourcefolder file="${tools.src.dir}"/>
+			<sourcefolder file="${gwt.src.dir}"/>
+			<sourcefolder file="${gadget.src.dir}"/>
+		</legacyHandler>
+		<packageCruxGadgetJar sourcedir="${work.dir}" outputfilename="${crux.gadgets.name}-legacy.jar" outputruntimefilename="${crux.gadgets.runtime.name}-legacy.jar"/>
+		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 	
 	<!-- 
 	========================================================================================================
 		Export crux-widgets.jar (Creates the crux-widgets.jar file and exports it to the dist folder)
 	========================================================================================================
-	-->
+	-->	
+	<macrodef name="packageCruxWidgetsJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputFileName"/>
+		<sequential>
+			<exportCruxUnpackagedJar sourcedir="@{sourceDir}" outputdir="${classes.dir}"/>
+			<jar jarfile="${dist.dir}/@{outputFileName}">
+				<fileset dir="${classes.dir}" >
+					<include name="org/cruxframework/crux/widgets/**/*" />
+				</fileset>
+				<fileset dir="@{sourceDir}" />
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	
 	<target name="export-crux-widgets">
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-		<delete  file="${dist.dir}/${crux.widgets.name}.jar" failonerror="no" />
-		
-		<delete dir="${classes.dir}" failonerror="no" />
-		<mkdir dir="${classes.dir}" />
-		
-		<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
-			   encoding="UTF-8">
-			<src>
-				<pathelement location="${core.src.dir}"/>
-				<pathelement location="${legacy.core.src.dir}"/>
-				<pathelement location="${gwt.src.dir}" />
-				<pathelement location="${widgets.src.dir}"/>
-			</src>
-			<classpath refid="build.classpath" />
-		</javac>
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
 
-		<svn failonerror="false" javahl="false" svnkit="true">
-			<wcversion path="${basedir}" />
-		</svn>
-		
-		<jar jarfile="${dist.dir}/${crux.widgets.name}.jar">
-			<fileset dir="${classes.dir}" excludes="**/public/*" >
-				<include name="org/cruxframework/crux/widgets/**/*" />
-			</fileset>	
+		<copy todir="${work.dir}">
+			<fileset dir="${core.src.dir}" />
+			<fileset dir="${gwt.src.dir}" />
 			<fileset dir="${widgets.src.dir}" />
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
+		</copy>
+		<packageCruxWidgetsJar sourcedir="${work.dir}" outputfilename="${crux.widgets.name}.jar" />
+	    <delete dir="${work.dir}" failonerror="no" />
+    </target>
+
+	<target name="export-crux-widgets-legacy">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<legacyHandler destinationfolder="${work.dir}">
+			<sourcefolder file="${core.src.dir}"/>
+			<sourcefolder file="${legacy.core.src.dir}"/>
+			<sourcefolder file="${gwt.src.dir}"/>
+			<sourcefolder file="${widgets.src.dir}"/>
+			<sourcefolder file="${legacy.widgets.src.dir}"/>
+		</legacyHandler>
+		<packageCruxWidgetsJar sourcedir="${work.dir}" outputfilename="${crux.widgets.name}-legacy.jar" />
+		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 	
 	<!-- 
@@ -304,24 +422,47 @@
 		Export crux-themes.jar (Creates the crux-themes.jar file and exports it to the dist folder)
 	========================================================================================================
 	-->
+	<macrodef name="packageCruxThemesJar">
+		<attribute name="sourceDir"/>
+		<attribute name="outputFileName"/>
+		<sequential>
+			<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
+			<delete  file="${dist.dir}/@{outputFileName}" failonerror="no" />
+			
+			<svn failonerror="false" javahl="false" svnkit="true">
+				<wcversion path="${basedir}" />
+			</svn>
+			
+			<jar jarfile="${dist.dir}/@{outputFileName}">
+				<fileset dir="@{sourceDir}" />
+				<manifest>
+					<attribute name="Build-Timestamp" value="${build.date}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Revision" value="${revision.max}" />
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	
 	<target name="export-crux-themes">
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
-		<delete  file="${dist.dir}/${crux.themes.name}.jar" failonerror="no" />
-		
-		<delete dir="${classes.dir}" failonerror="no" />
-		<mkdir dir="${classes.dir}" />
-		
-		<svn failonerror="false" javahl="false" svnkit="true">
-			<wcversion path="${basedir}" />
-		</svn>
-		
-		<jar jarfile="${dist.dir}/${crux.themes.name}.jar">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+
+		<copy todir="${work.dir}">
 			<fileset dir="${themes.src.dir}" />
-			<manifest>
-				<attribute name="Build-Timestamp" value="${build.date}" />
-				<attribute name="Implementation-Version" value="${version}" />
-				<attribute name="Implementation-Revision" value="${revision.max}" />
-			</manifest>
-		</jar>
+		</copy>
+		<packageCruxThemesJar sourcedir="${work.dir}" outputfilename="${crux.themes.name}.jar" />
+	    <delete dir="${work.dir}" failonerror="no" />
+    </target>
+
+	<target name="export-crux-themes-legacy">
+		<delete dir="${work.dir}" failonerror="no" />
+		<mkdir dir="${work.dir}" />
+		<legacyHandler destinationfolder="${work.dir}">
+			<sourcefolder file="${themes.src.dir}" />
+			<sourcefolder file="${legacy.themes.src.dir}"/>
+		</legacyHandler>
+		<packageCruxThemesJar sourcedir="${work.dir}" outputfilename="${crux.themes.name}-legacy.jar" />
+		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 </project>

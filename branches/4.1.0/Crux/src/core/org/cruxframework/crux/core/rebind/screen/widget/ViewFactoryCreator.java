@@ -724,7 +724,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
      */
     String[] getImports()
     {
-	    @SuppressWarnings("deprecation")
         String[] imports = new String[] {
     		GWT.class.getCanonicalName(),
     		org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName(),
@@ -737,7 +736,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     		RootLayoutPanel.class.getCanonicalName(),
     		Element.class.getCanonicalName(),
     		Node.class.getCanonicalName(),
-    		org.cruxframework.crux.core.client.event.Event.class.getCanonicalName(),
     		ViewLoadEvent.class.getCanonicalName(),
     		Panel.class.getCanonicalName(),
     		InterfaceConfigException.class.getCanonicalName(),

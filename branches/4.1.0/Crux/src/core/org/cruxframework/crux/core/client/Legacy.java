@@ -23,5 +23,7 @@ package org.cruxframework.crux.core.client;
  */
 public @interface Legacy
 {
-
+	Class<?> value() default NoTarget.class;
+	
+	public static class NoTarget{}
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/core"/>
-	<classpathentry kind="src" path="src/legacy/core"/>
 	<classpathentry kind="src" path="src/ui/themes"/>
 	<classpathentry kind="src" path="src/module"/>
 	<classpathentry kind="src" path="src/ui/widgets"/>

@@ -20,8 +20,7 @@ package org.cruxframework.crux.core.client.datasource;
  * @author Thiago da Rosa de Bustamante
  *
  */
-@SuppressWarnings("deprecation")
-public interface MeasurablePagedDataSource<E> extends EditablePagedDataSource<E>
+public interface MeasurablePagedDataSource<E> extends PagedDataSource<E>
 {
 	int getPageCount();
 	boolean setCurrentPage(int pageNumber);

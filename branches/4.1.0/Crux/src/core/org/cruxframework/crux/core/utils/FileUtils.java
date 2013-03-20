@@ -267,9 +267,21 @@ public class FileUtils
 	 * Recursively gets all files with a given extension contained in a directory
 	 * @param path
 	 * @param extension
+	 */
+	public static List<File> scanFiles(File path, final String extension)
+	{
+		ArrayList<File> result = new ArrayList<File>();
+		scanFiles(path, extension, result);
+		return result;
+	}
+	
+	/**
+	 * Recursively gets all files with a given extension contained in a directory
+	 * @param path
+	 * @param extension
 	 * @param result
 	 */
-	public static List<File> scanFiles(File path, final String extension, ArrayList<File> result)
+	private static void scanFiles(File path, final String extension, ArrayList<File> result)
 	{
 		if(path.isDirectory())
 		{
@@ -296,8 +308,48 @@ public class FileUtils
 				result.add(path);
 			}
 		}
-		
+	}
+	
+	/**
+	 * Recursively gets all files with a given extension contained in a directory
+	 * @param path
+	 */
+	public static List<File> scanFiles(File path)
+	{
+		ArrayList<File> result = new ArrayList<File>();
+		scanFiles(path, result);
 		return result;
+	}
+	
+	/**
+	 * Recursively gets all files with a given extension contained in a directory
+	 * @param path
+	 * @param result
+	 */
+	private static void scanFiles(File path, ArrayList<File> result)
+	{
+		if(path.isDirectory())
+		{
+			File[] found = path.listFiles(new FileFilter()
+			{
+				public boolean accept(File file)
+				{
+					return true;
+				}
+			});
+			
+			if (found != null)
+			{
+				for (File file : found)
+				{
+					scanFiles(file, result);
+				}
+			}
+		}
+		else
+		{
+			result.add(path);
+		}
 	}
 	
 	/**

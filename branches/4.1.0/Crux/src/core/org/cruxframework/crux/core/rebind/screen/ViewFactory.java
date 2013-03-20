@@ -354,10 +354,6 @@ public class ViewFactory
 	        	{
 	        		parseViewUseResourceAttribute(view, elem);
 	        	}
-	        	else if(attrName.equals("useSerializable"))
-	        	{
-	        		parseViewUseSerializableAttribute(view, elem);
-	        	}
 	        	else if(attrName.equals("useFormatter"))
 	        	{
 	        		parseViewUseFormatterAttribute(view, elem);
@@ -479,36 +475,6 @@ public class ViewFactory
 	 * @param elem
 	 * @throws ScreenConfigException 
 	 */
-	@SuppressWarnings("deprecation")
-    private void parseViewUseSerializableAttribute(View view, JSONObject elem) throws ScreenConfigException
-    {
-	    String serializerStr;
-        try
-        {
-	        serializerStr = elem.getString("useSerializable");
-        }
-        catch (JSONException e)
-        {
-			throw new ScreenConfigException(e);
-        }
-	    if (serializerStr != null)
-	    {
-	    	String[] serializers = RegexpPatterns.REGEXP_COMMA.split(serializerStr);
-	    	for (String serializer : serializers)
-	    	{
-	    		serializer = serializer.trim();
-	    		if (!StringUtils.isEmpty(serializer))
-	    		{
-	    			if (org.cruxframework.crux.core.rebind.serializable.Serializers.getCruxSerializable(serializer) == null)
-	    			{
-	    				throw new ScreenConfigException("Serializable ["+serializer+"], declared on view ["+view.getId()+"], not found!");
-	    			}
-	    			view.addSerializer(serializer);
-	    		}
-	    	}
-	    }
-    }
-
 	/**
 	 * @param view
 	 * @param elem

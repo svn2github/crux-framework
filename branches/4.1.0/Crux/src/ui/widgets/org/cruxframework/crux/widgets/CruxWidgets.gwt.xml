@@ -6,24 +6,6 @@
     	<when-property-is name="user.agent" value="opera" />
     </replace-with>
     <replace-with
-    	class="org.cruxframework.crux.widgets.client.dynatabs.TabInternalJSObjectsIEImpl">
-    	<when-type-is class="org.cruxframework.crux.widgets.client.dynatabs.TabInternalJSObjectsImpl" />
-    	<any>
-      		<when-property-is name="user.agent" value="ie6" />
-    		<when-property-is name="user.agent" value="ie8" />
-    		<when-property-is name="user.agent" value="ie9" />
-    	</any>
-    </replace-with>
-    <generate-with class="org.cruxframework.crux.widgets.rebind.PopupOpenerInvokerGenerator">
-		<when-type-assignable class="org.cruxframework.crux.widgets.client.dialog.PopupOpenerInvoker" />
-	</generate-with>
-	<generate-with class="org.cruxframework.crux.widgets.rebind.SiblingTabInvokerGenerator">
-		<when-type-assignable class="org.cruxframework.crux.widgets.client.dynatabs.SiblingTabInvoker" />
-	</generate-with>
-	<generate-with class="org.cruxframework.crux.widgets.rebind.TabInvokerGenerator">
-		<when-type-assignable class="org.cruxframework.crux.widgets.client.dynatabs.TabInvoker" />
-	</generate-with>
-    <replace-with
     	class="org.cruxframework.crux.widgets.client.util.FrameUtils.FrameStateMonitorSafariImpl">
     	<when-type-is class="org.cruxframework.crux.widgets.client.util.FrameUtils.FrameStateMonitor" />
     	<any>
@@ -53,9 +35,6 @@
       		<when-property-is name="user.agent" value="gecko1_8" />
     	</any>
     </replace-with>
-    <generate-with class="org.cruxframework.crux.widgets.rebind.wizard.WizardDataSerializerGenerator">
-		<when-type-assignable class="org.cruxframework.crux.widgets.client.wizard.WizardDataSerializer" />
-	</generate-with>
 	<replace-with
     	class="org.cruxframework.crux.widgets.client.util.FrameUtils.FrameAccessorIE">
     	<when-type-is class="org.cruxframework.crux.widgets.client.util.FrameUtils.FrameAccessorImpl" />
@@ -98,22 +77,6 @@
     	</any>
     </replace-with>
 
-	<replace-with
-		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerSafariImpl">
-		<when-type-assignable
-			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
-		<any>
-			<when-property-is name="user.agent" value="safari" />
-		</any>
-	</replace-with>
-	<replace-with
-		class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListenerImpl">
-		<when-type-assignable
-			class="org.cruxframework.crux.widgets.client.dialog.CruxInternalPopupController.PopupLoadListener" />
-		<none>
-			<when-property-is name="user.agent" value="safari" />
-		</none>
-	</replace-with>
 	<replace-with
 		class="org.cruxframework.crux.widgets.client.paging.NavigationButtonsPager.MobileButtonPanelCreator">
 		<when-type-assignable

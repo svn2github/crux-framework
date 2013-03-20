@@ -30,10 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Global;
 import org.cruxframework.crux.core.client.controller.WidgetController;
-import org.cruxframework.crux.core.client.controller.crossdoc.RequiresCrossDocumentSupport;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
@@ -98,39 +96,26 @@ public class ClientControllers
 				try 
 				{
 					Class<?> controllerClass = Class.forName(controller);
-					boolean validController = true;
-					if (controllerClass.getAnnotation(RequiresCrossDocumentSupport.class) != null)
+					Controller annot = controllerClass.getAnnotation(Controller.class);
+					Device[] devices = annot.supportedDevices();
+					String resourceKey = annot.value();
+					if (devices == null || devices.length ==0)
 					{
-						String enableCrossDocumentSupport = ConfigurationFactory.getConfigurations().enableCrossDocumentSupport();
-						if (enableCrossDocumentSupport == null || !enableCrossDocumentSupport.equals("true"))
-						{
-							validController = false;
-						}
-						
+						addResource(controllerClass, resourceKey, Device.all);
 					}
-					if (validController)
+					else
 					{
-						Controller annot = controllerClass.getAnnotation(Controller.class);
-						Device[] devices = annot.supportedDevices();
-						String resourceKey = annot.value();
-						if (devices == null || devices.length ==0)
+						for (Device device : devices)
 						{
-							addResource(controllerClass, resourceKey, Device.all);
+							addResource(controllerClass, resourceKey, device);
 						}
-						else
-						{
-							for (Device device : devices)
-                            {
-								addResource(controllerClass, resourceKey, device);
-                            }
-						}
-						if (controllerClass.getAnnotation(Global.class) != null)
-						{
-							globalControllers.add(annot.value());
-						}
-						initWidgetControllers(controllerClass, annot);
 					}
-				} 
+					if (controllerClass.getAnnotation(Global.class) != null)
+					{
+						globalControllers.add(annot.value());
+					}
+					initWidgetControllers(controllerClass, annot);
+				}
 				catch (ClassNotFoundException e) 
 				{
 					logger.error("Error initializing client controller.",e);
