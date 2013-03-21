@@ -20,6 +20,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.client.ImageResource.ImageOptions;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
@@ -42,4 +43,8 @@ public interface SiteResourcesSmall extends ClientBundle
 	@Source("rodapebg.png")
 	@ImageOptions(repeatStyle=RepeatStyle.None)
 	ImageResource rodapeBg();
+	
+	@Source("../icon-download.png")
+	ImageResource iconDownload();
+	
 }

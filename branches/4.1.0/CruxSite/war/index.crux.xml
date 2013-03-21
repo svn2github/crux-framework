@@ -15,7 +15,8 @@
 		<script type="text/javascript" src="cruxsite/cruxsite.nocache.js"></script>
 		
 		<c:screen useController="mainPageController,analyticsController" onHistoryChanged="mainPageController.onHistoryChanged" 
-				  onActivate="mainPageController.onLoad" useView="**/views/*" onLoad="analyticsController.load" />
+				  onActivate="mainPageController.onLoad" useView="**/views/*" onLoad="analyticsController.load" 
+				  smallViewport="user-scalable=no, width=320" largeViewport="user-scalable=no, width=device-width, height=device-height"/>
 
 		<site:siteFace id="site">
 			<site:menuEntry label="Home" url="index.html#!section=home" tooltip="Main Page" onSelect="mainPageController.onClickGoIndex" />

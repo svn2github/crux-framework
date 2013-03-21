@@ -33,26 +33,27 @@ public interface CssCruxSiteSmall extends CssResource
 	String poweredLabel();
 	String poweredImage();
 	String bannerArea();
+	String promoBanner();
 
 
 	
-	String shortcutsPanel();
-	String menuShortcut();
-	String headerMenuLabel();
-	String siteContent();
-	String siteFooter();
-	String cruxLabelFooter();
-	String cruxLabelFooter2();
-	String cruxLabelFooter3();
-	String cruxLabelFooter4();
-	String labelFooter();
+//	String shortcutsPanel();
+//	String menuShortcut();
+//	String headerMenuLabel();
+//	String siteContent();
+//	String siteFooter();
+//	String cruxLabelFooter();
+//	String cruxLabelFooter2();
+//	String cruxLabelFooter3();
+//	String cruxLabelFooter4();
+//	String labelFooter();
+//	String footerContent();
 	String contentAreas();
 	String contentLeft();
 	String contentCenter();
 	String contentRight();
 	String bannerAndNews();
 	String contentHorizontalSeparator();
-	String promoBanner();
 	String newsBoard();
 	String p();
 	String h1();
@@ -64,7 +65,6 @@ public interface CssCruxSiteSmall extends CssResource
 	String blockTypes();
 	String blockTypes2();
 	String rssPanel();
-	String footerContent();
 	String siteTutorial();
 	String donwloadButton();
 }

@@ -7,8 +7,6 @@ import org.cruxframework.crux.core.client.screen.views.BindRootView;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.cruxsite.client.device.CssLoader;
-import org.cruxframework.cruxsite.client.device.MobileDisplayHandler;
 import org.cruxframework.cruxsite.client.widget.SiteFace;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -24,9 +22,6 @@ public class MainPageController
 	@Expose
 	public void onLoad()
 	{
-		String appVersion = "";//TODO pegar a versao
-		MobileDisplayHandler.configureMetatags(appVersion);
-//		CssLoader.loadCssForDevice(appVersion);
 		String subsection = Window.Location.getHash();
 		if(StringUtils.isEmpty(subsection))
 		{
@@ -99,7 +94,7 @@ public class MainPageController
 	    screen.site().showView(viewName, viewName, false);
 	    View.addToHistory(viewName);
     }
-	
+	// TODO mover isso pra uma classe utilitaria do crux, com suporte a informar o nome do parametro que indica a view (abaixo seria "section")
 	private String getViewName(String hash)
 	{
 		if (StringUtils.isEmpty(hash))

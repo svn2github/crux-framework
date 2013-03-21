@@ -74,7 +74,6 @@ public interface SiteResourcesLarge extends ClientBundle
 	@ImageOptions(repeatStyle=RepeatStyle.None)
 	ImageResource bannerLeftArrow();
 	
-	@Source("icon-download.png")
+	@Source("../icon-download.png")
 	ImageResource iconDownload();
-	
 }
