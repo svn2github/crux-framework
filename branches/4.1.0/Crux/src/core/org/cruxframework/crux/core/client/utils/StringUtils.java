@@ -231,13 +231,18 @@ public class StringUtils
 			return null;
 		}
 		int index = value.length();  
-		while (index > 0 && Character.isWhitespace(value.charAt(index - 1)))  
+		while (index > 0 && isWhitespace(value.charAt(index - 1)))  
 		{  
 		    index--;  
 		}  
 		return value.substring(0, index);  		
 	}
 	
+	public static boolean isWhitespace(char c)
+    {
+	    return c == ' ' || c == '\t' || c == '\n';
+    }
+
 	/**
 	 *
 	 * <p>Find the Levenshtein distance between two Strings.</p>

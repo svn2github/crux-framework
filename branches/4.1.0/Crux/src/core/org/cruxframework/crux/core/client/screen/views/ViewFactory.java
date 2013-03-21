@@ -56,6 +56,18 @@ public interface ViewFactory
 	 */
 	public static interface CreateCallback
 	{
+		class EmptyCallback implements CreateCallback
+		{
+			private EmptyCallback(){}
+			
+			@Override
+            public void onViewCreated(View view)
+            {
+            }
+		}
+		
+		EmptyCallback EMPTY_CALLBACK = new EmptyCallback();
+		
 		/**
 		 * Handler method called when the requested view is created
 		 * @param view the requested view

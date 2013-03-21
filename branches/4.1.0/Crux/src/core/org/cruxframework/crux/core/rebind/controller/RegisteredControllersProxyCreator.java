@@ -100,7 +100,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	@Override
     protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
     {
-		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
+		srcWriter.println("private FastMap<Object> controllers = new FastMap<Object>();");
 		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
 		srcWriter.println("private "+iocContainerClassName+" iocContainer;");
     }	

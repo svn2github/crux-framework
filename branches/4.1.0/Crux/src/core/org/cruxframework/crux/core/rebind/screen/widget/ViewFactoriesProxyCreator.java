@@ -24,6 +24,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
 import org.cruxframework.crux.core.client.screen.DisplayHandler;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory;
@@ -77,6 +78,10 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 	    sourceWriter.println("public void createView(String name, String id, CreateCallback callback) throws InterfaceConfigException{ ");
 
+	    sourceWriter.println("if (callback == null){");
+	    sourceWriter.println("callback = CreateCallback.EMPTY_CALLBACK;");
+	    sourceWriter.println("}");
+	    
 //		if (Environment.isProduction())
 //		{
 			generateViewCreation(sourceWriter, getViews());
@@ -141,12 +146,22 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 
 			if (view.isRootView())
 			{
-				String smallViewport = view.getViewElement().optString("smallViewport");
-				String largeViewport = view.getViewElement().optString("largeViewport");
-				if ((smallViewport != null && smallViewport.length() > 0) || (largeViewport != null && largeViewport.length() > 0))
+				Device currentDevice = Device.valueOf(getDeviceFeatures());
+				if (currentDevice.getSize().equals(Size.small))
 				{
-					sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(smallViewport, false)+
-							","+EscapeUtils.quote(largeViewport, false)+");");
+					String smallViewport = view.getViewElement().optString("smallViewport");
+					if (smallViewport != null && smallViewport.length() > 0)
+					{
+						sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(smallViewport, false)+");");
+					}
+				}
+				else
+				{
+					String largeViewport = view.getViewElement().optString("largeViewport");
+					if (largeViewport != null && largeViewport.length() > 0)
+					{
+						sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(largeViewport, false)+");");
+					}
 				}
 			}
 			

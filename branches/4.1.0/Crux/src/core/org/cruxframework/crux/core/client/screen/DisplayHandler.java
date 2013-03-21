@@ -48,20 +48,26 @@ public class DisplayHandler
 	{
 		if (Screen.getCurrentDevice().getSize().equals(Size.small))
 		{
-			if (!StringUtils.isEmpty(smallDisplayContent))
-			{
-				createViewport(smallDisplayContent);	    
-			}
+			configureViewport(smallDisplayContent);
 		}
 		else if (!Screen.getCurrentDevice().getInput().equals(Input.mouse))
 		{
-			if (!StringUtils.isEmpty(largeDisplayContent))
-			{
-				createViewport(largeDisplayContent);
-			}
+			configureViewport(largeDisplayContent);
 		}
 		
 	}
+
+	/**
+	 * Configure a viewport using given contents
+	 * @param content
+	 */
+	public static void configureViewport(String content)
+    {
+	    if (!StringUtils.isEmpty(content))
+	    {
+	    	createViewport(content);	    
+	    }
+    }
 
 	/**
 	 * Create a viewport meta element with specified content

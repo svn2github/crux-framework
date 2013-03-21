@@ -24,7 +24,6 @@ import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
-import org.cruxframework.crux.core.client.screen.views.ViewContainer;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -78,7 +77,7 @@ public class Screen
 			@Override
 			public void execute()
 			{
-				ViewContainer.createView(id, null);
+				rootViewContainer.loadView(id, true);
 			}
 		});
     }
@@ -588,6 +587,15 @@ public class Screen
 	public static void configureViewport(String smallDisplayContent, String largeDisplayContent)
 	{
 		DisplayHandler.configureViewport(smallDisplayContent, largeDisplayContent);
+	}
+	
+	/**
+	 * Configure a viewport using given content
+	 * @param content
+	 */
+	public static void configureViewport(String content)
+	{
+		DisplayHandler.configureViewport(content);
 	}
 	
 	/**

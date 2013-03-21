@@ -71,6 +71,19 @@ public class RegisteredControllersProxyCreatorLegacy extends AbstractInterfaceWr
 		generateGetControllertMethod(sourceWriter);
     }
 
+	
+	/**
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourceWriter)
+	 */
+	@Override
+    protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+    {
+		srcWriter.println("private FastMap<ControllerInvoker> controllers = new FastMap<ControllerInvoker>();");
+		srcWriter.println("private "+org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName()+" view;");
+		srcWriter.println("private "+iocContainerClassName+" iocContainer;");
+    }	
+
+	
 	/**
 	 * Generate the block to include controller object.
 	 * @param controller
