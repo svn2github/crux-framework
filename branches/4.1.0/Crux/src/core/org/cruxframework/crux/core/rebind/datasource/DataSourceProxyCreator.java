@@ -91,6 +91,17 @@ public class DataSourceProxyCreator extends AbstractProxyCreator
 		createColumnDefinitions(srcWriter);
 		srcWriter.println("}");
 	}	
+    
+	/**
+	 * @see org.cruxframework.crux.core.rebind.AbstractProxyCreator#generateProxyFields(com.google.gwt.user.rebind.SourcePrinter)
+	 */
+	@Override
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		srcWriter.println("private " + View.class.getCanonicalName() + " __view;");		
+	}
+	
+    
 
 	protected void createColumnDefinitions(SourcePrinter out)
 	{
@@ -150,6 +161,7 @@ public class DataSourceProxyCreator extends AbstractProxyCreator
 	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		super.generateProxyMethods(srcWriter);
+		generateGetViewMethod(srcWriter);
 		generateUpdateFunction(srcWriter);
 		generateGetBoundObjectFunction(srcWriter);
 		generateCopyValueToWidgetMethod(srcWriter);
@@ -157,6 +169,17 @@ public class DataSourceProxyCreator extends AbstractProxyCreator
 		generateSetValueMethod(srcWriter);
 	}	
 	
+	/**
+	 * 
+	 * @param srcWriter
+	 */
+	protected void generateGetViewMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("public String getBoundCruxView(){");
+		srcWriter.println("return (this.__view==null?null:this.__view.getId());");
+		srcWriter.println("}");
+	}
+
 	/**
 	 * 
 	 * @param sourceWriter

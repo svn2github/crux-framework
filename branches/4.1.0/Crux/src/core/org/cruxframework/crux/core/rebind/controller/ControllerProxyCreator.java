@@ -100,6 +100,7 @@ public class ControllerProxyCreator extends AbstractProxyCreator
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		super.generateProxyFields(srcWriter);
+		srcWriter.println("private " + View.class.getCanonicalName() + " __view;");
 		generateLoggerField(srcWriter);
 		
 		srcWriter.println();
@@ -109,7 +110,19 @@ public class ControllerProxyCreator extends AbstractProxyCreator
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
 		super.generateProxyMethods(srcWriter);
+		generateGetViewMethod(srcWriter);
 		generateControllerOverideExposedMethods(srcWriter);
+	}
+
+	/**
+	 * 
+	 * @param srcWriter
+	 */
+	protected void generateGetViewMethod(SourcePrinter srcWriter)
+	{
+		srcWriter.println("public String getBoundCruxView(){");
+		srcWriter.println("return (this.__view==null?null:this.__view.getId());");
+		srcWriter.println("}");
 	}
 
 	/**
