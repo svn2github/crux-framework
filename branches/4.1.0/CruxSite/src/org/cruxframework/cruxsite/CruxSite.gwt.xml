@@ -4,8 +4,8 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>
 	
-    <set-property name="user.agent" value="safari" />
-    <set-property name="device.features" value="smallDisplayTouch"/>
+<!--     <set-property name="user.agent" value="safari" /> -->
+    <set-property name="device.features" value="largeDisplayMouse"/>
 
 	<set-property name="ClientBundle.enableInlining" value="false" />
 
