@@ -125,7 +125,7 @@
 	<target name="dist">
 		<delete dir="${dist.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${dist.dir}" />
-		
+		<antcall target="export-crux-build-tool"/>
 		<!-- Export all crux jars -->
 		<antcall target="dist-legacy" />
 		<antcall target="dist-no-legacy" />
