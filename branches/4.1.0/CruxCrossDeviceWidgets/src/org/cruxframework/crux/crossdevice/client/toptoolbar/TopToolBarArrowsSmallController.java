@@ -18,9 +18,9 @@ package org.cruxframework.crux.crossdevice.client.toptoolbar;
 import java.util.Iterator;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
+import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.widgets.client.event.openclose.BeforeCloseEvent;
@@ -67,8 +67,13 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 	protected int pos;
 	protected int canvasHeight;
 	
-	@Create
+	@Inject
 	protected PanelAnimation panelAnimation;
+
+	public void setPanelAnimation(PanelAnimation panelAnimation)
+    {
+    	this.panelAnimation = panelAnimation;
+    }
 
 	@Override
     public Widget getWidget(int index)

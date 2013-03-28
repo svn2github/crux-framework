@@ -16,7 +16,7 @@
 package org.cruxframework.crux.crossdevice.client.toptoolbar;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
+import org.cruxframework.crux.core.client.ioc.Inject;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,9 +37,14 @@ import com.google.gwt.user.client.ui.FocusPanel;
 @Controller("topToolBarTouchSmallController")
 public class TopToolBarTouchSmallController extends TopToolBarArrowsSmallController 
 {
-	@Create
+	@Inject
 	protected GripHandler gripHandler;
 	
+	public void setGripHandler(GripHandler gripHandler)
+    {
+    	this.gripHandler = gripHandler;
+    }
+
 	@Override
 	protected void prepareGripPanel()
 	{
