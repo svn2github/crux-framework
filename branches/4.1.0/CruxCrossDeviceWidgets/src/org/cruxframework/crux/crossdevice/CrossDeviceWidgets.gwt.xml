@@ -3,7 +3,6 @@
 	<inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
-	<inherits name='org.cruxframework.crux.crossdevice.themes.standard.Standard'/>
 
 	<property-provider name="device.features" generator="org.cruxframework.crux.core.rebind.crossdevice.DeviceFeaturesPropertyGenerator" /> 
 
