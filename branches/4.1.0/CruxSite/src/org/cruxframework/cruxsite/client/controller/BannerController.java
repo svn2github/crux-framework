@@ -2,39 +2,48 @@ package org.cruxframework.cruxsite.client.controller;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
-
-import com.google.gwt.user.client.Window;
+import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.views.BindRootView;
+import org.cruxframework.crux.core.client.screen.views.ControllerWrapper;
 
 @Controller("bannerController")
 public class BannerController 
 {
+	@Inject 
+	private MainScreen mainController;
+	
+	public void setMainController(MainScreen mainController) 
+	{
+		this.mainController = mainController;
+	}
+
+	@BindRootView
+	public static interface MainScreen extends ControllerWrapper 
+	{
+		MainPageController mainPageController();
+	}
+	
 	@Expose
 	public void onClickBannerFast()
 	{
-		Window.alert("fast");
+		mainController.mainPageController().onClickMenuLearn();
 	}
 	
 	@Expose
 	public void onClickBannerSocial()
 	{
-		Window.alert("social");
+		mainController.mainPageController().onClickMenuLearn();
 	}
 	
 	@Expose
 	public void onClickBannerJava()
 	{
-		Window.alert("java");
+		mainController.mainPageController().onClickMenuLearn();
 	}
 	
 	@Expose
 	public void onClickBannerCrossDevice()
 	{
-		Window.alert("cross-device");
-	}
-	
-	@Expose
-	public void onClickBannerTriggo()
-	{
-		Window.alert("triggo");
+		mainController.mainPageController().onClickMenuLearn();
 	}
 }

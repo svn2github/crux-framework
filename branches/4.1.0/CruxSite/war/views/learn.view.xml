@@ -6,45 +6,53 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
-	onLoad="rssController.onLoad" useController="rssController,bannerController,learnController" title="${siteMessages.siteTitle}" useResource="siteResources">
+	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates" title="${siteMessages.siteTitle}" 
+	useResource="siteResources, communityResources">
 	
 	<gwt:flexTable id="learnContent" width="900px">
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html id="htmlContentLearn">
-					<h1>Learn more from Crux</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et nisl non lectus rhoncus fringilla. Sed imperdiet bibendum sapien, a mattis magna accumsan ut. Porta, neque eget aliquet varius, metus ipsum porttitor sapien.</p>
+					<h1>Learn more about Crux</h1>
+					<p>Visit Crux manual <a href="https://code.google.com/p/crux-framework/wiki/UserManual">here</a> or access our community pages below.</p>
 					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
 		<gwt:row>
 			<gwt:cell>
-				<gwt:html>
-					<h1>Community</h1>
+				<gwt:html id="htmlContent">
+					<h1>Crux Community</h1>
+					<p>Crux is an open source project licensed under the Apache License 2.0. 
+					To learn more about the project, report problems, suggest modifications, or get support, please visit our links targeted to the community.</p>
+					<div class="risk"></div>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<gwt:horizontalPanel id="panel1">
-						<gwt:label id="comLabel1" text="If you want to get involved... Go to our community "/>
-						<gwt:anchor id="communityAnchor" styleName="${siteResources.css.shyLink}" text="website" onClick="learnController.goToCommunity"/>
-						<gwt:label id="comLabel2" text=" and get acquainted with our friends."/>
-					</gwt:horizontalPanel>
+					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
+						<tmp:siteReference href="http://blog.cruxframework.org" styleName="${siteResources.css.blockTypes}" siteTitle="Crux's Blog" 
+										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
+										   image="${communityResources.iconBlogger}" buttonLabel="Visit the Blog" id="blogSite"/>
+						<tmp:siteReference href="http://crux-framework.googlecode.com" styleName="${siteResources.css.blockTypes2}" siteTitle="Crux's Project" 
+										   siteDescription="Wiki,Issues, commit road and much more can be found on our Google Code page." 
+										   image="${communityResources.iconGoogle}" buttonLabel="Visit the Page" id="projectSite"/>
+						<tmp:siteReference href="http://groups.google.com/group/crux-framework" styleName="${siteResources.css.blockTypes}" siteTitle="Crux's Forum" 
+										   siteDescription="Our forum. There you can post question about Crux usage." 
+										   image="${communityResources.iconForum}" buttonLabel="Visit the Forum" id="forumSite"/>
+						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="${siteResources.css.blockTypes2}" siteTitle="Crux's Team" 
+										   siteDescription="Our contact: team@cruxframework.org" 
+										   image="${communityResources.iconForum}" buttonLabel="Talk to us" id="talkSite"/>
+					</xdev:storyboard>
 				</gwt:widget>
 			</gwt:cell>
 		</gwt:row>
 		<gwt:row>
 			<gwt:cell>
-				<gwt:html><p/></gwt:html>
-			</gwt:cell>
-		</gwt:row>
-		<gwt:row>
-			<gwt:cell>
 				<gwt:html>
-					<h1>Tutorial</h1>
+					<h1>Tutorials</h1>
 				</gwt:html>
 			</gwt:cell>
 		</gwt:row>

@@ -2,4 +2,4 @@ index.html:
 index.html:section=home
 index.html:section=download
 index.html:section=learn
-index.html:section=community
+#index.html:section=community
