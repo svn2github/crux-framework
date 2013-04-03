@@ -245,7 +245,7 @@ public class HTMLUtils
 				default: sb.append(c); break;
 			}
 		}
-		return (normalizeSpaces?sb.toString().trim():sb.toString());
+		return (sb.toString());
 	}
 	
 	/**
