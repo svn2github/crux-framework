@@ -20,30 +20,26 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ImageResource.ImageOptions;
-import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-@Resource(value="siteResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
-public interface SiteResourcesSmall extends ClientBundle
+@Resource(value="homeResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
+public interface HomeResourcesSmall extends ClientBundle
 {
-	@Source("cssCruxSiteSmall.css")
-	CssCruxSiteSmall css();
-
-	@Source("cruxdude.png")
-	ImageResource cruxLogo();
-
-	@Source("icons-powered.png")
-	ImageResource iconPowered();
-
-	@Source("rodapebg.png")
-	@ImageOptions(repeatStyle=RepeatStyle.None)
-	ImageResource rodapeBg();
+	@Source("banner-cross-device.jpg")
+	ImageResource bannerCrossDevice();
 	
-	@Source("../icon-download.png")
-	ImageResource iconDownload();
+	@Source("banner-fast.jpg")
+	ImageResource bannerFast();
 	
+	@Source("banner-java.jpg")
+	ImageResource bannerJava();
+	
+	@Source("banner-social.jpg")
+	ImageResource bannerSocial();
+	
+	@Source("banner-what-is-crux.jpg")
+	ImageResource bannerWhatIsCrux();
 }

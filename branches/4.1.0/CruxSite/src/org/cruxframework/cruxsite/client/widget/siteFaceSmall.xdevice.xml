@@ -15,7 +15,7 @@
 	        <gwt:label id="cruxLabel" text="CRUX" styleName="${siteResources.css.cruxLabel}"/>
 	        <gwt:image id="cruxLogo" url="${siteResources.cruxLogo}" styleName="${siteResources.css.cruxLogo}"/>
 	    </gwt:flowPanel>
-	    <crux:horizontalSwapViewContainer id="viewContainer" width="100%" height="100%" styleName="${siteResources.css.view}">
+	    <crux:horizontalSwapViewContainer id="viewContainer" width="100%" height="100%" >
 	    </crux:horizontalSwapViewContainer>
 	    <gwt:flowPanel id="footer" styleName="${siteResources.css.footer}">
 	    	<gwt:label id="poweredLabel" styleName="${siteResources.css.poweredLabel}" text="Powered By"/>

@@ -23,19 +23,31 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface CssCruxSiteSmall extends CssResource
 {
+	// Site
 	String header();
 	String headerMenu();
 	String buttonMenu();
 	String cruxLabel();
 	String cruxLogo();
-	String view();
+//	String view();
 	String footer();
 	String poweredLabel();
 	String poweredImage();
+	
+	// Home View
+	String contentAreas();
+	String contentLeft();
+	String contentCenter();
+	String contentRight();
+	String bannerAndNews();
 	String bannerArea();
 	String promoBanner();
+	String contentHorizontalSeparator();
+	String newsBoard();
+	String rssPanel();
 
-
+	
+	
 	
 //	String shortcutsPanel();
 //	String menuShortcut();
@@ -48,13 +60,8 @@ public interface CssCruxSiteSmall extends CssResource
 //	String cruxLabelFooter4();
 //	String labelFooter();
 //	String footerContent();
-	String contentAreas();
-	String contentLeft();
-	String contentCenter();
-	String contentRight();
-	String bannerAndNews();
-	String contentHorizontalSeparator();
-	String newsBoard();
+
+	
 	String p();
 	String h1();
 	String shyText();
@@ -64,7 +71,6 @@ public interface CssCruxSiteSmall extends CssResource
 	String communityContent();
 	String blockTypes();
 	String blockTypes2();
-	String rssPanel();
 	String siteTutorial();
 	String donwloadButton();
 }

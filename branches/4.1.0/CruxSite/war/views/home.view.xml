@@ -20,19 +20,19 @@
 								<gwt:widget>
 									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" 
 									 				   transitionDuration="400" autoTransitionInterval="20000" styleName="${siteResources.css.promoBanner}">
-									 	<xdev:banner largeImage="${homeResources.bannerWhatIsCrux}" smallImage="${homeResources.bannerWhatIsCruxMobile}"
-									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerWhatIsCruxTitle}" 
+									 	<xdev:banner image="${homeResources.bannerWhatIsCrux}" buttonLabel="${siteMessages.bannerActionLearnMore}" 
+									 				 title="${siteMessages.bannerWhatIsCruxTitle}" 
 									 				 text="${siteMessages.bannerWhatIsCrux}" onSelect="bannerController.onClickBannerJava"/>
-									 	<xdev:banner largeImage="${homeResources.bannerCrossDevice}" smallImage="${homeResources.bannerCrossDeviceMobile}"
+									 	<xdev:banner image="${homeResources.bannerCrossDevice}" 
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" 
 									 				 text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
-									 	<xdev:banner largeImage="${homeResources.bannerFast}" smallImage="${homeResources.bannerFastMobile}"
+									 	<xdev:banner image="${homeResources.bannerFast}" 
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" 
 									 				 text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
-									 	<xdev:banner largeImage="${homeResources.bannerSocial}" smallImage="${homeResources.bannerSocialMobile}"
+									 	<xdev:banner image="${homeResources.bannerSocial}" 
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" 
 									 				 text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
-									 	<xdev:banner largeImage="${homeResources.bannerJava}" smallImage="${homeResources.bannerJavaMobile}"
+									 	<xdev:banner image="${homeResources.bannerJava}" 
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" 
 									 				 text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
 									</xdev:promoBanner>
