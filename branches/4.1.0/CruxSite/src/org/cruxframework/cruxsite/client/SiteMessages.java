@@ -59,7 +59,7 @@ public interface SiteMessages extends Messages
 	@DefaultMessage("CAFEBABE")
 	String bannerJavaTitle();
 	
-	@DefaultMessage("Yes, it's pure Java inside! With Crux you don't ever need to write a single line of Javascript code.")
+	@DefaultMessage("Yes, it''s pure Java inside! With Crux you don''t ever need to write a single line of Javascript code.")
 	String bannerJavaText();
 	
 	@DefaultMessage("Cross-Device")
@@ -67,6 +67,12 @@ public interface SiteMessages extends Messages
 	
 	@DefaultMessage("Write once, run everywhere. Smartphones, tablets, Smart TVs... Crux fits all.")
 	String bannerCrossDeviceText();
+	
+	@DefaultMessage("Crux is")
+	String bannerWhatIsCruxTitle();	
+	
+	@DefaultMessage("a Java rapid development framework which enables the creation of powerfull cutting-edge web apps and web sites.") 
+	String bannerWhatIsCrux();
 	
 	@DefaultMessage("Triggo Labs")
 	String bannerTriggoTitle();

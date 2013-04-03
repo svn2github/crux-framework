@@ -50,4 +50,10 @@ public interface HomeResources extends ClientBundle
 	
 	@Source("small/banner-social.jpg")
 	ImageResource bannerSocialMobile();
+	
+	@Source("large/banner-what-is-crux.jpg")
+	ImageResource bannerWhatIsCrux();
+
+	@Source("small/banner-what-is-crux.jpg")
+	ImageResource bannerWhatIsCruxMobile();
 }

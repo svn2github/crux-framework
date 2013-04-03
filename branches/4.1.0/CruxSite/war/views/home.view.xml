@@ -16,38 +16,13 @@
 				<gwt:widget>
 					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="${siteResources.css.bannerAndNews}">
 						<gwt:row>
-							<gwt:cell>
-								<gwt:html>
-								<h1>
-									Crux is...
-								</h1>
-								</gwt:html>
-							</gwt:cell>
-						</gwt:row>
-						<gwt:row>
-							<gwt:cell>
-								<gwt:html>
-								<h2>
-								a Java rapid development framework that extends GWT and 
-								let you create powerful cutting-edge web applications 
-								and web sites.
-								</h2>
-								</gwt:html>
-							</gwt:cell>
-							<gwt:cell width="350px">
-								<gwt:html></gwt:html>
-							</gwt:cell>
-						</gwt:row>
-						<gwt:row>
-							<gwt:cell height="20px">
-								<gwt:html></gwt:html>
-							</gwt:cell>
-						</gwt:row>
-						<gwt:row>
 							<gwt:cell styleName="${siteResources.css.bannerArea}" colSpan="3">
 								<gwt:widget>
 									 <xdev:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" 
-									 				   transitionDuration="400" autoTransitionInterval="10000" styleName="${siteResources.css.promoBanner}">
+									 				   transitionDuration="400" autoTransitionInterval="20000" styleName="${siteResources.css.promoBanner}">
+									 	<xdev:banner largeImage="${homeResources.bannerWhatIsCrux}" smallImage="${homeResources.bannerWhatIsCruxMobile}"
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerWhatIsCruxTitle}" 
+									 				 text="${siteMessages.bannerWhatIsCrux}" onSelect="bannerController.onClickBannerJava"/>
 									 	<xdev:banner largeImage="${homeResources.bannerCrossDevice}" smallImage="${homeResources.bannerCrossDeviceMobile}"
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" 
 									 				 text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
@@ -60,7 +35,7 @@
 									 	<xdev:banner largeImage="${homeResources.bannerJava}" smallImage="${homeResources.bannerJavaMobile}"
 									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" 
 									 				 text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
-									 </xdev:promoBanner>
+									</xdev:promoBanner>
 								</gwt:widget>
 							</gwt:cell>
 						</gwt:row>
