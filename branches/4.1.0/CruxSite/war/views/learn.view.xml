@@ -9,7 +9,7 @@
 	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates" title="${siteMessages.siteTitle}" 
 	useResource="siteResources, communityResources">
 	
-	<gwt:flexTable id="learnContent" width="900px">
+	<gwt:flexTable id="learnContent">
 		<gwt:row>
 			<gwt:cell>
 				<gwt:html id="htmlContentLearn">
@@ -59,7 +59,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<site:tutorial id="quickstart" estimatedTime="3 min" width="900px" largeImage="../img/img_example_learn.png" 
+					<site:tutorial id="quickstart" estimatedTime="3 min" largeImage="../img/img_example_learn.png" 
 								   tutorialTitle="Using Project Generator" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="This is a video lesson that shows how to use the project generator tool to create a basic Crux Project"
 								   learnDescription="How to start a project with Crux and Eclipse and how to make a simple Hello World."
@@ -78,7 +78,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<site:tutorial id="gadget" estimatedTime="6 min" width="900px" largeImage="../img/img_opensocial.png" 
+					<site:tutorial id="gadget" estimatedTime="6 min" largeImage="../img/img_opensocial.png" 
 								   tutorialTitle="Creating Gadgets" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="This is a video lesson that shows how to create google gadgets using Crux"
 								   learnDescription="How to make a simple Hello World gadget."
@@ -96,7 +96,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<site:tutorial id="example" estimatedTime="6 min" width="900px" largeImage="../img/img_example_learn.png" 
+					<site:tutorial id="example" estimatedTime="6 min" largeImage="../img/img_example_learn.png" 
 								   tutorialTitle="Creating Gadgets" styleName="${siteResources.css.siteTutorial}"
 								   tutorialSubtitle="Another example"
 								   learnDescription="Example description."

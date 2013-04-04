@@ -4,7 +4,7 @@
            useController="tutorialLargeController">
 	<gwt:flexTable id="flexTlable" width="100%">
 		<gwt:row>
-			<gwt:cell rowSpan="3" width="80%"  verticalAlignment="top">
+			<gwt:cell rowSpan="3" width="50%"  verticalAlignment="top">
 				<gwt:widget>
 					<gwt:simplePanel id="simplePanel" styleName="contentPanel" >
 						<gwt:flexTable id="Table" >

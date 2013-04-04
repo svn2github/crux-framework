@@ -26,6 +26,9 @@ p, .p{
 	border-bottom:2px solid #213c66;
 	color:#fff;
 }
+
+@external risk;
+
 .header .buttonMenu{
 	float:left;
 	width:60px;
@@ -88,21 +91,25 @@ p, .p{
 @sprite .footer{
 	gwt-image: "rodapeBg";
 	background-size:100% auto;
-	height:72px;
-	margin-top:0;
-	padding-top:29px;
+	background-position: center center;
+	height:80px;
+	margin-top:0px;
+	padding-top:0px;
 	position:relative;
 	z-index:3;
 	text-align:center;
+	display: inline-block;
+	width: 100%;
 }
 .footer .poweredLabel{
 	font-size:15px;
 	color:#fff;
 	text-shadow:0 2px 2px #000;
 	text-align:center;
+	margin-top:5px;
 }
 .footer .poweredImage{
-	margin-top:10px;
+	margin-top:2px;
 	width:93px;
 	height:32px;
 }
@@ -347,7 +354,22 @@ p, .p{
 	gwt-image: "iconDownload";
 	border: 0 none;
 }
-.siteTutorial{
+
+@external siteTutorial contentPanel time learnPanel;
+.siteTutorial .contentPanel, .siteTutorial .time, .siteTutorial .learnPanel 
+{
+	background:#333;
+ 	background:rgba(0,0,0,0.2);
+ 	box-shadow:0 1px 5px rgba(0,0,0,0.4) inset, 0 1px 0 #fff;
+ 	border-radius:5px;
+ 	padding:10px;
+ 	color:#fff;
+ 	text-shadow:0 1px 1px rgba(0,0,0,0.5);
+ 	margin-bottom:7px;
+}
+.siteTutorial
+{
+	width: 100%;
 }
 #_crux_2insideContentDown p{
 	margin-bottom:0;
