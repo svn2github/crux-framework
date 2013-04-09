@@ -65,6 +65,8 @@ import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 import org.w3c.dom.Document;
 
+import com.google.gwt.resources.client.ResourcePrototype;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -1485,6 +1487,10 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		else if (HTMLTag.class.isAssignableFrom(type))
 		{
 			return "xs:anyType";
+		}
+		else if (ResourcePrototype.class.isAssignableFrom(type))
+		{
+			return "xs:string";
 		}
 		return null;
 	}
