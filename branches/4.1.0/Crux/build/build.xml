@@ -381,7 +381,9 @@
 				<fileset dir="${classes.dir}" >
 					<include name="org/cruxframework/crux/widgets/**/*" />
 				</fileset>
-				<fileset dir="@{sourceDir}" />
+				<fileset dir="@{sourceDir}" >
+					<include name="org/cruxframework/crux/widgets/**/*" />
+				</fileset>
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
