@@ -164,6 +164,7 @@ public class ColorPickerDialog extends DialogBox
 
 	public void setColor(String color)
 	{
+		this.color = color;
 		int[] rgb = ColorUtils.getRGB(color);
 		int[] hsl = ColorUtils.rgb2hsl(rgb);
 		huePicker.setHue(hsl[0]);
