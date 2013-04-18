@@ -184,7 +184,9 @@ public abstract class AbstractLayoutProjectGenerator implements LayoutProjectGen
 			this.replacements.add(new String[]{"moduleSimpleNameUpperCase", this.options.getModuleSimpleName()});
 			this.replacements.add(new String[]{"moduleSimpleName", this.options.getModuleSimpleName().toLowerCase()});
 			this.replacements.add(new String[]{"modulePackage", this.options.getModulePackage()});
-		}
+
+			this.replacements.add(new String[]{"crossDeviceModuleDeclaration", this.options.isCrossDevice()?"<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>":""});
+}
 		return this.replacements;		
 	}
 	
@@ -245,6 +247,18 @@ public abstract class AbstractLayoutProjectGenerator implements LayoutProjectGen
 	{
 		return createDir(options.getProjectDir(), "build/lib");
 	}
+	
+	protected File copyLibDir() throws IOException
+    {
+	    File buildLibDir = getBuildLibDir();
+	    String excludes = null;
+	    if (!this.options.isCrossDevice())
+	    {
+	    	excludes = "crux-cross-device*.jar";
+	    }
+	    FileUtils.copyFilesFromDir(new File(options.getLibDir(), "build"), buildLibDir, null, excludes);
+	    return buildLibDir;
+    }
 
 	protected abstract CruxProjectGeneratorOptions getCruxProjectGeneratorOptions(File workspaceDir, String projectName, String hostedModeStartupModule);
 	

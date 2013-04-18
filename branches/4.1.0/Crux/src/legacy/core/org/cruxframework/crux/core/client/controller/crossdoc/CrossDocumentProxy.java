@@ -25,7 +25,6 @@ import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.rpc.impl.Serializer;
 
-
 /**
  * The base class for invocation proxies created to make cross document calls
  * @author Thiago da Rosa de Bustamante

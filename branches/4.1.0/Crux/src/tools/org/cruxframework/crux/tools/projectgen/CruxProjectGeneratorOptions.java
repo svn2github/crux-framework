@@ -123,6 +123,7 @@ public class CruxProjectGeneratorOptions
 	private final String moduleSimpleName;
 	private final File projectDir;
 	private final String projectName;
+	private boolean crossDevice;
 	
 	private final File workspaceDir;
 
@@ -210,6 +211,16 @@ public class CruxProjectGeneratorOptions
 	public void setHostedModeVMArgs(String hostedModeVMArgs)
     {
     	this.hostedModeVMArgs = hostedModeVMArgs;
+    }
+	
+	public boolean isCrossDevice()
+    {
+    	return crossDevice;
+    }
+
+	public void setCrossDevice(boolean crossDevice)
+    {
+    	this.crossDevice = crossDevice;
     }
 
 	/**

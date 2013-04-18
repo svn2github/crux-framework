@@ -105,8 +105,7 @@ public class GadgetLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	@Override
     public void createdBuildFiles() throws IOException
     {
-		File buildLibDir = getBuildLibDir();
-		FileUtils.copyFilesFromDir(new File(options.getLibDir(), "build"), buildLibDir);
+		File buildLibDir = copyLibDir();
 		File webInfLibDir = getWebInfLibDir();
 		FileUtils.copyFilesFromDir(new File(options.getLibDir(), "gadget/build"), buildLibDir);
 		FileUtils.copyFilesFromDir(new File(options.getLibDir(), "gadget/web-inf"), webInfLibDir);

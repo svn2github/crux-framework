@@ -18,8 +18,6 @@ package org.cruxframework.crux.tools.projectgen;
 import java.io.File;
 import java.io.IOException;
 
-import org.cruxframework.crux.core.utils.FileUtils;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -50,8 +48,7 @@ public class MonolithicLayoutProjectGenerator extends AbstractLayoutProjectGener
 	@Override
     public void createdBuildFiles() throws IOException
     {
-		File buildLibDir = getBuildLibDir();
-		FileUtils.copyFilesFromDir(new File(options.getLibDir(), "build"), buildLibDir);
+		File buildLibDir = copyLibDir();
 		createFile(buildLibDir.getParentFile(), "build.xml", "build.xml");
     }
 

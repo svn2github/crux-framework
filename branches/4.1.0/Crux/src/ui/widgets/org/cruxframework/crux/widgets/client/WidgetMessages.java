@@ -88,12 +88,12 @@ public interface WidgetMessages extends Messages
 	@DefaultMessage("No pageable widget set for this pager.")
 	String pagerNoPageableSet();
 
-	@DefaultMessage("OK")
-	String colorPickerDialogOk();
-
-	@DefaultMessage("Cancel")
-	String colorPickerDialogCancel();
-
 	@DefaultMessage("Select Color")
 	String colorPickerDialogSelectColor();
+
+	@DefaultMessage("Ok")
+	String okLabel();
+
+	@DefaultMessage("Cancel")
+	String cancelLabel();
 }

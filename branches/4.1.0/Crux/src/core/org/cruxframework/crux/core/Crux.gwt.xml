@@ -31,7 +31,7 @@
 	
 	<!-- Specify the generator for screen wrappers.     -->
 	<generate-with class="org.cruxframework.crux.core.rebind.screen.wrapper.ViewWrapperGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewWrapper" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.WidgetAccessor" />
 	</generate-with>
 
 	<!-- Specify the generator for screen binders.     -->
@@ -41,7 +41,7 @@
 
 	<!-- Specify the generator for controller wrappers.     -->
 	<generate-with class="org.cruxframework.crux.core.rebind.controller.wrapper.ControllerWrapperGenerator">
-		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ControllerWrapper" />
+		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ControllerAccessor" />
 	</generate-with>
 
 	<!-- Specify the generator for view accessor.     -->

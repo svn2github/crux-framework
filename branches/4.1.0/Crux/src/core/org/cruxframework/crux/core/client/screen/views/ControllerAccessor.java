@@ -16,14 +16,14 @@
 package org.cruxframework.crux.core.client.screen.views;
 
 /**
- * A marker interface used to generate view wrappers. These wrappers are useful 
- * to avoid reference to widgets on view made with strings. With a wrapper, you can 
- * invoke an accessor method for each widget. 
+ * A marker interface used to generate controller wrappers. These wrappers are useful 
+ * to avoid reference to controllers on view made with strings. With a wrapper, you can 
+ * invoke an accessor method for each controller. 
  * 
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface ViewWrapper extends ViewBindable
+public interface ControllerAccessor extends ViewBindable
 {
 
 }

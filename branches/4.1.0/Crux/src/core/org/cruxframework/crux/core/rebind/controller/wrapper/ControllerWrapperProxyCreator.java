@@ -72,17 +72,17 @@ public class ControllerWrapperProxyCreator extends AbstractViewBindableProxyCrea
 				}
 				else
 				{
-					throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
+					throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
 				}
 			}
 			else
 			{
-				throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a class annotated with @Controller.");
+				throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a class annotated with @Controller.");
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a class annotated with @Controller.");
+			throw new CruxGeneratorException("The method ["+method.getName()+"] from ControllerAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a class annotated with @Controller.");
 		}
 	}
 

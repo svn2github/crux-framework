@@ -48,6 +48,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -59,6 +60,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	private final View view;
 	private Map<String, IocConfig<?>> configurations;
 	private JClassType viewBindableType;
+	private JClassType remoteServiceType;
 	private Device device;
 
 	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view, String device)
@@ -66,6 +68,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	    super(logger, context);
 		this.view = view;
 		viewBindableType = context.getTypeOracle().findType(ViewBindable.class.getCanonicalName());
+		remoteServiceType = context.getTypeOracle().findType(RemoteService.class.getCanonicalName());
 		this.device = Device.valueOf(device);
 		configurations = IocContainerManager.getConfigurationsForView(view, this.device);
     }
@@ -124,7 +127,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 			{
 				srcWriter.println(className+" result = _getScope(scope).getValue(new "+IocProvider.class.getCanonicalName()+"<"+className+">(){");
 				srcWriter.println("public "+className+" get(){");
-				srcWriter.println("return GWT.create("+className+".class);");
+				srcWriter.println("return GWT.create("+getInstantiationClass(className)+".class);");
 				srcWriter.println("}");
 				srcWriter.println("}, "+EscapeUtils.quote(className)+", subscope, ");
 				generateFieldsPopulationCallback(srcWriter, type);
@@ -145,6 +148,26 @@ public class IocContainerRebind extends AbstractProxyCreator
 			throw new IoCException("IoC Error Class ["+className+"] not found.");
 		}
 		
+    }
+
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 */
+	private String getInstantiationClass(String className)
+    {
+		if (className.endsWith("Async"))
+		{
+			String serviceInterface = className.substring(0, className.length() - 5);
+			JClassType type = context.getTypeOracle().findType(serviceInterface);
+			if (type != null && type.isAssignableTo(remoteServiceType))
+			{
+				return type.getQualifiedSourceName();
+			}
+		}
+		
+	    return className;
     }
 
 	/**

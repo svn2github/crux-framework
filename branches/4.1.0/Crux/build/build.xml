@@ -163,8 +163,7 @@
 			<delete dir="@{outputDir}" failonerror="no" />
 			<mkdir dir="@{outputDir}" />
 			
-			<javac destdir="@{outputDir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" 
-				   encoding="UTF-8">
+			<javac destdir="@{outputDir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" encoding="UTF-8">
 				<src>
 					<pathelement location="@{sourcedir}"/>
 				</src>

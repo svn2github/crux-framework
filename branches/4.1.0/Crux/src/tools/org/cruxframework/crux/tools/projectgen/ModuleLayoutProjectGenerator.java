@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.cruxframework.crux.core.utils.FileUtils;
 import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.tools.schema.ModuleSchemaGenerator;
 import org.cruxframework.crux.tools.schema.SchemaGenerator;
@@ -49,8 +48,7 @@ public class ModuleLayoutProjectGenerator extends AbstractLayoutProjectGenerator
 	@Override
     public void createdBuildFiles() throws IOException
     {
-		File buildLibDir = getBuildLibDir();
-		FileUtils.copyFilesFromDir(new File(options.getLibDir(), "build"), buildLibDir);
+		File buildLibDir = copyLibDir();
 		createFile(buildLibDir.getParentFile(), "build.xml", "modules/build.xml");
     }
 

@@ -20,10 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.cruxframework.crux.widgets.client.WidgetMessages;
+import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.util.ColorUtils;
 
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,7 +49,7 @@ public class ColorPickerDialog extends DialogBox
 	private HuePicker huePicker;
 	private String color;
 
-	protected WidgetMessages messages = GWT.create(WidgetMessages.class);
+	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
 	private Widget dialogArea;
 	private Button okButton;
 	private Button cancelButton;
@@ -118,8 +118,8 @@ public class ColorPickerDialog extends DialogBox
 
 	protected List<? extends Widget> createButtonsForButtonBar()
 	{
-		okButton = createButton(messages.colorPickerDialogOk());
-		cancelButton = createButton(messages.colorPickerDialogCancel()); 
+		okButton = createButton(messages.okLabel());
+		cancelButton = createButton(messages.cancelLabel()); 
 		return Arrays.asList(okButton, cancelButton);
 	}
 

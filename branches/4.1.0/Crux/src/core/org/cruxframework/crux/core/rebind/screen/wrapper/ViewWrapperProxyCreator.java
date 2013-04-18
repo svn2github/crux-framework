@@ -109,12 +109,12 @@ public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
 			}
 			else
 			{
-				throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
+				throw new CruxGeneratorException("The method ["+method.getName()+"] from WidgetAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must have no parameters.");
 			}
 		}
 		else
 		{
-			throw new CruxGeneratorException("The method ["+method.getName()+"] from ViewWrapper ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of com.google.gwt.user.client.ui.Widget.");
+			throw new CruxGeneratorException("The method ["+method.getName()+"] from WidgetAccessor ["+method.getEnclosingType().getQualifiedSourceName()+"] must return a subclass of com.google.gwt.user.client.ui.Widget.");
 		}
 	}
 
