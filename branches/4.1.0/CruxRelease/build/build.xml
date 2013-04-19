@@ -215,9 +215,9 @@
 		<!-- Update Quickstart application -->
 		<copy todir="${quickstart.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.dev.name}-legacy.jar" />				
+				<include name="${crux.widgets.name}-legacy.jar" />				
+				<include name="${crux.themes.name}-legacy.jar" />				
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
@@ -225,7 +225,7 @@
 		</copy>
 		<copy todir="${quickstart.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}-legacy.jar" />				
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
