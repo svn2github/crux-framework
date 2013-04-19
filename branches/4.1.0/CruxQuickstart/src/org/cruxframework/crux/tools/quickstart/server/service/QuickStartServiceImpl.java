@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.i18n.MessagesFactory;
+import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGenerator.Names;
 import org.cruxframework.crux.tools.projectgen.CruxProjectGeneratorOptions;
@@ -53,7 +54,15 @@ public class QuickStartServiceImpl implements QuickStartService
 		try
         {
 	        Properties config = new Properties();
-	        config.load(CruxProjectGenerator.class.getResourceAsStream("/project.properties"));
+	        
+	        if (Environment.isProduction())
+	        {
+	        	config.load(CruxProjectGenerator.class.getResourceAsStream("/project.properties"));
+	        }
+	        else
+	        {
+	        	config.load(CruxProjectGenerator.class.getResourceAsStream("/project-debug.properties"));
+	        }
 	        
 	        String projectName = config.getProperty(Names.projectName);
 	        String hostedModeStartupModule = config.getProperty(Names.hostedModeStartupModule);
@@ -98,7 +107,8 @@ public class QuickStartServiceImpl implements QuickStartService
 			layoutParameters.setHostedModeStartupURL(projectInfo.getHostedModeStartupURL());
 			layoutParameters.setHostedModeVMArgs(projectInfo.getHostedModeVMArgs());
 			layoutParameters.setAppDescription(projectInfo.getAppDescription());
-
+			layoutParameters.setCrossDevice(projectInfo.isCrossDevice());
+			
 			if ("GADGET_APP".equals(projectInfo.getProjectLayout()))
 			{
 				layoutParameters.getOption("gadgetUseLongManifestName").setValue(Boolean.toString(projectInfo.getGadgetInfo().isUseLongManifestName()));

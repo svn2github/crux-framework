@@ -286,4 +286,10 @@ public interface QuickStartMessages extends Messages
 	
 	@DefaultMessage("The userPreferences class used by Gadget to store gadget configuration parameters.")
 	String userPreferencesHelpText();
+
+	@DefaultMessage("Cross-Device Project")
+	String crossDevice();
+	
+	@DefaultMessage("Import crux cross device library, with adaptive widgets that can run on a large number of different devices.")
+	String crossDeviceOptionHelpText();
 }

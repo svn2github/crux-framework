@@ -15,17 +15,16 @@
  */
 package org.cruxframework.crux.tools.quickstart.client.controller;
 
+import org.cruxframework.crux.core.client.controller.Controller;
+import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.tools.quickstart.client.QuickStartMessages;
 import org.cruxframework.crux.tools.quickstart.client.remote.WelcomeServiceAsync;
 import org.cruxframework.crux.tools.quickstart.client.screen.OverviewScreen;
 
 import com.google.gwt.user.client.Window;
-
-import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.controller.Create;
-import org.cruxframework.crux.core.client.controller.Expose;
-import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
-import org.cruxframework.crux.core.client.screen.Screen;
 
 /**
  * @author Thiago da Rosa de Bustamante -
@@ -34,15 +33,31 @@ import org.cruxframework.crux.core.client.screen.Screen;
 @Controller("overviewController")
 public class OverviewController
 {
-	@Create
+	@Inject
 	protected OverviewScreen screen; 
 	
-	@Create
+	@Inject
 	protected QuickStartMessages messages; 
 
-	@Create
+	@Inject
 	protected WelcomeServiceAsync service;
 	
+	
+	public void setScreen(OverviewScreen screen)
+    {
+    	this.screen = screen;
+    }
+
+	public void setMessages(QuickStartMessages messages)
+    {
+    	this.messages = messages;
+    }
+
+	public void setService(WelcomeServiceAsync service)
+    {
+    	this.service = service;
+    }
+
 	@Expose
 	public void onLoad()
 	{
@@ -59,19 +74,19 @@ public class OverviewController
 	@Expose
 	public void generateApp()
 	{
-		Window.Location.assign(Screen.appendDebugParameters("appWizard.html"));
+		Window.Location.assign(Screen.rewriteUrl("appWizard.html"));
 	}
 	
 	@Expose
 	public void viewExamples()
 	{
-		Window.Location.assign(Screen.appendDebugParameters("examples.html"));
+		Window.Location.assign(Screen.rewriteUrl("examples.html"));
 	}
 	
 	@Expose
 	public void viewJavadoc()
 	{
-		Window.Location.assign(Screen.appendDebugParameters("/docs/index.html"));
+		Window.Location.assign(Screen.rewriteUrl("/docs/index.html"));
 	}
 	
 	@Expose

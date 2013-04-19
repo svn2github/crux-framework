@@ -84,6 +84,20 @@
 						</gwt:widget>
 					</gwt:cell>
 				</gwt:row>
+				<gwt:row>
+					<gwt:cell  width="150">
+						<gwt:widget><gwt:label id="crossDeviceLabel" styleName="FormLabel" text="${quickMsg.crossDevice}"/></gwt:widget>
+					</gwt:cell>
+					<gwt:cell>
+						<gwt:widget>
+							<q:helpContext helpText="${quickMsg.crossDeviceOptionHelpText}" id="crossDeviceContext">
+						     	<q:widget>
+									<gwt:checkBox id="crossDevice" />
+						     	</q:widget>
+						     </q:helpContext>
+						</gwt:widget>
+					</gwt:cell>
+				</gwt:row>
 				<gwt:row visible="false">
 					<gwt:cell  width="150">
 						<gwt:widget><gwt:label id="moduleDescriptionLabel" styleName="FormLabel" text="${quickMsg.cruxModuleDescription}"/></gwt:widget>

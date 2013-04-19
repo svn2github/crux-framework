@@ -43,6 +43,6 @@ public class ExamplesController
 	@Expose
 	public void backToMainMenu()
 	{
-		Window.Location.assign(Screen.appendDebugParameters("index.html"));
+		Window.Location.assign(Screen.rewriteUrl("index.html"));
 	}
 }

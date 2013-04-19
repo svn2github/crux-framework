@@ -37,6 +37,7 @@ public class ProjectInfo implements Serializable
 	private String hostedModeVMArgs;
 	private String projectLayout;
 	private String appDescription;
+	private boolean crossDevice;
 	private List<String[]> allProjectLayouts = new ArrayList<String[]>();
 	private GadgetInfo gadgetInfo;
 
@@ -144,5 +145,15 @@ public class ProjectInfo implements Serializable
 	public void setGadgetInfo(GadgetInfo gadgetInfo)
     {
     	this.gadgetInfo = gadgetInfo;
+    }
+
+	public boolean isCrossDevice()
+    {
+    	return crossDevice;
+    }
+
+	public void setCrossDevice(boolean crossDevice)
+    {
+    	this.crossDevice = crossDevice;
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Create;
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rpc.AsyncCallbackAdapter;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -28,8 +29,8 @@ import org.cruxframework.crux.tools.quickstart.client.dto.DirectoryInfo;
 import org.cruxframework.crux.tools.quickstart.client.dto.ProjectInfo;
 import org.cruxframework.crux.tools.quickstart.client.remote.QuickStartServiceAsync;
 import org.cruxframework.crux.tools.quickstart.client.screen.QuickStartScreen;
-import org.cruxframework.crux.widgets.client.dialog.MessageBox;
-import org.cruxframework.crux.widgets.client.dialog.ProgressDialog;
+import org.cruxframework.crux.widgets.client.dialog.MessageDialog;
+import org.cruxframework.crux.widgets.client.dialog.Progress;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
 import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
@@ -53,20 +54,40 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 @Controller("quickStartController")
 public class QuickStartController
 {
-	@Create
+	@Inject
 	protected QuickStartScreen screen;
 	
 	@Create
 	protected ProjectInfo projectInfo;
 
-	@Create
+	@Inject
 	protected QuickStartServiceAsync service;
 	
-	@Create
+	@Inject
 	protected QuickStartMessages messages;
 
 	private String outputDir;
-	
+
+	public void setScreen(QuickStartScreen screen)
+    {
+    	this.screen = screen;
+    }
+
+	public void setProjectInfo(ProjectInfo projectInfo)
+    {
+    	this.projectInfo = projectInfo;
+    }
+
+	public void setService(QuickStartServiceAsync service)
+    {
+    	this.service = service;
+    }
+
+	public void setMessages(QuickStartMessages messages)
+    {
+    	this.messages = messages;
+    }
+
 	@Expose
 	public void onLoad()
 	{
@@ -219,7 +240,7 @@ public class QuickStartController
 	@Expose
 	public void finish()
 	{
-		ProgressDialog.show(messages.waitGeneratingProject());
+		final Progress progress = Progress.show(messages.waitGeneratingProject());
 		
 		service.generateProject(projectInfo, new AsyncCallbackAdapter<Boolean>(this)
 		{
@@ -240,9 +261,9 @@ public class QuickStartController
 					message = messages.generateAppFailureMessage();
 				}
 				
-				ProgressDialog.hide();
+				progress.hide();
 				
-				MessageBox.show(title, message, new OkHandler()
+				MessageDialog.show(title, message, new OkHandler()
 				{
 					public void onOk(OkEvent event)
 					{
@@ -254,7 +275,7 @@ public class QuickStartController
 			@Override
 			public void onError(Throwable e)
 			{
-				ProgressDialog.hide();
+				progress.hide();
 				super.onError(e);
 			}
 		});
@@ -263,7 +284,7 @@ public class QuickStartController
 	@Expose
 	public void back()
 	{
-		Window.Location.assign(Screen.appendDebugParameters("index.html"));
+		Window.Location.assign(Screen.rewriteUrl("index.html"));
 	}	
 
 	@Expose

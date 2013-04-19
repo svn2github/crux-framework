@@ -13,6 +13,7 @@
 	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
 
 	<property name="crux.build.dir" value="../Crux/build" />
+	<property name="crux.resource.dir" value="${crux.build.dir}/resource/projectgen" />
 	<property name="crux.apps.dir" value="${crux.build.dir}/resource/samples" />
 	
 	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
@@ -128,6 +129,9 @@
 		<copy toDir="${temp.dir}/webroot/WEB-INF/classes">
 			<fileset dir="${crux.build.dir}">
 				<include name="version.properties" />
+			</fileset>
+			<fileset dir="${crux.resource.dir}">
+				<include name="project.properties"/>
 			</fileset>
 		</copy>
 

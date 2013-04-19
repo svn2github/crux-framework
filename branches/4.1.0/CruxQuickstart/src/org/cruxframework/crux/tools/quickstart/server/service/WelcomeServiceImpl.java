@@ -19,6 +19,7 @@ import java.util.PropertyResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.tools.quickstart.client.remote.WelcomeService;
 
 
@@ -43,7 +44,14 @@ public class WelcomeServiceImpl implements WelcomeService
 			{
 				if (cruxVersion == null)
 				{
-					cruxVersion = PropertyResourceBundle.getBundle("version").getString("version");
+					if (Environment.isProduction())
+					{
+						cruxVersion = PropertyResourceBundle.getBundle("version").getString("version");
+					}
+					else 
+					{
+						cruxVersion = "5.0.0";
+					}
 				}
 			}
 			finally
