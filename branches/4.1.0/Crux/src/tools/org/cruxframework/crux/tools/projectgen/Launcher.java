@@ -147,12 +147,11 @@ public class Launcher
 	{
 		File webAppLib = new File("./apps/quickstart.war/WEB-INF/lib");
 		File buildLib = new File("./lib/build");
-		File webInfLib = new File("./lib/web-inf");
-		File gadgetBuildLib = new File("./lib/gadget/build");
+		File legacyLib = new File("./lib/legacy");
 		
-		FileUtils.copyFilesFromDir(gadgetBuildLib, webAppLib);
-		FileUtils.copyFilesFromDir(buildLib, webAppLib);
-		FileUtils.copyFilesFromDir(webInfLib, webAppLib);
+		FileUtils.copyFilesFromDir(legacyLib, webAppLib, "crux-gadgets-legacy.jar", null);
+		FileUtils.copyFilesFromDir(buildLib, webAppLib, null, "crux-dev.jar,crux-widgets.jar,crux-themes.jar");
+		FileUtils.copyFilesFromDir(legacyLib, webAppLib, "crux-dev-legacy.jar,crux-widgets-legacy.jar,crux-themes-legacy.jar,crux-runtime-legacy.jar", null);
 	}
 	
 	/**

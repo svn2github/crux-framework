@@ -30,14 +30,6 @@
 	<property name="crux.widgets.name" value="crux-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
 
-	<property name="resource.dir" value="build/resource" />
-	<property name="project.config" value="${resource.dir}/projectgen/project.properties" />
-	<property name="cmd.file" value="${resource.dir}/projectgen/projectGenerator.cmd" />
-	<property name="sh.file" value="${resource.dir}/projectgen/projectGenerator.sh" />
-	<property name="launcher.sh.file" value="${resource.dir}/projectgen/start.sh" />
-	<property name="launcher.cmd.file" value="${resource.dir}/projectgen/start.cmd" />
-	<property name="samples.dir" value="${resource.dir}/samples" />
-	
 	<property name="work.dir" value="tmp" />
 	<property name="legacy.src.dir" value="tmp.legacy" />
 	<property name="legacy.core.src.dir" value="src/legacy/core" />
