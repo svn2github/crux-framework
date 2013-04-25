@@ -1,0 +1,263 @@
+<project name="CruxCrossDeviceShowcase" basedir="../">
+
+	<property name="final.name" value="CruxCrossDeviceShowcase" />
+	<property name="src.dir" value="src" />
+	<property name="dist.dir" value="dist" />
+	<property name="temp.dir" value="${dist.dir}/temp" />
+	<property name="build.lib.dir" value="build/lib" />
+
+	<property name="web.root" value="war" />
+	<property name="web.inf.dir" value="${web.root}/WEB-INF" />
+	<property name="web.lib.dir" value="${web.inf.dir}/lib" />
+	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
+
+	<property name="xsd.dir" value="xsd" />
+	<property file="build/build.properties" />
+	<property file="build/version.properties" />
+	<property name="snapshots.dir" value="snapshots" />
+	
+	<path id="build.classpath">
+		<fileset dir="${web.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${build.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="org/cruxframework/crux/tools/crux-tools.xml">
+		<classpath>
+			<path refid="build.classpath" />
+		</classpath>
+	</taskdef>
+
+	<!-- 
+	========================================================================================================
+		Generates the war for distribution
+	========================================================================================================
+	-->
+	<target name="export-war">
+
+		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
+		<mkdir dir="${temp.dir}" />
+
+		<copydir dest="${temp.dir}/webroot" src="${web.root}" />
+		
+		<cruxcompiler srcDir="${src.dir}" keepPagesGeneratedFiles="true" outputDir="${temp.dir}/webroot" 
+			webDir="${temp.dir}/webroot" pagesOutputDir="${temp.dir}/webroot" outputCharset="UTF-8">
+			<dirset dir="${temp.dir}/webroot" />
+			<classpath>
+				<path refid="build.classpath" />
+			</classpath>
+
+			<!-- change these two parameters if you need to modify memory settings -->
+			<jvmarg value="-Xmx768M" />
+			<jvmarg value="-Xms256M" />
+
+			<arg value="-localWorkers" />
+			<arg value="2" />
+
+			<!-- use these parameters if you want to modify GWT output settings
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			<arg value="-logLevel"/>
+			<arg value="DEBUG"/>
+			-->
+		</cruxcompiler>
+		
+		<delete>
+			<fileset dir="${temp.dir}/webroot">
+				<include name="**/*.crux.xml"/>
+				<include name="**/*.template.xml"/>
+			</fileset>
+		</delete>
+		
+		<blockremove beginmarker="&lt;!--antReplacementBlockBegin--&gt;" endmarker="&lt;!--antReplacementBlockEnd--&gt;" file="${temp.dir}/webroot/WEB-INF/web.xml" />
+
+		<serviceMapper projectDir="${temp.dir}/webroot">
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${target.classes.dir}" />
+			</classpath>
+		</serviceMapper>
+
+		<mkdir dir="${snapshots.dir}"/>
+		<copydir dest="${temp.dir}/webroot/WEB-INF/classes" src="${snapshots.dir}" />
+		
+		<war basedir="${temp.dir}/webroot" destfile="${temp.dir}/${final.name}.war" webxml="${web.inf.dir}/web.xml">
+			<manifest>
+				<attribute name="Class-Path" value="${final.name}.war" />
+			</manifest>
+		</war>
+		<move file="${temp.dir}/${final.name}.war" tofile="${dist.dir}/${final.name}.war" />
+		<delete dir="${dist.dir}/${final.name}" failonerror="no" includeemptydirs="yes" />
+		<unzip dest="${dist.dir}/${final.name}" src="${dist.dir}/${final.name}.war"></unzip>
+		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" />
+	</target>
+
+	<!-- 
+	========================================================================================================
+		Invokes the GWT compiler. Usefull for debugging generated Javascript
+	========================================================================================================
+	-->
+	<target name="compile-scripts">
+		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
+			<dirset dir="${web.root}" />
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${web.root}" />
+				<pathelement path="${target.classes.dir}" />
+			</classpath>
+
+			<!-- change these two parameters if you need to modify memory settings -->
+			<jvmarg value="-Xmx768M" />
+			<jvmarg value="-Xms256M" />
+
+			<arg value="-localWorkers" />
+			<arg value="2" />
+			<arg value="-gen"/>
+			<arg value="generated"/>
+			<!-- use these parameters if you want to modify GWT output settings
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			<arg value="-logLevel"/>
+			<arg value="DEBUG"/>
+			-->
+		</cruxcompiler>
+	</target>
+
+	<!-- 
+	========================================================================================================
+		Invokes the GWT compiler with draftCompile option.
+	========================================================================================================
+	-->
+	<target name="fast-compile-scripts">
+		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
+			<dirset dir="${web.root}" />
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${web.root}" />
+				<pathelement path="${target.classes.dir}" />
+			</classpath>
+
+			<!-- change these two parameters if you need to modify memory settings -->
+			<jvmarg value="-Xmx768M" />
+			<jvmarg value="-Xms256M" />
+
+			<arg value="-draftCompile" />
+			
+			<!-- use these parameters if you want to modify GWT output settings
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			<arg value="-logLevel"/>
+			<arg value="DEBUG"/>
+			-->
+		</cruxcompiler>
+	</target>
+
+
+	<!-- 
+	========================================================================================================
+		Generate XSD Files, based on Crux widgets libraries found on classpath
+	========================================================================================================
+	-->
+	<target name="generate-schemas">
+		<generateSchemas outputDir="${xsd.dir}">
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${target.classes.dir}" />
+				<pathelement path="${web.root}" />
+				<pathelement location="${src.dir}" />
+			</classpath>
+		</generateSchemas>
+	</target>
+
+	<!--
+	========================================================================================================
+		Incrementa a versao do build
+	========================================================================================================
+	-->
+	<target name="set-version">
+		<propertyfile file="build/version.properties">
+			<entry key="appengine.version" default="0" type="int" operation="+" value="1" />
+		</propertyfile>
+		<replace dir="${dist.dir}/${final.name}/WEB-INF" includes="appengine-web.xml" propertyFile="build/version.properties">
+			<replacefilter token="#[appengine.version]" property="appengine.version" />
+		</replace>
+	</target>
+
+	<!-- 
+	========================================================================================================
+		Generate Gadget and publish it on appEngine
+	========================================================================================================
+	-->
+	<target name="dist">
+		<delete dir="${dist.dir}" failonerror="yes" includeemptydirs="no" includes="**/*" />
+		<mkdir dir="${dist.dir}" />
+
+		<antcall target="export-war" />
+		<antcall target="set-version" />
+		<!-- antcall target="publish" / -->
+		
+	</target>
+	
+	<!-- 
+	========================================================================================================
+		Publish on appEngine
+	========================================================================================================
+	-->
+	<target name="publish">
+		<!--
+		<appcfg action="update" war="${dist.dir}/generated/RssGadget.war" >
+		</appcfg>
+		-->
+		<input addproperty="appengine.email" message="Informe o seu email associado à conta do AppEngine:" />
+		<input addproperty="appengine.password" message="Informe a senha da sua conta no AppEngine:" />
+		
+		<java classname="com.google.appengine.tools.admin.AppCfg" inputstring="${appengine.password}">
+		     <sysproperty key="appengine.sdk.root" value="${sdk.dir}" />
+		     <classpath>
+		          <fileset dir="${sdk.dir}/lib" includes="**/*.jar" />
+			 </classpath>
+		     <arg value="--email=${appengine.email}" />
+		     <arg value="--passin" />
+		     <arg value="update" />
+		     <arg value="../${dist.dir}/${final.name}" />
+		 </java>	
+	</target>	
+
+	<!-- 
+	========================================================================================================
+		Generate Snapshot
+	========================================================================================================
+	-->
+	<target name="generateHTMLSnapshots">		
+		<delete dir="${snapshots.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
+		<mkdir dir="${snapshots.dir}" />
+
+		<java classname="org.cruxframework.crux.tools.crawling.CrawlingTool" fork="true">
+			<classpath>
+				<pathelement path="${build/htmlunit}" />
+				<path refid="build.classpath" />
+				<pathelement path="${target.classes.dir}" />
+				<pathelement path="${web.root}" />
+				<pathelement location="${src.dir}" />
+			</classpath>
+			<!--jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->
+
+		    <arg value="outputDir" />
+		    <arg value="${snapshots.dir}" />
+		    <arg value="applicationBaseURL" />
+		    <arg value="http://localhost:8888/" />
+		    <arg value="javascriptTime" />
+		    <arg value="30000" />
+		    <arg value="urls" />
+		    <arg value="build/urlsSnapshot.txt" />
+		    <arg value="stopOnErrors" />
+		    <arg value="false" />
+		 </java>	
+	</target>	
+
+	
+</project>
