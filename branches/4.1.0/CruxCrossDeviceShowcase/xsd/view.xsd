@@ -1,0 +1,36 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/view" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:c="http://www.cruxframework.org/crux" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/view" >
+<xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
+<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
+<xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
+<xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:element name="view" type="View" />
+<xs:complexType name="View">
+<xs:choice maxOccurs="unbounded">
+<xs:element ref="c:crossDevice" />
+<xs:group ref="c:widgets" />
+<xs:any targetNamespace="http://www.w3.org/1999/xhtml"/>
+</xs:choice>
+<xs:attribute name="title" type="xs:string"/>
+<xs:attribute name="fragment" type="xs:string"/>
+<xs:attribute name="useController" type="xs:string"/>
+<xs:attribute name="useResource" type="xs:string"/>
+<xs:attribute name="useSerializable" type="xs:string"/>
+<xs:attribute name="useFormatter" type="xs:string"/>
+<xs:attribute name="useDataSource" type="xs:string"/>
+<xs:attribute name="useView" type="xs:string"/>
+<xs:attribute name="onClosing" type="xs:string"/>
+<xs:attribute name="onClose" type="xs:string"/>
+<xs:attribute name="onResized" type="xs:string"/>
+<xs:attribute name="onLoad" type="xs:string"/>
+<xs:attribute name="onActivate" type="xs:string"/>
+<xs:attribute name="onHistoryChanged" type="xs:string"/>
+<xs:attribute name="onUnload" type="xs:string"/>
+<xs:attribute name="onDeactivate" type="xs:string"/>
+</xs:complexType>
+</xs:schema>

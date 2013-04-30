@@ -1,0 +1,898 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/crux/widgets" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:c="http://www.cruxframework.org/crux" 
+xmlns:_crossDevice="http://www.cruxframework.org/crux/crossDevice" 
+xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/crux/widgets" >
+<xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
+<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
+<xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:element name="rollingTabPanel" type="TrollingTabPanel"/>
+<xs:complexType name="TrollingTabPanel">
+<xs:sequence>
+<xs:element name="tab" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_TabProcessor"/>
+</xs:sequence>
+<xs:attribute name="visibleTab" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="animationEnabled" type="xs:boolean" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onBeforeSelection" />
+</xs:complexType>
+<xs:element name="dialogViewContainer" type="TdialogViewContainer"/>
+<xs:complexType name="TdialogViewContainer">
+<xs:sequence>
+<xs:element name="view" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_dialogcontainer_DialogViewContainerFactory_ViewProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="textArea" type="TtextArea"/>
+<xs:complexType name="TtextArea">
+<xs:simpleContent>
+<xs:extension base="xs:string">
+<xs:attribute name="characterWidth" type="xs:int" />
+<xs:attribute name="visibleLines" type="xs:int" />
+<xs:attribute name="maxLength" type="xs:int" />
+<xs:attribute name="value" type="xs:string" />
+<xs:attribute name="textAlignment" type="org_cruxframework_crux_gwt_rebind_ValueBoxBaseFactory_TextAlign" />
+<xs:attribute name="readOnly" type="xs:boolean" />
+<xs:attribute name="alignment" type="org_cruxframework_crux_gwt_rebind_ValueBoxBaseFactory_TextAlign" />
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="tabIndex" type="xs:int" />
+<xs:attribute name="accessKey" type="xs:string" />
+<xs:attribute name="focus" type="xs:boolean" />
+<xs:attribute name="name" type="xs:string" />
+<xs:attribute name="text" type="xs:string" />
+<xs:attribute name="directionEstimator" type="org_cruxframework_crux_core_rebind_screen_widget_creator_direction_DirectionEstimator" default="defaultAlign" />
+<xs:attribute name="direction" type="com_google_gwt_i18n_client_HasDirection_Direction" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onDoubleClick" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onMouseDown" />
+<xs:attribute name="onMouseUp" />
+<xs:attribute name="onMouseOver" />
+<xs:attribute name="onMouseOut" />
+<xs:attribute name="onMouseMove" />
+<xs:attribute name="onMouseWheel" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyPress" />
+<xs:attribute name="onKeyDown" />
+<xs:attribute name="onFocus" />
+<xs:attribute name="onBlur" />
+<xs:attribute name="onTouchStart" />
+<xs:attribute name="onTouchMove" />
+<xs:attribute name="onTouchEnd" />
+<xs:attribute name="onTouchCancel" />
+<xs:attribute name="onChange" />
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+<xs:element name="horizontalSwapPanel" type="ThorizontalSwapPanel"/>
+<xs:complexType name="ThorizontalSwapPanel">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="0" maxOccurs="1"/>
+</xs:sequence>
+<xs:attribute name="transitionDuration" type="xs:int" default="500" />
+<xs:attribute name="useFadeTransitions" type="xs:boolean" default="false" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onSwap" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="timer" type="Ttimer"/>
+<xs:complexType name="Ttimer">
+<xs:sequence>
+<xs:element name="onTimeout" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_timer_TimerFactory_TimerChildrenProcessor"/>
+</xs:sequence>
+<xs:attribute name="start" type="xs:boolean" default="false" />
+<xs:attribute name="initial" type="xs:int" default="0" />
+<xs:attribute name="regressive" type="xs:boolean" default="false" />
+<xs:attribute name="pattern" type="xs:string" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="singleSelect" type="TsingleSelect"/>
+<xs:complexType name="TsingleSelect">
+<xs:sequence>
+<xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_select_SingleSelectFactory_SelectItemsProcessor"/>
+</xs:sequence>
+<xs:attribute name="visibleItemCount" type="xs:int" />
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="tabIndex" type="xs:int" />
+<xs:attribute name="accessKey" type="xs:string" />
+<xs:attribute name="focus" type="xs:boolean" />
+<xs:attribute name="name" type="xs:string" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onDoubleClick" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onMouseDown" />
+<xs:attribute name="onMouseUp" />
+<xs:attribute name="onMouseOver" />
+<xs:attribute name="onMouseOut" />
+<xs:attribute name="onMouseMove" />
+<xs:attribute name="onMouseWheel" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyPress" />
+<xs:attribute name="onKeyDown" />
+<xs:attribute name="onFocus" />
+<xs:attribute name="onBlur" />
+<xs:attribute name="onTouchStart" />
+<xs:attribute name="onTouchMove" />
+<xs:attribute name="onTouchEnd" />
+<xs:attribute name="onTouchCancel" />
+<xs:attribute name="onChange" />
+</xs:complexType>
+<xs:element name="grid" type="Tgrid"/>
+<xs:complexType name="Tgrid">
+<xs:sequence>
+<xs:choice minOccurs="1" maxOccurs="unbounded" >
+<xs:element name="dataColumn" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_DataColumnProcessor"/>
+<xs:element name="widgetColumn" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_WidgetColumnProcessor"/>
+</xs:choice>
+<xs:element name="rowDetails" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_RowDetailsProcessor"/>
+</xs:sequence>
+<xs:attribute name="pageSize" type="xs:int" default="8" />
+<xs:attribute name="rowSelection" type="org_cruxframework_crux_widgets_client_grid_RowSelectionModel" default="unselectable" />
+<xs:attribute name="cellSpacing" type="xs:int" default="1" />
+<xs:attribute name="autoLoadData" type="xs:boolean" default="false" />
+<xs:attribute name="stretchColumns" type="xs:boolean" default="false" />
+<xs:attribute name="highlightRowOnMouseOver" type="xs:boolean" default="false" />
+<xs:attribute name="fixedCellSize" type="xs:boolean" default="false" />
+<xs:attribute name="emptyDataFilling" type="xs:string" default=" " />
+<xs:attribute name="defaultSortingColumn" type="xs:string" />
+<xs:attribute name="defaultSortingType" type="org_cruxframework_crux_widgets_client_grid_Grid_SortingType" default="ascending" />
+<xs:attribute name="showRowDetailsIcon" type="xs:boolean" default="true" />
+<xs:attribute name="freezeHeaders" type="xs:boolean" default="false" />
+<xs:attribute name="dataSource" type="xs:string" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onRowClick" />
+<xs:attribute name="onRowDoubleClick" />
+<xs:attribute name="onRowRender" />
+<xs:attribute name="onBeforeRowSelect" />
+<xs:attribute name="onBeforeShowRowDetails" />
+<xs:attribute name="onShowRowDetails" />
+<xs:attribute name="onLoadRowDetails" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="stackMenu" type="TstackMenu"/>
+<xs:complexType name="TstackMenu">
+<xs:sequence>
+<xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_stackmenu_StackMenuFactory_StackMenuItemProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onSelection" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="colorPickerDialog" type="TcolorPickerDialog"/>
+<xs:complexType name="TcolorPickerDialog">
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="animationEnabled" type="xs:boolean" />
+<xs:attribute name="text" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onClose" />
+</xs:complexType>
+<xs:element name="maskedTextBox" type="TmaskedTextBox"/>
+<xs:complexType name="TmaskedTextBox">
+<xs:attribute name="formatter" type="xs:string" use="required" />
+<xs:attribute name="readOnly" type="xs:boolean" />
+<xs:attribute name="tabIndex" type="xs:int" />
+<xs:attribute name="maxLength" type="xs:int" />
+<xs:attribute name="accessKey" type="xs:string" />
+<xs:attribute name="focus" type="xs:boolean" />
+<xs:attribute name="value" type="xs:string" />
+<xs:attribute name="clearIfNotValid" type="xs:boolean" default="true" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="direction" type="com_google_gwt_i18n_client_HasDirection_Direction" />
+<xs:attribute name="name" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onChange" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onFocus" />
+<xs:attribute name="onBlur" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyPress" />
+<xs:attribute name="onKeyDown" />
+<xs:attribute name="onMouseDown" />
+<xs:attribute name="onMouseUp" />
+<xs:attribute name="onMouseOver" />
+<xs:attribute name="onMouseOut" />
+<xs:attribute name="onMouseMove" />
+<xs:attribute name="onMouseWheel" />
+<xs:attribute name="onDoubleClick" />
+</xs:complexType>
+<xs:element name="transferList" type="TtransferList"/>
+<xs:complexType name="TtransferList">
+<xs:sequence>
+<xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_transferlist_TransferListFactory_TransferListItemProcessor"/>
+</xs:sequence>
+<xs:attribute name="leftToRightButtonText" type="xs:string" />
+<xs:attribute name="rightToLeftButtonText" type="xs:string" />
+<xs:attribute name="allLeftToRightButtonText" type="xs:string" />
+<xs:attribute name="allRightToLeftButtonText" type="xs:string" />
+<xs:attribute name="leftListLabel" type="xs:string" />
+<xs:attribute name="rightListLabel" type="xs:string" />
+<xs:attribute name="visibleItemCount" type="xs:int" />
+<xs:attribute name="multiTransferFromLeft" type="xs:boolean" default="true" />
+<xs:attribute name="multiTransferFromRight" type="xs:boolean" default="true" />
+<xs:attribute name="showAllTransferButtons" type="xs:boolean" default="false" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onBeforeMoveItems" />
+<xs:attribute name="onMoveItems" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="scrollBanner" type="TscrollBanner"/>
+<xs:complexType name="TscrollBanner">
+<xs:sequence>
+<xs:element name="message" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+</xs:sequence>
+<xs:attribute name="messageScrollingPeriod" type="xs:string" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="tabViewContainer" type="TtabViewContainer"/>
+<xs:complexType name="TtabViewContainer">
+<xs:sequence>
+<xs:element name="view" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_tabcontainer_TabContainerFactory_TabsProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="randomPager" type="TrandomPager"/>
+<xs:complexType name="TrandomPager">
+<xs:attribute name="pageable" type="xs:string" use="required" />
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onPage" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="decoratedButton" type="TdecoratedButton"/>
+<xs:complexType name="TdecoratedButton">
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="tabIndex" type="xs:int" />
+<xs:attribute name="accessKey" type="xs:string" />
+<xs:attribute name="focus" type="xs:boolean" />
+<xs:attribute name="text" type="xs:string" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onDoubleClick" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onMouseDown" />
+<xs:attribute name="onMouseUp" />
+<xs:attribute name="onMouseOver" />
+<xs:attribute name="onMouseOut" />
+<xs:attribute name="onMouseMove" />
+<xs:attribute name="onMouseWheel" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyPress" />
+<xs:attribute name="onKeyDown" />
+<xs:attribute name="onFocus" />
+<xs:attribute name="onBlur" />
+<xs:attribute name="onTouchStart" />
+<xs:attribute name="onTouchMove" />
+<xs:attribute name="onTouchEnd" />
+<xs:attribute name="onTouchCancel" />
+</xs:complexType>
+<xs:element name="decoratedPanel" type="TdecoratedPanel"/>
+<xs:complexType name="TdecoratedPanel">
+<xs:choice >
+<xs:element name="html" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="text" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="widget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_decoratedpanel_DecoratedPanelFactory_WidgetProcessor"/>
+</xs:choice>
+<xs:attribute name="borderWidth" type="xs:int" />
+<xs:attribute name="spacing" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="horizontalSwapViewContainer" type="ThorizontalSwapViewContainer"/>
+<xs:complexType name="ThorizontalSwapViewContainer">
+<xs:sequence>
+<xs:element name="view" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_swapcontainer_HorizontalSwapContainerFactory_ViewProcessor"/>
+</xs:sequence>
+<xs:attribute name="transitionDuration" type="xs:int" default="500" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onChangeView" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="collapsePanel" type="TcollapsePanel"/>
+<xs:complexType name="TcollapsePanel">
+<xs:sequence>
+<xs:element name="title" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_TitleProcessor"/>
+<xs:element name="body" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_BodyProcessor"/>
+</xs:sequence>
+<xs:attribute name="collapsed" type="xs:boolean" />
+<xs:attribute name="collapsible" type="xs:boolean" />
+<xs:attribute name="borderWidth" type="xs:int" />
+<xs:attribute name="spacing" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+<xs:attribute name="onBeforeCollapse" />
+<xs:attribute name="onBeforeExpand" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="sequentialPager" type="TsequentialPager"/>
+<xs:complexType name="TsequentialPager">
+<xs:attribute name="pageable" type="xs:string" use="required" />
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onPage" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="dataGrid" type="TdataGrid"/>
+<xs:complexType name="TdataGrid">
+<xs:sequence>
+<xs:choice minOccurs="1" maxOccurs="unbounded" >
+<xs:element name="dataColumn" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_DataColumnProcessor"/>
+<xs:element name="widgetColumn" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_WidgetColumnProcessor"/>
+</xs:choice>
+<xs:element name="rowDetails" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_RowDetailsProcessor"/>
+</xs:sequence>
+<xs:attribute name="pageSize" type="xs:int" default="8" />
+<xs:attribute name="rowSelection" type="org_cruxframework_crux_widgets_client_grid_RowSelectionModel" default="unselectable" />
+<xs:attribute name="cellSpacing" type="xs:int" default="1" />
+<xs:attribute name="autoLoadData" type="xs:boolean" default="false" />
+<xs:attribute name="stretchColumns" type="xs:boolean" default="false" />
+<xs:attribute name="highlightRowOnMouseOver" type="xs:boolean" default="false" />
+<xs:attribute name="fixedCellSize" type="xs:boolean" default="false" />
+<xs:attribute name="emptyDataFilling" type="xs:string" default=" " />
+<xs:attribute name="defaultSortingColumn" type="xs:string" />
+<xs:attribute name="defaultSortingType" type="org_cruxframework_crux_widgets_client_grid_Grid_SortingType" default="ascending" />
+<xs:attribute name="showRowDetailsIcon" type="xs:boolean" default="true" />
+<xs:attribute name="freezeHeaders" type="xs:boolean" default="false" />
+<xs:attribute name="dataSource" type="xs:string" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onRowClick" />
+<xs:attribute name="onRowDoubleClick" />
+<xs:attribute name="onRowRender" />
+<xs:attribute name="onBeforeRowSelect" />
+<xs:attribute name="onBeforeShowRowDetails" />
+<xs:attribute name="onShowRowDetails" />
+<xs:attribute name="onLoadRowDetails" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="swapViewContainer" type="TswapViewContainer"/>
+<xs:complexType name="TswapViewContainer">
+<xs:sequence>
+<xs:element name="view" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_swapcontainer_SwapContainerFactory_ViewProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="titlePanel" type="TtitlePanel"/>
+<xs:complexType name="TtitlePanel">
+<xs:sequence>
+<xs:element name="title" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitleProcessor"/>
+<xs:element name="body" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_BodyProcessor"/>
+</xs:sequence>
+<xs:attribute name="borderWidth" type="xs:int" />
+<xs:attribute name="spacing" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="filter" type="Tfilter"/>
+<xs:complexType name="Tfilter">
+<xs:attribute name="accessKey" type="xs:string" />
+<xs:attribute name="autoSelectEnabled" type="xs:boolean" />
+<xs:attribute name="focus" type="xs:boolean" />
+<xs:attribute name="limit" type="xs:int" />
+<xs:attribute name="popupStyleName" type="xs:string" />
+<xs:attribute name="tabIndex" type="xs:int" />
+<xs:attribute name="value" type="xs:string" />
+<xs:attribute name="filterable" type="xs:string" use="required" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="animationEnabled" type="xs:boolean" />
+<xs:attribute name="text" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onChange" />
+<xs:attribute name="onSelection" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyPress" />
+<xs:attribute name="onKeyDown" />
+</xs:complexType>
+<xs:element name="maskedLabel" type="TmaskedLabel"/>
+<xs:complexType name="TmaskedLabel">
+<xs:attribute name="formatter" type="xs:string" use="required" />
+<xs:attribute name="text" type="xs:string" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="direction" type="com_google_gwt_i18n_client_HasDirection_Direction" />
+<xs:attribute name="wordWrap" type="xs:boolean" />
+<xs:attribute name="autoHorizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_AutoHorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onMouseDown" />
+<xs:attribute name="onMouseUp" />
+<xs:attribute name="onMouseOver" />
+<xs:attribute name="onMouseOut" />
+<xs:attribute name="onMouseMove" />
+<xs:attribute name="onMouseWheel" />
+</xs:complexType>
+<xs:element name="rollingPanel" type="TrollingPanel"/>
+<xs:complexType name="TrollingPanel">
+<xs:choice minOccurs="0" maxOccurs="unbounded" >
+<xs:element name="cell" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_rollingpanel_RollingPanelFactory_RollingCellProcessor"/>
+<xs:group ref="c:widgets" />
+</xs:choice>
+<xs:attribute name="nextButtonStyleName" type="xs:string" />
+<xs:attribute name="previousButtonStyleName" type="xs:string" />
+<xs:attribute name="bodyStyleName" type="xs:string" />
+<xs:attribute name="scrollToAddedWidgets" type="xs:boolean" />
+<xs:attribute name="spacing" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:element name="simpleViewContainer" type="TsimpleViewContainer"/>
+<xs:complexType name="TsimpleViewContainer">
+<xs:sequence>
+<xs:element name="view" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_simplecontainer_SimpleViewContainerFactory_ViewProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_simplecontainer_SimpleViewContainerFactory_ViewProcessor">
+<xs:attribute name="name" type="xs:string" use="required" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_rollingpanel_RollingPanelFactory_RollingCellProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" />
+</xs:sequence>
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_BodyProcessor">
+<xs:choice >
+<xs:element name="html" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="text" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="widget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitlePanelBodyWidgetProcessor"/>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitlePanelBodyWidgetProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitleProcessor">
+<xs:choice >
+<xs:element name="html" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="text" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="widget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitlePanelWidgetChildProcessor"/>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_titlepanel_AbstractTitlePanelFactory_TitlePanelWidgetChildProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_swapcontainer_SwapContainerFactory_ViewProcessor">
+<xs:attribute name="name" type="xs:string" use="required" />
+<xs:attribute name="active" type="xs:boolean" default="false" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_grid_GridFactory_RowDetailsProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_grid_GridFactory_WidgetColumnProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="label" type="xs:string" />
+<xs:attribute name="key" type="xs:string" use="required" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_grid_GridFactory_DataColumnProcessor">
+<xs:sequence>
+<xs:element name="editor" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_grid_GridFactory_DataColumnEditorProcessor"/>
+</xs:sequence>
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="sortable" type="xs:boolean" default="true" />
+<xs:attribute name="wrapLine" type="xs:boolean" default="false" />
+<xs:attribute name="frozen" type="xs:boolean" default="false" />
+<xs:attribute name="label" type="xs:string" />
+<xs:attribute name="key" type="xs:string" use="required" />
+<xs:attribute name="formatter" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_grid_GridFactory_DataColumnEditorProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_BodyProcessor">
+<xs:choice >
+<xs:element name="html" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="text" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="widget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_CollapsePanelBodyWidgetProcessor"/>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_CollapsePanelBodyWidgetProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_TitleProcessor">
+<xs:choice >
+<xs:element name="html" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="text" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="widget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_CollapsePanelWidgetProcessor"/>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_collapsepanel_CollapsePanelFactory_CollapsePanelWidgetProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_swapcontainer_HorizontalSwapContainerFactory_ViewProcessor">
+<xs:attribute name="name" type="xs:string" use="required" />
+<xs:attribute name="active" type="xs:boolean" default="false" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_decoratedpanel_DecoratedPanelFactory_WidgetProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="1" maxOccurs="1"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_tabcontainer_TabContainerFactory_TabsProcessor">
+<xs:attribute name="id" type="xs:string" />
+<xs:attribute name="name" type="xs:string" use="required" />
+<xs:attribute name="closeable" type="xs:boolean" default="true" />
+<xs:attribute name="lazy" type="xs:boolean" default="true" />
+<xs:attribute name="onBeforeFocus" />
+<xs:attribute name="onBeforeBlur" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_transferlist_TransferListFactory_TransferListItemProcessor">
+<xs:attribute name="label" type="xs:string" use="required" />
+<xs:attribute name="value" type="xs:string" use="required" />
+<xs:attribute name="location" type="org_cruxframework_crux_widgets_client_transferlist_TransferList_ItemLocation" use="required" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_stackmenu_StackMenuFactory_StackMenuItemProcessor">
+<xs:sequence>
+<xs:element name="item" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_stackmenu_StackMenuFactory_StackMenuItemProcessor"/>
+</xs:sequence>
+<xs:attribute name="key" type="xs:string" use="required" />
+<xs:attribute name="label" type="xs:string" use="required" />
+<xs:attribute name="open" type="xs:boolean" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="tooltip" type="xs:string" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_select_SingleSelectFactory_SelectItemsProcessor">
+<xs:attribute name="value" type="xs:string" />
+<xs:attribute name="label" type="xs:string" />
+<xs:attribute name="selected" type="xs:boolean" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_timer_TimerFactory_TimerChildrenProcessor">
+<xs:attribute name="time" type="xs:int" use="required" />
+<xs:attribute name="execute" type="xs:string" use="required" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_dialogcontainer_DialogViewContainerFactory_ViewProcessor">
+<xs:attribute name="name" type="xs:string" use="required" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_TabProcessor">
+<xs:sequence>
+<xs:choice minOccurs="0" maxOccurs="1" >
+<xs:element name="tabText" minOccurs="1" maxOccurs="1" type="xs:string"/>
+<xs:element name="tabHtml" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+<xs:element name="tabWidget" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_WidgetTitleTabProcessor"/>
+</xs:choice>
+<xs:element name="panelContent" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_TabWidgetProcessor"/>
+</xs:sequence>
+<xs:attribute name="tabEnabled" type="xs:boolean" default="true" />
+<xs:attribute name="tabWordWrap" type="xs:boolean" default="true" />
+<xs:attribute name="onClick" />
+<xs:attribute name="onKeyUp" />
+<xs:attribute name="onKeyDown" />
+<xs:attribute name="onKeyPress" />
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_TabWidgetProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_WidgetTitleTabProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" />
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="com_google_gwt_i18n_client_HasDirection_Direction">
+<xs:restriction base="xs:string">
+<xs:enumeration value="RTL" />
+<xs:enumeration value="LTR" />
+<xs:enumeration value="DEFAULT" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_core_rebind_screen_widget_creator_direction_DirectionEstimator">
+<xs:restriction base="xs:string">
+<xs:enumeration value="anyRtl" />
+<xs:enumeration value="firstStrong" />
+<xs:enumeration value="wordCount" />
+<xs:enumeration value="defaultAlign" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_widgets_client_transferlist_TransferList_ItemLocation">
+<xs:restriction base="xs:string">
+<xs:enumeration value="left" />
+<xs:enumeration value="right" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_gwt_rebind_ValueBoxBaseFactory_TextAlign">
+<xs:restriction base="xs:string">
+<xs:enumeration value="center" />
+<xs:enumeration value="justify" />
+<xs:enumeration value="left" />
+<xs:enumeration value="right" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_core_rebind_screen_widget_creator_align_AutoHorizontalAlignment">
+<xs:restriction base="xs:string">
+<xs:enumeration value="center" />
+<xs:enumeration value="justify" />
+<xs:enumeration value="left" />
+<xs:enumeration value="right" />
+<xs:enumeration value="localeStart" />
+<xs:enumeration value="localeEnd" />
+<xs:enumeration value="defaultAlign" />
+<xs:enumeration value="contentStart" />
+<xs:enumeration value="contentEnd" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_widgets_client_grid_RowSelectionModel">
+<xs:restriction base="xs:string">
+<xs:enumeration value="unselectable" />
+<xs:enumeration value="single" />
+<xs:enumeration value="singleRadioButton" />
+<xs:enumeration value="multiple" />
+<xs:enumeration value="multipleCheckBox" />
+<xs:enumeration value="multipleCheckBoxSelectAll" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment">
+<xs:restriction base="xs:string">
+<xs:enumeration value="center" />
+<xs:enumeration value="justify" />
+<xs:enumeration value="left" />
+<xs:enumeration value="right" />
+<xs:enumeration value="localeStart" />
+<xs:enumeration value="localeEnd" />
+<xs:enumeration value="defaultAlign" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_widgets_client_grid_Grid_SortingType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="ascending" />
+<xs:enumeration value="descending" />
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment">
+<xs:restriction base="xs:string">
+<xs:enumeration value="bottom" />
+<xs:enumeration value="middle" />
+<xs:enumeration value="top" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

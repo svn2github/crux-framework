@@ -1,0 +1,21 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/xdevice" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:c="http://www.cruxframework.org/crux" 
+attributeFormDefault="unqualified" 
+elementFormDefault="qualified" 
+targetNamespace="http://www.cruxframework.org/xdevice" >
+<xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
+<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
+<xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
+<xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
+<xs:element name="xdevice" type="XDevice" />
+<xs:complexType name="XDevice">
+<xs:choice maxOccurs="unbounded">
+<xs:group ref="c:widgetsCrossDev" />
+<xs:any targetNamespace="http://www.w3.org/1999/xhtml"/>
+</xs:choice>
+<xs:attribute name="useController" type="xs:string" use="required"/>
+<xs:attribute name="useResource" type="xs:string"/>
+</xs:complexType>
+</xs:schema>
