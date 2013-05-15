@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.cruxframework.crux.core.server.dispatch.Services;
+import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.server.scan.ClassScanner;
 import org.cruxframework.crux.scannotation.ClasspathUrlFinder;
 import org.cruxframework.crux.tools.parameters.ConsoleParameter;
@@ -113,6 +114,56 @@ public class ServiceMapper
 	}
 	
 	/**
+	 * Generates Remote Service map
+	 */
+	public void generateRestServicesMap()
+	{
+		try
+		{
+			Set<String> restServices =  ClassScanner.searchClassesByAnnotation(RestService.class);
+			Properties cruxRest = new Properties();
+			if (restServices != null)
+			{
+				for (String service : restServices) 
+				{
+					try 
+					{
+						Class<?> serviceClass = Class.forName(service);
+						RestService annot = serviceClass.getAnnotation(RestService.class);
+						if (cruxRest.containsKey(annot.value()))
+						{
+							throw new ServiceMapperException("Duplicated rest service [{"+annot.value()+"}]. Overiding previous registration...");
+						}
+						cruxRest.put(annot.value(), service);
+					}
+					catch (ClassNotFoundException e) 
+					{
+						throw new ServiceMapperException("Error initializing rest service class.",e);
+					}
+				}
+			}
+
+			File metaInfFile =new File(projectDir, "META-INF");
+			if (metaInfFile.exists())
+			{
+				if (!metaInfFile.isDirectory())
+				{
+					throw new ServiceMapperException("Can not create a META-INF directory on "+projectDir.getCanonicalPath());
+				}
+			}
+			else 
+			{
+				metaInfFile.mkdirs();
+			}
+			cruxRest.store(new FileOutputStream(new File(metaInfFile, "crux-rest")), "Crux RestServices implementations");
+		}
+		catch (IOException e)
+		{
+			throw new ServiceMapperException("Error creating rest service map", e);
+		}
+	}
+
+	/**
 	 * Creates the console parameters processor for this program
 	 * @return
 	 */
@@ -162,6 +213,7 @@ public class ServiceMapper
 		{
 			serviceMapper.processParameters(parameters.values());
 			serviceMapper.generateServicesMap();
+			serviceMapper.generateRestServicesMap();
 		}
 	}
 }

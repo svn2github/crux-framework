@@ -15,19 +15,43 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 
 /**
  * @author Thiago da Rosa de Bustamante
- *
+ * 
  */
 public class ClassUtils
 {
+
+	public static Type getGenericReturnTypeOfGenericInterfaceMethod(Class<?> clazz, Method method)
+	{
+		if (!method.getDeclaringClass().isInterface())
+		{
+			return method.getGenericReturnType();
+		}
+		try
+		{
+			Method tmp = clazz.getMethod(method.getName(), method.getParameterTypes());
+			return tmp.getGenericReturnType();
+		}
+		catch (NoSuchMethodException e)
+		{
+
+		}
+		return method.getGenericReturnType();
+	}
 
 	/**
 	 * 
@@ -40,7 +64,7 @@ public class ClassUtils
 		{
 			return null;
 		}
-		String result = "set"+Character.toUpperCase(propertyName.charAt(0)); 
+		String result = "set" + Character.toUpperCase(propertyName.charAt(0));
 		if (propertyName.length() > 1)
 		{
 			result += propertyName.substring(1);
@@ -51,7 +75,7 @@ public class ClassUtils
 	/**
 	 * 
 	 * @param propertyName
-	 * @param baseClass 
+	 * @param baseClass
 	 * @return
 	 */
 	public static String getGetterMethod(String propertyName, Class<?> baseClass)
@@ -60,28 +84,28 @@ public class ClassUtils
 		{
 			return null;
 		}
-		String result = ""+Character.toUpperCase(propertyName.charAt(0)); 
+		String result = "" + Character.toUpperCase(propertyName.charAt(0));
 		result += propertyName.substring(1);
 		if (propertyName.length() > 1)
 		{
 			try
-            {
-	            baseClass.getMethod("get"+result, new Class<?>[]{});
-                result = "get"+result;
-            }
-            catch (Exception e)
-            {
-	            try
-                {
-	                baseClass.getMethod("is"+result, new Class<?>[]{});
-	                result = "is"+result;
-                }
-                catch (Exception e1)
-                {
-               		result = null;
-                }
-            }
-			
+			{
+				baseClass.getMethod("get" + result, new Class<?>[] {});
+				result = "get" + result;
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					baseClass.getMethod("is" + result, new Class<?>[] {});
+					result = "is" + result;
+				}
+				catch (Exception e1)
+				{
+					result = null;
+				}
+			}
+
 		}
 		return result;
 	}
@@ -96,9 +120,9 @@ public class ClassUtils
 		{
 			return null;
 		}
-		String result = ""+Character.toUpperCase(propertyName.charAt(0)); 
+		String result = "" + Character.toUpperCase(propertyName.charAt(0));
 		result += propertyName.substring(1);
-        result = "get"+result;
+		result = "get" + result;
 		return result;
 	}
 
@@ -112,19 +136,19 @@ public class ClassUtils
 	{
 		try
 		{
-			if (widgetType.getMethod(setterMethod, new Class<?>[]{attrType}) != null)
+			if (widgetType.getMethod(setterMethod, new Class<?>[] { attrType }) != null)
 			{
 				return true;
 			}
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			try
 			{
 				if (attrType.isPrimitive())
 				{
 					Class<?> wrapperType = getBoxedClassForPrimitive(attrType);
-					if (widgetType.getMethod(setterMethod, new Class<?>[]{wrapperType}) != null)
+					if (widgetType.getMethod(setterMethod, new Class<?>[] { wrapperType }) != null)
 					{
 						return true;
 					}
@@ -132,13 +156,13 @@ public class ClassUtils
 				else
 				{
 					Class<?> primitiveType = getPrimitiveFromWrapper(attrType);
-					if (primitiveType != null && widgetType.getMethod(setterMethod, new Class<?>[]{primitiveType}) != null)
+					if (primitiveType != null && widgetType.getMethod(setterMethod, new Class<?>[] { primitiveType }) != null)
 					{
 						return true;
 					}
 				}
 			}
-			catch (Exception e1) 
+			catch (Exception e1)
 			{
 				// Do nothing... try superclass
 			}
@@ -198,25 +222,17 @@ public class ClassUtils
 	 */
 	public static boolean isSimpleType(Class<?> type)
 	{
-		return (
-				(type.equals(Integer.TYPE)) || (type.equals(Integer.class)) 
-				|| (type.equals(Short.TYPE)) || (type.equals(Short.class)) 
-				|| (type.equals(Long.TYPE)) || (type.equals(Long.class)) 
-				|| (type.equals(Byte.TYPE)) || (type.equals(Byte.class)) 
-				|| (type.equals(Float.TYPE)) || (type.equals(Float.class)) 
-				|| (type.equals(Double.TYPE)) || (type.equals(Double.class)) 
-				|| (type.equals(Boolean.TYPE)) || (type.equals(Boolean.class)) 
-				|| (type.equals(Character.TYPE)) || (type.equals(Character.class)) 
-				|| (type.equals(String.class)) 
-		       );
+		return ((type.equals(Integer.TYPE)) || (type.equals(Integer.class)) || (type.equals(Short.TYPE)) || (type.equals(Short.class)) || (type.equals(Long.TYPE)) || (type.equals(Long.class)) || (type.equals(Byte.TYPE)) || (type.equals(Byte.class))
+		        || (type.equals(Float.TYPE)) || (type.equals(Float.class)) || (type.equals(Double.TYPE)) || (type.equals(Double.class)) || (type.equals(Boolean.TYPE)) || (type.equals(Boolean.class)) || (type.equals(Character.TYPE))
+		        || (type.equals(Character.class)) || (type.equals(String.class)));
 	}
-	
+
 	/**
 	 * @param attrType
 	 * @return
 	 */
 	private static Class<?> getPrimitiveFromWrapper(Class<?> attrType)
-    {
+	{
 		if (attrType.equals(Integer.class))
 		{
 			return Integer.TYPE;
@@ -249,8 +265,8 @@ public class ClassUtils
 		{
 			return Character.TYPE;
 		}
-	    return null;
-    }
+		return null;
+	}
 
 	/**
 	 * 
@@ -268,10 +284,10 @@ public class ClassUtils
 				attributes = getChildTagConstraintsAnnotation(superClass);
 			}
 		}
-		
+
 		return attributes;
 	}
-	
+
 	/**
 	 * @param method
 	 * @return
@@ -279,14 +295,14 @@ public class ClassUtils
 	public static String getMethodDescription(Method method)
 	{
 		StringBuilder str = new StringBuilder();
-		
+
 		str.append(method.getDeclaringClass().getCanonicalName());
 		str.append(".");
 		str.append(method.getName());
 		str.append("(");
 		boolean needsComma = false;
-		
-		for ( Class<?> type : method.getParameterTypes())
+
+		for (Class<?> type : method.getParameterTypes())
 		{
 			if (needsComma)
 			{
@@ -296,7 +312,7 @@ public class ClassUtils
 			str.append(type.getCanonicalName());
 		}
 		str.append(")");
-		
+
 		return str.toString();
 	}
 
@@ -307,8 +323,187 @@ public class ClassUtils
 	 * @return
 	 */
 	public static boolean isPropertyVisibleToWrite(Class<?> type, Field field)
-    {
-		return Modifier.isPublic(field.getModifiers()) || 
-				ClassUtils.hasValidSetter(type, ClassUtils.getSetterMethod(field.getName()), field.getType());
-    }
+	{
+		return Modifier.isPublic(field.getModifiers()) || ClassUtils.hasValidSetter(type, ClassUtils.getSetterMethod(field.getName()), field.getType());
+	}
+	
+	public static Object stringToPrimitiveBoxType(Class<?> primitiveType, String value)
+	{
+		if (primitiveType.equals(String.class))
+		{
+			return value;
+		}
+		if (primitiveType.equals(Boolean.TYPE))
+		{
+			if (value == null)
+				return Boolean.FALSE;
+			return Boolean.valueOf(value);
+		}
+		else if (value == null)
+		{
+			value = "0";
+		}
+		else if (primitiveType.equals(Integer.TYPE))
+		{
+			return Integer.valueOf(value);
+		}
+		else if (primitiveType.equals(Long.TYPE))
+		{
+			return Long.valueOf(value);
+		}
+		else if (primitiveType.equals(Double.TYPE))
+		{
+			return Double.valueOf(value);
+		}
+		else if (primitiveType.equals(Float.TYPE))
+		{
+			return Float.valueOf(value);
+		}
+		else if (primitiveType.equals(Byte.TYPE))
+		{
+			return Byte.valueOf(value);
+		}
+		else if (primitiveType.equals(Short.TYPE))
+		{
+			return Short.valueOf(value);
+		}
+		else if (primitiveType.equals(Character.TYPE))
+		{
+			if (value != null && value.length() > 0)
+			{
+				return Character.valueOf(value.charAt(0));
+			}
+		}
+		return null;
+	}
+	
+	public static Class<?> getCollectionBaseType(Class<?> type, Type genericType)
+	{
+		if (genericType instanceof ParameterizedType)
+		{
+			ParameterizedType parameterizedType = (ParameterizedType) genericType;
+			Type componentGenericType = parameterizedType.getActualTypeArguments()[0];
+			return getRawType(componentGenericType);
+		}
+		else if (genericType instanceof GenericArrayType)
+		{
+			final GenericArrayType genericArrayType = (GenericArrayType) genericType;
+			Type componentGenericType = genericArrayType.getGenericComponentType();
+			return getRawType(componentGenericType);
+		}
+		else if (type.isArray())
+		{
+			return type.getComponentType();
+		}
+		return null;
+	}
+	
+	public static Class<?> getRawType(Type type)
+	{
+		if (type instanceof Class<?>)
+		{
+			// type is a normal class.
+			return (Class<?>) type;
+		}
+		else if (type instanceof ParameterizedType)
+		{
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			Type rawType = parameterizedType.getRawType();
+			return (Class<?>) rawType;
+		}
+		else if (type instanceof GenericArrayType)
+		{
+			final GenericArrayType genericArrayType = (GenericArrayType) type;
+			final Class<?> componentRawType = getRawType(genericArrayType.getGenericComponentType());
+			return Array.newInstance(componentRawType, 0).getClass();
+		}
+		else if (type instanceof TypeVariable)
+		{
+			final TypeVariable<?> typeVar = (TypeVariable<?>) type;
+			if (typeVar.getBounds() != null && typeVar.getBounds().length > 0)
+			{
+				return getRawType(typeVar.getBounds()[0]);
+			}
+		}
+		throw new RuntimeException("Unable to determine base class from Type");
+	}
+	 	
+	@SuppressWarnings("unchecked")
+    public static <T> T findAnnotation(Annotation[] searchList, Class<T> annotation)
+	{
+		if (searchList == null)
+		{
+			return null;
+		}
+		for (Annotation ann : searchList)
+		{
+			if (ann.annotationType().equals(annotation))
+			{
+				return (T) ann;
+			}
+		}
+		return null;
+	}
+	
+	public static Type getActualValueOfTypeVariable(Class<?> clazz, TypeVariable<?> typeVariable)
+	{
+		if (typeVariable.getGenericDeclaration() instanceof Class<?>)
+		{
+			Class<?> classDeclaringTypeVariable = (Class<?>) typeVariable.getGenericDeclaration();
+			// find the generic version of classDeclaringTypeVariable
+			Type fromInterface = getTypeVariableViaGenericInterface(clazz, classDeclaringTypeVariable, typeVariable);
+			if (fromInterface != null)
+			{
+				return fromInterface;
+			}
+
+			while (clazz.getSuperclass() != null)
+			{
+				if (clazz.getSuperclass().equals(classDeclaringTypeVariable))
+				{
+					// found it
+					ParameterizedType parameterizedSuperclass = (ParameterizedType) clazz.getGenericSuperclass();
+
+					for (int i = 0; i < classDeclaringTypeVariable.getTypeParameters().length; i++)
+					{
+						TypeVariable<?> tv = classDeclaringTypeVariable.getTypeParameters()[i];
+						if (tv.equals(typeVariable))
+						{
+							return parameterizedSuperclass.getActualTypeArguments()[i];
+						}
+					}
+				}
+
+				clazz = clazz.getSuperclass();
+			}
+		}
+
+		throw new RuntimeException("Unable to determine value of type parameter " + typeVariable);
+	}
+
+	private static Type getTypeVariableViaGenericInterface(Class<?> clazz, Class<?> classDeclaringTypeVariable, TypeVariable<?> typeVariable)
+	{
+		for (Type genericInterface : clazz.getGenericInterfaces())
+		{
+
+			if (genericInterface instanceof ParameterizedType)
+			{
+				ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
+
+				for (int i = 0; i < classDeclaringTypeVariable.getTypeParameters().length; i++)
+				{
+					TypeVariable<?> tv = classDeclaringTypeVariable.getTypeParameters()[i];
+					if (tv.equals(typeVariable))
+					{
+						return parameterizedType.getActualTypeArguments()[i];
+					}
+				}
+			}
+			else if (genericInterface instanceof Class)
+			{
+				return getTypeVariableViaGenericInterface((Class<?>) genericInterface, classDeclaringTypeVariable, typeVariable);
+			}
+		}
+		return null;
+	}
 }

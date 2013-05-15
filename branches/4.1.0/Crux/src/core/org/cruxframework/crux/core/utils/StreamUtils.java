@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,6 +99,18 @@ public class StreamUtils
 		{
 			safeCloseStreams(in, out);
 		}
+    }
+
+	/**
+	 * Writes the input stream to the output stream. Closes both if desired.
+	 * @param responseBodyAsStream
+	 * @return
+	 * @throws IOException 
+	 */
+	public static void write(String in, OutputStream out, boolean closeBoth) throws IOException
+    {
+		ByteArrayInputStream is = new ByteArrayInputStream(in.getBytes("UTF-8"));
+		write(is, out, closeBoth);
     }
 	
 	/**
