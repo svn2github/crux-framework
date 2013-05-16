@@ -15,23 +15,28 @@
  */
 package org.cruxframework.crux.widgets.client.styledpanel;
 
+import org.cruxframework.crux.core.client.utils.StyleManager;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Gesse S. F. Dafe
  */
 public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, HasVerticalAlignment
 {
-	private static final String DEFAULT_STYLE_NAME = "crux-StyledPanel";
-
+	private static final String DEFAULT_STYLE_NAME = "cruxStyledPanel";
+	private static final StyleManager styleManager = GWT.create(StyleManager.class);
+	
 	private VerticalAlignmentConstant verticalAlignment = HasVerticalAlignment.ALIGN_TOP;
 	private HorizontalAlignmentConstant horizontalAlignment = HasHorizontalAlignment.ALIGN_LEFT;
 
 	public StyledPanel()
 	{
-		setStyleName(DEFAULT_STYLE_NAME);
+		styleManager.applyStyleName(this, DEFAULT_STYLE_NAME);
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 				display = "table-cell";
 				verticalAlign = "middle";
 			}
-			if (this.verticalAlignment.equals(HasVerticalAlignment.ALIGN_BOTTOM))
+			else if (this.verticalAlignment.equals(HasVerticalAlignment.ALIGN_BOTTOM))
 			{
 				display = "table-cell";
 				verticalAlign = "bottom";
@@ -75,6 +80,16 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	@Override
 	public void setHorizontalAlignment(HorizontalAlignmentConstant align)
 	{
+		setHorizontalAlignment(align, null);
+	}
+	
+	/**
+	 * Apply the horizontal alignment on a single child widget or on every children (when child == null).
+	 * @param align
+	 * @param childIndex
+	 */
+	public void setHorizontalAlignment(HorizontalAlignmentConstant align, Widget child)
+	{
 		String marginLeft = "";
 		String marginRight = "";
 
@@ -93,8 +108,28 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 			}
 		}
 		
-		getElement().getStyle().setProperty("marginLeft", marginLeft);
-		getElement().getStyle().setProperty("marginRight", marginRight);
+		if(child == null)
+		{
+			int widgetCount = getWidgetCount();
+			for(int i = 0; i < widgetCount; i++)
+			{
+				Widget currentChild = getWidget(i);
+				currentChild.getElement().getStyle().setProperty("marginLeft", marginLeft);
+				currentChild.getElement().getStyle().setProperty("marginRight", marginRight);
+			}
+		}
+		else
+		{
+			child.getElement().getStyle().setProperty("marginLeft", marginLeft);
+			child.getElement().getStyle().setProperty("marginRight", marginRight);
+		}
+	}
+	
+	@Override
+	public void add(Widget w)
+	{
+		super.add(w);
+		setHorizontalAlignment(getHorizontalAlignment(), w);
 	}
 
 }

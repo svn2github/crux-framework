@@ -247,6 +247,22 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onDettach" />
 <xs:attribute name="onClose" />
 </xs:complexType>
+<xs:element name="styledPanel" type="TstyledPanel"/>
+<xs:complexType name="TstyledPanel">
+<xs:sequence>
+<xs:group ref="c:widgets" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
 <xs:element name="maskedTextBox" type="TmaskedTextBox"/>
 <xs:complexType name="TmaskedTextBox">
 <xs:attribute name="formatter" type="xs:string" use="required" />

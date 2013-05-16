@@ -1,0 +1,17 @@
+.cruxStyledPanel
+{
+	margin: 20px;
+}
+.cruxStyledPanel-small
+{
+	border: solid 2px #DDDDDD;
+	box-shadow: 0px 0px 10px #DDDDDD;
+	border-radius: 3px !important;
+	background: linear-gradient(to bottom, #EAEAEA, #DEE0DF);
+}
+.cruxStyledPanel-large
+{
+	border: solid 2px #DADADA;
+	border-radius: 5px !important;
+	background: linear-gradient(to bottom, #FFFFFF, #EAEAEA);
+}
