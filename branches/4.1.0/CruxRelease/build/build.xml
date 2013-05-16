@@ -60,6 +60,11 @@
 	<property name="crossdevice.dist.dir" value="${crossdevice.build}/dist" />
 	<property name="crossdevice.name" value="crux-cross-device-widgets" />
 	
+	<!-- Properties refering CruxCrossDeviceShowcase Project -->
+	<property name="crossdeviceshowcase.build" value="../CruxCrossDeviceShowcase" />
+	<property name="crossdeviceshowcase.build.dir" value="${crossdeviceshowcase.build}/build" />
+	<property name="crossdeviceshowcase.webinf.dir" value="${crossdeviceshowcase.build}/war/WEB-INF" />
+	
 	<!-- 
 	========================================================================================================
 		Checks the presence of jars which Crux depends on  
@@ -287,6 +292,28 @@
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		
+		<!-- Update CruxCrossDeviceShowcase project -->
+		<copy todir="${crossdeviceshowcase.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.themes.name}.jar" />				
+			</fileset>
+			<fileset dir="${crossdevice.dist.dir}">
+			    <include name="${crossdevice.name}.jar" />
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${crossdeviceshowcase.webinf.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.runtime.name}.jar" />				
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
