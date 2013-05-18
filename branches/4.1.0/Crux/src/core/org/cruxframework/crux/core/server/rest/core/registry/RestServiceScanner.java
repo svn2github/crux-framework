@@ -16,6 +16,8 @@
 package org.cruxframework.crux.core.server.rest.core.registry;
 
 import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletContext;
 
@@ -36,6 +38,9 @@ import org.cruxframework.crux.core.server.scan.ClassScanner;
 public class RestServiceScanner 
 {
 	private static final Log logger = LogFactory.getLog(RestServiceScanner.class);
+	private static final RestServiceScanner instance = new RestServiceScanner();
+	private static final Lock initializeLock = new ReentrantLock();
+	private static boolean initialized = false;
 	
 	/**
 	 * This class uses a file generated during application compilation to find out rest service classes.
@@ -110,7 +115,7 @@ public class RestServiceScanner
 	/**
 	 * This Constructor select the best strategy to use. 
 	 */
-	public RestServiceScanner()
+	private RestServiceScanner()
 	{
 		if (Environment.isProduction() ||  Boolean.parseBoolean(ConfigurationFactory.getConfigurations().useCompileTimeClassScanningForDevelopment()))
 		{
@@ -141,7 +146,7 @@ public class RestServiceScanner
 	 * 
 	 * @param context
 	 */
-	public void initialize(ServletContext context) 
+	private void initializeScanner(ServletContext context) 
 	{
 		if (!strategy.initialize(context))
 		{
@@ -153,4 +158,43 @@ public class RestServiceScanner
 			}
 		}
 	}
+	
+	public static RestServiceScanner getInstance()
+	{
+		return instance;
+	}
+	
+	public static void initialize(ServletContext context)
+	{
+		if (!initialized)
+		{
+			initializeLock.lock();
+			try
+			{
+				if (!initialized)
+				{
+					instance.initializeScanner(context);
+					if (logger.isInfoEnabled())
+					{
+						logger.info("Server services registered.");
+					}
+					initialized = true;
+				}
+			}
+			finally
+			{
+				initializeLock.unlock();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isInitialized()
+	{
+		return initialized;
+	}
+	
 }

@@ -20,32 +20,32 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Not Acceptable (406) is encountered
  */
-public class NotAcceptableException extends LoggableFailure
+public class UnsupportedMediaTypeException extends LoggableFailure
 {
 	private static final long serialVersionUID = -8466746321969478729L;
 
-	public NotAcceptableException(String s)
+	public UnsupportedMediaTypeException(String s)
 	{
-		super(s, HttpResponseCodes.SC_NOT_ACCEPTABLE);
+		super(s, HttpResponseCodes.SC_UNSUPPORTED_MEDIA_TYPE);
 	}
 
-	public NotAcceptableException(String s, Throwable throwable)
+	public UnsupportedMediaTypeException(String s, Throwable throwable)
 	{
-		super(s, throwable, HttpResponseCodes.SC_NOT_ACCEPTABLE);
+		super(s, throwable, HttpResponseCodes.SC_UNSUPPORTED_MEDIA_TYPE);
 	}
 
-	public NotAcceptableException(String s, String resp, Throwable throwable)
+	public UnsupportedMediaTypeException(String s, String resp, Throwable throwable)
 	{
-		super(s, resp, throwable, HttpResponseCodes.SC_NOT_ACCEPTABLE);
+		super(s, resp, throwable, HttpResponseCodes.SC_UNSUPPORTED_MEDIA_TYPE);
 	}
 
-	public NotAcceptableException(String s, String resp)
+	public UnsupportedMediaTypeException(String s, String resp)
 	{
-		super(s, resp, null, HttpResponseCodes.SC_NOT_ACCEPTABLE);
+		super(s, resp, null, HttpResponseCodes.SC_UNSUPPORTED_MEDIA_TYPE);
 	}
 
-	public NotAcceptableException(Throwable throwable)
+	public UnsupportedMediaTypeException(Throwable throwable)
 	{
-		super(throwable, HttpResponseCodes.SC_NOT_ACCEPTABLE);
+		super(throwable, HttpResponseCodes.SC_UNSUPPORTED_MEDIA_TYPE);
 	}
 }

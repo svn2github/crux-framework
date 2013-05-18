@@ -18,7 +18,8 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,9 +29,11 @@ import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * 
@@ -41,7 +44,7 @@ public class ResourceMethod
 {
 	private static final Lock lock = new ReentrantLock();
 
-	protected Set<String> httpMethods;
+	protected String httpMethod;
 	protected Method method;
 	protected Class<?> resourceClass;
 	protected Type genericReturnType;
@@ -51,9 +54,9 @@ public class ResourceMethod
 
 	private CacheInfo cacheInfo;
 
-	public ResourceMethod(Class<?> clazz, Method method, Set<String> httpMethods)
+	public ResourceMethod(Class<?> clazz, Method method, String httpMethod)
 	{
-		this.httpMethods = httpMethods;
+		this.httpMethod = httpMethod;
 		this.resourceClass = clazz;
 		this.method = method;
 		this.genericReturnType = ClassUtils.getGenericReturnTypeOfGenericInterfaceMethod(clazz, method);
@@ -91,7 +94,7 @@ public class ResourceMethod
         }
         catch (Exception e)
         {
-        	throw new InternalServerErrorException("Error creating rest service endpoint", e); 
+        	throw new InternalServerErrorException("Error creating rest service endpoint", "Error processing requested service", e); 
         }
 	}
 
@@ -109,7 +112,10 @@ public class ResourceMethod
 				{
 					if (writer == null)
 					{
-						ObjectMapper mapper = new ObjectMapper();
+						ObjectMapper mapper = new ObjectMapper();//TODO criar um unico objectMapper
+//						mapper.getSerializationConfig().without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//						mapper.getSerializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
+//						mapper.getDeserializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
 						JavaType returnJavaType = mapper.getTypeFactory().constructType(genericReturnType);
 						writer = mapper.writerWithType(returnJavaType);
 					}
@@ -125,16 +131,16 @@ public class ResourceMethod
             }
             catch (JsonProcessingException e)
             {
-            	throw new InternalServerErrorException("Error serializing rest service return", e); 
+            	throw new InternalServerErrorException("Error serializing rest service return", "Error processing requested service", e); 
             }
 		}
 		MethodReturn ret = new MethodReturn(hasReturnType, retVal, cacheInfo);
 		return ret;
 	}
 
-	public Set<String> getHttpMethods()
+	public String getHttpMethod()
 	{
-		return httpMethods;
+		return httpMethod;
 	}
 	
 	public static class MethodReturn

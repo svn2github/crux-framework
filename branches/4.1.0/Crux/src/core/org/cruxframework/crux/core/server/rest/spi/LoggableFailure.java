@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.server.rest.spi;
 
+
 /**
  * 
  * @author Thiago da Rosa de Bustamante
@@ -24,6 +25,7 @@ public class LoggableFailure extends RuntimeException
 {
     private static final long serialVersionUID = 7544003108034286732L;
 	private final int responseCode;
+	private String responseMessage;
 
 	public LoggableFailure(int responseCode)
     {
@@ -31,26 +33,48 @@ public class LoggableFailure extends RuntimeException
 		this.responseCode = responseCode;
     }
 
-	public LoggableFailure(String arg0, Throwable arg1, int responseCode)
+	public LoggableFailure(String s, Throwable throwable, int responseCode)
     {
-	    super(arg0, arg1);
+	    super(s, throwable);
 		this.responseCode = responseCode;
+		setResponseMessage(throwable.getMessage());
+
     }
 
-	public LoggableFailure(String arg0, int responseCode)
-    {
-	    super(arg0);
+	public LoggableFailure(String s, String resp, Throwable throwable, int responseCode)
+	{
+		super(s, throwable);
 		this.responseCode = responseCode;
+		responseMessage = resp;
+	}
+
+	public LoggableFailure(String s, int responseCode)
+    {
+	    super(s);
+		this.responseCode = responseCode;
+		setResponseMessage(s);
+
     }
 
-	public LoggableFailure(Throwable arg0, int responseCode)
+	public LoggableFailure(Throwable throwable, int responseCode)
     {
-	    super(arg0);
+	    super(throwable);
 		this.responseCode = responseCode;
+		setResponseMessage(throwable.getMessage());
     }
 
 	public int getResponseCode()
     {
     	return responseCode;
+    }
+	
+	public String getResponseMessage()
+    {
+    	return responseMessage;
+    }
+
+	public void setResponseMessage(String responseMessage)
+    {
+    	this.responseMessage = responseMessage;
     }
 }

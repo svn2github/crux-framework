@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.server.rest.spi;
 
+import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
+
 /**
  * Thrown when HTTP Method Not Allowed (405) is encountered
  */
@@ -24,16 +26,26 @@ public class MethodNotAllowedException extends LoggableFailure
 
 	public MethodNotAllowedException(String s)
 	{
-		super(s, 405);
+		super(s, HttpResponseCodes.SC_METHOD_NOT_ALLOWED);
 	}
 
 	public MethodNotAllowedException(String s, Throwable throwable)
 	{
-		super(s, throwable, 405);
+		super(s, throwable, HttpResponseCodes.SC_METHOD_NOT_ALLOWED);
+	}
+	
+	public MethodNotAllowedException(String s, String resp, Throwable throwable)
+	{
+		super(s, resp, throwable, HttpResponseCodes.SC_METHOD_NOT_ALLOWED);
+	}
+
+	public MethodNotAllowedException(String s, String resp)
+	{
+		super(s, resp, null, HttpResponseCodes.SC_METHOD_NOT_ALLOWED);
 	}
 
 	public MethodNotAllowedException(Throwable throwable)
 	{
-		super(throwable, 405);
+		super(throwable, HttpResponseCodes.SC_METHOD_NOT_ALLOWED);
 	}
 }

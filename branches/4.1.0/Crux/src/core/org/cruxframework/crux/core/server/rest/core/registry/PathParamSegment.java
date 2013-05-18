@@ -195,7 +195,7 @@ public class PathParamSegment extends Segment implements Comparable<PathParamSeg
 			if (segmentIndex + numSegments > request.getUri().getPathSegments().size())
 			{
 
-				throw new BadRequestException("Number of matched segments greater than actual");
+				throw new BadRequestException("Number of matched segments greater than actual", "Can not invoke requested service");
 			}
 			PathSegment[] encodedSegments = new PathSegment[numSegments];
 			PathSegment[] decodedSegments = new PathSegment[numSegments];

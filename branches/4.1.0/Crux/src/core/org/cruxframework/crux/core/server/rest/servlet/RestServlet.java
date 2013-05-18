@@ -29,6 +29,7 @@ import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
 import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.core.dispatch.RestDispatcher;
+import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
 import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
@@ -71,6 +72,10 @@ public class RestServlet extends HttpServlet
 
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res, String method) throws IOException
 	{
+		if (!RestServiceScanner.isInitialized())
+		{
+			RestServiceScanner.initialize(getServletContext());
+		}
 		HttpHeaders headers = null;
 		UriInfo uriInfo = null;
 		try
@@ -95,7 +100,7 @@ public class RestServlet extends HttpServlet
 		}
 		catch (LoggableFailure e) 
 		{
-			response.sendError(e.getResponseCode(), "Server error processing request.");
+			response.sendError(e.getResponseCode(), e.getResponseMessage());
 			response.getOutputHeaders().putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("text", "plain", "UTF-8"));
 			logger.error(e.getMessage(), e);
 		}

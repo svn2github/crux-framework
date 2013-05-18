@@ -2,8 +2,6 @@ package org.cruxframework.crux.core.server.rest.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.cruxframework.crux.core.server.rest.annotation.GET;
 import org.cruxframework.crux.core.server.rest.annotation.HttpMethod;
@@ -20,23 +18,33 @@ public class HttpMethodHelper
 	 * 
 	 * @param method
 	 * @return
+	 * @throws InvalidRestMethod 
 	 */
-	public static Set<String> getHttpMethods(Method method)
+	public static String getHttpMethod(Method method) throws InvalidRestMethod
 	{
-		HashSet<String> methods = new HashSet<String>();
+		return getHttpMethod(method, true);
+	}
+	
+	public static String getHttpMethod(Method method, boolean allowNull) throws InvalidRestMethod
+	{
+		String httpMethod = null;
 		for (Annotation annotation : method.getAnnotations())
 		{
 			HttpMethod http = annotation.annotationType().getAnnotation(HttpMethod.class);
 			if (http != null)
 			{
-				methods.add(http.value());
+				if (httpMethod != null)
+				{
+					throw new InvalidRestMethod("Crux REST methods can not be bound to more than one HTTP Method");
+				}
+				httpMethod = http.value();
 			}
 		}
-		if (methods.size() == 0)
+		if (!allowNull && httpMethod == null)
 		{
-			return null;
+			throw new InvalidRestMethod("Crux REST methods must be bound to one HTTP Method");
 		}
-		return methods;
+		return httpMethod;
 	}
 	
 	/**

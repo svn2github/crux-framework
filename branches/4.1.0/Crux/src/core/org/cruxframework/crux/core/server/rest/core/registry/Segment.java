@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.AmbiguousServiceException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.spi.MethodNotAllowedException;
 import org.cruxframework.crux.core.server.rest.spi.NotAcceptableException;
 import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
@@ -51,17 +52,21 @@ public class Segment
 			throw new NotAcceptableException("No match for accept header");
 		}
 
-		List<ResourceMethod> list = new ArrayList<ResourceMethod>();
+		ResourceMethod invoker = null;
 
-		for (ResourceMethod invoker : methods)
+		for (ResourceMethod rm : methods)
 		{
-			if (invoker.getHttpMethods().contains(httpMethod))
+			if (rm.getHttpMethod() != null && rm.getHttpMethod().equals(httpMethod))
 			{
-				list.add(invoker);
+				if (invoker != null)
+				{
+					throw new InternalServerErrorException("More than one method is bound to the same REST operation (URI + Method Type)", "Error processing requested operation.");
+				}
+				invoker = rm;
 			}
 		}
 
-		if (list.size() == 0)
+		if (invoker == null)
 		{
 			if (methods == null || methods.size() == 0)
 			{
@@ -70,24 +75,18 @@ public class Segment
 			throw new MethodNotAllowedException("No resource method found for " + httpMethod);
 		}
 
-		if (list.size() > 1)
-		{
-		}
-		return list.get(0);
+		return invoker;
 	}
 
 	protected void addMethod(ResourceMethod invoker)
 	{
-		for(String httpMethod: invoker.getHttpMethods())
+		for (ResourceMethod res : methods)
 		{
-			for (ResourceMethod res : methods)
+			if (res.getHttpMethod() != null && res.getHttpMethod().equals(invoker.getHttpMethod()))
 			{
-				if (res.getHttpMethods().contains(httpMethod))
-				{
-					throw new AmbiguousServiceException("Ambiguous service methods. Methods ["+invoker.getMethod().getName()+"] " +
-							"and ["+res.getMethod().getName()+"], declared on class ["+invoker.getResourceClass().getCanonicalName()+"] tries to serve" +
-							" the same rest path and HTTP method.");
-				}
+				throw new AmbiguousServiceException("Ambiguous service methods. Methods ["+invoker.getMethod().getName()+"] " +
+						"and ["+res.getMethod().getName()+"], declared on class ["+invoker.getResourceClass().getCanonicalName()+"] tries to serve" +
+				" the same rest path and HTTP method.");
 			}
 		}
 		methods.add(invoker);

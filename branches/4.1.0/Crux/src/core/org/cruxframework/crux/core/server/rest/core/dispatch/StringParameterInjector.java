@@ -148,7 +148,7 @@ public class StringParameterInjector
 			}
 			catch (Exception e)
 			{
-				throw new BadRequestException("Unable to extract parameter from http request for " + getParamSignature() +" for " + target, e);
+				throw new BadRequestException("Unable to extract parameter from http request for " + getParamSignature() +" for " + target, "Can not invoke requested service with given arguments", e);
 			}
 		}
 		else if (valueOf != null)
@@ -159,7 +159,7 @@ public class StringParameterInjector
 			}
 			catch (Exception e)
 			{
-				throw new BadRequestException("Unable to extract parameter from http request: " + getParamSignature() + " for " + target, e);
+				throw new BadRequestException("Unable to extract parameter from http request: " + getParamSignature() + " for " + target, "Can not invoke requested service with given arguments", e);
 			}
 		}
 		return null;

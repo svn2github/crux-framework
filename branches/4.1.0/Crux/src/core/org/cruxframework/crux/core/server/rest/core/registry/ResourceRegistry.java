@@ -17,12 +17,12 @@ package org.cruxframework.crux.core.server.rest.core.registry;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.server.rest.core.UriBuilder;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
+import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
 
 /**
  * 
@@ -112,11 +113,12 @@ public class ResourceRegistry
 	 */
 	protected void addResource(Class<?> clazz, String base)
 	{
+		Set<String> restMethodNames = new HashSet<String>();
 		for (Method method : clazz.getMethods())
 		{
 			if (!method.isSynthetic())
 			{
-				processMethod(base, clazz, method);
+				processMethod(base, clazz, method, restMethodNames);
 			}
 		}
 	}
@@ -139,16 +141,25 @@ public class ResourceRegistry
 	 * @param base
 	 * @param clazz
 	 * @param method
+	 * @param restMethodNames 
 	 */
-	protected void processMethod(String base, Class<?> clazz, Method method)
+	protected void processMethod(String base, Class<?> clazz, Method method, Set<String> restMethodNames)
 	{
 		if (method != null)
 		{
 			Path path = method.getAnnotation(Path.class);
-			Set<String> httpMethods = HttpMethodHelper.getHttpMethods(method);
+			String httpMethod = null;
+            try
+            {
+	            httpMethod = HttpMethodHelper.getHttpMethod(method);
+            }
+            catch (InvalidRestMethod e)
+            {
+				logger.error("Invalid Method: " + method.getDeclaringClass().getName() + "." + method.getName() + "().", e);
+            }
 
 			boolean pathPresent = path != null;
-			boolean restAnnotationPresent = pathPresent || (httpMethods != null);
+			boolean restAnnotationPresent = pathPresent || (httpMethod != null);
 			
 			UriBuilder builder = new UriBuilder();
 			if (base != null)
@@ -163,13 +174,22 @@ public class ResourceRegistry
 			}
 			String pathExpression = builder.getPath();
 			if (pathExpression == null)
-				pathExpression = "";
-
-			if (httpMethods != null)
 			{
-				ResourceMethod invoker = new ResourceMethod(clazz, method, httpMethods);
-				rootSegment.addPath(pathExpression, invoker);
-				size++;
+				pathExpression = "";
+			}
+			if (httpMethod != null)
+			{
+				if (restMethodNames.contains(method.getName()))
+				{
+					logger.error("Overloaded rest method: " + method.getDeclaringClass().getName() + "." + method.getName() + " found. It is not supported for Crux REST services.");
+				}
+				else
+				{
+					ResourceMethod invoker = new ResourceMethod(clazz, method, httpMethod);
+					rootSegment.addPath(pathExpression, invoker);
+					restMethodNames.add(method.getName());
+					size++;
+				}
 			}
 			else 
 			{
@@ -217,8 +237,7 @@ public class ResourceRegistry
 
 	private static void initializeRegistry()
     {
-	    initialized = true;
-	    RestServiceScanner serviceScanner = new RestServiceScanner();
+	    RestServiceScanner serviceScanner = RestServiceScanner.getInstance();
 		Iterator<String> restServices = serviceScanner.iterateRestServices();
 		
 		while (restServices.hasNext())
@@ -234,5 +253,6 @@ public class ResourceRegistry
             	logger.error("Error initializing rest service class [{"+serviceClassName+"}]", e);
             }
 		}
+		initialized = true;
     }
 }

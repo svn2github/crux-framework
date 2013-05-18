@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.server.rest.core.registry;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
 import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
-import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.PathHelper;
 
 /**
@@ -120,11 +118,6 @@ public class RootSegment extends Segment
 			expression += segments[i];
 		}
 		return expression;
-	}
-
-	protected boolean isLocator(Method method)
-	{
-		return HttpMethodHelper.getHttpMethods(method) == null;
 	}
 
 	public void addPath(String path, ResourceMethod invoker)

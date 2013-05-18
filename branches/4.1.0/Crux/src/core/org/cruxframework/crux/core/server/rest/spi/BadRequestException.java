@@ -15,25 +15,37 @@
  */
 package org.cruxframework.crux.core.server.rest.spi;
 
+import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
+
 /**
  * Thrown when HTTP Bad Request (400) is encountered
  */
 public class BadRequestException extends LoggableFailure
 {
 	private static final long serialVersionUID = 8229968255908232115L;
-
+	
 	public BadRequestException(String s)
 	{
-		super(s, 400);
+		super(s, HttpResponseCodes.SC_BAD_REQUEST);
 	}
 
 	public BadRequestException(String s, Throwable throwable)
 	{
-		super(s, throwable, 400);
+		super(s, throwable, HttpResponseCodes.SC_BAD_REQUEST);
+	}
+
+	public BadRequestException(String s, String resp, Throwable throwable)
+	{
+		super(s, resp, throwable, HttpResponseCodes.SC_BAD_REQUEST);
+	}
+
+	public BadRequestException(String s, String resp)
+	{
+		super(s, resp, null, HttpResponseCodes.SC_BAD_REQUEST);
 	}
 
 	public BadRequestException(Throwable throwable)
 	{
-		super(throwable, 400);
-	}
+		super(throwable, HttpResponseCodes.SC_BAD_REQUEST);
+	}	
 }

@@ -15,29 +15,37 @@
  */
 package org.cruxframework.crux.core.server.rest.spi;
 
+import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
+
 /**
  * Thrown when HTTP Internal Service Error (500) is encountered
  */
 public class InternalServerErrorException extends LoggableFailure
 {
+	private static final long serialVersionUID = -2432300008647858571L;
 
-   /**
-     * 
-     */
-    private static final long serialVersionUID = -2432300008647858571L;
+	public InternalServerErrorException(String s)
+	{
+		super(s, HttpResponseCodes.SC_INTERNAL_SERVER_ERROR);
+	}
 
-public InternalServerErrorException(String s)
-   {
-      super(s, 500);
-   }
+	public InternalServerErrorException(String s, Throwable throwable)
+	{
+		super(s, throwable, HttpResponseCodes.SC_INTERNAL_SERVER_ERROR);
+	}
 
-   public InternalServerErrorException(String s, Throwable throwable)
-   {
-      super(s, throwable, 500);
-   }
+	public InternalServerErrorException(String s, String resp, Throwable throwable)
+	{
+		super(s, resp, throwable, HttpResponseCodes.SC_INTERNAL_SERVER_ERROR);
+	}
 
-   public InternalServerErrorException(Throwable throwable)
-   {
-      super(throwable, 500);
-   }
+	public InternalServerErrorException(String s, String resp)
+	{
+		super(s, resp, null, HttpResponseCodes.SC_INTERNAL_SERVER_ERROR);
+	}
+
+	public InternalServerErrorException(Throwable throwable)
+	{
+		super(throwable, HttpResponseCodes.SC_INTERNAL_SERVER_ERROR);
+	}
 }

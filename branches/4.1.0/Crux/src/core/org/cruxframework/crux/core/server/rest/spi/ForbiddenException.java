@@ -18,34 +18,34 @@ package org.cruxframework.crux.core.server.rest.spi;
 import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 
 /**
- * Thrown when HTTP Not Found (404) is encountered
+ * Thrown when HTTP Forbidden (403) is encountered
  */
-public class NotFoundException extends LoggableFailure
+public class ForbiddenException extends LoggableFailure
 {
-	private static final long serialVersionUID = 5553054540052148779L;
+	private static final long serialVersionUID = -2432300008647858571L;
 
-	public NotFoundException(String s)
+	public ForbiddenException(String s)
 	{
-		super(s, HttpResponseCodes.SC_NOT_FOUND);
+		super(s, HttpResponseCodes.SC_FORBIDDEN);
 	}
 
-	public NotFoundException(String s, Throwable throwable)
+	public ForbiddenException(String s, Throwable throwable)
 	{
-		super(s, throwable, HttpResponseCodes.SC_NOT_FOUND);
+		super(s, throwable, HttpResponseCodes.SC_FORBIDDEN);
 	}
 
-	public NotFoundException(String s, String resp, Throwable throwable)
+	public ForbiddenException(String s, String resp, Throwable throwable)
 	{
-		super(s, resp, throwable, HttpResponseCodes.SC_NOT_FOUND);
+		super(s, resp, throwable, HttpResponseCodes.SC_FORBIDDEN);
 	}
 
-	public NotFoundException(String s, String resp)
+	public ForbiddenException(String s, String resp)
 	{
-		super(s, resp, null, HttpResponseCodes.SC_NOT_FOUND);
+		super(s, resp, null, HttpResponseCodes.SC_FORBIDDEN);
 	}
 
-	public NotFoundException(Throwable throwable)
+	public ForbiddenException(Throwable throwable)
 	{
-		super(throwable, HttpResponseCodes.SC_NOT_FOUND);
+		super(throwable, HttpResponseCodes.SC_FORBIDDEN);
 	}
 }

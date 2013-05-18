@@ -225,7 +225,7 @@ public class ServletUtil
 		if (!methodReturn.hasReturnType())
 		{
 			response.setContentLength(0);
-			response.setStatus(HttpServletResponse.SC_OK);
+			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 		}
 		else
 		{
@@ -259,7 +259,7 @@ public class ServletUtil
 			long expires = current + (cacheInfo.getCacheTime()*1000);
 			response.getOutputHeaders().addDateHeader(HttpHeaderNames.EXPIRES, expires);
 //			response.getOutputHeaders().addDateHeader(HttpHeaderNames.LAST_MODIFIED, current);			
-
+//TODO suportar operacoes condicionais (If-Match, etc)
 			switch (cacheInfo.getCacheControl())
             {
             	case PUBLIC:
@@ -298,7 +298,7 @@ public class ServletUtil
 	    	}
 	    	catch (IOException e)
 	    	{
-	    		throw new InternalServerErrorException("Unable to compress response", e);
+	    		throw new InternalServerErrorException("Unable to compress response", "Error processing requested service", e);
 	    	}
 	    	finally
 	    	{

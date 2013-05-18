@@ -30,6 +30,7 @@ import org.cruxframework.crux.core.server.rest.annotation.HeaderParam;
 import org.cruxframework.crux.core.server.rest.annotation.PathParam;
 import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
+import org.cruxframework.crux.core.server.rest.spi.ForbiddenException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
@@ -45,10 +46,12 @@ public class MethodInvoker
 	protected Method method;
 	protected Class<?> rootClass;
 	protected ValueInjector[] params;
+	private Class<?>[] exceptionTypes;
 
 	public MethodInvoker(Class<?> root, Method method)
 	{
 		this.method = method;
+		this.exceptionTypes = method.getExceptionTypes();
 		this.rootClass = root;
 		this.params = new ValueInjector[method.getParameterTypes().length];
 		Type[] genericParameterTypes = method.getGenericParameterTypes();
@@ -103,7 +106,7 @@ public class MethodInvoker
 		}
 		catch (Exception e)
 		{
-			BadRequestException badRequest = new BadRequestException("Failed processing arguments of " + method.toString(), e);
+			BadRequestException badRequest = new BadRequestException("Failed processing arguments of " + method.toString(), "Can not invoke requested service with given arguments", e);
 			throw badRequest;
 		}
 	}
@@ -119,12 +122,20 @@ public class MethodInvoker
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new InternalServerErrorException("Not allowed to reflect on method: " + method.toString(), e);
+			throw new InternalServerErrorException("Not allowed to reflect on method: " + method.toString(), "Can not execute requested service", e);
 		}
 		catch (InvocationTargetException e)
 		{
 			Throwable cause = e.getCause();
-			throw new InternalServerErrorException(cause);
+			if (isCheckedException(cause))
+			{
+				throw new ForbiddenException("Can not execute requested service. Checked Excpetion occurred on method: "+method.toString(), cause.getMessage(), cause);
+			}
+			else
+			{
+				throw new InternalServerErrorException("Can not execute requested service. Unchecked Excpetion occurred on method: "+method.toString(), 
+						"Can not execute requested service", cause);
+			}
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -151,10 +162,25 @@ public class MethodInvoker
 				}
 			}
 			msg += " )";
-			throw new InternalServerErrorException(msg, e);
+			throw new InternalServerErrorException(msg, "Can not execute requested service", e);
 		}
 	}
 
+	protected boolean isCheckedException(Throwable throwable)
+	{
+		if (exceptionTypes != null)
+		{
+			for (Class<?> exception : exceptionTypes)
+            {
+	            if (exception.isAssignableFrom(throwable.getClass()))
+	            {
+	            	return true;
+	            }
+            }
+		}
+		return false;
+	}
+	
 	protected ValueInjector createParameterExtractor(Class<?> injectTargetClass, AccessibleObject injectTarget, Class<?> type, Type genericType, Annotation[] annotations)
 	{
 		DefaultValue defaultValue = ClassUtils.findAnnotation(annotations, DefaultValue.class);

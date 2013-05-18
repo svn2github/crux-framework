@@ -69,6 +69,11 @@
 		<when-type-assignable class="com.google.gwt.user.client.rpc.RemoteService"/>
 	</generate-with>
 
+	<!-- Specify the generator for REST Proxies.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.rest.CruxRestProxyGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.service.RestProxy"/>
+	</generate-with>
+
 	<!-- Specify the generator for Device Adaptive stubs.     -->
 	<generate-with class="org.cruxframework.crux.core.rebind.crossdevice.DeviceAdaptiveGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceAdaptive"/>

@@ -76,7 +76,7 @@ public class PathParamInjector implements ValueInjector
 			list = uriInfo.getPathParameterPathSegments().get(paramName);
 			if (list == null)
 			{
-				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + uriInfo.getPath());
+				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + uriInfo.getPath(), "Can not execute requested service with informed params.");
 			}
 			PathSegment[] segments = list.get(list.size() - 1);
 			if (pathSegmentArray)
@@ -102,7 +102,7 @@ public class PathParamInjector implements ValueInjector
 			List<String> list = request.getUri().getPathParameters(true).get(paramName);
 			if (list == null)
 			{
-				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + request.getUri().getPath());
+				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + request.getUri().getPath(), "Can not execute requested service with informed params.");
 			}
 			if (list != null && list.size() > 0)
 			{
