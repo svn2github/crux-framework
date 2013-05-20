@@ -95,6 +95,13 @@
 			<when-property-is name="user.agent" value="ie8" />
 			<when-property-is name="user.agent" value="ie9" />
 		</any>
-    </replace-with>   
-    <source path="client" /> 
+    </replace-with>
+    
+    <!-- Cross-device stylename selector -->
+    <replace-with class="org.cruxframework.crux.core.client.utils.StyleManagerSmallDevices">
+		<when-type-assignable class="org.cruxframework.crux.core.client.utils.StyleManager" />
+		<when-property-is name="device.features" value="smallDisplayTouch" />
+	</replace-with> 
+	
+	<source path="client" /> 
 </module>
