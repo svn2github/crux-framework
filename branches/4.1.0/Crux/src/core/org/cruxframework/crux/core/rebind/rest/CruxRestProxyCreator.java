@@ -17,9 +17,10 @@ package org.cruxframework.crux.core.rebind.rest;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
 import org.cruxframework.crux.core.server.rest.util.Encode;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -44,7 +46,6 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.http.client.Request;
@@ -62,41 +63,17 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 {
 	private Class<?> restImplementationClass;
 	private JClassType callbackType;
-	private JClassType objectType;
-	private JClassType stringType;
+//	private JClassType stringType;
 	private JClassType javascriptObjectType;
+//	private JClassType dateType;
 	private String serviceBasePath;
-	private JClassType dateType;
-	private static Set<String> jsonFriendlyTypes = new HashSet<String>();
-	static
-	{
-		jsonFriendlyTypes.add(Integer.class.getCanonicalName());
-		jsonFriendlyTypes.add(Short.class.getCanonicalName());
-		jsonFriendlyTypes.add(Byte.class.getCanonicalName());
-		jsonFriendlyTypes.add(Long.class.getCanonicalName());
-		jsonFriendlyTypes.add(Double.class.getCanonicalName());
-		jsonFriendlyTypes.add(Float.class.getCanonicalName());
-		jsonFriendlyTypes.add(Boolean.class.getCanonicalName());
-		jsonFriendlyTypes.add(Character.class.getCanonicalName());
-		jsonFriendlyTypes.add(Integer.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Short.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Byte.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Long.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Double.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Float.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Boolean.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Character.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(String.class.getCanonicalName());
-		jsonFriendlyTypes.add(Date.class.getCanonicalName());
-	}
 	
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf);
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());
-		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
-		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
-		objectType = context.getTypeOracle().findType(Object.class.getCanonicalName());
+//		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
+//		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 		restImplementationClass = getRestImplementationClass(baseIntf);
 		String basePath;
@@ -152,7 +129,7 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 			List<JParameter> parameters = generateProxyWrapperMethodDeclaration(srcWriter, method);
 			String httpMethod = HttpMethodHelper.getHttpMethod(implementationMethod, false);
 			JParameter callbackParameter = parameters.get(parameters.size()-1);
-			String callbackResultTypeName = getCallbackResultTypeName(callbackParameter.getType());
+			String callbackResultTypeName = getCallbackResultTypeName(callbackParameter.getType().isClassOrInterface());
 			String callbackParameterName = callbackParameter.getName();
 			
 			srcWriter.println("String restURI = " + EscapeUtils.quote(methodURI) + ";");
@@ -165,32 +142,37 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 			srcWriter.println("if (s >= 0 && s < 10){");
 			if (!callbackResultTypeName.equalsIgnoreCase("void"))
 			{
-				JClassType callbackResultType = getTypeArgForGenericType(callbackParameter.getType());
+				JClassType callbackResultType = JClassUtils.getTypeArgForGenericType(callbackParameter.getType().isClassOrInterface());
 				srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode()){");
-				if (callbackResultType.isAssignableTo(stringType))
-				{
-					srcWriter.println(callbackResultTypeName+" result = response.getText();");
-				}
+//				if (callbackResultType.isAssignableTo(stringType))
+//				{
+//					srcWriter.println(callbackResultTypeName+" result = response.getText();");
+//				}
 //				else if (callbackResultType.isAssignableTo(dateType))
 //				{
 //					srcWriter.println(callbackResultTypeName+" result = new Date(Long.parseLong(response.getText());");
 //				}
-				else if (callbackResultType.findConstructor(new JType[]{stringType}) != null)
-				{
-					srcWriter.println(callbackResultTypeName+" result = new "+callbackResultTypeName+"(response.getText());");
-				}
-				else if (callbackResultType.findMethod("valueOf", new JType[]{stringType}) != null)
-				{
-					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".valueOf(response.getText());");
-				}
-				else if (callbackResultType.findMethod("fromString", new JType[]{stringType}) != null)
-				{
-					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".fromString(response.getText());");
-				}
-				else
-				{
-					srcWriter.println(callbackResultTypeName+" result = JsonUtils.unsafeEval(response.getText());");
-				}
+//				else if (callbackResultType.findConstructor(new JType[]{stringType}) != null)
+//				{
+//					srcWriter.println(callbackResultTypeName+" result = new "+callbackResultTypeName+"(response.getText());");
+//				}
+//				else if (callbackResultType.findMethod("valueOf", new JType[]{stringType}) != null)
+//				{
+//					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".valueOf(response.getText());");
+//				}
+//				else if (callbackResultType.findMethod("fromString", new JType[]{stringType}) != null)
+//				{
+//					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".fromString(response.getText());");
+//				}
+//				else if (callbackResultType.isAssignableTo(javascriptObjectType))
+//				{
+//					srcWriter.println(callbackResultTypeName+" result = JsonUtils.safeEval(response.getText());");
+//				}
+//				else
+//				{
+					String serializerName = new JSonSerializerProxyCreator(context, logger, callbackResultType).create();
+					srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(response.getText());");
+//				}
 				srcWriter.println(callbackParameterName+".onSuccess(result);");
 				srcWriter.println("}else {");
 				srcWriter.println(callbackParameterName+".onSuccess(null);");
@@ -240,9 +222,9 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		}
     }
 
-	protected String getCallbackResultTypeName(JType callbackParameter)
+	protected String getCallbackResultTypeName(JClassType callbackParameter)
     {
-	    JClassType jClassType = getTypeArgForGenericType(callbackParameter);
+	    JClassType jClassType = JClassUtils.getTypeArgForGenericType(callbackParameter);
 	    if (jClassType.isPrimitive() != null)
 	    {
 	    	return jClassType.isPrimitive().getQualifiedBoxedSourceName();
@@ -250,18 +232,6 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		return jClassType.getParameterizedQualifiedSourceName();
     }
 	
-	protected JClassType getTypeArgForGenericType(JType type)
-    {
-	    JParameterizedType parameterizedCallback = type.isParameterized();
-	    if (parameterizedCallback == null)
-	    {
-	    	return objectType;
-	    }
-	    JClassType jClassType = parameterizedCallback.getTypeArgs()[0];
-	    return jClassType;
-    }
-	
-
 	protected String getRestURI(JMethod method, Method implementationMethod)
 	{
 		String methodPath = paths(serviceBasePath);
@@ -352,51 +322,6 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		return path;
 	}
 
-	/**
-	 * @param srcWriter
-	 * @param method
-	 * @param returnType
-	 * @return
-	 */
-	protected List<JParameter> generateProxyWrapperMethodDeclaration(SourcePrinter srcWriter, JMethod method)
-	{
-		srcWriter.println();
-		srcWriter.print("public void ");
-		srcWriter.print(method.getName() + "(");
-
-		boolean needsComma = false;
-		List<JParameter> parameters = new ArrayList<JParameter>();
-		JParameter[] params = method.getParameters();
-		for (int i = 0; i < params.length; ++i)
-		{
-			JParameter param = params[i];
-
-			if (needsComma)
-			{
-				srcWriter.print(", ");
-			}
-			else
-			{
-				needsComma = true;
-			}
-
-			JType paramType = param.getType();
-			if (i == (params.length - 1))
-			{
-				srcWriter.print("final ");
-			}
-			srcWriter.print(paramType.getParameterizedQualifiedSourceName());
-			srcWriter.print(" ");
-
-			String paramName = param.getName();
-			parameters.add(param);
-			srcWriter.print(paramName);
-		}
-
-		srcWriter.println(") {");
-		return parameters;
-	}
-
 	@Override
 	protected String[] getImports()
 	{
@@ -470,7 +395,7 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		}
 		
 		JClassType lastParameterType = proxyTypes[proxyTypes.length - 1].isClassOrInterface();
-		if (!isTypesCompatiblesForSerialization(implementationMethod.getReturnType(), getTypeArgForGenericType(lastParameterType)))
+		if (!isTypesCompatiblesForSerialization(implementationMethod.getReturnType(), JClassUtils.getTypeArgForGenericType(lastParameterType)))
 		{
 			throw new CruxGeneratorException("Invalid signature for rest proxy method. Return type of implementation method is not compatible with Callback's type. Method["+method.getReadableDeclaration()+"]");
 		}
@@ -478,7 +403,7 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 
 	private boolean isTypesCompatiblesForSerialization(Class<?> class1, JType jType)
     {
-	    if (jsonFriendlyTypes.contains(jType.getQualifiedSourceName()))
+	    if (JSonSerializerProxyCreator.isJsonFriendly(jType))
 	    {
 	    	return (getAllowedType(jType).contains(class1));
 	    }
@@ -495,7 +420,8 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 						if (class1.isArray())
 						{
 							Class<?> componentType = class1.getComponentType();
-							validArray = isTypesCompatiblesForSerialization(componentType, getTypeArgForGenericType(jType));
+							JClassType jClassType = jType.isClassOrInterface();
+							validArray = jClassType != null && isTypesCompatiblesForSerialization(componentType, JClassUtils.getTypeArgForGenericType(jClassType));
 						}
 						return validArray || (List.class.isAssignableFrom(class1)) || (Set.class.isAssignableFrom(class1));
 					}
@@ -506,7 +432,8 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		    	}
 	    	}
 	    }
-	    return false;
+	    //Use a jsonEncorer implicitly
+	    return true;
     }
 
 	private List<Class<?>> getAllowedType(JType jType)
@@ -560,6 +487,14 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 		else if (jType.getQualifiedSourceName().equals(Date.class.getCanonicalName()))
 		{
 			result.add(Date.class);
+		}
+		else if (jType.getQualifiedSourceName().equals(BigInteger.class.getCanonicalName()))
+		{
+			result.add(BigInteger.class);
+		}
+		else if (jType.getQualifiedSourceName().equals(BigDecimal.class.getCanonicalName()))
+		{
+			result.add(BigDecimal.class);
 		}
 		return result;
 	}

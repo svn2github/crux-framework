@@ -29,6 +29,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -311,7 +312,21 @@ public class JClassUtils
 		    {
 		    	return valueVariable;
 		    }
-			
+		    
+		    if (((JClassType)expectedType).findConstructor(new JType[]{stringType}) != null)
+		    {
+		    	return "new "+expectedType.getQualifiedSourceName()+"("+valueVariable+")";
+		    }
+		    JMethod valueOfMethod = ((JClassType)expectedType).findMethod("valueOf", new JType[]{stringType});
+			if (valueOfMethod != null && valueOfMethod.isStatic())
+		    {
+		    	return expectedType.getQualifiedSourceName()+".valueOf("+valueVariable+")";
+		    }
+		    JMethod fromStringMethod = ((JClassType)expectedType).findMethod("fromString", new JType[]{stringType});
+			if (fromStringMethod != null && fromStringMethod.isStatic())
+		    {
+		    	return expectedType.getQualifiedSourceName()+".fromString("+valueVariable+")";
+		    }
 		}
 
 		return null;
@@ -659,4 +674,72 @@ public class JClassUtils
 			}
 		}
 	}
+
+	public static boolean isValidSetterMethod(JMethod method)
+	{
+        return (method.isPublic() && method.getName().startsWith("set") && method.getName().length() >3 && method.getParameters().length == 1);
+	}
+	
+	public static String getPropertyForSetterMethod(JMethod method)
+    {
+		String name = method.getName().substring(3);
+		name = Character.toLowerCase(name.charAt(0))+ name.substring(1);
+		
+		return name;
+    }
+	
+	public static List<JMethod> getSetterMethods(JClassType objectType)
+    {
+		List<JMethod> result = new ArrayList<JMethod>();
+	    JMethod[] methods = objectType.getOverridableMethods();
+	    
+	    for (JMethod jMethod : methods)
+        {
+	        if (isValidSetterMethod(jMethod))
+	        {
+	        	result.add(jMethod);
+	        }
+        }
+	    
+	    return result;
+    }
+
+	public static String getEmptyValueForType(JType objectType)
+    {
+		JPrimitiveType primitiveType = objectType.isPrimitive();
+		if (primitiveType != null)
+		{
+			if ((primitiveType == JPrimitiveType.INT)
+					||(primitiveType == JPrimitiveType.SHORT)
+					||(primitiveType == JPrimitiveType.LONG)
+					||(primitiveType == JPrimitiveType.BYTE)
+					||(primitiveType == JPrimitiveType.FLOAT)
+					||(primitiveType == JPrimitiveType.DOUBLE))
+					{
+				return "0";
+					}
+			else if (primitiveType == JPrimitiveType.BOOLEAN)
+			{
+				return "false";
+			}
+			else if (primitiveType == JPrimitiveType.CHAR)
+			{
+				return "' '";
+			}
+		}
+		
+		return "null";
+    }
+	
+	public static JClassType getTypeArgForGenericType(JClassType type)
+    {
+	    JParameterizedType parameterized = type.isParameterized();
+	    if (parameterized == null)
+	    {
+	    	return type.getOracle().findType("java.lang.Object");
+	    }
+	    JClassType jClassType = parameterized.getTypeArgs()[0];
+	    return jClassType;
+    }
+
 }

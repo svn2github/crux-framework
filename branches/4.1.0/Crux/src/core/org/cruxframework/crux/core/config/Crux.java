@@ -68,4 +68,5 @@ public interface Crux
 	void setServiceFactory(String value);
 	void setParameterBindGenerator(String value);
 	//TODO atualizar wiki com as opções correntes
+
 }

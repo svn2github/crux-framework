@@ -20,8 +20,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -29,12 +27,10 @@ import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.UnsupportedMediaTypeException;
+import org.cruxframework.crux.core.server.rest.util.JsonUtil;
 import org.cruxframework.crux.core.utils.StreamUtils;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * 
@@ -85,12 +81,7 @@ public class MessageBodyParamInjector extends StringParameterInjector implements
 					{
 						if (this.reader == null)
 						{
-							ObjectMapper mapper = new ObjectMapper();
-//							mapper.getSerializationConfig().without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//							mapper.getSerializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
-//							mapper.getDeserializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
-							JavaType paramJavaType = mapper.getTypeFactory().constructType(genericType);
-							this.reader = mapper.reader(paramJavaType);
+							this.reader = JsonUtil.createReader(genericType);
 						}
 					}
 					finally

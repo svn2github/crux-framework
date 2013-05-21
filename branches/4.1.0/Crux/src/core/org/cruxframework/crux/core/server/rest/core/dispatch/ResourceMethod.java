@@ -18,22 +18,17 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
+import org.cruxframework.crux.core.server.rest.util.JsonUtil;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * 
@@ -112,12 +107,7 @@ public class ResourceMethod
 				{
 					if (writer == null)
 					{
-						ObjectMapper mapper = new ObjectMapper();//TODO criar um unico objectMapper
-//						mapper.getSerializationConfig().without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//						mapper.getSerializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
-//						mapper.getDeserializationConfig().with(new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
-						JavaType returnJavaType = mapper.getTypeFactory().constructType(genericReturnType);
-						writer = mapper.writerWithType(returnJavaType);
+						writer = JsonUtil.createWriter(genericReturnType);
 					}
 				}
 				finally

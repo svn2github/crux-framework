@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cruxframework.crux.core.config.ConfigurationFactory;
@@ -248,6 +249,51 @@ public abstract class AbstractProxyCreator
 			w.print(throwType.getQualifiedSourceName());
         }
     }
+	
+	/**
+	 * @param srcWriter
+	 * @param method
+	 * @param returnType
+	 * @return
+	 */
+	protected List<JParameter> generateProxyWrapperMethodDeclaration(SourcePrinter srcWriter, JMethod method)
+	{
+		srcWriter.println();
+		srcWriter.print("public void ");
+		srcWriter.print(method.getName() + "(");
+
+		boolean needsComma = false;
+		List<JParameter> parameters = new ArrayList<JParameter>();
+		JParameter[] params = method.getParameters();
+		for (int i = 0; i < params.length; ++i)
+		{
+			JParameter param = params[i];
+
+			if (needsComma)
+			{
+				srcWriter.print(", ");
+			}
+			else
+			{
+				needsComma = true;
+			}
+
+			JType paramType = param.getType();
+			if (i == (params.length - 1))
+			{
+				srcWriter.print("final ");
+			}
+			srcWriter.print(paramType.getParameterizedQualifiedSourceName());
+			srcWriter.print(" ");
+
+			String paramName = param.getName();
+			parameters.add(param);
+			srcWriter.print(paramName);
+		}
+
+		srcWriter.println(") {");
+		return parameters;
+	}
 	
 	/**
 	 * @return
