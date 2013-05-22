@@ -6,7 +6,7 @@
 	<property name="src.dir" value="src" />
 	<property name="dist.dir" value="dist" />
 	<property name="expanded.dir" value="${dist.dir}/crux-${version}" />
-	
+
 	<property name="temp.dir" value="${dist.dir}/temp" />
 	<property name="resource.dir" value="resource" />
 	<property name="samples.dir" value="${resource.dir}/samples" />
@@ -30,20 +30,20 @@
 	<property name="crux.gadgets.runtime.name" value="crux-gadgets-runtime" />
 	<property name="crux.widgets.name" value="crux-widgets" />
 	<property name="crux.themes.name" value="crux-themes" />
-	
+
 	<!-- Properties refering Quickstart Project -->
 	<property name="quickstart.dir" value="../CruxQuickstart" />
 	<property name="quickstart.build.dir" value="${quickstart.dir}/build" />
 	<property name="quickstart.dist.dir" value="${quickstart.dir}/dist" />
 	<property name="quickstart.webinf.dir" value="${quickstart.dir}/war/WEB-INF" />
-	
+
 	<!-- Properties refering Quickstart Project -->
 	<property name="helloworld.dir" value="../HelloWorld" />
 	<property name="helloworld.build.dir" value="${helloworld.dir}/build" />
 	<property name="helloworld.dist.dir" value="${helloworld.dir}/dist" />
 	<property name="helloworld.webinf.dir" value="${helloworld.dir}/war/WEB-INF" />
-	
-	
+
+
 	<!-- Properties refering Showcase Project -->
 	<property name="showcase.dir" value="../CruxShowcase" />
 	<property name="showcase.build.dir" value="${showcase.dir}/build" />
@@ -53,21 +53,21 @@
 	<property name="site.dir" value="../CruxSite" />
 	<property name="site.build.dir" value="${site.dir}/build" />
 	<property name="site.webinf.dir" value="${site.dir}/war/WEB-INF" />
-	
+
 	<!-- Properties refering CruxCrossDevice Project -->
 	<property name="crossdevice.build" value="../CruxCrossDeviceWidgets" />
 	<property name="crossdevice.build.dir" value="${crossdevice.build}/build" />
 	<property name="crossdevice.dist.dir" value="${crossdevice.build}/dist" />
 	<property name="crossdevice.name" value="crux-cross-device-widgets" />
-	
+
 	<!-- Properties refering CruxCrossDeviceShowcase Project -->
 	<property name="crossdeviceshowcase.build" value="../CruxCrossDeviceShowcase" />
 	<property name="crossdeviceshowcase.build.dir" value="${crossdeviceshowcase.build}/build" />
 	<property name="crossdeviceshowcase.webinf.dir" value="${crossdeviceshowcase.build}/war/WEB-INF" />
-	
-	<!-- 
+
+	<!--
 	========================================================================================================
-		Checks the presence of jars which Crux depends on  
+		Checks the presence of jars which Crux depends on
 	========================================================================================================
 	-->
 	<target name="check-dependencies">
@@ -77,8 +77,8 @@
 			</not>
 		</condition>
 	</target>
-	
-	<!-- 
+
+	<!--
 	========================================================================================================
 		Download dependencies
 	========================================================================================================
@@ -90,36 +90,36 @@
 		<unzip dest="${dist.dir}/tmp" src="${dist.dir}/tmp/${zipName}"/>
 		<copy todir="${crux.lib.dir}" flatten="yes">
 			<fileset dir="${dist.dir}/tmp">
-				<include name="lib/crux-dev-deps.jar"/>
-				<include name="lib/gwt-dev.jar"/>
-				<include name="lib/gwt-user.jar"/>
-				<include name="lib/validation-api-1.0.0.GA-sources.jar"/>
-				<include name="lib/validation-api-1.0.0.GA.jar"/>
+				<include name="**/lib/crux-dev-deps.jar"/>
+				<include name="**/lib/gwt-dev.jar"/>
+				<include name="**/lib/gwt-user.jar"/>
+				<include name="**/lib/validation-api-1.0.0.GA-sources.jar"/>
+				<include name="**/lib/validation-api-1.0.0.GA.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${crux.build.dir}/dependencies" flatten="yes">
 			<fileset dir="${dist.dir}/tmp">
-				<include name="dependencies/crux-runtime-deps.jar"/>
-				<include name="dependencies/gwt-servlet-deps.jar"/>
-				<include name="dependencies/gwt-servlet.jar"/>
+				<include name="**/dependencies/crux-runtime-deps.jar"/>
+				<include name="**/dependencies/gwt-servlet-deps.jar"/>
+				<include name="**/dependencies/gwt-servlet.jar"/>
 			</fileset>
 		</copy>
-		<delete includeemptydirs="true"> 
+		<delete includeemptydirs="true">
 			<fileset dir="${dist.dir}/tmp">
 				<include name="**/*"/>
 				<include name="*"/>
 			</fileset>
 		</delete>
 	</target>
-	
-	<!-- 
+
+	<!--
 	========================================================================================================
 		Dist
 	========================================================================================================
 	-->
-	<target name="dist" depends="download-dependencies" 
+	<target name="dist" depends="download-dependencies"
 		description="Compiles Crux and generates the installer (zip file) for distribution.">
-		
+
 		<delete dir="${dist.dir}" failonerror="no" includeemptydirs="true" />
 		<mkdir dir="${expanded.dir}" />
 
@@ -129,14 +129,14 @@
 		<subant inheritall="false" target="generate-javadoc" antfile="${crux.build.dir}/build.xml" failonerror="false" buildpath="."/>
 		<copy todir="${expanded.dir}/docs">
 			<fileset dir="${crux.dist.dir}/docs" includes="**/*"/>
-		</copy>	
+		</copy>
 		<antcall target="update-applications-jars" />
-		
+
 		<!-- Copy all files to distribution folder -->
 		<copy todir="${expanded.dir}/lib/build">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
 			</fileset>
 			<fileset dir="${crossdevice.dist.dir}">
@@ -148,7 +148,7 @@
 		</copy>
 		<copy todir="${expanded.dir}/lib/web-inf">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="${crux.runtime.deps.name}.jar" />
@@ -157,26 +157,26 @@
 		</copy>
 		<copy todir="${expanded.dir}/lib/gadget/build">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.gadgets.name}.jar" />				
+				<include name="${crux.gadgets.name}.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${expanded.dir}/lib/gadget/web-inf">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.gadgets.runtime.name}.jar" />				
+				<include name="${crux.gadgets.runtime.name}.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${expanded.dir}/lib/legacy">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="*-legacy.jar" />				
+				<include name="*-legacy.jar" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="${expanded.dir}" file="${project.config}" />
 		<copy todir="${expanded.dir}" file="${cmd.file}" />
 		<copy todir="${expanded.dir}" file="${sh.file}" />
 		<copy todir="${expanded.dir}" file="${launcher.sh.file}" />
 		<copy todir="${expanded.dir}" file="${launcher.cmd.file}" />
-		
+
 		<exec command="chmod 755 ${expanded.dir}/projectGenerator.sh" failonerror="false" failifexecutionfails="false"/>
 		<exec command="chmod 755 ${expanded.dir}/start.sh" failonerror="false" failifexecutionfails="false"/>
 
@@ -188,18 +188,18 @@
 		<ant inheritall="false" target="dist" antfile="${helloworld.build.dir}/build.xml"/>
 		<copy todir="${expanded.dir}/apps/helloworld.war">
 			<fileset dir="${helloworld.dist.dir}/helloworld.war" excludes="**/*.jar"/>
-		</copy>	
+		</copy>
 
 		<!-- Add Quickstart application -->
 		<ant inheritall="false" target="dist" antfile="${quickstart.build.dir}/build.xml"/>
 		<copy todir="${expanded.dir}/apps/quickstart.war">
 			<fileset dir="${quickstart.dist.dir}/quickstart.war" excludes="**/*.jar"/>
-		</copy>	
+		</copy>
 
 		<!--zip basedir="${expanded.dir}" destfile="${dist.dir}/crux-${version}.zip" /-->
 	</target>
-	
-	<!-- 
+
+	<!--
 	========================================================================================================
 		Compile Crux and update apllications with new jars
 	========================================================================================================
@@ -209,9 +209,9 @@
 		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<antcall target="update-applications-jars" />
 	</target>
-	
-	
-	<!-- 
+
+
+	<!--
 	========================================================================================================
 		Update apllications with new jars
 	========================================================================================================
@@ -220,9 +220,9 @@
 		<!-- Update Quickstart application -->
 		<copy todir="${quickstart.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}-legacy.jar" />				
-				<include name="${crux.widgets.name}-legacy.jar" />				
-				<include name="${crux.themes.name}-legacy.jar" />				
+				<include name="${crux.dev.name}-legacy.jar" />
+				<include name="${crux.widgets.name}-legacy.jar" />
+				<include name="${crux.themes.name}-legacy.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
@@ -230,7 +230,7 @@
 		</copy>
 		<copy todir="${quickstart.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}-legacy.jar" />				
+				<include name="${crux.runtime.name}-legacy.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
@@ -240,9 +240,9 @@
 		<!-- Update HelloWorld application -->
 		<copy todir="${helloworld.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
+				<include name="${crux.themes.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
@@ -250,43 +250,43 @@
 		</copy>
 		<copy todir="${helloworld.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-	
+
 		<!-- Update Showcase application -->
 		<copy todir="${showcase.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
+				<include name="${crux.themes.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${crossdevice.dist.dir}">
-				<include name="*.jar"/>			    
+				<include name="*.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${showcase.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		
+
 		<!-- Update CruxCrossDeviceWidgets project -->
 		<copy todir="${crossdevice.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
+				<include name="${crux.themes.name}.jar" />
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
@@ -295,11 +295,11 @@
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		
+
 		<!-- Update CruxCrossDeviceShowcase project -->
 		<copy todir="${crossdeviceshowcase.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
 				<include name="${crux.widgets.name}.jar" />
 			</fileset>
@@ -312,7 +312,7 @@
 		</copy>
 		<copy todir="${crossdeviceshowcase.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
@@ -322,25 +322,25 @@
 		<!-- Update CruxSite application -->
 		<copy todir="${site.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />				
-				<include name="${crux.widgets.name}.jar" />				
-				<include name="${crux.themes.name}.jar" />				
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
+				<include name="${crux.themes.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${crossdevice.dist.dir}">
-				<include name="*.jar"/>			    
+				<include name="*.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${site.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.runtime.name}.jar" />				
+				<include name="${crux.runtime.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.dependencies.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-	
+
 	</target>
 </project>
