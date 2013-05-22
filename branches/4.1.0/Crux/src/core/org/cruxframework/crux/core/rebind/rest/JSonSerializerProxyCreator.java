@@ -35,7 +35,6 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -103,9 +102,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		generateEncodeMethod(srcWriter);
-		generateEncodeToJSONMethod(srcWriter);
 		generateDecodeMethod(srcWriter);
-		generateDecodeFromJSONMethod(srcWriter);
 
 	}
 
@@ -158,58 +155,19 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		return imports;
 	}
 
-	private void generateDecodeMethod(SourcePrinter srcWriter)
-	{
-		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decode(String jsonText){");
-		String decodedString = generateDecodeString(srcWriter, targetObjectType, "jsonText");
-		srcWriter.println("return "+decodedString+";");
-		srcWriter.println("}");
-	}
-
 	private void generateEncodeMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("public String encode(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
-//		String encodedString = generateEncodeString(srcWriter, targetObjectType, "object");
+		srcWriter.println("public JSONValue encode(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
 		srcWriter.println("return null;");
 		srcWriter.println("}");
 	}
 
-	private void generateDecodeFromJSONMethod(SourcePrinter srcWriter)
+	private void generateDecodeMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decodeFromJSON(JSONValue json){");
+		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decode(JSONValue json){");
 		String decodedString = generateDecodeStringForJsonValue(srcWriter, targetObjectType, "json");
 		srcWriter.println("return "+decodedString+";");
 		srcWriter.println("}");
-	}
-
-	private void generateEncodeToJSONMethod(SourcePrinter srcWriter)
-	{
-		srcWriter.println("public JSONValue encodeToJSON(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
-//		String encodedString = generateEncodeString(srcWriter, targetObjectType, "object");
-		srcWriter.println("return null;");
-		srcWriter.println("}");
-	}
-
-	public static String generateEncodeString(SourcePrinter srcWriter, JType objectType, String objectName)
-	{
-		if (isJsonFriendly(objectType))
-		{
-			return(objectName+".toString()");
-		}
-		return "\"\"";
-	}
-
-	public String generateDecodeString(SourcePrinter srcWriter, JType objectType, String jsonTextVar)
-	{
-		String jsonValueVar = nameFactory.createName("jsonValue");
-		JClassType objectClassType = objectType.isClassOrInterface();
-		if (objectClassType != null && objectClassType.isAssignableTo(javascriptObjectType))
-		{
-			srcWriter.println(objectType.getParameterizedQualifiedSourceName()+" result = "+JsonUtils.class.getCanonicalName()+".safeEval("+jsonTextVar+");");
-			return "result";
-		}
-		srcWriter.println("JSONValue "+jsonValueVar+" = JSONParser.parseStrict("+jsonTextVar+");");
-		return generateDecodeStringForJsonValue(srcWriter, objectType, jsonValueVar);
 	}
 
 	private String generateDecodeStringForJsonValue(SourcePrinter srcWriter, JType objectType, String jsonValueVar)
@@ -291,10 +249,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			srcWriter.println("for (int i=0; i < "+jsonCollectionVar+".size(); i++){");
 			String arrayItemValueVar = nameFactory.createName("item");
 			srcWriter.println("JSONValue " + arrayItemValueVar + " = " + jsonCollectionVar + ".get(i);");
-//			String arrayValueVar = generateDecodeStringForJsonValue(srcWriter, targetObjectType, arrayItemValueVar);
-//			srcWriter.println(resultObjectVar + ".add("+arrayValueVar+");");
 			String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
-			srcWriter.println(resultObjectVar+".add(new "+serializerName+"().decodeFromJSON("+arrayItemValueVar+"));");
+			srcWriter.println(resultObjectVar+".add(new "+serializerName+"().decode("+arrayItemValueVar+"));");
 			srcWriter.println("}");
 		}
 		else
@@ -302,10 +258,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			srcWriter.println("for (String key : "+jsonCollectionVar+".keySet()){");
 			String mapItemValueVar = nameFactory.createName("item");
 			srcWriter.println("JSONValue " + mapItemValueVar + " = " + jsonCollectionVar + ".get(key);");
-//			String mapValueVar = generateDecodeStringForJsonValue(srcWriter, targetObjectType, mapItemValueVar);
-//			srcWriter.println(resultObjectVar + ".put(key, "+mapValueVar+");");
 			String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
-			srcWriter.println(resultObjectVar+".put(key, new "+serializerName+"().decodeFromJSON("+mapItemValueVar+"));");
+			srcWriter.println(resultObjectVar+".put(key, new "+serializerName+"().decode("+mapItemValueVar+"));");
 			srcWriter.println("}");
 		}
 	}
@@ -393,10 +347,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			JType paramType = method.getParameterTypes()[0];
 			String paramObjectVar = nameFactory.createName("param");
 			srcWriter.println("JSONValue "+paramObjectVar+" = "+jsonObjectVar+".get("+EscapeUtils.quote(property)+");");
-//			String propertyVar = generateDecodeStringForJsonValue(srcWriter, paramType, paramObjectVar);
-//			srcWriter.println(resultObjectVar+"."+method.getName()+"("+propertyVar+");");
 			String serializerName = new JSonSerializerProxyCreator(context, logger, paramType).create();
-			srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decodeFromJSON("+paramObjectVar+"));");
+			srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+paramObjectVar+"));");
 		}
 	}
 

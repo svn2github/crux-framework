@@ -52,6 +52,8 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 /**
  * This class creates a client proxy for calling rest services
@@ -144,35 +146,17 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 			{
 				JClassType callbackResultType = JClassUtils.getTypeArgForGenericType(callbackParameter.getType().isClassOrInterface());
 				srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode()){");
-//				if (callbackResultType.isAssignableTo(stringType))
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = response.getText();");
-//				}
-//				else if (callbackResultType.isAssignableTo(dateType))
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = new Date(Long.parseLong(response.getText());");
-//				}
-//				else if (callbackResultType.findConstructor(new JType[]{stringType}) != null)
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = new "+callbackResultTypeName+"(response.getText());");
-//				}
-//				else if (callbackResultType.findMethod("valueOf", new JType[]{stringType}) != null)
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".valueOf(response.getText());");
-//				}
-//				else if (callbackResultType.findMethod("fromString", new JType[]{stringType}) != null)
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = "+callbackResultTypeName+".fromString(response.getText());");
-//				}
-//				else if (callbackResultType.isAssignableTo(javascriptObjectType))
-//				{
-//					srcWriter.println(callbackResultTypeName+" result = JsonUtils.safeEval(response.getText());");
-//				}
-//				else
-//				{
+
+				if (callbackResultType != null && callbackResultType.isAssignableTo(javascriptObjectType))
+				{
+					srcWriter.println(callbackResultTypeName+" result = "+JsonUtils.class.getCanonicalName()+".safeEval(jsonText);");
+				}
+				else
+				{
+					srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(response.getText());");
 					String serializerName = new JSonSerializerProxyCreator(context, logger, callbackResultType).create();
-					srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(response.getText());");
-//				}
+					srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(jsonValue);");
+				}
 				srcWriter.println(callbackParameterName+".onSuccess(result);");
 				srcWriter.println("}else {");
 				srcWriter.println(callbackParameterName+".onSuccess(null);");
@@ -330,7 +314,9 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 				RequestCallback.class.getCanonicalName(),
 				Request.class.getCanonicalName(), 
 				Response.class.getCanonicalName(), 
-				JsonUtils.class.getCanonicalName()};
+				JsonUtils.class.getCanonicalName(), 
+				JSONValue.class.getCanonicalName(),
+				JSONParser.class.getCanonicalName()};
 	}
 	
 	protected Method getImplementationMethod(JMethod method)

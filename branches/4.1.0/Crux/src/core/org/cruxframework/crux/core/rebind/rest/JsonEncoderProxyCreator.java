@@ -18,10 +18,12 @@ package org.cruxframework.crux.core.rebind.rest;
 import org.cruxframework.crux.core.client.service.JsonEncoder;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 /**
@@ -33,6 +35,7 @@ import com.google.gwt.json.client.JSONValue;
 public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private JClassType targetObjectType;
+	private JClassType javascriptObjectType;
 
 	public JsonEncoderProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
@@ -47,6 +50,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 				break;
 			}
 		}
+		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 	}
 
 	@Override
@@ -54,29 +58,35 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 	{
 		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();;
 		srcWriter.println("public String encode(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
-		srcWriter.println("return "+serializerName+".encode(object);");
+		srcWriter.println("JSONValue result = "+serializerName+".encode(object);");
+		srcWriter.println("if (result == null || result.isString() == null){");
+		srcWriter.println("return null;");
+		srcWriter.println("}");
+		srcWriter.println("return result.stringValue();");
 		srcWriter.println("}");
 		srcWriter.println();
 
 		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decode(String jsonText){");
-		srcWriter.println("return "+serializerName+".decode(jsonText);");
+		JClassType objectClassType = targetObjectType.isClassOrInterface();
+		if (objectClassType != null && objectClassType.isAssignableTo(javascriptObjectType))
+		{
+			srcWriter.println(targetObjectType.getParameterizedQualifiedSourceName()+" result = "+JsonUtils.class.getCanonicalName()+".safeEval(jsonText);");
+			srcWriter.println("return result;");
+		}
+		srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(jsonText);");
+		srcWriter.println("return "+serializerName+".decode(jsonValue);");
 		srcWriter.println("}");
 		srcWriter.println();
-
-		srcWriter.println("public JSONValue encodeToJSON(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
-		srcWriter.println("return "+serializerName+".encodeToJSON(object);");
-		srcWriter.println("}");
-		srcWriter.println();
-
-		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decodeFromJSON(JSONValue json){");
-		srcWriter.println("return "+serializerName+".decodeFromJSON(json);");
-		srcWriter.println("}");
 	}
 
 	@Override
 	protected String[] getImports()
 	{
-		return new String[]{JsonUtils.class.getCanonicalName(), JSONValue.class.getCanonicalName()};
+		return new String[]{
+				JsonUtils.class.getCanonicalName(), 
+				JSONValue.class.getCanonicalName(), 
+				JSONParser.class.getCanonicalName()
+		};
 	}
 
 }

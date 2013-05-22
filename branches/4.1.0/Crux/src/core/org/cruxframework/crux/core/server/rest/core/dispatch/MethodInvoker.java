@@ -76,6 +76,7 @@ public class MethodInvoker
 
 			Annotation[] annotations = method.getParameterAnnotations()[i];
 			params[i] = createParameterExtractor(root, method, type, genericType, annotations);
+			//TODO nao aceitar dois BodyParamInjectors no mesmo metodo....da conflito.
 		}
 	}
 

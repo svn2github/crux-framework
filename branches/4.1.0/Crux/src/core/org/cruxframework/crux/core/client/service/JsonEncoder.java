@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.core.client.service;
 
-import com.google.gwt.json.client.JSONValue;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -24,7 +23,5 @@ import com.google.gwt.json.client.JSONValue;
 public interface JsonEncoder<T>
 {
 	String encode(T object);
-	JSONValue encodeToJSON(T object);
 	T decode(String jsonText);
-	T decodeFromJSON(JSONValue jsonText);
 }
