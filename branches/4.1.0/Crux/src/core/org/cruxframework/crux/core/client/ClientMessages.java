@@ -117,4 +117,7 @@ public interface ClientMessages extends Messages
 	
 	@DefaultMessage("Css Resource [{0}] injected.")
 	String resourceCsssInjected(String cssClassName);
+
+	@DefaultMessage("Unexpected error calling rest service. Error [{0}].")
+	String restServiceUnexpectedError(String errorMesg);
 }

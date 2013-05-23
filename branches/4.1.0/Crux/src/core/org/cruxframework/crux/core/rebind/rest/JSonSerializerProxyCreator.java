@@ -39,12 +39,17 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
@@ -60,7 +65,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private JClassType setType;
 	private JClassType mapType;
 	private JClassType javascriptObjectType;
-	
+
 	private static Set<String> jsonFriendlyTypes = new HashSet<String>();
 	private static NameFactory nameFactory = new NameFactory();
 	static
@@ -150,7 +155,11 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JSONParser.class.getCanonicalName(),	
 				JSONValue.class.getCanonicalName(),
 				JSONObject.class.getCanonicalName(), 
-				JSONArray.class.getCanonicalName()
+				JSONArray.class.getCanonicalName(),
+				JSONNull.class.getCanonicalName(), 
+				JSONNumber.class.getCanonicalName(),
+				JSONBoolean.class.getCanonicalName(), 
+				JSONString.class.getCanonicalName()
 		};
 		return imports;
 	}
@@ -158,19 +167,20 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private void generateEncodeMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public JSONValue encode(" + targetObjectType.getParameterizedQualifiedSourceName() + " object){");
-		srcWriter.println("return null;");
+		String encoded = generateEncodeObject(srcWriter, targetObjectType, "object");
+		srcWriter.println("return "+encoded+";");
 		srcWriter.println("}");
 	}
 
 	private void generateDecodeMethod(SourcePrinter srcWriter)
 	{
 		srcWriter.println("public " + targetObjectType.getParameterizedQualifiedSourceName() + " decode(JSONValue json){");
-		String decodedString = generateDecodeStringForJsonValue(srcWriter, targetObjectType, "json");
+		String decodedString = generateDecodeJsonValue(srcWriter, targetObjectType, "json");
 		srcWriter.println("return "+decodedString+";");
 		srcWriter.println("}");
 	}
 
-	private String generateDecodeStringForJsonValue(SourcePrinter srcWriter, JType objectType, String jsonValueVar)
+	private String generateDecodeJsonValue(SourcePrinter srcWriter, JType objectType, String jsonValueVar)
 	{
 		String resultObjectVar = nameFactory.createName("o");
 		String resultSourceName = objectType.getParameterizedQualifiedSourceName();
@@ -206,6 +216,49 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		return resultObjectVar;
 	}
 
+	private String generateEncodeObject(SourcePrinter srcWriter, JType objectType, String objectVar)
+	{
+		String resultJSONValueVar = nameFactory.createName("json");
+
+		srcWriter.println("JSONValue "+resultJSONValueVar + " = JSONNull.getInstance();");
+		boolean isPrimitive = objectType.isPrimitive() != null;
+		
+		if (!isPrimitive)
+		{
+			srcWriter.println("if ("+objectVar+" != null){");
+		}
+
+		if (isJsonFriendly(objectType))
+		{
+			generateEncodeStringForJsonFriendlyType(srcWriter, objectType, objectVar, resultJSONValueVar);
+		}
+		else
+		{
+			JClassType objectClassType = objectType.isClassOrInterface();
+			if (objectClassType == null)
+			{
+				throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be serialized by JsonEncoder. ");
+			}
+			if (objectClassType.isAssignableTo(javascriptObjectType))
+			{
+				srcWriter.println(resultJSONValueVar+" = new JSONObject("+objectVar+");");
+			}
+			else if (isCollection(objectClassType))
+			{
+				generateEncodeStringForCollectionType(srcWriter, objectClassType, objectVar, resultJSONValueVar);
+			}
+			else
+			{
+				generateEncodeStringForCustomType(srcWriter, objectClassType, objectVar, resultJSONValueVar);
+			}
+		}
+		if (!isPrimitive)
+		{
+			srcWriter.println("}");
+		}
+		return resultJSONValueVar;
+	}
+
 	private boolean isCollection(JClassType objectType)
 	{
 		if ((objectType.isAssignableTo(listType)) || (objectType.isAssignableTo(setType)) || (objectType.isAssignableTo(mapType))
@@ -216,74 +269,113 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		}
 		return false;
 	}
-	
+
 	private void generateDecodeStringForJsonFriendlyType(SourcePrinter srcWriter, JType objectType, String jsonValueVar, String resultObjectVar)
-    {
-	    try
-        {
-	    	if (objectType.getQualifiedSourceName().equals("java.lang.String"))
-	    	{
-	    		srcWriter.println(resultObjectVar + " = " + JClassUtils.getParsingExpressionForSimpleType(jsonValueVar+".isString().stringValue()", objectType) + ";");
-	    	}
-	    	else
-	    	{
-	    		srcWriter.println(resultObjectVar + " = " + JClassUtils.getParsingExpressionForSimpleType(jsonValueVar+".toString()", objectType) + ";");
-	    	}
-        }
-        catch (NotFoundException e)
-        {
+	{
+		try
+		{
+			if (objectType.getQualifiedSourceName().equals("java.lang.String"))
+			{
+				srcWriter.println(resultObjectVar + " = " + JClassUtils.getParsingExpressionForSimpleType(jsonValueVar+".isString().stringValue()", objectType) + ";");
+			}
+			else
+			{
+				srcWriter.println(resultObjectVar + " = " + JClassUtils.getParsingExpressionForSimpleType(jsonValueVar+".toString()", objectType) + ";");
+			}
+		}
+		catch (NotFoundException e)
+		{
 			throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " +
-			"Error Interpreting object type.", e);
-        }
-    }
+					"Error Interpreting object type.", e);
+		}
+	}
+
+	private void generateEncodeStringForJsonFriendlyType(SourcePrinter srcWriter, JType objectType, String objectVar, String resultJSONValueVar)
+	{
+		if (objectType.getQualifiedSourceName().equals(String.class.getCanonicalName()))
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONString(" + objectVar + ");");
+		}
+		else if ((objectType == JPrimitiveType.BYTE) || (objectType.getQualifiedSourceName().equals(Byte.class.getCanonicalName()))
+				||(objectType == JPrimitiveType.SHORT) || (objectType.getQualifiedSourceName().equals(Short.class.getCanonicalName()))
+				||(objectType == JPrimitiveType.INT) || (objectType.getQualifiedSourceName().equals(Integer.class.getCanonicalName()))
+				||(objectType == JPrimitiveType.LONG) || (objectType.getQualifiedSourceName().equals(Long.class.getCanonicalName()))
+				||(objectType == JPrimitiveType.FLOAT) || (objectType.getQualifiedSourceName().equals(Float.class.getCanonicalName()))
+				||(objectType == JPrimitiveType.DOUBLE) || (objectType.getQualifiedSourceName().equals(Double.class.getCanonicalName())))
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONNumber(" + objectVar + ");");
+		}
+		else if (objectType.getQualifiedSourceName().equals(Date.class.getCanonicalName()))
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONNumber(" + objectVar + ".getTime());");
+		}
+		else if ((objectType == JPrimitiveType.BOOLEAN) || (objectType.getQualifiedSourceName().equals(Boolean.class.getCanonicalName())))
+		{
+			srcWriter.println(resultJSONValueVar + " = JSONBoolean.getInstance(" + objectVar + ");");
+		}
+		else if ((objectType == JPrimitiveType.CHAR) || (objectType.getQualifiedSourceName().equals(Character.class.getCanonicalName())))
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONString(\"\"+" + objectVar + ");");
+		}
+		else if (objectType.isEnum() != null)
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONString(" + objectVar + ".toString());");
+		}
+		else if (objectType.getQualifiedSourceName().equals(BigInteger.class.getCanonicalName())
+				|| objectType.getQualifiedSourceName().equals(BigDecimal.class.getCanonicalName()))
+		{
+			srcWriter.println(resultJSONValueVar + " = new JSONString(" + objectVar + ".toString());");
+		}
+		else
+		{
+			throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be serialized by JsonEncoder. " +
+			"Error Interpreting object type.");
+		}
+	}
 
 	private void generateDecodeStringForCollectionType(SourcePrinter srcWriter, JClassType objectType, String jsonValueVar, String resultObjectVar, String resultSourceName)
 	{
 		boolean isList = (!objectType.isAssignableTo(mapType)) && (!objectType.getQualifiedSourceName().equals(FastMap.class.getCanonicalName()));
 
-		String jsonCollectionVar = generateJSONValueCollectionVariableCreation(srcWriter, jsonValueVar, isList);
-		JClassType targetObjectType = generateCollectionInstantiation(srcWriter, objectType, resultObjectVar, resultSourceName);
-		
+		String jsonCollectionVar = generateJSONValueCollectionForDecode(srcWriter, jsonValueVar, isList);
+		JClassType targetObjectType = getCollectionTargetType(objectType);
+		generateCollectionInstantiation(srcWriter, objectType, resultObjectVar, resultSourceName, targetObjectType);
+
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
+		String serializerVar = nameFactory.createName("serializer");
+		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
 		{
 			srcWriter.println("for (int i=0; i < "+jsonCollectionVar+".size(); i++){");
-			String arrayItemValueVar = nameFactory.createName("item");
-			srcWriter.println("JSONValue " + arrayItemValueVar + " = " + jsonCollectionVar + ".get(i);");
-			String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
-			srcWriter.println(resultObjectVar+".add(new "+serializerName+"().decode("+arrayItemValueVar+"));");
+			srcWriter.println(resultObjectVar+".add("+serializerVar+".decode("+jsonCollectionVar + ".get(i)));");
 			srcWriter.println("}");
 		}
 		else
 		{
 			srcWriter.println("for (String key : "+jsonCollectionVar+".keySet()){");
-			String mapItemValueVar = nameFactory.createName("item");
-			srcWriter.println("JSONValue " + mapItemValueVar + " = " + jsonCollectionVar + ".get(key);");
-			String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
-			srcWriter.println(resultObjectVar+".put(key, new "+serializerName+"().decode("+mapItemValueVar+"));");
+			srcWriter.println(resultObjectVar+".put(key, "+serializerVar+".decode("+jsonCollectionVar + ".get(key)));");
 			srcWriter.println("}");
 		}
 	}
 
-	private JClassType generateCollectionInstantiation(SourcePrinter srcWriter, JClassType objectType, String resultObjectVar, String resultSourceName)
-    {
-	    JClassType targetObjectType;
-	    if (objectType.getQualifiedSourceName().equals(FastList.class.getCanonicalName()) 
-			|| objectType.getQualifiedSourceName().equals(FastMap.class.getCanonicalName())
-			|| objectType.isInterface() == null)
+	private void generateCollectionInstantiation(SourcePrinter srcWriter, JClassType objectType, 
+													   String resultObjectVar, String resultSourceName, 
+													   JClassType targetObjectType)
+	{
+		if (objectType.getQualifiedSourceName().equals(FastList.class.getCanonicalName()) 
+				|| objectType.getQualifiedSourceName().equals(FastMap.class.getCanonicalName())
+				|| objectType.isInterface() == null)
 		{
-			targetObjectType = objectType.isParameterized().getTypeArgs()[0];
 			srcWriter.println(resultObjectVar+" = new "+resultSourceName+"();");
 		}
 		else
 		{
 			if (objectType.isAssignableTo(listType))
 			{
-				targetObjectType = objectType.isParameterized().getTypeArgs()[0];
 				srcWriter.println(resultObjectVar+" = new "+ArrayList.class.getCanonicalName()+"<"+targetObjectType.getParameterizedQualifiedSourceName()+">();");
 			}
 			else if (objectType.isAssignableTo(setType))
 			{
-				targetObjectType = objectType.isParameterized().getTypeArgs()[0];
 				srcWriter.println(resultObjectVar+" = new "+HashSet.class.getCanonicalName()+"<"+targetObjectType.getParameterizedQualifiedSourceName()+">;");
 			}
 			else if (objectType.isAssignableTo(mapType))
@@ -292,9 +384,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				if (!keyObjectType.getQualifiedSourceName().equals("java.lang.String"))
 				{
 					throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " +
-								"Map Key is invalid. Only Strings are accepted.");
+					"Map Key is invalid. Only Strings are accepted.");
 				}
-				targetObjectType = objectType.isParameterized().getTypeArgs()[1];
 				srcWriter.println(resultObjectVar+" = new "+HashMap.class.getCanonicalName()+"<"+
 						keyObjectType.getParameterizedQualifiedSourceName()+","+targetObjectType.getParameterizedQualifiedSourceName()+">();");
 			}
@@ -304,13 +395,12 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				"Invalid collection type.");
 			}
 		}
-	    return targetObjectType;
-    }
+	}
 
-	private String generateJSONValueCollectionVariableCreation(SourcePrinter srcWriter, String jsonValueVar, boolean isList)
-    {
-	    String jsonCollectionVar;
-	    if (isList)
+	private String generateJSONValueCollectionForDecode(SourcePrinter srcWriter, String jsonValueVar, boolean isList)
+	{
+		String jsonCollectionVar;
+		if (isList)
 		{
 			jsonCollectionVar = nameFactory.createName("jsonArray");
 			srcWriter.println("JSONArray "+jsonCollectionVar+" = "+jsonValueVar+".isArray();");
@@ -320,8 +410,72 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			jsonCollectionVar = nameFactory.createName("jsonMap");
 			srcWriter.println("JSONObject "+jsonCollectionVar+" = "+jsonValueVar+".isObject();");
 		}
-	    return jsonCollectionVar;
-    }
+		return jsonCollectionVar;
+	}
+
+	private void generateEncodeStringForCollectionType(SourcePrinter srcWriter, JClassType objectType, String objectVar, String resultJSONValueVar)
+	{
+		boolean isList = (!objectType.isAssignableTo(mapType)) && (!objectType.getQualifiedSourceName().equals(FastMap.class.getCanonicalName()));
+
+		JClassType targetObjectType = getCollectionTargetType(objectType);
+		generateJSONValueCollectionForEncode(srcWriter, resultJSONValueVar, isList);
+
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();
+		String serializerVar = nameFactory.createName("serializer");
+		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
+		if (isList)
+		{
+			srcWriter.println("for ("+targetObjectType.getParameterizedQualifiedSourceName()+" obj: "+objectVar+"){");
+			srcWriter.println(resultJSONValueVar+".isArray().set("+resultJSONValueVar+".isArray().size(), "+serializerVar+".encode(obj));");
+			srcWriter.println("}");
+		}
+		else
+		{
+			srcWriter.println("for (String key : "+objectVar+".keySet()){");
+			srcWriter.println(resultJSONValueVar+".isObject().put(key, "+serializerVar+".encode("+objectVar+".get(key)));");
+			srcWriter.println("}");
+		}
+	}
+
+	private void generateJSONValueCollectionForEncode(SourcePrinter srcWriter, String resultJSONValueVar, boolean isList)
+	{
+		if (isList)
+		{
+			srcWriter.println(resultJSONValueVar+" = new JSONArray();");
+		}
+		else
+		{
+			srcWriter.println(resultJSONValueVar+" = new JSONObject();");
+		}
+	}
+
+	private JClassType getCollectionTargetType(JClassType objectType)
+	{
+		JClassType targetObjectType;
+		if (objectType.getQualifiedSourceName().equals(FastList.class.getCanonicalName()) 
+				|| objectType.getQualifiedSourceName().equals(FastMap.class.getCanonicalName())
+				|| (objectType.isAssignableTo(listType))
+				|| (objectType.isAssignableTo(setType)))
+		{
+			targetObjectType = objectType.isParameterized().getTypeArgs()[0];
+		}
+		else if (objectType.isAssignableTo(mapType))
+		{
+			JClassType keyObjectType = objectType.isParameterized().getTypeArgs()[0];
+			if (!keyObjectType.getQualifiedSourceName().equals("java.lang.String"))
+			{
+				throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be serialized by JsonEncoder. " +
+				"Map Key is invalid. Only Strings are accepted.");
+			}
+			targetObjectType = objectType.isParameterized().getTypeArgs()[1];
+		} 
+		else 
+		{
+			throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be serialized by JsonEncoder. " +
+			"Invalid collection type.");
+		}
+		return targetObjectType;
+	}
 
 	private void generateDecodeStringForCustomType(SourcePrinter srcWriter, JClassType objectType, String jsonValueVar, String resultObjectVar, String resultSourceName)
 	{
@@ -343,15 +497,28 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		List<JMethod> setterMethods = JClassUtils.getSetterMethods(objectType);
 		for (JMethod method : setterMethods)
 		{
-			String property = JClassUtils.getPropertyForSetterMethod(method);
+			String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 			JType paramType = method.getParameterTypes()[0];
-			String paramObjectVar = nameFactory.createName("param");
-			srcWriter.println("JSONValue "+paramObjectVar+" = "+jsonObjectVar+".get("+EscapeUtils.quote(property)+");");
 			String serializerName = new JSonSerializerProxyCreator(context, logger, paramType).create();
-			srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+paramObjectVar+"));");
+			srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
 		}
 	}
 
+
+	private void generateEncodeStringForCustomType(SourcePrinter srcWriter, JClassType objectType, String objectVar, String resultJSONValueVar)
+	{
+		srcWriter.println(resultJSONValueVar+" = new JSONObject();");
+		
+		List<JMethod> getterMethods = JClassUtils.getGetterMethods(objectType);
+		for (JMethod method : getterMethods)
+		{
+			String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+			JType returnType = method.getReturnType();
+			String serializerName = new JSonSerializerProxyCreator(context, logger, returnType).create();
+			srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+		}
+	}
+	
 	public static boolean isJsonFriendly(JType jType)
 	{
 		return (jsonFriendlyTypes.contains(jType.getQualifiedSourceName()));

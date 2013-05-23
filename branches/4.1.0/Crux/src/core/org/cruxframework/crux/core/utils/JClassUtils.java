@@ -680,7 +680,13 @@ public class JClassUtils
         return (method.isPublic() && method.getName().startsWith("set") && method.getName().length() >3 && method.getParameters().length == 1);
 	}
 	
-	public static String getPropertyForSetterMethod(JMethod method)
+	public static boolean isValidGetterMethod(JMethod method)
+	{
+        return (method.isPublic() && method.getName().startsWith("get") && method.getName().length() >3 
+        		&& method.getParameters().length == 0) && !method.getName().equals("getClass");
+	}
+	
+	public static String getPropertyForGetterOrSetterMethod(JMethod method)
     {
 		String name = method.getName().substring(3);
 		name = Character.toLowerCase(name.charAt(0))+ name.substring(1);
@@ -704,6 +710,24 @@ public class JClassUtils
 	    return result;
     }
 
+	public static List<JMethod> getGetterMethods(JClassType objectType)
+    {
+		List<JMethod> result = new ArrayList<JMethod>();
+	    JMethod[] methods = objectType.getOverridableMethods();
+	    
+	    for (JMethod jMethod : methods)
+        {
+	        if (isValidGetterMethod(jMethod))
+	        {
+	        	result.add(jMethod);
+	        }
+        }
+	    
+	    return result;
+    }
+
+	
+	
 	public static String getEmptyValueForType(JType objectType)
     {
 		JPrimitiveType primitiveType = objectType.isPrimitive();
@@ -741,5 +765,4 @@ public class JClassUtils
 	    JClassType jClassType = parameterized.getTypeArgs()[0];
 	    return jClassType;
     }
-
 }

@@ -108,10 +108,6 @@ public class StringParameterInjector
 	    {
 	    	valueOf = fromString;
 	    }
-	    if (valueOf == null)
-	    {
-	    	throw new RuntimeException("Unable to find a constructor that takes a String param or a valueOf() or fromString() method for " + getParamSignature() + " on " + target + " for basetype: " + type.getName());
-	    }
 	    return valueOf;
     }
 
