@@ -91,6 +91,10 @@ public class MessageBodyParamInjector extends StringParameterInjector implements
 				}
 				try
                 {
+					if (strVal == null || strVal.length()==0)
+					{
+						strVal = defaultValue;
+					}
 	                value = this.reader.readValue(strVal);
                 }
                 catch (Exception e)

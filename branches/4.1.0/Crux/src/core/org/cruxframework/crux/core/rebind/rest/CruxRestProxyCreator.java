@@ -242,16 +242,16 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 							srcWriter.println(builder+".setHeader(\"Content-type\", \"application/x-www-form-urlencoded\");");
 							formEncoded = true;
 						}
-						srcWriter.println("requestData = requestData.replace(\"{"+parameters[i].getName()+"}\", URL.encode("+parameters[i].getName()+"));");
+						srcWriter.println("requestData = requestData.replace(\"{"+parameters[i].getName()+"}\", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")));");
 					}
 					if (annotation instanceof HeaderParam)
 					{
-						srcWriter.println(builder+".setHeader("+EscapeUtils.quote(((HeaderParam) annotation).value())+", URL.encode("+parameters[i].getName()+"));");
+						srcWriter.println(builder+".setHeader("+EscapeUtils.quote(((HeaderParam) annotation).value())+", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")));");
 					}
 					if (annotation instanceof CookieParam)
 					{
 						srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(((CookieParam) annotation).value()) + 
-								", URL.encode("+parameters[i].getName()+"), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+								", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
 					}
 				}
 			}
@@ -284,7 +284,8 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 			{
 				if ((annotation instanceof QueryParam) || (annotation instanceof PathParam))
 				{
-					srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameters[i].getName()+"}\", "+parameters[i].getName()+");");
+					srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameters[i].getName()+"}\", "+
+							"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\"));");
 				}
 			}
 		}

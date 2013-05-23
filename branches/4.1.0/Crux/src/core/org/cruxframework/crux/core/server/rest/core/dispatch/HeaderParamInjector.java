@@ -41,6 +41,6 @@ public class HeaderParamInjector extends StringParameterInjector implements Valu
 		{
 			return extractValue(list.get(list.size() - 1));
 		}
-		return null;
+		return extractValue(null);
 	}
 }

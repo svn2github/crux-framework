@@ -18,7 +18,6 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
@@ -40,7 +39,7 @@ public class FormParamInjector extends StringParameterInjector implements ValueI
 		List<String> list = request.getDecodedFormParameters().get(paramName);
 		if (list == null)
 		{
-			list = new ArrayList<String>();
+			return extractValue(null);
 		}
 		if (list != null && list.size() > 0)
 		{

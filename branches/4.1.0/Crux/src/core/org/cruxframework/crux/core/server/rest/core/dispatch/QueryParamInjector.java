@@ -41,6 +41,6 @@ public class QueryParamInjector extends StringParameterInjector implements Value
 		{
 			return extractValue(list.get(list.size() - 1));
 		}
-		return null;
+		return extractValue(null);
 	}
 }

@@ -118,7 +118,7 @@ public class StringParameterInjector
 
 	public Object extractValue(String strVal)
 	{
-		if (strVal == null)
+		if (strVal == null || strVal.length()==0)
 		{
 			if (defaultValue == null)
 			{
