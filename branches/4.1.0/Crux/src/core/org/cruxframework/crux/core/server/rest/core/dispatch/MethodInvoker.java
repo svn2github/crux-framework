@@ -48,7 +48,7 @@ public class MethodInvoker
 	protected ValueInjector[] params;
 	private Class<?>[] exceptionTypes;
 
-	public MethodInvoker(Class<?> root, Method method)
+	public MethodInvoker(Class<?> root, Method method, String httpMethod)
 	{
 		this.method = method;
 		this.exceptionTypes = method.getExceptionTypes();
@@ -76,8 +76,8 @@ public class MethodInvoker
 
 			Annotation[] annotations = method.getParameterAnnotations()[i];
 			params[i] = createParameterExtractor(root, method, type, genericType, annotations);
-			//TODO nao aceitar dois BodyParamInjectors no mesmo metodo....da conflito.
 		}
+		validateParamExtractors(httpMethod);
 	}
 
 	public ValueInjector[] getParams()
@@ -222,4 +222,40 @@ public class MethodInvoker
 			return new MessageBodyParamInjector(injectTargetClass, injectTarget, type, genericType, annotations);
 		}
 	}
+	
+	protected void validateParamExtractors(String httpMethod)
+    {
+		boolean hasFormParam = false;
+		boolean hasBodyParam = false;
+		
+		for (ValueInjector paramInjector : params)
+        {
+	        if (paramInjector instanceof FormParamInjector)
+	        {
+	        	hasFormParam = true;
+	        }
+	        if (paramInjector instanceof MessageBodyParamInjector)
+	        {
+	    		if (hasBodyParam)
+	    		{
+	    			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can not use receive " +
+	    					"more than one parameter through body text", "Can not execute requested service");
+	    		}
+	        	hasBodyParam = true;
+	        }
+        }
+
+		if (hasBodyParam && hasFormParam)
+		{
+			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can not use both " +
+					"types on the same method: FormParam and BodyParam", "Can not execute requested service");
+		}
+		if ((hasBodyParam || hasFormParam) && httpMethod.equals("GET"))
+		{
+			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can receive " +
+					"parameters on body for GET methods.", "Can not execute requested service");
+		}
+    }
+
+	
 }

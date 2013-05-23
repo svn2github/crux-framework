@@ -207,7 +207,6 @@ public class ResourceRegistry
 				logger.error("Rest annotations found at non-public method: " + method.getDeclaringClass().getName() + "." + method.getName() + "(); Only public methods may be exposed as resource methods.");
 			}
 		}
-		//TODO nao permitir metodos GET que sejam void
 	}
 	
 	/**

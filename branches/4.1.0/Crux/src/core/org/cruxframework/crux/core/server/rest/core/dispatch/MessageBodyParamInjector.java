@@ -105,5 +105,4 @@ public class MessageBodyParamInjector extends StringParameterInjector implements
 		}
 		return value;
 	}
-	//TODO nao aceitar parametro no corpo do email que venham de metodos GET... pra GET, forcar que os parametros venham da URI
 }

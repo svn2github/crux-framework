@@ -49,13 +49,22 @@ public class ResourceMethod
 
 	private CacheInfo cacheInfo;
 
+	private boolean hasReturnType;
+
 	public ResourceMethod(Class<?> clazz, Method method, String httpMethod)
 	{
 		this.httpMethod = httpMethod;
 		this.resourceClass = clazz;
 		this.method = method;
 		this.genericReturnType = ClassUtils.getGenericReturnTypeOfGenericInterfaceMethod(clazz, method);
-		this.methodInvoker = new MethodInvoker(resourceClass, method);
+		this.hasReturnType = genericReturnType != null && !genericReturnType.equals(Void.class) && !genericReturnType.equals(Void.TYPE);
+		if (!hasReturnType && httpMethod.equals("GET"))
+		{
+			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". @GET methods " +
+					"can not be void.", "Can not execute requested service");
+		}
+		
+		this.methodInvoker = new MethodInvoker(resourceClass, method, httpMethod);
 		this.cacheInfo = HttpMethodHelper.getCacheInfoForGET(method);
 
 	}
@@ -96,7 +105,6 @@ public class ResourceMethod
 	public MethodReturn invoke(HttpRequest request, Object target)
 	{
 		Object rtn = methodInvoker.invoke(request, target);
-		boolean hasReturnType = genericReturnType != null && !genericReturnType.equals(Void.class) && !genericReturnType.equals(Void.TYPE) ;
 		String retVal = null;
 		if (hasReturnType && rtn != null)
 		{
