@@ -40,6 +40,7 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.dev.generator.NameFactory;
 
 /**
  * Generates a RegisteredControllers class. 
@@ -55,6 +56,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	private final String module;
 	private String iocContainerClassName;
 	private Device device;
+	private NameFactory nameFactory;
 
 	/**
 	 * Constructor
@@ -68,6 +70,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 		this.module = module;
 		this.iocContainerClassName = iocContainerClassName;
 		this.device = Device.valueOf(device);
+		this.nameFactory = new NameFactory();
     }
 
 	/**
@@ -286,14 +289,15 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	private String createController(SourcePrinter sourceWriter, String controller)
 	{
 		String controllerClassName = controllerClassNames.get(controller);
-		sourceWriter.println(controllerClassName+" __cont  = new "+controllerClassName+"(this.view);");
+		String controllerVar = nameFactory.createName("__cont");
+		sourceWriter.println(controllerClassName+" "+controllerVar+"  = new "+controllerClassName+"(this.view);");
 		JClassType controllerClass = getControllerClass(controller);
 		if (controllerClass == null)
 		{
 			throw new CruxGeneratorException("Can not found the controller ["+controllerClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFieldsAndMethods(sourceWriter, controllerClass, "__cont", "iocContainer", view, device);
-		return "__cont";
+		IocContainerRebind.injectFieldsAndMethods(sourceWriter, controllerClass, controllerVar, "iocContainer", view, device);
+		return controllerVar;
 	}
 
 	/**

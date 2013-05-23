@@ -36,6 +36,7 @@ import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,6 +53,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private final View view;
 	private String iocContainerClassName;
 	private Device device;
+	private NameFactory nameFactory;
 
 	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String iocContainerClassName, String device)
     {
@@ -59,6 +61,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 		this.view = view;
 		this.iocContainerClassName = iocContainerClassName;
 		this.device = Device.valueOf(device);
+		this.nameFactory = new NameFactory();
     }
 
 	@Override
@@ -152,14 +155,15 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private String createDataSource(SourcePrinter sourceWriter, String dataSource)
 	{
 		String datasourceClassName = dataSourcesClassNames.get(dataSource);
-		sourceWriter.println(datasourceClassName+" __dat  = new "+datasourceClassName+"(this.view);");
+		String dsVar = nameFactory.createName("__dat");
+		sourceWriter.println(datasourceClassName+" "+dsVar+"  = new "+datasourceClassName+"(this.view);");
 		JClassType datasourceClass = context.getTypeOracle().findType(DataSources.getDataSource(dataSource, device));
 		if (datasourceClass == null)
 		{
 			throw new CruxGeneratorException("Can not found the datasource ["+datasourceClassName+"]. Check your classpath and the inherit modules");
 		}
-		IocContainerRebind.injectFieldsAndMethods(sourceWriter, datasourceClass, "__dat", "iocContainer", view, device);
-		return "__dat";
+		IocContainerRebind.injectFieldsAndMethods(sourceWriter, datasourceClass, dsVar, "iocContainer", view, device);
+		return dsVar;
 	}
 	
 	
