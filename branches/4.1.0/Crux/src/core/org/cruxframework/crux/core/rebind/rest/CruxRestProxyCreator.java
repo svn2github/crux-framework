@@ -365,7 +365,7 @@ public class CruxRestProxyCreator extends AbstractWrapperProxyCreator
 							str.append("&");
 						}
 						first = false;
-						str.append(URLEncoder.encode(((QueryParam)annotation).value(), "UTF-8")+"={"+parameters[i].getName()+"}");
+						str.append(URLEncoder.encode(((FormParam)annotation).value(), "UTF-8")+"={"+parameters[i].getName()+"}");
 					}
 				}
 			}
