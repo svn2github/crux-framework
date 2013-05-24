@@ -38,9 +38,11 @@ import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.core.MultivaluedMap;
 import org.cruxframework.crux.core.server.rest.core.UriBuilder;
 import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
+import org.cruxframework.crux.core.server.rest.core.dispatch.ConditionalResponse;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
+import org.cruxframework.crux.core.server.rest.spi.HttpServletResponseHeaders;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
@@ -222,10 +224,15 @@ public class ServletUtil
 	  
 	public static void writeResponse(HttpRequest request, HttpResponse response, MethodReturn methodReturn) throws IOException
 	{
+		HttpServletResponseHeaders outputHeaders = response.getOutputHeaders();
 		if (!methodReturn.hasReturnType())
 		{
 			response.setContentLength(0);
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		}
+		else if (methodReturn.getConditionalResponse() != null)
+		{
+			writeConditionalResponse(response, methodReturn, outputHeaders);
 		}
 		else
 		{
@@ -235,31 +242,64 @@ public class ServletUtil
 			CacheInfo cacheInfo = methodReturn.getCacheInfo();
 			if (cacheInfo != null)
 			{
-				writeCacheHeaders(response, cacheInfo);
+				writeCacheHeaders(response, cacheInfo, methodReturn.getEtag(), methodReturn.getDateModified());
 			}
-			
+
 			response.setContentLength(responseBytes.length);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getOutputHeaders().putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("application", "json", "UTF-8"));
+			outputHeaders.putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("application", "json", "UTF-8"));
 			response.getOutputStream().write(responseBytes);
 		}
 	}
 
-	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo)
+	private static void writeConditionalResponse(HttpResponse response, MethodReturn methodReturn, HttpServletResponseHeaders outputHeaders)
+    {
+	    ConditionalResponse conditionalResponse = methodReturn.getConditionalResponse();
+	    response.setStatus(conditionalResponse.getStatus());
+	    
+	    String etag = conditionalResponse.getEtag();
+	    long dateModified = conditionalResponse.getLastModified();
+	    CacheInfo cacheInfo = methodReturn.getCacheInfo();
+	    
+	    if (cacheInfo != null)
+	    {
+	    	writeCacheHeaders(response, cacheInfo, etag, dateModified);
+	    }
+	    else
+	    {
+	    	//Confirmar se devo mandar etag e last modified em 412 ou 304 para escritas
+	    	if (etag != null && etag.length() > 0)
+	    	{
+	    		outputHeaders.putSingle(HttpHeaderNames.ETAG, etag);
+	    	}
+	    	if (dateModified > 0)
+	    	{
+	    		outputHeaders.addDateHeader(HttpHeaderNames.LAST_MODIFIED, dateModified);
+	    	}
+	    }
+    }
+
+	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo, String etag, long dateModified)
     {
 		org.cruxframework.crux.core.server.rest.core.CacheControl cacheControl = new org.cruxframework.crux.core.server.rest.core.CacheControl();
-		if (cacheInfo.getCacheTime() <= 0)
+		HttpServletResponseHeaders outputHeaders = response.getOutputHeaders();
+		if (!cacheInfo.isCacheEnabled())
 		{
 			cacheControl.setNoStore(true);
-			response.getOutputHeaders().addDateHeader(HttpHeaderNames.EXPIRES, 0);
+			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, 0);
 		}
 		else
 		{
-			long current = System.currentTimeMillis();
-			long expires = current + (cacheInfo.getCacheTime()*1000);
-			response.getOutputHeaders().addDateHeader(HttpHeaderNames.EXPIRES, expires);
-//			response.getOutputHeaders().addDateHeader(HttpHeaderNames.LAST_MODIFIED, current);			
-//TODO suportar operacoes condicionais (If-Match, etc)
+			long expires = cacheInfo.defineExpires();
+			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, expires);
+			if (etag != null && etag.length() > 0)
+			{
+				outputHeaders.putSingle(HttpHeaderNames.ETAG, etag);
+			}
+			if (dateModified > 0)
+			{
+				outputHeaders.addDateHeader(HttpHeaderNames.LAST_MODIFIED, dateModified);
+			}
 			switch (cacheInfo.getCacheControl())
             {
             	case PUBLIC:
@@ -275,7 +315,7 @@ public class ServletUtil
    	            break;
             }
 		}
-		response.getOutputHeaders().putSingle(HttpHeaderNames.CACHE_CONTROL, cacheControl);
+		outputHeaders.putSingle(HttpHeaderNames.CACHE_CONTROL, cacheControl);
     }
 
 	private static byte[] getResponseBytes(HttpRequest request, HttpResponse response, String responseContent) throws UnsupportedEncodingException, IOException

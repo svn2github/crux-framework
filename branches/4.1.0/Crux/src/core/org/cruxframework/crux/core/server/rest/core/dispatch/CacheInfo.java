@@ -49,6 +49,22 @@ public class CacheInfo
     	this.cacheControl = cacheControl;
     }
 
+	public long defineExpires()
+	{
+		return defineExpires(System.currentTimeMillis());
+	}
+
+	public long defineExpires(long current)
+	{
+		long expires = current + (cacheTime*1000);
+		return expires;
+	}
+	
+	public boolean isCacheEnabled()
+	{
+		return cacheTime > 0;
+	}
+	
 	public static CacheInfo parseCacheInfo(GET get)
     {
 		CacheInfo cacheInfo = new CacheInfo();
