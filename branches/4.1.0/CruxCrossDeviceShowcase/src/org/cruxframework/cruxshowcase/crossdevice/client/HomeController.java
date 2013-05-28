@@ -19,7 +19,7 @@ public class HomeController
 	public void sayHello()
 	{
 		HorizontalSwapContainer views = (HorizontalSwapContainer) Screen.get("views");
-		views.showView("hello");
+		views.showView("output");
 	}
 	
 }

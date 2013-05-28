@@ -8,12 +8,10 @@
 	useController="homeController" 
 	title="Hello Crux">
 	
-	<crux:styledPanel id="moldura">	
-		<xdev:storyboard id="formFields">
-			<gwt:label id="labelInstructions" text="Digite seu nome e aperte 'OK'"/>
-			<gwt:textBox id="nameTxtBox" />
-			<gwt:button id="okButton" text="OK" onClick="homeController.sayHello"></gwt:button>
-		</xdev:storyboard>
+	<crux:styledPanel id="moldura" >	
+		<gwt:label id="labelInstructions" text="Digite seu nome e aperte 'OK'"/>
+		<gwt:textBox id="nameTxtBox" />
+		<gwt:button id="okButton" text="OK" onClick="homeController.sayHello"></gwt:button>
 	</crux:styledPanel>
 	
 </v:view>

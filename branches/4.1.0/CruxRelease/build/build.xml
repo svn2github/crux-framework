@@ -86,7 +86,7 @@
 	<target name="download-dependencies" depends="check-dependencies" if="must.download.deps">
 		<property name="zipName" value="crux-developer-jars.zip"/>
 		<mkdir dir="${dist.dir}/tmp"/>
-		<get dest="${dist.dir}/tmp" src="http://crux-framework.googlecode.com/files/${zipName}"/>
+		<get dest="${dist.dir}/tmp/${zipName}" src="http://crux-framework.googlecode.com/files/${zipName}"/>
 		<unzip dest="${dist.dir}/tmp" src="${dist.dir}/tmp/${zipName}"/>
 		<copy todir="${crux.lib.dir}" flatten="yes">
 			<fileset dir="${dist.dir}/tmp">

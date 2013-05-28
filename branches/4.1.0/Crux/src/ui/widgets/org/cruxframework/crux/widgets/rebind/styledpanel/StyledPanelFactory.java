@@ -16,8 +16,12 @@
 package org.cruxframework.crux.widgets.rebind.styledpanel;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
+import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
@@ -31,6 +35,10 @@ import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
 @DeclarativeFactory(id="styledPanel", library="widgets", targetWidget=StyledPanel.class)
 @TagChildren({
 	@TagChild(FlowPanelFactory.WidgetContentProcessor.class)
+})
+@TagAttributesDeclaration({
+	@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
+	@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
 })
 public class StyledPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
 {
