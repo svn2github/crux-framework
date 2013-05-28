@@ -4,7 +4,7 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.BindRootView;
-import org.cruxframework.crux.core.client.screen.views.ControllerWrapper;
+import org.cruxframework.crux.core.client.screen.views.ControllerAccessor;
 
 @Controller("bannerController")
 public class BannerController 
@@ -18,7 +18,7 @@ public class BannerController
 	}
 
 	@BindRootView
-	public static interface MainScreen extends ControllerWrapper 
+	public static interface MainScreen extends ControllerAccessor 
 	{
 		MainPageController mainPageController();
 	}

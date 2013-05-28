@@ -31,7 +31,7 @@ public class DownloadController
 {
 	@Inject
 	private SiteConstants consts;
-
+	
 	@Expose
 	public void download()
 	{

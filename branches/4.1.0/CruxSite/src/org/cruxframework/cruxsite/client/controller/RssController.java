@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.BindView;
-import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
+import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.cruxsite.client.SiteConstants;
 import org.cruxframework.cruxsite.client.feed.Error;
 import org.cruxframework.cruxsite.client.feed.Feed;
@@ -127,7 +127,7 @@ public class RssController
     }
 
 	@BindView("home")
-	public static interface HomeView extends ViewWrapper
+	public static interface HomeView extends WidgetAccessor
 	{
 		RssPanel blogFeeds();
 		RssPanel projectFeeds();
