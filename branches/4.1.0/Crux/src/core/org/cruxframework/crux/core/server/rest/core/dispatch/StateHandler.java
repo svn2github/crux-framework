@@ -80,7 +80,8 @@ public class StateHandler
 			}
 			resourceStateHandler.add(key, dateModified, expires, etag);
 			ret.setDateModified(dateModified);
-			ret.setEtag(etag);
+			EntityTag entityTag = (etag != null)?new EntityTag(etag):null;
+			ret.setEtag(entityTag);
 		}
 		else
 		{
@@ -123,7 +124,7 @@ public class StateHandler
 	{
 		ResourceStateHandler resourceStateHandler = ResourceStateConfig.getResourceStateHandler();
 		ResourceState resourceState = resourceStateHandler.get(key);
-		ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState);
+		ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState.isExpired()?null:resourceState);
 		if (conditionalResponse == null)
 		{
 			return null;
@@ -161,7 +162,7 @@ public class StateHandler
 		{
 			if (!ifMatch(convertEtag(ifMatch), eTag))
 			{
-				result = new ConditionalResponse(resourceState.getEtag(), 0, HttpResponseCodes.SC_PRECONDITION_FAILED);
+				result = new ConditionalResponse(eTag, 0, HttpResponseCodes.SC_PRECONDITION_FAILED);
 			}
 		}
 		if (result == null)
@@ -173,11 +174,11 @@ public class StateHandler
 				{
 					if (httpMethod.equals("GET"))
 					{
-						result = new ConditionalResponse(resourceState.getEtag(), 0, HttpResponseCodes.SC_NOT_MODIFIED);
+						result = new ConditionalResponse(eTag, 0, HttpResponseCodes.SC_NOT_MODIFIED);
 					}
 					else
 					{
-						result = new ConditionalResponse(resourceState.getEtag(), 0, HttpResponseCodes.SC_PRECONDITION_FAILED);
+						result = new ConditionalResponse(eTag, 0, HttpResponseCodes.SC_PRECONDITION_FAILED);
 					}
 				}
 			}

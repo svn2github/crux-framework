@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.cruxframework.crux.core.server.rest.core.EntityTag;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.state.ResourceStateConfig;
@@ -159,7 +160,7 @@ public class ResourceMethod
 		protected final String ret;
 		private final CacheInfo cacheInfo;
 		private final ConditionalResponse conditionalResponse;
-		protected String etag;
+		protected EntityTag etag;
 		protected long dateModified;
 		
 		protected MethodReturn(boolean hasReturnType, String ret, CacheInfo cacheInfo, ConditionalResponse conditionalResponse)
@@ -190,12 +191,12 @@ public class ResourceMethod
         	return conditionalResponse;
         }
 
-		public String getEtag()
+		public EntityTag getEtag()
         {
         	return etag;
         }
 
-		public void setEtag(String etag)
+		public void setEtag(EntityTag etag)
         {
         	this.etag = etag;
         }

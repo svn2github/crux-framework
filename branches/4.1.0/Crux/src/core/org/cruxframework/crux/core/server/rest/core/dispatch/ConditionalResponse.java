@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
+import org.cruxframework.crux.core.server.rest.core.EntityTag;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -22,7 +24,7 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
  */
 public class ConditionalResponse
 {
-	private String etag;
+	private EntityTag etag;
 	private long lastModified;
 	private int status;
 
@@ -30,14 +32,14 @@ public class ConditionalResponse
 	{
 	}
 
-	public ConditionalResponse(String etag, long lastModified, int status)
+	public ConditionalResponse(EntityTag etag, long lastModified, int status)
 	{
 		this.etag = etag;
 		this.lastModified = lastModified;
 		this.status = status;
 	}
 
-	public String getEtag()
+	public EntityTag getEtag()
 	{
 		return etag;
 	}
@@ -52,7 +54,7 @@ public class ConditionalResponse
 		return status;
 	}
 
-	public void setEtag(String etag)
+	public void setEtag(EntityTag etag)
 	{
 		this.etag = etag;
 	}

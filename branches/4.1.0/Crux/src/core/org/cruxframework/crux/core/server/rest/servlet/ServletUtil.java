@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cruxframework.crux.core.server.rest.core.Cookie;
+import org.cruxframework.crux.core.server.rest.core.EntityTag;
 import org.cruxframework.crux.core.server.rest.core.Headers;
 import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
 import org.cruxframework.crux.core.server.rest.core.MediaType;
@@ -257,7 +258,7 @@ public class ServletUtil
 	    ConditionalResponse conditionalResponse = methodReturn.getConditionalResponse();
 	    response.setStatus(conditionalResponse.getStatus());
 	    
-	    String etag = conditionalResponse.getEtag();
+	    EntityTag etag = conditionalResponse.getEtag();
 	    long dateModified = conditionalResponse.getLastModified();
 	    CacheInfo cacheInfo = methodReturn.getCacheInfo();
 	    
@@ -268,7 +269,7 @@ public class ServletUtil
 	    else
 	    {
 	    	//Confirmar se devo mandar etag e last modified em 412 ou 304 para escritas
-	    	if (etag != null && etag.length() > 0)
+	    	if (etag != null)
 	    	{
 	    		outputHeaders.putSingle(HttpHeaderNames.ETAG, etag);
 	    	}
@@ -279,12 +280,12 @@ public class ServletUtil
 	    }
     }
 
-	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo, String etag, long dateModified)
+	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo, EntityTag etag, long dateModified)
     {
 		org.cruxframework.crux.core.server.rest.core.CacheControl cacheControl = new org.cruxframework.crux.core.server.rest.core.CacheControl();
 		HttpServletResponseHeaders outputHeaders = response.getOutputHeaders();
 		if (!cacheInfo.isCacheEnabled())
-		{
+		{//TODO tratar casos de estado para atender escrita condicional
 			cacheControl.setNoStore(true);
 			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, 0);
 		}
@@ -292,7 +293,7 @@ public class ServletUtil
 		{
 			long expires = cacheInfo.defineExpires();
 			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, expires);
-			if (etag != null && etag.length() > 0)
+			if (etag != null)
 			{
 				outputHeaders.putSingle(HttpHeaderNames.ETAG, etag);
 			}
