@@ -310,10 +310,13 @@ public class ServletUtil
             		cacheControl.setPrivate(true);
         			cacheControl.setMaxAge(cacheInfo.getCacheTime());
    	            break;
-            	case NOCACHE:
+            	case NO_CACHE:
             		cacheControl.setNoCache(true);
    	            break;
             }
+			cacheControl.setNoTransform(cacheInfo.isNoTransform());
+			cacheControl.setMustRevalidate(cacheInfo.isMustRevalidate());
+			cacheControl.setProxyRevalidate(cacheInfo.isProxyRevalidate());
 		}
 		outputHeaders.putSingle(HttpHeaderNames.CACHE_CONTROL, cacheControl);
     }

@@ -61,10 +61,23 @@ public class StateHandler
 	{
 		ResourceStateHandler resourceStateHandler = ResourceStateConfig.getResourceStateHandler();
 		if (ret.getCacheInfo() != null && ret.getCacheInfo().isCacheEnabled()) // only GET can declare cache
-		{
-			long dateModified = System.currentTimeMillis();
-			long expires = ret.getCacheInfo().defineExpires(dateModified);
-			String etag = generateEtag(ret.getReturn());
+		{//TODO aqui nesse if tem que testar metodos de escrita com dependencia de estado.
+			long dateModified;
+			long expires;
+			String etag;
+			ResourceState resourceState = resourceStateHandler.get(key);
+			if (resourceState != null && !resourceState.isExpired())
+			{
+				etag = resourceState.getEtag();
+				dateModified = resourceState.getDateModified();
+				expires = ret.getCacheInfo().defineExpires(System.currentTimeMillis());
+			}
+			else
+			{
+				etag = generateEtag(ret.getReturn());
+				dateModified = System.currentTimeMillis();
+				expires = ret.getCacheInfo().defineExpires(dateModified);
+			}
 			resourceStateHandler.add(key, dateModified, expires, etag);
 			ret.setDateModified(dateModified);
 			ret.setEtag(etag);
@@ -75,7 +88,7 @@ public class StateHandler
 		}
 	}
 
-	/**\
+	/**
 	 * Handle Cacheable GETS
 	 * @return
 	 */

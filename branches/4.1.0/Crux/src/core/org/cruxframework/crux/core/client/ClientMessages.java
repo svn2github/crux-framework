@@ -120,4 +120,6 @@ public interface ClientMessages extends Messages
 
 	@DefaultMessage("Unexpected error calling rest service. Error [{0}].")
 	String restServiceUnexpectedError(String errorMesg);
+	@DefaultMessage("Can not invoke write operation for uri[{0}] without previously loading it.")
+	String restServiceMissingStateEtag(String uri);
 }

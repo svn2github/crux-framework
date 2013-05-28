@@ -21,11 +21,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the annotated method responds to HTTP PUT requests
+ * Indicates that the annotated method responds to HTTP PUT requests. 
+ * PUT operations are used to write data (insert or updates). PUT operations are idempotent, 
+ * which means it can be performed repeatedly without side-effects.
+ * 
  * @see HttpMethod
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @HttpMethod(HttpMethod.PUT)
-public @interface PUT { 
+public @interface PUT 
+{ 
+	/**
+	 * If this state validation is enabled, Crux will add an If-Match HTTP header to ensure that the PUT operation will only be 
+	 * executed if the client retains the current state of the resource being updated. 
+	 * @return
+	 */
+	StateValidationModel validatePreviousState() default StateValidationModel.NO_VALIDATE;
 }

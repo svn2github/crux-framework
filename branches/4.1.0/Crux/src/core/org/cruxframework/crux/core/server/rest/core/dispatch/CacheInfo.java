@@ -25,6 +25,9 @@ import org.cruxframework.crux.core.server.rest.annotation.GET.CacheControl;
 public class CacheInfo
 {
 	private int cacheTime;
+	private boolean noTransform;
+	private boolean mustRevalidate;
+	private boolean proxyRevalidate;
 	private CacheControl cacheControl;
 
 	private CacheInfo(){}
@@ -65,11 +68,45 @@ public class CacheInfo
 		return cacheTime > 0;
 	}
 	
+	
+	public boolean isNoTransform()
+    {
+    	return noTransform;
+    }
+
+	public void setNoTransform(boolean noTransform)
+    {
+    	this.noTransform = noTransform;
+    }
+
+	public boolean isMustRevalidate()
+    {
+    	return mustRevalidate;
+    }
+
+	public void setMustRevalidate(boolean mustRevalidate)
+    {
+    	this.mustRevalidate = mustRevalidate;
+    }
+
+	public boolean isProxyRevalidate()
+    {
+    	return proxyRevalidate;
+    }
+
+	public void setProxyRevalidate(boolean proxyRevalidate)
+    {
+    	this.proxyRevalidate = proxyRevalidate;
+    }
+
 	public static CacheInfo parseCacheInfo(GET get)
     {
 		CacheInfo cacheInfo = new CacheInfo();
 		cacheInfo.setCacheTime(get.cacheTime());
 		cacheInfo.setCacheControl(get.cacheControl());
+		cacheInfo.setNoTransform(get.noTransform());
+		cacheInfo.setMustRevalidate(get.mustRevalidate());
+		cacheInfo.setProxyRevalidate(get.proxyRevalidate());
 	    return cacheInfo;
     }
 }

@@ -190,7 +190,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	 */
 	private void generateDataSourceClassBlock(SourcePrinter sourceWriter, String dataSource)
 	{
-		if (!dataSourcesClassNames.containsKey(dataSource) && !DataSources.hasDataSource(dataSource))
+		if (!dataSourcesClassNames.containsKey(dataSource) && DataSources.hasDataSource(dataSource))
 		{
 			try
             {

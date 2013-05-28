@@ -208,6 +208,7 @@ public class ResourceRegistry
 			}
 		}
 	}
+	//TODO implementar uma checagem para inpedir que o se crie metodos PUT com validacao de estado e que nao possuam um Getter na mesma classe para o pathexpression do PUT
 	
 	/**
 	 * 
