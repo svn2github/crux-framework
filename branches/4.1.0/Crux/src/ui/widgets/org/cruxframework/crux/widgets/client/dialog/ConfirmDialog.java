@@ -16,7 +16,7 @@
 package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.Crux;
-import org.cruxframework.crux.widgets.client.WidgetMessages;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.CancelEvent;
 import org.cruxframework.crux.widgets.client.event.CancelHandler;
@@ -52,7 +52,6 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	private Label messageLabel;
 	private Button okButton;
 	private Button cancelButton;
-	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
 
 	/**
 	 * Constructor 
@@ -208,6 +207,8 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	{
 		try
 		{
+			Screen.blockToUser("crux-MessageDialogScreenBlocker");
+
 			dialogBox.center();
 			dialogBox.show();
 			okButton.setFocus(true);
@@ -215,6 +216,8 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 		catch (Exception e)
 		{
 			Crux.getErrorHandler().handleError(e);
+			Screen.unblockToUser();
+			
 		}
 	}
 
@@ -224,9 +227,45 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	public void hide()
 	{
 		dialogBox.hide();
+		Screen.unblockToUser();
 	}
 	
+	/**
+	 * 
+	 * @param okLabel
+	 */
+	public void setOkLabel(String okLabel)
+	{
+		okButton.setText(okLabel);
+	}
 	
+	/**
+	 * 
+	 * @param cancelLabel
+	 */
+	public void setCancelLabel(String cancelLabel)
+	{
+		cancelButton.setText(cancelLabel);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getOkLabel()
+	{
+		return okButton.getText();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCancelLabel()
+	{
+		return cancelButton.getText();
+	}
+
 	/**
 	 * Shows a confirm dialog
 	 * @param title the text to be displayed as the caption of the message box 
@@ -236,19 +275,35 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	 */
 	public static ConfirmDialog show(String title, String message, OkHandler okHandler, CancelHandler cancelHandler)
 	{
-		return show(title, message, okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
+		return show(title, message, WidgetMsgFactory.getMessages().okLabel(), WidgetMsgFactory.getMessages().okLabel(), okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
 	}
 	
 	/**
 	 * Shows a confirm dialog
 	 * @param title the text to be displayed as the caption of the message box 
 	 * @param message the text to be displayed in the body of the message box
+	 * @param okLabel the text to be displayed in the body of the message box
+	 * @param cancelLabel the text to be displayed in the body of the message box
+	 * @param okHandler a handler for the OK button click event
+	 * @param cancelHandler a handler for the Cancel button click event
+	 */
+	public static ConfirmDialog show(String title, String message, String okLabel, String cancelLabel, OkHandler okHandler, CancelHandler cancelHandler)
+	{
+		return show(title, message, okLabel, cancelLabel, okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
+	}
+
+	/**
+	 * Shows a confirm dialog
+	 * @param title the text to be displayed as the caption of the message box 
+	 * @param message the text to be displayed in the body of the message box
+	 * @param okLabel the text to be displayed in the body of the message box
+	 * @param cancelLabel the text to be displayed in the body of the message box
 	 * @param okHandler a handler for the OK button click event
 	 * @param cancelHandler a handler for the Cancel button click event
 	 * @param styleName the name of the CSS class to be applied in the message box element 
 	 * @param animationEnabled true to enable animations while showing or hiding the message box
 	 */
-	public static ConfirmDialog show(String title, String message, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
+	public static ConfirmDialog show(String title, String message, String okLabel, String cancelLabel, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
 	{
 		ConfirmDialog confirm = new ConfirmDialog(); 
 		confirm.setTitle(title);
@@ -275,7 +330,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	{
 		Button okButton = new Button();
 		
-		okButton.setText(messages.okLabel());
+		okButton.setText(WidgetMsgFactory.getMessages().okLabel());
 		okButton.addStyleName("button");
 		okButton.addStyleName("okButton");
 		okButton.addClickHandler(new ClickHandler()
@@ -304,7 +359,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	{
 		Button cancelButton = new Button();
 		
-		cancelButton.setText(messages.cancelLabel());
+		cancelButton.setText(WidgetMsgFactory.getMessages().cancelLabel());
 		cancelButton.addStyleName("button");
 		cancelButton.addStyleName("cancelButton");
 		cancelButton.addClickHandler(new ClickHandler()

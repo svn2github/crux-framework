@@ -16,6 +16,7 @@
 package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
@@ -194,6 +195,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	{
 		try
 		{
+			Screen.blockToUser("crux-MessageDialogScreenBlocker");
 			dialogBox.center();
 			dialogBox.show();
 			okButton.setFocus(true);
@@ -201,6 +203,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		catch (Exception e)
 		{
 			Crux.getErrorHandler().handleError(e);
+			Screen.unblockToUser();
 		}
 	}
 
@@ -210,6 +213,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	public void hide()
 	{
 		dialogBox.hide();
+		Screen.unblockToUser();
 	}
 	
 	

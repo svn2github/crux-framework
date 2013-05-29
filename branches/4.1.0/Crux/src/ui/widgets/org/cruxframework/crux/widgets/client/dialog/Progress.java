@@ -16,6 +16,7 @@
 package org.cruxframework.crux.widgets.client.dialog;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -90,12 +91,15 @@ public class Progress implements HasAnimation, IsWidget
 	{
 		try
 		{
+			Screen.blockToUser("crux-ProgressDialogScreenBlocker");
+
 			dialog.center();
 			dialog.show();				
 		}
 		catch (Exception e)
 		{
 			Crux.getErrorHandler().handleError(e);
+			Screen.unblockToUser();
 		}
 	}
 	
@@ -105,6 +109,7 @@ public class Progress implements HasAnimation, IsWidget
 	public void hide()
 	{
 		dialog.hide();
+		Screen.unblockToUser();
 	}
 	
 	@Override
