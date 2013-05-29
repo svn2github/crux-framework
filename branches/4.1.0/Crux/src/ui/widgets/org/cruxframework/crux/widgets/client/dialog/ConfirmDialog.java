@@ -207,7 +207,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	{
 		try
 		{
-			Screen.blockToUser("crux-MessageDialogScreenBlocker");
+			Screen.blockToUser("crux-ConfirmDialogScreenBlocker");
 
 			dialogBox.center();
 			dialogBox.show();
