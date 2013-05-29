@@ -18,6 +18,9 @@ package org.cruxframework.crux.widgets.client.dialog;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.widgets.client.WidgetMessages;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
+import org.cruxframework.crux.widgets.client.event.CancelEvent;
+import org.cruxframework.crux.widgets.client.event.CancelHandler;
+import org.cruxframework.crux.widgets.client.event.HasCancelHandlers;
 import org.cruxframework.crux.widgets.client.event.HasOkHandlers;
 import org.cruxframework.crux.widgets.client.event.OkEvent;
 import org.cruxframework.crux.widgets.client.event.OkHandler;
@@ -37,40 +40,43 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A simple message dialog box
+ * A simple confirm dialog box
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
+public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnimation, IsWidget
 {
-	private static final String DEFAULT_STYLE_NAME = "crux-MessageDialog";
+	private static final String DEFAULT_STYLE_NAME = "crux-ConfirmDialog";
 	private DialogBox dialogBox;
-	private DockPanel messagePanel;
+	private DockPanel confirmPanel;
 	private Label messageLabel;
 	private Button okButton;
+	private Button cancelButton;
 	protected WidgetMessages messages = WidgetMsgFactory.getMessages();
 
 	/**
 	 * Constructor 
 	 */
-	public MessageDialog()
+	public ConfirmDialog()
 	{
 		dialogBox = new DialogBox(false, true);
 
-		messagePanel = new DockPanel();
+		confirmPanel = new DockPanel();
 		messageLabel = createMessageLabel();
-		messagePanel.add(messageLabel, DockPanel.CENTER);
+		confirmPanel.add(messageLabel, DockPanel.CENTER);
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setSpacing(10);
 		okButton = createOkButton();
 		horizontalPanel.add(okButton);
+		cancelButton = createCancelButton();
+		horizontalPanel.add(cancelButton);
 
-		messagePanel.add(horizontalPanel, DockPanel.SOUTH);
-		messagePanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);
+		confirmPanel.add(horizontalPanel, DockPanel.SOUTH);
+		confirmPanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);
 
-		dialogBox.add(messagePanel);
-		messagePanel.getElement().getParentElement().setAttribute("align", "center");
+		dialogBox.add(confirmPanel);
+		confirmPanel.getElement().getParentElement().setAttribute("align", "center");
 
 		setStyleName(DEFAULT_STYLE_NAME);
     }
@@ -188,6 +194,14 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	}	
 
 	/**
+	 * Adds a handler for the Cancel button click event
+	 */
+	public HandlerRegistration addCancelHandler(CancelHandler handler)
+	{
+		return dialogBox.addHandler(handler, CancelEvent.getType());
+	}	
+
+	/**
 	 * Show message dilaog. The dialog is centered and the screen is blocked for edition
 	 */
 	public void show()
@@ -214,37 +228,43 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	
 	
 	/**
-	 * Shows a message dialog
+	 * Shows a confirm dialog
 	 * @param title the text to be displayed as the caption of the message box 
 	 * @param message the text to be displayed in the body of the message box
 	 * @param okHandler a handler for the OK button click event
+	 * @param cancelHandler a handler for the Cancel button click event
 	 */
-	public static MessageDialog show(String title, String message, OkHandler okHandler)
+	public static ConfirmDialog show(String title, String message, OkHandler okHandler, CancelHandler cancelHandler)
 	{
-		return show(title, message, okHandler, DEFAULT_STYLE_NAME, false);
+		return show(title, message, okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
 	}
 	
 	/**
-	 * Shows a message dialog
+	 * Shows a confirm dialog
 	 * @param title the text to be displayed as the caption of the message box 
 	 * @param message the text to be displayed in the body of the message box
 	 * @param okHandler a handler for the OK button click event
+	 * @param cancelHandler a handler for the Cancel button click event
 	 * @param styleName the name of the CSS class to be applied in the message box element 
 	 * @param animationEnabled true to enable animations while showing or hiding the message box
 	 */
-	public static MessageDialog show(String title, String message, OkHandler okHandler, String styleName, boolean animationEnabled)
+	public static ConfirmDialog show(String title, String message, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
 	{
-		MessageDialog messageBox = new MessageDialog(); 
-		messageBox.setTitle(title);
-		messageBox.setMessage(message);
-		messageBox.setStyleName(styleName);
-		messageBox.setAnimationEnabled(animationEnabled);
+		ConfirmDialog confirm = new ConfirmDialog(); 
+		confirm.setTitle(title);
+		confirm.setMessage(message);
+		confirm.setStyleName(styleName);
+		confirm.setAnimationEnabled(animationEnabled);
 		if (okHandler != null)
 		{
-			messageBox.addOkHandler(okHandler);
+			confirm.addOkHandler(okHandler);
 		}
-		messageBox.show();
-		return messageBox;
+		if (cancelHandler != null)
+		{
+			confirm.addCancelHandler(cancelHandler);
+		}
+		confirm.show();
+		return confirm;
 	}
 	
 	/**
@@ -265,7 +285,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 				dialogBox.hide();
 				try
 				{
-					OkEvent.fire(MessageDialog.this);
+					OkEvent.fire(ConfirmDialog.this);
 				}
 				catch (Throwable e)
 				{
@@ -274,6 +294,35 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 			}
 		});
 		return okButton;
+	}
+	
+	/**
+	 * Creates the Cancel button
+	 * @return
+	 */
+	private Button createCancelButton()
+	{
+		Button cancelButton = new Button();
+		
+		cancelButton.setText(messages.cancelLabel());
+		cancelButton.addStyleName("button");
+		cancelButton.addStyleName("cancelButton");
+		cancelButton.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				dialogBox.hide();
+				try
+				{
+					CancelEvent.fire(ConfirmDialog.this);
+				}
+				catch (Throwable e)
+				{
+					Crux.getErrorHandler().handleError(e);
+				}
+			}
+		});
+		return cancelButton;
 	}
 	
 	/**
