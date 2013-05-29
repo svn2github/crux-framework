@@ -17,9 +17,13 @@ package org.cruxframework.crux.core.server.rest.core.registry;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,7 +31,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.server.rest.annotation.Path;
+import org.cruxframework.crux.core.server.rest.annotation.StateValidationModel;
 import org.cruxframework.crux.core.server.rest.core.UriBuilder;
+import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
@@ -114,14 +120,68 @@ public class ResourceRegistry
 	protected void addResource(Class<?> clazz, String base)
 	{
 		Set<String> restMethodNames = new HashSet<String>();
+		Map<String, List<RestMethodRegistrationInfo>> validRestMethods = new HashMap<String, List<RestMethodRegistrationInfo>>();
 		for (Method method : clazz.getMethods())
 		{
 			if (!method.isSynthetic())
 			{
-				processMethod(base, clazz, method, restMethodNames);
+				RestMethodRegistrationInfo methodRegistrationInfo = processMethod(base, clazz, method, restMethodNames);
+				if (methodRegistrationInfo != null)
+				{
+					List<RestMethodRegistrationInfo> methodsForPath = validRestMethods.get(methodRegistrationInfo.pathExpression);
+					if (methodsForPath == null)
+					{
+						methodsForPath = new ArrayList<RestMethodRegistrationInfo>();
+						validRestMethods.put(methodRegistrationInfo.pathExpression, methodsForPath);
+						
+					}
+					methodsForPath.add(methodRegistrationInfo);
+				}
 			}
 		}
+		checkCondiionalWriteMethods(validRestMethods);
 	}
+
+	private void checkCondiionalWriteMethods(Map<String, List<RestMethodRegistrationInfo>> validRestMethods)
+    {
+		for (Entry<String, List<RestMethodRegistrationInfo>> entry : validRestMethods.entrySet())
+        {
+	        List<RestMethodRegistrationInfo> methods = entry.getValue();
+			if (methods.size() > 0)
+	        {
+				for (RestMethodRegistrationInfo methodInfo : methods)
+                {
+					StateValidationModel stateValidationModel = HttpMethodHelper.getStateValidationModel(methodInfo.invoker.getMethod());
+					if (stateValidationModel != null && !stateValidationModel.equals(StateValidationModel.NO_VALIDATE))
+					{
+						if (!ensureReaderMethod(methods))
+						{
+							logger.error(" Method: " + methodInfo.invoker.getResourceClass().getName() + "." + methodInfo.invoker.getMethod().getName() + "() " +
+									"uses a stateValidationModel. It requires a valid GET method to provides the resource for validation.");
+						}
+					}
+                }
+	        }
+        }
+    }
+
+	private boolean ensureReaderMethod(List<RestMethodRegistrationInfo> methods)
+    {
+		for (RestMethodRegistrationInfo methodInfo : methods)
+        {
+			CacheInfo cacheInfo = HttpMethodHelper.getCacheInfoForGET(methodInfo.invoker.getMethod());
+			if (cacheInfo != null)
+			{
+				if (!cacheInfo.isCacheEnabled())
+				{
+					//for cacheable resources, eTag generation is already enabled.
+					methodInfo.invoker.forceEtagGeneration();
+				}
+				return true;
+			}
+        }
+		return false;
+    }
 
 	/**
 	 * 
@@ -143,7 +203,7 @@ public class ResourceRegistry
 	 * @param method
 	 * @param restMethodNames 
 	 */
-	protected void processMethod(String base, Class<?> clazz, Method method, Set<String> restMethodNames)
+	protected RestMethodRegistrationInfo processMethod(String base, Class<?> clazz, Method method, Set<String> restMethodNames)
 	{
 		if (method != null)
 		{
@@ -177,7 +237,11 @@ public class ResourceRegistry
 			{
 				pathExpression = "";
 			}
-			if (httpMethod != null)
+			if (restAnnotationPresent && !Modifier.isPublic(method.getModifiers()))
+			{
+				logger.error("Rest annotations found at non-public method: " + method.getDeclaringClass().getName() + "." + method.getName() + "(); Only public methods may be exposed as resource methods.");
+			}
+			else if (httpMethod != null)
 			{
 				if (restMethodNames.contains(method.getName()))
 				{
@@ -189,6 +253,7 @@ public class ResourceRegistry
 					rootSegment.addPath(pathExpression, invoker);
 					restMethodNames.add(method.getName());
 					size++;
+					return new RestMethodRegistrationInfo(pathExpression, invoker);
 				}
 			}
 			else 
@@ -202,14 +267,10 @@ public class ResourceRegistry
 					logger.debug("Method: " + method.getDeclaringClass().getName() + "." + method.getName() + "() ignored. It is not a rest method.");
 				}
 			}
-			if (restAnnotationPresent && !Modifier.isPublic(method.getModifiers()))
-			{
-				logger.error("Rest annotations found at non-public method: " + method.getDeclaringClass().getName() + "." + method.getName() + "(); Only public methods may be exposed as resource methods.");
-			}
 		}
+		return null;
 	}
-	//TODO implementar uma checagem para inpedir que o se crie metodos PUT com validacao de estado e que nao possuam um Getter na mesma classe para o pathexpression do PUT
-	
+
 	/**
 	 * 
 	 */
@@ -255,4 +316,16 @@ public class ResourceRegistry
 		}
 		initialized = true;
     }
+	
+	private static class RestMethodRegistrationInfo
+	{
+		private String pathExpression;
+		private ResourceMethod invoker;
+		
+		private RestMethodRegistrationInfo(String pathExpression, ResourceMethod invoker)
+        {
+			this.pathExpression = pathExpression;
+			this.invoker = invoker;
+        }
+	}
 }

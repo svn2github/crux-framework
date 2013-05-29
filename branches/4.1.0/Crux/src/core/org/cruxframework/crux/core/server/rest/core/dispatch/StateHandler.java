@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.cruxframework.crux.core.server.rest.annotation.GET;
 import org.cruxframework.crux.core.server.rest.core.EntityTag;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
@@ -60,23 +61,33 @@ public class StateHandler
 	public void updateState(MethodReturn ret)
 	{
 		ResourceStateHandler resourceStateHandler = ResourceStateConfig.getResourceStateHandler();
-		if (ret.getCacheInfo() != null && ret.getCacheInfo().isCacheEnabled()) // only GET can declare cache
-		{//TODO aqui nesse if tem que testar metodos de escrita com dependencia de estado.
+		if (ret.getCacheInfo() != null && (ret.getCacheInfo().isCacheEnabled() || ret.isEtagGenerationEnabled())) // only GET can declare cache
+		{
 			long dateModified;
-			long expires;
+			long expires = 0;
 			String etag;
 			ResourceState resourceState = resourceStateHandler.get(key);
+			if (!ret.getCacheInfo().isCacheEnabled())
+			{
+				expires = (GET.ONE_DAY*1000)+System.currentTimeMillis();
+			}
 			if (resourceState != null && !resourceState.isExpired())
 			{
 				etag = resourceState.getEtag();
 				dateModified = resourceState.getDateModified();
-				expires = ret.getCacheInfo().defineExpires(System.currentTimeMillis());
+				if (ret.getCacheInfo().isCacheEnabled())
+				{
+					expires = ret.getCacheInfo().defineExpires(System.currentTimeMillis());
+				}
 			}
 			else
 			{
 				etag = generateEtag(ret.getReturn());
 				dateModified = System.currentTimeMillis();
-				expires = ret.getCacheInfo().defineExpires(dateModified);
+				if (ret.getCacheInfo().isCacheEnabled())
+				{
+					expires = ret.getCacheInfo().defineExpires(dateModified);
+				}
 			}
 			resourceStateHandler.add(key, dateModified, expires, etag);
 			ret.setDateModified(dateModified);
@@ -110,7 +121,7 @@ public class StateHandler
 			ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState);
 			if (conditionalResponse != null)
 			{
-				return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse);
+				return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
 			}
 		}
 		return null;
@@ -124,12 +135,12 @@ public class StateHandler
 	{
 		ResourceStateHandler resourceStateHandler = ResourceStateConfig.getResourceStateHandler();
 		ResourceState resourceState = resourceStateHandler.get(key);
-		ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState.isExpired()?null:resourceState);
+		ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState == null || resourceState.isExpired()?null:resourceState);
 		if (conditionalResponse == null)
 		{
 			return null;
 		}
-		return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse);
+		return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
 	}
 
 	private ConditionalResponse evaluatePreconditions(ResourceState resourceState)

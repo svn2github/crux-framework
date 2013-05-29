@@ -243,7 +243,7 @@ public class ServletUtil
 			CacheInfo cacheInfo = methodReturn.getCacheInfo();
 			if (cacheInfo != null)
 			{
-				writeCacheHeaders(response, cacheInfo, methodReturn.getEtag(), methodReturn.getDateModified());
+				writeCacheHeaders(response, cacheInfo, methodReturn.getEtag(), methodReturn.getDateModified(), methodReturn.isEtagGenerationEnabled());
 			}
 
 			response.setContentLength(responseBytes.length);
@@ -264,7 +264,7 @@ public class ServletUtil
 	    
 	    if (cacheInfo != null)
 	    {
-	    	writeCacheHeaders(response, cacheInfo, etag, dateModified);
+	    	writeCacheHeaders(response, cacheInfo, etag, dateModified, methodReturn.isEtagGenerationEnabled());
 	    }
 	    else
 	    {
@@ -280,14 +280,18 @@ public class ServletUtil
 	    }
     }
 
-	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo, EntityTag etag, long dateModified)
+	private static void writeCacheHeaders(HttpResponse response, CacheInfo cacheInfo, EntityTag etag, long dateModified, boolean forceEtagGeneration)
     {
 		org.cruxframework.crux.core.server.rest.core.CacheControl cacheControl = new org.cruxframework.crux.core.server.rest.core.CacheControl();
 		HttpServletResponseHeaders outputHeaders = response.getOutputHeaders();
 		if (!cacheInfo.isCacheEnabled())
-		{//TODO tratar casos de estado para atender escrita condicional
+		{
 			cacheControl.setNoStore(true);
 			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, 0);
+			if (forceEtagGeneration && etag != null)
+			{
+				outputHeaders.putSingle(HttpHeaderNames.ETAG, etag);
+			}
 		}
 		else
 		{

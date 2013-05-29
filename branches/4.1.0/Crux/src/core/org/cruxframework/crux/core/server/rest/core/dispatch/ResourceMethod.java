@@ -49,6 +49,7 @@ public class ResourceMethod
 	protected ObjectWriter writer;
 	protected CacheInfo cacheInfo;
 	protected boolean hasReturnType;
+	private boolean etagGenerationEnabled = false;;
 
 	public ResourceMethod(Class<?> clazz, Method method, String httpMethod)
 	{
@@ -87,6 +88,17 @@ public class ResourceMethod
 	{
 		return method;
 	}
+
+	public void forceEtagGeneration()
+    {
+		etagGenerationEnabled = true;
+    }
+	
+	public boolean isEtagGenerationEnabled()
+    {
+	    return etagGenerationEnabled || (cacheInfo != null && cacheInfo.isCacheEnabled()); 
+	    
+    }
 
 	public MethodReturn invoke(HttpRequest request)
 	{
@@ -151,7 +163,7 @@ public class ResourceMethod
             	throw new InternalServerErrorException("Error serializing rest service return", "Error processing requested service", e); 
             }
 		}
-		return new MethodReturn(hasReturnType, retVal, cacheInfo, null);
+		return new MethodReturn(hasReturnType, retVal, cacheInfo, null, isEtagGenerationEnabled());
 	}
 
 	public static class MethodReturn
@@ -162,13 +174,15 @@ public class ResourceMethod
 		private final ConditionalResponse conditionalResponse;
 		protected EntityTag etag;
 		protected long dateModified;
+		protected final boolean etagGenerationEnabled;
 		
-		protected MethodReturn(boolean hasReturnType, String ret, CacheInfo cacheInfo, ConditionalResponse conditionalResponse)
+		protected MethodReturn(boolean hasReturnType, String ret, CacheInfo cacheInfo, ConditionalResponse conditionalResponse, boolean etagGenerationEnabled)
         {
 			this.hasReturnType = hasReturnType;
 			this.ret = ret;
 			this.cacheInfo = cacheInfo;
 			this.conditionalResponse = conditionalResponse;
+			this.etagGenerationEnabled = etagGenerationEnabled;
         }
 
 		public boolean hasReturnType()
@@ -209,6 +223,11 @@ public class ResourceMethod
 		public void setDateModified(long dateModified)
         {
         	this.dateModified = dateModified;
+        }
+
+		public boolean isEtagGenerationEnabled()
+        {
+        	return etagGenerationEnabled;
         }
 	}
 }

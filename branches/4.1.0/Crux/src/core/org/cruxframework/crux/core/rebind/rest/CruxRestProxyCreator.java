@@ -42,8 +42,6 @@ import org.cruxframework.crux.core.server.rest.annotation.CookieParam;
 import org.cruxframework.crux.core.server.rest.annotation.FormParam;
 import org.cruxframework.crux.core.server.rest.annotation.GET;
 import org.cruxframework.crux.core.server.rest.annotation.HeaderParam;
-import org.cruxframework.crux.core.server.rest.annotation.POST;
-import org.cruxframework.crux.core.server.rest.annotation.PUT;
 import org.cruxframework.crux.core.server.rest.annotation.Path;
 import org.cruxframework.crux.core.server.rest.annotation.PathParam;
 import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
@@ -187,7 +185,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
     	{
 			Method implementationMethod = getImplementationMethod(method);
 			String methodURI = getRestURI(method, implementationMethod);
-			StateValidationModel validationModel = getStateValidationModel(implementationMethod);
+			StateValidationModel validationModel = HttpMethodHelper.getStateValidationModel(implementationMethod);
 			if (validationModel != null && !validationModel.equals(StateValidationModel.NO_VALIDATE))
 			{
 				updateMethods.put(methodURI, implementationMethod);
@@ -211,22 +209,6 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			mustGenerateStateControlMethods = true; 
 		}
-    }
-
-	private StateValidationModel getStateValidationModel(Method method)
-    {
-		PUT put = method.getAnnotation(PUT.class);
-		if (put != null)
-		{
-			return put.validatePreviousState();
-		}
-		POST post = method.getAnnotation(POST.class);
-		if (post != null)
-		{
-			return post.validatePreviousState();
-		}
-
-	    return null;
     }
 
 	protected void generateWrapperMethod(RestMethodInfo methodInfo, SourcePrinter srcWriter)
@@ -319,7 +301,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
     {
 		if (readMethods.containsKey(uri) && updateMethods.containsKey(uri))
 		{
-			StateValidationModel validationModel = getStateValidationModel(method);
+			StateValidationModel validationModel = HttpMethodHelper.getStateValidationModel(method);
 			if (validationModel != null)
 			{
 				srcWriter.println("if (!__readCurrentEtag("+uriVar+", "+builderVar+","+validationModel.equals(StateValidationModel.ENSURE_STATE_MATCHES)+")){");

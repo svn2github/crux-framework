@@ -5,6 +5,9 @@ import java.lang.reflect.Method;
 
 import org.cruxframework.crux.core.server.rest.annotation.GET;
 import org.cruxframework.crux.core.server.rest.annotation.HttpMethod;
+import org.cruxframework.crux.core.server.rest.annotation.POST;
+import org.cruxframework.crux.core.server.rest.annotation.PUT;
+import org.cruxframework.crux.core.server.rest.annotation.StateValidationModel;
 import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
 
 /**
@@ -62,4 +65,20 @@ public class HttpMethodHelper
 		
 		return null;
 	}
+	
+	public static StateValidationModel getStateValidationModel(Method method)
+    {
+		PUT put = method.getAnnotation(PUT.class);
+		if (put != null)
+		{
+			return put.validatePreviousState();
+		}
+		POST post = method.getAnnotation(POST.class);
+		if (post != null)
+		{
+			return post.validatePreviousState();
+		}
+
+	    return null;
+    }
 }
