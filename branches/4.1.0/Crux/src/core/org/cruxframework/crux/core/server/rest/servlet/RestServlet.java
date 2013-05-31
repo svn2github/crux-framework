@@ -43,25 +43,24 @@ import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 public class RestServlet extends HttpServlet 
 {
 	private static final Log logger = LogFactory.getLog(RestServlet.class);
-
 	private static final long serialVersionUID = -4338760751718522206L;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		processRequest(req, resp, HttpMethod.POST);
+		processRequestForWriteOperation(req, resp, HttpMethod.POST);
 	}
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		processRequest(req, resp, HttpMethod.PUT);
+		processRequestForWriteOperation(req, resp, HttpMethod.PUT);
 	}
 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		processRequest(req, resp, HttpMethod.DELETE);
+		processRequestForWriteOperation(req, resp, HttpMethod.DELETE);
 	}
 
 	@Override
@@ -70,6 +69,20 @@ public class RestServlet extends HttpServlet
 		processRequest(req, resp, HttpMethod.GET);
 	}
 
+	protected void processRequestForWriteOperation(HttpServletRequest req, HttpServletResponse res, String method) throws IOException
+	{
+		String xsrfHeader = req.getHeader(HttpHeaderNames.XSRF_PROTECTION_HEADER);
+		if (xsrfHeader == null || xsrfHeader.length() == 0)
+		{
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "XSRF Protection validation failed for this request.");
+		}
+		else
+		{
+			processRequest(req, res, method);
+		}
+	}
+	
+	
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res, String method) throws IOException
 	{
 		if (!RestServiceScanner.isInitialized())

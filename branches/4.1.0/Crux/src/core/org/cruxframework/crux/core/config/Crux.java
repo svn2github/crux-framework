@@ -69,4 +69,12 @@ public interface Crux
 	void setParameterBindGenerator(String value);
 	//TODO atualizar wiki com as opções correntes
 
+	@DefaultServerMessage("org.cruxframework.crux.core.server.rest.state.ClusteredResourceStateHandler")
+	String restServiceResourceStateHandler();
+	void setRestServiceResourceStateHandler(String value);
+
+	@DefaultServerMessage("true")
+	String enableResourceStateCacheForRestServices();
+	void setEnableResourceStateCacheForRestServices(String value);
+
 }

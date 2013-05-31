@@ -15,22 +15,63 @@
  */
 package org.cruxframework.crux.core.server.rest.state;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 public class ResourceStateConfig
 {
-
-	private static NoClusteredResourceStateHandler noClusteredResourceStateHandler  = new NoClusteredResourceStateHandler(1000000);
+	private static final Log logger = LogFactory.getLog(ResourceStateConfig.class);
+	private static final Lock handlerLock = new ReentrantLock();
+	private static final Lock enabledLock = new ReentrantLock();
+	private static ResourceStateHandler resourceStateHandler  = null;
+	private static Boolean enabled;
 
 	public static boolean isResourceStateCacheEnabled()
 	{
-		return true;
+		if (enabled == null)
+		{
+			enabledLock.lock();
+			try
+			{
+				if (enabled == null)
+				{
+					enabled = Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableResourceStateCacheForRestServices());
+				}
+			}
+			finally
+			{
+				enabledLock.unlock();
+			}
+		}
+		return enabled;
 	}
 	
 	public static ResourceStateHandler getResourceStateHandler()
 	{
-		return noClusteredResourceStateHandler;
+		if (resourceStateHandler != null) return resourceStateHandler;
+		
+		try
+		{
+			handlerLock.lock();
+			if (resourceStateHandler != null) return resourceStateHandler;
+			resourceStateHandler = (ResourceStateHandler) Class.forName(ConfigurationFactory.getConfigurations().restServiceResourceStateHandler()).newInstance(); 
+		}
+		catch (Exception e)
+		{
+			logger.error("Error initializing resourceStateHandler.", e);
+		}
+		finally
+		{
+			handlerLock.unlock();
+		}
+		return resourceStateHandler;
 	}
 }
