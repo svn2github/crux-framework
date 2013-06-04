@@ -12,9 +12,12 @@
 	</head>
 	
 	<body>
+		
 		<script type="text/javascript" src="cruxcrossdeviceshowcase/cruxcrossdeviceshowcase.nocache.js"></script>
+		
 		<c:screen useController="homeController" onLoad="homeController.onLoad" useView="**/views/*" smallViewport="user-scalable=no, width=320" largeViewport="user-scalable=no, width=device-width, height=device-height"/>
-		<crux:horizontalSwapViewContainer id="views">
-		</crux:horizontalSwapViewContainer>
+		
+		<crux:horizontalSwapViewContainer id="views" />
+
 	</body>
 </html>

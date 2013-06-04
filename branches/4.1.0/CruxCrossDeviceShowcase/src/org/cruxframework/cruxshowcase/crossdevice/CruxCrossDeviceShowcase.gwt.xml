@@ -7,6 +7,10 @@
 	<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
 	
 	<set-property name="ClientBundle.enableInlining" value="false" />
+	
+	<!-- -->     
+	<set-property name="device.features" value="smallDisplayTouch"/> 
+	<!-- -->
 
 	<!-- To enable logging -->
 	<inherits name="com.google.gwt.logging.Logging"/>

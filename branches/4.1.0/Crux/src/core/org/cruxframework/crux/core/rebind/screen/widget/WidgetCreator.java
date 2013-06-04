@@ -20,6 +20,7 @@ import java.util.Map;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.client.utils.StyleManager;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
 import org.cruxframework.crux.core.declarativeui.ViewParser;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
@@ -56,7 +57,7 @@ import com.google.gwt.dom.client.PartialSupport;
 @TagAttributes({
 	@TagAttribute("width"),
 	@TagAttribute("height"),
-	@TagAttribute(value="styleName", supportsResources=true),
+	@TagAttribute(value="styleName", processor=WidgetCreator.StyleNameProcessor.class),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
@@ -551,6 +552,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public void postProcess(SourcePrinter out, C context) throws CruxGeneratorException
 	{
+		out.println("((" + StyleManager.class.getCanonicalName() + ") GWT.create(" + StyleManager.class.getCanonicalName() + ".class)).applyStyleName(" + context.getWidget() + ", " + context.getWidget() + ".getStyleName());");
 	}
 	
 	/**
@@ -738,6 +740,26 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 				}
 			}
 			return property;
+		}
+	}
+	
+	/**
+	 * @author Gesse Dafe
+	 */
+	public static class StyleNameProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public StyleNameProcessor(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String styleName)
+		{
+			if(!StringUtils.isEmpty(styleName))
+			{
+				styleName = widgetCreator.getResourceAccessExpression(styleName);
+				out.println("GWT.create(" + StyleManager.class.getCanonicalName() + ".class).applyStyleName(" + EscapeUtils.quote(styleName) + ", " + context.getWidget() + ");");
+			}
 		}
 	}
 }

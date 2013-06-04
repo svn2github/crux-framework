@@ -1,12 +1,13 @@
 package org.cruxframework.crux.core.client.utils;
 
-import com.google.gwt.user.client.ui.Widget;
-
+/**
+ * @author Gesse Dafe
+ */
 public class StyleManagerSmallDevices extends StyleManager
 {
-	public void applyStyleName(Widget widget, String styleName)
+	@Override
+	protected String getSufiix()
 	{
-		widget.setStyleName(styleName);
-		widget.addStyleName(styleName + "-small");
+		return "-small";
 	}
 }
