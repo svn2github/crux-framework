@@ -273,7 +273,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("try{");
 			generateMethodParamToBodyCode(srcWriter, methodInfo, "builder", httpMethod);
 			generateValidateStateBlock(srcWriter, methodInfo.implementationMethod, "builder", "restURI", methodInfo.methodURI, callbackParameterName);
-			generateXSRFHeaderProtectionForWrites(methodInfo.methodURI, "builder", srcWriter);
+			generateXSRFHeaderProtectionForWrites(httpMethod, "builder", srcWriter);
 			srcWriter.println("builder.send();");
 			srcWriter.println("}catch (Exception e){");
 			srcWriter.println(callbackParameterName+".onError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage()));");
@@ -286,9 +286,9 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 	}
 
-	private void generateXSRFHeaderProtectionForWrites(String methodURI, String builderVar, SourcePrinter srcWriter)
+	private void generateXSRFHeaderProtectionForWrites(String httpMethod, String builderVar, SourcePrinter srcWriter)
     {
-	    if (!readMethods.containsKey(methodURI))
+	    if (!httpMethod.equals("GET"))
 	    {
 	    	srcWriter.println(builderVar+".setHeader("+EscapeUtils.quote(HttpHeaderNames.XSRF_PROTECTION_HEADER)+", \"1\");");
 	    }
