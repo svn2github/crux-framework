@@ -266,7 +266,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 		{
 			public void onClick(ClickEvent event)
 			{
-				dialogBox.hide();
+				hide();
 				try
 				{
 					OkEvent.fire(MessageDialog.this);

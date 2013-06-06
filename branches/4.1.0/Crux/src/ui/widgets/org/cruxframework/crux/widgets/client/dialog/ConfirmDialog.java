@@ -337,7 +337,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 		{
 			public void onClick(ClickEvent event)
 			{
-				dialogBox.hide();
+				hide();
 				try
 				{
 					OkEvent.fire(ConfirmDialog.this);
@@ -366,7 +366,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 		{
 			public void onClick(ClickEvent event)
 			{
-				dialogBox.hide();
+				hide();
 				try
 				{
 					CancelEvent.fire(ConfirmDialog.this);
