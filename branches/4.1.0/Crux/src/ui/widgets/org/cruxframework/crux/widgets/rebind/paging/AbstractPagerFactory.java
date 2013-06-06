@@ -49,10 +49,11 @@ public abstract class AbstractPagerFactory extends WidgetCreator<WidgetCreatorCo
 		String pageableId = context.readWidgetProperty("pageable");
 		String strEnabled = context.readWidgetProperty("enabled");
 
-		if(pageableId != null && containsWidget(pageableId))
+		if(pageableId != null)
 		{
 			String widgetClassName = getWidgetClassName();
 			printlnPostProcessing("final "+widgetClassName+" "+widget+" = ("+widgetClassName+")"+ getViewVariable()+".getWidget("+EscapeUtils.quote(context.getWidgetId())+");");
+			printlnPostProcessing("assert("+getViewVariable()+".getWidget("+EscapeUtils.quote(pageableId)+") != null):"+EscapeUtils.quote("No pageable widget set for the pager ["+context.getWidgetId()+"], on view ["+getView().getId()+"].")+";");
 			printlnPostProcessing(widget+".setPageable(("+Pageable.class.getCanonicalName()+") "+getViewVariable()+".getWidget("+EscapeUtils.quote(pageableId)+"));");
 			if(strEnabled != null && strEnabled.length() > 0)
 			{

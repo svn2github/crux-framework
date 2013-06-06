@@ -701,15 +701,6 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	}
 
 	/**
-	 * @param widgetId
-	 * @return
-	 */
-	protected boolean containsWidget(String widgetId)
-	{
-		return view.getWidget(widgetId) != null;
-	}
-
-	/**
 	 * @return
 	 */
 	protected GeneratorContextExt getContext()
