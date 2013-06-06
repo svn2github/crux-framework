@@ -6,7 +6,7 @@ package org.cruxframework.crux.core.client.utils;
 public class StyleManagerSmallDevices extends StyleManager
 {
 	@Override
-	protected String getSufiix()
+	protected String getSufix()
 	{
 		return "-small";
 	}

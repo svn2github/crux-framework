@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class StyleManager
 {
-	protected String getSufiix()
+	protected String getSufix()
 	{
 		return "-large";
 	}
@@ -13,7 +13,7 @@ public class StyleManager
 	public final void applyStyleName(Widget widget, String styleName)
 	{
 		widget.setStyleName(styleName);
-		widget.addStyleName(styleName + getSufiix());
+		widget.addStyleName(styleName + getSufix());
 	}
 	
 	public final void applyStyleName(IsWidget widget, String styleName)
