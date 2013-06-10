@@ -4,7 +4,6 @@
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevicethemes.xstandard.XStandard'/>
-	<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
 	
 	<set-property name="ClientBundle.enableInlining" value="false" />
 	
