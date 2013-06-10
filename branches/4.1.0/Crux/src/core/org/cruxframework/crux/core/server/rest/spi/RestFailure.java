@@ -21,19 +21,19 @@ package org.cruxframework.crux.core.server.rest.spi;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class LoggableFailure extends RuntimeException
+public class RestFailure extends RuntimeException
 {
     private static final long serialVersionUID = 7544003108034286732L;
 	private final int responseCode;
 	private String responseMessage;
 
-	public LoggableFailure(int responseCode)
+	public RestFailure(int responseCode)
     {
 	    super();
 		this.responseCode = responseCode;
     }
 
-	public LoggableFailure(String s, Throwable throwable, int responseCode)
+	public RestFailure(String s, Throwable throwable, int responseCode)
     {
 	    super(s, throwable);
 		this.responseCode = responseCode;
@@ -41,14 +41,14 @@ public class LoggableFailure extends RuntimeException
 
     }
 
-	public LoggableFailure(String s, String resp, Throwable throwable, int responseCode)
+	public RestFailure(String s, String resp, Throwable throwable, int responseCode)
 	{
 		super(s, throwable);
 		this.responseCode = responseCode;
 		responseMessage = resp;
 	}
 
-	public LoggableFailure(String s, int responseCode)
+	public RestFailure(String s, int responseCode)
     {
 	    super(s);
 		this.responseCode = responseCode;
@@ -56,7 +56,7 @@ public class LoggableFailure extends RuntimeException
 
     }
 
-	public LoggableFailure(Throwable throwable, int responseCode)
+	public RestFailure(Throwable throwable, int responseCode)
     {
 	    super(throwable);
 		this.responseCode = responseCode;

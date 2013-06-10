@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Bad Request (400) is encountered
  */
-public class BadRequestException extends LoggableFailure
+public class BadRequestException extends RestFailure
 {
 	private static final long serialVersionUID = 8229968255908232115L;
 	

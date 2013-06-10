@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Method Not Allowed (405) is encountered
  */
-public class MethodNotAllowedException extends LoggableFailure
+public class MethodNotAllowedException extends RestFailure
 {
 	private static final long serialVersionUID = 3174000486624525396L;
 

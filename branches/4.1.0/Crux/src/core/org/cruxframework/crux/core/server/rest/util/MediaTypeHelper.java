@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 import org.cruxframework.crux.core.server.rest.core.MediaType;
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -35,7 +35,7 @@ public class MediaTypeHelper
             {
                float rtn = Float.valueOf(val);
                if (rtn > 1.0F)
-                  throw new LoggableFailure("MediaType q value cannot be greater than 1.0: " + type.toString(), HttpResponseCodes.SC_BAD_REQUEST);
+                  throw new RestFailure("MediaType q value cannot be greater than 1.0: " + type.toString(), HttpResponseCodes.SC_BAD_REQUEST);
                return rtn;
             }
          }

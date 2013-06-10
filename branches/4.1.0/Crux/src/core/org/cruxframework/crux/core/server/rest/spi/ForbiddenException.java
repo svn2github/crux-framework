@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Forbidden (403) is encountered
  */
-public class ForbiddenException extends LoggableFailure
+public class ForbiddenException extends RestFailure
 {
 	private static final long serialVersionUID = -2432300008647858571L;
 

@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import org.cruxframework.crux.core.server.rest.core.MultivaluedMapImpl;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
 import org.cruxframework.crux.core.server.rest.util.PathHelper;
 
@@ -161,7 +161,7 @@ public class RootSegment extends Segment
 				simpleSegment = path.substring(start);
 		}
 
-		LoggableFailure lastFailure = null;
+		RestFailure lastFailure = null;
 
 		SimpleSegment segment = simpleSegments.get(simpleSegment);
 		if (segment != null)
@@ -170,7 +170,7 @@ public class RootSegment extends Segment
 			{
 				return segment.matchSimple(request, path, start);
 			}
-			catch (LoggableFailure e)
+			catch (RestFailure e)
 			{
 				lastFailure = e;
 			}
@@ -182,7 +182,7 @@ public class RootSegment extends Segment
 			{
 				return pathParamSegment.matchPattern(request, path, start);
 			}
-			catch (LoggableFailure e)
+			catch (RestFailure e)
 			{
 				// try and propagate matched path that threw non-404 responses,
 				// i.e. MethodNotAllowed, etc.
@@ -196,7 +196,7 @@ public class RootSegment extends Segment
 			{
 				return pathParamSegment.matchPattern(request, path, start);
 			}
-			catch (LoggableFailure e)
+			catch (RestFailure e)
 			{
 				// try and propagate matched path that threw non-404 responses,
 				// i.e. MethodNotAllowed, etc.

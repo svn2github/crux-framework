@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.util.header.HeaderParameterParser;
 
 /**
@@ -104,13 +104,13 @@ public class WeightedLanguage implements Comparable<WeightedLanguage>
          {
             float rtn = Float.valueOf(val);
             if (rtn > 1.0F)
-               throw new LoggableFailure("Accept-Language q value cannot be greater than 1.0 " + lang.toString(), HttpResponseCodes.SC_BAD_REQUEST);
+               throw new RestFailure("Accept-Language q value cannot be greater than 1.0 " + lang.toString(), HttpResponseCodes.SC_BAD_REQUEST);
             return rtn;
          }
       }
       catch (NumberFormatException e)
       {
-         throw new LoggableFailure("MediaType q parameter must be a float: " + lang, HttpResponseCodes.SC_BAD_REQUEST);
+         throw new RestFailure("MediaType q parameter must be a float: " + lang, HttpResponseCodes.SC_BAD_REQUEST);
       }
       return 1.0f;
    }

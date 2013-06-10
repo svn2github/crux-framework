@@ -26,13 +26,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.server.rest.annotation.HttpMethod;
 import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
-import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.core.dispatch.RestDispatcher;
 import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 
@@ -74,7 +73,7 @@ public class RestServlet extends HttpServlet
 		String xsrfHeader = req.getHeader(HttpHeaderNames.XSRF_PROTECTION_HEADER);
 		if (xsrfHeader == null || xsrfHeader.length() == 0)
 		{
-			res.sendError(HttpServletResponse.SC_FORBIDDEN, "XSRF Protection validation failed for this request.");
+			ServletUtil.sendError(res, HttpServletResponse.SC_FORBIDDEN, "XSRF Protection validation failed for this request.");
 		}
 		else
 		{
@@ -98,7 +97,7 @@ public class RestServlet extends HttpServlet
 		}
 		catch (Exception e)
 		{
-			res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			ServletUtil.sendError(res, HttpServletResponse.SC_BAD_REQUEST, "Failed to parse request.");
 			logger.warn("Failed to parse request.", e);
 			return;
 		}
@@ -111,17 +110,18 @@ public class RestServlet extends HttpServlet
 			MethodReturn methodReturn = RestDispatcher.dispatch(request);
 			ServletUtil.writeResponse(request, response, methodReturn);
 		}
-		catch (LoggableFailure e) 
+		catch (RestFailure e) 
 		{
 			response.sendError(e.getResponseCode(), e.getResponseMessage());
-			response.getOutputHeaders().putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("text", "plain", "UTF-8"));
 			logger.error(e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error processing request.");
-			response.getOutputHeaders().putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("text", "plain", "UTF-8"));
 			logger.error(e.getMessage(), e);
 		}
 	}
 }
+//TODO permitir acesso ao request e ao response no rest service
+//TODO permitir pre processamentos (permissoes / etc)
+//TODO syncrhonizerToken

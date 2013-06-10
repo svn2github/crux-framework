@@ -21,7 +21,7 @@ import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.Meth
 import org.cruxframework.crux.core.server.rest.core.registry.ResourceRegistry;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
 
 /**
@@ -32,14 +32,14 @@ public class RestDispatcher
 {
 	private static final Log logger = LogFactory.getLog(RestDispatcher.class);
 
-	public static MethodReturn dispatch(HttpRequest request) throws LoggableFailure
+	public static MethodReturn dispatch(HttpRequest request) throws RestFailure
 	{
 		ResourceMethod invoker = RestDispatcher.getInvoker(request);
 		MethodReturn methodReturn = invoker.invoke(request);
 		return methodReturn;
 	}
 
-	public static ResourceMethod getInvoker(HttpRequest request) throws LoggableFailure
+	public static ResourceMethod getInvoker(HttpRequest request) throws RestFailure
 	{
 		if (logger.isDebugEnabled())
 		{

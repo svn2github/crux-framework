@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Not Acceptable (406) is encountered
  */
-public class NotAcceptableException extends LoggableFailure
+public class NotAcceptableException extends RestFailure
 {
 	private static final long serialVersionUID = -8466746321969478729L;
 

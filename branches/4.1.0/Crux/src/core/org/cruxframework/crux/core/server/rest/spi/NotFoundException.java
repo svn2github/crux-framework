@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Not Found (404) is encountered
  */
-public class NotFoundException extends LoggableFailure
+public class NotFoundException extends RestFailure
 {
 	private static final long serialVersionUID = 5553054540052148779L;
 

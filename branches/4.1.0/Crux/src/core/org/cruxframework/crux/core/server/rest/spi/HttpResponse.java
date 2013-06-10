@@ -6,7 +6,9 @@ import java.io.OutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.core.NewCookie;
+import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 
 /**
  * 
@@ -68,7 +70,14 @@ public class HttpResponse
 
 	public void sendError(int status, String message) throws IOException
 	{
-		response.sendError(status, message);
+		response.setStatus(status);
+		if (message!= null)
+		{
+			byte[] responseBytes = message.getBytes("UTF-8");
+			response.setContentLength(responseBytes.length);
+			outputHeaders.putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("text", "plain", "UTF-8"));
+			response.getOutputStream().write(responseBytes);
+		}
 	}
 
 	public boolean isCommitted()

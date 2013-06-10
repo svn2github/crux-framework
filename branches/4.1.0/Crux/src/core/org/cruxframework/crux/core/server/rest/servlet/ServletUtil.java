@@ -49,6 +49,7 @@ import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.MediaTypeHelper;
 import org.cruxframework.crux.core.server.rest.util.PathHelper;
+import org.cruxframework.crux.core.server.rest.util.header.MediaTypeHeaderParser;
 
 /**
  * 
@@ -362,4 +363,16 @@ public class ServletUtil
 	    }
 	    return responseBytes;
     }
+	
+	public static void sendError(HttpServletResponse response, int status, String message) throws IOException
+	{
+		response.setStatus(status);
+		if (message!= null)
+		{
+			byte[] responseBytes = message.getBytes("UTF-8");
+			response.setContentLength(responseBytes.length);
+			response.setHeader(HttpHeaderNames.CONTENT_TYPE, MediaTypeHeaderParser.toString(new MediaType("text", "plain", "UTF-8")));
+			response.getOutputStream().write(responseBytes);
+		}
+	}
 }

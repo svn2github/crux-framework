@@ -20,7 +20,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 /**
  * Thrown when HTTP Internal Service Error (500) is encountered
  */
-public class InternalServerErrorException extends LoggableFailure
+public class InternalServerErrorException extends RestFailure
 {
 	private static final long serialVersionUID = -2432300008647858571L;
 

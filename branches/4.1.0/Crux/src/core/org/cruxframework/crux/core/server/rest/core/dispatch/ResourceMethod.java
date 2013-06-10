@@ -24,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.cruxframework.crux.core.server.rest.core.EntityTag;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.state.ResourceStateConfig;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.JsonUtil;
@@ -121,6 +122,10 @@ public class ResourceMethod
         		Object target = resourceClass.newInstance();
         		return invoke(request, target);
         	}
+        }
+        catch (RestFailure e)
+        {
+        	throw e; 
         }
         catch (Exception e)
         {

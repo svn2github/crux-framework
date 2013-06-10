@@ -33,7 +33,7 @@ import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.server.rest.spi.ForbiddenException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
-import org.cruxframework.crux.core.server.rest.spi.LoggableFailure;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
@@ -101,7 +101,7 @@ public class MethodInvoker
 			}
 			return args;
 		}
-		catch (LoggableFailure f)
+		catch (RestFailure f)
 		{
 			throw f;
 		}
@@ -112,7 +112,7 @@ public class MethodInvoker
 		}
 	}
 
-	public Object invoke(HttpRequest request, Object resource) throws LoggableFailure
+	public Object invoke(HttpRequest request, Object resource) throws RestFailure
 	{
 		Object[] args = injectArguments(request);
 
