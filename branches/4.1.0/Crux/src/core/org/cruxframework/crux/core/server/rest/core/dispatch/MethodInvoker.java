@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import org.cruxframework.crux.core.server.rest.annotation.CookieParam;
@@ -46,6 +48,7 @@ public class MethodInvoker
 	protected Method method;
 	protected Class<?> rootClass;
 	protected ValueInjector[] params;
+	protected List<RequestPreprocessor> preprocessors; 
 	private Class<?>[] exceptionTypes;
 
 	public MethodInvoker(Class<?> root, Method method, String httpMethod)
@@ -78,6 +81,7 @@ public class MethodInvoker
 			params[i] = createParameterExtractor(root, method, type, genericType, annotations);
 		}
 		validateParamExtractors(httpMethod);
+		//initializePreprocessors();
 	}
 
 	public ValueInjector[] getParams()
@@ -114,6 +118,8 @@ public class MethodInvoker
 
 	public Object invoke(HttpRequest request, Object resource) throws RestFailure
 	{
+		preprocess(request);
+		
 		Object[] args = injectArguments(request);
 
 		try
@@ -166,6 +172,24 @@ public class MethodInvoker
 			throw new InternalServerErrorException(msg, "Can not execute requested service", e);
 		}
 	}
+
+	protected void initializePreprocessors() throws RequestProcessorException
+    {
+	    preprocessors = new ArrayList<RequestPreprocessor>();
+	    //TODO continuar daqui
+	    for (RequestPreprocessor preprocessor : preprocessors)
+        {
+	        preprocessor.createProcessor(method);
+        }
+    }
+
+	protected void preprocess(HttpRequest request)
+    {
+		for (RequestPreprocessor preprocessor : preprocessors)
+        {
+	        preprocessor.preprocess(request);
+        }
+    }
 
 	protected boolean isCheckedException(Throwable throwable)
 	{

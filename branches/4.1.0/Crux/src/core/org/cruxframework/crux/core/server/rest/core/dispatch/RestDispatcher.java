@@ -20,9 +20,9 @@ import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.core.registry.ResourceRegistry;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
-import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
-import org.cruxframework.crux.core.server.rest.spi.RestFailure;
+import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
 import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
+import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -32,10 +32,10 @@ public class RestDispatcher
 {
 	private static final Log logger = LogFactory.getLog(RestDispatcher.class);
 
-	public static MethodReturn dispatch(HttpRequest request) throws RestFailure
+	public static MethodReturn dispatch(HttpRequest request, HttpResponse response) throws RestFailure
 	{
 		ResourceMethod invoker = RestDispatcher.getInvoker(request);
-		MethodReturn methodReturn = invoker.invoke(request);
+		MethodReturn methodReturn = invoker.invoke(request, response);
 		return methodReturn;
 	}
 
@@ -44,10 +44,6 @@ public class RestDispatcher
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("PathInfo: " + request.getUri().getPath());
-		}
-		if (!request.isInitial())
-		{
-			throw new InternalServerErrorException(request.getUri().getPath() + " is not initial request.  Its suspended and retried.  Aborting.");
 		}
 		ResourceMethod invoker = ResourceRegistry.getInstance().getResourceMethod(request);
 		if (invoker == null)

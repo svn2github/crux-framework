@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.server.rest.servlet;
+package org.cruxframework.crux.core.server.rest.spi;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,11 +41,6 @@ import org.cruxframework.crux.core.server.rest.core.UriBuilder;
 import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ConditionalResponse;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
-import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
-import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
-import org.cruxframework.crux.core.server.rest.spi.HttpServletResponseHeaders;
-import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
-import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.MediaTypeHelper;
 import org.cruxframework.crux.core.server.rest.util.PathHelper;
@@ -56,7 +51,7 @@ import org.cruxframework.crux.core.server.rest.util.header.MediaTypeHeaderParser
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class ServletUtil
+public class HttpUtil
 {
 	public static UriInfo extractUriInfo(HttpServletRequest request)
 	{

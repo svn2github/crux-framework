@@ -22,7 +22,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.cruxframework.crux.core.server.rest.core.EntityTag;
+import org.cruxframework.crux.core.server.rest.core.HttpRequestAware;
+import org.cruxframework.crux.core.server.rest.core.HttpResponseAware;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.state.ResourceStateConfig;
@@ -50,12 +53,16 @@ public class ResourceMethod
 	protected ObjectWriter writer;
 	protected CacheInfo cacheInfo;
 	protected boolean hasReturnType;
-	private boolean etagGenerationEnabled = false;;
+	private boolean etagGenerationEnabled = false;
+	private boolean isRequestAware;
+	private boolean isResponseAware;;
 
 	public ResourceMethod(Class<?> clazz, Method method, String httpMethod)
 	{
 		this.httpMethod = httpMethod;
 		this.resourceClass = clazz;
+		this.isRequestAware = HttpRequestAware.class.isAssignableFrom(resourceClass);
+		this.isResponseAware = HttpResponseAware.class.isAssignableFrom(resourceClass);
 		this.method = method;
 		this.genericReturnType = ClassUtils.getGenericReturnTypeOfGenericInterfaceMethod(clazz, method);
 		this.hasReturnType = genericReturnType != null && !genericReturnType.equals(Void.class) && !genericReturnType.equals(Void.TYPE);
@@ -101,7 +108,7 @@ public class ResourceMethod
 	    
     }
 
-	public MethodReturn invoke(HttpRequest request)
+	public MethodReturn invoke(HttpRequest request, HttpResponse response)
 	{
         try
         {
@@ -111,7 +118,7 @@ public class ResourceMethod
         		MethodReturn ret = stateHandler.handledByCache();
         		if (ret == null)
         		{
-        			Object target = resourceClass.newInstance();
+        			Object target = createTarget(request, response);
         			ret = invoke(request, target);
         			stateHandler.updateState(ret);
         		}
@@ -119,7 +126,7 @@ public class ResourceMethod
         	}
         	else
         	{
-        		Object target = resourceClass.newInstance();
+        		Object target = createTarget(request, response);
         		return invoke(request, target);
         	}
         }
@@ -138,6 +145,20 @@ public class ResourceMethod
 		return httpMethod;
 	}
 	
+	private Object createTarget(HttpRequest request, HttpResponse response) throws InstantiationException, IllegalAccessException
+    {
+	    Object target = resourceClass.newInstance();
+		if (isRequestAware)
+	    {
+	    	((HttpRequestAware)target).setRequest(request);
+	    }
+		if (isResponseAware)
+	    {
+	    	((HttpResponseAware)target).setResponse(response);
+	    }
+	    return target;
+    }
+
 	private MethodReturn invoke(HttpRequest request, Object target)
 	{
 		Object rtn = methodInvoker.invoke(request, target);

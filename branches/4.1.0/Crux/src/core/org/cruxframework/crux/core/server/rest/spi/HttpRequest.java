@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
 import org.cruxframework.crux.core.server.rest.core.MediaType;
@@ -29,13 +29,12 @@ import org.cruxframework.crux.core.server.rest.util.Encode;
  */
 public class HttpRequest
 {
-	protected HttpHeaders httpHeaders;
-	protected HttpServletRequest request;
-	protected UriInfo uri;
-	protected String httpMethod;
+	protected final HttpHeaders httpHeaders;
+	protected final HttpServletRequest request;
+	protected final UriInfo uri;
+	protected final String httpMethod;
 	protected MultivaluedMap<String, String> formParameters;
 	protected MultivaluedMap<String, String> decodedFormParameters;
-	protected InputStream overridenStream;
 
 	public HttpRequest(HttpServletRequest request, HttpHeaders httpHeaders, UriInfo uri, String httpMethod)
 	{
@@ -43,16 +42,6 @@ public class HttpRequest
 		this.httpHeaders = httpHeaders;
 		this.httpMethod = httpMethod;
 		this.uri = uri;
-	}
-
-	public void setRequestUri(URI requestUri) throws IllegalStateException
-	{
-		uri = uri.relative(requestUri);
-	}
-
-	public void setRequestUri(URI baseUri, URI requestUri) throws IllegalStateException
-	{
-		uri = new UriInfo(baseUri, requestUri);
 	}
 
 	public MultivaluedMap<String, String> getPutFormParameters()
@@ -166,8 +155,6 @@ public class HttpRequest
 
 	public InputStream getInputStream()
 	{
-		if (overridenStream != null)
-			return overridenStream;
 		try
 		{
 			return request.getInputStream();
@@ -176,11 +163,6 @@ public class HttpRequest
 		{
 			throw new RuntimeException(e);
 		}
-	}
-
-	public void setInputStream(InputStream stream)
-	{
-		this.overridenStream = stream;
 	}
 
 	public UriInfo getUri()
@@ -192,15 +174,15 @@ public class HttpRequest
 	{
 		return httpMethod;
 	}
-
-	public void setHttpMethod(String method)
+	
+	public HttpSession getSession()
 	{
-		this.httpMethod = method;
+		return request.getSession();
 	}
 
-	public boolean isInitial()
+	public HttpSession getSession(boolean create)
 	{
-		return true;
+		return request.getSession(create);
 	}
 
 	protected MultivaluedMap<String, String> parseForm(InputStream entityStream) throws IOException

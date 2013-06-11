@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.server.rest.core.dispatch.RestDispatcher;
 import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.HttpResponse;
+import org.cruxframework.crux.core.server.rest.spi.HttpUtil;
 import org.cruxframework.crux.core.server.rest.spi.RestFailure;
 import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
@@ -73,7 +74,7 @@ public class RestServlet extends HttpServlet
 		String xsrfHeader = req.getHeader(HttpHeaderNames.XSRF_PROTECTION_HEADER);
 		if (xsrfHeader == null || xsrfHeader.length() == 0)
 		{
-			ServletUtil.sendError(res, HttpServletResponse.SC_FORBIDDEN, "XSRF Protection validation failed for this request.");
+			HttpUtil.sendError(res, HttpServletResponse.SC_FORBIDDEN, "XSRF Protection validation failed for this request.");
 		}
 		else
 		{
@@ -92,12 +93,12 @@ public class RestServlet extends HttpServlet
 		UriInfo uriInfo = null;
 		try
 		{
-			headers = ServletUtil.extractHttpHeaders(req);
-			uriInfo = ServletUtil.extractUriInfo(req);
+			headers = HttpUtil.extractHttpHeaders(req);
+			uriInfo = HttpUtil.extractUriInfo(req);
 		}
 		catch (Exception e)
 		{
-			ServletUtil.sendError(res, HttpServletResponse.SC_BAD_REQUEST, "Failed to parse request.");
+			HttpUtil.sendError(res, HttpServletResponse.SC_BAD_REQUEST, "Failed to parse request.");
 			logger.warn("Failed to parse request.", e);
 			return;
 		}
@@ -107,8 +108,11 @@ public class RestServlet extends HttpServlet
 
 		try
 		{
-			MethodReturn methodReturn = RestDispatcher.dispatch(request);
-			ServletUtil.writeResponse(request, response, methodReturn);
+			MethodReturn methodReturn = RestDispatcher.dispatch(request, response);
+			if (!response.isCommitted())
+			{
+				HttpUtil.writeResponse(request, response, methodReturn);
+			}
 		}
 		catch (RestFailure e) 
 		{
@@ -122,6 +126,5 @@ public class RestServlet extends HttpServlet
 		}
 	}
 }
-//TODO permitir acesso ao request e ao response no rest service
 //TODO permitir pre processamentos (permissoes / etc)
 //TODO syncrhonizerToken

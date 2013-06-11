@@ -3,11 +3,9 @@ package org.cruxframework.crux.core.server.rest.spi;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cruxframework.crux.core.server.rest.core.MediaType;
-import org.cruxframework.crux.core.server.rest.core.NewCookie;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 
 /**
@@ -32,7 +30,7 @@ public class HttpResponse
 		return status;
 	}
 
-	public void setStatus(int status)
+	void setStatus(int status)
 	{
 		this.status = status;
 		this.response.setStatus(status);
@@ -48,26 +46,6 @@ public class HttpResponse
 		return response.getOutputStream();
 	}
 
-	public void addNewCookie(NewCookie cookie)
-	{
-		Cookie cook = new Cookie(cookie.getName(), cookie.getValue());
-		cook.setMaxAge(cookie.getMaxAge());
-		cook.setVersion(cookie.getVersion());
-		if (cookie.getDomain() != null)
-			cook.setDomain(cookie.getDomain());
-		if (cookie.getPath() != null)
-			cook.setPath(cookie.getPath());
-		cook.setSecure(cookie.isSecure());
-		if (cookie.getComment() != null)
-			cook.setComment(cookie.getComment());
-		response.addCookie(cook);
-	}
-
-	public void sendError(int status) throws IOException
-	{
-		response.sendError(status);
-	}
-
 	public void sendError(int status, String message) throws IOException
 	{
 		response.setStatus(status);
@@ -77,6 +55,7 @@ public class HttpResponse
 			response.setContentLength(responseBytes.length);
 			outputHeaders.putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("text", "plain", "UTF-8"));
 			response.getOutputStream().write(responseBytes);
+			response.flushBuffer();
 		}
 	}
 
@@ -91,9 +70,13 @@ public class HttpResponse
 		outputHeaders = new HttpServletResponseHeaders(response);
 	}
 
-	public void setContentLength(int length)
+	public void flushBuffer() throws IOException
+	{
+		response.flushBuffer();
+	}
+
+	void setContentLength(int length)
     {
 		response.setContentLength(length);
     }
-
 }
