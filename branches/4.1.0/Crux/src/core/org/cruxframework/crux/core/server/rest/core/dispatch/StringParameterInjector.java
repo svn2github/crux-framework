@@ -21,7 +21,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.Date;
 
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
@@ -39,6 +41,7 @@ public class StringParameterInjector
 	protected String defaultValue;
 	protected String paramName;
 	protected AccessibleObject target;
+	private boolean isDate;
 
 	protected StringParameterInjector()
     {
@@ -56,6 +59,7 @@ public class StringParameterInjector
 		this.defaultValue = defaultValue;
 		this.target = target;
 		this.genericType = genericType;
+		this.isDate = Date.class.isAssignableFrom(type);
 
 		if (!type.isPrimitive())
 		{
@@ -132,7 +136,11 @@ public class StringParameterInjector
 				strVal = defaultValue;
 			}
 		}
-		if (type.isPrimitive())
+		if (isDate && StringUtils.isNumeric(strVal))  
+		{
+			return new Date(Long.parseLong(strVal));
+		}
+		else if (type.isPrimitive())
 		{
 			return ClassUtils.stringToPrimitiveBoxType(type, strVal);
 		}

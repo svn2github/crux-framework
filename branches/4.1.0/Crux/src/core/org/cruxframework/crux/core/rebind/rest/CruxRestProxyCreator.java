@@ -33,7 +33,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.service.RestProxy.Callback;
-import org.cruxframework.crux.core.client.service.RestProxy.RestService;
+import org.cruxframework.crux.core.client.service.RestProxy.TargetRestService;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
@@ -88,6 +88,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private Map<String, Method> updateMethods = new HashMap<String, Method>();
 	private Set<RestMethodInfo> restMethods = new HashSet<RestMethodInfo>();
 	private boolean mustGenerateStateControlMethods;
+	private JClassType stringType;
+	private JClassType dateType;
 	
 	
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
@@ -96,6 +98,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 		restImplementationClass = getRestImplementationClass(baseIntf);
+		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
+		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
 		String basePath;
 		try
 		{
@@ -120,10 +124,10 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	private Class<?> getRestImplementationClass(JClassType baseIntf)
 	{
-		RestService restService = baseIntf.getAnnotation(RestService.class);
+		TargetRestService restService = baseIntf.getAnnotation(TargetRestService.class);
 		if (restService == null)
 		{
-			throw new CruxGeneratorException("Can not create the rest proxy. Use @RestProxy.RestService annotation to inform the target of current proxy.");
+			throw new CruxGeneratorException("Can not create the rest proxy. Use @RestProxy.TargetRestService annotation to inform the target of current proxy.");
 		}
 		String serviceClassName = RestServiceScanner.getInstance().getServiceClassName(restService.value());
 		Class<?> restImplementationClass;
@@ -403,8 +407,24 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			{
 				if ((annotation instanceof QueryParam) || (annotation instanceof PathParam))
 				{
-					srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameters[i].getName()+"}\", "+
-							"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\"));");
+					JParameter parameter = parameters[i];
+					JClassType parameterType = parameter.getType().isClassOrInterface();
+					if (parameterType.isAssignableTo(stringType))
+					{
+						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
+								"("+parameter.getName()+"!=null?"+parameter.getName()+":\"\"));");
+					}
+					else if (parameterType.isAssignableTo(dateType))
+					{
+						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
+								"("+parameter.getName()+"!=null?Long.toString("+parameter.getName()+".getTime()):\"\"));");
+					} 
+					else
+					{
+						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
+								"("+parameter.getName()+"!=null?(\"\"+"+parameter.getName()+"):\"\"));");
+					}
+					
 				}
 			}
 		}

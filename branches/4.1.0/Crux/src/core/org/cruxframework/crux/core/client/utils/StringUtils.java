@@ -328,4 +328,30 @@ public class StringUtils
 
 		return p[n];
 	}
+
+	public static boolean isNumeric(String str) 
+	{
+		if (str == null || str.length() == 0) 
+		{
+			return false;
+		}
+		int sz = str.length();
+		int start = 0;
+		if(sz > 0 && str.charAt(0) == '-') 
+		{
+			if (sz == 1)
+			{
+				return false;
+			}
+			start = 1;
+		}
+		for (int i = start; i < sz; i++) 
+		{
+			if (Character.isDigit(str.charAt(i)) == false) 
+			{
+				return false;
+			}
+		}
+		return true;
+	}	
 }

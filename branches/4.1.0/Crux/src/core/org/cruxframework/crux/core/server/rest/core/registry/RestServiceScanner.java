@@ -134,11 +134,19 @@ public class RestServiceScanner
 	 */
 	public String getServiceClassName(String serviceName) 
 	{
+		if (!isInitialized())
+		{
+			initialize(null);
+		}
 		return strategy.getServiceClassName(serviceName);
 	}
 	
 	public Iterator<String> iterateRestServices()
 	{
+		if (!isInitialized())
+		{
+			initialize(null);
+		}
 		return strategy.iterateRestServices();
 	}
 

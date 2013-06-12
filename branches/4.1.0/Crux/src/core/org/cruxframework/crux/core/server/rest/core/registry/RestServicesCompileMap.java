@@ -61,21 +61,24 @@ public class RestServicesCompileMap
 	 */
 	public static boolean initialize(ServletContext context)
 	{
-		Properties properties = new Properties();
-		try
+		if (context != null)
 		{
-			properties.load(context.getResourceAsStream("/META-INF/crux-rest"));
-			Enumeration<?> serviceNames = (Enumeration<?>) properties.propertyNames();
-			while (serviceNames.hasMoreElements())
+			Properties properties = new Properties();
+			try
 			{
-				String serviceName = (String) serviceNames.nextElement();
-				remoteServices.put(serviceName, properties.getProperty(serviceName));
+				properties.load(context.getResourceAsStream("/META-INF/crux-rest"));
+				Enumeration<?> serviceNames = (Enumeration<?>) properties.propertyNames();
+				while (serviceNames.hasMoreElements())
+				{
+					String serviceName = (String) serviceNames.nextElement();
+					remoteServices.put(serviceName, properties.getProperty(serviceName));
+				}
+				return true;
 			}
-			return true;
-		}
-		catch (Exception e)
-		{
-			logger.info("Error initializing services.",e);
+			catch (Exception e)
+			{
+				logger.info("Error initializing services.",e);
+			}
 		}
 		return false;
 	}

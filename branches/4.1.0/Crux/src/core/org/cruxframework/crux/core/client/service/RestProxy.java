@@ -28,7 +28,7 @@ public interface RestProxy
 {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
-	public static @interface RestService
+	public static @interface TargetRestService
 	{
 		String value();
 	}
