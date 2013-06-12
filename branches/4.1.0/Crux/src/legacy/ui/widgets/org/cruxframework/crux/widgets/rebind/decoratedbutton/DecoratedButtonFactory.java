@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.rebind.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasTextFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -26,6 +27,8 @@ import org.cruxframework.crux.widgets.client.decoratedbutton.DecoratedButton;
  * Factory for Decorated Button widget
  * @author Gesse S. F. Dafe
  */
+@Deprecated
+@Legacy
 @DeclarativeFactory(id="decoratedButton", library="widgets", targetWidget=DecoratedButton.class)
 public class DecoratedButtonFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 			implements HasTextFactory<WidgetCreatorContext>

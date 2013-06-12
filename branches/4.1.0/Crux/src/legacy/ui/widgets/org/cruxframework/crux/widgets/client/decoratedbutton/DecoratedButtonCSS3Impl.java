@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.widgets.client.util.CSS3Utils;
 
 import com.google.gwt.dom.client.Style.Display;
@@ -24,6 +25,8 @@ import com.google.gwt.user.client.ui.Button;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Deprecated
+@Legacy
 public class DecoratedButtonCSS3Impl extends Button implements DecoratedButtonIntf
 {
 	public DecoratedButtonCSS3Impl()

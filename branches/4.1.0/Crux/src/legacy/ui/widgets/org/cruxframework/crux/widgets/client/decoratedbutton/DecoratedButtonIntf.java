@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
+
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.dom.client.HasAllGestureHandlers;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
@@ -30,6 +32,8 @@ import com.google.gwt.user.client.ui.HasText;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@Deprecated
+@Legacy
 public interface DecoratedButtonIntf extends HasText, 
 									HasClickHandlers, HasDoubleClickHandlers, HasEnabled,
 									HasAllFocusHandlers, HasAllGestureHandlers, HasAllKeyHandlers, 

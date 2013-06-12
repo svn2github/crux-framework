@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
@@ -28,6 +30,8 @@ import com.google.gwt.user.client.ui.HasText;
  * 
  * @author Gesse S. F. Dafe
  */
+@Deprecated
+@Legacy
 public class DecoratedButtonCSS2Impl extends FocusWidget implements HasText, DecoratedButtonIntf
 {
 	private DecoratedButtonFace face;

@@ -81,35 +81,36 @@ public class ScreenLegacy
 					@Override
 					public void onViewCreated(View view)
 					{
-						createCrossDocumentAccessor(Screen.this);
 						if (!rootViewContainer.add(view, true))
 						{
 							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(id));
 						}
 					}
 				});
-				if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
-				{
-					Screen.this.serializer = new ModuleComunicationSerializer();
-					createControllerAccessor(Screen.this);
-					Screen.this.addWindowCloseHandler(new CloseHandler<Window>()
-					{
-						public void onClose(CloseEvent<Window> event)
-						{
-							removeControllerAccessor(Screen.this);
-						}
-					});
-				}
-
-				Screen.this.addWindowCloseHandler(new CloseHandler<Window>()
-				{
-					public void onClose(CloseEvent<Window> event)
-					{
-						removeCrossDocumentAccessor(Screen.this);
-					}
-				});
 			}
 		});
+
+	    createCrossDocumentAccessor(Screen.this);
+	    if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
+	    {
+	    	this.serializer = new ModuleComunicationSerializer();
+	    	createControllerAccessor(Screen.this);
+	    	addWindowCloseHandler(new CloseHandler<Window>()
+	    	{
+	    		public void onClose(CloseEvent<Window> event)
+	    		{
+	    			removeControllerAccessor(Screen.this);
+	    		}
+	    	});
+	    }
+
+	    addWindowCloseHandler(new CloseHandler<Window>()
+	    {
+	    	public void onClose(CloseEvent<Window> event)
+	    	{
+	    		removeCrossDocumentAccessor(Screen.this);
+	    	}
+	    });
     }
 	
 	@Deprecated

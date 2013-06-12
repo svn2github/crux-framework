@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.server.rest.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.server.rest.annotation.HttpMethod;
 import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
+import org.cruxframework.crux.core.server.rest.core.RequestPreprocessors;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.core.dispatch.RestDispatcher;
 import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
@@ -125,6 +127,27 @@ public class RestServlet extends HttpServlet
 			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException
+	{
+	    super.init(config);
+	    String processors = config.getInitParameter("preprocessors");
+	    if (processors != null)
+	    {
+	    	String[] processorNames = processors.split(",");
+	    	for (String proc : processorNames)
+            {
+	            try
+                {
+					RequestPreprocessors.registerPreprocessor(proc.trim());
+                }
+                catch (Exception e)
+                {
+	                logger.error(e.getMessage(), e);
+                }
+            }
+	    }
+	}
 }
-//TODO permitir pre processamentos (permissoes / etc)
 //TODO syncrhonizerToken

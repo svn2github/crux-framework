@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -55,6 +57,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Gesse S. F. Dafe
  */
+@Deprecated
+@Legacy
 public class DecoratedButton extends Composite implements HasText, 
 									HasClickHandlers, HasDoubleClickHandlers, HasEnabled,
 									HasAllFocusHandlers, HasAllGestureHandlers, HasAllKeyHandlers, 

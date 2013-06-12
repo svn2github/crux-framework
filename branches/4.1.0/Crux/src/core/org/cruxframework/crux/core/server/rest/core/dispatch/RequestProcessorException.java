@@ -19,7 +19,7 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class RequestProcessorException extends Exception
+public class RequestProcessorException extends RuntimeException
 {
     private static final long serialVersionUID = 2012247754301919375L;
 

@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.decoratedbutton;
 
+import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.widgets.client.util.TextSelectionUtils;
 
 import com.google.gwt.dom.client.TableCellElement;
@@ -28,6 +29,8 @@ import com.google.gwt.user.client.ui.Widget;
  * HTML face DecoratedButton
  * @author Gesse S. F. Dafe
  */
+@Deprecated
+@Legacy
 public class DecoratedButtonFace extends Widget
 {
 	private TableElement face;

@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -31,6 +32,7 @@ import org.cruxframework.crux.core.server.rest.annotation.FormParam;
 import org.cruxframework.crux.core.server.rest.annotation.HeaderParam;
 import org.cruxframework.crux.core.server.rest.annotation.PathParam;
 import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
+import org.cruxframework.crux.core.server.rest.core.RequestPreprocessors;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.server.rest.spi.ForbiddenException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
@@ -81,7 +83,7 @@ public class MethodInvoker
 			params[i] = createParameterExtractor(root, method, type, genericType, annotations);
 		}
 		validateParamExtractors(httpMethod);
-		//initializePreprocessors();
+		initializePreprocessors();
 	}
 
 	public ValueInjector[] getParams()
@@ -176,14 +178,19 @@ public class MethodInvoker
 	protected void initializePreprocessors() throws RequestProcessorException
     {
 	    preprocessors = new ArrayList<RequestPreprocessor>();
-	    //TODO continuar daqui
-	    for (RequestPreprocessor preprocessor : preprocessors)
+
+	    Iterator<RequestPreprocessor> iterator = RequestPreprocessors.iteratePreprocessors();
+	    while (iterator.hasNext())
         {
-	        preprocessor.createProcessor(method);
+	    	RequestPreprocessor processor = iterator.next().createProcessor(method);
+	    	if (processor != null)
+	    	{
+	    		preprocessors.add(processor);
+	    	}
         }
     }
 
-	protected void preprocess(HttpRequest request)
+	protected void preprocess(HttpRequest request) throws RestFailure
     {
 		for (RequestPreprocessor preprocessor : preprocessors)
         {
@@ -245,6 +252,7 @@ public class MethodInvoker
 		{
 			return new MessageBodyParamInjector(injectTargetClass, injectTarget, type, genericType, annotations);
 		}
+		//TODO adicionar suporte para passar DTO via queryParam
 	}
 	
 	protected void validateParamExtractors(String httpMethod)
