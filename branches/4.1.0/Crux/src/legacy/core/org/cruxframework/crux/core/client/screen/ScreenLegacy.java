@@ -85,6 +85,24 @@ public class ScreenLegacy
 						{
 							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(id));
 						}
+					    if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
+					    {
+					    	addWindowCloseHandler(new CloseHandler<Window>()
+					    	{
+					    		public void onClose(CloseEvent<Window> event)
+					    		{
+					    			removeControllerAccessor(Screen.this);
+					    		}
+					    	});
+					    }
+
+					    addWindowCloseHandler(new CloseHandler<Window>()
+					    {
+					    	public void onClose(CloseEvent<Window> event)
+					    	{
+					    		removeCrossDocumentAccessor(Screen.this);
+					    	}
+					    });
 					}
 				});
 			}
@@ -95,22 +113,7 @@ public class ScreenLegacy
 	    {
 	    	this.serializer = new ModuleComunicationSerializer();
 	    	createControllerAccessor(Screen.this);
-	    	addWindowCloseHandler(new CloseHandler<Window>()
-	    	{
-	    		public void onClose(CloseEvent<Window> event)
-	    		{
-	    			removeControllerAccessor(Screen.this);
-	    		}
-	    	});
 	    }
-
-	    addWindowCloseHandler(new CloseHandler<Window>()
-	    {
-	    	public void onClose(CloseEvent<Window> event)
-	    	{
-	    		removeCrossDocumentAccessor(Screen.this);
-	    	}
-	    });
     }
 	
 	@Deprecated
