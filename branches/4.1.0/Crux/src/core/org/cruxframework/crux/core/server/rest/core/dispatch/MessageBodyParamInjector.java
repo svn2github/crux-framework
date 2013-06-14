@@ -17,8 +17,6 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,6 +26,7 @@ import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.UnsupportedMediaTypeException;
 import org.cruxframework.crux.core.server.rest.util.JsonUtil;
+import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.StreamUtils;
 
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -41,10 +40,12 @@ public class MessageBodyParamInjector extends StringParameterInjector implements
 {
 	private static final Lock lock = new ReentrantLock();
 	private ObjectReader reader;
+	private Type type;
 
-	public MessageBodyParamInjector(Class<?> declaringClass, AccessibleObject target, Class<?> type, Type genericType, Annotation[] annotations)
+	public MessageBodyParamInjector(Class<?> declaringClass, Type type)
 	{
-		super(type, genericType, "body", null, target, annotations);
+		super(ClassUtils.getRawType(type), "body", null);
+		this.type = type;
 	}
 
 	public Object inject(HttpRequest request)
@@ -81,7 +82,7 @@ public class MessageBodyParamInjector extends StringParameterInjector implements
 					{
 						if (this.reader == null)
 						{
-							this.reader = JsonUtil.createReader(genericType);
+							this.reader = JsonUtil.createReader(type);
 						}
 					}
 					finally

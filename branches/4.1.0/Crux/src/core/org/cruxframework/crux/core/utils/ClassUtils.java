@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -24,6 +27,13 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
@@ -34,6 +44,46 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstrain
  */
 public class ClassUtils
 {
+	private static Set<String> simpleTypes = new HashSet<String>();
+	static
+	{
+		simpleTypes.add(Integer.class.getCanonicalName());
+		simpleTypes.add(Short.class.getCanonicalName());
+		simpleTypes.add(Byte.class.getCanonicalName());
+		simpleTypes.add(Long.class.getCanonicalName());
+		simpleTypes.add(Double.class.getCanonicalName());
+		simpleTypes.add(Float.class.getCanonicalName());
+		simpleTypes.add(Boolean.class.getCanonicalName());
+		simpleTypes.add(Character.class.getCanonicalName());
+		simpleTypes.add(Integer.TYPE.getCanonicalName());
+		simpleTypes.add(Short.TYPE.getCanonicalName());
+		simpleTypes.add(Byte.TYPE.getCanonicalName());
+		simpleTypes.add(Long.TYPE.getCanonicalName());
+		simpleTypes.add(Double.TYPE.getCanonicalName());
+		simpleTypes.add(Float.TYPE.getCanonicalName());
+		simpleTypes.add(Boolean.TYPE.getCanonicalName());
+		simpleTypes.add(Character.TYPE.getCanonicalName());
+		simpleTypes.add(String.class.getCanonicalName());
+		simpleTypes.add(Date.class.getCanonicalName());
+		simpleTypes.add(BigInteger.class.getCanonicalName());
+		simpleTypes.add(BigDecimal.class.getCanonicalName());
+	}
+
+	static boolean isSimpleType(String className)
+	{
+		return simpleTypes.contains(className);
+	}
+
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static boolean isSimpleType(Type type)
+	{
+		Class<?> rawType = getRawType(type);
+		return rawType.isEnum() || isSimpleType(rawType.getCanonicalName());
+	}
 
 	public static Type getGenericReturnTypeOfGenericInterfaceMethod(Class<?> clazz, Method method)
 	{
@@ -173,7 +223,140 @@ public class ClassUtils
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static PropertyDescriptor[] extractBeanProperties(Class<?> type)
+	{
+        try
+        {
+        	BeanInfo beanInfo = Introspector.getBeanInfo(type);
+	        PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+	        return pds;
+        }
+        catch (Exception e)
+        {
+        	throw new RuntimeException("Unable to determine properties for bean: " + type.getCanonicalName(), e);
+        }
+	}
+	
+	/**
+	 *  workaround for JVM BUG - http://codereligion.com/post/28703017143/beware-of-java-beans-introspector
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static class PropertyInfo
+	{
+		private final String name;
+		private final Type type;
+		private final Method readMethod;
+		private final Method writeMethod;
 
+		public PropertyInfo(String name, Type type, Method readMethod, Method writeMethod)
+        {
+			this.name = name;
+			this.type = type;
+			this.readMethod = readMethod;
+			this.writeMethod = writeMethod;
+        }
+
+		public String getName()
+        {
+        	return name;
+        }
+
+		public Type getType()
+        {
+        	return type;
+        }
+
+		public Method getReadMethod()
+        {
+        	return readMethod;
+        }
+
+		public Method getWriteMethod()
+        {
+        	return writeMethod;
+        }
+	}
+    
+	/**
+	 *  workaround for JVM BUG - http://codereligion.com/post/28703017143/beware-of-java-beans-introspector
+	 * @param type
+	 * @return
+	 */
+	public static PropertyInfo[] extractBeanPropertiesInfo(Type type)
+	{
+		Class<?> rawType = getRawType(type);
+		PropertyDescriptor[] propertyDescriptors = extractBeanProperties(rawType);
+		
+		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
+		if (propertyDescriptors != null)
+		{
+			try
+			{
+				for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
+				{
+					if (propertyDescriptor.getReadMethod() != null && propertyDescriptor.getWriteMethod() != null)
+					{
+						Method readMethod = propertyDescriptor.getReadMethod();
+						Type returnType = readMethod.getGenericReturnType();
+						Type propertyType = getPropertyType(returnType, type, rawType);
+						Method writeMethod = propertyDescriptor.getWriteMethod();
+						result.add(new PropertyInfo(propertyDescriptor.getName(), propertyType, readMethod, writeMethod));
+					}
+				}
+	        }
+	        catch (Exception e)
+	        {
+	        	throw new RuntimeException("Unable to determine properties for bean: " + rawType.getCanonicalName(), e);
+	        }
+		}
+		return result.toArray(new PropertyInfo[result.size()]);
+	}
+
+	private static Type getPropertyType(Type propertyType, Type baseClass, Class<?> baseRawType)
+    {
+		Type result = null;
+		if (propertyType instanceof Class)
+		{
+			result = propertyType;
+		}
+		else if (propertyType instanceof TypeVariable)
+		{
+			Type[] typeArguments = ((ParameterizedType)baseClass).getActualTypeArguments();
+			TypeVariable<?>[] typeParameters = baseRawType.getTypeParameters();
+			String parameterName = ((TypeVariable<?>)propertyType).getName();
+			
+			int i=0;
+			for (TypeVariable<?> typeVariable : typeParameters)
+            {
+	            if (parameterName.equals(typeVariable.getName()))
+	            {
+	            	result = typeArguments[i]; 
+	            	break;
+	            }
+	            i++;
+            }
+			if (result == null)
+			{
+	        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName());
+			}
+		}
+		else 
+		{
+        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName());
+		}
+		
+	    return result;
+    }
+
+	
+	
 	/**
 	 * @param primitiveType
 	 * @return
@@ -213,18 +396,6 @@ public class ClassUtils
 			return Character.class;
 		}
 		return null;
-	}
-
-	/**
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static boolean isSimpleType(Class<?> type)
-	{
-		return ((type.equals(Integer.TYPE)) || (type.equals(Integer.class)) || (type.equals(Short.TYPE)) || (type.equals(Short.class)) || (type.equals(Long.TYPE)) || (type.equals(Long.class)) || (type.equals(Byte.TYPE)) || (type.equals(Byte.class))
-		        || (type.equals(Float.TYPE)) || (type.equals(Float.class)) || (type.equals(Double.TYPE)) || (type.equals(Double.class)) || (type.equals(Boolean.TYPE)) || (type.equals(Boolean.class)) || (type.equals(Character.TYPE))
-		        || (type.equals(Character.class)) || (type.equals(String.class)));
 	}
 
 	/**
@@ -343,7 +514,7 @@ public class ClassUtils
 		{
 			value = "0";
 		}
-		else if (primitiveType.equals(Integer.TYPE))
+		if (primitiveType.equals(Integer.TYPE))
 		{
 			return Integer.valueOf(value);
 		}

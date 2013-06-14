@@ -66,31 +66,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private JClassType mapType;
 	private JClassType javascriptObjectType;
 
-	private static Set<String> jsonFriendlyTypes = new HashSet<String>();
 	private static NameFactory nameFactory = new NameFactory();
-	static
-	{
-		jsonFriendlyTypes.add(Integer.class.getCanonicalName());
-		jsonFriendlyTypes.add(Short.class.getCanonicalName());
-		jsonFriendlyTypes.add(Byte.class.getCanonicalName());
-		jsonFriendlyTypes.add(Long.class.getCanonicalName());
-		jsonFriendlyTypes.add(Double.class.getCanonicalName());
-		jsonFriendlyTypes.add(Float.class.getCanonicalName());
-		jsonFriendlyTypes.add(Boolean.class.getCanonicalName());
-		jsonFriendlyTypes.add(Character.class.getCanonicalName());
-		jsonFriendlyTypes.add(Integer.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Short.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Byte.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Long.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Double.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Float.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Boolean.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(Character.TYPE.getCanonicalName());
-		jsonFriendlyTypes.add(String.class.getCanonicalName());
-		jsonFriendlyTypes.add(Date.class.getCanonicalName());
-		jsonFriendlyTypes.add(BigInteger.class.getCanonicalName());
-		jsonFriendlyTypes.add(BigDecimal.class.getCanonicalName());
-	}
 
 	public JSonSerializerProxyCreator(GeneratorContextExt context, TreeLogger logger, JType targetObjectType)
 	{
@@ -188,7 +164,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		srcWriter.println(resultSourceName + " "+resultObjectVar + " = " + JClassUtils.getEmptyValueForType(objectType) +";");
 		srcWriter.println("if ("+jsonValueVar+" != null && "+jsonValueVar+".isNull() == null){");
 
-		if (isJsonFriendly(objectType))
+		if (JClassUtils.isSimpleType(objectType))
 		{
 			generateDecodeStringForJsonFriendlyType(srcWriter, objectType, jsonValueVar, resultObjectVar);
 		}
@@ -228,7 +204,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			srcWriter.println("if ("+objectVar+" != null){");
 		}
 
-		if (isJsonFriendly(objectType))
+		if (JClassUtils.isSimpleType(objectType))
 		{
 			generateEncodeStringForJsonFriendlyType(srcWriter, objectType, objectVar, resultJSONValueVar);
 		}
@@ -517,10 +493,5 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			String serializerName = new JSonSerializerProxyCreator(context, logger, returnType).create();
 			srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
 		}
-	}
-	
-	public static boolean isJsonFriendly(JType jType)
-	{
-		return (jsonFriendlyTypes.contains(jType.getQualifiedSourceName()));
 	}
 }

@@ -15,12 +15,9 @@
  */
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -34,31 +31,27 @@ import org.cruxframework.crux.core.utils.ClassUtils;
  */
 public class StringParameterInjector
 {
-	protected Class<?> type;
-	protected Type genericType;
+	protected Class<?> rawType;
 	protected Constructor<?> constructor;
 	protected Method valueOf;
 	protected String defaultValue;
 	protected String paramName;
-	protected AccessibleObject target;
 	private boolean isDate;
 
 	protected StringParameterInjector()
     {
     }
 	
-	protected StringParameterInjector(Class<?> type, Type genericType, String paramName, String defaultValue, AccessibleObject target, Annotation[] annotations)
+	protected StringParameterInjector(Class<?> type, String paramName, String defaultValue)
 	{
-		initialize(type, genericType, paramName, defaultValue, target, annotations);
+		initialize(type, paramName, defaultValue);
 	}
 
-	protected void initialize(Class<?> type, Type genericType, String paramName, String defaultValue, AccessibleObject target, Annotation[] annotations)
+	protected void initialize(Class<?> type, String paramName, String defaultValue)
 	{
-		this.type = type;
+		this.rawType = type;
 		this.paramName = paramName;
 		this.defaultValue = defaultValue;
-		this.target = target;
-		this.genericType = genericType;
 		this.isDate = Date.class.isAssignableFrom(type);
 
 		if (!type.isPrimitive())
@@ -88,7 +81,7 @@ public class StringParameterInjector
 	    Method valueOf = null;
 	    try
 	    {
-	    	fromString = type.getDeclaredMethod("fromString", String.class);
+	    	fromString = rawType.getDeclaredMethod("fromString", String.class);
 	    	if (Modifier.isStatic(fromString.getModifiers()) == false)
 	    	{
 	    		fromString = null;
@@ -99,7 +92,7 @@ public class StringParameterInjector
 	    }
 	    try
 	    {
-	    	valueOf = type.getDeclaredMethod("valueOf", String.class);
+	    	valueOf = rawType.getDeclaredMethod("valueOf", String.class);
 	    	if (Modifier.isStatic(valueOf.getModifiers()) == false)
 	    	{
 	    		valueOf = null;
@@ -117,7 +110,7 @@ public class StringParameterInjector
 
 	public String getParamSignature()
 	{
-		return type.getName() + "(\"" + paramName + "\")";
+		return rawType.getName() + "(\"" + paramName + "\")";
 	}
 
 	public Object extractValue(String strVal)
@@ -126,7 +119,7 @@ public class StringParameterInjector
 		{
 			if (defaultValue == null)
 			{
-				if (!type.isPrimitive())
+				if (!rawType.isPrimitive())
 				{
 					return null;
 				}
@@ -140,9 +133,9 @@ public class StringParameterInjector
 		{
 			return new Date(Long.parseLong(strVal));
 		}
-		else if (type.isPrimitive())
+		else if (rawType.isPrimitive())
 		{
-			return ClassUtils.stringToPrimitiveBoxType(type, strVal);
+			return ClassUtils.stringToPrimitiveBoxType(rawType, strVal);
 		}
 		else if (constructor != null)
 		{
@@ -152,7 +145,7 @@ public class StringParameterInjector
 			}
 			catch (Exception e)
 			{
-				throw new BadRequestException("Unable to extract parameter from http request for " + getParamSignature() +" for " + target, "Can not invoke requested service with given arguments", e);
+				throw new BadRequestException("Unable to extract parameter from http request for " + getParamSignature(), "Can not invoke requested service with given arguments", e);
 			}
 		}
 		else if (valueOf != null)
@@ -163,7 +156,7 @@ public class StringParameterInjector
 			}
 			catch (Exception e)
 			{
-				throw new BadRequestException("Unable to extract parameter from http request: " + getParamSignature() + " for " + target, "Can not invoke requested service with given arguments", e);
+				throw new BadRequestException("Unable to extract parameter from http request: " + getParamSignature(), "Can not invoke requested service with given arguments", e);
 			}
 		}
 		return null;

@@ -15,13 +15,11 @@
  */
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
-
 
 import org.cruxframework.crux.core.server.rest.core.Cookie;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
  * 
@@ -31,24 +29,24 @@ import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 public class CookieParamInjector extends StringParameterInjector implements ValueInjector
 {
 
-	public CookieParamInjector(Class<?> type, Type genericType, AccessibleObject target, String cookieName, String defaultValue, Annotation[] annotations)
+	public CookieParamInjector(Type type, String cookieName, String defaultValue)
 	{
 		if (type.equals(Cookie.class))
 		{
-			this.type = type;
+			this.rawType = ClassUtils.getRawType(type);
 			this.paramName = cookieName;
 			this.defaultValue = defaultValue;
 		}
 		else
 		{
-			initialize(type, genericType, cookieName, defaultValue, target, annotations);
+			initialize(ClassUtils.getRawType(type), cookieName, defaultValue);
 		}
 	}
 
 	public Object inject(HttpRequest request)
 	{
 		Cookie cookie = request.getHttpHeaders().getCookies().get(paramName);
-		if (type.equals(Cookie.class))
+		if (rawType.equals(Cookie.class))
 		{
 			return cookie;
 		}

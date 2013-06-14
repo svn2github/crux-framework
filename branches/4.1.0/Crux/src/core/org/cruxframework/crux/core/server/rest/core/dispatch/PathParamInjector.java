@@ -15,16 +15,11 @@
  */
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.cruxframework.crux.core.server.rest.core.registry.PathSegment;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
-import org.cruxframework.crux.core.server.rest.spi.UriInfo;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
@@ -32,83 +27,25 @@ import org.cruxframework.crux.core.utils.ClassUtils;
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class PathParamInjector implements ValueInjector
+public class PathParamInjector extends StringParameterInjector implements ValueInjector
 {
-	private StringParameterInjector extractor;
-	private String paramName;
-	private boolean pathSegmentArray = false;
-	private boolean pathSegmentList = false;
 
-	public PathParamInjector(Class<?> type, Type genericType, AccessibleObject target, String paramName, String defaultValue, Annotation[] annotations)
+	public PathParamInjector(Type type, String paramName, String defaultValue)
 	{
-		if (isPathSegmentArray(type))
-		{
-			pathSegmentArray = true;
-		}
-		else if (isPathSegmentList(type, genericType))
-		{
-			pathSegmentList = true;
-		}
-		else if (!type.equals(PathSegment.class))
-		{
-			extractor = new StringParameterInjector(type, genericType, paramName, defaultValue, target, annotations);
-		}
-		this.paramName = paramName;
-	}
-
-	private boolean isPathSegmentArray(Class<?> type)
-	{
-		return type.isArray() && type.getComponentType().equals(PathSegment.class);
-	}
-
-	private boolean isPathSegmentList(Class<?> type, Type genericType)
-	{
-		Class<?> collectionBaseType = ClassUtils.getCollectionBaseType(type, genericType);
-		return List.class.equals(type) && collectionBaseType != null && collectionBaseType.equals(PathSegment.class);
+		super(ClassUtils.getRawType(type), paramName, defaultValue);
 	}
 
 	public Object inject(HttpRequest request)
 	{
-		if (extractor == null) // we are a PathSegment
+		List<String> list = request.getUri().getPathParameters(true).get(paramName);
+		if (list == null)
 		{
-			UriInfo uriInfo = request.getUri();
-			List<PathSegment[]> list = null;
-			list = uriInfo.getPathParameterPathSegments().get(paramName);
-			if (list == null)
-			{
-				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + uriInfo.getPath(), "Can not execute requested service with informed params.");
-			}
-			PathSegment[] segments = list.get(list.size() - 1);
-			if (pathSegmentArray)
-			{
-				return segments;
-			}
-			else if (pathSegmentList)
-			{
-				ArrayList<PathSegment> pathlist = new ArrayList<PathSegment>();
-				for (PathSegment seg : segments)
-				{
-					pathlist.add(seg);
-				}
-				return pathlist;
-			}
-			else
-			{
-				return segments[segments.length - 1];
-			}
+			throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + request.getUri().getPath(), "Can not execute requested service with informed params.");
 		}
-		else
+		if (list != null && list.size() > 0)
 		{
-			List<String> list = request.getUri().getPathParameters(true).get(paramName);
-			if (list == null)
-			{
-				throw new InternalServerErrorException("Unknown @PathParam: " + paramName + " for path: " + request.getUri().getPath(), "Can not execute requested service with informed params.");
-			}
-			if (list != null && list.size() > 0)
-			{
-				return extractor.extractValue(list.get(list.size() - 1));
-			}
-			return null;
+			return extractValue(list.get(list.size() - 1));
 		}
+		return null;
 	}
 }

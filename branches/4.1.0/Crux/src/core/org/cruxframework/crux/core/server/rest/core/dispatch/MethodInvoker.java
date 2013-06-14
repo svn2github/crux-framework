@@ -16,15 +16,12 @@
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 
 import org.cruxframework.crux.core.server.rest.annotation.CookieParam;
 import org.cruxframework.crux.core.server.rest.annotation.DefaultValue;
@@ -47,6 +44,8 @@ import org.cruxframework.crux.core.utils.ClassUtils;
  */
 public class MethodInvoker
 {
+	protected static enum RestParameterType{query, header, form, cookie, path, body}
+
 	protected Method method;
 	protected Class<?> rootClass;
 	protected ValueInjector[] params;
@@ -60,27 +59,10 @@ public class MethodInvoker
 		this.rootClass = root;
 		this.params = new ValueInjector[method.getParameterTypes().length];
 		Type[] genericParameterTypes = method.getGenericParameterTypes();
-		for (int i = 0; i < method.getParameterTypes().length; i++)
+		for (int i = 0; i < genericParameterTypes.length; i++)
 		{
-			Class<?> type;
-			Type genericType;
-
-			// the parameter type might be a type variable defined in a
-			// superclass
-			if (method.getGenericParameterTypes()[i] instanceof TypeVariable<?>)
-			{
-				// try to find out the value of the type variable
-				genericType = ClassUtils.getActualValueOfTypeVariable(root, (TypeVariable<?>) genericParameterTypes[i]);
-				type = ClassUtils.getRawType(genericType);
-			}
-			else
-			{
-				type = method.getParameterTypes()[i];
-				genericType = genericParameterTypes[i];
-			}
-
 			Annotation[] annotations = method.getParameterAnnotations()[i];
-			params[i] = createParameterExtractor(root, method, type, genericType, annotations);
+			params[i] = createParameterExtractor(root, genericParameterTypes[i], annotations);
 		}
 		validateParamExtractors(httpMethod);
 		initializePreprocessors();
@@ -213,7 +195,17 @@ public class MethodInvoker
 		return false;
 	}
 	
-	protected ValueInjector createParameterExtractor(Class<?> injectTargetClass, AccessibleObject injectTarget, Class<?> type, Type genericType, Annotation[] annotations)
+	protected static ValueInjector createParameterExtractor(Class<?> injectTargetClass, Type type, Annotation[] annotations)
+	{
+		if (ClassUtils.isSimpleType(type))
+		{
+			return createParameterExtractorForSimpleType(injectTargetClass, type, annotations);
+			
+		}
+		return createParameterExtractorForComplexType(injectTargetClass, type, annotations);
+	}
+	
+	protected static ValueInjector createParameterExtractorForSimpleType(Class<?> injectTargetClass, Type type, Annotation[] annotations)
 	{
 		DefaultValue defaultValue = ClassUtils.findAnnotation(annotations, DefaultValue.class);
 		String defaultVal = null;
@@ -230,31 +222,93 @@ public class MethodInvoker
 
 		if ((query = ClassUtils.findAnnotation(annotations, QueryParam.class)) != null)
 		{
-			return new QueryParamInjector(type, genericType, injectTarget, query.value(), defaultVal, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.query, injectTargetClass, type, query.value(), defaultVal);
 		}
 		else if ((header = ClassUtils.findAnnotation(annotations, HeaderParam.class)) != null)
 		{
-			return new HeaderParamInjector(type, genericType, injectTarget, header.value(), defaultVal, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.header, injectTargetClass, type, header.value(), defaultVal);
 		}
 		else if ((formParam = ClassUtils.findAnnotation(annotations, FormParam.class)) != null)
 		{
-			return new FormParamInjector(type, genericType, injectTarget, formParam.value(), defaultVal, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.form, injectTargetClass, type, formParam.value(), defaultVal);
 		}
 		else if ((cookie = ClassUtils.findAnnotation(annotations, CookieParam.class)) != null)
 		{
-			return new CookieParamInjector(type, genericType, injectTarget, cookie.value(), defaultVal, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.cookie, injectTargetClass, type, cookie.value(), defaultVal);
 		}
 		else if ((uriParam = ClassUtils.findAnnotation(annotations, PathParam.class)) != null)
 		{
-			return new PathParamInjector(type, genericType, injectTarget, uriParam.value(), defaultVal, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.path, injectTargetClass, type, uriParam.value(), defaultVal);
 		}
 		else
 		{
-			return new MessageBodyParamInjector(injectTargetClass, injectTarget, type, genericType, annotations);
+			return createParameterExtractorForSimpleType(RestParameterType.body, injectTargetClass, type, null, null);
 		}
-		//TODO adicionar suporte para passar DTO via queryParam
 	}
 	
+	protected static ValueInjector createParameterExtractorForSimpleType(RestParameterType restParameterType, Class<?> injectTargetClass, Type type, 
+																  String paramName, String defaultValue)
+	{
+		switch (restParameterType)
+        {
+        	case query: 
+        		return new QueryParamInjector(type, paramName, defaultValue);
+        	case header:
+        		return new HeaderParamInjector(type, paramName, defaultValue);
+        	case form:
+        		return new FormParamInjector(type, paramName, defaultValue);
+        	case cookie:
+        		return new CookieParamInjector(type, paramName, defaultValue);
+        	case path:
+        		return new PathParamInjector(type, paramName, defaultValue);
+        	default:
+    			return new MessageBodyParamInjector(injectTargetClass, type);
+        }
+	}
+
+	/**
+	 * The user can define a value object to group parameters that are passed in the same way (query, form, path, cookie, header).
+	 * @param injectTargetClass
+	 * @param injectTarget
+	 * @param type
+	 * @param genericType
+	 * @param annotations
+	 * @return
+	 */
+	protected static ValueInjector createParameterExtractorForComplexType(Class<?> injectTargetClass, Type type, Annotation[] annotations)
+	{
+		QueryParam query;
+		HeaderParam header;
+		PathParam uriParam;
+		CookieParam cookie;
+		FormParam formParam;
+
+		if ((query = ClassUtils.findAnnotation(annotations, QueryParam.class)) != null)
+		{
+			return new GroupValueInjector(RestParameterType.query, type, query.value());
+		}
+		else if ((header = ClassUtils.findAnnotation(annotations, HeaderParam.class)) != null)
+		{
+			return new GroupValueInjector(RestParameterType.header, type, header.value());
+		}
+		else if ((formParam = ClassUtils.findAnnotation(annotations, FormParam.class)) != null)
+		{
+			return new GroupValueInjector(RestParameterType.form, type, formParam.value());
+		}
+		else if ((cookie = ClassUtils.findAnnotation(annotations, CookieParam.class)) != null)
+		{
+			return new GroupValueInjector(RestParameterType.cookie, type, cookie.value());
+		}
+		else if ((uriParam = ClassUtils.findAnnotation(annotations, PathParam.class)) != null)
+		{
+			return new GroupValueInjector(RestParameterType.path, type, uriParam.value());
+		}
+		else
+		{
+			return new MessageBodyParamInjector(injectTargetClass, type);
+		}
+	}
+
 	protected void validateParamExtractors(String httpMethod)
     {
 		boolean hasFormParam = false;

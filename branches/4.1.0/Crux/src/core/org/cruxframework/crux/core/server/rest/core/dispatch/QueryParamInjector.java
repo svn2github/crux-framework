@@ -15,12 +15,11 @@
  */
 package org.cruxframework.crux.core.server.rest.core.dispatch;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Type;
 import java.util.List;
 
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
  * 
@@ -29,9 +28,9 @@ import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
  */
 public class QueryParamInjector extends StringParameterInjector implements ValueInjector
 {
-	public QueryParamInjector(Class<?> type, Type genericType, AccessibleObject target, String paramName, String defaultValue, Annotation[] annotations)
+	public QueryParamInjector(Type type, String paramName, String defaultValue)
 	{
-		super(type, genericType, paramName, defaultValue, target, annotations);
+		super(ClassUtils.getRawType(type), paramName, defaultValue);
 	}
 
 	public Object inject(HttpRequest request)

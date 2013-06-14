@@ -59,6 +59,8 @@ import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JEnumConstant;
+import com.google.gwt.core.ext.typeinfo.JEnumType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
@@ -409,26 +411,39 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				{
 					JParameter parameter = parameters[i];
 					JClassType parameterType = parameter.getType().isClassOrInterface();
-					if (parameterType.isAssignableTo(stringType))
+					String parameterName = parameter.getName();
+					if (JClassUtils.isSimpleType(parameterType))
 					{
-						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
-								"("+parameter.getName()+"!=null?"+parameter.getName()+":\"\"));");
+						generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, parameterType, parameterName);
 					}
-					else if (parameterType.isAssignableTo(dateType))
-					{
-						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
-								"("+parameter.getName()+"!=null?Long.toString("+parameter.getName()+".getTime()):\"\"));");
-					} 
 					else
 					{
-						srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameter.getName()+"}\", "+
-								"("+parameter.getName()+"!=null?(\"\"+"+parameter.getName()+"):\"\"));");
+						//TODO 
 					}
 					
 				}
 			}
 		}
 	}
+
+	protected void generateMethodParamToURICodeForSimpleType(SourcePrinter srcWriter, String uriVariable, JClassType parameterType, String parameterName)
+    {
+	    if (parameterType.isAssignableTo(stringType))
+	    {
+	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+	    			"("+parameterName+"!=null?"+parameterName+":\"\"));");
+	    }
+	    else if (parameterType.isAssignableTo(dateType))
+	    {
+	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+	    			"("+parameterName+"!=null?Long.toString("+parameterName+".getTime()):\"\"));");
+	    } 
+	    else
+	    {
+	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+	    			"("+parameterName+"!=null?(\"\"+"+parameterName+"):\"\"));");
+	    }
+    }
 
 	protected String getCallbackResultTypeName(JClassType callbackParameter)
 	{
@@ -649,7 +664,11 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	private boolean isTypesCompatiblesForSerialization(Class<?> class1, JType jType)
 	{
-		if (JSonSerializerProxyCreator.isJsonFriendly(jType))
+		if (jType.isEnum() != null)
+		{
+			return isEnumTypesCompatibles(class1, jType.isEnum());
+		}
+		else if (JClassUtils.isSimpleType(jType))
 		{
 			return (getAllowedType(jType).contains(class1));
 		}
@@ -680,6 +699,42 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 		//Use a jsonEncorer implicitly
 		return true;
+	}
+	
+	private boolean isEnumTypesCompatibles(Class<?> class1, JEnumType jType)
+	{
+		if (class1.isEnum())
+		{
+			Object[] values1 = class1.getEnumConstants();
+			JEnumConstant[] values2 = jType.getEnumConstants();
+			if (values1.length != values2.length)
+			{
+				return false;
+			}
+			for (JEnumConstant jEnumConstant : values2)
+            {
+                String name = jEnumConstant.getName();
+                boolean found = false;
+                for (Object enumConstant : values1)
+                {
+                    if (name.equals(enumConstant.toString()))
+                    {
+                    	found = true;
+                    	break;
+                    }
+                }
+                if (!found)
+                {
+                	return false;
+                }
+            }
+			return true;
+		}
+		else if (String.class.isAssignableFrom(class1))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	private List<Class<?>> getAllowedType(JType jType)

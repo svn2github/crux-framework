@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.utils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -452,6 +454,8 @@ public class JClassUtils
 	            JClassType numberType = classType.getOracle().getType(Number.class.getCanonicalName());
 	            JClassType booleanType = classType.getOracle().getType(Boolean.class.getCanonicalName());
 	            JClassType characterType = classType.getOracle().getType(Character.class.getCanonicalName());
+	            JClassType bigIntegerType = classType.getOracle().getType(BigInteger.class.getCanonicalName());
+	            JClassType bigDecimalType = classType.getOracle().getType(BigDecimal.class.getCanonicalName());
 
 	            return (classType.isPrimitive() != null) ||
 	            (numberType.isAssignableFrom(classType)) ||
@@ -460,6 +464,8 @@ public class JClassUtils
 	            (charSequenceType.isAssignableFrom(classType)) ||
 	            (charSequenceType.isAssignableFrom(classType)) ||
 	            (dateType.isAssignableFrom(classType)) ||
+	            (bigIntegerType.isAssignableFrom(classType)) ||
+	            (bigDecimalType.isAssignableFrom(classType)) ||
 	            (classType.isEnum() != null);
             }
             catch (NotFoundException e)
@@ -765,4 +771,5 @@ public class JClassUtils
 	    JClassType jClassType = parameterized.getTypeArgs()[0];
 	    return jClassType;
     }
+	
 }
