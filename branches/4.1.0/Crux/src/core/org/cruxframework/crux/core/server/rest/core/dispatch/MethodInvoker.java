@@ -324,7 +324,7 @@ public class MethodInvoker
 	        {
 	    		if (hasBodyParam)
 	    		{
-	    			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can not use receive " +
+	    			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can not receive " +
 	    					"more than one parameter through body text", "Can not execute requested service");
 	    		}
 	        	hasBodyParam = true;

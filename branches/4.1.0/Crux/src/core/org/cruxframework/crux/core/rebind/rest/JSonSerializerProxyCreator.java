@@ -250,7 +250,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	{
 		try
 		{
-			if (objectType.getQualifiedSourceName().equals("java.lang.String"))
+			if (objectType.getQualifiedSourceName().equals("java.lang.String") || objectType.isEnum() != null)
 			{
 				srcWriter.println(resultObjectVar + " = " + JClassUtils.getParsingExpressionForSimpleType(jsonValueVar+".isString().stringValue()", objectType) + ";");
 			}

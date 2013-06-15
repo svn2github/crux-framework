@@ -52,6 +52,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
 import org.cruxframework.crux.core.utils.JClassUtils;
+import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -124,7 +125,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		initializeRestMethods();
 	}
 
-	private Class<?> getRestImplementationClass(JClassType baseIntf)
+	protected Class<?> getRestImplementationClass(JClassType baseIntf)
 	{
 		TargetRestService restService = baseIntf.getAnnotation(TargetRestService.class);
 		if (restService == null)
@@ -184,7 +185,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		srcWriter.println("}");
 	}
 
-	private void initializeRestMethods()
+	protected void initializeRestMethods()
     {
     	JMethod[] methods = baseIntf.getOverridableMethods();
     	for (JMethod method : methods)
@@ -239,7 +240,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			if (!callbackResultTypeName.equalsIgnoreCase("void"))
 			{
 				JClassType callbackResultType = JClassUtils.getTypeArgForGenericType(callbackParameter.getType().isClassOrInterface());
-				srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode()){");
+				srcWriter.println("String jsonText = response.getText();");
+				srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode() && !"+StringUtils.class.getCanonicalName()+".isEmpty(jsonText)){");
 				srcWriter.println("try{");
 
 				if (callbackResultType != null && callbackResultType.isAssignableTo(javascriptObjectType))
@@ -248,7 +250,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				}
 				else
 				{
-					srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(response.getText());");
+					srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(jsonText);");
 					String serializerName = new JSonSerializerProxyCreator(context, logger, callbackResultType).create();
 					srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(jsonValue);");
 				}
@@ -292,7 +294,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 	}
 
-	private void generateXSRFHeaderProtectionForWrites(String httpMethod, String builderVar, SourcePrinter srcWriter)
+	protected void generateXSRFHeaderProtectionForWrites(String httpMethod, String builderVar, SourcePrinter srcWriter)
     {
 	    if (!httpMethod.equals("GET"))
 	    {
@@ -300,7 +302,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    }
     }
 
-	private void generateSalveStateBlock(SourcePrinter srcWriter, Method method, String responseVar, String uriVar, String uri)
+	protected void generateSalveStateBlock(SourcePrinter srcWriter, Method method, String responseVar, String uriVar, String uri)
     {
 		if (readMethods.containsKey(uri) && updateMethods.containsKey(uri))
 		{
@@ -312,7 +314,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
     }
 
-	private void generateValidateStateBlock(SourcePrinter srcWriter, Method method, String builderVar, String uriVar, String uri, String callbackParameterName)
+	protected void generateValidateStateBlock(SourcePrinter srcWriter, Method method, String builderVar, String uriVar, String uri, String callbackParameterName)
     {
 		if (readMethods.containsKey(uri) && updateMethods.containsKey(uri))
 		{
@@ -410,38 +412,72 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				if ((annotation instanceof QueryParam) || (annotation instanceof PathParam))
 				{
 					JParameter parameter = parameters[i];
-					JClassType parameterType = parameter.getType().isClassOrInterface();
+					JType parameterType = parameter.getType();
 					String parameterName = parameter.getName();
 					if (JClassUtils.isSimpleType(parameterType))
 					{
-						generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, parameterType, parameterName);
+						generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, parameterType, parameterName, 
+								parameterName, (parameterType.isPrimitive() != null?"true":parameterName+"!=null"));
 					}
 					else
 					{
-						//TODO 
+						generateMethodParamToURICodeForComplexType(srcWriter, uriVariable, parameterType, 
+								parameterName, parameterName, parameterName+"!=null"); 
 					}
-					
 				}
 			}
 		}
 	}
 
-	protected void generateMethodParamToURICodeForSimpleType(SourcePrinter srcWriter, String uriVariable, JClassType parameterType, String parameterName)
+	protected void generateMethodParamToURICodeForComplexType(SourcePrinter srcWriter, String uriVariable, JType parameterType, 
+			String parameterName, String parameterExpression, String parameterCheckExpression)
     {
-	    if (parameterType.isAssignableTo(stringType))
-	    {
-	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-	    			"("+parameterName+"!=null?"+parameterName+":\"\"));");
-	    }
-	    else if (parameterType.isAssignableTo(dateType))
-	    {
-	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-	    			"("+parameterName+"!=null?Long.toString("+parameterName+".getTime()):\"\"));");
-	    } 
+		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
+		for (PropertyInfo propertyInfo : propertiesInfo)
+        {
+	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
+	        {
+	        	generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, propertyInfo.getType(), 
+	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        			(propertyInfo.getType().isPrimitive()!=null?
+	        					parameterCheckExpression:
+	        					parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null"));
+	        }
+	        else
+	        {
+	        	generateMethodParamToURICodeForComplexType(srcWriter, uriVariable, propertyInfo.getType(), 
+	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        			parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null");
+	        }
+        }
+    }
+
+	protected void generateMethodParamToURICodeForSimpleType(SourcePrinter srcWriter, String uriVariable, JType parameterType, 
+			String parameterName, String parameterexpression, String parameterCheckExpression)
+    {
+		JClassType jClassType = parameterType.isClassOrInterface();
+		if (jClassType != null)
+		{
+			if (jClassType.isAssignableTo(stringType))
+			{
+				srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+						"("+parameterCheckExpression+"?"+parameterexpression+":\"\"));");
+			}
+			else if (jClassType.isAssignableTo(dateType))
+			{
+				srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+						"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\"));");
+			}
+		    else
+		    {
+		    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
+		    			"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"));");
+		    }
+		}
 	    else
 	    {
 	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-	    			"("+parameterName+"!=null?(\"\"+"+parameterName+"):\"\"));");
+	    			"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"));");
 	    }
     }
 
@@ -490,13 +526,47 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 						str.append("&");
 					}
 					first = false;
-					str.append(((QueryParam)annotation).value()+"={"+parameters[i].getName()+"}");
+					if (JClassUtils.isSimpleType(parameters[i].getType()))
+					{
+						buildQueryStringForSimpleType(str, parameters[i].getName(), ((QueryParam)annotation).value());
+					}
+					else
+					{
+						buildQueryStringForComplexType(str, parameters[i].getName(), parameters[i].getType(), ((QueryParam)annotation).value());
+					}
 				}
 			}
 		}
 
 		return str.toString();
 	}
+
+	protected void buildQueryStringForComplexType(StringBuilder str, String name, JType parameterType, String value)
+    {
+		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
+		boolean first = true;
+		for (PropertyInfo propertyInfo : propertiesInfo)
+        {
+			if (!first)
+			{
+				str.append("&");
+			}
+			first = false;
+	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
+	        {
+				buildQueryStringForSimpleType(str, name+"."+propertyInfo.getName(), value+"."+propertyInfo.getName());
+	        }
+	        else
+	        {
+				buildQueryStringForComplexType(str, name+"."+propertyInfo.getName(), propertyInfo.getType(), value+"."+propertyInfo.getName());
+	        }
+        }
+    }
+
+	protected void buildQueryStringForSimpleType(StringBuilder str, String parameterExpression, String parameterName)
+    {
+	    str.append(parameterName+"={"+parameterExpression+"}");
+    }
 
 	protected String getFormString(RestMethodInfo methodInfo)
 	{
@@ -613,7 +683,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return implementationMethod;
 	}
 
-	private void validateProxyMethod(JMethod method)
+	protected void validateProxyMethod(JMethod method)
 	{
 		if (method.getReturnType() != JPrimitiveType.VOID) 
 		{
@@ -631,7 +701,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 	}
 
-	private void validateImplementationMethod(JMethod method, Method implementationMethod)
+	protected void validateImplementationMethod(JMethod method, Method implementationMethod)
 	{
 		if (implementationMethod == null)
 		{
@@ -662,7 +732,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 	}
 
-	private boolean isTypesCompatiblesForSerialization(Class<?> class1, JType jType)
+	protected boolean isTypesCompatiblesForSerialization(Class<?> class1, JType jType)
 	{
 		if (jType.isEnum() != null)
 		{
@@ -701,7 +771,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return true;
 	}
 	
-	private boolean isEnumTypesCompatibles(Class<?> class1, JEnumType jType)
+	protected boolean isEnumTypesCompatibles(Class<?> class1, JEnumType jType)
 	{
 		if (class1.isEnum())
 		{
@@ -737,7 +807,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return false;
 	}
 
-	private List<Class<?>> getAllowedType(JType jType)
+	protected List<Class<?>> getAllowedType(JType jType)
 	{
 		List<Class<?>> result = new ArrayList<Class<?>>();
 		JPrimitiveType primitiveType = jType.isPrimitive();
@@ -800,7 +870,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return result;
 	}
 	
-	private static class RestMethodInfo
+	protected static class RestMethodInfo
 	{
 		private JMethod method;
 		private Method implementationMethod;

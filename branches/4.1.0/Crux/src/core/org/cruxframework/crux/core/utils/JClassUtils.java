@@ -732,7 +732,91 @@ public class JClassUtils
 	    return result;
     }
 
-	
+	public static class PropertyInfo
+	{
+		private final String name;
+		private final JType type;
+		private final JMethod readMethod;
+		private final JMethod writeMethod;
+
+		public PropertyInfo(String name, JType type, JMethod readMethod, JMethod writeMethod)
+        {
+			this.name = name;
+			this.type = type;
+			this.readMethod = readMethod;
+			this.writeMethod = writeMethod;
+        }
+
+		public String getName()
+        {
+        	return name;
+        }
+
+		public JType getType()
+        {
+        	return type;
+        }
+
+		public JMethod getReadMethod()
+        {
+        	return readMethod;
+        }
+
+		public JMethod getWriteMethod()
+        {
+        	return writeMethod;
+        }
+	}
+
+	public static PropertyInfo[] extractBeanPropertiesInfo(JClassType type)
+	{
+		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
+
+		List<JMethod> getterMethods = getGetterMethods(type);
+		List<JMethod> setterMethods = getSetterMethods(type);
+		
+		for (JMethod setterMethod : setterMethods)
+        {
+	        String setterProperty = getPropertyForGetterOrSetterMethod(setterMethod);
+	        for (JMethod getterMethod : getterMethods)
+            {
+		        String getterProperty = getPropertyForGetterOrSetterMethod(getterMethod);
+	            if (getterProperty.equals(setterProperty))
+	            {
+					result.add(new PropertyInfo(setterProperty, getterMethod.getReturnType(), getterMethod, setterMethod));
+					break;
+	            }
+            }
+        }
+		return result.toArray(new PropertyInfo[result.size()]);
+		
+//		Class<?> rawType = getRawType(type);
+//		PropertyDescriptor[] propertyDescriptors = extractBeanProperties(rawType);
+//		
+//		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
+//		if (propertyDescriptors != null)
+//		{
+//			try
+//			{
+//				for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
+//				{
+//					if (propertyDescriptor.getReadMethod() != null && propertyDescriptor.getWriteMethod() != null)
+//					{
+//						Method readMethod = propertyDescriptor.getReadMethod();
+//						Type returnType = readMethod.getGenericReturnType();
+//						Type propertyType = getPropertyType(returnType, type, rawType);
+//						Method writeMethod = propertyDescriptor.getWriteMethod();
+//						result.add(new PropertyInfo(propertyDescriptor.getName(), propertyType, readMethod, writeMethod));
+//					}
+//				}
+//	        }
+//	        catch (Exception e)
+//	        {
+//	        	throw new RuntimeException("Unable to determine properties for bean: " + rawType.getCanonicalName(), e);
+//	        }
+//		}
+//		return result.toArray(new PropertyInfo[result.size()]);
+	}
 	
 	public static String getEmptyValueForType(JType objectType)
     {

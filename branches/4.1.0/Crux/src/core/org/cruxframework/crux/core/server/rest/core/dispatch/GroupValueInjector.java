@@ -17,11 +17,14 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.cruxframework.crux.core.server.rest.core.dispatch.MethodInvoker.RestParameterType;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.utils.ClassUtils;
 import org.cruxframework.crux.core.utils.ClassUtils.PropertyInfo;
 
@@ -38,6 +41,11 @@ class GroupValueInjector implements ValueInjector
 	public GroupValueInjector(RestParameterType restParameterType, Type type, String paramPrefix)
     {
 		this.baseClass = ClassUtils.getRawType(type);
+		if (!isAllowedComplexType(baseClass))
+		{
+			throw new InternalServerErrorException("Invalid rest parameter for rest method: " + baseClass.getCanonicalName() + ". Type not allowed for " +
+					"this type of parameter. It ca only be passed as a body parameter", "Can not execute requested service");
+		}
 		List<PropertyInfo> writeableProperties = new ArrayList<PropertyInfo>();
 		PropertyInfo[] properties = ClassUtils.extractBeanPropertiesInfo(type);
 
@@ -82,6 +90,16 @@ class GroupValueInjector implements ValueInjector
 	    this.properties = writeableProperties.toArray(new PropertyInfo[writeableProperties.size()]);
     }
 
+	private boolean isAllowedComplexType(Class<?> type)
+	{
+		if (type.isArray() || Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type))
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private String getParamName(String paramPrefix, String name)
     {
 		StringBuilder builder = new StringBuilder();

@@ -211,7 +211,7 @@ public class HttpUtil
 
 	private static boolean exceedsUncompressedContentLengthLimit(String content)
 	{
-		return (content.length() * 2) > UNCOMPRESSED_BYTE_SIZE_LIMIT;
+		return (content != null) && ((content.length() * 2) > UNCOMPRESSED_BYTE_SIZE_LIMIT);
 	}
 
 	public static boolean shouldGzipResponseContent(HttpRequest request, String responseContent)
@@ -233,8 +233,6 @@ public class HttpUtil
 		}
 		else
 		{
-			String responseContent = methodReturn.getReturn();
-			byte[] responseBytes = getResponseBytes(request, response, responseContent);
 
 			CacheInfo cacheInfo = methodReturn.getCacheInfo();
 			if (cacheInfo != null)
@@ -242,6 +240,8 @@ public class HttpUtil
 				writeCacheHeaders(response, cacheInfo, methodReturn.getEtag(), methodReturn.getDateModified(), methodReturn.isEtagGenerationEnabled());
 			}
 
+			String responseContent = methodReturn.getReturn();
+			byte[] responseBytes = getResponseBytes(request, response, responseContent);
 			response.setContentLength(responseBytes.length);
 			response.setStatus(HttpServletResponse.SC_OK);
 			outputHeaders.putSingle(HttpHeaderNames.CONTENT_TYPE, new MediaType("application", "json", "UTF-8"));
@@ -325,7 +325,7 @@ public class HttpUtil
 	private static byte[] getResponseBytes(HttpRequest request, HttpResponse response, String responseContent) throws UnsupportedEncodingException, IOException
     {
 	    boolean gzipResponse = shouldGzipResponseContent(request, responseContent);
-	    byte[] responseBytes = responseContent.getBytes("UTF-8");
+	    byte[] responseBytes = (responseContent!=null?responseContent.getBytes("UTF-8"):new byte[0]);
 	    if (gzipResponse)
 	    {
 	    	ByteArrayOutputStream output = null;
