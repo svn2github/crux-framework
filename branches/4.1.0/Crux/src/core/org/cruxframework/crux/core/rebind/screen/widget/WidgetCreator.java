@@ -753,7 +753,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 			if(!StringUtils.isEmpty(styleName))
 			{
 				styleName = widgetCreator.getResourceAccessExpression(styleName);
-				out.println("((" + StyleManager.class.getCanonicalName() + ") GWT.create(" + StyleManager.class.getCanonicalName() + ".class)).applyStyleName(" + EscapeUtils.quote(styleName) + ", " + context.getWidget() + ");");
+				out.println("((" + StyleManager.class.getCanonicalName() + ") GWT.create(" + StyleManager.class.getCanonicalName() + ".class)).applyStyleName(" + context.getWidget() + ", " + EscapeUtils.quote(styleName) + ");");
 			}
 		}
 	}
