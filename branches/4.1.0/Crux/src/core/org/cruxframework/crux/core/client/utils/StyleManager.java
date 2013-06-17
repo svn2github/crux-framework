@@ -1,5 +1,6 @@
 package org.cruxframework.crux.core.client.utils;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -10,6 +11,12 @@ public class StyleManager
 		return "-large";
 	}
 
+	public final void applyStyleName(Element element, String styleName)
+	{
+		element.setClassName(styleName);
+		StyleUtils.addStyleName(element, styleName + getSufix());
+	}
+	
 	public final void applyStyleName(Widget widget, String styleName)
 	{
 		widget.setStyleName(styleName);
