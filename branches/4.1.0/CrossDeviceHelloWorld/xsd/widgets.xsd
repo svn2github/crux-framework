@@ -252,6 +252,9 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:sequence>
 <xs:group ref="c:widgets" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="defaultAlign" />
+<xs:attribute name="verticalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_VerticalAlignment" />
+<xs:attribute name="verticalSpacing" type="xs:int" default="0" />
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />
@@ -376,41 +379,6 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onLoadWidget" />
 <xs:attribute name="onAttach" />
 <xs:attribute name="onDettach" />
-</xs:complexType>
-<xs:element name="decoratedButton" type="TdecoratedButton"/>
-<xs:complexType name="TdecoratedButton">
-<xs:attribute name="enabled" type="xs:boolean" />
-<xs:attribute name="id" type="xs:string" use="required" />
-<xs:attribute name="width" type="xs:string" />
-<xs:attribute name="height" type="xs:string" />
-<xs:attribute name="styleName" type="xs:string" />
-<xs:attribute name="visible" type="xs:boolean" />
-<xs:attribute name="tooltip" type="xs:string" />
-<xs:attribute name="style" type="xs:string" />
-<xs:attribute name="tabIndex" type="xs:int" />
-<xs:attribute name="accessKey" type="xs:string" />
-<xs:attribute name="focus" type="xs:boolean" />
-<xs:attribute name="text" type="xs:string" />
-<xs:attribute name="onClick" />
-<xs:attribute name="onDoubleClick" />
-<xs:attribute name="onLoadWidget" />
-<xs:attribute name="onAttach" />
-<xs:attribute name="onDettach" />
-<xs:attribute name="onMouseDown" />
-<xs:attribute name="onMouseUp" />
-<xs:attribute name="onMouseOver" />
-<xs:attribute name="onMouseOut" />
-<xs:attribute name="onMouseMove" />
-<xs:attribute name="onMouseWheel" />
-<xs:attribute name="onKeyUp" />
-<xs:attribute name="onKeyPress" />
-<xs:attribute name="onKeyDown" />
-<xs:attribute name="onFocus" />
-<xs:attribute name="onBlur" />
-<xs:attribute name="onTouchStart" />
-<xs:attribute name="onTouchMove" />
-<xs:attribute name="onTouchEnd" />
-<xs:attribute name="onTouchCancel" />
 </xs:complexType>
 <xs:element name="decoratedPanel" type="TdecoratedPanel"/>
 <xs:complexType name="TdecoratedPanel">

@@ -52,7 +52,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	 */
 	public void showView(String viewId, Direction direction)
 	{
-		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container.";
+		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container yet, so it can not be shown using animations. Use 'showView(viewId)' method instead.";
 		renderView(getView(viewId), direction);
 	}
 

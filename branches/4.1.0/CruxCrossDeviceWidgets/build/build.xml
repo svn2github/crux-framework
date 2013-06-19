@@ -16,7 +16,7 @@
 	
 	<property name="cross.device.widgets.name" value="crux-cross-device-widgets" />
 	
-	<property name="cross.device.showcase.dir" value="../CruxCrossDeviceShowcase" />
+	<property name="cross.device.hello.world" value="../CrossDeviceHelloWorld" />
 	
 	<!--get src="http:/repoGesse/crux-dev-deps.jar" dest="${lib.dir}/crux-dev-deps.jar" verbose="true" usetimestamp="yes"/>
 	<get src="http:/repoGesse/gwt-servlet.jar" dest="${dependencies.dir}/gwt-servlet.jar" verbose="true" usetimestamp="yes"/>
@@ -72,7 +72,7 @@
 	========================================================================================================
 	-->
 	<target name="apply-css-draft" description="Applies the css files on client projects.">
-		<copy todir="${cross.device.showcase.dir}/war/cruxcrossdeviceshowcase" >
+		<copy todir="${cross.device.hello.world}/war/crossdevicehelloworld" >
 			<fileset dir="${src.dir}/org/cruxframework/crux/crossdevicethemes/xstandard/public/">
     			<include name="**/*.css"/>
 			</fileset>

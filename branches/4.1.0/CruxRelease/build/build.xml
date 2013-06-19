@@ -60,10 +60,10 @@
 	<property name="crossdevice.dist.dir" value="${crossdevice.build}/dist" />
 	<property name="crossdevice.name" value="crux-cross-device-widgets" />
 
-	<!-- Properties refering CruxCrossDeviceShowcase Project -->
-	<property name="crossdeviceshowcase.build" value="../CruxCrossDeviceShowcase" />
-	<property name="crossdeviceshowcase.build.dir" value="${crossdeviceshowcase.build}/build" />
-	<property name="crossdeviceshowcase.webinf.dir" value="${crossdeviceshowcase.build}/war/WEB-INF" />
+	<!-- Properties refering CrossDeviceHelloWorld Project -->
+	<property name="crossdevicehelloworld.build" value="../CrossDeviceHelloWorld" />
+	<property name="crossdevicehelloworld.build.dir" value="${crossdevicehelloworld.build}/build" />
+	<property name="crossdevicehelloworld.webinf.dir" value="${crossdevicehelloworld.build}/war/WEB-INF" />
 
 	<!--
 	========================================================================================================
@@ -296,8 +296,8 @@
 			</fileset>
 		</copy>
 
-		<!-- Update CruxCrossDeviceShowcase project -->
-		<copy todir="${crossdeviceshowcase.build.dir}/lib">
+		<!-- Update CrossDeviceHelloWorld project -->
+		<copy todir="${crossdevicehelloworld.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
@@ -310,7 +310,7 @@
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		<copy todir="${crossdeviceshowcase.webinf.dir}/lib">
+		<copy todir="${crossdevicehelloworld.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.runtime.name}.jar" />
 			</fileset>

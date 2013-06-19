@@ -18,6 +18,7 @@ package org.cruxframework.crux.widgets.client.styledpanel;
 import org.cruxframework.crux.core.client.utils.StyleManager;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -33,7 +34,8 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	
 	private VerticalAlignmentConstant verticalAlignment = HasVerticalAlignment.ALIGN_TOP;
 	private HorizontalAlignmentConstant horizontalAlignment = HasHorizontalAlignment.ALIGN_LEFT;
-
+	private int verticalSpacing = 0;
+	
 	public StyledPanel()
 	{
 		styleManager.applyStyleName(this, DEFAULT_STYLE_NAME);
@@ -110,13 +112,18 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 		
 		if(child == null)
 		{
-			int widgetCount = getWidgetCount();
-			for(int i = 0; i < widgetCount; i++)
+			final String finalMarginLeft = marginLeft;
+			final String finalMarginRight = marginRight;
+			
+			forEachWidget(new ChildWidgetAction()
 			{
-				Widget currentChild = getWidget(i);
-				currentChild.getElement().getStyle().setProperty("marginLeft", marginLeft);
-				currentChild.getElement().getStyle().setProperty("marginRight", marginRight);
-			}
+				@Override
+				public void doAction(Widget currentChild)
+				{
+					currentChild.getElement().getStyle().setProperty("marginLeft", finalMarginLeft);
+					currentChild.getElement().getStyle().setProperty("marginRight", finalMarginRight);
+				}
+			});
 		}
 		else
 		{
@@ -130,6 +137,38 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	{
 		super.add(w);
 		setHorizontalAlignment(getHorizontalAlignment(), w);
+	}
+
+	public int getVerticalSpacing()
+	{
+		return verticalSpacing;
+	}
+
+	public void setVerticalSpacing(final int verticalSpacing)
+	{
+		this.verticalSpacing = verticalSpacing;
+		forEachWidget(new ChildWidgetAction()
+		{
+			@Override
+			public void doAction(Widget widget)
+			{
+				widget.getElement().getStyle().setMarginTop(verticalSpacing, Unit.PX);
+			}
+		});
+	}
+	
+	private void forEachWidget(ChildWidgetAction action)
+	{
+		int widgetCount = getWidgetCount();
+		for(int i = 0; i < widgetCount; i++)
+		{
+			action.doAction(getWidget(i));
+		}
+	}
+	
+	private static interface ChildWidgetAction
+	{
+		void doAction(Widget widget);
 	}
 
 }
