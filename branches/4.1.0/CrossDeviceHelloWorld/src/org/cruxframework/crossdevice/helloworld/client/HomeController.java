@@ -1,4 +1,4 @@
-package org.cruxframework.cruxshowcase.crossdevice.client;
+package org.cruxframework.crossdevice.helloworld.client;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
