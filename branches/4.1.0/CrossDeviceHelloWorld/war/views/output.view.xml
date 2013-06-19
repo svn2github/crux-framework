@@ -8,8 +8,9 @@
 	useController="homeController" 
 	title="Hello Crux">
 	
-	<xdev:storyboard id="formFields">
-		<gwt:label id="labelHello" text="Ola, Cara!"/>
-	</xdev:storyboard>
+	<crux:styledPanel id="outerPanel" verticalSpacing="5" height="200px">	
+		<gwt:label id="helloLabel" text="Ola, Cara!"/>
+		<gwt:button id="backButton" text="Voltar" onClick="homeController.back"/>
+	</crux:styledPanel>
 	
 </v:view>
