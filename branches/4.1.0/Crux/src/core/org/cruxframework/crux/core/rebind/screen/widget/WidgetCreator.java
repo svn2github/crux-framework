@@ -57,7 +57,7 @@ import com.google.gwt.dom.client.PartialSupport;
 @TagAttributes({
 	@TagAttribute("width"),
 	@TagAttribute("height"),
-	@TagAttribute(value="styleName", processor=WidgetCreator.StyleNameProcessor.class),
+	@TagAttribute(value="styleName", processor=WidgetCreator.StyleNameProcessor.class, supportsResources=true),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
@@ -752,8 +752,15 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		{
 			if(!StringUtils.isEmpty(styleName))
 			{
-				styleName = widgetCreator.getResourceAccessExpression(styleName);
-				out.println("((" + StyleManager.class.getCanonicalName() + ") GWT.create(" + StyleManager.class.getCanonicalName() + ".class)).applyStyleName(" + context.getWidget() + ", " + EscapeUtils.quote(styleName) + ");");
+		        if (getWidgetCreator().isResourceReference(styleName))
+		        {
+		        	styleName = widgetCreator.getResourceAccessExpression(styleName);
+		        	out.println(context.getWidget() + ".setStyleName(" + styleName + ");");
+		        }
+		        else
+		        {
+					out.println("((" + StyleManager.class.getCanonicalName() + ") GWT.create(" + StyleManager.class.getCanonicalName() + ".class)).applyStyleName(" + context.getWidget() + ", " + EscapeUtils.quote(styleName) + ");");
+		        }
 			}
 		}
 	}
