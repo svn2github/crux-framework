@@ -239,7 +239,7 @@ public class MessageDialog  implements HasOkHandlers, HasAnimation, IsWidget
 	public static MessageDialog show(String title, String message, OkHandler okHandler, String styleName, boolean animationEnabled)
 	{
 		MessageDialog messageBox = new MessageDialog(); 
-		messageBox.setTitle(title);
+		messageBox.setDialogTitle(title);
 		messageBox.setMessage(message);
 		messageBox.setStyleName(styleName);
 		messageBox.setAnimationEnabled(animationEnabled);
