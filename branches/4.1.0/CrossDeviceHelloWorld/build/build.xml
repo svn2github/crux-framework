@@ -1,6 +1,6 @@
-<project name="CruxCrossDeviceShowcase" basedir="../">
+<project name="CrossDeviceHelloWorld" basedir="../">
 
-	<property name="final.name" value="CruxCrossDeviceShowcase" />
+	<property name="final.name" value="CrossDeviceHelloWorld" />
 	<property name="src.dir" value="src" />
 	<property name="dist.dir" value="dist" />
 	<property name="temp.dir" value="${dist.dir}/temp" />
