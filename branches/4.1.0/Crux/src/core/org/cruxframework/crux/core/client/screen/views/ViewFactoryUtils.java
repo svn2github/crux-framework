@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ViewFactoryUtils
 {
-	private static final String ENCLOSING_PANEL_PREFIX = "_crux_";
+	public static final String ENCLOSING_PANEL_PREFIX = "_crux_";
 	private static final String LAZY_CHILDREN_PANEL_PREFIX = "_chld_";
 	private static final String LAZY_PANEL_PREFIX = "_lazy_";
 	private static final int LAZY_PANEL_PREFIX_LENGTH = LAZY_CHILDREN_PANEL_PREFIX.length();

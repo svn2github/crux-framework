@@ -42,7 +42,11 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 		swapPanel = getMainWidget();
 		swapPanel.setStyleName(DEFAULT_STYLE_NAME);
 		active = new SimplePanel();
+		active.setWidth("inherit");
+		active.setHeight("inherit");
 		swap = new SimplePanel();
+		swap.setWidth("inherit");
+		swap.setHeight("inherit");
 	}
 
 	/**

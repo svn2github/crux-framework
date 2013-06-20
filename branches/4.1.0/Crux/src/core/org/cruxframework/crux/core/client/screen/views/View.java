@@ -28,6 +28,7 @@ import org.cruxframework.crux.core.client.datasource.DataSource;
 import org.cruxframework.crux.core.client.resources.Resource;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -73,7 +74,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	protected FastList<ViewLoadHandler> loadHandlers = new FastList<ViewLoadHandler>();
 	protected FastList<ViewUnloadHandler> unloadHandlers = new FastList<ViewUnloadHandler>();
 	protected boolean loaded = false;
-
+	protected String width;
+	protected String height;
+	
 	private ViewContainer viewContainer;
 	private String prefix;
 	private static int prefixCounter = 0;
@@ -124,6 +127,53 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 		return loaded;
 	}
 	
+	/**
+	 * Retrieve the view width;
+	 * @return
+	 */
+	public String getWidth()
+    {
+    	return width;
+    }
+
+	/**
+	 * Set the view width;
+	 * @return
+	 */
+	public void setWidth(String width)
+    {
+    	this.width = width;
+    	if (isActive() && !StringUtils.isEmpty(width))
+    	{
+    		updateViewWidth(width);
+    	}
+    }
+
+	/**
+	 * Retrieve the view height;
+	 * @return
+	 */
+	public String getHeight()
+    {
+    	return height;
+    }
+
+	/**
+	 * Set the views height;
+	 * @return
+	 */
+	public void setHeight(String height)
+    {
+    	this.height = height;
+    	if (isActive() && !StringUtils.isEmpty(height))
+    	{
+    		updateViewHeight(height);
+    	}
+    }
+
+	protected abstract void updateViewHeight(String height);
+	protected abstract void updateViewWidth(String width);
+
 	/**
 	 * Create a new DataSource instance
 	 * @param dataSource dataSource name, declared with <code>@DataSource</code> annotation

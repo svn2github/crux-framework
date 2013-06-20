@@ -366,6 +366,15 @@ public class ViewFactory
 	        	{
 	        		parseViewUseViewAttribute(view, elem);
 	        	}
+	        	else if (attrName.equals("width"))
+				{
+					view.setWidth(elem.getString(attrName));
+				}
+	        	else if(attrName.equals("height"))
+				{
+					view.setHeight(elem.getString(attrName));
+				}
+	        	
 	        	else if (attrName.startsWith("on"))
 	        	{
 	        		Event event = EventFactory.getEvent(attrName, elem.getString(attrName));

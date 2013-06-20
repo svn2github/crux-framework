@@ -674,6 +674,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"onLoad\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onActivate\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
+	    out.println("<xs:attribute name=\"width\" type=\"xs:string\"/>");
+	    out.println("<xs:attribute name=\"height\" type=\"xs:string\"/>");
     }
 
 	/**
@@ -1154,6 +1156,8 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 			out.println("</xs:choice>");
 			out.println("<xs:attribute name=\"useController\" type=\"xs:string\" use=\"required\"/>");
 			out.println("<xs:attribute name=\"useResource\" type=\"xs:string\"/>");
+			out.println("<xs:attribute name=\"width\" type=\"xs:string\"/>");
+			out.println("<xs:attribute name=\"height\" type=\"xs:string\"/>");
 			out.println("</xs:complexType>");
 	        
 	        out.println("</xs:schema>");

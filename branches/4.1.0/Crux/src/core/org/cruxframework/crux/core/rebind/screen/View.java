@@ -38,6 +38,8 @@ public class View
 {
 	protected String id;
 	protected String title;
+	protected String width;
+	protected String height;
 	protected String fragment;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
@@ -93,6 +95,42 @@ public class View
 	{
 		return widgets.values().iterator();
 	}
+
+	/**
+	 * Retrieve the view width
+	 * @return
+	 */
+	public String getWidth()
+    {
+    	return width;
+    }
+
+	/**
+	 * Set the view width
+	 * @param width
+	 */
+	public void setWidth(String width)
+    {
+    	this.width = width;
+    }
+
+	/**
+	 * Retrieve the view height
+	 * @return
+	 */
+	public String getHeight()
+    {
+    	return height;
+    }
+
+	/**
+	 * Set the view height
+	 * @param height
+	 */
+	public void setHeight(String height)
+    {
+    	this.height = height;
+    }
 
 	/**
 	 * Add a new widget to view

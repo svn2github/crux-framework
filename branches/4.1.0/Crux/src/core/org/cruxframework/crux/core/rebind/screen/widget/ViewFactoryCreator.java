@@ -297,11 +297,12 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateCreateDataSourceMethod(printer);
     	generateCreateWidgetsMethod(printer);
     	generateRenderMethod(printer);
+    	generateUpdateDimensionsMethods(printer);
     	generateInitializeLazyDependenciesMethod(printer);
     	generateGetIocContainerMethod(printer);
     }
-    
-    protected void generateGetIocContainerMethod(SourcePrinter printer)
+
+	protected void generateGetIocContainerMethod(SourcePrinter printer)
     {
     	printer.println("public "+ iocContainerClassName +" getIocContainer(){");
     	printer.println("return iocContainer;");
@@ -1095,6 +1096,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		JSONArray elementsMetaData = this.view.getElements();
 		processViewEvents(printer);
+		processViewDimensions(printer);
 		for (int i = 0; i < elementsMetaData.length(); i++)
 		{
 			JSONObject metaElement = elementsMetaData.optJSONObject(i);
@@ -1124,6 +1126,41 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		printer.println("}");
     }
 
+    private void processViewDimensions(SourcePrinter printer)
+    {
+	    if (!StringUtils.isEmpty(this.view.getWidth()))
+	    {
+			printer.println("setWidth("+EscapeUtils.quote(this.view.getWidth())+");");
+	    }
+	    if (!StringUtils.isEmpty(this.view.getHeight()))
+	    {
+			printer.println("setHeight("+EscapeUtils.quote(this.view.getHeight())+");");
+	    }
+	    
+    }
+
+	private void generateUpdateDimensionsMethods(SourcePrinter printer)
+    {
+    	printer.println("protected void updateViewHeight(String height){");
+		printer.println("if (this."+viewPanelVariable+" != null){");
+		printer.println("this."+viewPanelVariable+".setHeight(height);");
+//		printer.println("if (this.getContainer() != null && this.getContainer().getContainerPanel(this) != null){");
+//		printer.println("this.getContainer().getContainerPanel(this).setHeight(height);");
+//		printer.println("}");
+		printer.println("}");
+		printer.println("}");
+
+		printer.println("protected void updateViewWidth(String width){");
+		printer.println("if (this."+viewPanelVariable+" != null){");
+		printer.println("this."+viewPanelVariable+".setWidth(width);");
+//		printer.println("if (this.getContainer() != null && this.getContainer().getContainerPanel(this) != null){");
+//		printer.println("this.getContainer().getContainerPanel(this).setWidth(width);");
+//		printer.println("}");
+		printer.println("}");
+		printer.println("}");
+    }
+	
+	
 	/**
 	 * @param printer
 	 */
@@ -1174,7 +1211,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 				widgetViewId = widgetId;
 			}
     		
-    		printer.println("this."+viewPanelVariable+".add(widgets.get("+EscapeUtils.quote(widgetViewId)+"), " +
+    		printer.println("this."+viewPanelVariable+".addAndReplaceElement(widgets.get("+EscapeUtils.quote(widgetViewId)+"), " +
     				"ViewFactoryUtils.getEnclosingPanelId("+EscapeUtils.quote(widgetId)+", "+viewVariable+"));");
         }
 
@@ -1193,6 +1230,14 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		}
 		printer.println("}");
 
+		printer.println("if(!StringUtils.isEmpty(this.width)){");
+		printer.println("updateViewWidth(this.width);");
+		printer.println("}");
+		printer.println("if(!StringUtils.isEmpty(this.height)){");
+		printer.println("updateViewHeight(this.height);");
+		printer.println("}");
+		
+		
 		printer.println("if ("+LogConfiguration.class.getCanonicalName()+".loggingIsEnabled()){");
 		printer.println(loggerVariable+".info(Crux.getMessages().viewContainerViewRendered(getId()));");
 		printer.println("}");

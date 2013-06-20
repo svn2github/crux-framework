@@ -63,7 +63,7 @@ public abstract class AbstractHTMLPanelFactory extends ComplexPanelFactory<Widge
 						out.println("if ("+getChildWidgetClassName(child)+".isSupported()){");
 					}
 
-					out.println(context.getWidget()+".add("+childWidget+", "+EscapeUtils.quote(ViewFactoryUtils.getEnclosingPanelPrefix())+
+					out.println(context.getWidget()+".addAndReplaceElement("+childWidget+", "+EscapeUtils.quote(ViewFactoryUtils.getEnclosingPanelPrefix())+
 							"+"+getViewVariable()+".getPrefix()+"+EscapeUtils.quote(child.optString("id"))+");");
 					if (childPartialSupport)
 					{

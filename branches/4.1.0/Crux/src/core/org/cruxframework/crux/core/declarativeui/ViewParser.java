@@ -32,6 +32,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
@@ -1053,7 +1054,7 @@ public class ViewParser
 				widgetHolder = htmlElement;
 			}
 			
-			widgetHolder.setAttribute("id", "_crux_"+CRUX_VIEW_PREFIX+cruxPageElement.getAttribute("id"));
+			widgetHolder.setAttribute("id", ViewFactoryUtils.ENCLOSING_PANEL_PREFIX + CRUX_VIEW_PREFIX+cruxPageElement.getAttribute("id"));
 		}
     }
 
@@ -1086,7 +1087,7 @@ public class ViewParser
 	private boolean isCruxWidgetParent(Element htmlElement)
     {
 	    String id = htmlElement.getAttribute("id");
-	    return (id != null && id.startsWith("_crux_"));
+	    return (id != null && id.startsWith(ViewFactoryUtils.ENCLOSING_PANEL_PREFIX));
     }
 	
 	/**

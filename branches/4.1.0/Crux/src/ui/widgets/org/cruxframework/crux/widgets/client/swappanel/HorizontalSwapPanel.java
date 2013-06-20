@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.swappanel;
  
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.animation.Animation;
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.event.swap.HasSwapHandlers;
@@ -46,10 +47,9 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 	
 	private SimplePanel currentPanel = new SimplePanel();
 	private SimplePanel nextPanel = new SimplePanel();
-	
 	private int transitionDuration = 500;
-
 	private boolean useFadeTransitions = false;
+	private String height;
 	
 	/**
 	 * Constructor
@@ -77,6 +77,13 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		contentPanel.add(nextPanel);
 	}
 
+	@Override
+	public void setHeight(String height)
+	{
+	    this.height = height;
+		super.setHeight(height);
+	}
+	
 	@Override
     public HandlerRegistration addSwapHandler(SwapHandler handler)
     {
@@ -215,7 +222,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setTop(0, Unit.PX);
 		style.setLeft(0, Unit.PX);
 		style.setWidth(100, Unit.PCT);
-//		style.setHeight(100, Unit.PCT);
+		style.setHeight(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setVisibility(Visibility.VISIBLE);
@@ -229,7 +236,7 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 		style.setLeft(0, Unit.PX);
 		style.setPosition(Position.ABSOLUTE);
 		style.setWidth(100, Unit.PCT);
-//		style.setHeight(100, Unit.PCT);
+		style.setHeight(100, Unit.PCT);
 		style.setOverflowX(Overflow.HIDDEN);
 		style.setOverflowY(Overflow.VISIBLE);
 		style.setVisibility(Visibility.HIDDEN);
@@ -285,7 +292,14 @@ public class HorizontalSwapPanel extends Composite implements HasSwapHandlers
 						@Override
 						public void execute()
 						{
-							contentPanel.setHeight("auto");
+							if (StringUtils.isEmpty(height))
+							{
+								contentPanel.setHeight("auto");
+							}
+							else
+							{
+								contentPanel.setHeight(height);
+							}
 						}
 					});
 					if (completeCallback != null)
