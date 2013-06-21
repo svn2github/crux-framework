@@ -15,8 +15,10 @@
  */
 package org.cruxframework.crux.widgets.client.swapcontainer;
 
+import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
+import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.widgets.client.animation.Animation.Callback;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
@@ -58,6 +60,32 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	{
 		assert(views.containsKey(viewId)):"View ["+viewId+"] was not loaded into this container yet, so it can not be shown using animations. Use 'showView(viewId)' method instead.";
 		renderView(getView(viewId), direction);
+	}
+
+	public void showView(String viewName, final String viewId, final Direction direction)
+	{
+		if (views.containsKey(viewId))
+		{
+			renderView(getView(viewId), direction);
+		}
+		else
+		{
+			createView(viewName, viewId, new CreateCallback()
+			{
+				@Override
+				public void onViewCreated(View view)
+				{
+					if (add(view, false))
+					{
+						renderView(view, direction);
+					}
+					else
+					{
+						Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
+					}
+				}
+			});
+		}
 	}
 
 	/**
