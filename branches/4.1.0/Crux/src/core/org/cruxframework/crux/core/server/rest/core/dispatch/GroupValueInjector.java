@@ -44,7 +44,7 @@ class GroupValueInjector implements ValueInjector
 		if (!isAllowedComplexType(baseClass))
 		{
 			throw new InternalServerErrorException("Invalid rest parameter for rest method: " + baseClass.getCanonicalName() + ". Type not allowed for " +
-					"this type of parameter. It ca only be passed as a body parameter", "Can not execute requested service");
+					"this type of parameter. It can only be passed as a body parameter", "Can not execute requested service");
 		}
 		List<PropertyInfo> writeableProperties = new ArrayList<PropertyInfo>();
 		PropertyInfo[] properties = ClassUtils.extractBeanPropertiesInfo(type);
