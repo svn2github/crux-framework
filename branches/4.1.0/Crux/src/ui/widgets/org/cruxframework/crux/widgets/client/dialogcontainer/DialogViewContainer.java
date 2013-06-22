@@ -18,11 +18,13 @@ package org.cruxframework.crux.widgets.client.dialogcontainer;
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.widgets.client.dialog.CustomDialogBox;
 
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
@@ -33,7 +35,8 @@ import com.google.gwt.user.client.ui.Panel;
 public class DialogViewContainer extends SingleViewContainer 
 {
 	public static final String DEFAULT_STYLE_NAME = "crux-DialogViewContainer";
-	private CustomDialogBox containerPanel;
+	private DialogBox dialog;
+	private FlowPanel contentPanel; 
 	private View innerView;
 	private boolean unloadViewOnClose;
 	
@@ -42,6 +45,11 @@ public class DialogViewContainer extends SingleViewContainer
 		return createDialog(viewName, viewName, true);
 	}
 	
+	public static DialogViewContainer openDialog(String viewName, String viewId, boolean closeable)
+	{
+		return createDialog(viewName, viewId, closeable);
+	}
+
 	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable)
 	{
 		return createDialog(viewName, viewName, true, true, null, null, -1, -1);
@@ -70,25 +78,38 @@ public class DialogViewContainer extends SingleViewContainer
 	public DialogViewContainer(boolean closeable, boolean modal)
 	{
 		super(null, true);
-		containerPanel = new CustomDialogBox(false, true, modal);
-		containerPanel.setStyleName(DEFAULT_STYLE_NAME);
+		dialog = new DialogBox(false, modal);
+		dialog.setStyleName(DEFAULT_STYLE_NAME);
+		
+		contentPanel = new FlowPanel();
+		contentPanel.setWidth("100%");
+		
+		FlowPanel bodyPanel = new FlowPanel();
+		bodyPanel.setWidth("100%");
+		bodyPanel.setHeight("100%");
 		
 		if (closeable)
 		{
-			final Button focusPanel = new Button(" ");
-			focusPanel.setStyleName("closeButton");
+			final Button closeBtn = new Button(" ");
+			closeBtn.setStyleName("closeButton");
+			closeBtn.getElement().getStyle().setFloat(Float.RIGHT);
 			
-			focusPanel.addClickHandler(new ClickHandler()
+			closeBtn.addClickHandler(new ClickHandler()
 			{
 				public void onClick(ClickEvent event)
 				{
 					closeDialog();
 				}
 			});
+			FlowPanel headerPanel = new FlowPanel();
+			headerPanel.setWidth("100%");
+			headerPanel.add(closeBtn);
 						
-			containerPanel.setTopRightWidget(focusPanel);
+			bodyPanel.add(headerPanel);
 		}
-		
+		bodyPanel.add(contentPanel);
+		dialog.add(bodyPanel);
+
 		initWidget(new Label());
 	}
 
@@ -104,64 +125,64 @@ public class DialogViewContainer extends SingleViewContainer
 
 	public void setModal(boolean modal)
 	{
-		containerPanel.setModal(modal);
+		dialog.setModal(modal);
 	}
 	
 	public boolean isModal()
 	{
-		return containerPanel.isModal();
+		return dialog.isModal();
 	}
 	
 	public void setSize(String width, String height)
 	{
-		containerPanel.setSize(width, height);
+		dialog.setSize(width, height);
 	}
 
 	@Override
 	public void setWidth(String width)
 	{
-		containerPanel.setWidth(width);
+		dialog.setWidth(width);
 	}
 
 	@Override
 	public void setHeight(String height)
 	{
-		containerPanel.setHeight(height);
+		dialog.setHeight(height);
 	}
 	
 	public void setPosition(int left, int top)
 	{
-		containerPanel.setPopupPosition(left, top);
+		dialog.setPopupPosition(left, top);
 	}
 	
 	
 	@Override
 	public void setStyleName(String style)
 	{
-		containerPanel.setStyleName(style);
+		dialog.setStyleName(style);
 	}
 
 	@Override
 	public void setStyleDependentName(String styleSuffix, boolean add)
 	{
-		containerPanel.setStyleDependentName(styleSuffix, add);
+		dialog.setStyleDependentName(styleSuffix, add);
 	}
 	
 	@Override
 	public void setStyleName(String style, boolean add)
 	{
-		containerPanel.setStyleName(style, add);
+		dialog.setStyleName(style, add);
 	}
 
 	@Override
 	public void setStylePrimaryName(String style)
 	{
-		containerPanel.setStylePrimaryName(style);
+		dialog.setStylePrimaryName(style);
 	}
 
 	public void center()
 	{
-		containerPanel.center();
+		dialog.center();
 	}
 	
 	public View getView()
@@ -173,7 +194,7 @@ public class DialogViewContainer extends SingleViewContainer
 	{
 		assert(innerView != null):"There is no View loaded into this container.";
 		bindToDOM();
-		containerPanel.show();
+		dialog.show();
 	}
 	
 	public void closeDialog()
@@ -190,7 +211,7 @@ public class DialogViewContainer extends SingleViewContainer
 				return false;
 			}
 		}
-		containerPanel.hide();
+		dialog.hide();
 		unbindToDOM();
 		return true;
 	}
@@ -228,12 +249,12 @@ public class DialogViewContainer extends SingleViewContainer
 
     protected Panel getContainerPanel()
     {
-	    return containerPanel;
+	    return contentPanel;
     }
 	
 	@Override
 	protected void handleViewTitle(String title, Panel containerPanel, String viewId)
 	{
-		this.containerPanel.setText(title);
+		this.dialog.setText(title);
 	}
 }

@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.client.screen.views;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.views.View.RenderCallback;
@@ -108,6 +109,18 @@ public abstract class ViewContainer extends Composite
 	public boolean addLazy(View view)
 	{
 		return addView(view, true);
+	}
+	
+	/**
+	 * Remove all view inside this container
+	 */
+	public void clear()
+	{
+		FastList<String> keys = views.keys();
+		for (int i=0; i< keys.size(); i++)
+		{
+			remove(getView(keys.get(i)), true);
+		}
 	}
 	
 	/**

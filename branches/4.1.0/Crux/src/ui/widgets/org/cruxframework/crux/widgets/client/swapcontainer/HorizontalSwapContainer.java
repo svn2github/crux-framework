@@ -37,7 +37,8 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	private HorizontalSwapPanel swapPanel;
 	private Panel active;
 	private Panel swap;
-
+	private boolean autoRemoveInactiveViews = false;
+	
 	public HorizontalSwapContainer()
 	{
 		super(new HorizontalSwapPanel(), false);
@@ -50,6 +51,24 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 		swap.setWidth("inherit");
 		swap.setHeight("inherit");
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isAutoRemoveInactiveViews()
+    {
+    	return autoRemoveInactiveViews;
+    }
+
+	/**
+	 * 
+	 * @param autoRemoveInactiveViews
+	 */
+	public void setAutoRemoveInactiveViews(boolean autoRemoveInactiveViews)
+    {
+    	this.autoRemoveInactiveViews = autoRemoveInactiveViews;
+    }
 
 	/**
 	 * 
@@ -103,8 +122,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 			if (previous == null || direction == null)
 			{
 				swapPanel.setCurrentWidget(active);
-				swap.clear();
-				ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);
+				concludeViewsSwapping(previous, next);
 			}
 			else
 			{
@@ -113,13 +131,22 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 					@Override
 					public void onTransitionCompleted()
 					{
-						swap.clear();
-						ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);
+						concludeViewsSwapping(previous, next);
 					}
 				});
 			}
 		}
 	}
+
+	private void concludeViewsSwapping(final View previous, final View next)
+    {
+	    swap.clear();
+	    ChangeViewEvent.fire(HorizontalSwapContainer.this, previous, next);
+	    if(previous != null && autoRemoveInactiveViews)
+	    {
+	    	previous.removeFromContainer();
+	    }
+    }
 
 	@Override
 	protected void renderView(View view)

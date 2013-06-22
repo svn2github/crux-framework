@@ -43,6 +43,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @PartialSupport
+/**
+ * @author Thiago da Rosa de Bustamante
+ */
 public class ColorPickerDialog extends DialogBox
 {
 	private SaturationLightnessPicker slPicker;

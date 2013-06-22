@@ -49,7 +49,8 @@ class HorizontalSwapContainerContext extends WidgetCreatorContext
 	@TagChild(HorizontalSwapContainerFactory.ViewProcessor.class)
 })
 @TagAttributes({
-	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500")
+	@TagAttribute(value="transitionDuration", type=Integer.class, required=false, defaultValue="500"), 
+	@TagAttribute(value="autoRemoveInactiveViews", type=Boolean.class, defaultValue="false") 
 })
 @TagEvents({
 	@TagEvent(ChangeViewEvtBind.class)

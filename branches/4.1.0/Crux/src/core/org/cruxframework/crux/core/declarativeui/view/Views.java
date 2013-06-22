@@ -106,7 +106,11 @@ public class Views
 			initialize();
 		}
 		List<String> result = new ArrayList<String>();
-		if (isViewName(viewsLocator))
+		if (viewsLocator.equals("*"))
+		{
+			result.addAll(views.keySet());
+		}
+		else if (isViewName(viewsLocator))
 		{
 			result.add(viewsLocator);
 		}
