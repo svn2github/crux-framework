@@ -98,12 +98,6 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
-		if(!cacheableVersionFound()) {
-			initializeInnerMethods();
-		}
-	}
-
-	private void initializeInnerMethods() {
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 		restImplementationClass = getRestImplementationClass(baseIntf);
