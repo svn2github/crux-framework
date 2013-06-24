@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Modified version of GWT TabPanel that uses a RollingPanel wrapping its TabBar.
+ * Modified version of GWT TabPanel that uses a CustomRollingPanel wrapping its TabBar.
  * 
  * @author Thiago da Rosa de Bustamante -
  *

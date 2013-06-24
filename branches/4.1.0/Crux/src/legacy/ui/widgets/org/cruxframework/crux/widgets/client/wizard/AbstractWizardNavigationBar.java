@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.widgets.client.WidgetMsgFactory;
-import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.rollingpanel.CustomRollingPanel;
 
 import com.google.gwt.dom.client.Style.TableLayout;
 import com.google.gwt.user.client.ui.Composite;
@@ -35,14 +35,14 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 public abstract class AbstractWizardNavigationBar<T extends Serializable> extends Composite implements WizardStepListener<T>
 {
 	protected Wizard<T> wizard;
-	protected RollingPanel rollingPanel;
+	protected CustomRollingPanel rollingPanel;
 
 	/**
 	 * @param vertical
 	 */
 	public AbstractWizardNavigationBar(String styleName)
 	{
-		this.rollingPanel = new RollingPanel();
+		this.rollingPanel = new CustomRollingPanel();
 		this.rollingPanel.setStyleName(styleName);
 		initWidget(this.rollingPanel);
 		this.getElement().getStyle().setTableLayout(TableLayout.AUTO);

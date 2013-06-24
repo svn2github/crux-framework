@@ -113,4 +113,156 @@
       		<when-property-is name="user.agent" value="ie8" />
     	</any>
     </replace-with>
+
+    <!-- TopToolBar panel animation handler -->
+	<replace-with class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarArrowsSmallController.WebkitPanelAnimation">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarArrowsSmallController.PanelAnimation" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarArrowsSmallController.JSPanelAnimation">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarArrowsSmallController.PanelAnimation" />
+    	<none>
+      		<when-property-is name="user.agent" value="safari" />
+    	</none>
+	</replace-with>
+
+    <!-- TopToolBar panel touch handler -->
+	<replace-with class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarTouchSmallController.WebkitGripHandler">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.toptoolbar.TopToolBarTouchSmallController.GripHandler" />
+		<any>
+			<when-property-is name="user.agent" value="safari" />
+		</any>
+	</replace-with>
+	
+	<!-- Button  -->
+	<replace-with class="org.cruxframework.crux.widgets.client.button.Button.ButtonNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.button.Button.ButtonImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.button.Button.ButtonTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.button.Button.ButtonImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
+	<!-- Anchor  -->
+	<replace-with class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
+	<!-- PromoBanner  -->
+	<replace-with class="org.cruxframework.crux.widgets.client.promobanner.BannerImplLargeNoTouch">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.promobanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayArrows" />
+			<when-property-is name="device.features" value="largeDisplayMouse" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.promobanner.BannerImplSmallNoTouch">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.promobanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.promobanner.BannerImplSmallTouch">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.promobanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.promobanner.BannerImplLargeTouch">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.promobanner.BannerImpl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
+	<!-- SelectablePanel  -->
+	<replace-with class="org.cruxframework.crux.widgets.client.selectablepanel.SelectablePanel.PanelEventsHandlerNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.selectablepanel.SelectablePanel.PanelEventsHandler" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.selectablepanel.SelectablePanel.PanelEventsHandlerTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.selectablepanel.SelectablePanel.PanelEventsHandler" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+
+    <!-- Sideshow -->
+	<replace-with class="org.cruxframework.crux.widgets.client.slideshow.SlideshowPhotoPanel.SlideshowSwapPhotoPanel">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.slideshow.SlideshowPhotoPanel.SlideshowPhotoPanelImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.slideshow.SlideshowPhotoPanel.SlideshowTouchPhotoPanel">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.slideshow.SlideshowPhotoPanel.SlideshowPhotoPanelImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.slideshow.SlideshowThumbnails.ThumbnailsNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.slideshow.SlideshowThumbnails.SlideshowThumbnailsImpl" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.slideshow.SlideshowThumbnails.ThumbnailsTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.slideshow.SlideshowThumbnails.SlideshowThumbnailsImpl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.slideshow.layout.ClassicLayout.MobileImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.slideshow.layout.ClassicLayout.Impl" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
+	
+    <!-- RollingPanel -->
+	<replace-with class="org.cruxframework.crux.widgets.client.rollingpanel.RollingPanelNoTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel.PanelImplementation" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</none>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.rollingpanel.RollingPanelTouchImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel.PanelImplementation" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="largeDisplayTouch" />
+		</any>
+	</replace-with>
+    
+    
 </module>

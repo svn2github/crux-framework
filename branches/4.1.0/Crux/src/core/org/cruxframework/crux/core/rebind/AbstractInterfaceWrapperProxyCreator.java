@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind;
 
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.cruxframework.crux.core.declarativeui.view.Views;
+import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.rebind.screen.Screen;
 import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
@@ -337,7 +339,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		{
 			added.add(rootView.getId());
 			views.add(rootView);
-			findViews(rootView, views, added);
+			findViews(rootView, views, added, screen.getModule());
 		}
 	}
 	
@@ -347,7 +349,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 * @param views
 	 * @param added
 	 */
-	private void findViews(View view, List<View> views, Set<String> added) 
+	private void findViews(View view, List<View> views, Set<String> added, String moduleId) 
 	{
 		try
 		{
@@ -362,9 +364,13 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 					List<String> viewList = Views.getViews(viewLocator);
 					for (String viewName : viewList)
                     {
-						View innerView = ViewFactory.getInstance().getView(viewName, getDeviceFeatures());
-						views.add(innerView);
-						findViews(innerView, views, added);
+						URL url = Views.getView(viewName);
+						if (Modules.getInstance().isResourceOnModulePath(url, moduleId))
+						{
+							View innerView = ViewFactory.getInstance().getView(viewName, getDeviceFeatures());
+							views.add(innerView);
+							findViews(innerView, views, added, moduleId);
+						}
                     }
 				}
 			}

@@ -37,7 +37,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.rollingpanel.CustomRollingPanel;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
@@ -55,7 +55,7 @@ class RollingPanelContext extends WidgetCreatorContext
  * @author Thiago da Rosa de Bustamante
  *
  */
-@DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=RollingPanel.class)
+@DeclarativeFactory(id="rollingPanel", library="widgets", targetWidget=CustomRollingPanel.class)
 @TagAttributes({
 	@TagAttribute(value="nextButtonStyleName", supportsResources=true),
 	@TagAttribute(value="previousButtonStyleName", supportsResources=true),

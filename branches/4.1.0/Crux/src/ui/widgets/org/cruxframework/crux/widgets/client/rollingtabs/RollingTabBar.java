@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.rollingtabs;
 
-import org.cruxframework.crux.widgets.client.rollingpanel.RollingPanel;
+import org.cruxframework.crux.widgets.client.rollingpanel.CustomRollingPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Modified version of GWT TabBar that uses a RollingPanel wrapping its Tabs.
+ * Modified version of GWT TabBar that uses a CustomRollingPanel wrapping its Tabs.
  * 
  * @author Thiago da Rosa de Bustamante -
  *        
@@ -59,7 +59,7 @@ public class RollingTabBar extends Composite implements HasBeforeSelectionHandle
 {
 	private static final String STYLENAME_DEFAULT = "crux-TabBarItem";
 
-	private RollingPanel panel;
+	private CustomRollingPanel panel;
 	private Widget selectedTab;
 
 	/**
@@ -67,7 +67,7 @@ public class RollingTabBar extends Composite implements HasBeforeSelectionHandle
 	 */
 	RollingTabBar()
 	{
-		panel = new RollingPanel();
+		panel = new CustomRollingPanel();
 
 		initWidget(panel);
 		sinkEvents(Event.ONCLICK);
