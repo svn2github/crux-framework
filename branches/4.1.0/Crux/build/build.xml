@@ -255,6 +255,7 @@
 					<exclude name="org/cruxframework/crux/core/declarativeui" />
 					<exclude name="org/cruxframework/crux/core/server/launcher" />
 					<exclude name="org/cruxframework/crux/core/Crux.gwt.xml" />
+					<exclude name="org/cruxframework/crux/crossdevice/*" />
 				</fileset>
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
