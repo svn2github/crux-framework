@@ -171,7 +171,7 @@ public abstract class ViewContainer extends Composite
 
     /**
      * Render the requested view into the container.
-     * @param viewId View identifier
+     * @param viewName View name
      */
 	public void showView(String viewName)
 	{
