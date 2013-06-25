@@ -57,7 +57,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    {
 	    	try
 	    	{
-	    		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, getCurrentScreen().getModule());
+	    		GadgetManifestGenerator gadgetManifestGenerator = new GadgetManifestGenerator(logger, getModule());
 	    		this.moduleMetaClass = gadgetManifestGenerator.getModuleMetaClass();
 	    	}
 	    	catch (Exception e)

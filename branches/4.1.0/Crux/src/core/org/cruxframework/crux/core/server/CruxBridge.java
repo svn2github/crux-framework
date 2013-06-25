@@ -536,4 +536,5 @@ public class CruxBridge
 			webinfLibFile = new File(tmpDir+"webinfLibFile");
 		}
     }
+
 }

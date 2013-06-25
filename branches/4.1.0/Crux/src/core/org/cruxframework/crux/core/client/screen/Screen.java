@@ -54,6 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Screen
 {
+	private static final String CRUX_VIEW_TEST_PAGE = "__CRUX_VIEW_TEST_PAGE__";
 	private static Logger logger = Logger.getLogger(Screen.class.getName());
 	
 	protected RootViewContainer rootViewContainer = null;
@@ -80,14 +81,23 @@ public class Screen
 	 * 
 	 * @param id
 	 */
-	protected void createRootView(final String id)
+	protected void createRootView(String id)
     {
-	    Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		if (!GWT.isScript())
+		{
+			if (id.endsWith("/"+CRUX_VIEW_TEST_PAGE))
+			{
+				id = Window.Location.getParameter("viewName");
+				assert(id != null) : "To use viewTester, your must inform the viewName parameter.";
+			}
+		}
+	    final String viewId = id;
+		Scheduler.get().scheduleDeferred(new ScheduledCommand()
 		{
 			@Override
 			public void execute()
 			{
-				rootViewContainer.loadView(id, true);
+				rootViewContainer.loadView(viewId, true);
 			}
 		});
     }

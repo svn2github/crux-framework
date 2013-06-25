@@ -71,19 +71,28 @@ public class ScreenLegacy
     @SuppressWarnings("deprecation")
 	protected void createRootView(final String id)
     {
+		if (!GWT.isScript())
+		{
+			if (id.endsWith("/"+CRUX_VIEW_TEST_PAGE))
+			{
+				id = Window.Location.getParameter("viewName");
+				assert(id != null) : "To use viewTester, your must inform the viewName parameter.";
+			}
+		}
+	    final String viewId = id;
 	    Scheduler.get().scheduleDeferred(new ScheduledCommand()
 		{
 			@Override
 			public void execute()
 			{
-				ViewContainer.createView(id, new CreateCallback()
+				ViewContainer.createView(viewId, new CreateCallback()
 				{
 					@Override
 					public void onViewCreated(View view)
 					{
 						if (!rootViewContainer.add(view, true))
 						{
-							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(id));
+							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
 						}
 					    if (Crux.getConfig().enableCrux2OldInterfacesCompatibility())
 					    {
