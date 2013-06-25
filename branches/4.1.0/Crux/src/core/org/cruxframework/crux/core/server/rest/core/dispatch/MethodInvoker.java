@@ -338,7 +338,7 @@ public class MethodInvoker
 		}
 		if ((hasBodyParam || hasFormParam) && httpMethod.equals("GET"))
 		{
-			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can receive " +
+			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". Can not receive " +
 					"parameters on body for GET methods.", "Can not execute requested service");
 		}
     }
