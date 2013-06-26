@@ -19,6 +19,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+
 /**
  * @author Thiago da Rosa de Bustamante
  * @author Gesse S. F. Dafe
@@ -26,5 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface LocaleResolver 
 {
 	void initializeUserLocale(HttpServletRequest request);
+	void initializeUserLocale(HttpRequest request);
 	Locale getUserLocale() throws LocaleResolverException;
 }

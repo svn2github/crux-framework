@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cruxframework.crux.core.i18n.LocaleResolver;
+import org.cruxframework.crux.core.i18n.LocaleResolverInitialiser;
 import org.cruxframework.crux.core.server.rest.annotation.HttpMethod;
 import org.cruxframework.crux.core.server.rest.core.HttpHeaders;
 import org.cruxframework.crux.core.server.rest.core.RequestPreprocessors;
@@ -108,8 +110,10 @@ public class RestServlet extends HttpServlet
 		HttpRequest request = new HttpRequest(req, headers, uriInfo, method);
 		HttpResponse response = new HttpResponse(res);
 
+		boolean localeInitializedByServlet = false;
 		try
 		{
+			localeInitializedByServlet = initUserLocaleResolver(request);
 			MethodReturn methodReturn = RestDispatcher.dispatch(request, response);
 			if (!response.isCommitted())
 			{
@@ -126,8 +130,30 @@ public class RestServlet extends HttpServlet
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error processing request.");
 			logger.error(e.getMessage(), e);
 		}
+		finally
+		{
+			if (localeInitializedByServlet)
+			{
+				LocaleResolverInitialiser.clearLocaleResolverThreadData();
+			}
+		}
 	}
 	
+	/**
+	 * 
+	 */
+	protected boolean initUserLocaleResolver(HttpRequest req)
+	{
+		if (LocaleResolverInitialiser.getLocaleResolver() == null)
+		{
+			LocaleResolverInitialiser.createLocaleResolverThreadData();
+			LocaleResolver resolver = LocaleResolverInitialiser.getLocaleResolver();
+			resolver.initializeUserLocale(req);
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void init(ServletConfig config) throws ServletException
 	{

@@ -134,11 +134,31 @@ public class Modules
 	 * @param moduleId
 	 * @return
 	 */
+	public boolean isResourceOnModulePathOrContext(URL url, String moduleId)
+	{
+		URL[] webBaseDirs = ClassPathResolverInitializer.getClassPathResolver().findWebBaseDirs();
+		for (URL webBaseURL : webBaseDirs)
+        {
+			if (url.toString().startsWith(webBaseURL.toString()))
+			{
+				return true;
+			}
+        }
+		
+		return isResourceOnModulePath(url, moduleId, new HashSet<String>());
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param moduleId
+	 * @return
+	 */
 	public boolean isResourceOnModulePath(URL url, String moduleId)
 	{
 		return isResourceOnModulePath(url, moduleId, new HashSet<String>());
 	}
-	
+
 	/**
 	 * @param module
 	 * @return

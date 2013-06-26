@@ -233,7 +233,6 @@ public class HttpUtil
 		}
 		else
 		{
-
 			CacheInfo cacheInfo = methodReturn.getCacheInfo();
 			if (cacheInfo != null)
 			{
@@ -291,6 +290,7 @@ public class HttpUtil
 		}
 		else
 		{
+			outputHeaders.putSingle(HttpHeaderNames.VARY, HttpHeaderNames.ACCEPT_LANGUAGE);
 			long expires = cacheInfo.defineExpires();
 			outputHeaders.addDateHeader(HttpHeaderNames.EXPIRES, expires);
 			if (etag != null)

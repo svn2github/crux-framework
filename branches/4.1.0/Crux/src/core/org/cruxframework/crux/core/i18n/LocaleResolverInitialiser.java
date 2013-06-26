@@ -97,6 +97,7 @@ public class LocaleResolverInitialiser
 		catch (Exception e) 
 		{
 			logger.error("Error initializing LocaleResolver.", e);
+			throw new LocaleResolverException(e.getMessage(), e);
 		}
 		finally
 		{

@@ -15,9 +15,12 @@
  */
 package org.cruxframework.crux.core.i18n;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 
 
 /**
@@ -64,5 +67,19 @@ public class LocaleResolverImpl implements LocaleResolver
 			userLocale = Locale.getDefault();
 		}
 	}
+
+	@Override
+    public void initializeUserLocale(HttpRequest request)
+    {
+	    List<Locale> languages = request.getHttpHeaders().getAcceptableLanguages();
+	    if (languages == null || languages.size() == 0)
+	    {
+			userLocale = Locale.getDefault();
+	    }
+	    else
+	    {
+	    	userLocale = languages.get(0);
+	    }
+    }
 
 }
