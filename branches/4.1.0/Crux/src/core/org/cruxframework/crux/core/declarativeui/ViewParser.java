@@ -1042,103 +1042,10 @@ public class ViewParser
 		boolean attachableWidget = isAttachableWidget(cruxPageElement);
 		if ((isWidget(currentWidgetTag)) && attachableWidget && isHTMLChild(cruxPageElement))
 		{
-			Element widgetHolder;
-			boolean hasSiblings = hasSiblingElements(cruxPageElement);
-			if (!isOrphanRequiresResizeWidget(currentWidgetTag, cruxPageElement) && (hasSiblings || isCruxWidgetParent(htmlElement)) || isBody(htmlElement))
-			{
-				widgetHolder = htmlDocument.createElement("div");
-				htmlElement.appendChild(widgetHolder);
-			}
-			else
-			{
-				widgetHolder = htmlElement;
-			}
-			
+			Element widgetHolder = htmlDocument.createElement("div");
+			htmlElement.appendChild(widgetHolder);
 			widgetHolder.setAttribute("id", ViewFactoryUtils.ENCLOSING_PANEL_PREFIX + CRUX_VIEW_PREFIX+cruxPageElement.getAttribute("id"));
 		}
-    }
-
-	/**
-	 * @param localName
-	 * @param libraryName
-	 * @return
-	 */
-	private boolean isOrphanRequiresResizeWidget(String tagName, Element cruxPageElement)
-    {
-	    Node parentNode = cruxPageElement.getParentNode(); 
-		return (WidgetConfig.isRequiresResizeWidget(tagName) && isBody(parentNode));
-    }
-
-	/**
-	 * 
-	 * @param node
-	 * @return
-	 */
-	private boolean isBody(Node node)
-    {
-	    return node.getLocalName().equalsIgnoreCase("body") && node.getNamespaceURI().equals(XHTML_NAMESPACE);
-    }
-
-	/**
-	 * 
-	 * @param htmlElement
-	 * @return
-	 */
-	private boolean isCruxWidgetParent(Element htmlElement)
-    {
-	    String id = htmlElement.getAttribute("id");
-	    return (id != null && id.startsWith(ViewFactoryUtils.ENCLOSING_PANEL_PREFIX));
-    }
-	
-	/**
-	 * 
-	 * @param cruxPageElement
-	 * @return
-	 */
-	private boolean hasSiblingElements(Element cruxPageElement)
-	{
-		Node sibling = cruxPageElement.getPreviousSibling();
-		
-		while (sibling != null)
-		{
-			if (isValidSibling(sibling))
-			{
-				return true;
-			}
-			
-			sibling = sibling.getPreviousSibling();
-		}
-
-		sibling = cruxPageElement.getNextSibling();
-		while (sibling != null)
-		{
-			if (isValidSibling(sibling))
-			{
-				return true;
-			}
-			
-			sibling = sibling.getNextSibling();
-		}
-		return false;
-    }
-
-	/**
-	 * 
-	 * @param sibling
-	 * @return
-	 */
-	private boolean isValidSibling(Node sibling)
-    {
-	    short nodeType = sibling.getNodeType();
-		if (nodeType == Node.ELEMENT_NODE)
-	    {
-	    	return true;
-	    }
-	    else if (nodeType == Node.CDATA_SECTION_NODE || nodeType == Node.TEXT_NODE || nodeType == Node.ENTITY_NODE)
-	    {
-	    	return sibling.getNodeValue().replaceAll("\\s+", "").length() > 0;
-	    }
-	    return false;
     }
 
 	/**
