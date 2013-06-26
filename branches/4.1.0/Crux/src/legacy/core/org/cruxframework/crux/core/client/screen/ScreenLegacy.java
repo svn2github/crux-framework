@@ -69,7 +69,7 @@ public class ScreenLegacy
 	 * @param id
 	 */
     @SuppressWarnings("deprecation")
-	protected void createRootView(final String id)
+	protected void createRootView(String id)
     {
 		if (!GWT.isScript())
 		{
