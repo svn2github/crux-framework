@@ -31,9 +31,9 @@ public class BrowserNetworkTools
 			@Override
 			public void onResponseReceived(Request request, Response response) {
 				if(response.getStatusCode() == 404) {
-
-				} else {
 					isOnline = false;
+				} else {
+					isOnline = true;
 				}
 			}
 
