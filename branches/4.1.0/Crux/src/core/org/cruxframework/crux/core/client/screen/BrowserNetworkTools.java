@@ -45,10 +45,6 @@ public class BrowserNetworkTools
 
 		public IsOnlineDefault() {
 			builder.setCallback(callback);
-		}
-
-		@Override
-		public boolean isOnline() {
 			Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 				public boolean execute() {
 					try {
@@ -59,7 +55,10 @@ public class BrowserNetworkTools
 					return true;
 				}
 			}, 1000);
+		}
 
+		@Override
+		public boolean isOnline() {
 			return isOnline;
 		}
 	}
