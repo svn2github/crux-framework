@@ -19,6 +19,8 @@
 	<!-- Servlet used to handle RPC event calls.              -->
 	<servlet path="/crux.rpc" class="org.cruxframework.crux.core.server.dispatch.RemoteServiceServlet"/>
 
+    <!-- Generates -->
+
 	<!-- Specify the generator for registered widgets.     -->
 	<generate-with class="org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ViewFactory" />
@@ -78,6 +80,22 @@
 	<generate-with class="org.cruxframework.crux.core.rebind.crossdevice.DeviceAdaptiveGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceAdaptive"/>
 	</generate-with>
+	
+	<!-- Replaces -->
+	
+	<!-- Specify Default implementation for isOnline -->
+    <replace-with
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineDefault">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.IsOnline" />
+    </replace-with>
+	
+	<!-- Specify Mozilla implementation for isOnline -->
+    <replace-with
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineSafari">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.IsOnline" />
+        <when-property-is name="user.agent" value="gecko"/>
+        <when-property-is name="user.agent" value="gecko1_8" />
+    </replace-with>   
 	
 	<!-- Specify ie6 implementation for screen blocker -->
 	<replace-with
