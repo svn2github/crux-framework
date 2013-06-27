@@ -8,32 +8,40 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 
 public class BrowserNetworkTools  
 {
-	protected static IsOnline isOnline = GWT.create(IsOnline.class);
+	private static IsOnline isOnline = null;
 
+	private static IsOnline getStaticInstance() {
+		if(isOnline == null) {
+			isOnline = GWT.create(IsOnline.class); 
+		} 
+		return isOnline;
+	}
+	
 	public static boolean isOnline() {
-		return isOnline.isOnline();
+		return getStaticInstance().isOnline();
 	}
 
 	public interface IsOnline {
 		public boolean isOnline();
 	}
 
-	public class IsOnlineDefault implements IsOnline {
-		private boolean isOnline = false;
+	public static class IsOnlineDefault implements IsOnline {
+		private static Boolean isOnline;
 
-		private String imgSrc = "https://www.google.com.br/images/srpr/logo4w.png" + "?randomNumber=" + System.currentTimeMillis();
-		private RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, imgSrc);
+		private String url = "https://www.google.com.br/images/srpr/logo4w.png" + "?randomNumber=" + System.currentTimeMillis();
+		private RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 		private RequestCallback callback = new RequestCallback() {
 
 			@Override
 			public void onResponseReceived(Request request, Response response) {
-				if(response.getStatusCode() == 404) {
-					isOnline = false;
-				} else {
+				if(response.getStatusCode() == 302) {
 					isOnline = true;
+				} else {
+					isOnline = false;
 				}
 			}
 
@@ -44,6 +52,7 @@ public class BrowserNetworkTools
 		};
 
 		public IsOnlineDefault() {
+			Window.alert("Default");
 			builder.setCallback(callback);
 			Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 				public boolean execute() {
@@ -59,16 +68,36 @@ public class BrowserNetworkTools
 
 		@Override
 		public boolean isOnline() {
+			if(isOnline == null) {
+				Scheduler.get().scheduleEntry(new RepeatingCommand() {
+					@Override
+					public boolean execute() {
+						if(isOnline != null) {
+							return false;
+						}
+						return true;
+					}
+				});
+			}
+			
 			return isOnline;
 		}
 	}
 
-	public class IsOnlineSafari implements IsOnline {
-
+	public static class IsOnlineSafari implements IsOnline {
 		@Override
 		public native boolean isOnline() /*-{
 			alert('IsOnlineSafari');
-		    return new $wnd.navigator.onLine();
+		    return $wnd.navigator.onLine();
+		  }-*/;
+	}
+	
+	public static class IsOnlineFF implements IsOnline {
+
+		@Override
+		public native boolean isOnline() /*-{
+			alert('IsOnlineFF');
+		    return true;
 		  }-*/;
 	}
 }

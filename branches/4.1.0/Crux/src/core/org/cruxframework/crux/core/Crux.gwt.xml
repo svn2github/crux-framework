@@ -86,13 +86,13 @@
 	<!-- Specify Default implementation for isOnline -->
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineDefault">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.IsOnline" />
+        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnline" />
     </replace-with>
 	
 	<!-- Specify Mozilla implementation for isOnline -->
     <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineSafari">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.IsOnline" />
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineFF">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnline" />
         <when-property-is name="user.agent" value="gecko"/>
         <when-property-is name="user.agent" value="gecko1_8" />
     </replace-with>   
