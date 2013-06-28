@@ -152,13 +152,8 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		storyboard = getChildWidget("storyboard");
 		this.itemHeight = "75px";
 		this.itemHeight = "100%";
-    }
-	
-	@Override
-	protected void initWidgetDefaultStyleName()
-	{
 		setStyleName("crux-Storyboard");
-	}
+    }
 
 	@Override
     public String getLargeDeviceItemWidth()

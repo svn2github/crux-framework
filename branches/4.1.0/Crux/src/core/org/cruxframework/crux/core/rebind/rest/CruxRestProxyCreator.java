@@ -15,12 +15,9 @@
  */
 package org.cruxframework.crux.core.rebind.rest;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,19 +29,15 @@ import java.util.Set;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.service.RestProxy.Callback;
 import org.cruxframework.crux.core.client.service.RestProxy.TargetRestService;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.server.rest.annotation.CookieParam;
-import org.cruxframework.crux.core.server.rest.annotation.FormParam;
 import org.cruxframework.crux.core.server.rest.annotation.GET;
-import org.cruxframework.crux.core.server.rest.annotation.HeaderParam;
 import org.cruxframework.crux.core.server.rest.annotation.Path;
-import org.cruxframework.crux.core.server.rest.annotation.PathParam;
-import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
 import org.cruxframework.crux.core.server.rest.annotation.StateValidationModel;
 import org.cruxframework.crux.core.server.rest.core.registry.RestServiceScanner;
 import org.cruxframework.crux.core.server.rest.util.Encode;
@@ -52,7 +45,6 @@ import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
 import org.cruxframework.crux.core.utils.JClassUtils;
-import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -73,7 +65,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Cookies;
 
 /**
  * This class creates a client proxy for calling rest services
@@ -91,9 +82,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private Map<String, Method> updateMethods = new HashMap<String, Method>();
 	private Set<RestMethodInfo> restMethods = new HashSet<RestMethodInfo>();
 	private boolean mustGenerateStateControlMethods;
-	private JClassType stringType;
-	private JClassType dateType;
-	
+	private QueryParameterHandler queryParameterHandler;
+	private BodyParameterHandler bodyParameterHandler;
 	
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
@@ -101,8 +91,8 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 		restImplementationClass = getRestImplementationClass(baseIntf);
-		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
-		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
+		queryParameterHandler = new QueryParameterHandler(context);
+		bodyParameterHandler = new BodyParameterHandler(logger, context);
 		String basePath;
 		try
 		{
@@ -229,10 +219,12 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			String callbackParameterName = callbackParameter.getName();
 
 			srcWriter.println("String baseURIPath = " + EscapeUtils.quote(methodInfo.methodURI) + ";");
-			generateMethodParamToURICode(srcWriter, methodInfo, "baseURIPath");
+			queryParameterHandler.generateMethodParamToURICode(srcWriter, methodInfo, "baseURIPath");
 			srcWriter.println("final String restURI = baseURIPath;");
 
 			srcWriter.println("RequestBuilder builder = new RequestBuilder(RequestBuilder."+httpMethod+", restURI);");
+			setLocaleInfo(srcWriter, "builder");
+
 			srcWriter.println("builder.setCallback(new RequestCallback(){");
 			srcWriter.println("public void onResponseReceived(Request request, Response response){");
 			srcWriter.println("int s = (response.getStatusCode()-200);");
@@ -279,7 +271,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("});");
 
 			srcWriter.println("try{");
-			generateMethodParamToBodyCode(srcWriter, methodInfo, "builder", httpMethod);
+			bodyParameterHandler.generateMethodParamToBodyCode(srcWriter, methodInfo, "builder", httpMethod);
 			generateValidateStateBlock(srcWriter, methodInfo.implementationMethod, "builder", "restURI", methodInfo.methodURI, callbackParameterName);
 			generateXSRFHeaderProtectionForWrites(httpMethod, "builder", srcWriter);
 			srcWriter.println("builder.send();");
@@ -293,6 +285,15 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			throw new CruxGeneratorException("Invalid Method: " + methodInfo.method.getEnclosingType().getName() + "." + methodInfo.method.getName() + "().", e);
 		}
 	}
+
+	protected void setLocaleInfo(SourcePrinter srcWriter, String builderVariable)
+    {
+		
+		srcWriter.println("String _locale = "+Screen.class.getCanonicalName()+".getLocale();");
+		srcWriter.println("if (_locale != null){");
+	    srcWriter.println(builderVariable+".setHeader(\""+HttpHeaderNames.ACCEPT_LANGUAGE+"\", _locale.replace('_', '-'));");//	pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+		srcWriter.println("}");
+    }
 
 	protected void generateXSRFHeaderProtectionForWrites(String httpMethod, String builderVar, SourcePrinter srcWriter)
     {
@@ -329,158 +330,6 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
     }
 
-	protected void generateMethodParamToBodyCode(SourcePrinter srcWriter, RestMethodInfo methodInfo, String builder, String httpMethod)
-	{
-		Annotation[][] parameterAnnotations = methodInfo.implementationMethod.getParameterAnnotations();
-		JParameter[] parameters = methodInfo.method.getParameters();
-		boolean formEncoded = false;
-		boolean hasBodyObject = false;
-
-		String formString = getFormString(methodInfo); 
-		if (!StringUtils.isEmpty(formString))
-		{
-			srcWriter.println("String requestData = "+EscapeUtils.quote(formString)+";");
-		}
-		for (int i = 0; i< parameterAnnotations.length; i++)
-		{
-			Annotation[] annotations = parameterAnnotations[i];
-			if (annotations == null || annotations.length == 0)
-			{ // JSON on body
-				if(hasBodyObject)
-				{
-					throw new CruxGeneratorException("Invalid Method: " + methodInfo.method.getEnclosingType().getName() + "." + methodInfo.method.getName() + "(). " +
-					"Request body can not contain more than one body parameter (JSON serialized object).");
-				}
-
-				hasBodyObject = true;
-				String serializerName = new JSonSerializerProxyCreator(context, logger, parameters[i].getType()).create();
-				srcWriter.println(builder+".setHeader(\"Content-type\", \"application/json\");");
-				srcWriter.println("JSONValue serialized = new "+serializerName+"().encode("+parameters[i].getName()+");");
-				srcWriter.println("String requestData = (serialized==null||serialized.isNull()!=null)?null:serialized.toString();");
-			}
-			else
-			{
-				for (Annotation annotation : annotations)
-				{
-					if (annotation instanceof FormParam)
-					{
-						if (!formEncoded)
-						{
-							srcWriter.println(builder+".setHeader(\"Content-type\", \"application/x-www-form-urlencoded\");");
-							formEncoded = true;
-						}
-						srcWriter.println("requestData = requestData.replace(\"{"+parameters[i].getName()+"}\", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")));");
-					}
-					if (annotation instanceof HeaderParam)
-					{
-						srcWriter.println(builder+".setHeader("+EscapeUtils.quote(((HeaderParam) annotation).value())+", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")));");
-					}
-					if (annotation instanceof CookieParam)
-					{
-						srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(((CookieParam) annotation).value()) + 
-								", URL.encode("+"("+parameters[i].getName()+"!=null?"+parameters[i].getName()+":\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
-					}
-				}
-			}
-		}
-		if (hasBodyObject && formEncoded)
-		{
-			throw new CruxGeneratorException("Invalid Method: " + methodInfo.method.getEnclosingType().getName() + "." + methodInfo.method.getName() + "(). " +
-			"Request body can not contain form parameters and a JSON serialized object.");
-		}
-		if (hasBodyObject || formEncoded)
-		{
-			if (httpMethod.equals("GET"))
-			{
-				throw new CruxGeneratorException("Invalid Method: " + methodInfo.method.getEnclosingType().getName() + "." + methodInfo.method.getName() + "(). " +
-				"Can not use request body parameters on a GET operation.");
-			}
-			srcWriter.println(builder+".setRequestData(requestData);");
-		}
-	}
-
-	protected void generateMethodParamToURICode(SourcePrinter srcWriter, RestMethodInfo methodInfo, String uriVariable)
-	{
-		Annotation[][] parameterAnnotations = methodInfo.implementationMethod.getParameterAnnotations();
-		JParameter[] parameters = methodInfo.method.getParameters();
-
-		for (int i = 0; i< parameterAnnotations.length; i++)
-		{
-			Annotation[] annotations = parameterAnnotations[i];
-			for (Annotation annotation : annotations)
-			{
-				if ((annotation instanceof QueryParam) || (annotation instanceof PathParam))
-				{
-					JParameter parameter = parameters[i];
-					JType parameterType = parameter.getType();
-					String parameterName = parameter.getName();
-					if (JClassUtils.isSimpleType(parameterType))
-					{
-						generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, parameterType, parameterName, 
-								parameterName, (parameterType.isPrimitive() != null?"true":parameterName+"!=null"));
-					}
-					else
-					{
-						generateMethodParamToURICodeForComplexType(srcWriter, uriVariable, parameterType, 
-								parameterName, parameterName, parameterName+"!=null"); 
-					}
-				}
-			}
-		}
-	}
-
-	protected void generateMethodParamToURICodeForComplexType(SourcePrinter srcWriter, String uriVariable, JType parameterType, 
-			String parameterName, String parameterExpression, String parameterCheckExpression)
-    {
-		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
-		for (PropertyInfo propertyInfo : propertiesInfo)
-        {
-	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
-	        {
-	        	generateMethodParamToURICodeForSimpleType(srcWriter, uriVariable, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
-	        			(propertyInfo.getType().isPrimitive()!=null?
-	        					parameterCheckExpression:
-	        					parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null"));
-	        }
-	        else
-	        {
-	        	generateMethodParamToURICodeForComplexType(srcWriter, uriVariable, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
-	        			parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null");
-	        }
-        }
-    }
-
-	protected void generateMethodParamToURICodeForSimpleType(SourcePrinter srcWriter, String uriVariable, JType parameterType, 
-			String parameterName, String parameterexpression, String parameterCheckExpression)
-    {
-		JClassType jClassType = parameterType.isClassOrInterface();
-		if (jClassType != null)
-		{
-			if (jClassType.isAssignableTo(stringType))
-			{
-				srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-						"("+parameterCheckExpression+"?"+parameterexpression+":\"\"));");
-			}
-			else if (jClassType.isAssignableTo(dateType))
-			{
-				srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-						"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\"));");
-			}
-		    else
-		    {
-		    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-		    			"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"));");
-		    }
-		}
-	    else
-	    {
-	    	srcWriter.println(uriVariable+"="+uriVariable+".replace(\"{"+parameterName+"}\", "+
-	    			"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"));");
-	    }
-    }
-
 	protected String getCallbackResultTypeName(JClassType callbackParameter)
 	{
 		JClassType jClassType = JClassUtils.getTypeArgForGenericType(callbackParameter);
@@ -499,108 +348,13 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		{
 			methodPath = paths(methodPath, path.value());
 		}
-		String queryString = getQueryString(method, implementationMethod);
+		String queryString = queryParameterHandler.getQueryString(method, implementationMethod);
 		if (queryString.length() > 0)
 		{
 			return methodPath+"?"+queryString;
 		}
 		return methodPath;
 	}
-
-	protected String getQueryString(JMethod method, Method implementationMethod)
-	{
-		StringBuilder str = new StringBuilder();
-		boolean first = true;
-		Annotation[][] parameterAnnotations = implementationMethod.getParameterAnnotations();
-		JParameter[] parameters = method.getParameters();
-
-		for (int i = 0; i< parameterAnnotations.length; i++)
-		{
-			Annotation[] annotations = parameterAnnotations[i];
-			for (Annotation annotation : annotations)
-			{
-				if (annotation instanceof QueryParam)
-				{
-					if (!first)
-					{
-						str.append("&");
-					}
-					first = false;
-					if (JClassUtils.isSimpleType(parameters[i].getType()))
-					{
-						buildQueryStringForSimpleType(str, parameters[i].getName(), ((QueryParam)annotation).value());
-					}
-					else
-					{
-						buildQueryStringForComplexType(str, parameters[i].getName(), parameters[i].getType(), ((QueryParam)annotation).value());
-					}
-				}
-			}
-		}
-
-		return str.toString();
-	}
-
-	protected void buildQueryStringForComplexType(StringBuilder str, String name, JType parameterType, String value)
-    {
-		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
-		boolean first = true;
-		for (PropertyInfo propertyInfo : propertiesInfo)
-        {
-			if (!first)
-			{
-				str.append("&");
-			}
-			first = false;
-	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
-	        {
-				buildQueryStringForSimpleType(str, name+"."+propertyInfo.getName(), value+"."+propertyInfo.getName());
-	        }
-	        else
-	        {
-				buildQueryStringForComplexType(str, name+"."+propertyInfo.getName(), propertyInfo.getType(), value+"."+propertyInfo.getName());
-	        }
-        }
-    }
-
-	protected void buildQueryStringForSimpleType(StringBuilder str, String parameterExpression, String parameterName)
-    {
-	    str.append(parameterName+"={"+parameterExpression+"}");
-    }
-
-	protected String getFormString(RestMethodInfo methodInfo)
-	{
-		StringBuilder str = new StringBuilder();
-		boolean first = true;
-		Annotation[][] parameterAnnotations = methodInfo.implementationMethod.getParameterAnnotations();
-		JParameter[] parameters = methodInfo.method.getParameters();
-
-		try
-		{
-			for (int i = 0; i< parameterAnnotations.length; i++)
-			{
-				Annotation[] annotations = parameterAnnotations[i];
-				for (Annotation annotation : annotations)
-				{
-					if (annotation instanceof FormParam)
-					{
-						if (!first)
-						{
-							str.append("&");
-						}
-						first = false;
-						str.append(URLEncoder.encode(((FormParam)annotation).value(), "UTF-8")+"={"+parameters[i].getName()+"}");
-					}
-				}
-			}
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new CruxGeneratorException("Unsupported encoding for parameter name on method ["+methodInfo.implementationMethod.toString()+"]");
-		}
-		return str.toString();
-	}
-
 
 	protected String paths(String basePath, String... segments)
 	{
@@ -868,19 +622,5 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			result.add(BigDecimal.class);
 		}
 		return result;
-	}
-	
-	protected static class RestMethodInfo
-	{
-		private JMethod method;
-		private Method implementationMethod;
-		private String methodURI;
-		
-		public RestMethodInfo(JMethod method, Method implementationMethod, String methodURI)
-        {
-			this.method = method;
-			this.implementationMethod = implementationMethod;
-			this.methodURI = methodURI;
-        }
 	}
 }

@@ -157,13 +157,8 @@ public class TopToolBarLargeController extends DeviceAdaptiveController implemen
 	{
 		RootPanel.get().insert(this, 0);
 		floatPanel = getChildWidget("topToolBar");
-	}
-
-	@Override
-    protected void initWidgetDefaultStyleName()
-    {
 		setStyleName("crux-TopToolBar");
-    }
+	}
 
 	protected HandlerRegistration createEmptyHandlerRegistration()
 	{

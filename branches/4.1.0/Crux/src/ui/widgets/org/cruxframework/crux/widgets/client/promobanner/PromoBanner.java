@@ -1,6 +1,5 @@
 package org.cruxframework.crux.widgets.client.promobanner;
 
-import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
 import com.google.gwt.core.client.GWT;
@@ -27,20 +26,6 @@ public class PromoBanner extends Composite
 		setStyleName("crux-PromoBanner");
 	}
 
-	@Override
-	public void setStyleName(String style)
-	{
-	    super.setStyleName(style);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
-	}
-	
-	@Override
-	public void setStyleName(String style, boolean add)
-	{
-	    super.setStyleName(style, add);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
-	}
-	
 	public void setLargeBannersHeight(String height)
 	{
 		impl.setLargeBannersHeight(height);

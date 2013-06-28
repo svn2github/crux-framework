@@ -455,7 +455,8 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 					}
 				}
 			});
-		}			
+		}
+		setStyleName("crux-Slideshow");
 	}
 
 	private void setPhotoPanel()
@@ -467,12 +468,6 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
     }
 	
 	public abstract void configurePhotoPanel();
-	
-	@Override
-    protected void initWidgetDefaultStyleName()
-    {
-		setStyleName("crux-Slideshow");
-    }
 
 	/**
 	 * 

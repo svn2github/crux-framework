@@ -15,9 +15,6 @@
  */
 package org.cruxframework.crux.widgets.client.styledpanel;
 
-import org.cruxframework.crux.core.client.utils.StyleManager;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -29,8 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, HasVerticalAlignment
 {
-	private static final String DEFAULT_STYLE_NAME = "cruxStyledPanel";
-	private static final StyleManager styleManager = GWT.create(StyleManager.class);
+	private static final String DEFAULT_STYLE_NAME = "crux-StyledPanel";
 	
 	private VerticalAlignmentConstant verticalAlignment = HasVerticalAlignment.ALIGN_TOP;
 	private HorizontalAlignmentConstant horizontalAlignment = HasHorizontalAlignment.ALIGN_LEFT;
@@ -38,7 +34,7 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	
 	public StyledPanel()
 	{
-		styleManager.applyStyleName(this, DEFAULT_STYLE_NAME);
+		setStyleName(DEFAULT_STYLE_NAME);
 	}
 
 	@Override
@@ -170,5 +166,4 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	{
 		void doAction(Widget widget);
 	}
-
 }

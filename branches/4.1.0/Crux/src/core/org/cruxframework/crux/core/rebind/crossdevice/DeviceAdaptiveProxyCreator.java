@@ -195,7 +195,6 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 		srcWriter.println("initWidget(viewContainer.asWidget());");
 		srcWriter.println("viewContainer.add("+viewVariable+", true);");
 		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).init();");
-		srcWriter.println("(("+DeviceAdaptiveController.class.getCanonicalName()+")this._controller).initWidgetDefaultStyleName();");
 		srcWriter.println("}");
     }
 

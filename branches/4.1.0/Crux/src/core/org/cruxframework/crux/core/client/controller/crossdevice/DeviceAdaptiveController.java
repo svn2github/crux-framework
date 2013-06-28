@@ -15,11 +15,8 @@
  */
 package org.cruxframework.crux.core.client.controller.crossdevice;
 
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewAware;
-import org.cruxframework.crux.core.client.utils.StyleUtils;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.EventHandler;
@@ -44,19 +41,6 @@ public abstract class DeviceAdaptiveController
 	public DeviceAdaptiveController()
     {
     }
-
-	/**
-	 * Override this method to define default stylename for the widget
-	 */
-	protected abstract void initWidgetDefaultStyleName();
-	
-	/**
-	 * Override this method to apply dependent stylenames for the widget
-	 */
-	protected void applyWidgetDependentStyleNames()
-	{
-		applyWidgetDependentStyleNames(getElement());
-	}
 
 	/**
 	 * Override this method if you need to add some startup code for component
@@ -115,7 +99,6 @@ public abstract class DeviceAdaptiveController
 	public void setStyleName(String style)
 	{
 		boundWidget.setStyleName(style);
-		applyWidgetDependentStyleNames();
 	}
 	
 	public String getStyleName()
@@ -161,36 +144,5 @@ public abstract class DeviceAdaptiveController
 	public Widget asWidget()
 	{
 		return boundWidget;
-	}
-	
-	/**
-	 * Apply dependent style name on element, based on current device
-	 * @param element
-	 */
-	public static void applyWidgetDependentStyleNames(Element element)
-	{
-		switch (Screen.getCurrentDevice())
-        {
-        	case smallDisplayArrows:
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.arrows.toString());
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.small.toString());
-	        break;
-        	case smallDisplayTouch:
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.touch.toString());
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.small.toString());
-	        break;
-        	case largeDisplayTouch:
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.touch.toString());
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
-	        break;
-        	case largeDisplayArrows:
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.arrows.toString());
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
-	        break;
-        	case largeDisplayMouse:
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Input.mouse.toString());
-        		StyleUtils.addStyleDependentName(element, DeviceAdaptive.Size.large.toString());
-	        break;
-        }
 	}
 }

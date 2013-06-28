@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.widgets.client.anchor;
 
-import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.widgets.client.event.HasSelectHandlers;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
@@ -187,20 +186,6 @@ public class Anchor extends Composite implements HasSelectHandlers, HasHTML, Has
 		impl = GWT.create(AnchorImpl.class);
 		initWidget(impl);
 		setStyleName("crux-Anchor");
-	}
-
-	@Override
-	public void setStyleName(String style)
-	{
-	    super.setStyleName(style);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
-	}
-	
-	@Override
-	public void setStyleName(String style, boolean add)
-	{
-	    super.setStyleName(style, add);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
 	}
 	
 	@Override

@@ -25,14 +25,11 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.views.OrientationChangeOrResizeHandler;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.client.utils.StyleManager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -62,19 +59,12 @@ public class Screen
 	protected String id;
 	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
-	protected StyleManager styleManager = GWT.create(StyleManager.class);
 
     protected Screen(final String id) 
 	{
 		this.id = id;
 		rootViewContainer = new RootViewContainer();
 		createRootView(id);
-		
-		NodeList<Element> elements = Document.get().getElementsByTagName("HTML");
-		styleManager.applyStyleName(elements.getItem(0), "HTML");
-		
-		elements = Document.get().getElementsByTagName("BODY");
-		styleManager.applyStyleName(elements.getItem(0), "BODY");
 	}
 
 	/**

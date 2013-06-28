@@ -240,6 +240,7 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
 				setFloatPanelPosition();
 			}
 		});
+		setStyleName("crux-TopToolBar");
 	}
 	
 	protected void prepareGripPanel()
@@ -283,12 +284,6 @@ public class TopToolBarArrowsSmallController extends DeviceAdaptiveController im
     {
 	    placeHolder = DOM.createDiv();
 	    Document.get().getBody().insertFirst(placeHolder);
-    }
-
-	@Override
-    protected void initWidgetDefaultStyleName()
-    {
-		setStyleName("crux-TopToolBar");
     }
 
 	protected Widget prepareGripWidget(Widget widget)

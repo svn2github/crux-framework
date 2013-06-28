@@ -15,7 +15,6 @@
  */
 package org.cruxframework.crux.widgets.client.selectablepanel;
 
-import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.widgets.client.event.HasSelectHandlers;
 import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
@@ -169,21 +168,7 @@ public class SelectablePanel extends SimplePanel implements HasSelectHandlers, H
 		impl.handlePanel();
 		setStyleName("crux-SelectablePanel");
 	}
-	
-	@Override
-	public void setStyleName(String style)
-	{
-	    super.setStyleName(style);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
-	}
-	
-	@Override
-	public void setStyleName(String style, boolean add)
-	{
-	    super.setStyleName(style, add);
-	    DeviceAdaptiveController.applyWidgetDependentStyleNames(getElement());
-	}
-	
+
 	public int getTabIndex() 
 	{
 		return focusImpl.getTabIndex(getElement());
