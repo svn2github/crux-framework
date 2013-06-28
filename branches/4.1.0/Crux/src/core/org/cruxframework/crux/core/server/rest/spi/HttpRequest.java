@@ -43,6 +43,15 @@ public class HttpRequest
 		this.httpMethod = httpMethod;
 		this.uri = uri;
 	}
+	
+	/**
+	 * @see request.getRemoteAddr();
+	 * @return a <code>String</code> containing the fully 
+     *			qualified name of the client
+	 */
+	public String getRemoteAddr() {
+		return request.getRemoteAddr();
+	}
 
 	public MultivaluedMap<String, String> getPutFormParameters()
 	{
