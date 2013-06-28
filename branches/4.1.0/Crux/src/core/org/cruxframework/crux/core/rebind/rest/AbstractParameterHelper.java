@@ -71,23 +71,23 @@ abstract class AbstractParameterHelper
 		{
 			if (jClassType.isAssignableTo(stringType))
 			{
-				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encode("+
+				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encodePathSegment("+
 						"("+parameterCheckExpression+"?"+parameterexpression+":\"\")));");
 			}
 			else if (jClassType.isAssignableTo(dateType))
 			{
-				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encode("+
+				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encodePathSegment("+
 						"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\")));");
 			}
 		    else
 		    {
-				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encode("+
+				srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encodePathSegment("+
 						"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")));");
 		    }
 		}
 	    else
 	    {
-			srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encode("+
+			srcWriter.println(parameterStringVariable+"="+parameterStringVariable+".replace(\"{"+parameterName+"}\", URL.encodePathSegment("+
 					"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")));");
 	    }
     }

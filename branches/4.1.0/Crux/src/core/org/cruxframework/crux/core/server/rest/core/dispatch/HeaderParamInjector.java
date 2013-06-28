@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
+import org.cruxframework.crux.core.server.rest.util.Encode;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
@@ -38,7 +39,7 @@ public class HeaderParamInjector extends StringParameterInjector implements Valu
 		List<String> list = request.getHttpHeaders().getRequestHeaders().get(paramName);
 		if (list != null && list.size() > 0)
 		{
-			return extractValue(list.get(list.size() - 1));
+			return extractValue(Encode.decode(list.get(list.size() - 1)));
 		}
 		return extractValue(null);
 	}

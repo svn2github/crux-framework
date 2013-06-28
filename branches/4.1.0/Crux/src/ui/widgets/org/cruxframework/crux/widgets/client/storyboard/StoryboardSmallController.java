@@ -151,7 +151,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
     {
 		storyboard = getChildWidget("storyboard");
 		this.itemHeight = "75px";
-		this.itemHeight = "100%";
+		this.itemWidth = "100%";
 		setStyleName("crux-Storyboard");
     }
 

@@ -170,12 +170,12 @@ class BodyParameterHandler extends AbstractParameterHelper
 			}
 			if (annotation instanceof HeaderParam)
 			{
-				generateMethodParamToHeaderCodeForSimpleType(srcWriter, builder, ((HeaderParam) annotation).value(), parameterType, parameterName, 
+				generateMethodParamToHeaderCodeForSimpleType(srcWriter, builder, ((HeaderParam) annotation).value(), parameterType,  
 						parameterName, (parameterType.isPrimitive() != null?"true":parameterName+"!=null"));
 			}
 			if (annotation instanceof CookieParam)
 			{
-				generateMethodParamToCookieCodeForSimpleType(srcWriter, ((CookieParam) annotation).value(), parameterType, parameterName, 
+				generateMethodParamToCookieCodeForSimpleType(srcWriter, ((CookieParam) annotation).value(), parameterType, 
 						parameterName, (parameterType.isPrimitive() != null?"true":parameterName+"!=null"));
 			}
 		}
@@ -189,42 +189,42 @@ class BodyParameterHandler extends AbstractParameterHelper
 			if (annotation instanceof HeaderParam)
 			{
 				generateMethodParamToHeaderCodeForComplexType(srcWriter, builder, ((HeaderParam) annotation).value(), parameterType, 
-						parameterName, parameterName, parameterName+"!=null"); 
+						parameterName, parameterName+"!=null"); 
 			}
 			if (annotation instanceof CookieParam)
 			{
 				generateMethodParamToCookieCodeForComplexType(srcWriter, ((CookieParam) annotation).value(), parameterType, 
-						parameterName, parameterName, parameterName+"!=null"); 
+						parameterName, parameterName+"!=null"); 
 			}
 		}
 	    return formEncoded;
     }
 	
 	private void generateMethodParamToCookieCodeForComplexType(SourcePrinter srcWriter, String cookieName, JType parameterType, 
-			String parameterName, String parameterExpression, String parameterCheckExpression)
+			String parameterExpression, String parameterCheckExpression)
     {
 		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
 		for (PropertyInfo propertyInfo : propertiesInfo)
         {
 	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
 	        {
-	        	generateMethodParamToCookieCodeForSimpleType(srcWriter, cookieName, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        	generateMethodParamToCookieCodeForSimpleType(srcWriter, cookieName+"."+propertyInfo.getName(), propertyInfo.getType(), 
+	        			parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
 	        			(propertyInfo.getType().isPrimitive()!=null?
 	        					parameterCheckExpression:
 	        					parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null"));
 	        }
 	        else
 	        {
-	        	generateMethodParamToCookieCodeForComplexType(srcWriter, cookieName, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        	generateMethodParamToCookieCodeForComplexType(srcWriter, cookieName+"."+propertyInfo.getName(), propertyInfo.getType(), 
+	        			parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
 	        			parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null");
 	        }
         }
     }
 
 	private void generateMethodParamToCookieCodeForSimpleType(SourcePrinter srcWriter, String cookieName, JType parameterType, 
-			String parameterName, String parameterexpression, String parameterCheckExpression)
+			String parameterexpression, String parameterCheckExpression)
     {
 		JClassType jClassType = parameterType.isClassOrInterface();
 		if (jClassType != null)
@@ -232,78 +232,78 @@ class BodyParameterHandler extends AbstractParameterHelper
 			if (jClassType.isAssignableTo(stringType))
 			{
 				srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(cookieName) + 
-						", URL.encode("+"("+parameterCheckExpression+"?"+parameterexpression+":\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+						", "+"("+parameterCheckExpression+"?"+parameterexpression+":\"\"), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
 			}
 			else if (jClassType.isAssignableTo(dateType))
 			{
 				srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(cookieName) + 
-						", URL.encode("+"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+						", "+"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\"), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
 			}
 		    else
 		    {
 				srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(cookieName) + 
-						", URL.encode("+"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+						", "+"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
 		    }
 		}
 	    else
 	    {
 			srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(cookieName) + 
-					", URL.encode("+"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+					", "+"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\"), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
 	    }
     }
 
-	private void generateMethodParamToHeaderCodeForComplexType(SourcePrinter srcWriter, String builder, String cookieName, JType parameterType, 
-			String parameterName, String parameterExpression, String parameterCheckExpression)
+	private void generateMethodParamToHeaderCodeForComplexType(SourcePrinter srcWriter, String builder, String headerName, JType parameterType, 
+					String parameterExpression, String parameterCheckExpression)
     {
 		PropertyInfo[] propertiesInfo = JClassUtils.extractBeanPropertiesInfo(parameterType.isClassOrInterface());
 		for (PropertyInfo propertyInfo : propertiesInfo)
         {
 	        if (JClassUtils.isSimpleType(propertyInfo.getType()))
 	        {
-	        	generateMethodParamToHeaderCodeForSimpleType(srcWriter, builder, cookieName, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        	generateMethodParamToHeaderCodeForSimpleType(srcWriter, builder, headerName+"."+propertyInfo.getName(), propertyInfo.getType(), 
+	        			parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
 	        			(propertyInfo.getType().isPrimitive()!=null?
 	        					parameterCheckExpression:
 	        					parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null"));
 	        }
 	        else
 	        {
-	        	generateMethodParamToHeaderCodeForComplexType(srcWriter, builder, cookieName, propertyInfo.getType(), 
-	        			parameterName+"."+propertyInfo.getName(), parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
+	        	generateMethodParamToHeaderCodeForComplexType(srcWriter, builder, headerName+"."+propertyInfo.getName(), propertyInfo.getType(), 
+	        			parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()", 
 	        			parameterCheckExpression + " && " + parameterExpression+"."+propertyInfo.getReadMethod().getName()+"()!=null");
 	        }
         }
     }
 
-	private void generateMethodParamToHeaderCodeForSimpleType(SourcePrinter srcWriter, String headerName, String builderVarName, JType parameterType, 
-			String parameterName, String parameterexpression, String parameterCheckExpression)
+	private void generateMethodParamToHeaderCodeForSimpleType(SourcePrinter srcWriter, String builderVarName, String headerName, 
+			JType parameterType, String parameterexpression, String parameterCheckExpression)
     {
 		JClassType jClassType = parameterType.isClassOrInterface();
+		srcWriter.println("if ("+parameterCheckExpression+"){");
 		if (jClassType != null)
 		{
 			if (jClassType.isAssignableTo(stringType))
 			{
-				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encode("+"" +
-						"("+parameterCheckExpression+"?"+parameterexpression+":\"\")));");
+				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encodePathSegment("+
+						parameterexpression+"));");
 			}
 			else if (jClassType.isAssignableTo(dateType))
 			{
-				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encode("+"" +
-						"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\")));");
-				srcWriter.println(Cookies.class.getCanonicalName()+".setCookie("+EscapeUtils.quote(headerName) + 
-						", URL.encode("+"("+parameterCheckExpression+"?Long.toString("+parameterexpression+".getTime()):\"\")), new "+Date.class.getCanonicalName()+"(2240532000000L), null, \"/\", false);");
+				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encodePathSegment("+
+						"Long.toString("+parameterexpression+".getTime())));");
 			}
 		    else
 		    {
-				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encode("+"" +
-						"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")));");
+				srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encodePathSegment("+
+						"\"\"+"+parameterexpression+"));");
 		    }
 		}
 	    else
 	    {
-			srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encode("+"" +
-					"("+parameterCheckExpression+"?(\"\"+"+parameterexpression+"):\"\")));");
+			srcWriter.println(builderVarName+".setHeader("+EscapeUtils.quote(headerName)+", URL.encodePathSegment("+
+					"\"\"+"+parameterexpression+"));");
 	    }
+		srcWriter.println("}");
     }
 
 	
