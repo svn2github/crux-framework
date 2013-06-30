@@ -8,9 +8,11 @@
 	useController="homeController" 
 	title="Hello Crux">
 	
-	<crux:styledPanel id="outerPanel" verticalSpacing="5" height="200px">	
-		<gwt:label id="helloLabel" text="Ola, Cara!"/>
-		<gwt:button id="backButton" text="Voltar" onClick="homeController.back"/>
+	<crux:styledPanel id="outerPanel" height="150px" horizontalAlignment="center" verticalAlignment="middle">
+		<gwt:flowPanel id="grouping">
+			<gwt:label id="helloLabel" text="Olá, Cara!"/>
+			<xdev:button id="backButton" text="Voltar" onSelect="homeController.back"/>
+		</gwt:flowPanel>
 	</crux:styledPanel>
 	
 </v:view>
