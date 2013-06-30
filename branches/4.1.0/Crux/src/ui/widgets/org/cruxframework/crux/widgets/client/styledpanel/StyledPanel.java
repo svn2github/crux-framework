@@ -106,26 +106,18 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 			}
 		}
 		
-		if(child == null)
+		final String finalMarginLeft = marginLeft;
+		final String finalMarginRight = marginRight;
+		
+		forEachWidget(child, new ChildWidgetAction()
 		{
-			final String finalMarginLeft = marginLeft;
-			final String finalMarginRight = marginRight;
-			
-			forEachWidget(new ChildWidgetAction()
+			@Override
+			public void doAction(Widget currentChild)
 			{
-				@Override
-				public void doAction(Widget currentChild)
-				{
-					currentChild.getElement().getStyle().setProperty("marginLeft", finalMarginLeft);
-					currentChild.getElement().getStyle().setProperty("marginRight", finalMarginRight);
-				}
-			});
-		}
-		else
-		{
-			child.getElement().getStyle().setProperty("marginLeft", marginLeft);
-			child.getElement().getStyle().setProperty("marginRight", marginRight);
-		}
+				currentChild.getElement().getStyle().setProperty("marginLeft", finalMarginLeft);
+				currentChild.getElement().getStyle().setProperty("marginRight", finalMarginRight);
+			}
+		});
 	}
 	
 	@Override
@@ -133,6 +125,7 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	{
 		super.add(w);
 		setHorizontalAlignment(getHorizontalAlignment(), w);
+		setVerticalSpacing(getVerticalSpacing(), w);
 	}
 
 	public int getVerticalSpacing()
@@ -140,10 +133,15 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 		return verticalSpacing;
 	}
 
-	public void setVerticalSpacing(final int verticalSpacing)
+	public void setVerticalSpacing(int verticalSpacing)
+	{
+		setVerticalSpacing(verticalSpacing, null);
+	}
+	
+	private void setVerticalSpacing(final int verticalSpacing, Widget child)
 	{
 		this.verticalSpacing = verticalSpacing;
-		forEachWidget(new ChildWidgetAction()
+		forEachWidget(child, new ChildWidgetAction()
 		{
 			@Override
 			public void doAction(Widget widget)
@@ -153,12 +151,19 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 		});
 	}
 	
-	private void forEachWidget(ChildWidgetAction action)
+	private void forEachWidget(Widget singleTarget, ChildWidgetAction action)
 	{
-		int widgetCount = getWidgetCount();
-		for(int i = 0; i < widgetCount; i++)
+		if(singleTarget == null)
 		{
-			action.doAction(getWidget(i));
+			int widgetCount = getWidgetCount();
+			for(int i = 0; i < widgetCount; i++)
+			{
+				action.doAction(getWidget(i));
+			}
+		}
+		else
+		{
+			action.doAction(singleTarget);
 		}
 	}
 	
@@ -166,4 +171,5 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	{
 		void doAction(Widget widget);
 	}
+
 }
