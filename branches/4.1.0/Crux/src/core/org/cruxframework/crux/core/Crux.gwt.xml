@@ -85,16 +85,18 @@
 	
 	<!-- Specify Default implementation for isOnline -->
     <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineDefault">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnline" />
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerDefault">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
+        <none>
+	        <when-property-is name="user.agent" value="safari"/>
+        </none>
     </replace-with>
 	
 	<!-- Specify Mozilla implementation for isOnline -->
     <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnlineFF">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.IsOnline" />
-        <when-property-is name="user.agent" value="gecko"/>
-        <when-property-is name="user.agent" value="gecko1_8" />
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerSafari">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
+        <when-property-is name="user.agent" value="safari"/>
     </replace-with>   
 	
 	<!-- Specify ie6 implementation for screen blocker -->
