@@ -789,33 +789,6 @@ public class JClassUtils
             }
         }
 		return result.toArray(new PropertyInfo[result.size()]);
-		
-//		Class<?> rawType = getRawType(type);
-//		PropertyDescriptor[] propertyDescriptors = extractBeanProperties(rawType);
-//		
-//		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
-//		if (propertyDescriptors != null)
-//		{
-//			try
-//			{
-//				for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
-//				{
-//					if (propertyDescriptor.getReadMethod() != null && propertyDescriptor.getWriteMethod() != null)
-//					{
-//						Method readMethod = propertyDescriptor.getReadMethod();
-//						Type returnType = readMethod.getGenericReturnType();
-//						Type propertyType = getPropertyType(returnType, type, rawType);
-//						Method writeMethod = propertyDescriptor.getWriteMethod();
-//						result.add(new PropertyInfo(propertyDescriptor.getName(), propertyType, readMethod, writeMethod));
-//					}
-//				}
-//	        }
-//	        catch (Exception e)
-//	        {
-//	        	throw new RuntimeException("Unable to determine properties for bean: " + rawType.getCanonicalName(), e);
-//	        }
-//		}
-//		return result.toArray(new PropertyInfo[result.size()]);
 	}
 	
 	public static String getEmptyValueForType(JType objectType)
