@@ -83,22 +83,28 @@
 	
 	<!-- Replaces -->
 	
-	<!-- Specify Default implementation for isOnline -->
+	<!-- Specify Default implementation for NetworkChecker -->
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerDefault">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
-        <none>
-	        <when-property-is name="user.agent" value="safari"/>
-        </none>
     </replace-with>
 	
-	<!-- Specify Mozilla implementation for isOnline -->
+	<!-- Specify implementation for specific browsers -->
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerSafari">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
         <when-property-is name="user.agent" value="safari"/>
     </replace-with>   
-	
+    
+    <replace-with
+        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerIE8AndAbove">
+        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
+        <any>
+            <when-property-is name="user.agent" value="ie8"/>
+            <when-property-is name="user.agent" value="ie9"/>
+        </any>
+    </replace-with>
+    
 	<!-- Specify ie6 implementation for screen blocker -->
 	<replace-with
     	class="org.cruxframework.crux.core.client.screen.ScreenBlockerIE6">

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 cruxframework.org.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.cruxframework.crux.core.client.screen;
 
 import com.google.gwt.core.client.GWT;
@@ -22,7 +37,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class BrowserNetworkTools
 {
-	private static NetworkChecker isOnline = null;
+	private static NetworkChecker networkChecker = null;
 
 	public interface NetworkChecker
 	{
@@ -30,9 +45,7 @@ public class BrowserNetworkTools
 	}
 
 	/**
-	 * Inspect network conditions.
-	 * 
-	 * @return
+	 * @return true if the client is online and false otherwise.
 	 */
 	public static boolean isOnline()
 	{
@@ -41,24 +54,23 @@ public class BrowserNetworkTools
 
 	private static NetworkChecker getStaticInstance()
 	{
-		if (isOnline == null)
+		if (networkChecker == null)
 		{
-			isOnline = GWT.create(NetworkChecker.class);
+			networkChecker = GWT.create(NetworkChecker.class);
 		}
-		return isOnline;
+		return networkChecker;
 	}
 
 	/**
-	 * TODO: javadoc!!!
-	 * 
-	 * @return
+	 * NetworkChecker implementation for Default browsers
+	 * @author samuel.cardoso
 	 */
 	public static class NetworkCheckerDefault implements NetworkChecker
 	{
 		private static final int REPEATING_INTERVAL = 5000;
 		private static final String TESTER_ID = "_network_tester_";
 		private final String URL_IMG = "clear.cache.gif";
-		private Boolean isOnline;
+		private boolean isOnline;
 		private Panel testerPanel;
 
 		public NetworkCheckerDefault()
@@ -68,23 +80,22 @@ public class BrowserNetworkTools
 			{
 				public boolean execute()
 				{
-					updateNetowrkStatus();
+					updateNetworkStatus();
 					return true;
 				}
 			}, REPEATING_INTERVAL);
 		}
 
 		@Override
+		/*As this is set by a timer task, it should be initialized
+		 * at the application bootstrap otherwise it may indicate
+		 * a false answer. */ 
 		public boolean isOnline()
 		{
-			if (isOnline == null)
-			{
-				updateNetowrkStatus();
-			}
 			return isOnline;
 		}
 
-		private void updateNetowrkStatus()
+		private void updateNetworkStatus()
 		{
 			Image img = new Image(URL_IMG+"?"+System.currentTimeMillis());
 			img.getElement().getStyle().setPosition(Position.ABSOLUTE);
@@ -112,24 +123,35 @@ public class BrowserNetworkTools
 		}
 
 		private Panel createTesterPanel()
-        {
-	        final Element div = Document.get().createDivElement();
+		{
+			final Element div = Document.get().createDivElement();
 			div.setId(TESTER_ID);
 			Document.get().getBody().appendChild(div);
-	        return RootPanel.get(TESTER_ID);
-        }
+			return RootPanel.get(TESTER_ID);
+		}
 	}
 
 	/**
-	 * TODO: javadoc!!!
-	 * 
-	 * @return
+	 * NetworkChecker implementation for Safari browsers
+	 * @author samuel.cardoso
 	 */
 	public static class NetworkCheckerSafari implements NetworkChecker
 	{
 		@Override
 		public native boolean isOnline() /*-{
-			return $wnd.navigator.onLine();
+			return window.navigator.onLine;
+		}-*/;
+	}
+	
+	/**
+	 * NetworkChecker implementation for IE8+ browsers
+	 * @author samuel.cardoso
+	 */
+	public static class NetworkCheckerIE8AndAbove implements NetworkChecker
+	{
+		@Override
+		public native boolean isOnline() /*-{
+			return window.navigator.onLine;
 		}-*/;
 	}
 }
