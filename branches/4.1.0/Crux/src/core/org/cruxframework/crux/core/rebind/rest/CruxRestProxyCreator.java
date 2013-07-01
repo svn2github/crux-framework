@@ -565,42 +565,42 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	{
 		List<Class<?>> result = new ArrayList<Class<?>>();
 		JPrimitiveType primitiveType = jType.isPrimitive();
-		if (primitiveType == JPrimitiveType.INT)
+		if (primitiveType == JPrimitiveType.INT || jType.getQualifiedSourceName().equals(Integer.class.getCanonicalName()))
 		{
 			result.add(Integer.TYPE);
 			result.add(Integer.class);
 		}
-		else if (primitiveType == JPrimitiveType.SHORT)
+		else if (primitiveType == JPrimitiveType.SHORT || jType.getQualifiedSourceName().equals(Short.class.getCanonicalName()))
 		{
 			result.add(Short.TYPE);
 			result.add(Short.class);
 		}
-		else if (primitiveType == JPrimitiveType.LONG)
+		else if (primitiveType == JPrimitiveType.LONG || jType.getQualifiedSourceName().equals(Long.class.getCanonicalName()))
 		{
 			result.add(Long.TYPE);
 			result.add(Long.class);
 		}
-		else if (primitiveType == JPrimitiveType.BYTE)
+		else if (primitiveType == JPrimitiveType.BYTE || jType.getQualifiedSourceName().equals(Byte.class.getCanonicalName()))
 		{
 			result.add(Byte.TYPE);
 			result.add(Byte.class);
 		}
-		else if (primitiveType == JPrimitiveType.FLOAT)
+		else if (primitiveType == JPrimitiveType.FLOAT || jType.getQualifiedSourceName().equals(Float.class.getCanonicalName()))
 		{
 			result.add(Float.TYPE);
 			result.add(Float.class);
 		}
-		else if (primitiveType == JPrimitiveType.DOUBLE)
+		else if (primitiveType == JPrimitiveType.DOUBLE || jType.getQualifiedSourceName().equals(Double.class.getCanonicalName()))
 		{
 			result.add(Double.TYPE);
 			result.add(Double.class);
 		}
-		else if (primitiveType == JPrimitiveType.BOOLEAN)
+		else if (primitiveType == JPrimitiveType.BOOLEAN || jType.getQualifiedSourceName().equals(Boolean.class.getCanonicalName()))
 		{
 			result.add(Boolean.TYPE);
 			result.add(Boolean.class);
 		}
-		else if (primitiveType == JPrimitiveType.CHAR)
+		else if (primitiveType == JPrimitiveType.CHAR || jType.getQualifiedSourceName().equals(Character.class.getCanonicalName()))
 		{
 			result.add(Character.TYPE);
 			result.add(Character.class);
