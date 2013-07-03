@@ -16,6 +16,9 @@
 package org.cruxframework.crux.widgets.client.swapcontainer;
 
 import org.cruxframework.crux.core.client.Crux;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
@@ -38,6 +41,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	private Panel active;
 	private Panel swap;
 	private boolean autoRemoveInactiveViews = false;
+	private boolean animationEnabled = true;
 	
 	public HorizontalSwapContainer()
 	{
@@ -124,7 +128,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 			final View previous = activeView;
 			final View next = view;
 			super.renderView(view);
-			if (previous == null || direction == null)
+			if (previous == null || direction == null || !animationEnabled)
 			{
 				swapPanel.setCurrentWidget(active);
 				concludeViewsSwapping(previous, next);
@@ -197,6 +201,59 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	public int getTransitionDuration()
 	{
 		return swapPanel.getTransitionDuration();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isAnimationEnabled()
+	{
+		return animationEnabled;
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 * @param device
+	 */
+	public void setAnimationEnabled(boolean enabled, Device device)
+	{
+		if (device == Device.all || Screen.getCurrentDevice() == device)
+		{
+			animationEnabled = enabled;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param enabled
+	 * @param size
+	 */
+	public void setAnimationEnabled(boolean enabled, Size size)
+	{
+		if (Screen.getCurrentDevice().getSize() == size)
+		{
+			animationEnabled = enabled;
+		}
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void setAnimationEnabledForLargeDevices(boolean enabled)
+	{
+		setAnimationEnabled(enabled, Size.large);
+	}
+	
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void setAnimationEnabledForSmallDevices(boolean enabled)
+	{
+		setAnimationEnabled(enabled, Size.small);
 	}
 
 	/**

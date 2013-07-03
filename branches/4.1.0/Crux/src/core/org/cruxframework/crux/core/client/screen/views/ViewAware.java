@@ -21,5 +21,6 @@ package org.cruxframework.crux.core.client.screen.views;
  */
 public interface ViewAware
 {
-	String getBoundCruxView();
+	String getBoundCruxViewId();
+	View getBoundCruxView();
 }

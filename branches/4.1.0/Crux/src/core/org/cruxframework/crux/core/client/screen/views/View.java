@@ -1125,8 +1125,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	public static View of(Object viewAware)
 	{
 		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
-		String view = ((ViewAware)viewAware).getBoundCruxView();
-		return getView(view);
+		return ((ViewAware)viewAware).getBoundCruxView();
 	}
 
 	/**

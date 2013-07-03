@@ -125,8 +125,12 @@ public abstract class AbstractViewBindableProxyCreator extends AbstractWrapperPr
     
 	protected void generateViewBindableMethods(SourcePrinter sourceWriter)
     {
-		sourceWriter.println("public String getBoundCruxView(){");
+		sourceWriter.println("public String getBoundCruxViewId(){");
 		sourceWriter.println("return this.__view;");
+		sourceWriter.println("}");
+		sourceWriter.println();
+		sourceWriter.println("public "+View.class.getCanonicalName()+" getBoundCruxView(){");
+		sourceWriter.println("return (this.__view!=null?"+View.class.getCanonicalName()+".getView(this.__view):null);");
 		sourceWriter.println("}");
 		sourceWriter.println();
 		sourceWriter.println("public void bindCruxView(String view){");

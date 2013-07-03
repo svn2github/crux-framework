@@ -56,8 +56,14 @@ public abstract class IocContainer implements ViewAware
 	}
 	
 	@Override
-	public String getBoundCruxView()
+	public String getBoundCruxViewId()
 	{
 	    return (this.view == null? null:this.view.getId());
+	}
+
+	@Override
+	public View getBoundCruxView()
+	{
+	    return this.view;
 	}
 }

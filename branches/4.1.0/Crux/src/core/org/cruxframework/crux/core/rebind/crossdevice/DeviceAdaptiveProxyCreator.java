@@ -188,7 +188,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 
 		String viewVariable = ViewFactoryCreator.createVariableName("view");
 		srcWriter.println(viewClassName + " " + 
-				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+");");
+				viewVariable + " = new "+viewClassName+"("+EscapeUtils.quote(baseIntf.getSimpleSourceName())+"+(_idGen++));");
 		createController(srcWriter, viewVariable);
 		srcWriter.println(viewVariable+".setController(this._controller);");
 		
@@ -221,6 +221,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	    }
 	    srcWriter.println("private static "+Logger.class.getCanonicalName()+" "+viewFactoryCreator.getLoggerVariable()+" = "+
 	    		Logger.class.getCanonicalName()+".getLogger("+getProxySimpleName()+".class.getName());");
+		srcWriter.println("private static int _idGen = 0;");
     }
 
 	@Override

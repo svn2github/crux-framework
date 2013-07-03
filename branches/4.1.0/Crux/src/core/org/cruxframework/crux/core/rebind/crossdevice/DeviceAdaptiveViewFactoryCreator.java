@@ -93,6 +93,11 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 		printer.println("public void setController("+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" controller){");
 		printer.println("this._controller = controller;");
 		printer.println("}");
+		// Device adaptive views can not be registered as loaded views. It is only for device widget internal usage.
+		printer.println("public void registerLoadedView(){");
+		printer.println("}");
+		printer.println("public void unregisterLoadedView(){");
+		printer.println("}");
 	}
 	
 	

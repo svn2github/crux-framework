@@ -136,8 +136,8 @@ public class IocContainerRebind extends AbstractProxyCreator
 
 			if (type.isAssignableTo(viewBindableType))
 			{
-				srcWriter.println("if (scope != "+Scope.class.getCanonicalName()+ "."+Scope.DOCUMENT.name()+" && result.getBoundCruxView() == null){");
-				srcWriter.println("result.bindCruxView(this.getBoundCruxView());");
+				srcWriter.println("if (scope != "+Scope.class.getCanonicalName()+ "."+Scope.DOCUMENT.name()+" && result.getBoundCruxViewId() == null){");
+				srcWriter.println("result.bindCruxView(this.getBoundCruxViewId());");
 				srcWriter.println("}");
 			}
 			srcWriter.println("return result;");
@@ -145,7 +145,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 		}
 		catch (NotFoundException e)
 		{
-			throw new IoCException("IoC Error Class ["+className+"] not found.");
+			throw new IoCException("IoC Error Class ["+className+"] not found.", e);
 		}
 		
     }

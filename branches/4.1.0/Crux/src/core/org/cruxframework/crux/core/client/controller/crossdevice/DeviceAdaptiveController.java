@@ -72,8 +72,7 @@ public abstract class DeviceAdaptiveController
 	
 	private View getControllerView()
 	{
-		String view = ((ViewAware)this).getBoundCruxView();
-		return (view != null)?View.getView(view):null;
+		return ((ViewAware)this).getBoundCruxView();
 	}
 	
 	void setBoundWidget(Widget boundWidget)

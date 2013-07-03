@@ -120,8 +120,11 @@ public class ControllerProxyCreator extends AbstractProxyCreator
 	 */
 	protected void generateGetViewMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("public String getBoundCruxView(){");
+		srcWriter.println("public String getBoundCruxViewId(){");
 		srcWriter.println("return (this.__view==null?null:this.__view.getId());");
+		srcWriter.println("}");
+		srcWriter.println("public "+View.class.getCanonicalName()+" getBoundCruxView(){");
+		srcWriter.println("return this.__view;");
 		srcWriter.println("}");
 	}
 
