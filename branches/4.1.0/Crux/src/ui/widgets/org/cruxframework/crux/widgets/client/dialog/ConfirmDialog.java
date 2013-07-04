@@ -307,6 +307,8 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	{
 		ConfirmDialog confirm = new ConfirmDialog(); 
 		confirm.setTitle(title);
+		confirm.setOkLabel(okLabel);
+		confirm.setCancelLabel(cancelLabel);
 		confirm.setMessage(message);
 		confirm.setStyleName(styleName);
 		confirm.setAnimationEnabled(animationEnabled);
