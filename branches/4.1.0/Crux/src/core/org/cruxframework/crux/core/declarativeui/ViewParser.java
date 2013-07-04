@@ -513,6 +513,12 @@ public class ViewParser
 			Node htmlElement = htmlDocument.importNode(cruxPageElement, false);
 			htmlDocument.appendChild(htmlElement);
 		}
+		
+		String manifest = cruxPageDocument.getDocumentElement().getAttribute("manifest");
+		if (!StringUtils.isEmpty(manifest))
+		{
+			htmlDocument.getDocumentElement().setAttribute("manifest", manifest);
+		}
 	    return htmlDocument;
     }
 

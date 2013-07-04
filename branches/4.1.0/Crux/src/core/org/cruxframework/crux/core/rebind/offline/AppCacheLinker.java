@@ -167,15 +167,6 @@ public class AppCacheLinker extends AbstractLinker
 		return false;
 	}
 
-	private String getPermutationId(ArtifactSet artifacts)
-	{
-		for (CompilationResult result : artifacts.find(CompilationResult.class))
-		{
-			return Integer.toString(result.getPermutationId());
-		}
-		return null;
-	}
-	
 	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationId) throws UnableToCompleteException
 	{
 		String moduleName = context.getModuleName();
@@ -191,9 +182,8 @@ public class AppCacheLinker extends AbstractLinker
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
 
-		return emitString(logger, builder.toString(), permutationId+".appcache");
+		return emitString(logger, builder.toString(), getManifestName(permutationId));
 	}
-	
 	
 	private long getCurrentTimeTruncatingMiliseconds()
     {
@@ -230,5 +220,19 @@ public class AppCacheLinker extends AbstractLinker
 			}
         }
 	    return name;
+    }
+
+	static String getPermutationId(ArtifactSet artifacts)
+	{
+		for (CompilationResult result : artifacts.find(CompilationResult.class))
+		{
+			return Integer.toString(result.getPermutationId());
+		}
+		return null;
+	}
+	
+	static String getManifestName(String permutationId)
+    {
+	    return permutationId+".appcache";
     }
 }
