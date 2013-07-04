@@ -15,49 +15,91 @@
  */
 package org.cruxframework.crux.core.rebind.offline;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.linker.AbstractLinker;
+import com.google.gwt.core.ext.linker.Artifact;
 import com.google.gwt.core.ext.linker.ArtifactSet;
+import com.google.gwt.core.ext.linker.CompilationResult;
 import com.google.gwt.core.ext.linker.ConfigurationProperty;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
-import com.google.gwt.core.ext.linker.LinkerOrder;
 import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
-import com.google.gwt.core.ext.linker.LinkerOrder.Order;
+import com.google.gwt.core.ext.linker.LinkerOrder;
+import com.google.gwt.core.ext.linker.Shardable;
 
 /**
- * @author Thiago da Rosa de Bustamante
+ * A GWT linker that produces an offline.appcache file describing what to cache in
+ * the application cache. It produces one appcache file for each permutation.
  * 
+ * @author Thiago da Rosa de Bustamante
  */
-@LinkerOrder(Order.POST)
+@LinkerOrder(LinkerOrder.Order.POST)
+@Shardable
 public class AppCacheLinker extends AbstractLinker
 {
+	private final HashSet<String> cachedArtifacts = new HashSet<String>();
+	private static Set<String> allArtifacts = Collections.synchronizedSet(new HashSet<String>());
+	private static Map<String, Set<String>> generatedManifestResources = Collections.synchronizedMap(new HashMap<String, Set<String>>());
+	private List<String> acceptedFileExtensions = Arrays.asList(".html", ".js", ".css", ".png", ".jpg", ".gif", ".ico");
+
 	@Override
 	public String getDescription()
 	{
-		return "Appcache manifest generator";
+		return "HTML5 appcache manifest generator";
 	}
 
 	@Override
-	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, boolean onePermutation) throws UnableToCompleteException
 	{
-		String moduleName = context.getModuleName();
-		String initialPage = getInitialPage(context);
-		
 		ArtifactSet artifactset = new ArtifactSet(artifacts);
 
-		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
-		builder.append("# Build Time ["+getCurrentTimeTruncatingMiliseconds()+"]\n");
-		builder.append("CACHE:\n");
-
-		if (initialPage != null)
+		if (onePermutation)
 		{
-			builder.append(initialPage+"\n");
+			analyzePermutationArtifacts(artifacts);
+		}
+		else
+		{
+			emitPermutationsAppCache(logger, context, artifacts, artifactset);
+			emitMainAppCache(logger, context, artifacts, artifactset);
 		}
 		
+		return artifactset;
+	}
+
+	private void analyzePermutationArtifacts(ArtifactSet artifacts)
+    {
+	    String permutationId = getPermutationId(artifacts);
+
+	    SortedSet<String> hashSet = new TreeSet<String>();
+		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
+		{
+			if (emitted.getVisibility() == Visibility.Private)
+			{
+				continue;
+			}
+    		String pathName = emitted.getPartialPath();
+    		if (acceptCachedResource(pathName))
+    		{
+    			hashSet.add(pathName);
+    			allArtifacts.add(pathName);
+    		}
+	    }
+	    generatedManifestResources.put(permutationId, hashSet);
+    }
+
+    private void emitPermutationsAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, ArtifactSet artifactset) throws UnableToCompleteException
+    {
 		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
 		{
 			if (emitted.getVisibility() == Visibility.Private)
@@ -65,22 +107,94 @@ public class AppCacheLinker extends AbstractLinker
 				continue;
 			}
 			String pathName = emitted.getPartialPath();
-			if (pathName.endsWith("symbolMap") || pathName.endsWith(".xml.gz") || pathName.endsWith("rpc.log")
-			   || pathName.endsWith("gwt.rpc") || pathName.endsWith("manifest.txt") || pathName.startsWith("rpcPolicyManifest"))
+			if (acceptCachedResource(pathName))
 			{
-				continue;
+				if (!allArtifacts.contains(pathName))
+				{
+					// common stuff like clear.cache.gif, *.nocache.js, etc
+					cachedArtifacts.add(pathName);
+				}
 			}
-			builder.append("/"+moduleName+"/"+pathName).append("\n");
+	    }
+
+	    Set<String> keySet = generatedManifestResources.keySet();
+	    for (String permutationId : keySet)
+	    {
+	    	Set<String> set = generatedManifestResources.get(permutationId);
+	    	set.addAll(cachedArtifacts);
+	    	artifactset.add(createCacheManifest(context, logger, set, permutationId));
+	    }
+    }
+
+	private void emitMainAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, ArtifactSet artifactset) throws UnableToCompleteException
+    {
+	    String moduleName = context.getModuleName();
+		String initialPage = getInitialPage(context);
+		
+
+		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
+		builder.append("# Build Time ["+getCurrentTimeTruncatingMiliseconds()+"]\n");
+		builder.append("\nCACHE:\n");
+
+		if (initialPage != null)
+		{
+			builder.append(initialPage+"\n");
 		}
-		builder.append("/"+moduleName+"/hosted.html\n");
-		builder.append("/"+moduleName+"/"+moduleName+".nocache.js\n");
-		builder.append("NETWORK:\n");
+		
+		for (String fn : cachedArtifacts)
+		{
+			builder.append("/"+moduleName+"/"+fn+"\n");
+		}
+		builder.append("\nNETWORK:\n");
 		builder.append("*\n");
 		EmittedArtifact manifest = emitString(logger, builder.toString(), getManifestName(context));
 		artifactset.add(manifest);
-		return artifactset;
+    }
+
+	private boolean acceptCachedResource(String filename)
+	{
+		if (filename.startsWith("compile-report/"))
+		{
+			return false;
+		}
+		for (String acceptedExtension : acceptedFileExtensions)
+		{
+			if (filename.endsWith(acceptedExtension))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
+	private String getPermutationId(ArtifactSet artifacts)
+	{
+		for (CompilationResult result : artifacts.find(CompilationResult.class))
+		{
+			return Integer.toString(result.getPermutationId());
+		}
+		return null;
+	}
+	
+	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationId) throws UnableToCompleteException
+	{
+		String moduleName = context.getModuleName();
+
+		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
+		builder.append("# Build Time ["+getCurrentTimeTruncatingMiliseconds()+"]\n");
+		builder.append("\nCACHE:\n");
+
+		for (String fn : artifacts)
+		{
+			builder.append("/"+moduleName+"/"+fn+"\n");
+		}
+		builder.append("\nNETWORK:\n");
+		builder.append("*\n\n");
+
+		return emitString(logger, builder.toString(), permutationId+".appcache");
+	}
+	
+	
 	private long getCurrentTimeTruncatingMiliseconds()
     {
 	    long currentTime = (System.currentTimeMillis()/1000) * 1000;

@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.rebind.rest;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -427,7 +426,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		Method[] allMethods = restImplementationClass.getMethods();
 		for (Method m: allMethods)
 		{
-			if (hasSameSignature(m, method))
+			if (m.getName().equals(method.getName()))
 			{
 				implementationMethod = m;
 				break;
@@ -438,52 +437,6 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return implementationMethod;
 	}
 
-	private boolean hasSameSignature(Method method, JMethod jMethod)
-	{
-		//checks the method name
-		if(!method.getName().equals(jMethod.getName()))
-		{
-			return false;
-		}
-		
-		//checks parameters
-		int paramIndex = 0;
-		int sizeJParam = jMethod.getParameterTypes().length;
-		Type[] type = method.getGenericParameterTypes();
-		
-		for(JType jType : jMethod.getParameterTypes())
-		{
-			//check for last param: callback
-			if(paramIndex == (sizeJParam - 1)) {
-				//if has already checked other params so both methods are equals
-				if(paramIndex != 0)
-				{
-					return true;
-				} else
-				//otherwise we need to check if proxy method doesn't have any params
-				{
-					return (type.length == 0); 
-				}
-			}
-			try
-			{
-				//checks if the corresponding param has the same type
-				if(!type[paramIndex].toString().contains(jType.getParameterizedQualifiedSourceName()))
-				{
-					return false;
-				}
-			} catch (ArrayIndexOutOfBoundsException e)
-			{
-				return false;
-			} catch (NullPointerException e)
-			{
-				return false;
-			}
-			paramIndex++;
-		}
-		return true;
-	}
-	
 	protected void validateProxyMethod(JMethod method)
 	{
 		if (method.getReturnType() != JPrimitiveType.VOID) 
