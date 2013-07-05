@@ -56,7 +56,7 @@ import com.google.gwt.dom.client.PartialSupport;
 @TagAttributes({
 	@TagAttribute("width"),
 	@TagAttribute("height"),
-	@TagAttribute(value="styleName", supportsResources=true),
+	@TagAttribute(value="styleName", processor=WidgetCreator.ClassProcessor.class, supportsResources=true),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
@@ -733,6 +733,32 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 				}
 			}
 			return property;
+		}
+	}
+	
+	/**
+	 * @author Samuel Almeida Cardoso
+	 *
+	 */
+	public static class ClassProcessor extends AttributeProcessor<WidgetCreatorContext>
+	{
+		public ClassProcessor(WidgetCreator<?> widgetCreator)
+        {
+	        super(widgetCreator);
+        }
+
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String className)
+		{
+			String[] classAttributes = className.split(" ");
+			if (classAttributes.length > 1)
+			{
+				for (int i=0; i<classAttributes.length; i++)
+				{
+					out.println(context.getWidget()+".addStyleName("+EscapeUtils.quote(classAttributes[i])+");");
+				}
+			} else {
+				out.println(context.getWidget()+".setStyleName("+EscapeUtils.quote(className)+");");
+			}
 		}
 	}
 }
