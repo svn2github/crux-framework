@@ -57,7 +57,7 @@ public class HeaderPanelFactory extends ComplexPanelFactory<WidgetCreatorContext
 	@TagConstraints(widgetProperty="contentWidget")
 	public static class ContentWidgetProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 
-	@TagConstraints(tagName="content")
+	@TagConstraints(tagName="footer")
 	@TagChildren({
 		@TagChild(FooterWidgetProcessor.class)
 	})
