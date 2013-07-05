@@ -4,16 +4,13 @@
 	xmlns:core="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	useController="homeController" 
 	title="Olá, Crux!"> 
 	
 	<crux:styledPanel id="outerPanel" height="150px" horizontalAlignment="center" verticalAlignment="middle">
-		<gwt:flowPanel id="grouping">	
-			<gwt:label id="questionLabel" text="Qual é o seu nome?"/>
-			<gwt:textBox id="nameTextBox" width="200px"/>
-			<xdev:button id="okButton" text="Vai!" onSelect="homeController.sayHello" style="display:block"/>
-		</gwt:flowPanel>
+		<gwt:label id="questionLabel" text="Qual é o seu nome?"/>
+		<gwt:textBox id="nameTextBox" width="200px"/>
+		<crux:button id="okButton" text="Vai!" onSelect="homeController.sayHello" style="display:block"/>
 	</crux:styledPanel>
 	
 </v:view>

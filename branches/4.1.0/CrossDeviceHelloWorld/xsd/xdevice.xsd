@@ -6,7 +6,6 @@ attributeFormDefault="unqualified"
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/xdevice" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
-<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
 <xs:element name="xdevice" type="XDevice" />
@@ -17,5 +16,7 @@ targetNamespace="http://www.cruxframework.org/xdevice" >
 </xs:choice>
 <xs:attribute name="useController" type="xs:string" use="required"/>
 <xs:attribute name="useResource" type="xs:string"/>
+<xs:attribute name="width" type="xs:string"/>
+<xs:attribute name="height" type="xs:string"/>
 </xs:complexType>
 </xs:schema>

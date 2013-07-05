@@ -2,13 +2,11 @@
 xmlns="http://www.cruxframework.org/crux/gwt" 
 xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 xmlns:c="http://www.cruxframework.org/crux" 
-xmlns:_crossDevice="http://www.cruxframework.org/crux/crossDevice" 
 xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/crux/gwt" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
-<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:element name="datePicker" type="TdatePicker"/>
 <xs:complexType name="TdatePicker">
@@ -441,7 +439,7 @@ targetNamespace="http://www.cruxframework.org/crux/gwt" >
 <xs:sequence>
 <xs:element name="header" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_gwt_rebind_HeaderPanelFactory_HeaderProcessor"/>
 <xs:element name="content" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_gwt_rebind_HeaderPanelFactory_ContentProcessor"/>
-<xs:element name="content" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_gwt_rebind_HeaderPanelFactory_FooterProcessor"/>
+<xs:element name="footer" minOccurs="1" maxOccurs="1" type="org_cruxframework_crux_gwt_rebind_HeaderPanelFactory_FooterProcessor"/>
 </xs:sequence>
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />

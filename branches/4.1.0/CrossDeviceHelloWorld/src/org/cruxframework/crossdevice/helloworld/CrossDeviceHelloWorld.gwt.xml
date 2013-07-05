@@ -3,7 +3,7 @@
 	<inherits name='org.cruxframework.crux.gwt.CruxGWTWidgets'/>
 	<inherits name='org.cruxframework.crux.widgets.CruxWidgets'/>
 	<inherits name='org.cruxframework.crux.crossdevice.CrossDeviceWidgets'/>
-	<inherits name='org.cruxframework.crux.crossdevicethemes.xstandard.XStandard'/>
+	<inherits name='org.cruxframework.crux.themes.widgets.xstandard.XStandard'/>
 	
 	<set-property name="ClientBundle.enableInlining" value="false" />
 	

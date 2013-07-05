@@ -6,7 +6,6 @@ attributeFormDefault="unqualified"
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/view" >
 <xs:import schemaLocation="core.xsd" namespace="http://www.cruxframework.org/crux"/>
-<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
 <xs:element name="view" type="View" />
@@ -30,6 +29,8 @@ targetNamespace="http://www.cruxframework.org/view" >
 <xs:attribute name="onLoad" type="xs:string"/>
 <xs:attribute name="onActivate" type="xs:string"/>
 <xs:attribute name="onHistoryChanged" type="xs:string"/>
+<xs:attribute name="width" type="xs:string"/>
+<xs:attribute name="height" type="xs:string"/>
 <xs:attribute name="onUnload" type="xs:string"/>
 <xs:attribute name="onDeactivate" type="xs:string"/>
 </xs:complexType>

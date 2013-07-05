@@ -420,6 +420,7 @@
 	<macrodef name="packageCruxThemesJar">
 		<attribute name="sourceDir"/>
 		<attribute name="outputFileName"/>
+		<attribute name="includesPattern"/>
 		<sequential>
 			<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath" />
 			<delete  file="${dist.dir}/@{outputFileName}" failonerror="no" />
@@ -428,8 +429,20 @@
 				<wcversion path="${basedir}" />
 			</svn>
 			
+			<javac destdir="${classes.dir}" target="1.5" source="1.5" debug="true" excludes="**/public/*" encoding="UTF-8">
+				<src>
+					<pathelement location="@{sourcedir}"/>
+				</src>
+				<classpath refid="build.classpath" />
+			</javac>
+			
 			<jar jarfile="${dist.dir}/@{outputFileName}">
-				<fileset dir="@{sourceDir}" />
+				<fileset dir="@{sourceDir}">
+					<include name="@{includesPattern}"/>
+				</fileset>
+				<fileset dir="${classes.dir}">
+					<include name="@{includesPattern}"/>
+				</fileset>
 				<manifest>
 					<attribute name="Build-Timestamp" value="${build.date}" />
 					<attribute name="Implementation-Version" value="${version}" />
@@ -442,11 +455,11 @@
 	<target name="export-crux-themes">
 		<delete dir="${work.dir}" failonerror="no" />
 		<mkdir dir="${work.dir}" />
-
 		<copy todir="${work.dir}">
 			<fileset dir="${themes.src.dir}" />
+			<fileset dir="${core.src.dir}"/>
 		</copy>
-		<packageCruxThemesJar sourcedir="${work.dir}" outputfilename="${crux.themes.name}.jar" />
+		<packageCruxThemesJar sourcedir="${work.dir}" includespattern="org/cruxframework/crux/themes/**/*" outputfilename="${crux.themes.name}.jar" />
 	    <delete dir="${work.dir}" failonerror="no" />
     </target>
 
@@ -457,7 +470,7 @@
 			<sourcefolder file="${themes.src.dir}" />
 			<sourcefolder file="${legacy.themes.src.dir}"/>
 		</legacyHandler>
-		<packageCruxThemesJar sourcedir="${work.dir}" outputfilename="${crux.themes.name}-legacy.jar" />
+		<packageCruxThemesJar sourcedir="${work.dir}" includespattern="**/*" outputfilename="${crux.themes.name}-legacy.jar" />
 		<delete dir="${work.dir}" failonerror="no" />
 	</target>
 </project>

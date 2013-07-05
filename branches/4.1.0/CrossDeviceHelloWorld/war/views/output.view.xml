@@ -11,7 +11,7 @@
 	<crux:styledPanel id="outerPanel" height="150px" horizontalAlignment="center" verticalAlignment="middle">
 		<gwt:flowPanel id="grouping">
 			<gwt:label id="helloLabel" text="Olá, Cara!"/>
-			<xdev:button id="backButton" text="Voltar" onSelect="homeController.back"/>
+			<crux:button id="backButton" text="Voltar" onSelect="homeController.back"/>
 		</gwt:flowPanel>
 	</crux:styledPanel>
 	

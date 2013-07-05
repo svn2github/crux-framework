@@ -1,13 +1,11 @@
 <xs:schema 
 xmlns="http://www.cruxframework.org/crux" 
 xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-xmlns:_crossDevice="http://www.cruxframework.org/crux/crossDevice" 
 xmlns:_widgets="http://www.cruxframework.org/crux/widgets" 
 xmlns:_gwt="http://www.cruxframework.org/crux/gwt" 
 attributeFormDefault="unqualified" 
 elementFormDefault="qualified" 
 targetNamespace="http://www.cruxframework.org/crux" >
-<xs:import schemaLocation="crossDevice.xsd" namespace="http://www.cruxframework.org/crux/crossDevice"/>
 <xs:import schemaLocation="widgets.xsd" namespace="http://www.cruxframework.org/crux/widgets"/>
 <xs:import schemaLocation="gwt.xsd" namespace="http://www.cruxframework.org/crux/gwt"/>
 <xs:element name="splashScreen" type="SplashScreen"/>
@@ -37,6 +35,8 @@ targetNamespace="http://www.cruxframework.org/crux" >
 <xs:attribute name="onLoad" type="xs:string"/>
 <xs:attribute name="onActivate" type="xs:string"/>
 <xs:attribute name="onHistoryChanged" type="xs:string"/>
+<xs:attribute name="width" type="xs:string"/>
+<xs:attribute name="height" type="xs:string"/>
 <xs:attribute name="smallViewport" type="xs:string"/>
 <xs:attribute name="largeViewport" type="xs:string"/>
 </xs:complexType>
@@ -74,39 +74,35 @@ targetNamespace="http://www.cruxframework.org/crux" >
 </xs:simpleType>
 <xs:group name="widgets">
 <xs:choice>
-<xs:element ref="_crossDevice:storyboard" />
-<xs:element ref="_crossDevice:promoBanner" />
-<xs:element ref="_crossDevice:selectablePanel" />
-<xs:element ref="_crossDevice:slideshow" />
-<xs:element ref="_crossDevice:button" />
-<xs:element ref="_crossDevice:labeledTextBox" />
-<xs:element ref="_crossDevice:topTollBar" />
-<xs:element ref="_crossDevice:anchor" />
+<xs:element ref="_widgets:promoBanner" />
+<xs:element ref="_widgets:anchor" />
 <xs:element ref="_widgets:rollingTabPanel" />
 <xs:element ref="_widgets:dialogViewContainer" />
 <xs:element ref="_widgets:textArea" />
+<xs:element ref="_widgets:slideshow" />
 <xs:element ref="_widgets:horizontalSwapPanel" />
+<xs:element ref="_widgets:button" />
 <xs:element ref="_widgets:timer" />
 <xs:element ref="_widgets:singleSelect" />
 <xs:element ref="_widgets:grid" />
 <xs:element ref="_widgets:stackMenu" />
 <xs:element ref="_widgets:colorPickerDialog" />
+<xs:element ref="_widgets:topTollBar" />
 <xs:element ref="_widgets:styledPanel" />
 <xs:element ref="_widgets:maskedTextBox" />
+<xs:element ref="_widgets:selectablePanel" />
 <xs:element ref="_widgets:transferList" />
 <xs:element ref="_widgets:scrollBanner" />
 <xs:element ref="_widgets:tabViewContainer" />
 <xs:element ref="_widgets:randomPager" />
-<xs:element ref="_widgets:decoratedPanel" />
+<xs:element ref="_widgets:storyboard" />
 <xs:element ref="_widgets:horizontalSwapViewContainer" />
-<xs:element ref="_widgets:collapsePanel" />
 <xs:element ref="_widgets:sequentialPager" />
 <xs:element ref="_widgets:dataGrid" />
 <xs:element ref="_widgets:swapViewContainer" />
-<xs:element ref="_widgets:titlePanel" />
+<xs:element ref="_widgets:rollingPanel" />
 <xs:element ref="_widgets:filter" />
 <xs:element ref="_widgets:maskedLabel" />
-<xs:element ref="_widgets:rollingPanel" />
 <xs:element ref="_widgets:simpleViewContainer" />
 <xs:element ref="_gwt:datePicker" />
 <xs:element ref="_gwt:nativeHorizontalScrollbar" />
@@ -197,39 +193,35 @@ targetNamespace="http://www.cruxframework.org/crux" >
 </xs:group>
 <xs:group name="widgetsCrossDev">
 <xs:choice>
-<xs:element ref="_crossDevice:storyboard" />
-<xs:element ref="_crossDevice:promoBanner" />
-<xs:element ref="_crossDevice:selectablePanel" />
-<xs:element ref="_crossDevice:slideshow" />
-<xs:element ref="_crossDevice:button" />
-<xs:element ref="_crossDevice:labeledTextBox" />
-<xs:element ref="_crossDevice:topTollBar" />
-<xs:element ref="_crossDevice:anchor" />
+<xs:element ref="_widgets:promoBanner" />
+<xs:element ref="_widgets:anchor" />
 <xs:element ref="_widgets:rollingTabPanel" />
 <xs:element ref="_widgets:dialogViewContainer" />
 <xs:element ref="_widgets:textArea" />
+<xs:element ref="_widgets:slideshow" />
 <xs:element ref="_widgets:horizontalSwapPanel" />
+<xs:element ref="_widgets:button" />
 <xs:element ref="_widgets:timer" />
 <xs:element ref="_widgets:singleSelect" />
 <xs:element ref="_widgets:grid" />
 <xs:element ref="_widgets:stackMenu" />
 <xs:element ref="_widgets:colorPickerDialog" />
+<xs:element ref="_widgets:topTollBar" />
 <xs:element ref="_widgets:styledPanel" />
 <xs:element ref="_widgets:maskedTextBox" />
+<xs:element ref="_widgets:selectablePanel" />
 <xs:element ref="_widgets:transferList" />
 <xs:element ref="_widgets:scrollBanner" />
 <xs:element ref="_widgets:tabViewContainer" />
 <xs:element ref="_widgets:randomPager" />
-<xs:element ref="_widgets:decoratedPanel" />
+<xs:element ref="_widgets:storyboard" />
 <xs:element ref="_widgets:horizontalSwapViewContainer" />
-<xs:element ref="_widgets:collapsePanel" />
 <xs:element ref="_widgets:sequentialPager" />
 <xs:element ref="_widgets:dataGrid" />
 <xs:element ref="_widgets:swapViewContainer" />
-<xs:element ref="_widgets:titlePanel" />
+<xs:element ref="_widgets:rollingPanel" />
 <xs:element ref="_widgets:filter" />
 <xs:element ref="_widgets:maskedLabel" />
-<xs:element ref="_widgets:rollingPanel" />
 <xs:element ref="_widgets:simpleViewContainer" />
 <xs:element ref="_gwt:datePicker" />
 <xs:element ref="_gwt:nativeHorizontalScrollbar" />

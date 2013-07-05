@@ -8,5 +8,4 @@
 	<uri name="http://www.cruxframework.org/crux/gwt" uri="platform:/resource/CrossDeviceHelloWorld/xsd/gwt.xsd"/>
 	<uri name="http://www.cruxframework.org/crux/widgets" uri="platform:/resource/CrossDeviceHelloWorld/xsd/widgets.xsd"/>
 	<uri name="http://www.cruxframework.org/xdevice" uri="platform:/resource/CrossDeviceHelloWorld/xsd/xdevice.xsd"/>
-	<uri name="http://www.cruxframework.org/crux/crossDevice" uri="platform:/resource/CrossDeviceHelloWorld/xsd/crossDevice.xsd"/>
 </catalog>
