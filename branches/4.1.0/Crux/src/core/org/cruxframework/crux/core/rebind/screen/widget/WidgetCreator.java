@@ -56,7 +56,7 @@ import com.google.gwt.dom.client.PartialSupport;
 @TagAttributes({
 	@TagAttribute("width"),
 	@TagAttribute("height"),
-	@TagAttribute(value="styleName", processor=WidgetCreator.ClassProcessor.class, supportsResources=true),
+	@TagAttribute(value="styleName", processor=WidgetCreator.StyleNameProcessor.class, supportsResources=true),
 	@TagAttribute(value="visible", type=Boolean.class),
 	@TagAttribute(value="tooltip", supportsI18N=true, property="title"),
 	@TagAttribute(value="style", processor=WidgetCreator.StyleProcessor.class)
@@ -736,28 +736,58 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		}
 	}
 	
-	/**
-	 * @author Samuel Almeida Cardoso
-	 *
-	 */
-	public static class ClassProcessor extends AttributeProcessor<WidgetCreatorContext>
+	public static class StyleNameProcessor extends AttributeProcessor<WidgetCreatorContext>
 	{
-		public ClassProcessor(WidgetCreator<?> widgetCreator)
+		public StyleNameProcessor(WidgetCreator<?> widgetCreator)
         {
 	        super(widgetCreator);
         }
 
-		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String className)
+		public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String styleName)
 		{
-			String[] classAttributes = className.split(" ");
-			if (classAttributes.length > 1)
+			if(!StringUtils.isEmpty(styleName))
 			{
-				for (int i=0; i<classAttributes.length; i++)
+				String[] classAttributes = styleName.split(" ");
+				if (classAttributes.length > 1)
 				{
-					out.println(context.getWidget()+".addStyleName("+EscapeUtils.quote(classAttributes[i])+");");
+					for (int i=0; i<classAttributes.length; i++)
+					{
+						styleName = classAttributes[i];
+						if (getWidgetCreator().isResourceReference(styleName))
+				        {
+				        	styleName = widgetCreator.getResourceAccessExpression(styleName);
+				        	addStyleName(out, context.getWidget(), styleName, true);
+				        }
+				        else
+				        {
+				        	addStyleName(out, context.getWidget(), EscapeUtils.quote(styleName), true);
+				        }
+					}
+				} 
+				else 
+				{
+					if (getWidgetCreator().isResourceReference(styleName))
+			        {
+			        	styleName = widgetCreator.getResourceAccessExpression(styleName);
+			        	addStyleName(out, context.getWidget(), styleName, false);
+			        }
+			        else
+			        {
+			        	addStyleName(out, context.getWidget(), EscapeUtils.quote(styleName), false);
+			        }
 				}
-			} else {
-				out.println(context.getWidget()+".setStyleName("+EscapeUtils.quote(className)+");");
+			}
+		}
+		
+		private void addStyleName(SourcePrinter out, String widgetName, String valueExpr, boolean add)
+		{
+			if (add)
+			{
+				out.println(widgetName+".setStyleName("+valueExpr+", true);");
+			}
+			else
+			{
+				out.println(widgetName+".setStyleName("+valueExpr+");");
 			}
 		}
 	}
