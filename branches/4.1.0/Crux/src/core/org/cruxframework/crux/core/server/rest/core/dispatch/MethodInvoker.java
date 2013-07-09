@@ -120,7 +120,7 @@ public class MethodInvoker
 			Throwable cause = e.getCause();
 			if (isCheckedException(cause))
 			{
-				throw new ForbiddenException("Can not execute requested service. Checked Excpetion occurred on method: "+method.toString(), cause.getMessage(), cause);
+				throw new ForbiddenException("Can not execute requested service. Checked Exception occurred on method: "+method.toString(), cause.getMessage(), cause);
 			}
 			else
 			{
