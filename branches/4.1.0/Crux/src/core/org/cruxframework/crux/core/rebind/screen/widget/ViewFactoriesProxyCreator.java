@@ -82,21 +82,11 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	    sourceWriter.println("callback = CreateCallback.EMPTY_CALLBACK;");
 	    sourceWriter.println("}");
 	    
-//		if (Environment.isProduction())
-//		{
-			generateViewCreation(sourceWriter, getViews());
-//		}
-//		else
-//		{
-//			generateViewCreation(sourceWriter, getViewsForCurrentScreen());
-//		}
-		
-		sourceWriter.println("}");
+	    generateViewCreation(sourceWriter, getViews());
 
-		if (Environment.isProduction())
-		{
-			generateFragmentedViewFactoryCreation(sourceWriter);
-		}
+	    sourceWriter.println("}");
+
+	    generateFragmentedViewFactoryCreation(sourceWriter);
     }
 
 	/**
