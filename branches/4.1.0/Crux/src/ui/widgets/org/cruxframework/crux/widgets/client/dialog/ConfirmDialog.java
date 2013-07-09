@@ -275,7 +275,7 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	 */
 	public static ConfirmDialog show(String title, String message, OkHandler okHandler, CancelHandler cancelHandler)
 	{
-		return show(title, message, WidgetMsgFactory.getMessages().okLabel(), WidgetMsgFactory.getMessages().okLabel(), okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
+		return show(title, message, WidgetMsgFactory.getMessages().okLabel(), WidgetMsgFactory.getMessages().cancelLabel(), okHandler, cancelHandler, DEFAULT_STYLE_NAME, false);
 	}
 	
 	/**
