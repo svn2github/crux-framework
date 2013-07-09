@@ -57,8 +57,12 @@ public class DialogViewContainer extends SingleViewContainer
 	
 	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable, boolean modal, String width, String height, int left, int top)
 	{
+		return createDialog(viewName, viewId, closeable, modal, width, height, left, top, null);
+	}
+	public static DialogViewContainer createDialog(String viewName, String viewId, boolean closeable, boolean modal, String width, String height, int left, int top, Object parameter)
+	{
 		DialogViewContainer container = new DialogViewContainer(closeable, modal);
-		container.loadView(viewName, viewId, true);
+		container.showView(viewName, viewId, parameter);
 		if (!StringUtils.isEmpty(width) && !StringUtils.isEmpty(height))
 		{
 			container.setSize(width, height);

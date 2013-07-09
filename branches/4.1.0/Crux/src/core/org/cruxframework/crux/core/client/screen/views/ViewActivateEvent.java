@@ -19,11 +19,20 @@ import org.cruxframework.crux.core.client.event.CruxEvent;
 
 public class ViewActivateEvent extends CruxEvent<View> 
 {
+	private final Object parameter;
+
 	/**
 	 * 
 	 */
-	protected ViewActivateEvent(View view, String viewId)
+	protected ViewActivateEvent(View view, String viewId, Object parameter)
 	{
 		super(view, viewId);
+		this.parameter = parameter;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public <T> T getParameterObject()
+	{
+		return (T) parameter;
 	}
 }

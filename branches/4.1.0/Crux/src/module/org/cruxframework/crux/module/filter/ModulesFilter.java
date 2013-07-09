@@ -28,8 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
+import org.cruxframework.crux.core.server.CruxAbstractFilter;
 import org.cruxframework.crux.core.server.CruxBridge;
-import org.cruxframework.crux.core.server.CruxFilter;
 import org.cruxframework.crux.core.utils.StreamUtils;
 import org.cruxframework.crux.module.CruxModuleBridge;
 import org.cruxframework.crux.module.CruxModuleHandler;
@@ -41,10 +41,9 @@ import org.cruxframework.crux.module.CruxModuleHandler;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public class ModulesFilter extends CruxFilter
+public class ModulesFilter extends CruxAbstractFilter
 {
 	private static final Log log = LogFactory.getLog(ModulesFilter.class);
-	
 	protected String modulesUrlPrefix;
 	
 	
@@ -52,7 +51,6 @@ public class ModulesFilter extends CruxFilter
 	public void init(FilterConfig config) throws ServletException
 	{
 		super.init(config);
-		
 		modulesUrlPrefix = config.getInitParameter("modulesUrlPrefix");
 	}
 	

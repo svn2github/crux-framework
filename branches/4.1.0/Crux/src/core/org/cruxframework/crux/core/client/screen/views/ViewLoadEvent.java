@@ -24,7 +24,6 @@ import org.cruxframework.crux.core.client.event.CruxEvent;
  */
 public class ViewLoadEvent extends CruxEvent<View>
 {
-	
 	/**
 	 * Constructor
 	 */

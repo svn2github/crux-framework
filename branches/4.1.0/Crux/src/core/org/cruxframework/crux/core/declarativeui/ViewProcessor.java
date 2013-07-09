@@ -105,7 +105,7 @@ public class ViewProcessor
 	}
 
 	/**
-	 * Extract the widgets metadata from the  from the view page.
+	 * Extract the widgets metadata from the view page.
      *
 	 * @param viewId
 	 * @param viewSource

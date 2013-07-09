@@ -92,8 +92,8 @@ public abstract class ScreenResourcesScanner
 			createPagesMapForModule(modulePages);
 			return modulePages.get(module);
 		}
-	}		
-		
+	}
+	
 	/**
 	 * 
 	 * @param module
@@ -125,6 +125,7 @@ public abstract class ScreenResourcesScanner
 	/**
 	 * 
 	 * @param modulePages
+	 * @param includeInternal
 	 * @return
 	 * @throws ScreenConfigException
 	 */
@@ -147,6 +148,5 @@ public abstract class ScreenResourcesScanner
 		}
 	}
 	
-
 	protected abstract boolean accepts(String urlString);
 }

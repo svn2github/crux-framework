@@ -780,13 +780,14 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 
 	/**
 	 * Mark this view as active
+	 * @param parameter to be passed to activate event
 	 */
-	protected void setActive()
+	protected void setActive(Object parameter)
 	{
 		if (!active)
 		{
 			active = true;
-			ViewActivateEvent event = new ViewActivateEvent(this, this.getId());
+			ViewActivateEvent event = new ViewActivateEvent(this, this.getId(), parameter);
 			for (int i = 0; i < attachHandlers.size(); i++)
 			{
 				ViewActivateHandler handler = attachHandlers.get(i);

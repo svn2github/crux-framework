@@ -174,6 +174,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	        
 	        logger.info("Generating core.xsd file");
 	        generateCoreSchema(libraries, templateLibraries);
+	        generateOfflineSchema();
 	        generateXDeviceSchema(libraries, templateLibraries);
 	        generateViewSchema(libraries, templateLibraries);
 	        
@@ -618,6 +619,41 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 	 * 
 	 * @param libraries
 	 * @param templateLibraries 
+	 */
+	private void generateOfflineSchema()
+	{
+		try
+        {
+	        File coreFile = new File(destDir, "offline.xsd");
+	        if (coreFile.exists())
+	        {
+	        	coreFile.delete();
+	        }
+	        coreFile.createNewFile();
+	        
+	        String targetNS = "http://www.cruxframework.org/offline";
+	        registerNamespaceForCatalog(targetNS, coreFile);
+	        
+	        PrintStream out = new PrintStream(coreFile);
+	        out.println("<xs:schema ");
+	        out.println("xmlns=\"http://www.cruxframework.org/offline\" ");
+	        out.println("targetNamespace=\"" + targetNS + "\" >");
+	        
+	        generateOfflineScreenElement(out);
+	        
+	        out.println("</xs:schema>");
+	        out.close();
+        }
+        catch (Exception e)
+        {
+	        throw new SchemaGeneratorException(e.getMessage(), e);
+        }
+	}
+
+	/**
+	 * 
+	 * @param libraries
+	 * @param templateLibraries 
 	 * @param out
 	 */
 	private void generateCoreSchemasImport(Set<String> libraries, Set<String> templateLibraries, PrintStream out)
@@ -651,6 +687,27 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		generateElementAttributesForAllViewElements(out);
 		out.println("<xs:attribute name=\"smallViewport\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"largeViewport\" type=\"xs:string\"/>");
+		out.println("</xs:complexType>");
+	}
+
+	/**
+	 * 
+	 * @param out
+	 */
+	private void generateOfflineScreenElement(PrintStream out)
+	{
+		out.println("<xs:element name=\"offlineContent\" type=\"OfflineContent\"/>");
+		out.println("<xs:complexType name=\"OfflineContent\" mixed=\"true\">");
+		out.println("<xs:attribute name=\"resourceName\" type=\"xs:string\" use=\"required\"/>");
+		out.println("</xs:complexType>");
+		
+		out.println("<xs:element name=\"offlineScreen\" type=\"OfflineScreen\"/>");
+		out.println("<xs:complexType name=\"OfflineScreen\" mixed=\"true\">");
+		out.println("<xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">");
+		out.println("<xs:element ref=\"offlineContent\" />");
+		out.println("</xs:choice>");
+		out.println("<xs:attribute name=\"moduleName\" type=\"xs:string\" use=\"required\"/>");
+		out.println("<xs:attribute name=\"screenId\" type=\"xs:string\" use=\"required\"/>");
 		out.println("</xs:complexType>");
 	}
 

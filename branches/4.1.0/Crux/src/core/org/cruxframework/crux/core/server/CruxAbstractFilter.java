@@ -15,24 +15,19 @@
  */
 package org.cruxframework.crux.core.server;
 
-import java.io.IOException;
-
 import javax.servlet.Filter;
-import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * Used to save the path to the current HTML page. This information is necessary
- * to generate the client handlers and formatters.
+ * Base class for crux devmode filters.
  * 
  * @author Thiago Bustamante
  */
-public class CruxFilter implements Filter 
+public abstract class CruxAbstractFilter implements Filter 
 {
 	protected boolean production = true;
 	protected FilterConfig config = null;
@@ -45,25 +40,6 @@ public class CruxFilter implements Filter
 	
 	public void destroy() 
 	{
-	}
-
-	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) 
-	throws IOException, ServletException 
-	{
-		if (production)
-		{
-			chain.doFilter(req, resp);
-		}
-		else
-		{
-			String requestedScreen = getRequestedScreen(req);
-			if (requestedScreen != null)
-			{
-				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
-			}
-						
-			chain.doFilter(req, resp);
-		}
 	}
 	
 	/**

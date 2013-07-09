@@ -3,6 +3,4 @@
 	
 	<define-linker name="manifestLinker" class="org.cruxframework.crux.core.rebind.offline.AppCacheLinker"/>
 	<add-linker name="manifestLinker"/>
-	<define-linker name="offlineLinker" class="org.cruxframework.crux.core.rebind.offline.OfflineLinker"/>
-	<add-linker name="offlineLinker"/>
 </module>

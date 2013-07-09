@@ -85,18 +85,18 @@ public class SimpleViewContainer extends SingleViewContainer
 	}
 	
 	@Override
-	public void showView(String viewName, String viewId)
+	public void showView(String viewName, String viewId, Object parameter)
 	{
 	    if (getView() != null)
 	    {
 	    	if (getView().removeFromContainer())
 	    	{
-		    	super.showView(viewName, viewId);
+		    	super.showView(viewName, viewId, parameter);
 	    	}
 	    }
 	    else
 	    {
-	    	super.showView(viewName, viewId);
+	    	super.showView(viewName, viewId, parameter);
 	    }
 	}
 }

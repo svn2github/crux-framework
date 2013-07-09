@@ -44,7 +44,7 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	 */
 	public Set<String> getAllScreenIDs(String module) throws ScreenConfigException
 	{
-		return  new DeclarativeUIScreenResourceScanner().getPages(module);
+		return new DeclarativeUIScreenResourceScanner().getPages(module);
 	}
 
 	/**
@@ -59,11 +59,11 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 			InputStream inputStream = null;
 			URLStreamManager manager = null;
 			
+			screenId = RegexpPatterns.REGEXP_BACKSLASH.matcher(screenId).replaceAll("/").replace(".html", ".crux.xml");
+
 			for (URL webBaseDir: webBaseDirs)
 			{
 				URLResourceHandler resourceHandler = URLResourceHandlersRegistry.getURLResourceHandler(webBaseDir.getProtocol());
-
-				screenId = RegexpPatterns.REGEXP_BACKSLASH.matcher(screenId).replaceAll("/").replace(".html", ".crux.xml");
 				screenURL = resourceHandler.getChildResource(webBaseDir, screenId);
 				manager = new URLStreamManager(screenURL);
 				inputStream = manager.open();
@@ -129,10 +129,12 @@ public class DeclarativeUIScreenResolver implements ScreenResourceResolver
 	public InputStream getScreenResource(String screenId) throws CruxGeneratorException
     {
 		Document screen = getRootView(screenId, null);
+		if (screen == null)
+		{
+			return null;
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ViewProcessor.generateHTML(screenId, screen, out);			
 		return new ByteArrayInputStream(out.toByteArray());
     }
-	
-	
 }

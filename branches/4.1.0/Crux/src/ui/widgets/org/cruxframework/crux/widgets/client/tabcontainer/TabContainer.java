@@ -79,7 +79,7 @@ public class TabContainer extends MultipleViewsContainer
 		{
 			if (render)
 			{
-				renderView(view);
+				renderView(view, null);
 			}
 			return true;
 		}

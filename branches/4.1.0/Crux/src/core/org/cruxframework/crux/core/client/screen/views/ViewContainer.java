@@ -162,7 +162,7 @@ public abstract class ViewContainer extends Composite
 		{
 			if (render)
 			{
-				renderView(view);
+				renderView(view, null);
 			}
 			return true;
 		}
@@ -185,17 +185,28 @@ public abstract class ViewContainer extends Composite
 	 */
 	public void showView(String viewName, String viewId)
 	{
+		showView(viewName, viewId, null);
+	}
+	
+	/**
+     * Render the requested view into the container.
+     * @param viewId View identifier
+	 * @param viewId View name
+	 * @param parameter to be passed to activate event
+	 */
+	public void showView(String viewName, String viewId, Object parameter)
+	{
 		View view = getView(viewId);
 		if (view != null)
 		{
 			if (!view.isActive())
 			{
-				renderView(view);
+				renderView(view, parameter);
 			}
 		}
 		else
 		{
-			loadView(viewName, viewId, true);
+			loadAndRenderView(viewName, viewId, parameter);
 		}
 	}
 
@@ -293,6 +304,36 @@ public abstract class ViewContainer extends Composite
 		}
 	}
 	
+	protected void loadAndRenderView(final String viewName, final String viewId, final Object parameter)
+	{
+		try
+		{
+			if (LogConfiguration.loggingIsEnabled())
+			{
+				logger.info(Crux.getMessages().viewContainerCreatingView(viewId));
+			}
+			createView(viewName, viewId, new CreateCallback()
+			{
+				@Override
+				public void onViewCreated(View view)
+				{
+					if (add(view))
+					{
+						renderView(view, parameter);
+					}
+					else
+					{
+						Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
+					}
+				}
+			});
+		}
+		catch (InterfaceConfigException e)
+		{
+			Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId), e);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
     protected <T extends Widget> T getMainWidget()
 	{
@@ -319,8 +360,9 @@ public abstract class ViewContainer extends Composite
 	 * This method must be called by subclasses when any of your views is rendered.
 	 * @param view
 	 * @param containerPanel
+	 * @param parameter
 	 */
-	protected void activate(final View view, Panel containerPanel)
+	protected void activate(final View view, Panel containerPanel, final Object parameter)
 	{
 		if (!view.isLoaded())
 		{
@@ -331,7 +373,7 @@ public abstract class ViewContainer extends Composite
 			@Override
 			public void onRendered()
 			{
-				view.setActive();
+				view.setActive(parameter);
 			}
 		});
 		ViewHandlers.ensureViewContainerHandlers(this);
@@ -404,12 +446,13 @@ public abstract class ViewContainer extends Composite
     /**
      * Render the view into the container
      * @param view
+     * @param parameter
      */
-    protected void renderView(View view)
+    protected void renderView(View view, Object parameter)
     {
 		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
 		Panel containerPanel = getContainerPanel(view);
-		activate(view, containerPanel);
+		activate(view, containerPanel, parameter);
 		String title = view.getTitle();
 		if (!StringUtils.isEmpty(title))
 		{

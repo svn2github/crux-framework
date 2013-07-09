@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.offline;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +26,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.rebind.screen.OfflineScreen;
+import org.cruxframework.crux.core.rebind.screen.ScreenConfigException;
+import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
+import org.cruxframework.crux.core.server.CruxBridge;
+
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -32,15 +39,16 @@ import com.google.gwt.core.ext.linker.AbstractLinker;
 import com.google.gwt.core.ext.linker.Artifact;
 import com.google.gwt.core.ext.linker.ArtifactSet;
 import com.google.gwt.core.ext.linker.CompilationResult;
-import com.google.gwt.core.ext.linker.ConfigurationProperty;
 import com.google.gwt.core.ext.linker.EmittedArtifact;
 import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
 import com.google.gwt.core.ext.linker.LinkerOrder;
 import com.google.gwt.core.ext.linker.Shardable;
+import com.google.gwt.core.ext.linker.impl.PermutationsUtil;
+import com.google.gwt.util.tools.Utility;
 
 /**
- * A GWT linker that produces an offline.appcache file describing what to cache in
- * the application cache. It produces one appcache file for each permutation.
+ * A GWT linker that produces an offline.appcache file describing what to cache
+ * in the application cache. It produces one appcache file for each permutation.
  * 
  * @author Thiago da Rosa de Bustamante
  */
@@ -52,6 +60,7 @@ public class AppCacheLinker extends AbstractLinker
 	private static Set<String> allArtifacts = Collections.synchronizedSet(new HashSet<String>());
 	private static Map<String, Set<String>> generatedManifestResources = Collections.synchronizedMap(new HashMap<String, Set<String>>());
 	private List<String> acceptedFileExtensions = Arrays.asList(".html", ".js", ".css", ".png", ".jpg", ".gif", ".ico");
+	private PermutationsUtil permutationsUtil;
 
 	@Override
 	public String getDescription()
@@ -66,40 +75,127 @@ public class AppCacheLinker extends AbstractLinker
 
 		if (onePermutation)
 		{
-			analyzePermutationArtifacts(artifacts);
+			analyzePermutationArtifacts(artifactset);
 		}
 		else
 		{
-			emitPermutationsAppCache(logger, context, artifacts, artifactset);
-			emitMainAppCache(logger, context, artifacts, artifactset);
+			try
+			{
+				Set<OfflineScreen> offlinePages = OfflineScreens.getOfflinePages(context.getModuleName());
+				if (offlinePages != null)
+				{
+					for (OfflineScreen offlineScreen : offlinePages)
+					{
+						emitOfflineArtifacts(logger, context, artifactset, offlineScreen);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				logger.log(TreeLogger.ERROR, "Unable to create offline files", e);
+				throw new UnableToCompleteException();
+			}
 		}
-		
+
 		return artifactset;
 	}
 
-	private void analyzePermutationArtifacts(ArtifactSet artifacts)
-    {
-	    String permutationId = getPermutationId(artifacts);
+	private void emitOfflineArtifacts(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, OfflineScreen offlineScreen) throws UnableToCompleteException
+	{
+		String screenID = getTargetScreenId(context, logger, offlineScreen.getRefScreen());
+		emitMainAppCache(logger, context, artifacts, screenID);
+		emitPermutationsAppCache(logger, context, artifacts, screenID);
+		emitOfflinePage(logger, context, artifacts, offlineScreen);
+	}
 
-	    SortedSet<String> hashSet = new TreeSet<String>();
+	private void emitOfflinePage(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, OfflineScreen offlineScreen) throws UnableToCompleteException
+	{
+		permutationsUtil = new PermutationsUtil();
+		permutationsUtil.setupPermutationsMap(artifacts);
+		StringBuffer buffer = readFileToStringBuffer(getOfflinePageTemplate(logger, context), logger);
+	    int startPos = buffer.indexOf("// __OFFLINE_SELECTION_END__");
+	    if (startPos != -1)
+	    {
+	    	String ss = generateSelectionScript(logger, context, artifacts);
+	    	buffer.insert(startPos, ss);
+	    }
+		artifacts.add(emitString(logger, buffer.toString(), context.getModuleName() + offlineScreen.getId() + ".html", System.currentTimeMillis()));
+	}
+
+	private String generateSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
+	{
+		String selectionScriptText;
+		StringBuffer buffer = readFileToStringBuffer(getSelectionScriptTemplate(logger, context), logger);
+		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts, null);
+		//selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
+		return selectionScriptText;
+	}
+
+	protected StringBuffer readFileToStringBuffer(String filename, TreeLogger logger) throws UnableToCompleteException
+	{
+		StringBuffer buffer;
+		try
+		{
+			buffer = new StringBuffer(Utility.getFileFromClassPath(filename));
+		}
+		catch (IOException e)
+		{
+			logger.log(TreeLogger.ERROR, "Unable to read file: " + filename, e);
+			throw new UnableToCompleteException();
+		}
+		return buffer;
+	}
+
+	protected static void replaceAll(StringBuffer buf, String search, String replace)
+	{
+		int len = search.length();
+		for (int pos = buf.indexOf(search); pos >= 0; pos = buf.indexOf(search, pos + 1))
+		{
+			buf.replace(pos, pos + len, replace);
+		}
+	}
+
+	private String fillSelectionScriptTemplate(StringBuffer selectionScript, TreeLogger logger, LinkerContext context, ArtifactSet artifacts, Object object) throws UnableToCompleteException
+	{
+		permutationsUtil.addPermutationsJs(selectionScript, logger, context);
+		replaceAll(selectionScript, "__MODULE_FUNC__", context.getModuleFunctionName());
+		replaceAll(selectionScript, "__MODULE_NAME__", context.getModuleName());
+		return selectionScript.toString();
+	}
+
+	private String getSelectionScriptTemplate(TreeLogger logger, LinkerContext context)
+	{
+	    return "org/cruxframework/crux/core/rebind/offline/OfflineSelectionTemplate.js";
+	}
+
+	private String getOfflinePageTemplate(TreeLogger logger, LinkerContext context)
+	{
+	    return "org/cruxframework/crux/core/rebind/offline/OfflinePage.html";
+	}
+
+	private void analyzePermutationArtifacts(ArtifactSet artifacts)
+	{
+		String permutationId = getPermutationId(artifacts);
+
+		SortedSet<String> hashSet = new TreeSet<String>();
 		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
 		{
 			if (emitted.getVisibility() == Visibility.Private)
 			{
 				continue;
 			}
-    		String pathName = emitted.getPartialPath();
-    		if (acceptCachedResource(pathName))
-    		{
-    			hashSet.add(pathName);
-    			allArtifacts.add(pathName);
-    		}
-	    }
-	    generatedManifestResources.put(permutationId, hashSet);
-    }
+			String pathName = emitted.getPartialPath();
+			if (acceptCachedResource(pathName))
+			{
+				hashSet.add(pathName);
+				allArtifacts.add(pathName);
+			}
+		}
+		generatedManifestResources.put(permutationId, hashSet);
+	}
 
-    private void emitPermutationsAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, ArtifactSet artifactset) throws UnableToCompleteException
-    {
+	private void emitPermutationsAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String startScreenId) throws UnableToCompleteException
+	{
 		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
 		{
 			if (emitted.getVisibility() == Visibility.Private)
@@ -115,41 +211,40 @@ public class AppCacheLinker extends AbstractLinker
 					cachedArtifacts.add(pathName);
 				}
 			}
-	    }
+		}
 
-	    Set<String> keySet = generatedManifestResources.keySet();
-	    for (String permutationId : keySet)
-	    {
-	    	Set<String> set = generatedManifestResources.get(permutationId);
-	    	set.addAll(cachedArtifacts);
-	    	artifactset.add(createCacheManifest(context, logger, set, permutationId));
-	    }
-    }
+		Set<String> keySet = generatedManifestResources.keySet();
+		for (String permutationId : keySet)
+		{
+			Set<String> set = generatedManifestResources.get(permutationId);
+			set.addAll(cachedArtifacts);
+			artifacts.add(createCacheManifest(context, logger, set, permutationId));
+			artifacts.add(createCacheManifestLoader(context, logger, permutationId, startScreenId));
+		}
+	}
 
-	private void emitMainAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, ArtifactSet artifactset) throws UnableToCompleteException
-    {
-	    String moduleName = context.getModuleName();
-		String initialPage = getInitialPage(context);
-		
+	private void emitMainAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String startScreenId) throws UnableToCompleteException
+	{
+		String moduleName = context.getModuleName();
 
 		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
-		builder.append("# Build Time ["+getCurrentTimeTruncatingMiliseconds()+"]\n");
+		builder.append("# Build Time [" + getCurrentTimeTruncatingMiliseconds() + "]\n");
 		builder.append("\nCACHE:\n");
 
-		if (initialPage != null)
+		if (startScreenId != null)
 		{
-			builder.append(initialPage+"\n");
+			builder.append(startScreenId + "\n");
 		}
-		
+
 		for (String fn : cachedArtifacts)
 		{
-			builder.append("/"+moduleName+"/"+fn+"\n");
+			builder.append("/" + moduleName + "/" + fn + "\n");
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n");
-		EmittedArtifact manifest = emitString(logger, builder.toString(), getManifestName(context));
-		artifactset.add(manifest);
-    }
+		EmittedArtifact manifest = emitString(logger, builder.toString(), getManifestName());
+		artifacts.add(manifest);
+	}
 
 	private boolean acceptCachedResource(String filename)
 	{
@@ -172,55 +267,58 @@ public class AppCacheLinker extends AbstractLinker
 		String moduleName = context.getModuleName();
 
 		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
-		builder.append("# Build Time ["+getCurrentTimeTruncatingMiliseconds()+"]\n");
+		builder.append("# Build Time [" + getCurrentTimeTruncatingMiliseconds() + "]\n");
 		builder.append("\nCACHE:\n");
 
 		for (String fn : artifacts)
 		{
-			builder.append("/"+moduleName+"/"+fn+"\n");
+			builder.append("/" + moduleName + "/" + fn + "\n");
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
 
 		return emitString(logger, builder.toString(), getManifestName(permutationId));
 	}
-	
+
+	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationId, String startScreenId) throws UnableToCompleteException
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("<html manifest=\"" + getManifestName(permutationId) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
+		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden\">");
+		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"overflow:hidden;height:100%;width:100%\" height=\"100%\" width=\"100%\"></iframe>");
+		builder.append("</body></html>");
+
+		return emitString(logger, builder.toString(), getManifestLoaderName(permutationId));
+	}
+
+	private String getTargetScreenId(LinkerContext context, TreeLogger logger, String screenID) throws UnableToCompleteException
+	{
+		if (StringUtils.isEmpty(screenID))
+		{
+			screenID = CruxBridge.getInstance().getLastPageRequested();
+			try
+			{
+				screenID = ScreenFactory.getInstance().getScreen(screenID, null).getRelativeId();
+			}
+			catch (ScreenConfigException e)
+			{
+				logger.log(TreeLogger.ERROR, e.getMessage(), e);
+				throw new UnableToCompleteException();
+			}
+		}
+		return screenID;
+	}
+
 	private long getCurrentTimeTruncatingMiliseconds()
-    {
-	    long currentTime = (System.currentTimeMillis()/1000) * 1000;
+	{
+		long currentTime = (System.currentTimeMillis() / 1000) * 1000;
 		return currentTime;
-    }
+	}
 
-	private String getInitialPage(LinkerContext context)
-    {
-	    for (ConfigurationProperty property : context.getConfigurationProperties())
-        {
-			if (property.getName().equals("crux.appcache.initialpage"))
-			{
-				List<String> values = property.getValues();
-				return values.isEmpty() ? null : values.get(0);
-			}
-        }
-	    return null;
-    }
-
-	private String getManifestName(LinkerContext context)
-    {
-		String name = "offline.appcache";
-	    for (ConfigurationProperty property : context.getConfigurationProperties())
-        {
-			if (property.getName().equals("crux.appcache.manifestName"))
-			{
-				List<String> values = property.getValues();
-				if (!values.isEmpty())
-				{
-					name = values.get(0);
-					break;
-				}
-			}
-        }
-	    return name;
-    }
+	private String getManifestName()
+	{
+		return "offline.appcache";
+	}
 
 	static String getPermutationId(ArtifactSet artifacts)
 	{
@@ -230,9 +328,15 @@ public class AppCacheLinker extends AbstractLinker
 		}
 		return null;
 	}
-	
+
 	static String getManifestName(String permutationId)
-    {
-	    return permutationId+".appcache";
-    }
+	{
+		return permutationId + ".appcache";
+	}
+
+	static String getManifestLoaderName(String permutationId)
+	{
+		return "_offlineLoader_" + permutationId + ".html";
+	}
+
 }

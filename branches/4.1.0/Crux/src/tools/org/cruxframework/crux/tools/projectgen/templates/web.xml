@@ -24,6 +24,16 @@
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+	    <servlet-name>restServiceServlet</servlet-name>
+	    <servlet-class>org.cruxframework.crux.core.server.rest.servlet.RestServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>restServiceServlet</servlet-name>
+	    <url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
 	<!--antReplacementBlockBegin-->
 	<!--
 	===========================================================================
@@ -37,15 +47,6 @@
         <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
     </listener>
 	<filter>
-		<display-name>CruxFilter</display-name>
-		<filter-name>CruxFilter</filter-name>
-		<filter-class>org.cruxframework.crux.core.server.CruxFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CruxFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-	<filter>
 		<display-name>DeclarativeUIFilter</display-name>
 		<filter-name>DeclarativeUIFilter</filter-name>
 		<filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
@@ -54,6 +55,14 @@
 		<filter-name>DeclarativeUIFilter</filter-name>
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>
+    <servlet>
+        <servlet-name>testViewServlet</servlet-name>
+        <servlet-class>org.cruxframework.crux.core.server.development.ViewTester</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>testViewServlet</servlet-name>
+        <url-pattern>/viewTester/*</url-pattern>
+    </servlet-mapping>
 	<!--antReplacementBlockEnd-->
 
 </web-app>

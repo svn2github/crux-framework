@@ -92,9 +92,20 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	 */
 	public void showView(String viewName, final String viewId, final Direction direction)
 	{
+		showView(viewName, viewId, direction, null);
+	}
+	
+	/**
+	 * 
+	 * @param viewName
+	 * @param viewId
+	 * @param direction
+	 */
+	public void showView(String viewName, final String viewId, final Direction direction, final Object parameter)
+	{
 		if (views.containsKey(viewId))
 		{
-			renderView(getView(viewId), direction);
+			renderView(getView(viewId), direction, parameter);
 		}
 		else
 		{
@@ -105,7 +116,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 				{
 					if (add(view, false))
 					{
-						renderView(view, direction);
+						renderView(view, direction, parameter);
 					}
 					else
 					{
@@ -120,14 +131,15 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	 * 
 	 * @param view
 	 * @param direction
+	 * @param parameter
 	 */
-	protected void renderView(View view, Direction direction)
+	protected void renderView(View view, Direction direction, Object parameter)
 	{
 		if (activeView == null || !activeView.getId().equals(view.getId()))
 		{
 			final View previous = activeView;
 			final View next = view;
-			super.renderView(view);
+			super.renderView(view, parameter);
 			if (previous == null || direction == null || !animationEnabled)
 			{
 				swapPanel.setCurrentWidget(active);
@@ -158,15 +170,15 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
     }
 
 	@Override
-	protected void renderView(View view)
+	protected void renderView(View view, Object parameter)
 	{
-		renderView(view, Direction.FORWARD);
+		renderView(view, Direction.FORWARD, parameter);
 	}
 
 	@Override
-	protected void activate(View view, Panel containerPanel)
+	protected void activate(View view, Panel containerPanel, Object parameter)
 	{
-		super.activate(view, containerPanel);
+		super.activate(view, containerPanel, parameter);
 		swapPanelVariables();
 	}
 

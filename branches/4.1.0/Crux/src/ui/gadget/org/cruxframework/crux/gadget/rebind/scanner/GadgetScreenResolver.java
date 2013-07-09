@@ -29,10 +29,9 @@ public class GadgetScreenResolver extends DeclarativeUIScreenResolver
 	/**
 	 * 
 	 */
+	@Override
 	public Set<String> getAllScreenIDs(String module) throws ScreenConfigException
 	{
 		return new GadgetScreenResourceScanner().getPages(module);
 	}
-	
-	
 }

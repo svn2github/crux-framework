@@ -26,7 +26,8 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenResourceResolverInitializer;
-import org.cruxframework.crux.core.server.CruxFilter;
+import org.cruxframework.crux.core.server.CruxAbstractFilter;
+import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.utils.StreamUtils;
 
 
@@ -36,7 +37,7 @@ import org.cruxframework.crux.core.utils.StreamUtils;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public class DeclarativeUIFilter extends CruxFilter
+public class DeclarativeUIFilter extends CruxAbstractFilter
 {
 	private static final Log log = LogFactory.getLog(DeclarativeUIFilter.class);
 
@@ -52,6 +53,7 @@ public class DeclarativeUIFilter extends CruxFilter
 			String requestedScreen = getRequestedScreen(req);
 			if (requestedScreen != null)
 			{
+				CruxBridge.getInstance().registerLastPageRequested(requestedScreen);
 				try
 				{
 					String screenId = requestedScreen.replace(".html", ".crux.xml");

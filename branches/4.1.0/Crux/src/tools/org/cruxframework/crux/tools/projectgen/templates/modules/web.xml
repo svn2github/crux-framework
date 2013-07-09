@@ -24,6 +24,16 @@
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+	    <servlet-name>restServiceServlet</servlet-name>
+	    <servlet-class>org.cruxframework.crux.core.server.rest.servlet.RestServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>restServiceServlet</servlet-name>
+	    <url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
 	<!--antReplacementBlockBegin-->
 	<!--
 	===========================================================================
@@ -45,6 +55,14 @@
 		<filter-name>ModulesDeclarativeUIFilter</filter-name>
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>
+    <servlet>
+        <servlet-name>testViewServlet</servlet-name>
+        <servlet-class>org.cruxframework.crux.module.development.ModulesViewTester</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>testViewServlet</servlet-name>
+        <url-pattern>/viewTester/*</url-pattern>
+    </servlet-mapping>
 	<!--antReplacementBlockEnd-->
 
 </web-app>
