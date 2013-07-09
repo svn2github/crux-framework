@@ -54,6 +54,8 @@ function __MODULE_FUNC__() {
       // intentionally silent on property failure
       return;
     }
+    
+    window.location.replace('offlineLoader_'+initialHtml);
 }
 
 __MODULE_FUNC__();

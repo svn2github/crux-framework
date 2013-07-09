@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.rebind.screen;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.cruxframework.crux.core.rebind.module.Module;
+import org.cruxframework.crux.core.rebind.module.Modules;
 import org.cruxframework.crux.core.utils.XMLUtils;
 import org.cruxframework.crux.core.utils.XMLUtils.XMLException;
 import org.cruxframework.crux.scannotation.URLStreamManager;
@@ -69,12 +71,20 @@ public class OfflineScreenFactory
         }
 	}
 
-	private OfflineScreen parseDocument(String id, Document screen)
+	private OfflineScreen parseDocument(String id, Document screen) throws ScreenConfigException
     {
 		Element screenElement = screen.getDocumentElement();
 		String moduleName = screenElement.getAttribute("moduleName");
 		String screenId = screenElement.getAttribute("screenId");
-		OfflineScreen result = new OfflineScreen(id, moduleName, screenId);
+
+		Module mod = Modules.getInstance().getModule(moduleName);
+		if (mod == null)
+		{
+			throw new ScreenConfigException("No module declared on screen ["+id+"].");
+		}
+		String relativeScreenId = Modules.getInstance().getRelativeScreenId(mod, id).replace(".offline.xml", ".html");
+		
+		OfflineScreen result = new OfflineScreen(relativeScreenId, moduleName, screenId);
 
 		NodeList nodes = screenElement.getChildNodes();
 		for (int i=0; i < nodes.getLength(); i++)

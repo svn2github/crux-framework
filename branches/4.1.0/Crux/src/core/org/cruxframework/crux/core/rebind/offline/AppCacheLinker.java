@@ -119,7 +119,8 @@ public class AppCacheLinker extends AbstractLinker
 	    	String ss = generateSelectionScript(logger, context, artifacts);
 	    	buffer.insert(startPos, ss);
 	    }
-		artifacts.add(emitString(logger, buffer.toString(), context.getModuleName() + offlineScreen.getId() + ".html", System.currentTimeMillis()));
+		replaceAll(buffer, "__MANIFEST_NAME__", getManifestName());
+		artifacts.add(emitString(logger, buffer.toString(), offlineScreen.getId(), System.currentTimeMillis()));
 	}
 
 	private String generateSelectionScript(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
@@ -175,7 +176,7 @@ public class AppCacheLinker extends AbstractLinker
 
 	private void analyzePermutationArtifacts(ArtifactSet artifacts)
 	{
-		String permutationId = getPermutationId(artifacts);
+		String permutationName = getPermutationName(artifacts);
 
 		SortedSet<String> hashSet = new TreeSet<String>();
 		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
@@ -191,7 +192,7 @@ public class AppCacheLinker extends AbstractLinker
 				allArtifacts.add(pathName);
 			}
 		}
-		generatedManifestResources.put(permutationId, hashSet);
+		generatedManifestResources.put(permutationName, hashSet);
 	}
 
 	private void emitPermutationsAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String startScreenId) throws UnableToCompleteException
@@ -214,12 +215,12 @@ public class AppCacheLinker extends AbstractLinker
 		}
 
 		Set<String> keySet = generatedManifestResources.keySet();
-		for (String permutationId : keySet)
+		for (String permutationName : keySet)
 		{
-			Set<String> set = generatedManifestResources.get(permutationId);
+			Set<String> set = generatedManifestResources.get(permutationName);
 			set.addAll(cachedArtifacts);
-			artifacts.add(createCacheManifest(context, logger, set, permutationId));
-			artifacts.add(createCacheManifestLoader(context, logger, permutationId, startScreenId));
+			artifacts.add(createCacheManifest(context, logger, set, permutationName));
+			artifacts.add(createCacheManifestLoader(context, logger, permutationName, startScreenId));
 		}
 	}
 
@@ -240,6 +241,13 @@ public class AppCacheLinker extends AbstractLinker
 		{
 			builder.append("/" + moduleName + "/" + fn + "\n");
 		}
+		
+		Set<String> keySet = generatedManifestResources.keySet();
+		for (String permutationName : keySet)
+		{
+			builder.append("/" + moduleName + "/" + getManifestLoaderName(permutationName) + "\n");
+		}
+		
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n");
 		EmittedArtifact manifest = emitString(logger, builder.toString(), getManifestName());
@@ -262,7 +270,7 @@ public class AppCacheLinker extends AbstractLinker
 		return false;
 	}
 
-	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationId) throws UnableToCompleteException
+	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationName) throws UnableToCompleteException
 	{
 		String moduleName = context.getModuleName();
 
@@ -277,18 +285,18 @@ public class AppCacheLinker extends AbstractLinker
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
 
-		return emitString(logger, builder.toString(), getManifestName(permutationId));
+		return emitString(logger, builder.toString(), getManifestName(permutationName));
 	}
 
-	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationId, String startScreenId) throws UnableToCompleteException
+	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationName, String startScreenId) throws UnableToCompleteException
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("<html manifest=\"" + getManifestName(permutationId) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
+		builder.append("<html manifest=\"" + getManifestName(permutationName) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
 		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden\">");
 		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"overflow:hidden;height:100%;width:100%\" height=\"100%\" width=\"100%\"></iframe>");
 		builder.append("</body></html>");
 
-		return emitString(logger, builder.toString(), getManifestLoaderName(permutationId));
+		return emitString(logger, builder.toString(), getManifestLoaderName(permutationName));
 	}
 
 	private String getTargetScreenId(LinkerContext context, TreeLogger logger, String screenID) throws UnableToCompleteException
@@ -320,23 +328,23 @@ public class AppCacheLinker extends AbstractLinker
 		return "offline.appcache";
 	}
 
-	static String getPermutationId(ArtifactSet artifacts)
+	private String getPermutationName(ArtifactSet artifacts)
 	{
 		for (CompilationResult result : artifacts.find(CompilationResult.class))
 		{
-			return Integer.toString(result.getPermutationId());
+			return result.getStrongName();
 		}
 		return null;
 	}
 
-	static String getManifestName(String permutationId)
+	private String getManifestName(String permutationName)
 	{
-		return permutationId + ".appcache";
+		return permutationName + ".appcache";
 	}
 
-	static String getManifestLoaderName(String permutationId)
+	private String getManifestLoaderName(String permutationName)
 	{
-		return "_offlineLoader_" + permutationId + ".html";
+		return "offlineLoader_" + permutationName + ".cache.html";
 	}
 
 }
