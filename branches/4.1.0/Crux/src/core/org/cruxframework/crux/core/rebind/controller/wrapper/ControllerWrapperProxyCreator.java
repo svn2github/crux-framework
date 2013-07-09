@@ -97,7 +97,7 @@ public class ControllerWrapperProxyCreator extends AbstractViewBindableProxyCrea
 		String classSourceName = returnType.getParameterizedQualifiedSourceName();
 		sourceWriter.println("public "+classSourceName+" " + methodName+"(){");
 		sourceWriter.println(View.class.getCanonicalName()+" __view = "+View.class.getCanonicalName()+".getView(this.__view);");
-		sourceWriter.println("assert(__view != null):"+EscapeUtils.quote("View was not loaded. Ensure that bindCruxView method was called.")+";");
+		sourceWriter.println("assert(__view != null):"+EscapeUtils.quote("View was not loaded. Ensure that desired view is loaded by the application (through useView declaration).")+";");
 		sourceWriter.println("return __view.getController("+EscapeUtils.quote(controller.value())+");");
 		sourceWriter.println("}");
     }
