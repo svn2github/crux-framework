@@ -21,6 +21,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
 
@@ -43,4 +44,5 @@ public interface Storyboard extends DeviceAdaptive, IndexedPanel, HasSelectionHa
 	void setSmallDeviceItemHeight(String height);
 	String getLargeDeviceItemHeight();
 	void setLargeDeviceItemHeight(String height);
+	void setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant value);
 }

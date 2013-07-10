@@ -14,6 +14,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -187,5 +188,11 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	@Override
     public void setLargeDeviceItemHeight(String height)
     {
+    }
+
+	@Override
+    public void setHorizontalAlignment(HorizontalAlignmentConstant value)
+    {
+		//DO Nothing
     }
 }

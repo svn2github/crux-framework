@@ -3,7 +3,9 @@ package org.cruxframework.crux.widgets.client.storyboard;
 import org.cruxframework.crux.core.client.controller.Controller;
 
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 @Controller("storyboardLargeController")
 public class StoryboardLargeController extends StoryboardSmallController
@@ -14,6 +16,7 @@ public class StoryboardLargeController extends StoryboardSmallController
 		super.init();
 		this.itemHeight = "200px";
 		this.itemWidth = "200px";
+		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     }
 
 	@Override
@@ -57,5 +60,11 @@ public class StoryboardLargeController extends StoryboardSmallController
     public void setLargeDeviceItemHeight(String height)
     {
 		this.itemHeight = height;
-    }	
+    }
+	
+	@Override
+    public void setHorizontalAlignment(HorizontalAlignmentConstant value)
+    {
+    	storyboard.getElement().getStyle().setProperty("textAlign", value.getTextAlignString());
+    }
 }
