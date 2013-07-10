@@ -688,13 +688,25 @@ public class JClassUtils
 	
 	public static boolean isValidGetterMethod(JMethod method)
 	{
-        return (method.isPublic() && method.getName().startsWith("get") && method.getName().length() >3 
-        		&& method.getParameters().length == 0) && !method.getName().equals("getClass");
+        return ((method.isPublic() && method.getName().startsWith("get") && method.getName().length() >3 
+        		&& method.getParameters().length == 0) && !method.getName().equals("getClass") 
+        		|| (method.isPublic() && method.getName().startsWith("is") && method.getName().length() >2 
+                		&& method.getParameters().length == 0) 
+                		&& (method.getReturnType() == JPrimitiveType.BOOLEAN || Boolean.class.getCanonicalName().equals(method.getReturnType().getQualifiedSourceName()))
+        		);
 	}
 	
 	public static String getPropertyForGetterOrSetterMethod(JMethod method)
     {
-		String name = method.getName().substring(3);
+		String name = method.getName();
+		if (name.startsWith("get") || name.startsWith("set"))
+		{
+			name = name.substring(3);
+		}
+		else if (name.startsWith("is"))
+		{
+			name = name.substring(2);
+		}
 		name = Character.toLowerCase(name.charAt(0))+ name.substring(1);
 		
 		return name;
