@@ -15,9 +15,6 @@
  */
 package org.cruxframework.crux.core.utils;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -223,26 +220,7 @@ public class ClassUtils
 		}
 		return false;
 	}
-	
-	/**
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static PropertyDescriptor[] extractBeanProperties(Class<?> type)
-	{
-        try
-        {
-        	BeanInfo beanInfo = Introspector.getBeanInfo(type);
-	        PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
-	        return pds;
-        }
-        catch (Exception e)
-        {
-        	throw new RuntimeException("Unable to determine properties for bean: " + type.getCanonicalName(), e);
-        }
-	}
-	
+		
 	/**
 	 *  workaround for JVM BUG - http://codereligion.com/post/28703017143/beware-of-java-beans-introspector
 	 * @author Thiago da Rosa de Bustamante
@@ -283,7 +261,81 @@ public class ClassUtils
         	return writeMethod;
         }
 	}
-    
+
+	public static boolean isValidSetterMethod(Method method)
+	{
+        return (Modifier.isPublic(method.getModifiers()) && method.getName().startsWith("set") && method.getName().length() >3 && method.getParameterTypes().length == 1);
+	}
+
+	/**
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static boolean isValidGetterMethod(Method method)
+	{
+        return Modifier.isPublic(method.getModifiers()) &&
+               ((method.getName().startsWith("get") && method.getName().length() >3 
+        		&& method.getParameterTypes().length == 0) && !method.getName().equals("getClass") 
+        		|| (method.getName().startsWith("is") && method.getName().length() >2 
+                		&& method.getParameterTypes().length == 0) 
+                		&& (method.getReturnType().equals(Boolean.TYPE) || method.getReturnType().equals(Boolean.class))
+        		);
+	}
+	
+	public static List<Method> getSetterMethods(Class<?> objectType)
+    {
+		List<Method> result = new ArrayList<Method>();
+	    Method[] methods = objectType.getMethods();
+	    
+	    for (Method method : methods)
+        {
+	        if (isValidSetterMethod(method))
+	        {
+	        	result.add(method);
+	        }
+        }
+	    
+	    return result;
+    }
+
+	/**
+	 * 
+	 * @param objectType
+	 * @return
+	 */
+	public static List<Method> getGetterMethods(Class<?> objectType)
+    {
+		List<Method> result = new ArrayList<Method>();
+	    Method[] methods = objectType.getMethods();
+	    
+	    for (Method method : methods)
+        {
+	        if (isValidGetterMethod(method))
+	        {
+	        	result.add(method);
+	        }
+        }
+	    
+	    return result;
+    }
+	
+	public static String getPropertyForGetterOrSetterMethod(Method method)
+    {
+		String name = method.getName();
+		if (name.startsWith("get") || name.startsWith("set"))
+		{
+			name = name.substring(3);
+		}
+		else if (name.startsWith("is"))
+		{
+			name = name.substring(2);
+		}
+		name = Character.toLowerCase(name.charAt(0))+ name.substring(1);
+		
+		return name;
+    }
+	
 	/**
 	 *  workaround for JVM BUG - http://codereligion.com/post/28703017143/beware-of-java-beans-introspector
 	 * @param type
@@ -292,30 +344,34 @@ public class ClassUtils
 	public static PropertyInfo[] extractBeanPropertiesInfo(Type type)
 	{
 		Class<?> rawType = getRawType(type);
-		PropertyDescriptor[] propertyDescriptors = extractBeanProperties(rawType);
-		
 		List<PropertyInfo> result = new ArrayList<PropertyInfo>();
-		if (propertyDescriptors != null)
+
+		List<Method> getterMethods = getGetterMethods(rawType);
+		List<Method> setterMethods = getSetterMethods(rawType);
+		
+		try
 		{
-			try
+			for (Method setterMethod : setterMethods)
 			{
-				for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
+				String setterProperty = getPropertyForGetterOrSetterMethod(setterMethod);
+				for (Method getterMethod : getterMethods)
 				{
-					if (propertyDescriptor.getReadMethod() != null && propertyDescriptor.getWriteMethod() != null)
+					String getterProperty = getPropertyForGetterOrSetterMethod(getterMethod);
+					if (getterProperty.equals(setterProperty))
 					{
-						Method readMethod = propertyDescriptor.getReadMethod();
-						Type returnType = readMethod.getGenericReturnType();
+						Type returnType = getterMethod.getGenericReturnType();
 						Type propertyType = getPropertyType(returnType, type, rawType);
-						Method writeMethod = propertyDescriptor.getWriteMethod();
-						result.add(new PropertyInfo(propertyDescriptor.getName(), propertyType, readMethod, writeMethod));
+						result.add(new PropertyInfo(setterProperty, propertyType, getterMethod, setterMethod));
+						break;
 					}
 				}
-	        }
-	        catch (Exception e)
-	        {
-	        	throw new RuntimeException("Unable to determine properties for bean: " + rawType.getCanonicalName(), e);
-	        }
+			}
 		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Unable to determine properties for bean: " + rawType.getCanonicalName(), e);
+		}
+		
 		return result.toArray(new PropertyInfo[result.size()]);
 	}
 
