@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.screen.OfflineScreen;
@@ -61,6 +62,7 @@ public class AppCacheLinker extends AbstractLinker
 	private static Map<String, Set<String>> generatedManifestResources = Collections.synchronizedMap(new HashMap<String, Set<String>>());
 	private List<String> acceptedFileExtensions = Arrays.asList(".html", ".js", ".css", ".png", ".jpg", ".gif", ".ico");
 	private PermutationsUtil permutationsUtil;
+	private static AtomicBoolean analyzed = new AtomicBoolean(false);
 
 	@Override
 	public String getDescription()
@@ -76,24 +78,28 @@ public class AppCacheLinker extends AbstractLinker
 		if (onePermutation)
 		{
 			analyzePermutationArtifacts(artifactset);
+			analyzed.set(true);
 		}
 		else
 		{
-			try
+			if (analyzed.get())
 			{
-				Set<OfflineScreen> offlinePages = OfflineScreens.getOfflinePages(context.getModuleName());
-				if (offlinePages != null)
+				try
 				{
-					for (OfflineScreen offlineScreen : offlinePages)
+					Set<OfflineScreen> offlinePages = OfflineScreens.getOfflinePages(context.getModuleName());
+					if (offlinePages != null)
 					{
-						emitOfflineArtifacts(logger, context, artifactset, offlineScreen);
+						for (OfflineScreen offlineScreen : offlinePages)
+						{
+							emitOfflineArtifacts(logger, context, artifactset, offlineScreen);
+						}
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				logger.log(TreeLogger.ERROR, "Unable to create offline files", e);
-				throw new UnableToCompleteException();
+				catch (Exception e)
+				{
+					logger.log(TreeLogger.ERROR, "Unable to create offline files", e);
+					throw new UnableToCompleteException();
+				}
 			}
 		}
 
@@ -128,7 +134,7 @@ public class AppCacheLinker extends AbstractLinker
 		String selectionScriptText;
 		StringBuffer buffer = readFileToStringBuffer(getSelectionScriptTemplate(logger, context), logger);
 		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts, null);
-		//selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
+		selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
 		return selectionScriptText;
 	}
 
@@ -317,18 +323,18 @@ public class AppCacheLinker extends AbstractLinker
 		return screenID;
 	}
 
-	private long getCurrentTimeTruncatingMiliseconds()
+	static long getCurrentTimeTruncatingMiliseconds()
 	{
 		long currentTime = (System.currentTimeMillis() / 1000) * 1000;
 		return currentTime;
 	}
 
-	private String getManifestName()
+	static String getManifestName()
 	{
 		return "offline.appcache";
 	}
 
-	private String getPermutationName(ArtifactSet artifacts)
+	static String getPermutationName(ArtifactSet artifacts)
 	{
 		for (CompilationResult result : artifacts.find(CompilationResult.class))
 		{
@@ -337,12 +343,12 @@ public class AppCacheLinker extends AbstractLinker
 		return null;
 	}
 
-	private String getManifestName(String permutationName)
+	static String getManifestName(String permutationName)
 	{
 		return permutationName + ".appcache";
 	}
 
-	private String getManifestLoaderName(String permutationName)
+	static String getManifestLoaderName(String permutationName)
 	{
 		return "offlineLoader_" + permutationName + ".cache.html";
 	}
