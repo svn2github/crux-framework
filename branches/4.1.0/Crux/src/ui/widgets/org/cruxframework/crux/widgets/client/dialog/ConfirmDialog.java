@@ -303,10 +303,10 @@ public class ConfirmDialog  implements HasOkHandlers, HasCancelHandlers, HasAnim
 	 * @param styleName the name of the CSS class to be applied in the message box element 
 	 * @param animationEnabled true to enable animations while showing or hiding the message box
 	 */
-	public static ConfirmDialog show(String title, String message, String okLabel, String cancelLabel, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
+	public static ConfirmDialog show(String dialogTitle, String message, String okLabel, String cancelLabel, OkHandler okHandler, CancelHandler cancelHandler, String styleName, boolean animationEnabled)
 	{
 		ConfirmDialog confirm = new ConfirmDialog(); 
-		confirm.setTitle(title);
+		confirm.setDialogTitle(dialogTitle);
 		confirm.setOkLabel(okLabel);
 		confirm.setCancelLabel(cancelLabel);
 		confirm.setMessage(message);
