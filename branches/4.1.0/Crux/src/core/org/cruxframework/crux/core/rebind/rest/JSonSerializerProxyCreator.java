@@ -164,7 +164,11 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		srcWriter.println(resultSourceName + " "+resultObjectVar + " = " + JClassUtils.getEmptyValueForType(objectType) +";");
 		srcWriter.println("if ("+jsonValueVar+" != null && "+jsonValueVar+".isNull() == null){");
 
-		if (JClassUtils.isSimpleType(objectType))
+		if(objectType.getQualifiedSourceName().equals(Void.class.getCanonicalName())) 
+		{
+			srcWriter.println("return null;");
+		}
+		else if (JClassUtils.isSimpleType(objectType))
 		{
 			generateDecodeStringForJsonFriendlyType(srcWriter, objectType, jsonValueVar, resultObjectVar);
 		}
