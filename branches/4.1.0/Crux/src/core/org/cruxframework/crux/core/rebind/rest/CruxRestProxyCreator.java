@@ -139,7 +139,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException 
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(){");
-		srcWriter.println("__hostPath = com.google.gwt.core.client.GWT.getHostPageBaseURL();");
+		srcWriter.println("__hostPath = com.google.gwt.core.client.GWT.getModuleBaseURL();");
 		srcWriter.println("__hostPath = __hostPath.substring(0, __hostPath.indexOf(com.google.gwt.core.client.GWT.getModuleName()));");
 		srcWriter.println("}");
 	}

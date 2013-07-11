@@ -105,7 +105,6 @@ public class ResourceMethod
 	public boolean isEtagGenerationEnabled()
     {
 	    return etagGenerationEnabled || (cacheInfo != null && cacheInfo.isCacheEnabled()); 
-	    
     }
 
 	public MethodReturn invoke(HttpRequest request, HttpResponse response)
