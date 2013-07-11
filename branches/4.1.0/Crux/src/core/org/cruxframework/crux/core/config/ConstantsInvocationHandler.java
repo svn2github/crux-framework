@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.cruxframework.crux.core.i18n.DefaultServerMessage;
 import org.cruxframework.crux.core.i18n.MessageException;
 
+import com.google.gwt.i18n.client.Messages.DefaultMessage;
+
 
 /**
  * Dynamic proxy for message resources.
@@ -107,15 +109,26 @@ public abstract class ConstantsInvocationHandler implements InvocationHandler
 	protected String getMessageFromAnnotation(Method method, Object[] args, String name)
 	{
 		DefaultServerMessage serverAnnot = method.getAnnotation(DefaultServerMessage.class);
+		DefaultMessage clientAnnot = method.getAnnotation(DefaultMessage.class);
+		
+		String value = null;
 		if (serverAnnot != null)
 		{
-			String value = MessageFormat.format(serverAnnot.value(),args);
+			value = MessageFormat.format(serverAnnot.value(),args);
+		} else if(clientAnnot != null) 
+		{
+			value = MessageFormat.format(clientAnnot.value(),args);
+		}
+		
+		if (value != null)
+		{
 			if (this.isCacheable)
 			{
 				resolvedConstants.put(name, value);
 			}
 			return value;
 		}
+		
 		return null;
 	}
 	
