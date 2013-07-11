@@ -104,7 +104,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 		catch (Exception e)
 		{
-			basePath = "/rest";
+			basePath = "rest";
 		}
 		String value = restImplementationClass.getAnnotation(Path.class).value();
 		if (value.startsWith("/"))
@@ -136,12 +136,22 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 
 	@Override
+	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException 
+	{
+		srcWriter.println("public "+getProxySimpleName()+"(){");
+		srcWriter.println("__hostPath = com.google.gwt.core.client.GWT.getHostPageBaseURL();");
+		srcWriter.println("__hostPath = __hostPath.substring(0, __hostPath.indexOf(com.google.gwt.core.client.GWT.getModuleName()));");
+		srcWriter.println("}");
+	}
+	
+	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		if (mustGenerateStateControlMethods)
 		{
 			srcWriter.println(FastMap.class.getCanonicalName()+"<String> __currentEtags = new "+FastMap.class.getCanonicalName()+"<String>();");
 		}
+		srcWriter.println("private String __hostPath;");
 	}
 	
 	@Override
@@ -220,11 +230,10 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 			srcWriter.println("String baseURIPath = " + EscapeUtils.quote(methodInfo.methodURI) + ";");
 			queryParameterHandler.generateMethodParamToURICode(srcWriter, methodInfo, "baseURIPath");
-			srcWriter.println("final String restURI = baseURIPath;");
+			srcWriter.println("final String restURI = __hostPath + baseURIPath;");
 
 			srcWriter.println("RequestBuilder builder = new RequestBuilder(RequestBuilder."+httpMethod+", restURI);");
 			setLocaleInfo(srcWriter, "builder");
-
 			srcWriter.println("builder.setCallback(new RequestCallback(){");
 			srcWriter.println("public void onResponseReceived(Request request, Response response){");
 			srcWriter.println("int s = (response.getStatusCode()-200);");
