@@ -5,4 +5,5 @@
 	<add-linker name="offlineLinker"/>
 	<define-linker name="manifestLinker" class="org.cruxframework.crux.core.rebind.offline.AppCacheLinker"/>
 	<add-linker name="manifestLinker"/>
+	<source path="clientoffline" /> 	
 </module>

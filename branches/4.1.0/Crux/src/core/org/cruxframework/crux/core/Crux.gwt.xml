@@ -81,6 +81,16 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.DeviceAdaptive"/>
 	</generate-with>
 	
+	<!-- Specify the generator for BeanCopier.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.bean.BeanCopierGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.bean.BeanCopier"/>
+	</generate-with>
+
+	<!-- Specify the generator for BeanComparator.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.bean.BeanComparatorGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.bean.BeanComparator"/>
+	</generate-with>
+
 	<!-- Replaces -->
 	
 	<!-- Specify Default implementation for NetworkChecker -->
@@ -123,4 +133,5 @@
 		</any>
     </replace-with>	
 	<source path="client" /> 
+	<source path="shared" /> 
 </module>
