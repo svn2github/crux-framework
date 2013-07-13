@@ -841,4 +841,20 @@ public class JClassUtils
 	    return jClassType;
     }
 	
+	public static JClassType[] getActualParameterTypes(JClassType baseIntf, JClassType desiredInterfaceType)
+	{
+		JClassType[] interfaces = baseIntf.getImplementedInterfaces();
+		for (JClassType intf : interfaces)
+		{
+			JParameterizedType parameterized = intf.isParameterized();
+			if (parameterized != null)
+			{
+				if (parameterized.getBaseType().equals(desiredInterfaceType))
+				{
+					return parameterized.getTypeArgs();
+				}
+			}
+		}
+		throw new RuntimeException("Desired interface is nor parameterized or baseIntef does not extends that interface.");
+	}
 }

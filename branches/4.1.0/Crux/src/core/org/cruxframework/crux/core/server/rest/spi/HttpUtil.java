@@ -42,6 +42,7 @@ import org.cruxframework.crux.core.server.rest.core.dispatch.CacheInfo;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ConditionalResponse;
 import org.cruxframework.crux.core.server.rest.core.dispatch.ResourceMethod.MethodReturn;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
+import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 import org.cruxframework.crux.core.server.rest.util.MediaTypeHelper;
 import org.cruxframework.crux.core.server.rest.util.PathHelper;
 import org.cruxframework.crux.core.server.rest.util.header.MediaTypeHeaderParser;
@@ -222,7 +223,11 @@ public class HttpUtil
 	public static void writeResponse(HttpRequest request, HttpResponse response, MethodReturn methodReturn) throws IOException
 	{
 		HttpServletResponseHeaders outputHeaders = response.getOutputHeaders();
-		if (!methodReturn.hasReturnType())
+		if (methodReturn.getCheckedExceptionData() != null)
+		{
+			response.sendError(HttpResponseCodes.SC_FORBIDDEN, methodReturn.getCheckedExceptionData());
+		}
+		else if (!methodReturn.hasReturnType())
 		{
 			response.setContentLength(0);
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);

@@ -31,10 +31,10 @@ import org.cruxframework.crux.core.server.rest.annotation.PathParam;
 import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
 import org.cruxframework.crux.core.server.rest.core.RequestPreprocessors;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
-import org.cruxframework.crux.core.server.rest.spi.ForbiddenException;
 import org.cruxframework.crux.core.server.rest.spi.HttpRequest;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.server.rest.spi.RestFailure;
+import org.cruxframework.crux.core.shared.rest.RestException;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
 /**
@@ -55,7 +55,7 @@ public class MethodInvoker
 	public MethodInvoker(Class<?> root, Method method, String httpMethod)
 	{
 		this.method = method;
-		this.exceptionTypes = method.getExceptionTypes();
+		this.exceptionTypes = getRestExceptionTypes(method);
 		this.rootClass = root;
 		this.params = new ValueInjector[method.getParameterTypes().length];
 		Type[] genericParameterTypes = method.getGenericParameterTypes();
@@ -120,7 +120,8 @@ public class MethodInvoker
 			Throwable cause = e.getCause();
 			if (isCheckedException(cause))
 			{
-				throw new ForbiddenException("Can not execute requested service. Checked Exception occurred on method: "+method.toString(), cause.getMessage(), cause);
+				cause.setStackTrace(new StackTraceElement[]{});
+				return cause;
 			}
 			else
 			{
@@ -156,6 +157,21 @@ public class MethodInvoker
 			throw new InternalServerErrorException(msg, "Can not execute requested service", e);
 		}
 	}
+
+	protected Class<?>[] getRestExceptionTypes(Method method)
+    {
+		List<Class<?>> result = new ArrayList<Class<?>>();
+	    Class<?>[] types = method.getExceptionTypes();
+	    for (Class<?> exceptionClass : types)
+        {
+            if (RestException.class.isAssignableFrom(exceptionClass))
+            {
+            	result.add(exceptionClass);
+            }
+        }
+		return result.toArray(new Class[result.size()]);
+    }
+
 
 	protected void initializePreprocessors() throws RequestProcessorException
     {

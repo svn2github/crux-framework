@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.rest;
 
 import org.cruxframework.crux.core.client.service.JsonEncoder;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
+import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
@@ -41,15 +42,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 	{
 		super(logger, context, baseIntf, true);
 		JClassType jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
-		JClassType[] interfaces = baseIntf.getImplementedInterfaces();
-		for (JClassType intf : interfaces)
-		{
-			if (intf.equals(jsonEncoderType))
-			{
-				targetObjectType = intf.isParameterized().getTypeArgs()[0];
-				break;
-			}
-		}
+		targetObjectType = JClassUtils.getActualParameterTypes(baseIntf, jsonEncoderType)[0];
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 	}
 

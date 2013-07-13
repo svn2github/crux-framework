@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,6 +46,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class ResourceMethod
 {
 	private static final Lock lock = new ReentrantLock();
+	private static final Lock exceptionlock = new ReentrantLock();
 
 	protected String httpMethod;
 	protected Method method;
@@ -51,6 +54,7 @@ public class ResourceMethod
 	protected Type genericReturnType;
 	protected MethodInvoker methodInvoker;
 	protected ObjectWriter writer;
+	protected Map<String, ObjectWriter> exceptionWriters = new HashMap<String, ObjectWriter>();
 	protected CacheInfo cacheInfo;
 	protected boolean hasReturnType;
 	private boolean etagGenerationEnabled = false;
@@ -71,7 +75,7 @@ public class ResourceMethod
 			throw new InternalServerErrorException("Invalid rest method: " + method.toString() + ". @GET methods " +
 					"can not be void.", "Can not execute requested service");
 		}
-		
+
 		this.methodInvoker = new MethodInvoker(resourceClass, method, httpMethod);
 		this.cacheInfo = HttpMethodHelper.getCacheInfoForGET(method);
 
@@ -98,97 +102,134 @@ public class ResourceMethod
 	}
 
 	public void forceEtagGeneration()
-    {
+	{
 		etagGenerationEnabled = true;
-    }
-	
+	}
+
 	public boolean isEtagGenerationEnabled()
-    {
-	    return etagGenerationEnabled || (cacheInfo != null && cacheInfo.isCacheEnabled()); 
-    }
+	{
+		return etagGenerationEnabled || (cacheInfo != null && cacheInfo.isCacheEnabled()); 
+
+	}
 
 	public MethodReturn invoke(HttpRequest request, HttpResponse response)
 	{
-        try
-        {
-        	if (ResourceStateConfig.isResourceStateCacheEnabled())
-        	{
-        		StateHandler stateHandler = new StateHandler(this, request);
-        		MethodReturn ret = stateHandler.handledByCache();
-        		if (ret == null)
-        		{
-        			Object target = createTarget(request, response);
-        			ret = invoke(request, target);
-        			stateHandler.updateState(ret);
-        		}
-        		return ret;
-        	}
-        	else
-        	{
-        		Object target = createTarget(request, response);
-        		return invoke(request, target);
-        	}
-        }
-        catch (RestFailure e)
-        {
-        	throw e; 
-        }
-        catch (Exception e)
-        {
-        	throw new InternalServerErrorException("Error invoking rest service endpoint", "Error processing requested service", e); 
-        }
+		try
+		{
+			if (ResourceStateConfig.isResourceStateCacheEnabled())
+			{
+				StateHandler stateHandler = new StateHandler(this, request);
+				MethodReturn ret = stateHandler.handledByCache();
+				if (ret == null)
+				{
+					Object target = createTarget(request, response);
+					ret = invoke(request, target);
+					if (ret.getCheckedExceptionData() == null)
+					{
+						stateHandler.updateState(ret);
+					}
+				}
+				return ret;
+			}
+			else
+			{
+				Object target = createTarget(request, response);
+				return invoke(request, target);
+			}
+		}
+		catch (RestFailure e)
+		{
+			throw e; 
+		}
+		catch (Exception e)
+		{
+			throw new InternalServerErrorException("Error invoking rest service endpoint", "Error processing requested service", e); 
+		}
 	}
 
 	public String getHttpMethod()
 	{
 		return httpMethod;
 	}
-	
+
 	private Object createTarget(HttpRequest request, HttpResponse response) throws InstantiationException, IllegalAccessException
-    {
-	    Object target = resourceClass.newInstance();
+	{
+		Object target = resourceClass.newInstance();
 		if (isRequestAware)
-	    {
-	    	((HttpRequestAware)target).setRequest(request);
-	    }
+		{
+			((HttpRequestAware)target).setRequest(request);
+		}
 		if (isResponseAware)
-	    {
-	    	((HttpResponseAware)target).setResponse(response);
-	    }
-	    return target;
-    }
+		{
+			((HttpResponseAware)target).setResponse(response);
+		}
+		return target;
+	}
 
 	private MethodReturn invoke(HttpRequest request, Object target)
 	{
 		Object rtn = methodInvoker.invoke(request, target);
 		String retVal = null;
-		if (hasReturnType && rtn != null)
+		String exeptionData = null;
+		try
 		{
-			if (writer == null)
+			if (rtn != null && rtn instanceof Exception)
 			{
-				lock.lock();
-				try
+				exeptionData = getExceptionWriter((Exception) rtn).writeValueAsString(rtn);
+			}
+			else if (hasReturnType && rtn != null)
+			{
+				retVal = getReturnWriter().writeValueAsString(rtn);
+			}
+		}
+		catch (JsonProcessingException e)
+		{
+			throw new InternalServerErrorException("Error serializing rest service return", "Error processing requested service", e); 
+		}
+		return new MethodReturn(hasReturnType, retVal, exeptionData, cacheInfo, null, isEtagGenerationEnabled());
+	}
+
+	private ObjectWriter getExceptionWriter(Exception e)
+	{
+		ObjectWriter objectWriter = exceptionWriters.get(e.getClass().getCanonicalName());
+		if (objectWriter == null)
+		{
+			exceptionlock.lock();
+			try
+			{
+				objectWriter = exceptionWriters.get(e.getClass().getCanonicalName());
+				if (objectWriter == null)
 				{
-					if (writer == null)
-					{
-						writer = JsonUtil.createWriter(genericReturnType);
-					}
-				}
-				finally
-				{
-					lock.unlock();
+					objectWriter = JsonUtil.createWriter(e.getClass());
+					exceptionWriters.put(e.getClass().getCanonicalName(), objectWriter);
 				}
 			}
-			try
-            {
-	            retVal = writer.writeValueAsString(rtn);
-            }
-            catch (JsonProcessingException e)
-            {
-            	throw new InternalServerErrorException("Error serializing rest service return", "Error processing requested service", e); 
-            }
+			finally
+			{
+				exceptionlock.unlock();
+			}
 		}
-		return new MethodReturn(hasReturnType, retVal, cacheInfo, null, isEtagGenerationEnabled());
+		return objectWriter;
+	}
+
+	private ObjectWriter getReturnWriter()
+	{
+		if (writer == null)
+		{
+			lock.lock();
+			try
+			{
+				if (writer == null)
+				{
+					writer = JsonUtil.createWriter(genericReturnType);
+				}
+			}
+			finally
+			{
+				lock.unlock();
+			}
+		}
+		return writer;
 	}
 
 	public static class MethodReturn
@@ -200,59 +241,71 @@ public class ResourceMethod
 		protected EntityTag etag;
 		protected long dateModified;
 		protected final boolean etagGenerationEnabled;
-		
-		protected MethodReturn(boolean hasReturnType, String ret, CacheInfo cacheInfo, ConditionalResponse conditionalResponse, boolean etagGenerationEnabled)
-        {
+		protected String checkedExceptionData;
+
+		protected MethodReturn(boolean hasReturnType, String ret, String exceptionData, CacheInfo cacheInfo, ConditionalResponse conditionalResponse, boolean etagGenerationEnabled)
+		{
 			this.hasReturnType = hasReturnType;
 			this.ret = ret;
+			this.checkedExceptionData = exceptionData;
 			this.cacheInfo = cacheInfo;
 			this.conditionalResponse = conditionalResponse;
 			this.etagGenerationEnabled = etagGenerationEnabled;
-        }
+		}
 
 		public boolean hasReturnType()
-        {
-        	return hasReturnType;
-        }
+		{
+			return hasReturnType;
+		}
 
 		public String getReturn()
-        {
-        	return ret;
-        }
+		{
+			return ret;
+		}
 
 		public CacheInfo getCacheInfo()
-        {
-        	return cacheInfo;
-        }
+		{
+			return cacheInfo;
+		}
 
 		public ConditionalResponse getConditionalResponse()
-        {
-        	return conditionalResponse;
-        }
+		{
+			return conditionalResponse;
+		}
 
 		public EntityTag getEtag()
-        {
-        	return etag;
-        }
+		{
+			return etag;
+		}
 
 		public void setEtag(EntityTag etag)
-        {
-        	this.etag = etag;
-        }
+		{
+			this.etag = etag;
+		}
 
 		public long getDateModified()
-        {
-        	return dateModified;
-        }
+		{
+			return dateModified;
+		}
 
 		public void setDateModified(long dateModified)
-        {
-        	this.dateModified = dateModified;
-        }
+		{
+			this.dateModified = dateModified;
+		}
 
 		public boolean isEtagGenerationEnabled()
-        {
-        	return etagGenerationEnabled;
-        }
+		{
+			return etagGenerationEnabled;
+		}
+
+		public String getCheckedExceptionData()
+		{
+			return checkedExceptionData;
+		}
+
+		public void setCheckedExceptionData(String checkedExceptionData)
+		{
+			this.checkedExceptionData = checkedExceptionData;
+		}
 	}
 }

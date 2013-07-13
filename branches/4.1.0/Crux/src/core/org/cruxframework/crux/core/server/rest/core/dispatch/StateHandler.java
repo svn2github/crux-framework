@@ -121,7 +121,7 @@ public class StateHandler
 			ConditionalResponse conditionalResponse = evaluatePreconditions(resourceState);
 			if (conditionalResponse != null)
 			{
-				return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
+				return new MethodReturn(resourceMethod.hasReturnType, null, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
 			}
 		}
 		return null;
@@ -140,7 +140,7 @@ public class StateHandler
 		{
 			return null;
 		}
-		return new MethodReturn(resourceMethod.hasReturnType, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
+		return new MethodReturn(resourceMethod.hasReturnType, null, null, resourceMethod.cacheInfo, conditionalResponse, resourceMethod.isEtagGenerationEnabled());
 	}
 
 	private ConditionalResponse evaluatePreconditions(ResourceState resourceState)
