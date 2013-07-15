@@ -31,7 +31,7 @@ public class ViewDeactivateEvent extends CruxEvent<View>
 
 	public void cancel()
 	{
-		this.canceled = false;
+		this.canceled = true;
 	}
 	
 	/**
