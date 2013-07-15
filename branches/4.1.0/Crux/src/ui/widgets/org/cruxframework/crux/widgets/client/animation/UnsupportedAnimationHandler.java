@@ -136,7 +136,7 @@ class UnsupportedAnimationHandler implements AnimationHandler
 	}-*/;
 	
 	private native boolean hasOriginalLeft(Element el)/*-{
-		return (el._originalLeft !== null);
+		return (!el._originalLeft);
 	}-*/;
 
 	private native void setOriginalLeft(Element el, int left)/*-{
