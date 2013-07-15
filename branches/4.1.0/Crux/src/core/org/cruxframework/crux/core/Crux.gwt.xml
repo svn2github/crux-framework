@@ -91,6 +91,11 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.bean.BeanComparator"/>
 	</generate-with>
 
+	<!-- Specify the generator for BeanComparator.     -->
+	<generate-with class="org.cruxframework.crux.core.rebind.bean.BeanContentValidatorGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.bean.BeanContentValidator"/>
+	</generate-with>
+
 	<!-- Replaces -->
 	
 	<!-- Specify Default implementation for NetworkChecker -->
