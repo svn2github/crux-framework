@@ -36,6 +36,24 @@ public interface RestProxy
 	public static interface Callback<T>
 	{
 		void onSuccess(T result);
-		void onError(int status, String message);
+		void onError(Exception e);
+	}
+	
+	public static class RestError extends Exception
+	{
+        private static final long serialVersionUID = -147464971080325777L;
+		
+        private int status;
+        
+        public RestError(int status, String message)
+        {
+        	super(message);
+        	this.status = status; 
+        }
+        
+        public int getStatusCode()
+        {
+        	return status;
+        }
 	}
 }

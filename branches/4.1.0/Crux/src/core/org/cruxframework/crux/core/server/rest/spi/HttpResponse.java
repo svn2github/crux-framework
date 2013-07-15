@@ -2,11 +2,16 @@ package org.cruxframework.crux.core.server.rest.spi;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.cruxframework.crux.core.server.rest.core.MediaType;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
+import org.cruxframework.crux.core.server.rest.util.JsonUtil;
+
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  * 
@@ -15,14 +20,18 @@ import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
  */
 public class HttpResponse
 {
+	private static final Lock lock = new ReentrantLock();
+
 	private HttpServletResponse response;
 	private int status = 200;
 	private HttpServletResponseHeaders outputHeaders;
+	private static ObjectWriter exceptionDataWriter;
 
 	public HttpResponse(HttpServletResponse response)
 	{
 		this.response = response;
 		outputHeaders = new HttpServletResponseHeaders(response);
+		initializeExceptionWriter();
 	}
 
 	public int getStatus()
@@ -58,6 +67,12 @@ public class HttpResponse
 			response.flushBuffer();
 		}
 	}
+	
+	public void sendException(int status, String message) throws IOException
+	{
+		ExceptionData exceptionData = new ExceptionData(message);
+		sendError(status, exceptionDataWriter.writeValueAsString(exceptionData));
+	}
 
 	public boolean isCommitted()
 	{
@@ -78,5 +93,39 @@ public class HttpResponse
 	void setContentLength(int length)
     {
 		response.setContentLength(length);
+    }
+	
+	static class ExceptionData
+	{
+		private String message;
+
+		public ExceptionData(String message)
+		{
+			this.message = message;
+		}
+
+		public String getMessage()
+        {
+        	return message;
+        }
+	}
+
+	private void initializeExceptionWriter()
+    {
+	    if (exceptionDataWriter == null)
+		{
+			lock.lock();
+			try
+			{
+				if (exceptionDataWriter == null)
+				{
+					exceptionDataWriter = JsonUtil.createWriter(ExceptionData.class);
+				}
+			}
+			finally
+			{
+				lock.unlock();
+			}
+		}
     }
 }

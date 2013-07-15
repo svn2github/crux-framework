@@ -15,10 +15,6 @@
  */
 package org.cruxframework.crux.core.shared.rest;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -28,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class RestException extends Exception
 {
     private static final long serialVersionUID = -7638825230446103361L;
-    private static Map<String, String> md5 = Collections.synchronizedMap(new HashMap<String, String>());
-    
     
 	public RestException()
     {
@@ -53,6 +47,7 @@ public class RestException extends Exception
 
 	@Override
 	@JsonIgnore
+	@org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore
 	public Throwable getCause()
 	{
 	    return super.getCause();
@@ -60,6 +55,7 @@ public class RestException extends Exception
 	
 	@Override
 	@JsonIgnore
+	@org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore
 	public StackTraceElement[] getStackTrace()
 	{
 	    return super.getStackTrace();
@@ -67,6 +63,15 @@ public class RestException extends Exception
 	
 	@Override
 	@JsonIgnore
+	@org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore
+	public void setStackTrace(StackTraceElement[] stackTrace)
+	{
+	    super.setStackTrace(stackTrace);
+	}
+
+	@Override
+	@JsonIgnore
+	@org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore
 	public String getLocalizedMessage()
 	{
 	    return super.getLocalizedMessage();

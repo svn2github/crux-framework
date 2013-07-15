@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.server.rest.core.dispatch;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -34,6 +35,7 @@ import org.cruxframework.crux.core.server.rest.state.ResourceStateConfig;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.JsonUtil;
 import org.cruxframework.crux.core.utils.ClassUtils;
+import org.cruxframework.crux.core.utils.EncryptUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -55,6 +57,7 @@ public class ResourceMethod
 	protected MethodInvoker methodInvoker;
 	protected ObjectWriter writer;
 	protected Map<String, ObjectWriter> exceptionWriters = new HashMap<String, ObjectWriter>();
+	protected Map<String, String> exceptionIds = new HashMap<String, String>();
 	protected CacheInfo cacheInfo;
 	protected boolean hasReturnType;
 	private boolean etagGenerationEnabled = false;
@@ -175,7 +178,7 @@ public class ResourceMethod
 		{
 			if (rtn != null && rtn instanceof Exception)
 			{
-				exeptionData = getExceptionWriter((Exception) rtn).writeValueAsString(rtn);
+				exeptionData = getExceptionData((Exception) rtn);
 			}
 			else if (hasReturnType && rtn != null)
 			{
@@ -189,27 +192,62 @@ public class ResourceMethod
 		return new MethodReturn(hasReturnType, retVal, exeptionData, cacheInfo, null, isEtagGenerationEnabled());
 	}
 
+	private String getExceptionData(Exception e) throws JsonProcessingException
+    {
+	    return "{\"exId\": \"" + getExceptionId(e) + "\", \"exData\": " + getExceptionWriter(e).writeValueAsString(e) + "}";
+    }
+
+	private String getExceptionId(Exception e)
+	{
+		String name = e.getClass().getCanonicalName();
+		String exceptionId = exceptionIds.get(name);
+		if (exceptionId == null)
+		{
+			initializeExceptionObjects(e, name);
+		}
+		return exceptionIds.get(name);
+	}
+
 	private ObjectWriter getExceptionWriter(Exception e)
 	{
-		ObjectWriter objectWriter = exceptionWriters.get(e.getClass().getCanonicalName());
+		String name = e.getClass().getCanonicalName();
+		ObjectWriter objectWriter = exceptionWriters.get(name);
 		if (objectWriter == null)
 		{
-			exceptionlock.lock();
-			try
-			{
-				objectWriter = exceptionWriters.get(e.getClass().getCanonicalName());
-				if (objectWriter == null)
-				{
-					objectWriter = JsonUtil.createWriter(e.getClass());
-					exceptionWriters.put(e.getClass().getCanonicalName(), objectWriter);
-				}
-			}
-			finally
-			{
-				exceptionlock.unlock();
-			}
+			initializeExceptionObjects(e, name);
 		}
-		return objectWriter;
+		return exceptionWriters.get(name);
+	}
+
+	private void initializeExceptionObjects(Exception e, String name)
+    {
+	    exceptionlock.lock();
+	    try
+	    {
+	    	ObjectWriter objectWriter = exceptionWriters.get(name);
+	    	if (objectWriter == null)
+	    	{
+	    		objectWriter = JsonUtil.createWriter(e.getClass());
+	    		exceptionWriters.put(name, objectWriter);
+	    		exceptionIds.put(name, hash(name));
+	    	}
+	    }
+	    finally
+	    {
+	    	exceptionlock.unlock();
+	    }
+    }
+
+	private String hash(String s)
+	{
+		try
+		{
+			return EncryptUtils.hash(s);
+		}
+		catch (NoSuchAlgorithmException ns)
+		{
+			throw new InternalServerErrorException("Error generating MD5 hash for String["+s+"]", "Error processing requested service", ns); 
+		}
 	}
 
 	private ObjectWriter getReturnWriter()

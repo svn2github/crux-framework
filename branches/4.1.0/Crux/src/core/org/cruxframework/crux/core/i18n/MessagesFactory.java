@@ -79,7 +79,7 @@ class MessagesInvocationHandler extends ConstantsInvocationHandler
 	@Override
 	protected <T> PropertyResourceBundle getPropertiesForLocale(final Class<T> targetInterface) 
 	{
-		Locale userLocale = LocaleResolverInitialiser.getLocaleResolver().getUserLocale();
+		Locale userLocale = LocaleResolverInitializer.getLocaleResolver().getUserLocale();
 		PropertyResourceBundle properties = null;
 		if (!localeMessages.containsKey(userLocale))
 		{

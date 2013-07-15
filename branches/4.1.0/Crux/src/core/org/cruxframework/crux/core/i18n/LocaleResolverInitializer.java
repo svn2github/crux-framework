@@ -24,16 +24,16 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 
 
 /**
- * Initialises the LocaleResolver class
+ * Initializes the LocaleResolver class
  * @author Thiago da Rosa de Bustamante
  * @author Gesse S. F. Dafe
  */
-public class LocaleResolverInitialiser 
+public class LocaleResolverInitializer 
 {
 	protected static Class<? extends LocaleResolver> localeResolverClass;
 	protected static ThreadLocal<LocaleResolver> localeResolver = new ThreadLocal<LocaleResolver>();
 	private static final Lock lock = new ReentrantLock();
-	private static final Log logger = LogFactory.getLog(LocaleResolverInitialiser.class);
+	private static final Log logger = LogFactory.getLog(LocaleResolverInitializer.class);
 
 	/**
 	 * 
@@ -77,7 +77,7 @@ public class LocaleResolverInitialiser
 	 */
 	public static void registerLocaleResolverClass(Class<? extends LocaleResolver> localeResolverClass)
 	{
-		LocaleResolverInitialiser.localeResolverClass = localeResolverClass;
+		LocaleResolverInitializer.localeResolverClass = localeResolverClass;
 	}
 	
 	/**

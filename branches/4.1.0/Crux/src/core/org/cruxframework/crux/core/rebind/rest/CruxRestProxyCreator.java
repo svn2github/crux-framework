@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.service.RestProxy.Callback;
+import org.cruxframework.crux.core.client.service.RestProxy.RestError;
 import org.cruxframework.crux.core.client.service.RestProxy.TargetRestService;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -44,6 +45,8 @@ import org.cruxframework.crux.core.server.rest.util.Encode;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.HttpMethodHelper;
 import org.cruxframework.crux.core.server.rest.util.InvalidRestMethod;
+import org.cruxframework.crux.core.shared.rest.RestException;
+import org.cruxframework.crux.core.utils.EncryptUtils;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -63,6 +66,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
@@ -84,7 +88,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private boolean mustGenerateStateControlMethods;
 	private QueryParameterHandler queryParameterHandler;
 	private BodyParameterHandler bodyParameterHandler;
-	
+
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
@@ -143,7 +147,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		srcWriter.println("__hostPath = __hostPath.substring(0, __hostPath.indexOf(com.google.gwt.core.client.GWT.getModuleName()));");
 		srcWriter.println("}");
 	}
-	
+
 	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
@@ -153,19 +157,19 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 		srcWriter.println("private String __hostPath;");
 	}
-	
+
 	@Override
-    protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
-    {
+	protected void generateProxyMethods(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
 		if (mustGenerateStateControlMethods)
 		{
 			generateStateControlMethods(srcWriter);
 		}
 		for (RestMethodInfo methodInfo : restMethods)
-        {
-    		generateWrapperMethod(methodInfo, srcWriter);
-        }
-    }
+		{
+			generateWrapperMethod(methodInfo, srcWriter);
+		}
+	}
 
 	protected void generateStateControlMethods(SourcePrinter srcWriter)
 	{
@@ -186,10 +190,10 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 
 	protected void initializeRestMethods()
-    {
-    	JMethod[] methods = baseIntf.getOverridableMethods();
-    	for (JMethod method : methods)
-    	{
+	{
+		JMethod[] methods = baseIntf.getOverridableMethods();
+		for (JMethod method : methods)
+		{
 			Method implementationMethod = getImplementationMethod(method);
 			String methodURI = getRestURI(method, implementationMethod);
 			StateValidationModel validationModel = HttpMethodHelper.getStateValidationModel(implementationMethod);
@@ -202,9 +206,9 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				readMethods.put(methodURI, implementationMethod);
 			}
 			restMethods.add(new RestMethodInfo(method, implementationMethod, methodURI));
-    	}
-		
-	    mustGenerateStateControlMethods = false;
+		}
+
+		mustGenerateStateControlMethods = false;
 		for (Entry<String, Method> entry : updateMethods.entrySet())
 		{
 			Method method = entry.getValue();
@@ -216,7 +220,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			mustGenerateStateControlMethods = true; 
 		}
-    }
+	}
 
 	protected void generateWrapperMethod(RestMethodInfo methodInfo, SourcePrinter srcWriter)
 	{
@@ -235,47 +239,18 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("RequestBuilder builder = new RequestBuilder(RequestBuilder."+httpMethod+", restURI);");
 			setLocaleInfo(srcWriter, "builder");
 			srcWriter.println("builder.setCallback(new RequestCallback(){");
+
 			srcWriter.println("public void onResponseReceived(Request request, Response response){");
 			srcWriter.println("int s = (response.getStatusCode()-200);");
 			srcWriter.println("if (s >= 0 && s < 10){");
-			if (!callbackResultTypeName.equalsIgnoreCase("void"))
-			{
-				JClassType callbackResultType = JClassUtils.getTypeArgForGenericType(callbackParameter.getType().isClassOrInterface());
-				srcWriter.println("String jsonText = response.getText();");
-				srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode() && !"+StringUtils.class.getCanonicalName()+".isEmpty(jsonText)){");
-				srcWriter.println("try{");
-
-				if (callbackResultType != null && callbackResultType.isAssignableTo(javascriptObjectType))
-				{
-					srcWriter.println(callbackResultTypeName+" result = "+JsonUtils.class.getCanonicalName()+".safeEval(jsonText);");
-				}
-				else
-				{
-					srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(jsonText);");
-					String serializerName = new JSonSerializerProxyCreator(context, logger, callbackResultType).create();
-					srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(jsonValue);");
-				}
-				generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
-				srcWriter.println(callbackParameterName+".onSuccess(result);");
-				srcWriter.println("}catch (Exception e){");
-				srcWriter.println(callbackParameterName+".onError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage()));");
-				srcWriter.println("}");
-				srcWriter.println("}else {");
-				generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
-				srcWriter.println(callbackParameterName+".onSuccess(null);");
-				srcWriter.println("}");
-			}
-			else
-			{
-				generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
-				srcWriter.println(callbackParameterName+".onSuccess(null);");
-			}
+			generateSuccessCallHandlingCode(methodInfo, srcWriter, callbackParameter, callbackResultTypeName, callbackParameterName);
 			srcWriter.println("}else{ ");
-			srcWriter.println(callbackParameterName+".onError(response.getStatusCode(), response.getText());");
+			generateExceptionCallHandlingCode(methodInfo, srcWriter, callbackParameterName);
 			srcWriter.println("}");
 			srcWriter.println("}");
+
 			srcWriter.println("public void onError(Request request, Throwable exception){");
-			srcWriter.println(callbackParameterName+".onError(-1, Crux.getMessages().restServiceUnexpectedError(exception.getMessage()));");
+			srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(exception.getMessage())));");
 			srcWriter.println("}");
 			srcWriter.println("});");
 
@@ -285,7 +260,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			generateXSRFHeaderProtectionForWrites(httpMethod, "builder", srcWriter);
 			srcWriter.println("builder.send();");
 			srcWriter.println("}catch (Exception e){");
-			srcWriter.println(callbackParameterName+".onError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage()));");
+			srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage())));");
 			srcWriter.println("}");
 			srcWriter.println("}");
 		}
@@ -295,25 +270,126 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 	}
 
+	protected void generateExceptionCallHandlingCode(RestMethodInfo methodInfo, SourcePrinter srcWriter, String callbackParameterName)
+	{
+		try
+		{
+			srcWriter.println("JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();");
+
+			Class<?>[] restExceptionTypes = getRestExceptionTypes(methodInfo.implementationMethod);
+			if (restExceptionTypes != null && restExceptionTypes.length > 0)
+			{
+				srcWriter.println("JSONValue exId = jsonObject.get(\"exId\");");
+				srcWriter.println("if (exId == null){");
+				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), jsonObject.get(\"message\").isString().stringValue()));");
+				srcWriter.println("} else {");
+				srcWriter.println("String hash = exId.isString().stringValue();");
+				boolean first = true;
+				for (Class<?> restException : restExceptionTypes)
+				{
+					JClassType exceptionType = context.getTypeOracle().findType(restException.getCanonicalName());
+					if (exceptionType == null)
+					{
+						throw new CruxGeneratorException("Exception type ["+restException.getCanonicalName()+"] can not be used on client code. Add this exeption to a GWT client package.");
+					}
+					if (!first)
+					{
+						srcWriter.print("else ");
+					}
+					first = false;
+					srcWriter.println("if (StringUtils.unsafeEquals(hash,"+EscapeUtils.quote(EncryptUtils.hash(exceptionType.getParameterizedQualifiedSourceName()))+")){");
+					String serializerName = new JSonSerializerProxyCreator(context, logger, exceptionType).create();
+					srcWriter.println("Exception ex = new "+serializerName+"().decode(jsonObject.get(\"exData\"));");
+					srcWriter.println(callbackParameterName+".onError(ex);");
+					srcWriter.println("}");
+				}
+				srcWriter.println("else {");
+				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), jsonObject.get(\"exData\").toString()));");
+				srcWriter.println("}");
+				
+				srcWriter.println("}");
+			}
+			else
+			{
+				srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), jsonObject.get(\"message\").isString().stringValue()));");
+			}
+		}
+		catch (Exception e) 
+		{
+			throw new CruxGeneratorException("Error generatirng exception handlers for type ["+baseIntf.getParameterizedQualifiedSourceName()+"].", e);
+		}
+	}
+
+	protected Class<?>[] getRestExceptionTypes(Method method)
+	{
+		List<Class<?>> result = new ArrayList<Class<?>>();
+		Class<?>[] types = method.getExceptionTypes();
+		for (Class<?> exceptionClass : types)
+		{
+			if (RestException.class.isAssignableFrom(exceptionClass))
+			{
+				result.add(exceptionClass);
+			}
+		}
+		return result.toArray(new Class[result.size()]);
+	}
+
+	protected void generateSuccessCallHandlingCode(RestMethodInfo methodInfo, SourcePrinter srcWriter, 
+			JParameter callbackParameter, String callbackResultTypeName, String callbackParameterName)
+	{
+		if (!callbackResultTypeName.equalsIgnoreCase("void"))
+		{
+			JClassType callbackResultType = JClassUtils.getTypeArgForGenericType(callbackParameter.getType().isClassOrInterface());
+			srcWriter.println("String jsonText = response.getText();");
+			srcWriter.println("if (Response.SC_NO_CONTENT != response.getStatusCode() && !"+StringUtils.class.getCanonicalName()+".isEmpty(jsonText)){");
+			srcWriter.println("try{");
+
+			if (callbackResultType != null && callbackResultType.isAssignableTo(javascriptObjectType))
+			{
+				srcWriter.println(callbackResultTypeName+" result = "+JsonUtils.class.getCanonicalName()+".safeEval(jsonText);");
+			}
+			else
+			{
+				srcWriter.println("JSONValue jsonValue = JSONParser.parseStrict(jsonText);");
+				String serializerName = new JSonSerializerProxyCreator(context, logger, callbackResultType).create();
+				srcWriter.println(callbackResultTypeName+" result = new "+serializerName+"().decode(jsonValue);");
+			}
+			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
+			srcWriter.println(callbackParameterName+".onSuccess(result);");
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceUnexpectedError(e.getMessage())));");
+			srcWriter.println("}");
+			srcWriter.println("}else {");
+			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
+			srcWriter.println(callbackParameterName+".onSuccess(null);");
+			srcWriter.println("}");
+		}
+		else
+		{
+			generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
+			srcWriter.println(callbackParameterName+".onSuccess(null);");
+		}
+	}
+
 	protected void setLocaleInfo(SourcePrinter srcWriter, String builderVariable)
-    {
-		
+	{
+
 		srcWriter.println("String _locale = "+Screen.class.getCanonicalName()+".getLocale();");
 		srcWriter.println("if (_locale != null){");
-	    srcWriter.println(builderVariable+".setHeader(\""+HttpHeaderNames.ACCEPT_LANGUAGE+"\", _locale.replace('_', '-'));");//	pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+		srcWriter.println(builderVariable+".setHeader(\""+HttpHeaderNames.ACCEPT_LANGUAGE+"\", _locale.replace('_', '-'));");//	pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
 		srcWriter.println("}");
-    }
+	}
 
 	protected void generateXSRFHeaderProtectionForWrites(String httpMethod, String builderVar, SourcePrinter srcWriter)
-    {
-	    if (!httpMethod.equals("GET"))
-	    {
-	    	srcWriter.println(builderVar+".setHeader("+EscapeUtils.quote(HttpHeaderNames.XSRF_PROTECTION_HEADER)+", \"1\");");
-	    }
-    }
+	{
+		if (!httpMethod.equals("GET"))
+		{
+			srcWriter.println(builderVar+".setHeader("+EscapeUtils.quote(HttpHeaderNames.XSRF_PROTECTION_HEADER)+", \"1\");");
+		}
+	}
 
 	protected void generateSalveStateBlock(SourcePrinter srcWriter, Method method, String responseVar, String uriVar, String uri)
-    {
+	{
 		if (readMethods.containsKey(uri) && updateMethods.containsKey(uri))
 		{
 			GET get = method.getAnnotation(GET.class);
@@ -322,22 +398,22 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println("__saveCurrentEtag("+uriVar+", "+responseVar+");");
 			}
 		}
-    }
+	}
 
 	protected void generateValidateStateBlock(SourcePrinter srcWriter, Method method, String builderVar, String uriVar, String uri, String callbackParameterName)
-    {
+	{
 		if (readMethods.containsKey(uri) && updateMethods.containsKey(uri))
 		{
 			StateValidationModel validationModel = HttpMethodHelper.getStateValidationModel(method);
 			if (validationModel != null)
 			{
 				srcWriter.println("if (!__readCurrentEtag("+uriVar+", "+builderVar+","+validationModel.equals(StateValidationModel.ENSURE_STATE_MATCHES)+")){");
-				srcWriter.println(callbackParameterName+".onError(-1, Crux.getMessages().restServiceMissingStateEtag("+uriVar+"));");
+				srcWriter.println(callbackParameterName+".onError(new RestError(-1, Crux.getMessages().restServiceMissingStateEtag("+uriVar+")));");
 				srcWriter.println("return;");
 				srcWriter.println("}");
 			}
 		}
-    }
+	}
 
 	protected String getCallbackResultTypeName(JClassType callbackParameter)
 	{
@@ -422,9 +498,14 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				Response.class.getCanonicalName(), 
 				JsonUtils.class.getCanonicalName(), 
 				JSONValue.class.getCanonicalName(),
+				JSONObject.class.getCanonicalName(),
 				JSONParser.class.getCanonicalName(), 
 				URL.class.getCanonicalName(), 
-				Crux.class.getCanonicalName()};
+				Crux.class.getCanonicalName(),
+				Callback.class.getCanonicalName(),
+				StringUtils.class.getCanonicalName(),
+				RestError.class.getCanonicalName()
+		};
 	}
 
 	protected Method getImplementationMethod(JMethod method)
@@ -533,7 +614,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		//Use a jsonEncorer implicitly
 		return true;
 	}
-	
+
 	protected boolean isEnumTypesCompatibles(Class<?> class1, JEnumType jType)
 	{
 		if (class1.isEnum())
@@ -545,22 +626,22 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				return false;
 			}
 			for (JEnumConstant jEnumConstant : values2)
-            {
-                String name = jEnumConstant.getName();
-                boolean found = false;
-                for (Object enumConstant : values1)
-                {
-                    if (name.equals(enumConstant.toString()))
-                    {
-                    	found = true;
-                    	break;
-                    }
-                }
-                if (!found)
-                {
-                	return false;
-                }
-            }
+			{
+				String name = jEnumConstant.getName();
+				boolean found = false;
+				for (Object enumConstant : values1)
+				{
+					if (name.equals(enumConstant.toString()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					return false;
+				}
+			}
 			return true;
 		}
 		else if (String.class.isAssignableFrom(class1))

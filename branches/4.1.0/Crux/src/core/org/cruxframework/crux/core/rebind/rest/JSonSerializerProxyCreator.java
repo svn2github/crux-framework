@@ -29,11 +29,13 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.service.JsonEncoder;
+import org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -135,7 +137,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				JSONNull.class.getCanonicalName(), 
 				JSONNumber.class.getCanonicalName(),
 				JSONBoolean.class.getCanonicalName(), 
-				JSONString.class.getCanonicalName()
+				JSONString.class.getCanonicalName(),
+				GWT.class.getCanonicalName()
 		};
 		return imports;
 	}
@@ -459,28 +462,20 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 
 	private void generateDecodeStringForCustomType(SourcePrinter srcWriter, JClassType objectType, String jsonValueVar, String resultObjectVar, String resultSourceName)
 	{
-		if (objectType.isInterface() != null || objectType.isAbstract())
-		{
-			throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " +
-			"Custom types must be concrete classes. Interfaces and abstract classes are not allowed.");
-		}
-		if (objectType.findConstructor(new JType[]{}) == null)
-		{
-			throw new CruxGeneratorException("Type ["+objectType.getParameterizedQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " +
-			"It must declare a public and empty cosntructor.");
-		}
-
 		String jsonObjectVar = nameFactory.createName("jsonObject");
 		srcWriter.println("JSONObject "+jsonObjectVar+" = "+jsonValueVar+".isObject();");
-		srcWriter.println(resultObjectVar+" = new "+resultSourceName+"();");
+		srcWriter.println(resultObjectVar+" = GWT.create("+resultSourceName+".class);");
 
 		List<JMethod> setterMethods = JClassUtils.getSetterMethods(objectType);
 		for (JMethod method : setterMethods)
 		{
-			String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-			JType paramType = method.getParameterTypes()[0];
-			String serializerName = new JSonSerializerProxyCreator(context, logger, paramType).create();
-			srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
+			if (method.getAnnotation(JsonIgnore.class) == null)
+			{
+				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+				JType paramType = method.getParameterTypes()[0];
+				String serializerName = new JSonSerializerProxyCreator(context, logger, paramType).create();
+				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
+			}
 		}
 	}
 
@@ -492,10 +487,13 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		List<JMethod> getterMethods = JClassUtils.getGetterMethods(objectType);
 		for (JMethod method : getterMethods)
 		{
-			String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-			JType returnType = method.getReturnType();
-			String serializerName = new JSonSerializerProxyCreator(context, logger, returnType).create();
-			srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+			if (method.getAnnotation(JsonIgnore.class) == null)
+			{
+				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+				JType returnType = method.getReturnType();
+				String serializerName = new JSonSerializerProxyCreator(context, logger, returnType).create();
+				srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+			}
 		}
 	}
 }

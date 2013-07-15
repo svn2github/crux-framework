@@ -13,24 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.service;
+package org.cruxframework.crux.core.utils;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
+import com.google.gwt.user.server.Base64Utils;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface JsonEncoder<T>
+public class EncryptUtils
 {
-	String encode(T object);
-	T decode(String jsonText);
-	
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.METHOD})
-	public static @interface JsonIgnore{}
+	public static String hash(String s) throws NoSuchAlgorithmException
+	{
+		MessageDigest digest = MessageDigest.getInstance("MD5");
+		digest.update(s.getBytes());
+		return Base64Utils.toBase64(digest.digest());
+	}
 }

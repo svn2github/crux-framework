@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 import org.cruxframework.crux.core.client.rpc.st.UseSynchronizerToken;
 import org.cruxframework.crux.core.i18n.LocaleResolver;
-import org.cruxframework.crux.core.i18n.LocaleResolverInitialiser;
+import org.cruxframework.crux.core.i18n.LocaleResolverInitializer;
 import org.cruxframework.crux.core.server.dispatch.st.CruxSynchronizerTokenHandler;
 import org.cruxframework.crux.core.server.dispatch.st.CruxSynchronizerTokenHandlerFactory;
 import org.cruxframework.crux.core.server.dispatch.st.InvalidTokenException;
@@ -121,10 +121,10 @@ public class RemoteServiceServlet extends com.google.gwt.user.server.rpc.RemoteS
 	 */
 	protected boolean initUserLocaleResolver()
 	{
-		if (LocaleResolverInitialiser.getLocaleResolver() == null)
+		if (LocaleResolverInitializer.getLocaleResolver() == null)
 		{
-			LocaleResolverInitialiser.createLocaleResolverThreadData();
-			LocaleResolver resolver = LocaleResolverInitialiser.getLocaleResolver();
+			LocaleResolverInitializer.createLocaleResolverThreadData();
+			LocaleResolver resolver = LocaleResolverInitializer.getLocaleResolver();
 			resolver.initializeUserLocale(getThreadLocalRequest());
 			return true;
 		}
@@ -136,7 +136,7 @@ public class RemoteServiceServlet extends com.google.gwt.user.server.rpc.RemoteS
 	 */
 	protected void clearUserLocaleResolver()
 	{
-		LocaleResolverInitialiser.clearLocaleResolverThreadData();
+		LocaleResolverInitializer.clearLocaleResolverThreadData();
 	}
 
 	/**

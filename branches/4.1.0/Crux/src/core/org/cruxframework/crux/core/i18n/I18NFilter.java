@@ -35,15 +35,15 @@ public class I18NFilter implements Filter
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) 
 	throws IOException, ServletException 
 	{
-		LocaleResolverInitialiser.createLocaleResolverThreadData();
-		LocaleResolverInitialiser.getLocaleResolver().initializeUserLocale((HttpServletRequest) req);
+		LocaleResolverInitializer.createLocaleResolverThreadData();
+		LocaleResolverInitializer.getLocaleResolver().initializeUserLocale((HttpServletRequest) req);
 		try
 		{
 			chain.doFilter(req, resp);
 		}
 		finally
 		{
-			LocaleResolverInitialiser.clearLocaleResolverThreadData();
+			LocaleResolverInitializer.clearLocaleResolverThreadData();
 		}
 	}
 
