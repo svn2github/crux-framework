@@ -263,7 +263,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println("}else {");
 				generateSalveStateBlock(srcWriter, methodInfo.implementationMethod, "response", "restURI", methodInfo.methodURI);
 				srcWriter.println(callbackParameterName+".onSuccess(null);");
-				srcWriter.println(" }");
+				srcWriter.println("}");
 			}
 			else
 			{
