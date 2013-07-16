@@ -264,5 +264,18 @@
 		</any>
 	</replace-with>
     
+    <!-- NumberTextBox -->
+	<replace-with class="org.cruxframework.crux.widgets.client.textbox.NumberTextBox.DesktopImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.textbox.NumberTextBox.Impl" />
+		<any>
+			<when-property-is name="device.features" value="largeDisplayMouse" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.textbox.NumberTextBox.DevicesImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.textbox.NumberTextBox.Impl" />
+		<none>
+			<when-property-is name="device.features" value="largeDisplayMouse" />
+		</none>
+	</replace-with>
     
 </module>

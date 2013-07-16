@@ -17,6 +17,7 @@ package org.cruxframework.crux.widgets.client.maskedtextbox;
 
 import org.cruxframework.crux.core.client.formatter.InvalidFormatException;
 import org.cruxframework.crux.core.client.formatter.annotation.FormatterName;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -33,7 +34,7 @@ public class IntFilterFormatter extends FilteredTextBoxBaseFormatter
 
 	public String format(Object input) throws InvalidFormatException
 	{
-		if (input instanceof Integer)
+		if (input != null && (input instanceof Integer))
 		{
 			return Integer.toString((Integer) input);
 		}
@@ -45,6 +46,10 @@ public class IntFilterFormatter extends FilteredTextBoxBaseFormatter
 
 	public Object unformat(String input) throws InvalidFormatException
 	{
+		if (StringUtils.isEmpty(input))
+		{
+			return null;
+		}
 		return Integer.parseInt(input);
 	}
 
