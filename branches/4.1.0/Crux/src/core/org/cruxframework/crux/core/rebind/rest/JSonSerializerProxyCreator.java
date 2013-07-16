@@ -67,6 +67,8 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private JClassType setType;
 	private JClassType mapType;
 	private JClassType javascriptObjectType;
+	private JClassType exceptionType;
+	private JClassType stringType;
 
 	private static NameFactory nameFactory = new NameFactory();
 
@@ -74,10 +76,12 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	{
 		super(logger, context);
 		jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
+		exceptionType = context.getTypeOracle().findType(Exception.class.getCanonicalName());
 		listType = context.getTypeOracle().findType(List.class.getCanonicalName());
 		setType = context.getTypeOracle().findType(Set.class.getCanonicalName());
 		mapType = context.getTypeOracle().findType(Map.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
+		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
 		this.targetObjectType = targetObjectType;
 	}
 
@@ -464,7 +468,19 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	{
 		String jsonObjectVar = nameFactory.createName("jsonObject");
 		srcWriter.println("JSONObject "+jsonObjectVar+" = "+jsonValueVar+".isObject();");
-		srcWriter.println(resultObjectVar+" = GWT.create("+resultSourceName+".class);");
+		
+		if (objectType.isAssignableTo(exceptionType) && objectType.findConstructor(new JType[]{stringType}) != null)
+		{
+			srcWriter.println("if ("+jsonObjectVar+".containsKey(\"message\")){");
+			srcWriter.println(resultObjectVar+" = new "+resultSourceName+"("+jsonObjectVar+".get(\"message\").isString().stringValue());");
+			srcWriter.println("} else {");
+			srcWriter.println(resultObjectVar+" = GWT.create("+resultSourceName+".class);");
+			srcWriter.println("}");
+		}
+		else
+		{
+			srcWriter.println(resultObjectVar+" = GWT.create("+resultSourceName+".class);");
+		}
 
 		List<JMethod> setterMethods = JClassUtils.getSetterMethods(objectType);
 		for (JMethod method : setterMethods)
