@@ -133,30 +133,35 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 	 * @param direction
 	 * @param parameter
 	 */
-	protected void renderView(View view, Direction direction, Object parameter)
+	protected boolean renderView(View view, Direction direction, Object parameter)
 	{
 		if (activeView == null || !activeView.getId().equals(view.getId()))
 		{
 			final View previous = activeView;
 			final View next = view;
-			super.renderView(view, parameter);
-			if (previous == null || direction == null || !animationEnabled)
+			boolean rendered = super.renderView(view, parameter);
+			if (rendered)
 			{
-				swapPanel.setCurrentWidget(active);
-				concludeViewsSwapping(previous, next);
-			}
-			else
-			{
-				swapPanel.transitTo(active, direction, new Callback()
+				if (previous == null || direction == null || !animationEnabled)
 				{
-					@Override
-					public void onTransitionCompleted()
+					swapPanel.setCurrentWidget(active);
+					concludeViewsSwapping(previous, next);
+				}
+				else
+				{
+					swapPanel.transitTo(active, direction, new Callback()
 					{
-						concludeViewsSwapping(previous, next);
-					}
-				});
+						@Override
+						public void onTransitionCompleted()
+						{
+							concludeViewsSwapping(previous, next);
+						}
+					});
+				}
 			}
+			return rendered;
 		}
+		return false;
 	}
 
 	private void concludeViewsSwapping(final View previous, final View next)
@@ -170,16 +175,20 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
     }
 
 	@Override
-	protected void renderView(View view, Object parameter)
+	protected boolean renderView(View view, Object parameter)
 	{
-		renderView(view, Direction.FORWARD, parameter);
+		return renderView(view, Direction.FORWARD, parameter);
 	}
 
 	@Override
-	protected void activate(View view, Panel containerPanel, Object parameter)
+	protected boolean activate(View view, Panel containerPanel, Object parameter)
 	{
-		super.activate(view, containerPanel, parameter);
-		swapPanelVariables();
+		boolean activated = super.activate(view, containerPanel, parameter);
+		if (activated)
+		{
+			swapPanelVariables();
+		}
+		return activated;
 	}
 
 	@Override

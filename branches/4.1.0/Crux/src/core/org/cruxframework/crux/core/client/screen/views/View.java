@@ -804,7 +804,6 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	{
 		if (active)
 		{
-			active = false;
 			if (!skipEvent)
 			{
 				ViewDeactivateEvent event = new ViewDeactivateEvent(this, this.getId());
@@ -813,7 +812,12 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 					ViewDeactivateHandler handler = detachHandlers.get(i);
 					handler.onDeactivate(event);
 				}
-				return !event.isCanceled();
+				active = event.isCanceled();
+				return !active;
+			}
+			else
+			{
+				active = false;
 			}
 		}
 		return true;

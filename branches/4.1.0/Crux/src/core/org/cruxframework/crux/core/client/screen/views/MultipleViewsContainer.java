@@ -40,14 +40,15 @@ public abstract class MultipleViewsContainer extends ViewContainer
     }
 
 	@Override
-	protected void activate(View view, Panel containerPanel, Object parameter)
+	protected boolean activate(View view, Panel containerPanel, Object parameter)
 	{
 		assert(view != null):"Can not active a null view";
-	    if (!activeViews.containsKey(view.getId()))
+		boolean activated = super.activate(view, containerPanel, parameter);
+	    if (activated && !activeViews.containsKey(view.getId()))
 	    {
 	    	activeViews.put(view.getId(), view);
-    		super.activate(view, containerPanel, parameter);
 	    }
+	    return activated;
 	}
 	
 	@Override

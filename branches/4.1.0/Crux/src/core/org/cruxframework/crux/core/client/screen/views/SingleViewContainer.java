@@ -46,20 +46,21 @@ public abstract class SingleViewContainer extends ViewContainer
 	}
 	
 	@Override
-	protected void activate(View view, Panel containerPanel, Object parameter)
+	protected boolean activate(View view, Panel containerPanel, Object parameter)
 	{
 	    if (activeView != null)
 	    {
 	    	if (deactivate(activeView, getContainerPanel(activeView), false))
 	    	{
 	    		activeView = view;
-	    		super.activate(view, containerPanel, parameter);
+	    		return super.activate(view, containerPanel, parameter);
 	    	}
+	    	return false;
 	    }
 	    else
 	    {
 	    	activeView = view;
-    		super.activate(view, containerPanel, parameter);
+    		return super.activate(view, containerPanel, parameter);
 	    }
 	}
 	

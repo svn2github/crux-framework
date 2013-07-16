@@ -362,7 +362,7 @@ public abstract class ViewContainer extends Composite
 	 * @param containerPanel
 	 * @param parameter
 	 */
-	protected void activate(final View view, Panel containerPanel, final Object parameter)
+	protected boolean activate(final View view, Panel containerPanel, final Object parameter)
 	{
 		if (!view.isLoaded())
 		{
@@ -377,6 +377,7 @@ public abstract class ViewContainer extends Composite
 			}
 		});
 		ViewHandlers.ensureViewContainerHandlers(this);
+		return true;
 	}
 
 	/**
@@ -448,16 +449,20 @@ public abstract class ViewContainer extends Composite
      * @param view
      * @param parameter
      */
-    protected void renderView(View view, Object parameter)
+    protected boolean renderView(View view, Object parameter)
     {
 		assert (view!= null && views.containsKey(view.getId())):"Can not render the view["+view.getId()+"]. It was not added to the container";
 		Panel containerPanel = getContainerPanel(view);
-		activate(view, containerPanel, parameter);
-		String title = view.getTitle();
-		if (!StringUtils.isEmpty(title))
+		boolean activated = activate(view, containerPanel, parameter);
+		if (activated)
 		{
-			handleViewTitle(title, containerPanel, view.getId());
+			String title = view.getTitle();
+			if (!StringUtils.isEmpty(title))
+			{
+				handleViewTitle(title, containerPanel, view.getId());
+			}
 		}
+		return activated;
     }	
     
     /**
