@@ -435,9 +435,14 @@ public abstract class ViewContainer extends Composite
     {
 	    if (views.containsKey(view.getId()))
 		{
-			if (deactivate(view, getContainerPanel(view), skipEvent) && (skipEvent || view.unload()))
+			Panel containerPanel = getContainerPanel(view);
+			if (deactivate(view, containerPanel, skipEvent) && (skipEvent || view.unload()))
 			{
 				views.remove(view.getId());
+				if (view.isActive())
+				{
+					containerPanel.clear();
+				}
 				return true;
 			}
 		}

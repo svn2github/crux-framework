@@ -35,7 +35,7 @@ public class IntFilterFormatter extends FilteredTextBoxBaseFormatter
 	{
 		if (input instanceof Integer)
 		{
-			return Long.toString((Long) input);
+			return Integer.toString((Integer) input);
 		}
 		else
 		{

@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind.bean;
 
 import org.cruxframework.crux.core.client.bean.BeanContentValidator;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
@@ -80,7 +81,13 @@ public class BeanContentValidatorProxyCreator extends AbstractInterfaceWrapperPr
 					if (JClassUtils.isSimpleType(propertyInfo.getType()))
 					{
 						JPrimitiveType primitiveType = propertyInfo.getType().isPrimitive();
-						if (primitiveType == null)
+						if (propertyInfo.getType().getQualifiedSourceName().equals(String.class.getCanonicalName()))
+						{
+							srcWriter.println("if ("+(empty?"!":"")+"StringUtils.isEmpty("+objVariable+"."+propertyInfo.getReadMethod().getName()+"())){");
+							srcWriter.println("return false;");
+							srcWriter.println("}");
+						}
+						else if (primitiveType == null)
 						{
 							srcWriter.println("if ("+objVariable+"."+propertyInfo.getReadMethod().getName()+"() "+(empty?"!=":"==")+" null){");
 							srcWriter.println("return false;");
@@ -109,7 +116,8 @@ public class BeanContentValidatorProxyCreator extends AbstractInterfaceWrapperPr
 	protected String[] getImports()
 	{
 		return new String[]{
-				aType.getParameterizedQualifiedSourceName() 
+				aType.getParameterizedQualifiedSourceName(),
+				StringUtils.class.getCanonicalName()
 		};
 	}
 }
