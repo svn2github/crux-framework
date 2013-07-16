@@ -32,7 +32,8 @@ import org.cruxframework.crux.widgets.client.textbox.NumberTextBox;
  */
 @DeclarativeFactory(id="numberTextBox", library="widgets", targetWidget=NumberTextBox.class)
 @TagAttributes({
-	@TagAttribute("value")
+	@TagAttribute("value"),
+	@TagAttribute(value="maxLength", type=Integer.class)
 })
 public class NumberTextBoxFactory extends WidgetCreator<WidgetCreatorContext> implements HasValueChangeHandlersFactory<WidgetCreatorContext>, 
 									HasNameFactory<WidgetCreatorContext>, HasEnabledFactory<WidgetCreatorContext>, HasAllFocusHandlersFactory<WidgetCreatorContext>

@@ -46,7 +46,11 @@ public class NumberTextBox extends Composite implements HasValue<Integer>, HasEn
 {
 	private Impl impl;
 
-	static interface Impl extends IsWidget, HasValue<Integer>, HasEnabled, HasAllFocusHandlers, HasName {}
+	static interface Impl extends IsWidget, HasValue<Integer>, HasEnabled, HasAllFocusHandlers, HasName 
+	{
+		int getMaxLength();
+		void setMaxLength(int length);
+	}
 	
 	static class DesktopImpl extends Composite implements Impl
 	{
@@ -132,6 +136,18 @@ public class NumberTextBox extends Composite implements HasValue<Integer>, HasEn
         {
 	        return box.getName();
         }
+
+		@Override
+        public int getMaxLength()
+        {
+	        return box.getMaxLength();
+        }
+
+		@Override
+        public void setMaxLength(int length)
+        {
+			box.setMaxLength(length);
+        }
 	}
 	
 	static class DevicesImpl extends Composite implements Impl
@@ -175,6 +191,21 @@ public class NumberTextBox extends Composite implements HasValue<Integer>, HasEn
 			    e.type = "number";
 			    return e;
 			}-*/;
+
+			public int getMaxLength()
+            {
+			    return getInputElement().getMaxLength();
+            }
+
+			public void setMaxLength(int length)
+            {
+				getInputElement().setMaxLength(length);
+            }
+			
+			private InputElement getInputElement() 
+			{
+				return getElement().cast();
+			}
 		}
 
 		ValueBoxBase<Integer> impl;
@@ -251,6 +282,32 @@ public class NumberTextBox extends Composite implements HasValue<Integer>, HasEn
         {
 	        return impl.getName();
         }
+
+		@Override
+        public int getMaxLength()
+        {
+			if (HTML5Input.isSupported())
+			{
+				return ((HTML5Input)impl).getMaxLength();
+			}
+			else
+			{
+				return ((IntegerBox)impl).getMaxLength();
+			}
+        }
+
+		@Override
+        public void setMaxLength(int length)
+        {
+			if (HTML5Input.isSupported())
+			{
+				((HTML5Input)impl).setMaxLength(length);
+			}
+			else
+			{
+				((IntegerBox)impl).setMaxLength(length);
+			}
+        }
 	}
 	
 	public NumberTextBox()
@@ -319,4 +376,15 @@ public class NumberTextBox extends Composite implements HasValue<Integer>, HasEn
     {
 	    return impl.getName();
     }
+	
+	public int getMaxLength()
+	{
+		return impl.getMaxLength();
+	}
+	
+	public void setMaxLength(int length)
+	{
+		impl.setMaxLength(length);
+	}
+
 }
