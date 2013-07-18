@@ -125,6 +125,20 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		final SelectablePanel panel = new SelectablePanel();
 		panel.add(widget);
 		panel.setStyleName("item");
+		
+		//feature to add a style to a <div> item if the storyboard width/height property is empty
+		if(widget.getElement() != null && widget.getElement().getStyle() != null) {
+			if(StringUtils.isEmpty(itemWidth)) {
+				String elementWidth = widget.getElement().getStyle().getWidth();
+				itemWidth = StringUtils.isEmpty(elementWidth) ? itemWidth : elementWidth;
+			}
+				
+			if(StringUtils.isEmpty(itemHeight)) {
+				String elementHeight = widget.getElement().getStyle().getHeight();
+				itemHeight = StringUtils.isEmpty(elementHeight) ? itemHeight : elementHeight;
+			}
+		}
+		
 		if (!StringUtils.isEmpty(itemHeight))
 		{
 			panel.setHeight(itemHeight);
