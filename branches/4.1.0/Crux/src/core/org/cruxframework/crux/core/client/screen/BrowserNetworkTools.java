@@ -70,6 +70,7 @@ public class BrowserNetworkTools
 		private static final int REPEATING_INTERVAL = 5000;
 		private static final String TESTER_ID = "_network_tester_";
 		private final String URL_IMG = "clear.cache.gif";
+		@SuppressWarnings("unused")
 		private boolean isOnline;
 		private Panel testerPanel;
 
@@ -92,7 +93,9 @@ public class BrowserNetworkTools
 		 * a false answer. */ 
 		public boolean isOnline()
 		{
-			return isOnline;
+			//this will be replaced by another implementation that uses the bootstrap
+			return true;
+			//return isOnline;
 		}
 
 		private void updateNetworkStatus()
