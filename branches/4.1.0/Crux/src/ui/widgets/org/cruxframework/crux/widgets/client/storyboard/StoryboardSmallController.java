@@ -15,6 +15,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -125,20 +127,6 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		final SelectablePanel panel = new SelectablePanel();
 		panel.add(widget);
 		panel.setStyleName("item");
-		
-		//feature to add a style to a <div> item if the storyboard width/height property is empty
-		if(widget.getElement() != null && widget.getElement().getStyle() != null) {
-			if(StringUtils.isEmpty(itemWidth)) {
-				String elementWidth = widget.getElement().getStyle().getWidth();
-				itemWidth = StringUtils.isEmpty(elementWidth) ? itemWidth : elementWidth;
-			}
-				
-			if(StringUtils.isEmpty(itemHeight)) {
-				String elementHeight = widget.getElement().getStyle().getHeight();
-				itemHeight = StringUtils.isEmpty(elementHeight) ? itemHeight : elementHeight;
-			}
-		}
-		
 		if (!StringUtils.isEmpty(itemHeight))
 		{
 			panel.setHeight(itemHeight);
@@ -208,5 +196,40 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
     public void setHorizontalAlignment(HorizontalAlignmentConstant value)
     {
 		//DO Nothing
+    }
+
+	@Override
+    public void setVerticalAlignment(VerticalAlignmentConstant value)
+    {
+    	storyboard.getElement().getStyle().setProperty("verticalAlign", value.getVerticalAlignString());
+    }
+
+	@Override
+    public void setSmallDeviceItemHeight(IsWidget child, String height)
+    {
+		assert(child.asWidget().getParent() != null);
+		child.asWidget().getParent().setHeight(height);
+    }
+
+	@Override
+	public void setLargeDeviceItemHeight(IsWidget child, String height)
+	{
+	}
+	
+	@Override
+    public void setLargeDeviceItemWidth(IsWidget child, String width)
+    {
+    }
+
+	@Override
+    public void setHorizontalAlignment(IsWidget child, HorizontalAlignmentConstant value)
+    {
+		child.asWidget().getParent().getElement().getStyle().setProperty("textAlign", value.getTextAlignString());
+    }
+
+	@Override
+    public void setVerticalAlignment(IsWidget child, VerticalAlignmentConstant value)
+    {
+		child.asWidget().getParent().getElement().getStyle().setProperty("verticalAlign", value.getVerticalAlignString());
     }
 }

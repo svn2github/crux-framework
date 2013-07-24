@@ -22,8 +22,10 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IndexedPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -45,4 +47,10 @@ public interface Storyboard extends DeviceAdaptive, IndexedPanel, HasSelectionHa
 	String getLargeDeviceItemHeight();
 	void setLargeDeviceItemHeight(String height);
 	void setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant value);
+	void setVerticalAlignment(HasVerticalAlignment.VerticalAlignmentConstant value);
+	void setLargeDeviceItemHeight(IsWidget child, String height);
+	void setSmallDeviceItemHeight(IsWidget child, String height);
+	void setLargeDeviceItemWidth(IsWidget child, String width);
+	void setHorizontalAlignment(IsWidget child, HasHorizontalAlignment.HorizontalAlignmentConstant value);
+	void setVerticalAlignment(IsWidget child, HasVerticalAlignment.VerticalAlignmentConstant value);
 }
