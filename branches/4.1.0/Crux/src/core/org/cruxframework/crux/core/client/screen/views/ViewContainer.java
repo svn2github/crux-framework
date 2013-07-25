@@ -366,7 +366,7 @@ public abstract class ViewContainer extends Composite
 	{
 		if (!view.isLoaded())
 		{
-			view.load();
+			view.load(parameter);
 		}
 		view.render(containerPanel, new RenderCallback()
 		{
@@ -418,7 +418,7 @@ public abstract class ViewContainer extends Composite
 			views.put(view.getId(), view);
 			if (!lazy)
 			{
-				view.load();
+				view.load(null);
 			}
 			return true;
 		}

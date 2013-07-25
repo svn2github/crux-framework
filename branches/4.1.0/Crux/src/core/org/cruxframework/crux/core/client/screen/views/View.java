@@ -826,8 +826,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	/**
 	 * Called by the {@link ViewContainer} when the view is added to the container. 
 	 * This method creates the view widgets
+	 * @param parameter 
 	 */
-	protected void load()
+	protected void load(Object parameter)
 	{
 		if (!loaded)
 		{

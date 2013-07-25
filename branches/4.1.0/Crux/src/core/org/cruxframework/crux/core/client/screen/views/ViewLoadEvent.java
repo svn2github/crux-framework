@@ -24,11 +24,26 @@ import org.cruxframework.crux.core.client.event.CruxEvent;
  */
 public class ViewLoadEvent extends CruxEvent<View>
 {
+	private final Object parameter;
+
+	protected ViewLoadEvent(View view, Object parameter)
+	{
+		super(view, view.getId());
+		this.parameter = parameter;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public <T> T getParameterObject()
+	{
+		return (T) parameter;
+	}
+	
 	/**
 	 * Constructor
 	 */
 	protected ViewLoadEvent(View view)
 	{
 		super(view, view.getId());
+		parameter = null;
 	}
 }
