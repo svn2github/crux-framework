@@ -54,8 +54,15 @@ function __MODULE_FUNC__() {
       // intentionally silent on property failure
       return;
     }
-    
-    window.location.replace('offlineLoader_'+initialHtml);
+    var wrapFrame = document.createElement('iframe');
+    wrapFrame.src = 'offlineLoader_'+initialHtml;
+	wrapFrame.frameborder = 0;
+	wrapFrame.style.overflow = 'hidden';
+	wrapFrame.style.height = '100%';
+	wrapFrame.style.width = '100%';
+	wrapFrame.width = '100%';
+	wrapFrame.height = '100%';
+    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
 }
 
 __MODULE_FUNC__();

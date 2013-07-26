@@ -650,4 +650,29 @@ public class Screen
 	{
 		Screen.get().hideBlockDiv();
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isIos()
+	{
+		String userAgent = Window.Navigator.getUserAgent().toLowerCase();
+		return (userAgent.indexOf("iphone") > 0 || userAgent.indexOf("ipod") > 0 || userAgent.indexOf("ipad") > 0);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isAndroid()
+	{
+		String userAgent = Window.Navigator.getUserAgent().toLowerCase();
+		return (userAgent.indexOf("android") > 0);
+	}
+	
+    public static native void reload() /*-{
+    	$wnd.top.location.reload();
+  	}-*/;
+
 }

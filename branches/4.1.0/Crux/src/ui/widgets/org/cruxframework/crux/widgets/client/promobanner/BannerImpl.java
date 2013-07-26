@@ -16,7 +16,6 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -220,7 +219,7 @@ abstract class BannerImpl extends Composite
 	    if(selectHandler != null && hasButtonLabel)
 	    {
 	    	final Button btn = new Button();
-	    	boolean iosDevice = isIos();
+	    	boolean iosDevice = Screen.isIos();
 	    	btn.setPreventDefaultTouchEvents(!iosDevice); //iOS bug when using Fast Anchor on a TouchSlider
 	    	btn.setStyleName("button");
 	    	btn.setText(buttonLabel);
@@ -252,13 +251,6 @@ abstract class BannerImpl extends Composite
 	    }
 	    return messagePanel;
     }
-
-	private boolean isIos()
-	{
-		String userAgent = Window.Navigator.getUserAgent().toLowerCase();
-		
-		return (userAgent.indexOf("iphone") > 0 || userAgent.indexOf("ipod") > 0 || userAgent.indexOf("ipad") > 0);
-	}
 	
 	protected void showBanner(int i)
 	{

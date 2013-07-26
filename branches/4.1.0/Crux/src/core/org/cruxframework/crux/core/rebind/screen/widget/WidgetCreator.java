@@ -36,6 +36,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
+import org.cruxframework.crux.core.utils.ClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -507,7 +508,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public boolean hasPartialSupport()
     {
-	    return getWidgetClass().getAnnotation(PartialSupport.class) != null;
+	    return getWidgetClass().getAnnotation(PartialSupport.class) != null && ClassUtils.hasMethod(getWidgetClass(), "isSupported");
     }
 	
 	/**
@@ -525,7 +526,14 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	public void instantiateWidget(SourcePrinter out, C context) throws CruxGeneratorException
 	{
 		String className = getWidgetClassName();
-		out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
+		if (hasPartialSupport() && ClassUtils.hasMethod(getWidgetClass(), "createIfSupported"))
+		{
+			out.println("final "+className + " " + context.getWidget()+" = "+className+".createIfSupported();");
+		}
+		else
+		{
+			out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
+		}
 	}
 	
 	/**

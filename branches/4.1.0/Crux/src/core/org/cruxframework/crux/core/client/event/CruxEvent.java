@@ -21,20 +21,14 @@ package org.cruxframework.crux.core.client.event;
  *
  * @param <T>
  */
-public class CruxEvent<T>
+public class CruxEvent<T> extends Event<T>
 {
-	protected T source;
 	protected String senderId;
 
 	protected CruxEvent(T source, String senderId)
 	{
-		this.source = source;
+		super(source);
 		this.senderId = senderId;
-	}
-	
-	public T getSource()
-	{
-		return source;
 	}
 	
 	public String getSenderId()

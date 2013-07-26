@@ -175,6 +175,40 @@ public class ClassUtils
 
 	/**
 	 * 
+	 * @param baseType
+	 * @param methodName
+	 * @return
+	 */
+	public static boolean hasMethod(Class<?> baseType, String methodName)
+	{
+		return hasMethod(baseType, methodName, new Class<?>[]{});
+	}
+
+	/**
+	 * 
+	 * @param baseType
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 */
+	public static boolean hasMethod(Class<?> baseType, String methodName, Class<?>[] parameters)
+	{
+		try
+		{
+			if (baseType.getMethod(methodName, parameters) != null)
+			{
+				return true;
+			}
+		}
+		catch (Exception e)
+		{
+			
+		}
+		return false;
+	}
+	
+	/**
+	 * 
 	 * @param widgetType
 	 * @param setterMethod
 	 * @return

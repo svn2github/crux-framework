@@ -60,6 +60,7 @@ public class AppCacheLinker extends AbstractLinker
 	private final HashSet<String> cachedArtifacts = new HashSet<String>();
 	private static Set<String> allArtifacts = Collections.synchronizedSet(new HashSet<String>());
 	private static Map<String, Set<String>> generatedManifestResources = Collections.synchronizedMap(new HashMap<String, Set<String>>());
+	private static Map<String, String> generatedManifestNames = Collections.synchronizedMap(new HashMap<String, String>());
 	private List<String> acceptedFileExtensions = Arrays.asList(".html", ".js", ".css", ".png", ".jpg", ".gif", ".ico");
 	private PermutationsUtil permutationsUtil;
 	private static AtomicBoolean analyzed = new AtomicBoolean(false);
@@ -133,7 +134,7 @@ public class AppCacheLinker extends AbstractLinker
 	{
 		String selectionScriptText;
 		StringBuffer buffer = readFileToStringBuffer(getSelectionScriptTemplate(logger, context), logger);
-		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts, null);
+		selectionScriptText = fillSelectionScriptTemplate(buffer, logger, context, artifacts);
 		selectionScriptText = context.optimizeJavaScript(logger, selectionScriptText);
 		return selectionScriptText;
 	}
@@ -162,11 +163,20 @@ public class AppCacheLinker extends AbstractLinker
 		}
 	}
 
-	private String fillSelectionScriptTemplate(StringBuffer selectionScript, TreeLogger logger, LinkerContext context, ArtifactSet artifacts, Object object) throws UnableToCompleteException
+	private String fillSelectionScriptTemplate(StringBuffer selectionScript, TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
 	{
 		permutationsUtil.addPermutationsJs(selectionScript, logger, context);
 		replaceAll(selectionScript, "__MODULE_FUNC__", context.getModuleFunctionName());
 		replaceAll(selectionScript, "__MODULE_NAME__", context.getModuleName());
+		
+		Set<String> keySet = generatedManifestResources.keySet();
+		for (String permutationName : keySet)
+		{
+			if (generatedManifestNames.containsKey(permutationName))
+			{
+				replaceAll(selectionScript, generatedManifestNames.get(permutationName), permutationName);
+			}
+		}
 		return selectionScript.toString();
 	}
 
@@ -183,6 +193,7 @@ public class AppCacheLinker extends AbstractLinker
 	private void analyzePermutationArtifacts(ArtifactSet artifacts)
 	{
 		String permutationName = getPermutationName(artifacts);
+		String permutationStrongName = getPermutationStrongName(artifacts);
 
 		SortedSet<String> hashSet = new TreeSet<String>();
 		for (EmittedArtifact emitted : artifacts.find(EmittedArtifact.class))
@@ -199,6 +210,7 @@ public class AppCacheLinker extends AbstractLinker
 			}
 		}
 		generatedManifestResources.put(permutationName, hashSet);
+		generatedManifestNames.put(permutationName, permutationStrongName);
 	}
 
 	private void emitPermutationsAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String startScreenId) throws UnableToCompleteException
@@ -259,7 +271,7 @@ public class AppCacheLinker extends AbstractLinker
 		EmittedArtifact manifest = emitString(logger, builder.toString(), getManifestName());
 		artifacts.add(manifest);
 	}
-
+	
 	private boolean acceptCachedResource(String filename)
 	{
 		if (filename.startsWith("compile-report/"))
@@ -278,15 +290,13 @@ public class AppCacheLinker extends AbstractLinker
 
 	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationName) throws UnableToCompleteException
 	{
-		String moduleName = context.getModuleName();
-
 		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
 		builder.append("# Build Time [" + getCurrentTimeTruncatingMiliseconds() + "]\n");
 		builder.append("\nCACHE:\n");
 
 		for (String fn : artifacts)
 		{
-			builder.append("/" + moduleName + "/" + fn + "\n");
+			builder.append(fn + "\n");
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
@@ -335,6 +345,15 @@ public class AppCacheLinker extends AbstractLinker
 	}
 
 	static String getPermutationName(ArtifactSet artifacts)
+	{
+		for (CompilationResult result : artifacts.find(CompilationResult.class))
+		{
+			return Integer.toString(result.getPermutationId());
+		}
+		return null;
+	}
+
+	static String getPermutationStrongName(ArtifactSet artifacts)
 	{
 		for (CompilationResult result : artifacts.find(CompilationResult.class))
 		{

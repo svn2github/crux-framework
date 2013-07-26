@@ -28,7 +28,7 @@ import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.Validate;
-import org.cruxframework.crux.core.client.event.CruxEvent;
+import org.cruxframework.crux.core.client.event.Event;
 import org.cruxframework.crux.core.client.formatter.HasFormatter;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewAware;
@@ -137,7 +137,7 @@ public class ControllerProxyCreator extends AbstractProxyCreator
     		GWT.class.getCanonicalName(), 
     		org.cruxframework.crux.core.client.screen.Screen.class.getCanonicalName(),
     		FastMap.class.getCanonicalName(),
-    		CruxEvent.class.getCanonicalName(),
+    		Event.class.getCanonicalName(),
     		GwtEvent.class.getCanonicalName(),
     		HasValue.class.getCanonicalName(),
     		HasText.class.getCanonicalName(),
@@ -369,7 +369,7 @@ public class ControllerProxyCreator extends AbstractProxyCreator
 	        if (parameters != null && parameters.length == 1)
 	        {
 	        	JClassType gwtEventType = controllerClass.getOracle().getType(GwtEvent.class.getCanonicalName());
-	        	JClassType cruxEventType = controllerClass.getOracle().getType(CruxEvent.class.getCanonicalName());
+	        	JClassType cruxEventType = controllerClass.getOracle().getType(Event.class.getCanonicalName());
 	        	JClassType parameterType = parameters[0].getType().isClassOrInterface();
 	        	if (parameterType == null || (!gwtEventType.isAssignableFrom(parameterType) && !cruxEventType.isAssignableFrom(parameterType)))
 	        	{
