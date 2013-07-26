@@ -21,7 +21,7 @@ package org.cruxframework.crux.core.clientoffline;
  */
 public interface ApplicationCacheUIHandler
 {
-	void showProgress(String message);
-	void hideProgress();
+	void showMessage(String message);
+	void hideMessage();
 	void confirmReloadPage();
 }

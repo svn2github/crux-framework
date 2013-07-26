@@ -38,7 +38,7 @@ public class ApplicationCacheUIHandlerImpl implements ApplicationCacheUIHandler
      * Shows the progress dialog.
      */
 	@Override
-    public void showProgress(String message) 
+    public void showMessage(String message) 
     {
     	if (progress == null)
     	{
@@ -54,7 +54,7 @@ public class ApplicationCacheUIHandlerImpl implements ApplicationCacheUIHandler
      * Hides the progress dialog.
      */
 	@Override
-    public void hideProgress() 
+    public void hideMessage() 
     {
         if (progress != null)
         {

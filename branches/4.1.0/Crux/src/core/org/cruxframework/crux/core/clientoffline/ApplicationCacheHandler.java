@@ -56,13 +56,9 @@ public class ApplicationCacheHandler implements EntryPoint
     {
         hookAllListeners(this);
         scheduleUpdateChecker();
-        if (getStatus() == CHECKING) 
+        if (getStatus() == DOWNLOADING)
         {
-        	uiHandler.showProgress(messages.checkingResources());
-        }
-        else if (getStatus() == DOWNLOADING)
-        {
-        	uiHandler.showProgress(messages.downloadingResources());
+        	uiHandler.showMessage(messages.downloadingResources());
         }
 
         // Sometimes android leaves the status indicator spinning and spinning
@@ -74,14 +70,14 @@ public class ApplicationCacheHandler implements EntryPoint
      * @return The status of the application cache.
      */
     public static native int getStatus()/*-{
-        return $wnd.top.applicationCache.status;
+        return window.applicationCache.status;
     }-*/;
 
     /**
      * Asks the application cache to update itself.
      */
     public static native void updateCache()/*-{
-        $wnd.top.applicationCache.update();
+        window.applicationCache.update();
     }-*/;
 
     private void pollForStatusOnAndroid() 
@@ -100,7 +96,7 @@ public class ApplicationCacheHandler implements EntryPoint
                             switch (getStatus()) 
                             {
                             	case IDLE:
-                            		uiHandler.hideProgress();
+                            		uiHandler.hideMessage();
                             		return false;
                             	case UPDATEREADY:
                             		requestUpdate(false);
@@ -145,7 +141,7 @@ public class ApplicationCacheHandler implements EntryPoint
 		{
 			logger.log(Level.INFO, "Resources cached.");
 		}
-    	uiHandler.hideProgress();
+    	uiHandler.hideMessage();
     }
 
     /**
@@ -159,7 +155,6 @@ public class ApplicationCacheHandler implements EntryPoint
 		{
 			logger.log(Level.INFO, messages.checkingResources());
 		}
-    	uiHandler.showProgress(messages.checkingResources());
     }
 
     /**
@@ -174,7 +169,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, messages.downloadingResources());
 		}
     	updating = true;
-    	uiHandler.showProgress(messages.downloadingResources());
+    	uiHandler.showMessage(messages.downloadingResources());
     }
 
     /**
@@ -188,7 +183,7 @@ public class ApplicationCacheHandler implements EntryPoint
 		{
 			logger.log(Level.INFO, "No updates found");
 		}
-    	uiHandler.hideProgress();
+    	uiHandler.hideMessage();
     }
 
     /**
@@ -198,7 +193,7 @@ public class ApplicationCacheHandler implements EntryPoint
      */
     protected void onUpdateReady(Event event) 
     {
-    	uiHandler.hideProgress();
+    	uiHandler.hideMessage();
     	requestUpdate(false);
     	updating = false;
     }
@@ -214,7 +209,7 @@ public class ApplicationCacheHandler implements EntryPoint
 		{
 			logger.log(Level.INFO, messages.progressStatus(event.getLoaded(), event.getTotal()));
 		}
-    	uiHandler.showProgress(messages.progressStatus(event.getLoaded(), event.getTotal()));
+    	uiHandler.showMessage(messages.progressStatus(event.getLoaded(), event.getTotal()));
     }
     
 	/**
@@ -242,6 +237,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, messages.applicationCacheObsolete());
 		}
 		this.obsolete = true; 
+    	uiHandler.showMessage(messages.applicationCacheObsolete());
     }
 
     /**
@@ -274,35 +270,35 @@ public class ApplicationCacheHandler implements EntryPoint
      *            the instance to hook the listeners to.
      */
     protected final native void hookAllListeners(ApplicationCacheHandler instance)/*-{
-        $wnd.top.applicationCache.addEventListener('cached',
+        window.applicationCache.addEventListener('cached',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onCached(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('checking',
+        window.applicationCache.addEventListener('checking',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onChecking(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('downloading',
+        window.applicationCache.addEventListener('downloading',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onDownloading(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('noupdate',
+        window.applicationCache.addEventListener('noupdate',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onNoUpdate(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('updateready',
+        window.applicationCache.addEventListener('updateready',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onUpdateReady(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('progress',
+        window.applicationCache.addEventListener('progress',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onProgress(Lorg/cruxframework/crux/core/clientoffline/ProgressEvent;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('obsolete',
+        window.applicationCache.addEventListener('obsolete',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onObsolete(Lcom/google/gwt/user/client/Event;)(event);
             }, false);
-        $wnd.top.applicationCache.addEventListener('error',
+        window.applicationCache.addEventListener('error',
             function(event) {
                 instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onError(Lcom/google/gwt/user/client/Event;)(event);
             }, false);

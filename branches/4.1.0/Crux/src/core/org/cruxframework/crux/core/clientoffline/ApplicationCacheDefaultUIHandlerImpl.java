@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -41,7 +40,7 @@ public class ApplicationCacheDefaultUIHandlerImpl implements ApplicationCacheUIH
      * Shows the progress dialog.
      */
 	@Override
-    public void showProgress(String message) 
+    public void showMessage(String message) 
     {
     	if (progress == null)
     	{
@@ -54,14 +53,14 @@ public class ApplicationCacheDefaultUIHandlerImpl implements ApplicationCacheUIH
      * Hides the progress dialog.
      */
 	@Override
-    public void hideProgress() 
+    public void hideMessage() 
     {
-//        if (progress != null)
-//        {
-//        	progress.hide();
-//        	progress = null;
-//			contentLabel = null;
-//        }
+        if (progress != null)
+        {
+        	progress.hide();
+        	progress = null;
+			contentLabel = null;
+        }
     }
 
 	@Override
@@ -78,7 +77,7 @@ public class ApplicationCacheDefaultUIHandlerImpl implements ApplicationCacheUIH
         final DialogBox box = new DialogBox();
         final VerticalPanel panel = new VerticalPanel();
         contentLabel = new Label(content);
-        box.add(contentLabel);
+        panel.add(contentLabel);
         final Button buttonClose = new Button();
         buttonClose.setText("Ok");
         buttonClose.addClickHandler(new ClickHandler()
@@ -89,9 +88,7 @@ public class ApplicationCacheDefaultUIHandlerImpl implements ApplicationCacheUIH
 				box.hide();
 			}
 		});
-        buttonClose.setWidth("90px");
         panel.add(buttonClose);
-        panel.setCellHorizontalAlignment(buttonClose, HasAlignment.ALIGN_RIGHT);
         box.add(panel);
         box.center();
         return box;
