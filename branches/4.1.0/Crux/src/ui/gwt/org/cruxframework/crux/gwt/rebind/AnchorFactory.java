@@ -22,6 +22,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHorizontalAli
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasNameFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.AnyWidget;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.WidgetChildProcessor.HTMLTag;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
@@ -42,7 +43,8 @@ import com.google.gwt.user.client.ui.Anchor;
 	@TagAttribute("target")
 })
 @TagChildren({
-	@TagChild(value=AnchorFactory.ContentProcessor.class, autoProcess=false)
+	@TagChild(value=AnchorFactory.ContentProcessor.class, autoProcess=false),
+	@TagChild(value=AnchorFactory.ImageProcessor.class)
 })
 public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext> 
 	   implements HasHTMLFactory<WidgetCreatorContext>, HasNameFactory<WidgetCreatorContext>, 
@@ -52,6 +54,9 @@ public class AnchorFactory extends FocusWidgetFactory<WidgetCreatorContext>
 	@TagConstraints(minOccurs="0", maxOccurs="unbounded", type=HTMLTag.class)
 	public static class ContentProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
 
+	@TagConstraints(minOccurs="0", maxOccurs="1", type=AnyWidget.class)
+	public static class ImageProcessor extends WidgetChildProcessor<WidgetCreatorContext> {}
+	
 	@Override
     public WidgetCreatorContext instantiateContext()
     {
