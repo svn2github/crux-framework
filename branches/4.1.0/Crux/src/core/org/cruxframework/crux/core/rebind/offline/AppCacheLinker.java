@@ -110,7 +110,7 @@ public class AppCacheLinker extends AbstractLinker
 	private void emitOfflineArtifacts(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, OfflineScreen offlineScreen) throws UnableToCompleteException
 	{
 		String screenID = getTargetScreenId(context, logger, offlineScreen.getRefScreen());
-		emitMainAppCache(logger, context, artifacts, screenID);
+		emitMainAppCache(logger, context, artifacts);
 		emitPermutationsAppCache(logger, context, artifacts, screenID);
 		emitOfflinePage(logger, context, artifacts, offlineScreen);
 	}
@@ -237,23 +237,18 @@ public class AppCacheLinker extends AbstractLinker
 		{
 			Set<String> set = generatedManifestResources.get(permutationName);
 			set.addAll(cachedArtifacts);
-			artifacts.add(createCacheManifest(context, logger, set, permutationName));
+			artifacts.add(createCacheManifest(context, logger, set, permutationName, startScreenId));
 			artifacts.add(createCacheManifestLoader(context, logger, permutationName, startScreenId));
 		}
 	}
 
-	private void emitMainAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts, String startScreenId) throws UnableToCompleteException
+	private void emitMainAppCache(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException
 	{
 		String moduleName = context.getModuleName();
 
 		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
 		builder.append("# Build Time [" + getCurrentTimeTruncatingMiliseconds() + "]\n");
 		builder.append("\nCACHE:\n");
-
-		if (startScreenId != null)
-		{
-			builder.append(startScreenId + "\n");
-		}
 
 		for (String fn : cachedArtifacts)
 		{
@@ -288,15 +283,22 @@ public class AppCacheLinker extends AbstractLinker
 		return false;
 	}
 
-	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationName) throws UnableToCompleteException
+	private Artifact<?> createCacheManifest(LinkerContext context, TreeLogger logger, Set<String> artifacts, String permutationName, String startScreenId) throws UnableToCompleteException
 	{
+		String moduleName = context.getModuleName();
+		
 		StringBuilder builder = new StringBuilder("CACHE MANIFEST\n");
 		builder.append("# Build Time [" + getCurrentTimeTruncatingMiliseconds() + "]\n");
 		builder.append("\nCACHE:\n");
 
+		if (startScreenId != null)
+		{
+			builder.append(startScreenId + "\n");
+		}
+
 		for (String fn : artifacts)
 		{
-			builder.append(fn + "\n");
+			builder.append("/" + moduleName + "/" + fn + "\n");
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");
@@ -307,9 +309,10 @@ public class AppCacheLinker extends AbstractLinker
 	private Artifact<?> createCacheManifestLoader(LinkerContext context, TreeLogger logger, String permutationName, String startScreenId) throws UnableToCompleteException
 	{
 		StringBuilder builder = new StringBuilder();
+		builder.append("<!DOCTYPE html>\n");
 		builder.append("<html manifest=\"" + getManifestName(permutationName) + "\"><head><title></title><style>HTML,BODY{height: 100%;}</style></head>");
-		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden\">");
-		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"overflow:hidden;height:100%;width:100%\" height=\"100%\" width=\"100%\"></iframe>");
+		builder.append("<body style=\"margin:0px;padding:0px;overflow:hidden;\">");
+		builder.append("<iframe src=\"" + startScreenId + "\" frameborder=\"0\" style=\"height:100%;width:100%\" height=\"100%\" width=\"100%\"></iframe>");
 		builder.append("</body></html>");
 
 		return emitString(logger, builder.toString(), getManifestLoaderName(permutationName));

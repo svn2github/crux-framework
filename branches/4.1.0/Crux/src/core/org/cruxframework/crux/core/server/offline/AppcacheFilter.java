@@ -52,11 +52,10 @@ public class AppcacheFilter implements Filter
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException
 	{
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) resp;
 		if (Environment.isProduction())
 		{
-			HttpServletRequest request = (HttpServletRequest) req;
-			HttpServletResponse response = (HttpServletResponse) resp;
-			
 			String ifModifiedHeader = request.getHeader(HttpHeaderNames.IF_MODIFIED_SINCE);
 			long dateModified = getDateModified(request);
 			if ((ifModifiedHeader == null) || isFileModified(ifModifiedHeader, dateModified))
@@ -70,6 +69,8 @@ public class AppcacheFilter implements Filter
 		}
 		else
 		{
+			response.setContentType("text/cache-manifest");
+			response.setCharacterEncoding("UTF-8");
 			chain.doFilter(req, resp);
 		}
 	}

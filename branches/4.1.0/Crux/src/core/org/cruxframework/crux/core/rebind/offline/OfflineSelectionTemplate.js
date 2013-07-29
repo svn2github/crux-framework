@@ -54,15 +54,47 @@ function __MODULE_FUNC__() {
       // intentionally silent on property failure
       return;
     }
-    var wrapFrame = document.createElement('iframe');
-    wrapFrame.src = 'offlineLoader_'+initialHtml;
-	wrapFrame.frameborder = 0;
-	wrapFrame.style.overflow = 'hidden';
-	wrapFrame.style.height = '100%';
-	wrapFrame.style.width = '100%';
-	wrapFrame.width = '100%';
-	wrapFrame.height = '100%';
-    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
+//    var _ua = computePropValue('user.agent');
+//    if (_ua == 'safari')
+//    {
+//	    var wrapFrame = document.createElement('iframe');
+//	    wrapFrame.src = 'offlineLoader_'+initialHtml;
+//		wrapFrame.frameborder = 0;
+//		wrapFrame.style.height = '100%';
+//		wrapFrame.style.width = '100%';
+//		wrapFrame.width = '100%';
+//		wrapFrame.height = '100%';
+//	    document.getElementsByTagName('body')[0].appendChild(wrapFrame);
+//	}
+//	else 
+	if (window.applicationCache)
+	{
+		if (window.applicationCache.status =! 4)
+		{
+	        window.applicationCache.addEventListener('noupdate',
+	            function(event) {
+	                window.location.replace('offlineLoader_'+initialHtml);
+	            }, false);
+	        window.applicationCache.addEventListener('updateready',
+	            function(event) {
+	                window.location.replace('offlineLoader_'+initialHtml);
+	            }, false);
+	        window.applicationCache.addEventListener('error',
+	            function(event) {
+	                window.location.replace('offlineLoader_'+initialHtml);
+	            }, false);
+		} 
+		else
+		{	
+			setTimeout(function(){
+				window.location.replace('offlineLoader_'+initialHtml);
+			}, 100);
+		}
+	}
+	else
+	{
+	   window.alert('This browser does not support offline mode.');
+	}
 }
 
 __MODULE_FUNC__();
