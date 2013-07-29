@@ -26,6 +26,9 @@ public class ViewLoadEvent extends CruxEvent<View>
 {
 	private final Object parameter;
 
+	/**
+	 * Constructor
+	 */
 	protected ViewLoadEvent(View view, Object parameter)
 	{
 		super(view, view.getId());
@@ -36,14 +39,5 @@ public class ViewLoadEvent extends CruxEvent<View>
     public <T> T getParameterObject()
 	{
 		return (T) parameter;
-	}
-	
-	/**
-	 * Constructor
-	 */
-	protected ViewLoadEvent(View view)
-	{
-		super(view, view.getId());
-		parameter = null;
 	}
 }

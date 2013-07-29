@@ -746,9 +746,9 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	/**
 	 * Fires the load event
 	 */
-	protected void fireLoadEvent()
+	protected void fireLoadEvent(Object paramenter)
 	{
-		ViewLoadEvent event = new ViewLoadEvent(this);
+		ViewLoadEvent event = new ViewLoadEvent(this, paramenter);
 		for (int i = 0; i < loadHandlers.size(); i++)
         {
 			ViewLoadHandler handler = loadHandlers.get(i);
@@ -826,9 +826,8 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	/**
 	 * Called by the {@link ViewContainer} when the view is added to the container. 
 	 * This method creates the view widgets
-	 * @param parameter 
 	 */
-	protected void load(Object parameter)
+	protected void load(Object paramenter)
 	{
 		if (!loaded)
 		{
@@ -836,7 +835,7 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 			registerLoadedView();
 			createWidgets();
 			loaded = true;
-			fireLoadEvent();
+			fireLoadEvent(paramenter);
 		}
 	}
 	

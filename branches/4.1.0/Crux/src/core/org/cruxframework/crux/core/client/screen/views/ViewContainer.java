@@ -98,7 +98,12 @@ public abstract class ViewContainer extends Composite
 	 */
 	public boolean add(View view)
 	{
-		return addView(view, false);
+		return add(view, null);
+	}
+
+	public boolean add(View view, Object parameter)
+	{
+		return addView(view, false, parameter);
 	}
 
 	/**
@@ -108,7 +113,7 @@ public abstract class ViewContainer extends Composite
 	 */
 	public boolean addLazy(View view)
 	{
-		return addView(view, true);
+		return addView(view, true, null);
 	}
 	
 	/**
@@ -411,14 +416,14 @@ public abstract class ViewContainer extends Composite
 	 * @param view View to be added
 	 * @return
 	 */
-    protected boolean doAdd(View view, boolean lazy)
+    protected boolean doAdd(View view, boolean lazy, Object parameter)
     {
 		if (!views.containsKey(view.getId()))
 		{
 			views.put(view.getId(), view);
 			if (!lazy)
 			{
-				view.load(null);
+				view.load(parameter);
 			}
 			return true;
 		}
@@ -477,11 +482,11 @@ public abstract class ViewContainer extends Composite
      * @param lazy
      * @return
      */
-    protected boolean addView(View view, boolean lazy)
+    protected boolean addView(View view, boolean lazy, Object parameter)
     {
 	    assert (view != null):"Can not add a null view to the ViewContainer";
 		assert (getView(view.getId()) == null):"This container already contains a view with the given identifier ["+view.getId()+"].";
-		if (doAdd(view, lazy))
+		if (doAdd(view, lazy, parameter))
 		{
 			adoptView(view);
 			return true;

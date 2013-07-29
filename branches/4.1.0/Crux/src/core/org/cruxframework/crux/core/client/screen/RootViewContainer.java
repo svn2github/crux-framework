@@ -44,11 +44,11 @@ class RootViewContainer extends SingleViewContainer
 	}
 	
 	@Override
-	protected boolean doAdd(View view, boolean lazy)
+	protected boolean doAdd(View view, boolean lazy, Object parameter)
 	{
 	    assert(views.isEmpty()):"RootViewContainer can not contain more then one view";
 	    rootView = view;
-	    boolean added = super.doAdd(view, lazy);
+	    boolean added = super.doAdd(view, lazy, parameter);
 	    if (!added)
 	    {//During view creation, a widget can make a reference to Screen static methods... So, it is better to 
 	     // set rootView reference before widgets creation...	

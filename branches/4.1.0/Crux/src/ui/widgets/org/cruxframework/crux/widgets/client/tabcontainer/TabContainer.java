@@ -161,17 +161,17 @@ public class TabContainer extends MultipleViewsContainer
 	}
 
 	@Override
-	protected boolean doAdd(View view, boolean lazy)
+	protected boolean doAdd(View view, boolean lazy, Object parameter)
 	{
-		return doAdd(view, lazy, true);
+		return doAdd(view, lazy, true, parameter);
 	}
 
-	protected boolean doAdd(View view, boolean lazy, boolean closeable)
+	protected boolean doAdd(View view, boolean lazy, boolean closeable, Object parameter)
     {
 	    String tabId = view.getId();
 	    if (!views.containsKey(view.getId()))
 	    {
-	    	boolean doAdd = super.doAdd(view, lazy);
+	    	boolean doAdd = super.doAdd(view, lazy, parameter);
 	    	if (doAdd)
 	    	{
 	    		Flap flap = new Flap(this, view, closeable);
