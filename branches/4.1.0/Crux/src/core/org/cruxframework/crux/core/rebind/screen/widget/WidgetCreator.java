@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.PartialSupport;
 
@@ -508,7 +509,9 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	 */
 	public boolean hasPartialSupport()
     {
-	    return getWidgetClass().getAnnotation(PartialSupport.class) != null && ClassUtils.hasMethod(getWidgetClass(), "isSupported");
+	    JClassType widgetClassType = getViewFactory().getContext().getTypeOracle().findType(getWidgetClassName());
+		return widgetClassType != null && widgetClassType.getAnnotation(PartialSupport.class) != null 
+	    	   && ClassUtils.hasMethod(getWidgetClass(), "isSupported");
     }
 	
 	/**
