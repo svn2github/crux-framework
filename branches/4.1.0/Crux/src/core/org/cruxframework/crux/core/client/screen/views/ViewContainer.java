@@ -98,12 +98,7 @@ public abstract class ViewContainer extends Composite
 	 */
 	public boolean add(View view)
 	{
-		return add(view, null);
-	}
-
-	public boolean add(View view, Object parameter)
-	{
-		return addView(view, false, parameter);
+		return add(view, false, null);
 	}
 
 	/**
@@ -161,13 +156,13 @@ public abstract class ViewContainer extends Composite
 	 * @param render If true, call the render method
 	 * @return
 	 */
-    public boolean add(View view, boolean render)
+    public boolean add(View view, boolean render, Object parameter)
     {
-		if (add(view))
+		if (addView(view, false, parameter))
 		{
 			if (render)
 			{
-				renderView(view, null);
+				renderView(view, parameter);
 			}
 			return true;
 		}
@@ -273,9 +268,9 @@ public abstract class ViewContainer extends Composite
 	 */
 	public void loadView(String viewName, final boolean render)
 	{
-		loadView(viewName, viewName, render);
+		loadView(viewName, viewName, render, null);
 	}
-
+	
 	/**
 	 * Loads a view into the current container
 	 * 
@@ -283,7 +278,7 @@ public abstract class ViewContainer extends Composite
 	 * @param viewId View identifier
 	 * @param render If true also render the view
 	 */
-	public void loadView(final String viewName, final String viewId, final boolean render)
+	public void loadView(final String viewName, final String viewId, final boolean render, final Object parameter)
 	{
 		try
 		{
@@ -296,7 +291,7 @@ public abstract class ViewContainer extends Composite
 				@Override
 				public void onViewCreated(View view)
 				{
-					if (!add(view, render))
+					if (!add(view, render, parameter))
 					{
 						Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
 					}
@@ -322,7 +317,7 @@ public abstract class ViewContainer extends Composite
 				@Override
 				public void onViewCreated(View view)
 				{
-					if (add(view))
+					if (addView(view, false, parameter))
 					{
 						renderView(view, parameter);
 					}
