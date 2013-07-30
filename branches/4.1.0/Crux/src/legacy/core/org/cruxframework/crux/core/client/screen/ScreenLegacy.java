@@ -90,7 +90,7 @@ public class ScreenLegacy
 					@Override
 					public void onViewCreated(View view)
 					{
-						if (!rootViewContainer.add(view, true))
+						if (!rootViewContainer.add(view, true, null))
 						{
 							Crux.getErrorHandler().handleError(Crux.getMessages().viewContainerErrorCreatingView(viewId));
 						}

@@ -21,7 +21,7 @@ package org.cruxframework.crux.core.client.event;
  *
  * @param <T>
  */
-public class CruxEvent<T> extends Event<T>
+public class CruxEvent<T> extends BaseEvent<T>
 {
 	protected String senderId;
 

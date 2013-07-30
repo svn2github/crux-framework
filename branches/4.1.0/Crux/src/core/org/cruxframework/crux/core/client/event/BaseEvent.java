@@ -19,11 +19,11 @@ package org.cruxframework.crux.core.client.event;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Event<T>
+public class BaseEvent<T>
 {
 	protected T source;
 	
-	protected Event(T source)
+	protected BaseEvent(T source)
 	{
 		this.source = source;
 	}

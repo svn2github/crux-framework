@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.clientoffline;
 
-import org.cruxframework.crux.core.client.event.Event;
+import org.cruxframework.crux.core.client.event.BaseEvent;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.shared.EventHandler;
@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class NetworkEvent extends Event<Network>
+public class NetworkEvent extends BaseEvent<Network>
 {
 	/**
 	 * Implemented by objects that handle {@link NetworkEvent}.
