@@ -23,6 +23,6 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface OfflineConstants extends Constants
 {
-	@DefaultIntValue(60000) // 1 min
+	@DefaultIntValue(10000) // 1 min
 	int updateCheckInterval();
 }

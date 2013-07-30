@@ -18,13 +18,15 @@ package org.cruxframework.crux.core.clientoffline;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Event;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -41,14 +43,38 @@ public class ApplicationCacheHandler implements EntryPoint
     public static final int UPDATEREADY = 4;
     public static final int OBSOLETE = 5;
 
+    public static enum CacheEvent {onCached, onChecking, onDownloading, onNoupdate, onUpdateready, onProgress, onObsolete, onError}
+	
     private OfflineMessages messages = GWT.create(OfflineMessages.class);
     private OfflineConstants constants = GWT.create(OfflineConstants.class);
     private ApplicationCacheUIHandler uiHandler = GWT.create(ApplicationCacheUIHandler.class);
 
     private boolean updating = false;
 	private boolean obsolete = false;
+	private static FastList<ApplicationCacheEvent.Handler> cacheEventHandlers = null;
 
-
+	public static HandlerRegistration addApplicationCacheHandler(final ApplicationCacheEvent.Handler handler)
+	{
+		if (cacheEventHandlers == null)
+		{
+			 cacheEventHandlers = new FastList<ApplicationCacheEvent.Handler>();
+		}
+		cacheEventHandlers.add(handler);
+		
+		return new HandlerRegistration()
+		{
+			@Override
+			public void removeHandler()
+			{
+				int index = cacheEventHandlers.indexOf(handler);
+				if (index >= 0)
+				{
+					cacheEventHandlers.remove(index);
+				}
+			}
+		};
+	}
+	
     /**
      * Initializes and starts the monitoring.
      */
@@ -58,9 +84,9 @@ public class ApplicationCacheHandler implements EntryPoint
         scheduleUpdateChecker();
         if (getStatus() == DOWNLOADING)
         {
-        	uiHandler.showMessage(messages.downloadingResources());
+        	onDownloading();
         }
-
+        Network.get(); // initializes network monitor...
         // Sometimes android leaves the status indicator spinning and spinning
         // and spinning...
         pollForStatusOnAndroid();
@@ -69,17 +95,50 @@ public class ApplicationCacheHandler implements EntryPoint
     /**
      * @return The status of the application cache.
      */
-    public static native int getStatus()/*-{
+    private static native int getStatus()/*-{
         return window.applicationCache.status;
     }-*/;
 
     /**
      * Asks the application cache to update itself.
      */
-    public static native void updateCache()/*-{
+    public static void updateCache()
+    {
+    	try
+    	{
+    		updateCacheNative();	
+    	}
+    	catch (Exception e) 
+    	{
+    		if (LogConfiguration.loggingIsEnabled())
+    		{
+    			logger.log(Level.SEVERE, "Error updating cache.", e);
+    		}
+		}
+    }
+    /**
+     * Asks the application cache to update itself.
+     */
+    public static native void updateCacheNative()/*-{
         window.applicationCache.update();
     }-*/;
 
+    public static native void swapCache()/*-{
+        window.applicationCache.swapCache();
+    }-*/;
+    
+    private void fireApplicationCacheEvent(CacheEvent eventType)
+    {
+    	if (cacheEventHandlers != null)
+    	{
+    		ApplicationCacheEvent event = new ApplicationCacheEvent(eventType);
+    		for (int i=0; i< cacheEventHandlers.size(); i++)
+    		{
+    			cacheEventHandlers.get(i).onCacheEvent(event);
+    		}
+    	}
+    }
+    
     private void pollForStatusOnAndroid() 
     {
         if (Screen.isAndroid()) 
@@ -135,13 +194,14 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The event.
      */
-    protected void onCached(Event event) 
+    protected void onCached() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.INFO, "Resources cached.");
 		}
     	uiHandler.hideMessage();
+    	fireApplicationCacheEvent(CacheEvent.onCached);
     }
 
     /**
@@ -149,12 +209,13 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The event.
      */
-    protected void onChecking(Event event) 
+    protected void onChecking() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.INFO, messages.checkingResources());
 		}
+    	fireApplicationCacheEvent(CacheEvent.onChecking);
     }
 
     /**
@@ -162,14 +223,14 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The event.
      */
-    protected void onDownloading(Event event) 
+    protected void onDownloading() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.INFO, messages.downloadingResources());
 		}
     	updating = true;
-    	uiHandler.showMessage(messages.downloadingResources());
+    	fireApplicationCacheEvent(CacheEvent.onDownloading);
     }
 
     /**
@@ -177,13 +238,14 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The event.
      */
-    protected void onNoUpdate(Event event) 
+    protected void onNoUpdate() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.INFO, "No updates found");
 		}
     	uiHandler.hideMessage();
+    	fireApplicationCacheEvent(CacheEvent.onNoupdate);
     }
 
     /**
@@ -191,11 +253,20 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The event.
      */
-    protected void onUpdateReady(Event event) 
+    protected void onUpdateReady() 
     {
     	uiHandler.hideMessage();
-    	requestUpdate(false);
     	updating = false;
+    	fireApplicationCacheEvent(CacheEvent.onUpdateready);
+		ApplicationCacheHandler.swapCache();
+    	Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				requestUpdate(false);
+			}
+		});
     }
 
     /**
@@ -210,6 +281,7 @@ public class ApplicationCacheHandler implements EntryPoint
 			logger.log(Level.INFO, messages.progressStatus(event.getLoaded(), event.getTotal()));
 		}
     	uiHandler.showMessage(messages.progressStatus(event.getLoaded(), event.getTotal()));
+    	fireApplicationCacheEvent(CacheEvent.onProgress);
     }
     
 	/**
@@ -217,12 +289,14 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The error event.
      */
-    protected void onError(Event event) 
+    protected void onError() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
 			logger.log(Level.INFO, messages.applicationCacheError());
 		}
+    	uiHandler.hideMessage();
+    	fireApplicationCacheEvent(CacheEvent.onError);
     }
 
 	/**
@@ -230,7 +304,7 @@ public class ApplicationCacheHandler implements EntryPoint
      * 
      * @param event The error event.
      */
-    protected void onObsolete(Event event) 
+    protected void onObsolete() 
     {
 		if (LogConfiguration.loggingIsEnabled())
 		{
@@ -238,6 +312,7 @@ public class ApplicationCacheHandler implements EntryPoint
 		}
 		this.obsolete = true; 
     	uiHandler.showMessage(messages.applicationCacheObsolete());
+    	fireApplicationCacheEvent(CacheEvent.onObsolete);
     }
 
     /**
@@ -255,7 +330,7 @@ public class ApplicationCacheHandler implements EntryPoint
 		}
         if (force) 
         {
-            Screen.reload();
+    		Screen.reload();
         }
         else
         {
@@ -272,23 +347,23 @@ public class ApplicationCacheHandler implements EntryPoint
     protected final native void hookAllListeners(ApplicationCacheHandler instance)/*-{
         window.applicationCache.addEventListener('cached',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onCached(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onCached()();
             }, false);
         window.applicationCache.addEventListener('checking',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onChecking(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onChecking()();
             }, false);
         window.applicationCache.addEventListener('downloading',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onDownloading(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onDownloading()();
             }, false);
         window.applicationCache.addEventListener('noupdate',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onNoUpdate(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onNoUpdate()();
             }, false);
         window.applicationCache.addEventListener('updateready',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onUpdateReady(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onUpdateReady()();
             }, false);
         window.applicationCache.addEventListener('progress',
             function(event) {
@@ -296,11 +371,11 @@ public class ApplicationCacheHandler implements EntryPoint
             }, false);
         window.applicationCache.addEventListener('obsolete',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onObsolete(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onObsolete()();
             }, false);
         window.applicationCache.addEventListener('error',
             function(event) {
-                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onError(Lcom/google/gwt/user/client/Event;)(event);
+                instance.@org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler::onError()();
             }, false);
     }-*/;
 }

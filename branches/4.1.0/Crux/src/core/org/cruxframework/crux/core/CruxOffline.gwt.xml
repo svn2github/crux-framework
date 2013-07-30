@@ -23,7 +23,7 @@
         </none>
     </replace-with>   
     <replace-with
-        class="org.cruxframework.crux.core.clientoffline.Network.AjaxImpl">
+        class="org.cruxframework.crux.core.clientoffline.Network.UnsupportedImpl">
         <when-type-is class="org.cruxframework.crux.core.clientoffline.Network.Impl" />
         <when-property-is name="user.agent" value="ie6"/>
     </replace-with>   

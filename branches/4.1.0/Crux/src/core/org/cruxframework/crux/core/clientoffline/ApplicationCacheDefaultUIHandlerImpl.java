@@ -18,13 +18,9 @@ package org.cruxframework.crux.core.clientoffline;
 import org.cruxframework.crux.core.client.screen.Screen;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -75,21 +71,8 @@ public class ApplicationCacheDefaultUIHandlerImpl implements ApplicationCacheUIH
 	private static DialogBox createAlertBox(final String content) 
 	{
         final DialogBox box = new DialogBox();
-        final VerticalPanel panel = new VerticalPanel();
         contentLabel = new Label(content);
-        panel.add(contentLabel);
-        final Button buttonClose = new Button();
-        buttonClose.setText("Ok");
-        buttonClose.addClickHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				box.hide();
-			}
-		});
-        panel.add(buttonClose);
-        box.add(panel);
+        box.add(contentLabel);
         box.center();
         return box;
     }

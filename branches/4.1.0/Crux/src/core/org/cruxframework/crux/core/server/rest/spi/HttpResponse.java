@@ -70,8 +70,13 @@ public class HttpResponse
 	
 	public void sendException(int status, String message) throws IOException
 	{
+		sendError(status, serializeException(message));
+	}
+
+	public static String serializeException(String message) throws IOException
+	{
 		ExceptionData exceptionData = new ExceptionData(message);
-		sendError(status, exceptionDataWriter.writeValueAsString(exceptionData));
+		return exceptionDataWriter.writeValueAsString(exceptionData);
 	}
 
 	public boolean isCommitted()

@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.clientoffline;
 
 import org.cruxframework.crux.core.client.event.BaseEvent;
+import org.cruxframework.crux.core.clientoffline.ApplicationCacheHandler.CacheEvent;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -23,35 +24,35 @@ import com.google.gwt.event.shared.EventHandler;
  * @author Thiago da Rosa de Bustamante
  * 
  */
-public class NetworkEvent extends BaseEvent<Network>
+public class ApplicationCacheEvent extends BaseEvent<Network>
 {
 	/**
-	 * Implemented by objects that handle {@link NetworkEvent}.
+	 * Implemented by objects that handle {@link ApplicationCacheEvent}.
 	 */
 	public interface Handler extends EventHandler
 	{
-		void onNetworkChanged(NetworkEvent event);
+		void onCacheEvent(ApplicationCacheEvent event);
 	}
 
-	private final boolean onLine;
+	private final CacheEvent event;
 
 	/**
-	 * Construct a new {@link NetworkEvent}.
+	 * Construct a new {@link ApplicationCacheEvent}.
 	 * 
-	 * @param onLine true if the application is online
+	 * @param event current application cache event type
 	 */
-	protected NetworkEvent(boolean onLine)
+	protected ApplicationCacheEvent(CacheEvent event)
 	{
 		super (Network.get());
-		this.onLine = onLine;
+		this.event = event;
 	}
 
 	/**
-	 * Returns true if this event announces that the source has been onLine,
+	 * Returns true application cache event type,
 	 * false if it has been online.
 	 */
-	public boolean isOnLine()
+	public CacheEvent getEventType()
 	{
-		return onLine;
+		return event;
 	}
 }

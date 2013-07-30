@@ -145,7 +145,23 @@ public class Network implements HasNetworkHandlers
 		
 		public CacheManifestImpl()
         {
-			createManifestEventListeners(this);
+			ApplicationCacheHandler.addApplicationCacheHandler(new ApplicationCacheEvent.Handler()
+			{
+				@Override
+				public void onCacheEvent(ApplicationCacheEvent event)
+				{
+					switch (event.getEventType())
+                    {
+                    	case onDownloading:
+                    	case onUpdateready:
+                    	case onNoupdate:
+                    		onCacheHitEvent();
+	                    break;
+                    	case onError:
+                    		onCacheFailedEvent();                    		
+                    }
+				}
+			});
         }
 		
 		@Override
@@ -154,7 +170,7 @@ public class Network implements HasNetworkHandlers
 	        return isOnLine;
         }
 
-		private void onCacheEvent()
+		private void onCacheHitEvent()
 		{
 			boolean oldStatus = isOnLine;
 			isOnLine = true;
@@ -173,21 +189,6 @@ public class Network implements HasNetworkHandlers
 				fireOffLineEvent();
 			}
 		}
-
-		private native void createManifestEventListeners(CacheManifestImpl instance)/*-{
-	        $wnd.applicationCache.addEventListener('noupdate',
-	                function(event) {
-	                    instance.@org.cruxframework.crux.core.clientoffline.Network.CacheManifestImpl::onCacheEvent()();
-	                }, false);
-	        $wnd.applicationCache.addEventListener('updateready',
-	                function(event) {
-	                    instance.@org.cruxframework.crux.core.clientoffline.Network.CacheManifestImpl::onCacheEvent()();
-	                }, false);
-            $wnd.applicationCache.addEventListener('error',
-	                function(event) {
-	                    instance.@org.cruxframework.crux.core.clientoffline.Network.CacheManifestImpl::onCacheFailedEvent()();
-	                }, false);
-		}-*/;
 	}
 
 	/**

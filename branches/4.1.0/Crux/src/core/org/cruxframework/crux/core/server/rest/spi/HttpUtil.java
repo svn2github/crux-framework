@@ -369,7 +369,7 @@ public class HttpUtil
 		response.setStatus(status);
 		if (message!= null)
 		{
-			byte[] responseBytes = message.getBytes("UTF-8");
+			byte[] responseBytes = HttpResponse.serializeException(message).getBytes("UTF-8");
 			response.setContentLength(responseBytes.length);
 			response.setHeader(HttpHeaderNames.CONTENT_TYPE, MediaTypeHeaderParser.toString(new MediaType("text", "plain", "UTF-8")));
 			response.getOutputStream().write(responseBytes);
