@@ -114,7 +114,7 @@ public class HorizontalSwapContainer extends SingleViewContainer implements HasC
 				@Override
 				public void onViewCreated(View view)
 				{
-					if (addView(view, false, null))
+					if (addView(view, false, parameter))
 					{
 						renderView(view, direction, parameter);
 					}
