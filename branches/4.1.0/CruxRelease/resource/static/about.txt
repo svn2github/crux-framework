@@ -1,5 +1,5 @@
 Crux
-Copyright (c) cruxframework.org. 2011.  All rights reserved.
+Copyright (c) cruxframework.org. 2013.  All rights reserved.
 Visit Crux Code (http://www.cruxframework.org).
 
 This product includes software developed by:
@@ -10,8 +10,13 @@ This product includes software developed by:
     - Commons-logging
 - JBoss
     - javassist (http://labs.jboss.com/javassist/)
+    - restEasy (Includes some classes, modified and moved to package org.cruxframework.crux.core.server.rest) 
+         http://http://www.jboss.org/resteasy
 - Mortbay
     - Jetty (http://jetty.codehaus.org/jetty/)
 - Scannotation (Modified and renamed to org.cruxframework.crux.scannotation)  
      - http://scannotation.sourceforge.net/
+- IndexedDBShim  
+     - https://github.com/axemclion/IndexedDBShim
+
 For source availability and license information see COPYING.
