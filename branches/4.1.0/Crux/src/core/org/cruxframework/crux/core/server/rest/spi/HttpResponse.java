@@ -45,6 +45,16 @@ public class HttpResponse
 		this.response.setStatus(status);
 	}
 
+	void setContentType(String type)
+	{
+		this.response.setContentType(type);
+	}
+	
+	void setHeader(String name, String value)
+	{
+		this.response.setHeader(name, value);
+	}
+	
 	public HttpServletResponseHeaders getOutputHeaders()
 	{
 		return outputHeaders;
