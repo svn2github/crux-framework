@@ -2,6 +2,7 @@ package org.cruxframework.crux.core.server.rest.spi;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -45,14 +46,43 @@ public class HttpResponse
 		this.response.setStatus(status);
 	}
 
-	void setContentType(String type)
+	/**
+	 * Flushes the response as a file.
+	 * @param mimeType the file mimeType. 
+	 * @param fileName the file name.
+	 * @param fileContent the file content. 
+	 * @throws IOException
+	 */
+	public void flushFileContent(String mimeType, String fileName, String fileContent) throws IOException
 	{
-		this.response.setContentType(type);
+		generateFileContent(mimeType, "UTF-8", fileName, fileContent);
+		
+		this.response.flushBuffer();
 	}
 	
-	void setHeader(String name, String value)
+	/**
+	 * Flushes the response as a file.
+	 * @param mimeType the file mimeType. 
+	 * @param charset the file charset. 
+	 * @param fileName the file name.
+	 * @param fileContent the file content. 
+	 * @throws IOException
+	 */
+	public void flushFileContent(String mimeType, String charset, String fileName, String fileContent) throws IOException
 	{
-		this.response.setHeader(name, value);
+		generateFileContent(mimeType, charset, fileName, fileContent);
+		
+		this.response.flushBuffer();
+	}
+
+	private void generateFileContent(String mimeType, String charset,
+			String fileName, String fileContent) throws IOException {
+		this.response.setContentType(mimeType + "; " + "charset=" + charset);
+		this.response.setHeader("Content-disposition", "inline; filename=" + fileName);
+		
+		PrintWriter writer = this.response.getWriter();
+		writer.println(fileContent);
+		writer.close();
 	}
 	
 	public HttpServletResponseHeaders getOutputHeaders()
