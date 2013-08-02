@@ -13,24 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.service;
+package org.cruxframework.crux.core.client.db.indexeddb.events;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabase;
 
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface JsonEncoder<T>
+public class IDBUpgradeNeededEvent extends JavaScriptObject
 {
-	String encode(T object);
-	T decode(String jsonText);
-	
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.METHOD})
-	public static @interface JsonIgnore{}
+	public static interface Handler
+	{
+		void onUpgradeNeeded(IDBUpgradeNeededEvent event);
+	}
+
+	protected IDBUpgradeNeededEvent(){}
+
+	public final native IDBDatabase getResult()/*-{
+		return this.target.result;
+	}-*/;
 }

@@ -96,6 +96,10 @@
 		<when-type-assignable class="org.cruxframework.crux.core.client.bean.BeanContentValidator"/>
 	</generate-with>
 
+	<generate-with class="org.cruxframework.crux.core.rebind.bean.JsonEncoderProxyGenerator">
+		<when-type-assignable class="org.cruxframework.crux.core.client.bean.JsonEncoder"/>
+	</generate-with>
+
 	<!-- Replaces -->
 	
 	<!-- Specify Default implementation for NetworkChecker -->

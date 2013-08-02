@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.bean.JsonEncoder;
+import org.cruxframework.crux.core.client.bean.JsonEncoder.JsonIgnore;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
-import org.cruxframework.crux.core.client.service.JsonEncoder;
-import org.cruxframework.crux.core.client.service.JsonEncoder.JsonIgnore;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
