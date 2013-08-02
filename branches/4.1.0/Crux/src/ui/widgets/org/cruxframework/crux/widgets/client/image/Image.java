@@ -44,9 +44,11 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public class Image extends Composite implements HasSelectHandlers, HasLoadHandlers, HasErrorHandlers
 {
-	static class ImageImpl extends com.google.gwt.user.client.ui.Image implements HasSelectHandlers
+	static abstract class ImageImpl extends com.google.gwt.user.client.ui.Image implements HasSelectHandlers
 	{
 		protected boolean preventDefaultTouchEvents = false;
+		protected abstract void select();
+		
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
         {
 		    return addHandler(handler, SelectEvent.getType());
@@ -67,10 +69,20 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 				@Override
 				public void onClick(ClickEvent event)
 				{
-					SelectEvent.fire(NoTouchImpl.this);
+					SelectEvent selectEvent = SelectEvent.fire(NoTouchImpl.this);
+					if (selectEvent.isCanceled())
+					{
+						event.preventDefault();
+					}
 				}
 			});
         }
+		
+		@Override
+		protected void select()
+		{
+			ClickEvent.fireNativeEvent(null, this);
+		}
 	}
 	
 	static class TouchImpl extends ImageImpl implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
@@ -85,6 +97,12 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
         {
 			addTouchStartHandler(this);
         }
+		
+		@Override
+		protected void select()
+		{
+			SelectEvent.fire(this);
+		}
 		
 		@Override
 		public void onTouchEnd(TouchEndEvent event)
