@@ -16,19 +16,15 @@
 package org.cruxframework.crux.widgets.rebind.styledpanel;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.align.HorizontalAlignment;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.align.VerticalAlignment;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasVerticalAlignmentFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.children.AnyWidgetChildProcessor;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttribute;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributes;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChild;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
-import org.cruxframework.crux.gwt.rebind.ComplexPanelFactory;
 import org.cruxframework.crux.gwt.rebind.FlowPanelFactory;
+import org.cruxframework.crux.gwt.rebind.PanelFactory;
 import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
 
 /**
@@ -38,16 +34,9 @@ import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
 @TagChildren({
 	@TagChild(FlowPanelFactory.WidgetContentProcessor.class)
 })
-@TagAttributesDeclaration({
-	@TagAttributeDeclaration(value="horizontalAlignment", type=HorizontalAlignment.class, defaultValue="defaultAlign"),
-	@TagAttributeDeclaration(value="verticalAlignment", type=VerticalAlignment.class)
-})
-@TagAttributes({
-	@TagAttribute(value="verticalSpacing", type=Integer.class, defaultValue="0")
-})
-public class StyledPanelFactory extends ComplexPanelFactory<WidgetCreatorContext>
+public class StyledPanelFactory extends PanelFactory<WidgetCreatorContext> implements HasHorizontalAlignmentFactory<WidgetCreatorContext>, HasVerticalAlignmentFactory<WidgetCreatorContext>
 {
-    @TagConstraints(minOccurs="0", maxOccurs="unbounded")
+    @TagConstraints(minOccurs="0", maxOccurs="1")
     public static class WidgetContentProcessor extends AnyWidgetChildProcessor<WidgetCreatorContext> {}
 	
 	@Override

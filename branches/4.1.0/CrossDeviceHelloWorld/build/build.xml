@@ -128,6 +128,38 @@
 
 	<!-- 
 	========================================================================================================
+		Invokes the GWT compiler with draftCompile option and java debug parameters.
+	========================================================================================================
+	-->
+	<target name="fast-compile-scripts-bebug">
+		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
+			<dirset dir="${web.root}" />
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement path="${web.root}" />
+				<pathelement path="${target.classes.dir}" />
+			</classpath>
+
+			<!-- change these two parameters if you need to modify memory settings -->
+			<jvmarg value="-Xmx768M" />
+			<jvmarg value="-Xms256M" />
+
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y"/>
+			
+			<arg value="-draftCompile" />
+			
+			<!-- use these parameters if you want to modify GWT output settings
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			<arg value="-logLevel"/>
+			<arg value="DEBUG"/>
+			-->
+		</cruxcompiler>
+	</target>
+	
+	<!-- 
+	========================================================================================================
 		Invokes the GWT compiler with draftCompile option.
 	========================================================================================================
 	-->

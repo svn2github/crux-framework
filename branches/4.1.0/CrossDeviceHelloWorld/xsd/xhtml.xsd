@@ -672,6 +672,7 @@
       </xs:sequence>
       <xs:attributeGroup ref="i18n"/>
       <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute name="manifest" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

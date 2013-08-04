@@ -1,0 +1,16 @@
+<xs:schema 
+xmlns="http://www.cruxframework.org/offline" 
+targetNamespace="http://www.cruxframework.org/offline" >
+<xs:element name="offlineContent" type="OfflineContent"/>
+<xs:complexType name="OfflineContent" mixed="true">
+<xs:attribute name="resourceName" type="xs:string" use="required"/>
+</xs:complexType>
+<xs:element name="offlineScreen" type="OfflineScreen"/>
+<xs:complexType name="OfflineScreen" mixed="true">
+<xs:choice minOccurs="0" maxOccurs="unbounded">
+<xs:element ref="offlineContent" />
+</xs:choice>
+<xs:attribute name="moduleName" type="xs:string" use="required"/>
+<xs:attribute name="screenId" type="xs:string" use="required"/>
+</xs:complexType>
+</xs:schema>

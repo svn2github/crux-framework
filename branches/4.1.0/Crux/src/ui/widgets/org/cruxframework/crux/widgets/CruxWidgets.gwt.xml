@@ -277,5 +277,13 @@
 			<when-property-is name="device.features" value="largeDisplayMouse" />
 		</none>
 	</replace-with>
+	
+	<!-- FormDisplay -->
+	<replace-with class="org.cruxframework.crux.widgets.client.formdisplay.FormDisplay.FormEntrySmall">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.formdisplay.FormDisplay.FormEntry" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+		</any>
+	</replace-with>
     
 </module>

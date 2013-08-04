@@ -28,6 +28,22 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onAttach" />
 <xs:attribute name="onDettach" />
 </xs:complexType>
+<xs:element name="formDisplay" type="TformDisplay"/>
+<xs:complexType name="TformDisplay">
+<xs:sequence>
+<xs:element name="entry" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_formdisplay_FormDisplayFactory_EntryProcessor"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+</xs:complexType>
 <xs:element name="anchor" type="Tanchor"/>
 <xs:complexType name="Tanchor">
 <xs:sequence>
@@ -73,6 +89,27 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onAttach" />
 <xs:attribute name="onDettach" />
 <xs:attribute name="onBeforeSelection" />
+</xs:complexType>
+<xs:element name="slideshow" type="Tslideshow"/>
+<xs:complexType name="Tslideshow">
+<xs:sequence>
+<xs:element name="service" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_slideshow_SlideshowFactory_ServiceProcessor"/>
+</xs:sequence>
+<xs:attribute name="autoPlay" type="xs:boolean" default="false" />
+<xs:attribute name="loadOnStartup" type="xs:boolean" default="false" />
+<xs:attribute name="layout" type="xs:string" />
+<xs:attribute name="preloadNextImages" type="xs:boolean" default="true" />
+<xs:attribute name="transitionDelay" type="xs:int" default="5000" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
 </xs:complexType>
 <xs:element name="dialogViewContainer" type="TdialogViewContainer"/>
 <xs:complexType name="TdialogViewContainer">
@@ -139,27 +176,6 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onChange" />
 </xs:extension>
 </xs:simpleContent>
-</xs:complexType>
-<xs:element name="slideshow" type="Tslideshow"/>
-<xs:complexType name="Tslideshow">
-<xs:sequence>
-<xs:element name="service" minOccurs="0" maxOccurs="1" type="org_cruxframework_crux_widgets_rebind_slideshow_SlideshowFactory_ServiceProcessor"/>
-</xs:sequence>
-<xs:attribute name="autoPlay" type="xs:boolean" default="false" />
-<xs:attribute name="loadOnStartup" type="xs:boolean" default="false" />
-<xs:attribute name="layout" type="xs:string" />
-<xs:attribute name="preloadNextImages" type="xs:boolean" default="true" />
-<xs:attribute name="transitionDelay" type="xs:int" default="5000" />
-<xs:attribute name="id" type="xs:string" use="required" />
-<xs:attribute name="width" type="xs:string" />
-<xs:attribute name="height" type="xs:string" />
-<xs:attribute name="styleName" type="xs:string" />
-<xs:attribute name="visible" type="xs:boolean" />
-<xs:attribute name="tooltip" type="xs:string" />
-<xs:attribute name="style" type="xs:string" />
-<xs:attribute name="onLoadWidget" />
-<xs:attribute name="onAttach" />
-<xs:attribute name="onDettach" />
 </xs:complexType>
 <xs:element name="horizontalSwapPanel" type="ThorizontalSwapPanel"/>
 <xs:complexType name="ThorizontalSwapPanel">
@@ -483,6 +499,26 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="onAttach" />
 <xs:attribute name="onDettach" />
 </xs:complexType>
+<xs:element name="numberTextBox" type="TnumberTextBox"/>
+<xs:complexType name="TnumberTextBox">
+<xs:attribute name="value" type="xs:string" />
+<xs:attribute name="maxLength" type="xs:int" />
+<xs:attribute name="id" type="xs:string" use="required" />
+<xs:attribute name="width" type="xs:string" />
+<xs:attribute name="height" type="xs:string" />
+<xs:attribute name="styleName" type="xs:string" />
+<xs:attribute name="visible" type="xs:boolean" />
+<xs:attribute name="tooltip" type="xs:string" />
+<xs:attribute name="style" type="xs:string" />
+<xs:attribute name="name" type="xs:string" />
+<xs:attribute name="enabled" type="xs:boolean" />
+<xs:attribute name="onLoadWidget" />
+<xs:attribute name="onAttach" />
+<xs:attribute name="onDettach" />
+<xs:attribute name="onChange" />
+<xs:attribute name="onFocus" />
+<xs:attribute name="onBlur" />
+</xs:complexType>
 <xs:element name="tabViewContainer" type="TtabViewContainer"/>
 <xs:complexType name="TtabViewContainer">
 <xs:sequence>
@@ -523,6 +559,7 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="largeDeviceItemWidth" type="xs:string" />
 <xs:attribute name="smallDeviceItemHeight" type="xs:string" />
 <xs:attribute name="largeDeviceItemHeight" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="center" />
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />
@@ -542,6 +579,8 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 </xs:sequence>
 <xs:attribute name="transitionDuration" type="xs:int" default="500" />
 <xs:attribute name="autoRemoveInactiveViews" type="xs:boolean" default="false" />
+<xs:attribute name="animationEnabledForLargeDevices" type="xs:boolean" default="true" />
+<xs:attribute name="animationEnabledForSmallDevices" type="xs:boolean" default="true" />
 <xs:attribute name="id" type="xs:string" use="required" />
 <xs:attribute name="width" type="xs:string" />
 <xs:attribute name="height" type="xs:string" />
@@ -819,6 +858,9 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:attribute name="time" type="xs:int" use="required" />
 <xs:attribute name="execute" type="xs:string" use="required" />
 </xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_dialogcontainer_DialogViewContainerFactory_ViewProcessor">
+<xs:attribute name="name" type="xs:string" use="required" />
+</xs:complexType>
 <xs:complexType name="org_cruxframework_crux_widgets_rebind_slideshow_SlideshowFactory_ServiceProcessor">
 <xs:sequence>
 <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="org_cruxframework_crux_widgets_rebind_slideshow_SlideshowFactory_ServiceParameterProcessor"/>
@@ -828,9 +870,6 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:complexType name="org_cruxframework_crux_widgets_rebind_slideshow_SlideshowFactory_ServiceParameterProcessor">
 <xs:attribute name="name" type="xs:string" use="required" />
 <xs:attribute name="value" type="xs:string" use="required" />
-</xs:complexType>
-<xs:complexType name="org_cruxframework_crux_widgets_rebind_dialogcontainer_DialogViewContainerFactory_ViewProcessor">
-<xs:attribute name="name" type="xs:string" use="required" />
 </xs:complexType>
 <xs:complexType name="org_cruxframework_crux_widgets_rebind_rollingtabs_RollingTabPanelFactory_TabProcessor">
 <xs:sequence>
@@ -857,6 +896,13 @@ targetNamespace="http://www.cruxframework.org/crux/widgets" >
 <xs:sequence>
 <xs:group ref="c:widgets" />
 </xs:sequence>
+</xs:complexType>
+<xs:complexType name="org_cruxframework_crux_widgets_rebind_formdisplay_FormDisplayFactory_EntryProcessor">
+<xs:sequence>
+<xs:group ref="c:widgets" />
+</xs:sequence>
+<xs:attribute name="label" type="xs:string" />
+<xs:attribute name="horizontalAlignment" type="org_cruxframework_crux_core_rebind_screen_widget_creator_align_HorizontalAlignment" default="left" />
 </xs:complexType>
 <xs:complexType name="org_cruxframework_crux_widgets_rebind_promobanner_PromoBannerFactory_BannerProcessor">
 <xs:attribute name="image" type="xs:string" />

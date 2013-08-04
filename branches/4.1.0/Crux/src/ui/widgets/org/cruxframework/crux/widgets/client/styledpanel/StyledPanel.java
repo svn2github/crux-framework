@@ -15,26 +15,46 @@
  */
 package org.cruxframework.crux.widgets.client.styledpanel;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Gesse S. F. Dafe
  */
-public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, HasVerticalAlignment
+public class StyledPanel extends Composite implements HasHorizontalAlignment, HasVerticalAlignment
 {
+	private static final String DEFAULT_OUTER_STYLE_NAME = "crux-StyledPanelOuter";
 	private static final String DEFAULT_STYLE_NAME = "crux-StyledPanel";
 	
-	private VerticalAlignmentConstant verticalAlignment = HasVerticalAlignment.ALIGN_TOP;
-	private HorizontalAlignmentConstant horizontalAlignment = HasHorizontalAlignment.ALIGN_LEFT;
-	private int verticalSpacing = 0;
+	private VerticalAlignmentConstant verticalAlignment = HasVerticalAlignment.ALIGN_MIDDLE;
+	private HorizontalAlignmentConstant horizontalAlignment = HasHorizontalAlignment.ALIGN_CENTER;
+
+	private SimplePanel externalPanel = new SimplePanel();
+	private SimplePanel internalPanel = new SimplePanel();
 	
 	public StyledPanel()
 	{
-		setStyleName(DEFAULT_STYLE_NAME);
+		initWidget(externalPanel);
+		externalPanel.add(internalPanel);
+		
+		Style extrnStyle = externalPanel.getElement().getStyle();
+		extrnStyle.setProperty("display", "table");
+		extrnStyle.setProperty("boxSizing", "border-box");
+
+		Style intrnStyle = internalPanel.getElement().getStyle();
+		intrnStyle.setProperty("display", "table-cell");
+		intrnStyle.setWidth(100, Unit.PCT);
+		
+		externalPanel.setStyleName(DEFAULT_OUTER_STYLE_NAME);
+		internalPanel.setStyleName(DEFAULT_STYLE_NAME);
+
+		setHorizontalAlignment(horizontalAlignment);
+		setVerticalAlignment(verticalAlignment);
 	}
 
 	@Override
@@ -46,7 +66,6 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 	@Override
 	public void setVerticalAlignment(VerticalAlignmentConstant align)
 	{
-		String display = "";
 		String verticalAlign = "";
 
 		if (align != null)
@@ -55,18 +74,16 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 			
 			if (this.verticalAlignment.equals(HasVerticalAlignment.ALIGN_MIDDLE))
 			{
-				display = "table-cell";
 				verticalAlign = "middle";
 			}
 			else if (this.verticalAlignment.equals(HasVerticalAlignment.ALIGN_BOTTOM))
 			{
-				display = "table-cell";
 				verticalAlign = "bottom";
 			}
 		}
 		
-		getElement().getStyle().setProperty("display", display);
-		getElement().getStyle().setProperty("verticalAlign", verticalAlign);
+		Style style = internalPanel.getElement().getStyle();
+		style.setProperty("verticalAlign", verticalAlign);
 	}
 
 	@Override
@@ -77,16 +94,6 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 
 	@Override
 	public void setHorizontalAlignment(HorizontalAlignmentConstant align)
-	{
-		setHorizontalAlignment(align, null);
-	}
-	
-	/**
-	 * Apply the horizontal alignment on a single child widget or on every children (when child == null).
-	 * @param align
-	 * @param childIndex
-	 */
-	public void setHorizontalAlignment(HorizontalAlignmentConstant align, Widget child)
 	{
 		String marginLeft = "";
 		String marginRight = "";
@@ -99,77 +106,26 @@ public class StyledPanel extends FlowPanel implements HasHorizontalAlignment, Ha
 			{
 				marginRight = "auto";
 			}
-			if (this.verticalAlignment.equals(HasHorizontalAlignment.ALIGN_CENTER))
+			if (this.horizontalAlignment.equals(HasHorizontalAlignment.ALIGN_CENTER))
 			{
 				marginLeft = "auto";
 				marginRight = "auto";
 			}
 		}
 		
-		final String finalMarginLeft = marginLeft;
-		final String finalMarginRight = marginRight;
-		
-		forEachWidget(child, new ChildWidgetAction()
+		if(internalPanel.getWidget() != null)
 		{
-			@Override
-			public void doAction(Widget currentChild)
-			{
-				currentChild.getElement().getStyle().setProperty("marginLeft", finalMarginLeft);
-				currentChild.getElement().getStyle().setProperty("marginRight", finalMarginRight);
-			}
-		});
+			Style childStyle = internalPanel.getWidget().getElement().getStyle();
+			childStyle.setProperty("marginLeft", marginLeft);
+			childStyle.setProperty("marginRight", marginRight);
+		}
 	}
 	
-	@Override
 	public void add(Widget w)
 	{
-		super.add(w);
-		setHorizontalAlignment(getHorizontalAlignment(), w);
-		setVerticalSpacing(getVerticalSpacing(), w);
-	}
-
-	public int getVerticalSpacing()
-	{
-		return verticalSpacing;
-	}
-
-	public void setVerticalSpacing(int verticalSpacing)
-	{
-		setVerticalSpacing(verticalSpacing, null);
+		internalPanel.add(w);
+		setHorizontalAlignment(getHorizontalAlignment());
 	}
 	
-	private void setVerticalSpacing(final int verticalSpacing, Widget child)
-	{
-		this.verticalSpacing = verticalSpacing;
-		forEachWidget(child, new ChildWidgetAction()
-		{
-			@Override
-			public void doAction(Widget widget)
-			{
-				widget.getElement().getStyle().setMarginTop(verticalSpacing, Unit.PX);
-			}
-		});
-	}
 	
-	private void forEachWidget(Widget singleTarget, ChildWidgetAction action)
-	{
-		if(singleTarget == null)
-		{
-			int widgetCount = getWidgetCount();
-			for(int i = 0; i < widgetCount; i++)
-			{
-				action.doAction(getWidget(i));
-			}
-		}
-		else
-		{
-			action.doAction(singleTarget);
-		}
-	}
-	
-	private static interface ChildWidgetAction
-	{
-		void doAction(Widget widget);
-	}
-
 }

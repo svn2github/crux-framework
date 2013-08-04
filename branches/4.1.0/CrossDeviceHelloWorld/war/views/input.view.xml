@@ -7,10 +7,15 @@
 	useController="homeController" 
 	title="Olá, Crux!"> 
 	
-	<crux:styledPanel id="outerPanel" height="150px" horizontalAlignment="center" verticalAlignment="middle">
-		<gwt:label id="questionLabel" text="Qual é o seu nome?"/>
-		<gwt:textBox id="nameTextBox" width="200px"/>
-		<crux:button id="okButton" text="Vai!" onSelect="homeController.sayHello" style="display:block"/>
+	<crux:styledPanel id="outerPanel" height="200px">
+		<crux:formDisplay id="form">
+			<crux:entry label="Qual é o seu nome?">
+				<gwt:textBox id="nameTextBox" width="200px"/>
+			</crux:entry>
+			<crux:entry horizontalAlignment="center">
+				<crux:button id="okButton" text="Vai!" onSelect="homeController.sayHello" style="display:block"/>
+			</crux:entry>
+		</crux:formDisplay>
 	</crux:styledPanel>
 	
 </v:view>

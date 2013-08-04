@@ -2,19 +2,24 @@ HTML
 {
 	margin: 0px;
 	padding: 0px;
+	height: 100%;
 }
 BODY
 {
 	background-color: #CAD0D3;
 	margin: 0px;
 	padding: 0px;
+	height: 100%;
 }
 
-@external crux-StyledPanel;
+@external crux-StyledPanel, crux-StyledPanelOuter;
+.crux-StyledPanelOuter
+{
+	padding: 8px;
+	width: 100%;
+}
 .crux-StyledPanel
 {
-	margin: 10px;
-	padding: 10px;
 	border: solid 1px #FFFFFF;
 	border-radius: 2px !important;
 	background-image: -webkit-linear-gradient(top, #F0F0F0, #EAEAEA);
@@ -51,16 +56,12 @@ BODY
 	border: solid 1px #3673a5;
 	box-shadow: inset 0px 0px 1px #fff;
 	-webkit-box-shadow: inset 0px 0px 1px #fff;
-	
-	-moz-transition: color 0.25s ease-in-out;
-	-webkit-transition: color 0.25s ease-in-out;
-	transition: color 0.25s ease-in-out;	
 }
-.crux-Button:hover, .crux-Button:active
+
+@external crux-FormDisplay, formEntryLabel, formEntryData;
+.crux-FormDisplay .formEntryData
 {
-	background: #489be9;
-	background: -moz-linear-gradient(top, #489be9 0%, #489be9 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#489be9), color-stop(100%,#489be9));
+	padding-bottom: 15px;
 }
 
 @external gwt-TextBox;
