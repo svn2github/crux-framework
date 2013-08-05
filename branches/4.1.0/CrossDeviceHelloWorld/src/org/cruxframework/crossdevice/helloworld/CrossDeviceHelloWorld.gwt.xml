@@ -8,7 +8,6 @@
 	<set-property name="ClientBundle.enableInlining" value="false" />
 	
 	<!-- -->     
-	<set-property name="device.features" value="smallDisplayTouch"/> 
 	<!-- -->
 
 	<!-- To enable logging -->

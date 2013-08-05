@@ -13,20 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.themes.widgets.xstandard.client.resource.small;
+package org.cruxframework.crux.themes.widgets.xstandard.client.resource.large;
 
-import org.cruxframework.crux.core.client.resources.Resource;
-import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
-
-import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * @author Gesse Dafe
  *
  */
-@Resource(value="xStandardResources", supportedDevices={Device.smallDisplayArrows, Device.smallDisplayTouch})
-public interface XStandardResources extends ClientBundle
+public interface CssXStandardLarge extends CssResource
 {
-	@Source("cssXStandardSmall.css")
-	CssXStandardSmall css();
 }
