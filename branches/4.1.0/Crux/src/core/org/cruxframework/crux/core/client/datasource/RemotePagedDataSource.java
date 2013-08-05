@@ -222,9 +222,14 @@ implements MeasurableRemoteDataSource<T>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-    @Override
+	@Override
 	public void sort(String columnName, boolean ascending)
+	{
+		sort(columnName, ascending, false);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void sort(String columnName, boolean ascending, boolean isCaseSensitive)
 	{
 		ensurePageLoaded(currentRecord);
 		if (currentRecord > -1)
@@ -237,7 +242,7 @@ implements MeasurableRemoteDataSource<T>
 			{
 				pageData[i] = data[i+startPageRecord];
 			}
-			sortArray(pageData,columnName, ascending);
+			sortArray(pageData, columnName, ascending, isCaseSensitive);
 			updateRecords(startPageRecord, endPageRecord, pageData);
 		}
 	}	

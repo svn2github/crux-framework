@@ -22,6 +22,7 @@ import org.cruxframework.crux.core.client.ClientMessages;
 import org.cruxframework.crux.core.client.Legacy;
 
 
+
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -107,16 +108,16 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 		}
 	}
 	
-	public void sort(final String columnName, boolean ascending)
+	public void sort(final String columnName, boolean ascending, boolean isCaseSensitive)
 	{
 		ensureLoaded();
 		if (data != null)
 		{
-			sortArray(data,columnName, ascending);
+			sortArray(data,columnName, ascending, isCaseSensitive);
 		}
 	}
 
-	protected void sortArray(DataSourceRecord<E>[] array, final String columnName, final boolean ascending)
+	protected void sortArray(DataSourceRecord<E>[] array, final String columnName, final boolean ascending, final boolean isCaseSensitive)
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
@@ -150,12 +151,23 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 					if (value2==null) return -1;
 				}
 
-				return compareNonNullValuesByType(value1,value2,ascending);
+				return compareNonNullValuesByType(value1,value2,ascending,isCaseSensitive);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending)
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean isCaseSensitive)
 			{
+				if(!isCaseSensitive && value1 instanceof String && value2 instanceof String)
+				{
+					if (ascending)
+					{
+						return ((String)value1).compareToIgnoreCase((String)value2);	
+					} else
+					{
+						return ((String)value2).compareToIgnoreCase((String)value1);
+					}
+				}
+				
 				if (ascending)
 				{
 					return ((Comparable)value1).compareTo(value2);

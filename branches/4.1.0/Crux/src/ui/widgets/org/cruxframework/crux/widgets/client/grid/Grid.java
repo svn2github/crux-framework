@@ -84,6 +84,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	private Pager pager;
 	private String emptyDataFilling;
 	private String defaultSortingColumn;
+	private boolean defaultIsCaseSensitive;
 	private SortingType defaultSortingType;
 	private RowDetailsManager rowDetailsManager;
 	private DataRow currentEditingRow;
@@ -106,7 +107,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 			boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType)
 	{
 		this(columnDefinitions, pageSize, rowSelection, cellSpacing, autoLoadData, stretchColumns, highlightRowOnMouseOver, emptyDataFilling,
-				fixedCellSize, defaultSortingColumn, defaultSortingType, null, false, false);
+				fixedCellSize, defaultSortingColumn, defaultSortingType, null, false, false, false);
 	}
 
 	/**
@@ -124,11 +125,12 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * @param defaultSortingType tells the grid if <code>defaultSortingColumn</code> should be used ascending or descending
 	 * @param rowDetailsWidgetCreator used to create on-demand row details
 	 * @param showRowDetailsIcon if <code>true</code>, the second column of the grid will contain icons for expanding or collapsing the row's details
+	 * @param isCaseSensitive indicate if the columns sort are or not key sensitive
 	 */
 	public Grid(ColumnDefinitions columnDefinitions, int pageSize, RowSelectionModel rowSelection, int cellSpacing,
 			boolean autoLoadData, boolean stretchColumns, boolean highlightRowOnMouseOver, String emptyDataFilling,
 			boolean fixedCellSize, String defaultSortingColumn, SortingType defaultSortingType,
-			RowDetailWidgetCreator rowDetailsWidgetCreator, boolean showRowDetailsIcon, boolean freezeHeaders)
+			RowDetailWidgetCreator rowDetailsWidgetCreator, boolean showRowDetailsIcon, boolean freezeHeaders, boolean isCaseSensitive)
 	{
 		super(columnDefinitions, rowSelection, cellSpacing, stretchColumns, highlightRowOnMouseOver, fixedCellSize, rowDetailsWidgetCreator, showRowDetailsIcon, freezeHeaders);
 		getColumnDefinitions().setGrid(this);
@@ -137,6 +139,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 		this.autoLoadData = autoLoadData;
 		this.defaultSortingColumn = defaultSortingColumn;
 		this.defaultSortingType = defaultSortingType;
+		this.defaultIsCaseSensitive = isCaseSensitive;
 		if(hasRowDetails())
 		{
 			this.rowDetailsManager = new RowDetailsManager(rowDetailsWidgetCreator);
@@ -810,11 +813,11 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	 * Sorts the grid's data by the given column
 	 * @param columnKey
 	 */
-	public void sort(String columnKey, boolean ascending)
+	public void sort(String columnKey, boolean ascending, boolean isCaseSensitive)
 	{
 		if(this.isDataLoaded())
 		{
-			this.dataSource.sort(columnKey, ascending);
+			this.dataSource.sort(columnKey, ascending, isCaseSensitive);
 			this.ascendingSort = ascending;
 			this.currentSortingColumn = columnKey;
 
@@ -973,7 +976,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 
 		if(sort)
 		{
-			sort(this.defaultSortingColumn, !this.defaultSortingType.equals(SortingType.descending));
+			sort(this.defaultSortingColumn, !this.defaultSortingType.equals(SortingType.descending), this.defaultIsCaseSensitive);
 		}
 
 		return sort;
@@ -1105,7 +1108,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 					boolean resorting = columnKey.equals(previousSorting);
 					boolean descending = resorting && grid.ascendingSort;
 
-					grid.sort(columnKey, !descending);
+					grid.sort(columnKey, !descending, grid.defaultIsCaseSensitive);
 				}
 			};
 		}

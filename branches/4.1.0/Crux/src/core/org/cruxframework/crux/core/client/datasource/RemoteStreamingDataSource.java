@@ -511,8 +511,17 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	/**
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#sort(java.lang.String, boolean)
 	 */
+	@Override
+	public void sort(String columnName, boolean ascending)
+	{
+		sort(columnName, ascending, false);
+	}
+	
+	/**
+	 * @see org.cruxframework.crux.core.client.datasource.DataSource#sort(java.lang.String, boolean)
+	 */
 	@SuppressWarnings("unchecked")
-    public void sort(String columnName, boolean ascending)
+    public void sort(String columnName, boolean ascending, boolean isCaseSensitive)
 	{
 		if (currentRecord > -1)
 		{
@@ -524,12 +533,12 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 			{
 				pageData[i] = data.get(i+startPageRecord);
 			}
-			sortArray(pageData,columnName, ascending);
+			sortArray(pageData,columnName, ascending, isCaseSensitive);
 			updatePageRecords(startPageRecord, endPageRecord, pageData);
 		}
 	}
 	
-	protected void sortArray(DataSourceRecord<T>[] array, final String columnName, final boolean ascending)
+	protected void sortArray(DataSourceRecord<T>[] array, final String columnName, final boolean ascending, final boolean isCaseSensitive)
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
@@ -563,12 +572,23 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 					if (value2==null) return -1;
 				}
 
-				return compareNonNullValuesByType(value1,value2,ascending);
+				return compareNonNullValuesByType(value1,value2,ascending,isCaseSensitive);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			private int compareNonNullValuesByType(Object value1, Object value2,boolean ascending)
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean isCaseSensitive)
 			{
+				if(!isCaseSensitive && value1 instanceof String && value2 instanceof String)
+				{
+					if (ascending)
+					{
+						return ((String)value1).compareToIgnoreCase((String)value2);	
+					} else
+					{
+						return ((String)value2).compareToIgnoreCase((String)value1);
+					}
+				}
+				
 				if (ascending)
 				{
 					return ((Comparable)value1).compareTo(value2);
