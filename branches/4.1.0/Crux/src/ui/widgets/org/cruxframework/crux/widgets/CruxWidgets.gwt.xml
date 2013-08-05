@@ -152,6 +152,22 @@
 		</any>
 	</replace-with>
 
+    <!-- Image -->
+    <replace-with class="org.cruxframework.crux.widgets.client.image.Image.NoTouchImpl">
+        <when-type-assignable class="org.cruxframework.crux.widgets.client.image.Image.ImageImpl" />
+        <none>
+            <when-property-is name="device.features" value="smallDisplayTouch" />
+            <when-property-is name="device.features" value="largeDisplayTouch" />
+        </none>
+    </replace-with>
+    <replace-with class="org.cruxframework.crux.widgets.client.image.Image.TouchImpl">
+        <when-type-assignable class="org.cruxframework.crux.widgets.client.image.Image.ImageImpl" />
+        <any>
+            <when-property-is name="device.features" value="smallDisplayTouch" />
+            <when-property-is name="device.features" value="largeDisplayTouch" />
+        </any>
+    </replace-with>
+
 	<!-- Anchor  -->
 	<replace-with class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorNoTouchImpl">
 		<when-type-assignable class="org.cruxframework.crux.widgets.client.anchor.Anchor.AnchorImpl" />

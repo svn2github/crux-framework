@@ -81,7 +81,7 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 		@Override
 		protected void select()
 		{
-			ClickEvent.fireNativeEvent(null, this);
+			SelectEvent.fire(NoTouchImpl.this);
 		}
 	}
 	
@@ -161,7 +161,6 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 	{
 		impl = GWT.create(ImageImpl.class);
 		initWidget(impl.asWidget());
-		
 	}
 
 	public Image(ImageResource resource)
