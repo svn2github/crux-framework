@@ -69,11 +69,11 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 		String className = DisclosurePanel.class.getCanonicalName();
 		if (!StringUtils.isEmpty(headerText))
 		{
-			out.println(className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(headerText)+");");
+			out.println("final "+className + " " + context.getWidget()+" = new "+className+"("+EscapeUtils.quote(headerText)+");");
 		}
 		else
 		{
-			out.println(className + " " + context.getWidget()+" = new "+className+"();");
+			out.println("final "+className + " " + context.getWidget()+" = new "+className+"();");
 		}
 		
 		String open = context.readWidgetProperty("open");
