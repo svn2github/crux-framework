@@ -125,7 +125,7 @@ public class MethodInvoker
 			}
 			else
 			{
-				throw new InternalServerErrorException("Can not execute requested service. Unchecked Excpetion occurred on method: "+method.toString(), 
+				throw new InternalServerErrorException("Can not execute requested service. Unchecked Exception occurred on method: "+method.toString(), 
 						"Can not execute requested service", cause);
 			}
 		}
