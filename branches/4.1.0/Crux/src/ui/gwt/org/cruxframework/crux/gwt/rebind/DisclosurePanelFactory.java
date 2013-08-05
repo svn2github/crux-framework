@@ -83,7 +83,7 @@ public class DisclosurePanelFactory extends CompositeFactory<WidgetCreatorContex
 			out.println("private boolean loaded = false;");
 			out.println("public void onOpen("+OpenEvent.class.getCanonicalName()+"<"+className+"> event){"); 
 			out.println("if (!loaded){");
-			out.println(LazyPanel.class.getCanonicalName() +"widget = ("+LazyPanel.class.getCanonicalName()+")"+context.getWidget()+".getContent();");
+			out.println(LazyPanel.class.getCanonicalName() +" widget = ("+LazyPanel.class.getCanonicalName()+")"+context.getWidget()+".getContent();");
 			out.println("widget.ensureWidget();");
 			out.println("loaded = true;");
 			out.println("}");
