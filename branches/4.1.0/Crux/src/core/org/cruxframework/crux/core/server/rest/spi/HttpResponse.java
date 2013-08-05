@@ -47,6 +47,20 @@ public class HttpResponse
 	}
 
 	/**
+	 * Flushes the response as a error.
+	 * @param errorContent the file content. 
+	 * @throws IOException
+	 */
+	public void flushFileContentError(String errorContent) throws IOException
+	{
+		PrintWriter writer = this.response.getWriter();
+		writer.println(errorContent);
+		writer.close();
+		
+		this.response.flushBuffer();
+	}
+	
+	/**
 	 * Flushes the response as a file.
 	 * @param mimeType the file mimeType. 
 	 * @param fileName the file name.
