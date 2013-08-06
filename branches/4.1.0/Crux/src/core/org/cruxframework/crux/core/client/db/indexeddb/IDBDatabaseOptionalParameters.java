@@ -15,7 +15,10 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import org.cruxframework.crux.core.client.utils.JsUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -33,7 +36,12 @@ public class IDBDatabaseOptionalParameters extends JavaScriptObject
             this.keyPath = keyPath;
     }-*/;
     
-    public final native void setKeyPath(String[] keyPath) /*-{
+    public final void setKeyPath(String[] keyPath)
+    {
+    	setKeyPath(JsUtils.toJsArray(keyPath));
+    }
+    
+    private native void setKeyPath(JsArrayString keyPath) /*-{
 	    this.keyPath = keyPath;
 	}-*/;
 

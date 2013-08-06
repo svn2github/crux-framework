@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.client.db.indexeddb;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -25,7 +26,7 @@ public class IDBKeyRange extends JavaScriptObject
 {
 	protected IDBKeyRange() {}
 
-	public final native JavaScriptObject getLowerObject() /*-{
+	public final native JsArrayMixed getLowerObject() /*-{
 		return this.lower;
 	}-*/;
 
@@ -37,7 +38,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return this.lower;
 	}-*/;
 
-	public final native JavaScriptObject getUpperObject() /*-{
+	public final native JsArrayMixed getUpperObject() /*-{
 		return this.upper;
 	}-*/;
 
@@ -57,7 +58,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return this.upperOpen;
 	}-*/;
 
-	public final native static IDBKeyRange only(JavaScriptObject key) /*-{
+	public final native static IDBKeyRange only(JsArrayMixed key) /*-{
 		return $wnd.IDBKeyRange.only(key);
 	}-*/;
 
@@ -69,7 +70,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.only(key);
 	}-*/;
 
-	public final native static IDBKeyRange lowerBound(JavaScriptObject key, boolean open) /*-{
+	public final native static IDBKeyRange lowerBound(JsArrayMixed key, boolean open) /*-{
 		return $wnd.IDBKeyRange.lowerBound(key,open);
 	}-*/;
 
@@ -81,7 +82,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.lowerBound(key,open);
 	}-*/;
 
-	public final native static IDBKeyRange lowerBound(JavaScriptObject key) /*-{
+	public final native static IDBKeyRange lowerBound(JsArrayMixed key) /*-{
 		return $wnd.IDBKeyRange.lowerBound(key);
 	}-*/;
 	
@@ -93,7 +94,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.lowerBound(key);
 	}-*/;
 
-	public final native static IDBKeyRange upperBound(JavaScriptObject key, boolean open)/*-{
+	public final native static IDBKeyRange upperBound(JsArrayMixed key, boolean open)/*-{
 		return $wnd.IDBKeyRange.upperBound(key,open);
 	}-*/;
 
@@ -105,7 +106,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.upperBound(key,open);
 	}-*/;
 
-	public final native static IDBKeyRange upperBound(JavaScriptObject key)/*-{
+	public final native static IDBKeyRange upperBound(JsArrayMixed key)/*-{
 		return $wnd.IDBKeyRange.upperBound(key);
 	}-*/;
 	
@@ -117,7 +118,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.upperBound(key);
 	}-*/;
 
-	public final native static IDBKeyRange bound(JavaScriptObject startKey, JavaScriptObject endKey, boolean startOpen, boolean endOpen) /*-{
+	public final native static IDBKeyRange bound(JsArrayMixed startKey, JsArrayMixed endKey, boolean startOpen, boolean endOpen) /*-{
 		return $wnd.IDBKeyRange.bound(startKey,endKey,startOpen,endOpen);
 	}-*/;
 
@@ -129,7 +130,7 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.bound(startKey,endKey,startOpen,endOpen);
 	}-*/;
 
-	public final native static IDBKeyRange bound(JavaScriptObject startKey, JavaScriptObject endKey) /*-{
+	public final native static IDBKeyRange bound(JsArrayMixed startKey, JsArrayMixed endKey) /*-{
 		return $wnd.IDBKeyRange.bound(startKey,endKey);
 	}-*/;
 	

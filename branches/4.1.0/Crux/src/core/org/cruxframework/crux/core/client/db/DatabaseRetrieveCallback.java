@@ -13,33 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb.events;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayMixed;
+package org.cruxframework.crux.core.client.db;
 
 /**
+ * AbstractDatabase operations callback. All db operations are asynchronous.
+ * Use this callback to receive feedback for requested operations.
+ * 
  * @author Thiago da Rosa de Bustamante
- *
  */
-public class IDBObjectStoreEvent extends JavaScriptObject
+public interface DatabaseRetrieveCallback<T>
 {
-	public static interface Handler
-	{
-		void onSuccess(IDBObjectStoreEvent event);
-	}
-	
-	protected IDBObjectStoreEvent(){}
-
-	public final native JsArrayMixed getObjectKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native String getStringKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native int getIntKey()/*-{
-		return this.target.result;
-	}-*/;
+	void onSuccess(T result);
+	void onFailed(String message);
 }

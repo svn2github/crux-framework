@@ -15,6 +15,11 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Defines the database metadada. All Database interfaces must be annotated with 
  * this annotation to inform Crux the database structure.
@@ -31,4 +36,33 @@ public @interface DatabaseMetadata
 	 * @return Database version.
 	 */
 	int version();
+	/**
+	 * @return Object stores metadata.
+	 */
+	ObjectStoreMetadata[] objectStores();
+
+	/**
+	 * If this property is true, Crux will override any existent Object store or index when updating database.
+	 * If false, only non existent database or index will be created on database updating. 
+	 * @return
+	 */
+	boolean overrideDBElements() default false;
+	
+	/**
+	 * Defines a new object store for current database. 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.ANNOTATION_TYPE)
+	public @interface ObjectStoreMetadata
+	{
+		String name() default "";
+		boolean autoIncrement() default false;
+		String keyPath() default "";
+		String[] compositeKeyPath() default {};
+		Class<?> targetClass() default Empty.class;
+	}
+	
+	public static class Empty{}
 }

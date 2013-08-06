@@ -13,33 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb.events;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayMixed;
+package org.cruxframework.crux.core.client.db;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBObjectStoreEvent extends JavaScriptObject
+public class DatabaseException extends RuntimeException
 {
-	public static interface Handler
-	{
-		void onSuccess(IDBObjectStoreEvent event);
-	}
-	
-	protected IDBObjectStoreEvent(){}
+    private static final long serialVersionUID = -8809931291701089427L;
 
-	public final native JsArrayMixed getObjectKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native String getStringKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native int getIntKey()/*-{
-		return this.target.result;
-	}-*/;
+	public DatabaseException()
+    {
+	    super();
+    }
+
+	public DatabaseException(String message, Throwable t)
+    {
+	    super(message, t);
+    }
+
+	public DatabaseException(String message)
+    {
+	    super(message);
+    }
+
+	public DatabaseException(Throwable t)
+    {
+	    super(t);
+    }
 }

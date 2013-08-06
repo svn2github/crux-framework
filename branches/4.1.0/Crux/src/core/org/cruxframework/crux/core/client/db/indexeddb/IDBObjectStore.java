@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEven
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayString;
 
 /**
@@ -104,7 +105,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.put(value);
 	}-*/;
 	
-	public final native IDBObjectStoreRequest put(JavaScriptObject value,JavaScriptObject key) /*-{
+	public final native IDBObjectStoreRequest put(JavaScriptObject value,JsArrayMixed key) /*-{
 	    return this.put(value,key);
 	}-*/;
 
@@ -120,7 +121,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.add(value);
 	}-*/;
 	
-	public final native IDBObjectStoreRequest add(JavaScriptObject value,JavaScriptObject key) /*-{
+	public final native IDBObjectStoreRequest add(JavaScriptObject value,JsArrayMixed key) /*-{
 	    return this.add(value,key);
 	}-*/;
 
@@ -132,7 +133,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.add(value,key);
 	}-*/;
 
-	public final native IDBRequest<IDBObjectStore> delete(JavaScriptObject key) /*-{
+	public final native IDBRequest<IDBObjectStore> delete(JsArrayMixed key) /*-{
 	    return this["delete"](key);
 	}-*/;
 
@@ -144,7 +145,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this["delete"](key);
 	}-*/;
 	
-	public final native IDBObjectRetrieveRequest get(JavaScriptObject key) /*-{
+	public final native IDBObjectRetrieveRequest get(JsArrayMixed key) /*-{
 	    return this.get(key);
 	}-*/;
 

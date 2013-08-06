@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.client.db.indexeddb;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -53,7 +54,7 @@ public class IDBCursor extends JavaScriptObject
 		return this.source;
 	}-*/;
 
-    public final native JavaScriptObject getObjectKey() /*-{
+    public final native JsArrayMixed getObjectKey() /*-{
 	    return this.key;
 	}-*/;
 	
@@ -65,7 +66,7 @@ public class IDBCursor extends JavaScriptObject
     	return this.key;
 	}-*/;
 
-	public final native JavaScriptObject getObjectPrimaryKey() /*-{
+	public final native JsArrayMixed getObjectPrimaryKey() /*-{
 	    return this.primaryKey;
 	}-*/;
 	
@@ -89,7 +90,7 @@ public class IDBCursor extends JavaScriptObject
 	      this["continue"]();
 	}-*/;
 	
-	public final native void continueCursor(JavaScriptObject key)/*-{
+	public final native void continueCursor(JsArrayMixed key)/*-{
 	      this["continue"](key);
 	}-*/;
 	
@@ -101,7 +102,7 @@ public class IDBCursor extends JavaScriptObject
 	    this["continue"](key);
 	}-*/;
 
-	public final native IDBRequest<IDBCursor> delete(JavaScriptObject key) /*-{
+	public final native IDBRequest<IDBCursor> delete(JsArrayMixed key) /*-{
 	    return this["delete"](key);
 	}-*/;
 

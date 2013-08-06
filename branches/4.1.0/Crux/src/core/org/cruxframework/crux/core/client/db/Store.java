@@ -13,33 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb.events;
+package org.cruxframework.crux.core.client.db;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayMixed;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
 /**
+ * Maps a class to an object store into the Crux Database.
  * @author Thiago da Rosa de Bustamante
- *
  */
-public class IDBObjectStoreEvent extends JavaScriptObject
+@Target(ElementType.TYPE)
+public @interface Store
 {
-	public static interface Handler
-	{
-		void onSuccess(IDBObjectStoreEvent event);
-	}
-	
-	protected IDBObjectStoreEvent(){}
+	/**
+	 * Define the object store name
+	 * @return
+	 */
+	String value();
 
-	public final native JsArrayMixed getObjectKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native String getStringKey()/*-{
-		return this.target.result;
-	}-*/;
-	
-	public final native int getIntKey()/*-{
-		return this.target.result;
-	}-*/;
+	/**
+	 * Identifies a key on the object store
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	@Target(ElementType.METHOD)
+	public @interface Key
+	{
+		boolean autoIncrement() default false;
+	}
 }
