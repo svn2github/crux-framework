@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.declarativeui;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -35,6 +36,9 @@ import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.StreamUtils;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Process Crux view files, extracting metadata and generating the host html for
@@ -50,7 +54,6 @@ public class ViewProcessor
 
 	private static final Log log = LogFactory.getLog(ViewProcessor.class);
 	private static DocumentBuilder documentBuilder = null;
-
 	private static List<CruxXmlPreProcessor> preProcessors;
 	private static final Lock lock = new ReentrantLock();
 
@@ -173,8 +176,35 @@ public class ViewProcessor
 					DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 					builderFactory.setNamespaceAware(true);
 					builderFactory.setIgnoringComments(true);
+					builderFactory.setIgnoringElementContentWhitespace(true);
 					
 					documentBuilder = builderFactory.newDocumentBuilder();
+					documentBuilder.setEntityResolver(new EntityResolver() {
+						@Override
+						public InputSource resolveEntity(String publicId, String systemId)
+								throws SAXException, IOException {
+							if (systemId.contains("crux-view.dtd"))
+							{
+								return new InputSource(new ByteArrayInputStream(getValidEntities().getBytes()));
+							}
+							else 
+							{
+								return null;
+							}
+						}
+
+						private String getValidEntities() {
+							StringBuffer sb = new StringBuffer();
+							sb.append("<!ENTITY quot    \"&#34;\">");
+							sb.append("<!ENTITY amp     \"&#38;\">");
+							sb.append("<!ENTITY apos    \"&#39;\">");
+							sb.append("<!ENTITY lt      \"&#60;\">");
+							sb.append("<!ENTITY gt      \"&#62;\">");
+							sb.append("<!ENTITY nbsp    \"&#160;\">");
+							return sb.toString();
+						}
+					});
+					
 					initializePreProcessors();
 				}
 				catch (Throwable e)
