@@ -108,6 +108,13 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 		}
 	}
 	
+	@Override
+	public void sort(final String columnName, boolean ascending)
+	{
+		sort(columnName, ascending, false);
+	}
+	
+	@Override
 	public void sort(final String columnName, boolean ascending, boolean isCaseSensitive)
 	{
 		ensureLoaded();
