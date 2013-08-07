@@ -102,15 +102,7 @@ public class IDBCursor extends JavaScriptObject
 	    this["continue"](key);
 	}-*/;
 
-	public final native IDBRequest<IDBCursor> delete(JsArrayMixed key) /*-{
-	    return this["delete"](key);
-	}-*/;
-
-	public final native IDBRequest<IDBCursor> delete(String key) /*-{
-	    return this["delete"](key);
-	}-*/;
-
-	public final native IDBRequest<IDBCursor> delete(int key) /*-{
-	    return this["delete"](key);
+	public final native IDBRequest<IDBCursor> delete() /*-{
+	    return this["delete"]();
 	}-*/;
 }

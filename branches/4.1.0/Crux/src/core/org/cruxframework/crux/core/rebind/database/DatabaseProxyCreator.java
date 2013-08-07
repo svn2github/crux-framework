@@ -21,12 +21,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.db.AbstractDatabase;
-import org.cruxframework.crux.core.client.db.DatabaseMetadata;
-import org.cruxframework.crux.core.client.db.DatabaseMetadata.ObjectStoreMetadata;
-import org.cruxframework.crux.core.client.db.Store;
-import org.cruxframework.crux.core.client.db.Store.Key;
+import org.cruxframework.crux.core.client.db.ObjectStore;
+import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata;
+import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata.Empty;
+import org.cruxframework.crux.core.client.db.annotation.Store;
+import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata.ObjectStoreMetadata;
+import org.cruxframework.crux.core.client.db.annotation.Store.Key;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabaseOptionalParameters;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
@@ -38,6 +42,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPackage;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -49,13 +54,50 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private DatabaseMetadata databaseMetadata;
+	private JClassType integerType;
+	private JClassType stringType;
+	private JClassType emptyType;
 
 	public DatabaseProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		databaseMetadata = baseIntf.getAnnotation(DatabaseMetadata.class);
+		integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
+		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
+		emptyType = context.getTypeOracle().findType(Empty.class.getCanonicalName());
 	}
 
+	@Override
+	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+	    ObjectStoreMetadata[] objectStores = databaseMetadata.objectStores();
+	    
+	    Set<String> added = new HashSet<String>();
+	    
+		srcWriter.println("public "+getProxySimpleName()+"(){");
+		for (ObjectStoreMetadata objectStoreMetadata : objectStores)
+        {
+			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
+			if (!objectStoreTarget.isAssignableTo(emptyType))
+			{
+				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
+				srcWriter.println("storeNames.put("+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+", "+EscapeUtils.quote(objectStoreName)+");");
+				if (added.contains(objectStoreTarget.getQualifiedSourceName()))
+				{
+					throw new CruxGeneratorException("The same type is configured for different ObjectStores on Database["+databaseMetadata.name()+"]");
+				}
+				added.add(objectStoreTarget.getQualifiedSourceName());
+			}
+        }
+		srcWriter.println("}");
+	}
+	
+	@Override
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		srcWriter.println(FastMap.class.getCanonicalName()+"<String> storeNames = new "+FastMap.class.getCanonicalName()+"<String>();");
+	}
+	
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
@@ -67,7 +109,13 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		srcWriter.println("return "+databaseMetadata.version()+";");
 		srcWriter.println("}");
 		srcWriter.println();
+	    srcWriter.println("protected String getObjectStoreName(Class<?> objectType){");
+	    srcWriter.println("return storeNames.get(objectType.getName().replace('$','.'));");
+	    srcWriter.println("}");
+		srcWriter.println();
 		generateUpdateDatabaseStructureMethod(srcWriter);
+		generateGetObjectStoreMethod(srcWriter);
+		generateGetObjectStoreByNameMethod(srcWriter);
 	}
 
 	protected void generateUpdateDatabaseStructureMethod(SourcePrinter srcWriter)
@@ -76,6 +124,69 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	    generateObjectStoresCreation(srcWriter);
 	    
+	    srcWriter.println("}");
+		srcWriter.println();
+    }
+	
+	protected void generateGetObjectStoreMethod(SourcePrinter srcWriter)
+    {
+	    srcWriter.println("protected <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType, IDBObjectStore idbObjectStore){");
+	    
+	    boolean first = true;
+	    ObjectStoreMetadata[] objectStores = databaseMetadata.objectStores();
+	    
+		srcWriter.println("String className = objectType.getName().replace('$','.');");
+		for (ObjectStoreMetadata objectStoreMetadata : objectStores)
+        {
+			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
+			if (!objectStoreTarget.isAssignableTo(emptyType))
+			{
+				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
+				if (!first)
+				{
+					srcWriter.print("else ");
+				}
+				first = false;
+				srcWriter.println("if (StringUtils.unsafeEquals(className, "+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+")){");
+				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
+				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
+			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
+				srcWriter.println("}");
+			}
+        }
+	    
+	    srcWriter.println("return null;");
+	    srcWriter.println("}");
+		srcWriter.println();
+    }
+
+	protected void generateGetObjectStoreByNameMethod(SourcePrinter srcWriter)
+    {
+	    srcWriter.println("protected <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore){");
+	    
+	    boolean first = true;
+	    ObjectStoreMetadata[] objectStores = databaseMetadata.objectStores();
+	    
+		for (ObjectStoreMetadata objectStoreMetadata : objectStores)
+        {
+			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
+//			if (!objectStoreTarget.isAssignableTo(emptyType))
+//			{
+				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
+				if (!first)
+				{
+					srcWriter.print("else ");
+				}
+				first = false;
+				srcWriter.println("if (StringUtils.unsafeEquals(storeName, "+EscapeUtils.quote(objectStoreName)+")){");
+				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
+				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
+			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
+				srcWriter.println("}");
+//			}
+        }
+	    
+	    srcWriter.println("return null;");
 	    srcWriter.println("}");
 		srcWriter.println();
     }
@@ -96,7 +207,9 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			addedObjectStores.add(objectStoreName);
 			if (databaseMetadata.overrideDBElements())
 			{
+				srcWriter.println("if (db.getObjectStoreNames().contains("+EscapeUtils.quote(objectStoreName)+")){");
 				srcWriter.println("db.deleteObjectStore("+EscapeUtils.quote(objectStoreName)+");");
+				srcWriter.println("}");
 			}
 			else
 			{
@@ -120,7 +233,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				String[] keyPath = getKeyPath(objectStoreTarget);
 				if (keyPath == null || keyPath.length == 0)
 				{
-					srcWriter.println("db.createObjectStore("+EscapeUtils.quote(objectStoreName)+");");
+					throw new CruxGeneratorException("can not create an objectStore without a key definition. ObjectStore["+objectStoreName+"].");
 				}
 				else if (keyPath.length == 1)
 				{
@@ -133,7 +246,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			else
 			{
-				srcWriter.println("db.createObjectStore("+EscapeUtils.quote(objectStoreName)+");");
+				throw new CruxGeneratorException("can not create an objectStore without a key definition. ObjectStore["+objectStoreName+"].");
 			}
 			if (!databaseMetadata.overrideDBElements())
 			{
@@ -141,7 +254,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
         }
     }
-
+	
 	protected void generateObjectStoreCreation(SourcePrinter srcWriter, String keyPath, boolean autoIncrement, String objectStoreName)
     {
 	    srcWriter.println("db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+
@@ -150,7 +263,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	protected void generateObjectStoreCreation(SourcePrinter srcWriter, String[] keyPaths, boolean autoIncrement, String objectStoreName)
     {
-	    srcWriter.print("db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+
+	    srcWriter.println("db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+
 	    		IDBDatabaseOptionalParameters.class.getCanonicalName()+".create(new String[]{");
 	    boolean first = true;
 	    for (String keyPath : keyPaths)
@@ -185,6 +298,23 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return result;
 	}
 	
+	protected String[] getKeyPath(ObjectStoreMetadata objectStoreMetadata, JClassType targetObject)
+	{
+		if (!StringUtils.isEmpty(objectStoreMetadata.keyPath()))
+		{
+			return new String[]{objectStoreMetadata.keyPath()};
+		}
+		else if (objectStoreMetadata.compositeKeyPath().length > 0)
+		{
+			return objectStoreMetadata.compositeKeyPath(); 
+		}
+		else if (targetObject != null)
+		{
+			return getKeyPath(targetObject);
+		}
+		return new String[]{};
+	}
+	
 	protected String[] getKeyPath(JClassType targetObject)
 	{
 		List<String> result = new ArrayList<String>();
@@ -193,6 +323,12 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
         {
 	        if (method.getAnnotation(Key.class) != null)
 	        {
+	        	if (!method.getReturnType().equals(stringType) && 
+	        		!method.getReturnType().equals(integerType) && 
+	        		!method.getReturnType().equals(JPrimitiveType.INT))
+	        	{
+	        		throw new CruxGeneratorException("Crux databases only support Strings or int as key components");
+	        	}
 	        	result.add(JClassUtils.getPropertyForGetterOrSetterMethod(method));
 	        }
         }
@@ -220,17 +356,15 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
 		return name;
 	}
-
-	protected void checkKeyPath(String... keyPath)
-	{
-		
-	}
 	
 	@Override
 	protected String[] getImports()
 	{
 		return new String[]{
-			AbstractDatabase.class.getCanonicalName() 
+			AbstractDatabase.class.getCanonicalName(), 
+			IDBObjectStore.class.getCanonicalName(),
+			ObjectStore.class.getCanonicalName(), 
+			StringUtils.class.getCanonicalName()
 		};
 	}
 

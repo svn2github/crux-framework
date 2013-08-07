@@ -15,30 +15,19 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 
 /**
- * Maps a class to an object store into the Crux Database.
  * @author Thiago da Rosa de Bustamante
+ *
  */
-@Target(ElementType.TYPE)
-public @interface Store
+public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 {
-	/**
-	 * Define the object store name
-	 * @return
-	 */
-	String value();
+	protected final IDBObjectStore idbObjectStore;
 
-	/**
-	 * Identifies a key on the object store
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	@Target(ElementType.METHOD)
-	public @interface Key
+	protected AbstractObjectStore(IDBObjectStore idbObjectStore)
 	{
-		boolean autoIncrement() default false;
+		this.idbObjectStore = idbObjectStore;
+		
 	}
 }

@@ -15,6 +15,9 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.Transaction.TransactionCallback;
+import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata;
+
 /**
  * A Crux client database. Uses IndexedDB to store objects on application's client side.
  * To declare a new database, create a new interface extending Database and use {@link DatabaseMetadata} 
@@ -24,6 +27,12 @@ package org.cruxframework.crux.core.client.db;
  */
 public interface Database
 {
+	/**
+	 * Return true if the current database is open.
+	 * @return
+	 */
+	boolean isOpen();
+	
 	/**
 	 * Retrieve the database name. This information is extracted from {@code @}DatabaseMetadata annotation
 	 * @return
@@ -52,91 +61,108 @@ public interface Database
 	 * @param callback - called when operation is completed
 	 */
 	void delete(final DatabaseCallback callback);
-
-	/**
-	 * Insert a new object into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
-	 * @param object
-	 * @param callback
-	 */
-	void add(Object object, DatabaseCallback callback);
 	
 	/**
-	 * Insert all object into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
-	 * @param object
-	 * @param callback
+	 * Create a new transaction targeting the objectStores associated with the given object types.
+	 * @param objectTypes
+	 * @param mode
+	 * @return
 	 */
-    void add(Object[] objects, Class<?> objectType, final DatabaseCallback callback);
+	Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode);
 
 	/**
-	 * Update the current object into its associated objectStore. If the object does not exists, create a new one.
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * Create a new transaction targeting the given objectStores.
+	 * @param storeNames
+	 * @param mode
+	 * @return
+	 */
+	Transaction getTransaction(String[] storeNames, Transaction.Mode mode);
+	
+	/**
+	 * Create a new transaction targeting the objectStores associated with the given object types.
+	 * @param objectTypes
+	 * @param mode
+	 * @param callback
+	 * @return
+	 */
+	Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode, TransactionCallback callback);
+
+	/**
+	 * Create a new transaction targeting the given objectStores.
+	 * @param storeNames
+	 * @param mode
+	 * @param callback
+	 * @return
+	 */
+	Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback);
+
+	/**
+	 * Insert the object into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
+	 * @param <K>
+	 * @param <V>
 	 * @param object
 	 * @param callback
 	 */
-	void put(Object object, DatabaseCallback callback);
+	<K, V> void add(V object, DatabaseCallback callback);
 	
+	/**
+	 * Insert all objects into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
+	 * @param <K>
+	 * @param <V>
+	 * @param object
+	 * @param callback
+	 */
+	<K, V> void add(V[] objects, Class<V> objectType, DatabaseCallback callback);
+	
+	/**
+	 * Update object into its associated objectStore. If the object does not exists, create a new one.
+	 * @param <K>
+	 * @param <V>
+	 * @param object
+	 * @param callback
+	 */
+	<K, V> void put(V object, DatabaseCallback callback);
+
 	/**
 	 * Update all received objects into its associated objectStore. If one object does not exists, create a new one.
 	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * @param <K>
+	 * @param <V>
 	 * @param object
 	 * @param callback
 	 */
-    void put(Object[] objects, Class<?> objectType, final DatabaseCallback callback);
+	<K, V> void put(V[] objects, Class<V> objectType, DatabaseCallback callback);
 
     /**
      * Retrieve the object associated with the given key from its associated objectStore. 
 	 * If no objectStore is associated with object type, a DatabaseException is threw  
-     * @param <T>
+	 * @param <K>
+	 * @param <V>
      * @param key
      * @param objectType
      * @param callback
      */
-    <T> void get(int key, Class<T> objectType, DatabaseRetrieveCallback<T> callback);
-
-    /**
-     * Retrieve the object associated with the given key from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
-     * @param <T>
-     * @param key
-     * @param objectType
-     * @param callback
-     */
-    <T> void get(String key, Class<T> objectType, DatabaseRetrieveCallback<T> callback);
-
-    /**
-     * Retrieve the object associated with the given key from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
-     * @param <T>
-     * @param key a composite key
-     * @param objectType
-     * @param callback
-     */
-    <T> void get(String[] compositeKey, Class<T> objectType, DatabaseRetrieveCallback<T> callback);
-    
+	<K, V> void get(K key, Class<V> objectType, DatabaseRetrieveCallback<V> callback);
+	
     /**
      * Remove the object associated with the given key from its associated objectStore. 
 	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * @param <K>
+	 * @param <V>
      * @param compositeKey
      * @param objectType
      * @param callback
      */
-    void delete(Object[] compositeKey, Class<?> objectType, DatabaseCallback callback);
+	<K, V> void delete(K key, Class<V> objectType, DatabaseCallback callback);
 
     /**
-     * Remove the object associated with the given key from its associated objectStore. 
+     * Remove all objects in the given range from its associated objectStore. 
 	 * If no objectStore is associated with object type, a DatabaseException is threw  
-     * @param key
+	 * @param <K>
+	 * @param <V>
+     * @param compositeKey
      * @param objectType
      * @param callback
      */
-    void delete(int key, Class<?> objectType, DatabaseCallback callback);
-
-    /**
-     * Remove the object associated with the given key from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
-     * @param key
-     * @param objectType
-     * @param callback
-     */
-    void delete(String key, Class<?> objectType, DatabaseCallback callback);
+	<K, V> void delete(KeyRange<K> keyRange, Class<V> objectType, DatabaseCallback callback);
 }

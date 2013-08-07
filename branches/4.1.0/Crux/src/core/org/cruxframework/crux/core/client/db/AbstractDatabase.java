@@ -15,27 +15,21 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.cruxframework.crux.core.client.bean.JsonEncoder;
+import org.cruxframework.crux.core.client.db.Transaction.TransactionCallback;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabase;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBTransaction;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBTransaction.IDBTransactionMode;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBAbortEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBBlockedEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCompleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
-import org.cruxframework.crux.core.client.utils.StringUtils;
 
-import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -90,7 +84,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onError(IDBErrorEvent event)
 			{
-				String message = "Error opening Database ["+getName()+"]: " + event;//TODO i18n
+				String message = "Error opening Database ["+getName()+"]: " + event.getName();//TODO i18n
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -107,14 +101,25 @@ public abstract class AbstractDatabase implements Database
 			public void onUpgradeNeeded(IDBUpgradeNeededEvent event)
 			{
 				db = event.getResult();
-				if (LogConfiguration.loggingIsEnabled())
+				try
 				{
-					logger.log(Level.INFO, "Browser is using an outdated Database ["+getName()+"]. Upgrading database structure.");//TODO i18n
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.INFO, "Browser is using an outdated Database ["+getName()+"]. Upgrading database structure.");//TODO i18n
+					}
+					updateDatabaseStructure();
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.INFO, "Browser Database upgraded ["+getName()+"].");//TODO i18n
+					}
 				}
-				updateDatabaseStructure();
-				if (LogConfiguration.loggingIsEnabled())
+				catch (RuntimeException e) 
 				{
-					logger.log(Level.INFO, "Browser Database upgraded ["+getName()+"].");//TODO i18n
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.SEVERE, "Error Upgrading Database ["+getName()+"]: " + e.getMessage(), e);//TODO i18n
+					}
+					throw e;
 				}
 			}
 		});
@@ -122,7 +127,7 @@ public abstract class AbstractDatabase implements Database
 
 	public void close()
 	{
-		if (db != null)
+		if (isOpen())
 		{
 			db.close();
 			db = null;
@@ -165,7 +170,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onError(IDBErrorEvent event)
 			{
-				String message = "Error removing Database ["+getName()+"]: "+event;
+				String message = "Error removing Database ["+getName()+"]: "+event.getName();
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -178,256 +183,146 @@ public abstract class AbstractDatabase implements Database
 		});
 	}
 
-	public void add(Object object, DatabaseCallback callback)
+	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode)
 	{
-		add(new Object[]{object}, object.getClass(), callback);
+		return getTransaction(objectTypes, mode, null);
 	}
 	
-    public void add(Object[] objects, Class<?> objectType, final DatabaseCallback callback)
+	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode)
 	{
-		doAddOrPut(objects, objectType, callback, "add");
+		return getTransaction(storeNames, mode, null);
 	}
 
-	public void put(Object object, DatabaseCallback callback)
+	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode, TransactionCallback callback)
 	{
-		put(new Object[]{object}, object.getClass(), callback);
-	}
-	
-    public void put(Object[] objects, Class<?> objectType, final DatabaseCallback callback)
-	{
-		doAddOrPut(objects, objectType, callback, "put");
-	}
-
-    public <T> void get(int key, Class<T> objectType, final DatabaseRetrieveCallback<T> callback)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readonly);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		IDBObjectRetrieveRequest retrieveRequest = objectStore.get(key);
-		appendRetriveEventHandlers(callback, className, storeName, transaction, retrieveRequest);
-    }
-
-    public <T> void get(String key, Class<T> objectType, final DatabaseRetrieveCallback<T> callback)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readonly);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		IDBObjectRetrieveRequest retrieveRequest = objectStore.get(key);
-		appendRetriveEventHandlers(callback, className, storeName, transaction, retrieveRequest);
-    }
-
-    public <T> void get(Object[] key, Class<T> objectType, final DatabaseRetrieveCallback<T> callback)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readonly);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		IDBObjectRetrieveRequest retrieveRequest = objectStore.get(getNativeCompositeKey(key, className));
-		appendRetriveEventHandlers(callback, className, storeName, transaction, retrieveRequest);
-    }
-
-    public void delete(int key, Class<?> objectType, DatabaseCallback callback)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readwrite);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		objectStore.delete(key);
-		appendWriteDBEventHandlers(callback, "delete", storeName, transaction);
-    }
-
-    public void delete(String key, Class<?> objectType, DatabaseCallback callback)
-	{
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readwrite);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		objectStore.delete(key);
-		appendWriteDBEventHandlers(callback, "delete", storeName, transaction);
-	}
-    
-    public void delete(Object[] compositeKey, Class<?> objectType, DatabaseCallback callback)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readwrite);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		objectStore.delete(getNativeCompositeKey(compositeKey, className));
-		appendWriteDBEventHandlers(callback, "delete", storeName, transaction);
-    }
-    
-    private void checkDbOpened()
-    {
-	    if (db == null)
-		{
-			throw new DatabaseException("Database is not opened."); //i18n
-		}
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void doAddOrPut(Object[] objects, Class<?> objectType, final DatabaseCallback callback, final String operation)
-    {
-	    checkDbOpened();
-		final String className = objectType.getName();
-		final String storeName = getObjectStoreName(className);
-		if (storeName == null)
-		{
-			throw new DatabaseException("Can not found objectStore associated with class ["+className+"] on this database."); //i18n
-		}
-		IDBTransaction transaction = db.getTransaction(new String[]{storeName}, IDBTransactionMode.readwrite);
-		IDBObjectStore objectStore = transaction.getObjectStore(storeName);
-		JsonEncoder encoder = getEncoder(className);
-		if (StringUtils.unsafeEquals("add", operation))
-		{
-			for (Object object : objects)
-			{
-				objectStore.add(encoder.toJavaScriptObject(object));
-			}
-		}
-		else
-		{
-			for (Object object : objects)
-			{
-				objectStore.put(encoder.toJavaScriptObject(object));
-			}
-		}
-		appendWriteDBEventHandlers(callback, operation, storeName, transaction);
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-	private <T> void appendRetriveEventHandlers(final DatabaseRetrieveCallback<T> callback, 
-			final String className, final String storeName, IDBTransaction transaction, 
-			IDBObjectRetrieveRequest retrieveRequest)
-    {
-	    final JsonEncoder encoder = getEncoder(className);
-		retrieveRequest.onSuccess(new IDBObjectRetrieveEvent.Handler()
-		{
-            @Override
-			public void onSuccess(IDBObjectRetrieveEvent event)
-			{
-				callback.onSuccess((T) encoder.fromJavaScriptObject(event.getObject()));
-			}
-		});
+		List<String> storeNames = new ArrayList<String>();
 		
-		transaction.onError(new IDBErrorEvent.Handler()
+		for(Class<?> objectType: objectTypes)
 		{
-			@Override
-			public void onError(IDBErrorEvent event)
+			String storeName = getObjectStoreName(objectType);
+			if (storeName == null)
 			{
-				String message = "Error executing transaction.  ObjectStore["+storeName+"], Database ["+getName()+"].";//TODO i18n
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onFailed(message);
-				}
+				throw new DatabaseException("Can not found objectStore for type ["+objectType.getName()+"] on database ["+getName()+"]");//TODO i18n
 			}
-		});
-		transaction.onAbort(new IDBAbortEvent.Handler()
-		{
-			@Override
-			public void onAbort(IDBAbortEvent event)
-			{
-				String message = "Transaction aborted.  ObjectStore["+storeName+"], Database ["+getName()+"].";//TODO i18n
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, message);
-				}
-				if (callback != null)
-				{
-					callback.onFailed(message);
-				}
-			}
-		});
+			storeNames.add(storeName);
+		}
+			
+		return getTransaction(storeNames.toArray(new String[storeNames.size()]), mode, callback);
+	}
+	
+	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback)
+	{
+		Transaction transaction = new Transaction(this, storeNames, mode);
+		transaction.setTransactionCallback(callback);
+		return transaction;
+	}
+
+	@SuppressWarnings("unchecked")
+    public <K, V> void add(V object, final DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite);
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
+   		objectStore.add(object);
+	}
+
+	public <K, V> void add(V[] objects, Class<V> objectType, final DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite);
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	for (V object : objects)
+        {
+    		objectStore.add(object);
+        }
+	}
+
+	@SuppressWarnings("unchecked")
+    public <K, V> void put(V object, final DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite);
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
+   		objectStore.put(object);
+	}
+
+	public <K, V> void put(V[] objects, Class<V> objectType, final DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	for (V object : objects)
+        {
+    		objectStore.put(object);
+        }
+	}
+
+    public <K, V> void get(K key, Class<V> objectType, final DatabaseRetrieveCallback<V> callback)
+    {
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readOnly, getCallbackForGetTransaction(callback));
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	objectStore.get(key, callback);
     }
 
-	private void appendWriteDBEventHandlers(final DatabaseCallback callback, final String operation, final String storeName, IDBTransaction transaction)
+    public <K, V> void delete(K key, Class<V> objectType, DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	objectStore.delete(key);
+	}
+        
+    public <K, V> void delete(KeyRange<K> keys, Class<V> objectType, DatabaseCallback callback)
+	{
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	objectStore.delete(keys);
+	}
+
+    public boolean isOpen()
     {
-	    transaction.onComplete(new IDBCompleteEvent.Handler()
-		{
-			@Override
-			public void onComplete(IDBCompleteEvent event)
-			{
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, "Transaction completed for "+operation+". ObjectStore["+storeName+"], Database ["+getName()+"].");
-				}
-				if (callback != null)
-				{
-					callback.onSuccess();
-				}
-			}
-		});
-		transaction.onError(new IDBErrorEvent.Handler()
-		{
-			@Override
-			public void onError(IDBErrorEvent event)
-			{
-				String message = "Error executing transaction.  ObjectStore["+storeName+"], Database ["+getName()+"].";//TODO i18n
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onFailed(message);
-				}
-			}
-		});
-		transaction.onAbort(new IDBAbortEvent.Handler()
-		{
-			@Override
-			public void onAbort(IDBAbortEvent event)
-			{
-				String message = "Transaction aborted.  ObjectStore["+storeName+"], Database ["+getName()+"].";//TODO i18n
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, message);
-				}
-				if (callback != null)
-				{
-					callback.onFailed(message);
-				}
-			}
-		});
+    	return db != null;
     }
-	
+    
+	private <T> TransactionCallback getCallbackForGetTransaction(final DatabaseRetrieveCallback<T> callback)
+    {
+	    return new TransactionCallback()
+		{
+			@Override
+			public void onError(String message)
+			{
+				callback.onFailed(message);
+			}
+			
+			@Override
+			public void onAbort()
+			{
+				callback.onFailed("Transaction abborted");//TODO i18n
+			}
+		};
+    }
+
+	private TransactionCallback getCallbackForWriteTransaction(final DatabaseCallback callback)
+    {
+	    return new TransactionCallback()
+		{
+			@Override
+			public void onError(String message)
+			{
+				callback.onFailed(message);
+			}
+			
+			@Override
+			public void onAbort()
+			{
+				callback.onFailed("Transaction abborted");//TODO i18n
+			}
+			
+			@Override
+			public void onComplete()
+			{
+				callback.onSuccess();
+			}
+		};
+    }
+
 	protected abstract void updateDatabaseStructure();
-	protected abstract String getObjectStoreName(String className);
-	protected abstract JsonEncoder<?> getEncoder(String className);
-	protected abstract JsArrayMixed getNativeCompositeKey(Object[] key, String className);
+	protected abstract <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType, IDBObjectStore idbObjectStore);
+	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
+	protected abstract String getObjectStoreName(Class<?> objectType);
 }

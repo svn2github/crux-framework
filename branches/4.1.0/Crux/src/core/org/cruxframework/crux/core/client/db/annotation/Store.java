@@ -13,24 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb.events;
+package org.cruxframework.crux.core.client.db.annotation;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
 /**
+ * Maps a class to an object store into the Crux Database.
  * @author Thiago da Rosa de Bustamante
- *
  */
-public class IDBErrorEvent extends JavaScriptObject
+@Target(ElementType.TYPE)
+public @interface Store
 {
-	public static interface Handler
+	/**
+	 * Define the object store name
+	 * @return
+	 */
+	String value();
+
+	/**
+	 * Identifies a key on the object store
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	@Target(ElementType.METHOD)
+	public @interface Key
 	{
-		void onError(IDBErrorEvent event);
+		boolean autoIncrement() default false;
 	}
-	
-	protected IDBErrorEvent(){}
-	
-	public final native String getName()/*-{
-		return (this.target && this.target.error)?this.target.error.name:'unknown';
-	}-*/;
 }

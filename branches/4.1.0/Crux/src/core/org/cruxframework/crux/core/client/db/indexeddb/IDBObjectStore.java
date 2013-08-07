@@ -133,6 +133,10 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.add(value,key);
 	}-*/;
 
+	public final native IDBRequest<IDBObjectStore> delete(IDBKeyRange keyRange) /*-{
+	    return this["delete"](keyRange);
+	}-*/;
+
 	public final native IDBRequest<IDBObjectStore> delete(JsArrayMixed key) /*-{
 	    return this["delete"](key);
 	}-*/;

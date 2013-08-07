@@ -13,24 +13,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.indexeddb.events;
+package org.cruxframework.crux.core.client.db;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
+
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class IDBErrorEvent extends JavaScriptObject
+public abstract class KeyRange<K>
 {
-	public static interface Handler
+	protected final IDBKeyRange idbKeyRange;
+
+	protected KeyRange(IDBKeyRange idbKeyRange)
+    {
+		this.idbKeyRange = idbKeyRange;
+    }
+	
+    public boolean isLowerOpen()
+    {
+	    return idbKeyRange.isLowerOpen();
+    }
+
+    public boolean isUpperOpen()
+    {
+	    return idbKeyRange.isUpperOpen();
+    }
+	
+	protected IDBKeyRange getNativeKeyRange()
 	{
-		void onError(IDBErrorEvent event);
+		return idbKeyRange;
 	}
-	
-	protected IDBErrorEvent(){}
-	
-	public final native String getName()/*-{
-		return (this.target && this.target.error)?this.target.error.name:'unknown';
-	}-*/;
+
+	public abstract K getLower();
+	public abstract K getUpper();
 }
