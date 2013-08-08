@@ -64,6 +64,11 @@
 	<property name="crossdevicehelloworld.build" value="../CrossDeviceHelloWorld" />
 	<property name="crossdevicehelloworld.build.dir" value="${crossdevicehelloworld.build}/build" />
 	<property name="crossdevicehelloworld.webinf.dir" value="${crossdevicehelloworld.build}/war/WEB-INF" />
+	
+	<!-- Properties refering CrossDeviceShowcase Project -->
+	<property name="crossdeviceshowcase.build" value="../CrossDeviceShowcase" />
+	<property name="crossdeviceshowcase.build.dir" value="${crossdeviceshowcase.build}/build" />
+	<property name="crossdeviceshowcase.webinf.dir" value="${crossdeviceshowcase.build}/war/WEB-INF" />
 
 	<!--
 	========================================================================================================
@@ -72,9 +77,17 @@
 	-->
 	<target name="check-dependencies">
 		<condition property="must.download.deps">
-			<not>
-				<available file="${crux.dependencies.dir}/crux-runtime-deps.jar" type="file"/>
-			</not>
+			<or>
+				<not><available file="${crux.dependencies.dir}/crux-runtime-deps.jar" type="file"/></not>
+				<not><available file="${crux.dependencies.dir}/gwt-servlet.jar" type="file"/></not>
+				<not><available file="${crux.dependencies.dir}/gwt-servlet-deps.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/crux-dev-deps.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/gwt-dev.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/gwt-user.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/validation-api-1.0.0.GA.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/validation-api-1.0.0.GA-sources.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/jgroups-3.2.9.Final.jar" type="file"/></not>	
+			</or>
 		</condition>
 	</target>
 
@@ -95,6 +108,7 @@
 				<include name="**/lib/gwt-user.jar"/>
 				<include name="**/lib/validation-api-1.0.0.GA-sources.jar"/>
 				<include name="**/lib/validation-api-1.0.0.GA.jar"/>
+				<include name="**/lib/jgroups-3.2.9.Final.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${crux.build.dir}/dependencies" flatten="yes">
@@ -311,6 +325,29 @@
 			</fileset>
 		</copy>
 		<copy todir="${crossdevicehelloworld.webinf.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.runtime.name}.jar" />
+			</fileset>
+			<fileset dir="${crux.dependencies.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<!-- Update CrossDeviceShowcase project -->
+		<copy todir="${crossdeviceshowcase.build.dir}/lib">
+			<fileset dir="${crux.dist.dir}" >
+				<include name="${crux.dev.name}.jar" />
+				<include name="${crux.themes.name}.jar" />
+				<include name="${crux.widgets.name}.jar" />
+			</fileset>
+			<fileset dir="${crossdevice.dist.dir}">
+			    <include name="${crossdevice.name}.jar" />
+			</fileset>
+			<fileset dir="${crux.lib.dir}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${crossdeviceshowcase.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.runtime.name}.jar" />
 			</fileset>
