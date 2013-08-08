@@ -55,7 +55,7 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	        {
 	        	String resource = ViewFactoryCreator.createVariableName("resource");
 	        	out.println(ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(property)+";");
-	        	out.println(context.getWidget()+".setUrlAndVisibleRect(Screen.rewriteUrl("+resource+".getSafeUri().asString()), "+resource+".getLeft(), "+resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight());");
+	        	out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+resource+".getSafeUri().asString()));");
 	        }
 	        else
 	        {
