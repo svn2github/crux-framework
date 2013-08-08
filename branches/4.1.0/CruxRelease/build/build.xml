@@ -220,7 +220,7 @@
 		Compile Crux and update apllications with new jars
 	========================================================================================================
 	-->
-	<target name="compile-update-applications-jars" >
+	<target name="compile-update-applications-jars" depends="download-dependencies">
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
 		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<antcall target="update-applications-jars" />
