@@ -86,7 +86,8 @@
 				<not><available file="${crux.lib.dir}/gwt-user.jar" type="file"/></not>
 				<not><available file="${crux.lib.dir}/validation-api-1.0.0.GA.jar" type="file"/></not>
 				<not><available file="${crux.lib.dir}/validation-api-1.0.0.GA-sources.jar" type="file"/></not>
-				<not><available file="${crux.lib.dir}/jgroups-3.2.9.Final.jar" type="file"/></not>	
+				<not><available file="${crux.lib.dir}/jgroups-3.2.9.Final.jar" type="file"/></not>
+				<not><available file="${crux.lib.dir}/tools-jdk-1.7.0.21.jar" type="file"/></not>
 			</or>
 		</condition>
 	</target>
@@ -109,6 +110,7 @@
 				<include name="**/lib/validation-api-1.0.0.GA-sources.jar"/>
 				<include name="**/lib/validation-api-1.0.0.GA.jar"/>
 				<include name="**/lib/jgroups-3.2.9.Final.jar"/>
+				<include name="**/lib/tools-jdk-1.7.0.21.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${crux.build.dir}/dependencies" flatten="yes">
