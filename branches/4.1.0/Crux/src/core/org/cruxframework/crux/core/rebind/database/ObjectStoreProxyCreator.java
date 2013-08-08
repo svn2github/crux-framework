@@ -18,25 +18,23 @@ package org.cruxframework.crux.core.rebind.database;
 import java.io.PrintWriter;
 
 import org.cruxframework.crux.core.client.db.AbstractObjectStore;
+import org.cruxframework.crux.core.client.db.Cursor;
+import org.cruxframework.crux.core.client.db.DBMessages;
+import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
-import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata.Empty;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
-import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
-import org.cruxframework.crux.core.rebind.rest.JSonSerializerProxyCreator;
-import org.cruxframework.crux.core.utils.JClassUtils;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
@@ -44,41 +42,23 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ObjectStoreProxyCreator extends AbstractProxyCreator
+public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 {
-	private final JClassType targetObjectType;
-	private JClassType integerType;
-	private JClassType stringType;
 	private JClassType abstractObjectStoreType;
-	private JClassType emptyType;
-	private final String objectStoreName;
-	private final String[] keyPath;
-	private String serializerVariable;
 	private String idbObjectStoreVariable;
 
 	public ObjectStoreProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
 	{
-		super(logger, context);
-		this.objectStoreName = objectStoreName;
-		this.keyPath = keyPath;
+		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.abstractObjectStoreType = context.getTypeOracle().findType(AbstractObjectStore.class.getCanonicalName());
-		this.targetObjectType = targetObjectType;
-		if (JClassUtils.isSimpleType(targetObjectType))
-		{
-			throw new CruxGeneratorException("Simple types are not allowed as row in Crux Database. Create an wrapper Object to your value. ObjectStoreName["+objectStoreName+"]");
-		}
-		this.stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
-		this.integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
-		this.emptyType = context.getTypeOracle().findType(Empty.class.getCanonicalName());
-		this.serializerVariable = "serializer";
 		this.idbObjectStoreVariable = "idbObjectStore";
 	}
 	
 	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType).create();;
-		srcWriter.println("private "+serializerName+" "+serializerVariable+" = new "+serializerName+"();");
+	    super.generateProxyFields(srcWriter);
+	    srcWriter.println("private "+DBMessages.class.getCanonicalName()+" messages = GWT.create("+DBMessages.class.getCanonicalName()+".class);");
 	}
 
 	@Override
@@ -98,54 +78,12 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 		generateAddMethod(srcWriter);
 		generatePutMethod(srcWriter);
 		generateGetMethod(srcWriter);
+		generateOpenCursorMethod(srcWriter);
 		if (hasCompositeKey())
 		{
 			generateGetNativeKeyMethod(srcWriter);
 		}
 	}
-
-	private boolean hasCompositeKey()
-    {
-	    return (keyPath.length > 1) && (!targetObjectType.isAssignableTo(emptyType));
-    }
-
-	protected void generateGetNativeKeyMethod(SourcePrinter srcWriter)
-    {
-	    srcWriter.println("private "+JsArrayMixed.class.getCanonicalName()+" getNativeKey(Object[] key){");
-	    srcWriter.println(JsArrayMixed.class.getCanonicalName()+ " result = createArray();");
-	    
-	    int i=0;
-	    for (String key : keyPath)
-        {
-	        String getterMethod = JClassUtils.getGetterMethod(key, targetObjectType);
-			if (StringUtils.isEmpty(getterMethod))
-			{
-				throw new CruxGeneratorException("Invalid keyPath for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
-			}
-			JType jType = JClassUtils.getReturnTypeFromMethodClass(targetObjectType, getterMethod, new JType[]{});
-        	if (jType.equals(stringType))
-        	{
-        	    srcWriter.println("result.push((String)key["+i+"]);");
-        	}
-        	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
-        	{
-        	    srcWriter.println("result.push((int)key["+i+"]);");
-        	}
-        	else
-        	{
-        		throw new CruxGeneratorException("Invalid key type for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
-        	}
-        	i++;
-        }
-	    srcWriter.println("return result;");
-	    srcWriter.println("}");
-	    
-	    srcWriter.println();
-	    srcWriter.println("private native "+JsArrayMixed.class.getCanonicalName()+" createArray()/*-{");
-	    srcWriter.println(JsArrayMixed.class.getCanonicalName()+ " result = createArray();");
-	    srcWriter.println("return [];");
-	    srcWriter.println("}-*/;");
-    }
 
 	protected void generateGetObjectStoreNameMethod(SourcePrinter srcWriter)
     {
@@ -184,7 +122,14 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 		srcWriter.println("if (object == null){");
 		srcWriter.println("throw new NullPointerException();");
 		srcWriter.println("}");
-		srcWriter.println(idbObjectStoreVariable+".add("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+		if (isEmptyType())
+		{
+			srcWriter.println(idbObjectStoreVariable+".add(object);");
+		}
+		else
+		{
+			srcWriter.println(idbObjectStoreVariable+".add("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+		}
 		srcWriter.println("}");
 		srcWriter.println();
     }
@@ -195,7 +140,14 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 		srcWriter.println("if (object == null){");
 		srcWriter.println("throw new NullPointerException();");
 		srcWriter.println("}");
-		srcWriter.println(idbObjectStoreVariable+".put("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+		if (isEmptyType())
+		{
+			srcWriter.println(idbObjectStoreVariable+".put(object);");
+		}
+		else
+		{
+			srcWriter.println(idbObjectStoreVariable+".put("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+		}
 		srcWriter.println("}");
 		srcWriter.println();
     }
@@ -213,9 +165,44 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 		}
 		srcWriter.println("retrieveRequest.onSuccess(new IDBObjectRetrieveEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBObjectRetrieveEvent event){");
-		srcWriter.println("callback.onSuccess("+serializerVariable+".decode(new JSONObject(event.getObject())));");
+		if (isEmptyType())
+		{
+			srcWriter.println("callback.onSuccess(event.getObject());");
+		}
+		else
+		{
+			srcWriter.println("callback.onSuccess("+serializerVariable+".decode(new JSONObject(event.getObject())));");
+		}
 		srcWriter.println("}");
 		srcWriter.println("});");
+
+		srcWriter.println("retrieveRequest.onError(new IDBErrorEvent.Handler(){");
+		srcWriter.println("public void onError(IDBErrorEvent event){");
+		srcWriter.println("callback.onFailed(messages.objectStoreGetError(event.getName()));");
+		srcWriter.println("}");
+		srcWriter.println("});");
+				
+		srcWriter.println("}");
+		srcWriter.println();
+    }
+
+	protected void generateOpenCursorMethod(SourcePrinter srcWriter)
+    {
+		srcWriter.println("public void openCursor(final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
+		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor();");
+		srcWriter.println("cursorRequest.onSuccess(new IDBCursorEvent.Handler(){");
+		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
+		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath).create();
+		srcWriter.println("callback.onSuccess(new "+cursorClassName+"(event.getCursor()));");
+		srcWriter.println("}");
+		srcWriter.println("});");
+
+		srcWriter.println("cursorRequest.onError(new IDBErrorEvent.Handler(){");
+		srcWriter.println("public void onError(IDBErrorEvent event){");
+		srcWriter.println("callback.onFailed(messages.objectStoreCursorError(event.getName()));");
+		srcWriter.println("}");
+		srcWriter.println("});");
+		
 		srcWriter.println("}");
 		srcWriter.println();
     }
@@ -256,53 +243,6 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
 
-	private String getTargetObjectClassName()
-    {
-		if (targetObjectType.isAssignableTo(emptyType))
-		{
-			return JavaScriptObject.class.getCanonicalName();
-		}
-	    return targetObjectType.getParameterizedQualifiedSourceName();
-    }
-	
-	private String getKeyTypeName()
-	{
-		if (targetObjectType.isAssignableTo(emptyType))
-		{
-			return JavaScriptObject.class.getCanonicalName();
-		}
-		if (keyPath.length >= 2)
-		{
-			return "Object[]";
-		}
-		else if (keyPath.length == 1)
-		{
-			String getterMethod = JClassUtils.getGetterMethod(keyPath[0], targetObjectType);
-			if (StringUtils.isEmpty(getterMethod))
-			{
-				throw new CruxGeneratorException("Invalid keyPath for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
-			}
-			JType jType = JClassUtils.getReturnTypeFromMethodClass(targetObjectType, getterMethod, new JType[]{});
-        	if (jType.equals(stringType))
-        	{
-        		return "String";
-        	}
-        	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
-        	{
-        		return "Integer";
-        		
-        	}
-        	else
-        	{
-        		throw new CruxGeneratorException("Invalid key type for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
-        	}
-		}
-		else
-		{
-			throw new CruxGeneratorException("can not create an objectStore without a key definition. ObjectStore["+objectStoreName+"].");
-		}
-	}
-
 	/**
 	 * @return
 	 */
@@ -314,7 +254,13 @@ public class ObjectStoreProxyCreator extends AbstractProxyCreator
 				DatabaseRetrieveCallback.class.getCanonicalName(), 
 				IDBObjectRetrieveEvent.class.getCanonicalName(), 
 				IDBObjectRetrieveRequest.class.getCanonicalName(), 
-				JSONObject.class.getCanonicalName()
+				JSONObject.class.getCanonicalName(), 
+				DatabaseCursorCallback.class.getCanonicalName(), 
+				IDBObjectCursorRequest.class.getCanonicalName(), 
+				IDBCursorEvent.class.getCanonicalName(),
+				IDBErrorEvent.class.getCanonicalName(),
+				Cursor.class.getCanonicalName(), 
+				GWT.class.getCanonicalName()
 		};
 		return imports;
 	}

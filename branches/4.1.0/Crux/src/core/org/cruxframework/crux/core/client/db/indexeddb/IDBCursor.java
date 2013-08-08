@@ -51,7 +51,7 @@ public class IDBCursor extends JavaScriptObject
     }
     
     private native String getDirectionNative()/*-{
-		return this.source;
+		return this.direction;
 	}-*/;
 
     public final native JsArrayMixed getObjectKey() /*-{

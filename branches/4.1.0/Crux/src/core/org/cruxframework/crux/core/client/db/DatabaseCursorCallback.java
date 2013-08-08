@@ -16,13 +16,13 @@
 package org.cruxframework.crux.core.client.db;
 
 /**
- * Database retrieve operation callback. 
- * Use this callback to read objects from object stores.
- * 
+ * Database cursor operations callback. 
+ * Use this callback to read objects from a cursor.
  * @author Thiago da Rosa de Bustamante
+ *
  */
-public interface DatabaseRetrieveCallback<T>
+public interface DatabaseCursorCallback<K, V>
 {
-	void onSuccess(T result);
+	void onSuccess(Cursor<K, V> result);
 	void onFailed(String message);
 }

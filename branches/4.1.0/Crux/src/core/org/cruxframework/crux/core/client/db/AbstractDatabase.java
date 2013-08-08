@@ -30,6 +30,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -41,6 +42,7 @@ public abstract class AbstractDatabase implements Database
 {
 	protected static Logger logger = Logger.getLogger(AbstractDatabase.class.getName());
 	protected IDBDatabase db = null;
+	protected DBMessages messages = GWT.create(DBMessages.class); 
 
 	public void open(final DatabaseCallback callback)
 	{
@@ -53,7 +55,7 @@ public abstract class AbstractDatabase implements Database
 				db = event.getResult();
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.INFO, "Database ["+getName()+"] opened.");
+					logger.log(Level.INFO, messages.databaseOpened(getName()));
 				}
 				if (callback != null)
 				{
@@ -67,7 +69,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onBlocked(IDBBlockedEvent event)
 			{
-				String message = "Database ["+getName()+"] is blocked.";//TODO i18n
+				String message = messages.databaseBlocked(getName());
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -84,7 +86,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onError(IDBErrorEvent event)
 			{
-				String message = "Error opening Database ["+getName()+"]: " + event.getName();//TODO i18n
+				String message = messages.databaseOpenError(getName(), event.getName());
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -105,19 +107,19 @@ public abstract class AbstractDatabase implements Database
 				{
 					if (LogConfiguration.loggingIsEnabled())
 					{
-						logger.log(Level.INFO, "Browser is using an outdated Database ["+getName()+"]. Upgrading database structure.");//TODO i18n
+						logger.log(Level.INFO, messages.databaseUpgrading(getName()));
 					}
 					updateDatabaseStructure();
 					if (LogConfiguration.loggingIsEnabled())
 					{
-						logger.log(Level.INFO, "Browser Database upgraded ["+getName()+"].");//TODO i18n
+						logger.log(Level.INFO, messages.databaseUpgraded(getName()));
 					}
 				}
 				catch (RuntimeException e) 
 				{
 					if (LogConfiguration.loggingIsEnabled())
 					{
-						logger.log(Level.SEVERE, "Error Upgrading Database ["+getName()+"]: " + e.getMessage(), e);//TODO i18n
+						logger.log(Level.SEVERE, messages.databaseUpgradeError(getName(), e.getMessage()), e);
 					}
 					throw e;
 				}
@@ -154,7 +156,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onBlocked(IDBBlockedEvent event)
 			{
-				String message = "Database ["+getName()+"] is blocked.";//TODO i18n
+				String message = messages.databaseBlocked(getName());
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -170,7 +172,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onError(IDBErrorEvent event)
 			{
-				String message = "Error removing Database ["+getName()+"]: "+event.getName();
+				String message = messages.databaseDeleteError(getName(), event.getName());
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -202,7 +204,7 @@ public abstract class AbstractDatabase implements Database
 			String storeName = getObjectStoreName(objectType);
 			if (storeName == null)
 			{
-				throw new DatabaseException("Can not found objectStore for type ["+objectType.getName()+"] on database ["+getName()+"]");//TODO i18n
+				throw new DatabaseException(messages.databaseObjectStoreNotFoundError(getName(), objectType.getName()));
 			}
 			storeNames.add(storeName);
 		}
@@ -220,14 +222,14 @@ public abstract class AbstractDatabase implements Database
 	@SuppressWarnings("unchecked")
     public <K, V> void add(V object, final DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite);
+    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
    		objectStore.add(object);
 	}
 
 	public <K, V> void add(V[] objects, Class<V> objectType, final DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite);
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
     	for (V object : objects)
         {
@@ -238,7 +240,7 @@ public abstract class AbstractDatabase implements Database
 	@SuppressWarnings("unchecked")
     public <K, V> void put(V object, final DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite);
+    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
    		objectStore.put(object);
 	}
@@ -255,7 +257,7 @@ public abstract class AbstractDatabase implements Database
 
     public <K, V> void get(K key, Class<V> objectType, final DatabaseRetrieveCallback<V> callback)
     {
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readOnly, getCallbackForGetTransaction(callback));
+    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readOnly);
     	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
     	objectStore.get(key, callback);
     }
@@ -278,24 +280,6 @@ public abstract class AbstractDatabase implements Database
     {
     	return db != null;
     }
-    
-	private <T> TransactionCallback getCallbackForGetTransaction(final DatabaseRetrieveCallback<T> callback)
-    {
-	    return new TransactionCallback()
-		{
-			@Override
-			public void onError(String message)
-			{
-				callback.onFailed(message);
-			}
-			
-			@Override
-			public void onAbort()
-			{
-				callback.onFailed("Transaction abborted");//TODO i18n
-			}
-		};
-    }
 
 	private TransactionCallback getCallbackForWriteTransaction(final DatabaseCallback callback)
     {
@@ -310,7 +294,7 @@ public abstract class AbstractDatabase implements Database
 			@Override
 			public void onAbort()
 			{
-				callback.onFailed("Transaction abborted");//TODO i18n
+				callback.onFailed(messages.databaseTransactionAborted(getName()));
 			}
 			
 			@Override

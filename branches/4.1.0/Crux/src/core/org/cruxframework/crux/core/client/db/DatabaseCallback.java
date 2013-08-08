@@ -16,7 +16,7 @@
 package org.cruxframework.crux.core.client.db;
 
 /**
- * AbstractDatabase operations callback. All db operations are asynchronous.
+ * Database operations callback. All db operations are asynchronous.
  * Use this callback to receive feedback for requested operations.
  * 
  * @author Thiago da Rosa de Bustamante

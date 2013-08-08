@@ -15,14 +15,38 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
+
 /**
- * Database retrieve operation callback. 
- * Use this callback to read objects from object stores.
- * 
  * @author Thiago da Rosa de Bustamante
+ *
  */
-public interface DatabaseRetrieveCallback<T>
+public abstract class Cursor<K, V>
 {
-	void onSuccess(T result);
-	void onFailed(String message);
+	protected final IDBCursorWithValue idbCursor;
+
+	protected Cursor(IDBCursorWithValue idbCursor)
+	{
+		this.idbCursor = idbCursor;
+	}
+
+	public void advance(int count)
+	{
+		idbCursor.advance(count);
+	};
+	
+	public void continueCursor()
+	{
+		idbCursor.continueCursor();
+	}
+
+	public void delete()
+	{
+		idbCursor.delete();
+	}
+
+	public abstract void update(V value);
+	public abstract K getKey();
+	public abstract V getValue();
+	public abstract void continueCursor(K key);
 }

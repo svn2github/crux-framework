@@ -62,4 +62,10 @@ public interface ObjectStore<K, V>
 	 * @param key
 	 */
 	void delete(KeyRange<K> keyRange);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param callback
+	 */
+	void openCursor(DatabaseCursorCallback<K, V> callback);
 }

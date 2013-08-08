@@ -61,7 +61,7 @@ public class Transaction
         }
 	    if (db == null || !db.isOpen())
 		{
-			throw new DatabaseException("Database is not opened."); //i18n
+			throw new DatabaseException(db.messages.databaseNotOpenedError());
 		}
 				
 		transaction = db.db.getTransaction(storeNames, idbMode);
@@ -72,7 +72,7 @@ public class Transaction
 			{
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.INFO, "Transaction aborted...");
+					logger.log(Level.INFO, Transaction.this.db.messages.databaseTransactionAborted(Transaction.this.db.getName()));
 				}
 				if (transactionCallback != null)
 				{
@@ -87,7 +87,7 @@ public class Transaction
 			{
 				if (LogConfiguration.loggingIsEnabled())
 				{
-					logger.log(Level.INFO, "Transaction completed");
+					logger.log(Level.INFO, Transaction.this.db.messages.databaseTransactionCompleted(Transaction.this.db.getName()));
 				}
 				if (transactionCallback != null)
 				{
@@ -100,7 +100,7 @@ public class Transaction
 			@Override
 			public void onError(IDBErrorEvent event)
 			{
-				String message = "Transaction Error ["+event.getName()+"]";
+				String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), event.getName());
 				if (LogConfiguration.loggingIsEnabled())
 				{
 					logger.log(Level.SEVERE, message);
@@ -153,22 +153,22 @@ public class Transaction
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static class TransactionCallback
+	public static interface TransactionCallback
 	{
 		/**
 		 * Called when the transaction completes with success.
 		 */
-		public void onComplete(){}
+		void onComplete();
 
 		/**
 		 * Called when an unexpected error occur.
 		 * @param message
 		 */
-		public void onError(String message){}
+		void onError(String message);
 		
 		/**
 		 * Called if the transaction is aborted before completion (rolled back).
 		 */
-		public void onAbort(){}
+		void onAbort();
 	}
 }

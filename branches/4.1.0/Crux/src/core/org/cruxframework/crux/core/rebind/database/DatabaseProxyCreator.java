@@ -170,20 +170,17 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		for (ObjectStoreMetadata objectStoreMetadata : objectStores)
         {
 			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
-//			if (!objectStoreTarget.isAssignableTo(emptyType))
-//			{
-				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
-				if (!first)
-				{
-					srcWriter.print("else ");
-				}
-				first = false;
-				srcWriter.println("if (StringUtils.unsafeEquals(storeName, "+EscapeUtils.quote(objectStoreName)+")){");
-				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
-				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
-			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
-				srcWriter.println("}");
-//			}
+			String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
+			if (!first)
+			{
+				srcWriter.print("else ");
+			}
+			first = false;
+			srcWriter.println("if (StringUtils.unsafeEquals(storeName, "+EscapeUtils.quote(objectStoreName)+")){");
+			String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
+			String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
+			srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
+			srcWriter.println("}");
         }
 	    
 	    srcWriter.println("return null;");
