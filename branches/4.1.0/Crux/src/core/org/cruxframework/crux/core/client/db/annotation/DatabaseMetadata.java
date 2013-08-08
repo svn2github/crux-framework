@@ -62,7 +62,15 @@ public @interface DatabaseMetadata
 		String keyPath() default "";
 		String[] compositeKeyPath() default {};
 		Class<?> targetClass() default Empty.class;
+		IndexMetadata[] indexMetadata() default {};
 	}
 	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.ANNOTATION_TYPE)
+	public @interface IndexMetadata
+	{
+		
+	}
+
 	public static class Empty{}
 }

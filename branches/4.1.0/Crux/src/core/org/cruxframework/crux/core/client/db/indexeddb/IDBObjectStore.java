@@ -15,8 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
-import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
@@ -65,6 +65,17 @@ public class IDBObjectStore extends JavaScriptObject
 		}-*/;
 	}
 
+	public static class IDBObjectCountRequest extends IDBRequest<IDBObjectStore>
+	{
+		protected IDBObjectCountRequest(){}
+		
+		public final native void onSuccess(IDBCountEvent.Handler handler) /*-{
+			this.onsuccess = function(evt) {
+		    	handler.@org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent.Handler::onSuccess(Lorg/cruxframework/crux/core/client/db/indexeddb/events/IDBCountEvent;)(evt);
+			};              
+		}-*/;
+	}
+	
 	protected IDBObjectStore(){}
 
 	public final native String getName() /*-{
@@ -75,18 +86,18 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.keyPath;
 	}-*/;
 
-    public final FastList<String> getCompositeKeyPath()
+    public final String[] getCompositeKeyPath()
     {
-    	return JsUtils.toFastList(getCompositeKeyPathNative());
+    	return JsUtils.toArray(getCompositeKeyPathNative());
     }
     
     private native JsArrayString getCompositeKeyPathNative() /*-{
 	    return this.keyPath;
 	}-*/;
 
-	public final FastList<String> getIndexNames() 
+	public final String[] getIndexNames() 
 	{
-	    return JsUtils.toFastList(getIndexNamesNative());
+	    return JsUtils.toArray(getIndexNamesNative());
 	}	
 	
 	private native JsArrayString getIndexNamesNative() /*-{
@@ -182,11 +193,11 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.openCursor(range,direction);
 	}-*/;
 	
-	public final native IDBObjectCursorRequest count() /*-{
+	public final native IDBObjectCountRequest count() /*-{
 	    return this.count();
 	}-*/;
 
-	public final native IDBObjectCursorRequest count(IDBKeyRange range) /*-{
+	public final native IDBObjectCountRequest count(IDBKeyRange range) /*-{
 	    return this.count(range);
 	}-*/;
 

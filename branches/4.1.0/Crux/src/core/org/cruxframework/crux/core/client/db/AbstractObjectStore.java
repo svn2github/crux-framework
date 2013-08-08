@@ -16,6 +16,11 @@
 package org.cruxframework.crux.core.client.db;
 
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCountRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -24,10 +29,64 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 {
 	protected final IDBObjectStore idbObjectStore;
+    
+	protected DBMessages messages = GWT.create(DBMessages.class);
 
 	protected AbstractObjectStore(IDBObjectStore idbObjectStore)
 	{
 		this.idbObjectStore = idbObjectStore;
 		
 	}
+	
+	public String[] getIndexNames()
+	{
+		return idbObjectStore.getIndexNames();
+	}
+	
+	@Override
+	public boolean istAutoIncrement()
+	{
+	    return idbObjectStore.istAutoIncrement();
+	}
+	
+	@Override
+	public void clear()
+	{
+		idbObjectStore.clear();
+	}
+	
+	@Override
+	public void count(final DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbObjectStore.count();
+		handleCallback(callback, countRequest);
+	}
+
+	@Override
+	public void count(KeyRange<K> range, final DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbObjectStore.count(range.getNativeKeyRange());
+		handleCallback(callback, countRequest);
+	}
+
+	private void handleCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
+    {
+	    countRequest.onError(new IDBErrorEvent.Handler()
+		{
+			@Override
+			public void onError(IDBErrorEvent event)
+			{
+				callback.onFailed(messages.objectStoreCountError(event.getName()));
+			}
+		});
+		countRequest.onSuccess(new IDBCountEvent.Handler()
+		{
+			
+			@Override
+			public void onSuccess(IDBCountEvent event)
+			{
+				callback.onSuccess(event.getCount());
+			}
+		});
+    }
 }

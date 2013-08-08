@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 
 /**
@@ -23,6 +24,29 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
  */
 public abstract class Cursor<K, V>
 {
+	/**
+	 * Direction for the cursor
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	public static enum CursorDirection 
+	{
+		next(IDBCursorDirection.next), 
+		nextunique(IDBCursorDirection.nextunique),
+		prev(IDBCursorDirection.prev), 
+		prevunique(IDBCursorDirection.prevunique);
+		
+		private IDBCursorDirection direction;
+		CursorDirection(IDBCursorDirection direction)
+		{
+			this.direction = direction;
+		}
+		protected IDBCursorDirection getNativeCursorDirection()
+		{
+			return direction;
+		}
+	}
+
 	protected final IDBCursorWithValue idbCursor;
 
 	protected Cursor(IDBCursorWithValue idbCursor)
@@ -45,6 +69,21 @@ public abstract class Cursor<K, V>
 		idbCursor.delete();
 	}
 
+	public CursorDirection getDirection()
+	{
+		switch (idbCursor.getDirection())
+        {
+        	case next:
+        		return CursorDirection.next;
+        	case nextunique:
+    	        return CursorDirection.nextunique;
+        	case prev:
+    	        return CursorDirection.prev;
+        	default:
+    	        return CursorDirection.prevunique;
+        }
+	}
+	
 	public abstract void update(V value);
 	public abstract K getKey();
 	public abstract V getValue();

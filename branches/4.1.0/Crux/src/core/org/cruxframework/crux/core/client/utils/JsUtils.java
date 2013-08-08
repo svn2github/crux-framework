@@ -28,6 +28,15 @@ import com.google.gwt.core.client.JsArrayString;
  */
 public class JsUtils
 {
+	public static String[] toArray(JsArrayString jSArray)
+	{
+		String[] result = new String[jSArray.length()];
+		for (int i = 0; i < jSArray.length(); i++)
+		{
+			result[i] = jSArray.get(i);
+		}
+		return result;
+	}
 
 	public static List<String> toList(JsArrayString jSArray)
 	{

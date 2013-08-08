@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
+
 
 /**
  * Represents an ObjectStore on Crux Database. ObjectStores are collections of objects inserted into the Database.
@@ -64,8 +66,53 @@ public interface ObjectStore<K, V>
 	void delete(KeyRange<K> keyRange);
 	
 	/**
+	 * Return the names of the indexes associated with this object store.
+	 * @return
+	 */
+	String[] getIndexNames();
+
+	/**
+	 * Return true if this object store auto increments its keys.
+	 * @return
+	 */
+	boolean istAutoIncrement();
+	
+	/**
+	 * Clear this object store
+	 */
+	void clear();
+	
+	/**
 	 * Open a cursor to iterate over the object store.
 	 * @param callback
 	 */
 	void openCursor(DatabaseCursorCallback<K, V> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param callback
+	 */
+	void openCursor(KeyRange<K> keyRange, DatabaseCursorCallback<K, V> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param direction
+	 * @param callback
+	 */
+	void openCursor(KeyRange<K> keyRange, CursorDirection direction, DatabaseCursorCallback<K, V> callback);
+	
+	/**
+	 * Return the number of items stored into this object store.
+	 * @param callback
+	 */
+	void count(DatabaseCountCallback callback);
+
+	/**
+	 * Return the number of items stored into this object store in the given range.
+	 * @param range
+	 * @param callback
+	 */
+	void count(KeyRange<K> range, DatabaseCountCallback callback);
 }

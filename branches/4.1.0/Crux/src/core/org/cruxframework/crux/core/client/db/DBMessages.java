@@ -64,4 +64,7 @@ public interface DBMessages extends Messages
 	
 	@DefaultMessage("Transaction Error on Database [{0}]. Error name [{1}].")
 	String databaseTransactionError(String databaseName, String errorName);
+
+	@DefaultMessage("Error counting object store items. Error name [{0}].")
+	String objectStoreCountError(String name);
 }
