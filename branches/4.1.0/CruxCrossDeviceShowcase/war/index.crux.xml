@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:show="http://www.cruxframework.org/crux/showcase"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt">
+	
+	<head>
+		<title>Crux Framework - Cross-Device Showcase</title>
+		<meta name="fragment" content="!" />
+	</head>
+	
+	<body>
+		<script type="text/javascript" src="crossdeviceshowcase/crossdeviceshowcase.nocache.js"></script>
+
+		<c:screen useController="mainController" useView="**/views/**/*" 
+				  smallViewport="user-scalable=no, width=320" 
+				  largeViewport="user-scalable=no, width=device-width, height=device-height" useResource="xStandardResources" height="100%"/>
+
+		<show:menuDisplay id="menuDisplay">
+			<show:menuEntry label="Forms" targetView="formDisplay"/>
+		</show:menuDisplay>
+	
+	</body>
+</html>
