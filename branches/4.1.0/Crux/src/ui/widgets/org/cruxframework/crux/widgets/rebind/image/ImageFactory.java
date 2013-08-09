@@ -55,6 +55,15 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
 	        {
 	        	String resource = ViewFactoryCreator.createVariableName("resource");
 	        	out.println(ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(property)+";");
+	        	
+	        	//trying
+	        	//out.println(context.getWidget()+".setUrlAndVisibleRect(Screen.rewriteUrl("+resource+".getSafeUri().asString()), "+resource+".getLeft(), "+resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight());");
+	        	
+	        	//use? It seems that setUrlAndVisibleRect is a no-op.
+	        	//out.println(context.getWidget()+".addLoadHandler(new com.google.gwt.event.dom.client.LoadHandler() { public void onLoad(com.google.gwt.event.dom.client.LoadEvent event) { "+context.getWidget()+".getElement().getStyle().setVisibility(com.google.gwt.dom.client.Style.Visibility.VISIBLE); } });");
+	        	//out.println(context.getWidget()+".getElement().getStyle().setVisibility(com.google.gwt.dom.client.Style.Visibility.HIDDEN);");
+	        	
+	        	//working
 	        	out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+resource+".getSafeUri().asString()));");
 	        }
 	        else
