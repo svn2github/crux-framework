@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Crux" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
 	<property name="dist" location="../dist" />
 
