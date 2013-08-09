@@ -16,8 +16,6 @@
 package org.cruxframework.crux.core.client.screen;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
@@ -67,15 +65,16 @@ public class BrowserNetworkTools
 	 */
 	public static class NetworkCheckerDefault implements NetworkChecker
 	{
+		@SuppressWarnings("unused")
 		private static final int REPEATING_INTERVAL = 5000;
 		private static final String TESTER_ID = "_network_tester_";
 		private final String URL_IMG = "clear.cache.gif";
-		@SuppressWarnings("unused")
-		private boolean isOnline;
+		private boolean isOnline = true;
 		private Panel testerPanel;
 
 		public NetworkCheckerDefault()
 		{
+			/*
 			testerPanel = createTesterPanel();
 			Scheduler.get().scheduleFixedDelay(new RepeatingCommand()
 			{
@@ -85,6 +84,7 @@ public class BrowserNetworkTools
 					return true;
 				}
 			}, REPEATING_INTERVAL);
+			*/
 		}
 
 		@Override
@@ -94,13 +94,13 @@ public class BrowserNetworkTools
 		public boolean isOnline()
 		{
 			//this will be replaced by another implementation that uses the bootstrap
-			return true;
-			//return isOnline;
+			return isOnline;
 		}
 
+		@SuppressWarnings("unused")
 		private void updateNetworkStatus()
 		{
-			Image img = new Image(URL_IMG+"?"+System.currentTimeMillis());
+			Image img = new Image(com.google.gwt.core.client.GWT.getModuleName()+"/"+URL_IMG+"?"+System.currentTimeMillis());
 			img.getElement().getStyle().setPosition(Position.ABSOLUTE);
 			img.getElement().getStyle().setLeft(-1000, Unit.PX);
 			img.addLoadHandler(new LoadHandler()
@@ -125,6 +125,7 @@ public class BrowserNetworkTools
 			testerPanel.add(img);	
 		}
 
+		@SuppressWarnings("unused")
 		private Panel createTesterPanel()
 		{
 			final Element div = Document.get().createDivElement();
