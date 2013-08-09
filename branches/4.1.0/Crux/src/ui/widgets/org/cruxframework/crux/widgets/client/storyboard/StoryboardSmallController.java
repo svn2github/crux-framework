@@ -26,6 +26,8 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	protected FlowPanel storyboard;
 	protected String itemHeight;
 	protected String itemWidth;
+	private boolean expandHeight;
+	private boolean expandWidth;
 
 	@Override
 	public Widget getWidget(int index)
@@ -127,16 +129,8 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		final SelectablePanel panel = new SelectablePanel();
 		panel.add(widget);
 		panel.setStyleName("item");
-		if (!StringUtils.isEmpty(itemHeight))
-		{
-			panel.setHeight(itemHeight);
-		}
+		configHeightWidth(panel);
 		
-		if (!StringUtils.isEmpty(itemWidth))
-		{
-			panel.setWidth(itemWidth);
-		}
-
 		panel.addSelectHandler(new SelectHandler()
 		{
 			@Override
@@ -147,6 +141,30 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 			}
 		});
 		return panel;
+	}
+
+	private void configHeightWidth(final SelectablePanel panel) {
+		if (!StringUtils.isEmpty(itemHeight))
+		{
+			if(expandHeight)
+			{
+				panel.setHeight("100%");
+				panel.getElement().getStyle().setProperty("min-height", itemHeight);
+			}
+			
+			panel.setHeight(itemHeight);
+		}
+		
+		if (!StringUtils.isEmpty(itemWidth))
+		{
+			if(expandWidth)
+			{
+				panel.setWidth("100%");
+				panel.getElement().getStyle().setProperty("min-width", itemWidth);
+			}
+			
+			panel.setWidth(itemWidth);
+		}
 	}
 		
 	@Override
@@ -232,4 +250,14 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
     {
 		child.asWidget().getParent().getElement().getStyle().setProperty("verticalAlign", value.getVerticalAlignString());
     }
+
+	@Override
+	public void setExpandHeight(boolean expandHeight) {
+		this.expandHeight = expandHeight;
+	}
+
+	@Override
+	public void setExpandWidth(boolean expandWidth) {
+		this.expandWidth = expandWidth;
+	}
 }

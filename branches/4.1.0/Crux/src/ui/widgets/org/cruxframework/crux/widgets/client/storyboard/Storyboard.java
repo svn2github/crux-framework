@@ -53,4 +53,6 @@ public interface Storyboard extends DeviceAdaptive, IndexedPanel, HasSelectionHa
 	void setLargeDeviceItemWidth(IsWidget child, String width);
 	void setHorizontalAlignment(IsWidget child, HasHorizontalAlignment.HorizontalAlignmentConstant value);
 	void setVerticalAlignment(IsWidget child, HasVerticalAlignment.VerticalAlignmentConstant value);
+	void setExpandHeight(boolean expandHeight);
+	void setExpandWidth(boolean expandWidth);
 }
