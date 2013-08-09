@@ -8,12 +8,22 @@
 	
 	<crux:styledPanel id="panel" height="100%">
 		<crux:formDisplay id="form">
-			<crux:entry label="Nome:">
-				<gwt:textBox id="nameTextBox" value="Exemplos Cross-Device com Crux Framework"/>
+			<crux:entry label="Framework:">
+				<gwt:textBox id="frameworkTextBox" value="Crux Framework"/>
 			</crux:entry>
-			<crux:entry label="Versão">
+			<crux:entry label="Versão:">
 				<gwt:textBox id="versionTextBox" value="5.0"/>
 			</crux:entry>
+			<crux:entry label="Assunto:">
+				<gwt:textBox id="subjectTextBox" value="Exemplos Cross-Device"/>
+			</crux:entry>
+			<crux:entry label="Suporte:">
+				<gwt:horizontalPanel id="supportPanel" spacing="10">
+					<gwt:checkBox id="desktopCheckBox" text="Desktop" checked="true"/>
+					<gwt:checkBox id="smartPhoneCheckBox" text="Smart Phone" checked="true"/>
+					<gwt:checkBox id="tabletCheckBox" text="Tablet" checked="true"/>
+				</gwt:horizontalPanel>
+			</crux:entry>			
 			<crux:entry>
 				<crux:button id="btn" text="Fechar" onSelect="mainController.showMenu"/>	
 			</crux:entry>

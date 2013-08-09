@@ -18,7 +18,7 @@
 				  smallViewport="user-scalable=no, width=320" 
 				  largeViewport="user-scalable=no, width=device-width, height=device-height" useResource="xStandardResources" height="100%"/>
 
-		<show:menuDisplay id="menuDisplay">
+		<show:menuDisplay id="menuDisplay" height="100%">
 			<show:menuEntry label="Forms" targetView="formDisplay"/>
 		</show:menuDisplay>
 	
