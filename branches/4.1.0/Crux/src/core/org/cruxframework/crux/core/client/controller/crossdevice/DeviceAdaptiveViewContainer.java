@@ -34,6 +34,7 @@ public class DeviceAdaptiveViewContainer extends SingleViewContainer implements 
     {
 		super(new SimplePanel(), true);
 		containerPanel = getMainWidget();
+		containerPanel.getElement().getStyle().setProperty("height", "inherit");
     }
 	
 	@Override

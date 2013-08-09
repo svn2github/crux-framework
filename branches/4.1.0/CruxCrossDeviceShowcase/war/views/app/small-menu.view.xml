@@ -5,6 +5,6 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"> 
 	
-	<gwt:flowPanel id="menuPanel" width="100%"/>
+	<gwt:flowPanel id="menuPanel"/>
 	
 </v:view>

@@ -6,7 +6,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	useController="mainController"> 
 	
-	<crux:styledPanel id="panel" height="100%" width="100%">
+	<crux:styledPanel id="panel" height="100%">
 		<crux:formDisplay id="form">
 			<crux:entry label="Nome:">
 				<gwt:textBox id="nameTextBox" value="Exemplos Cross-Device com Crux Framework"/>
