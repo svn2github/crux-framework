@@ -41,7 +41,12 @@ public class IDBDatabase extends IDBClass
 		return this.version;
 	}-*/;
 
-	public final FastList<String> getObjectStoreNames()
+	public final String[] getObjectStoreNames()
+	{
+		return JsUtils.toArray(getObjectStoreNamesNative());
+	}
+
+	public final FastList<String> listObjectStoreNames()
 	{
 		return JsUtils.toFastList(getObjectStoreNamesNative());
 	}

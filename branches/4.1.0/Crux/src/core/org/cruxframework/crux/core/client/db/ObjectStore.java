@@ -115,4 +115,11 @@ public interface ObjectStore<K, V>
 	 * @param callback
 	 */
 	void count(KeyRange<K> range, DatabaseCountCallback callback);
+
+	/**
+	 * Retrieve the index for the given name
+	 * @param name
+	 * @return
+	 */
+	Index getIndex(String name);
 }

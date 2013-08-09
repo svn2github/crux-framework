@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.client.db.annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.IndexDef;
+
 /**
  * Maps a class to an object store into the Crux Database.
  * @author Thiago da Rosa de Bustamante
@@ -32,6 +34,12 @@ public @interface Store
 	String value();
 
 	/**
+	 * Defines complex indexes for this object store
+	 * @author Thiago da Rosa de Bustamante
+	 */
+	IndexDef[] indexes() default {};
+
+	/**
 	 * Identifies a key on the object store
 	 * @author Thiago da Rosa de Bustamante
 	 *
@@ -39,6 +47,17 @@ public @interface Store
 	@Target(ElementType.METHOD)
 	public @interface Key
 	{
-		boolean autoIncrement() default false;
+		int order() default -1;
+		boolean autoIncrement() default false; // TODO somente campos numericos INT
+	}
+
+	/**
+	 * Defines an index for a column on this object store
+	 * @author Thiago da Rosa de Bustamante
+	 */
+	@Target(ElementType.METHOD)
+	public @interface Indexed
+	{
+		boolean unique() default false;
 	}
 }

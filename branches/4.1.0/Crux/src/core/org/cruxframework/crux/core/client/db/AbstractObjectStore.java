@@ -20,15 +20,12 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectC
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 {
-	protected DBMessages messages = GWT.create(DBMessages.class);
 	protected final AbstractDatabase db;
 	protected final IDBObjectStore idbObjectStore;
 
@@ -69,6 +66,12 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 		handleCallback(callback, countRequest);
 	}
 
+	@Override
+	public Index getIndex(String name)
+	{
+	    return new Index(idbObjectStore.getIndex(name));
+	}
+	
 	private void handleCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
     {
 		if (callback != null || db.errorHandler != null)
@@ -84,12 +87,12 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 				{
 					if (callback != null)
 					{
-						callback.onError(messages.objectStoreCountError(event.getName()));
+						callback.onError(db.messages.objectStoreCountError(event.getName()));
 						callback.setDb(null);
 					}
 					else if (db.errorHandler != null)
 					{
-						db.errorHandler.onError(messages.objectStoreCountError(event.getName()));
+						db.errorHandler.onError(db.messages.objectStoreCountError(event.getName()));
 					}
 				}
 			});

@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind.database;
 
-import org.cruxframework.crux.core.client.db.annotation.DatabaseMetadata.Empty;
+import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.Empty;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;

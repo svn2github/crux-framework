@@ -50,7 +50,7 @@ public abstract class AbstractDatabase implements Database
     @Override
 	public void open(final DatabaseCallback callback)
 	{
-		IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
+		final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
 		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
 		{
 			@Override
@@ -121,7 +121,7 @@ public abstract class AbstractDatabase implements Database
 					{
 						logger.log(Level.INFO, messages.databaseUpgrading(getName()));
 					}
-					updateDatabaseStructure();
+					updateDatabaseStructure(openDBRequest);
 					if (LogConfiguration.loggingIsEnabled())
 					{
 						logger.log(Level.INFO, messages.databaseUpgraded(getName()));
@@ -367,7 +367,7 @@ public abstract class AbstractDatabase implements Database
 		};
     }
 
-	protected abstract void updateDatabaseStructure();
+	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
 	protected abstract <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType, IDBObjectStore idbObjectStore);
 	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
 	protected abstract String getObjectStoreName(Class<?> objectType);

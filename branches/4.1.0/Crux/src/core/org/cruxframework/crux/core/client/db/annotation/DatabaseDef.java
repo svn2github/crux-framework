@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public @interface DatabaseMetadata
+public @interface DatabaseDef
 {
 	/**
 	 * @return Database name.
@@ -39,7 +39,7 @@ public @interface DatabaseMetadata
 	/**
 	 * @return Object stores metadata.
 	 */
-	ObjectStoreMetadata[] objectStores();
+	ObjectStoreDef[] objectStores();
 
 	/**
 	 * If this property is true, Crux will override any existent Object store or index when updating database.
@@ -55,21 +55,28 @@ public @interface DatabaseMetadata
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.ANNOTATION_TYPE)
-	public @interface ObjectStoreMetadata
+	public @interface ObjectStoreDef
 	{
 		String name() default "";
 		boolean autoIncrement() default false;
-		String keyPath() default "";
-		String[] compositeKeyPath() default {};
+		String[] keyPath() default {};
 		Class<?> targetClass() default Empty.class;
-		IndexMetadata[] indexMetadata() default {};
+		IndexDef[] indexes() default {};
 	}
 	
+	/**
+	 * Defines a new Index for a given object store.
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.ANNOTATION_TYPE)
-	public @interface IndexMetadata
+	public @interface IndexDef
 	{
-		
+		String name() default "";
+		String[] keyPath();
+		boolean unique() default false;
+		boolean multiEntry() default false;
 	}
 
 	public static class Empty{}

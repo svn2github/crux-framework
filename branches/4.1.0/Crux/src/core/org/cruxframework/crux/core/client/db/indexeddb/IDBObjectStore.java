@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
@@ -100,6 +101,11 @@ public class IDBObjectStore extends JavaScriptObject
 	    return JsUtils.toArray(getIndexNamesNative());
 	}	
 	
+	public final FastList<String> listIndexNames() 
+	{
+	    return JsUtils.toFastList(getIndexNamesNative());
+	}	
+
 	private native JsArrayString getIndexNamesNative() /*-{
 	    return this.indexNames;
 	}-*/;
