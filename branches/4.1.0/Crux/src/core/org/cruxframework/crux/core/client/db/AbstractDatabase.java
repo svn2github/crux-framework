@@ -22,10 +22,12 @@ import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.db.Transaction.TransactionCallback;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBDatabase;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBDeleteDBRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBBlockedEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
@@ -150,11 +152,11 @@ public abstract class AbstractDatabase implements Database
     @Override
 	public void delete(final DatabaseCallback callback)
 	{
-		IDBOpenDBRequest deleteDatabase = IDBFactory.get().deleteDatabase(getName());
-		deleteDatabase.onSuccess(new IDBOpenedEvent.Handler()
+		IDBDeleteDBRequest deleteDatabase = IDBFactory.get().deleteDatabase(getName());
+		deleteDatabase.onSuccess(new IDBDatabaseDeleteEvent.Handler()
 		{
 			@Override
-			public void onSuccess(IDBOpenedEvent event)
+			public void onDelete(IDBDatabaseDeleteEvent event)
 			{
 				db = null;
 				if (callback != null)

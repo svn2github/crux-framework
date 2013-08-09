@@ -54,7 +54,7 @@ public class IDBFactory extends JavaScriptObject
 		return this.open(name, version);
 	}-*/;
 
-    public final native IDBOpenDBRequest deleteDatabase(String name) /*-{
+    public final native IDBDeleteDBRequest deleteDatabase(String name) /*-{
 		return this.deleteDatabase(name);
     }-*/;
     
