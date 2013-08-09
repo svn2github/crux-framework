@@ -45,19 +45,21 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType abstractObjectStoreType;
 	private String idbObjectStoreVariable;
+	private String dbVariable;
 
 	public ObjectStoreProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.abstractObjectStoreType = context.getTypeOracle().findType(AbstractObjectStore.class.getCanonicalName());
 		this.idbObjectStoreVariable = "idbObjectStore";
+		this.dbVariable = "db";
 	}
 	
 	@Override
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println("public "+getProxySimpleName()+"(IDBObjectStore idbObjectStore){");
-		srcWriter.println("super(idbObjectStore);");
+		srcWriter.println("public "+getProxySimpleName()+"(AbstractDatabase db, IDBObjectStore idbObjectStore){");
+		srcWriter.println("super(db, idbObjectStore);");
 		srcWriter.println("}");
 	}
 	
@@ -157,8 +159,14 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbObjectStoreVariable+".get(key);");
 		}
+		srcWriter.println("if (callback != null || "+dbVariable+".errorHandler != null){");
+		srcWriter.println("if (callback != null){");
+		srcWriter.println("callback.setDb("+dbVariable+");");
+		srcWriter.println("}");
+		
 		srcWriter.println("retrieveRequest.onSuccess(new IDBObjectRetrieveEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBObjectRetrieveEvent event){");
+		srcWriter.println("if (callback != null){");
 		if (isEmptyType())
 		{
 			srcWriter.println("callback.onSuccess(event.getObject());");
@@ -167,14 +175,23 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("callback.onSuccess("+serializerVariable+".decode(new JSONObject(event.getObject())));");
 		}
+		srcWriter.println("callback.setDb(null);");
+		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
 
 		srcWriter.println("retrieveRequest.onError(new IDBErrorEvent.Handler(){");
 		srcWriter.println("public void onError(IDBErrorEvent event){");
-		srcWriter.println("callback.onFailed(messages.objectStoreGetError(event.getName()));");
+		srcWriter.println("if (callback != null){");
+		srcWriter.println("callback.onError(messages.objectStoreGetError(event.getName()));");
+		srcWriter.println("callback.setDb(null);");
+		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
+		srcWriter.println(dbVariable+".errorHandler.onError(messages.objectStoreGetError(event.getName()));");
+		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
+
+		srcWriter.println("}");
 				
 		srcWriter.println("}");
 		srcWriter.println();
@@ -209,18 +226,34 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 
 	private void generateCursorHandlers(SourcePrinter srcWriter)
 	{
+		srcWriter.println("if (callback != null || "+dbVariable+".errorHandler != null){");
+		srcWriter.println("if (callback != null){");
+		srcWriter.println("callback.setDb("+dbVariable+");");
+		srcWriter.println("}");
+		
 		srcWriter.println("cursorRequest.onSuccess(new IDBCursorEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
 		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath).create();
+		srcWriter.println("if (callback != null){");
 		srcWriter.println("callback.onSuccess(new "+cursorClassName+"(event.getCursor()));");
+		srcWriter.println("callback.setDb(null);");
+		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
 		
 		srcWriter.println("cursorRequest.onError(new IDBErrorEvent.Handler(){");
 		srcWriter.println("public void onError(IDBErrorEvent event){");
-		srcWriter.println("callback.onFailed(messages.objectStoreCursorError(event.getName()));");
+		srcWriter.println("if (callback != null){");
+		srcWriter.println("callback.onError(messages.objectStoreCursorError(event.getName()));");
+		srcWriter.println("callback.setDb(null);");
+		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
+		srcWriter.println(dbVariable+".errorHandler.onError(messages.objectStoreCursorError(event.getName()));");
+		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
+		
+		srcWriter.println("}");
+		
 	}
 	
 	@Override

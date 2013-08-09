@@ -42,8 +42,10 @@ public abstract class AbstractDatabase implements Database
 {
 	protected static Logger logger = Logger.getLogger(AbstractDatabase.class.getName());
 	protected IDBDatabase db = null;
-	protected DBMessages messages = GWT.create(DBMessages.class); 
+	protected DBMessages messages = GWT.create(DBMessages.class);
+	protected DatabaseErrorHandler errorHandler; 
 
+    @Override
 	public void open(final DatabaseCallback callback)
 	{
 		IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
@@ -76,7 +78,11 @@ public abstract class AbstractDatabase implements Database
 				}
 				if (callback != null)
 				{
-					callback.onFailed(message);
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
 				}
 			}
 		});
@@ -93,7 +99,11 @@ public abstract class AbstractDatabase implements Database
 				}
 				if (callback != null)
 				{
-					callback.onFailed(message);
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
 				}
 			}
 		});
@@ -127,6 +137,7 @@ public abstract class AbstractDatabase implements Database
 		});
 	}
 
+    @Override
 	public void close()
 	{
 		if (isOpen())
@@ -136,6 +147,7 @@ public abstract class AbstractDatabase implements Database
 		}
 	}
 	
+    @Override
 	public void delete(final DatabaseCallback callback)
 	{
 		IDBOpenDBRequest deleteDatabase = IDBFactory.get().deleteDatabase(getName());
@@ -163,7 +175,11 @@ public abstract class AbstractDatabase implements Database
 				}
 				if (callback != null)
 				{
-					callback.onFailed(message);
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
 				}
 			}
 		});
@@ -179,22 +195,29 @@ public abstract class AbstractDatabase implements Database
 				}
 				if (callback != null)
 				{
-					callback.onFailed(message);
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
 				}
 			}
 		});
 	}
 
+    @Override
 	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode)
 	{
 		return getTransaction(objectTypes, mode, null);
 	}
 	
+    @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode)
 	{
 		return getTransaction(storeNames, mode, null);
 	}
 
+    @Override
 	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode, TransactionCallback callback)
 	{
 		List<String> storeNames = new ArrayList<String>();
@@ -212,6 +235,7 @@ public abstract class AbstractDatabase implements Database
 		return getTransaction(storeNames.toArray(new String[storeNames.size()]), mode, callback);
 	}
 	
+    @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback)
 	{
 		Transaction transaction = new Transaction(this, storeNames, mode);
@@ -220,6 +244,7 @@ public abstract class AbstractDatabase implements Database
 	}
 
 	@SuppressWarnings("unchecked")
+    @Override
     public <K, V> void add(V object, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -227,6 +252,7 @@ public abstract class AbstractDatabase implements Database
    		objectStore.add(object);
 	}
 
+    @Override
 	public <K, V> void add(V[] objects, Class<V> objectType, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -238,6 +264,7 @@ public abstract class AbstractDatabase implements Database
 	}
 
 	@SuppressWarnings("unchecked")
+    @Override
     public <K, V> void put(V object, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -245,6 +272,7 @@ public abstract class AbstractDatabase implements Database
    		objectStore.put(object);
 	}
 
+    @Override
 	public <K, V> void put(V[] objects, Class<V> objectType, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -255,6 +283,7 @@ public abstract class AbstractDatabase implements Database
         }
 	}
 
+    @Override
     public <K, V> void get(K key, Class<V> objectType, final DatabaseRetrieveCallback<V> callback)
     {
     	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readOnly);
@@ -262,6 +291,7 @@ public abstract class AbstractDatabase implements Database
     	objectStore.get(key, callback);
     }
 
+    @Override
     public <K, V> void delete(K key, Class<V> objectType, DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -269,6 +299,7 @@ public abstract class AbstractDatabase implements Database
     	objectStore.delete(key);
 	}
         
+    @Override
     public <K, V> void delete(KeyRange<K> keys, Class<V> objectType, DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
@@ -276,31 +307,60 @@ public abstract class AbstractDatabase implements Database
     	objectStore.delete(keys);
 	}
 
+    @Override
     public boolean isOpen()
     {
     	return db != null;
     }
 
+    @Override
+    public void setDefaultErrorHandler(DatabaseErrorHandler errorHandler)
+    {
+		this.errorHandler = errorHandler;
+        
+    }
+    
 	private TransactionCallback getCallbackForWriteTransaction(final DatabaseCallback callback)
     {
+		if (callback == null && errorHandler == null)
+		{
+			return null;
+		}
 	    return new TransactionCallback()
 		{
 			@Override
 			public void onError(String message)
 			{
-				callback.onFailed(message);
+				if (callback != null)
+				{
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
+				}
 			}
 			
 			@Override
 			public void onAbort()
 			{
-				callback.onFailed(messages.databaseTransactionAborted(getName()));
+				if (callback != null)
+				{
+					callback.onError(messages.databaseTransactionAborted(getName()));
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(messages.databaseTransactionAborted(getName()));
+				}
 			}
 			
 			@Override
 			public void onComplete()
 			{
-				callback.onSuccess();
+				if (callback != null)
+				{
+					callback.onSuccess();
+				}
 			}
 		};
     }

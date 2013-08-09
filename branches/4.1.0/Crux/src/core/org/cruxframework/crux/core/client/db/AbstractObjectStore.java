@@ -28,14 +28,14 @@ import com.google.gwt.core.client.GWT;
  */
 public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 {
-	protected final IDBObjectStore idbObjectStore;
-    
 	protected DBMessages messages = GWT.create(DBMessages.class);
+	protected final AbstractDatabase db;
+	protected final IDBObjectStore idbObjectStore;
 
-	protected AbstractObjectStore(IDBObjectStore idbObjectStore)
+	protected AbstractObjectStore(AbstractDatabase db, IDBObjectStore idbObjectStore)
 	{
+		this.db = db;
 		this.idbObjectStore = idbObjectStore;
-		
 	}
 	
 	public String[] getIndexNames()
@@ -71,22 +71,41 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 
 	private void handleCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
     {
-	    countRequest.onError(new IDBErrorEvent.Handler()
+		if (callback != null || db.errorHandler != null)
 		{
-			@Override
-			public void onError(IDBErrorEvent event)
+			if (callback != null)
 			{
-				callback.onFailed(messages.objectStoreCountError(event.getName()));
+				callback.setDb(db);
 			}
-		});
-		countRequest.onSuccess(new IDBCountEvent.Handler()
-		{
-			
-			@Override
-			public void onSuccess(IDBCountEvent event)
+			countRequest.onError(new IDBErrorEvent.Handler()
 			{
-				callback.onSuccess(event.getCount());
-			}
-		});
+				@Override
+				public void onError(IDBErrorEvent event)
+				{
+					if (callback != null)
+					{
+						callback.onError(messages.objectStoreCountError(event.getName()));
+						callback.setDb(null);
+					}
+					else if (db.errorHandler != null)
+					{
+						db.errorHandler.onError(messages.objectStoreCountError(event.getName()));
+					}
+				}
+			});
+			countRequest.onSuccess(new IDBCountEvent.Handler()
+			{
+
+				@Override
+				public void onSuccess(IDBCountEvent event)
+				{
+					if (callback != null)
+					{
+						callback.onSuccess(event.getCount());
+						callback.setDb(null);
+					}
+				}
+			});
+		}
     }
 }

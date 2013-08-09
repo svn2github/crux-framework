@@ -21,8 +21,7 @@ package org.cruxframework.crux.core.client.db;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public interface DatabaseCursorCallback<K, V>
+public abstract class DatabaseCursorCallback<K, V> extends Callback
 {
-	void onSuccess(Cursor<K, V> result);
-	void onFailed(String message);
+	public abstract void onSuccess(Cursor<K, V> result);
 }

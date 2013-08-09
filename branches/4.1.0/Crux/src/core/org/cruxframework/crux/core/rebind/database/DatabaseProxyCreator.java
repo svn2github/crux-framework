@@ -150,7 +150,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println("if (StringUtils.unsafeEquals(className, "+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+")){");
 				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
 				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
-			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
+			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(this, idbObjectStore);");
 				srcWriter.println("}");
 			}
         }
@@ -179,7 +179,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("if (StringUtils.unsafeEquals(storeName, "+EscapeUtils.quote(objectStoreName)+")){");
 			String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
 			String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
-			srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(idbObjectStore);");
+			srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(this, idbObjectStore);");
 			srcWriter.println("}");
         }
 	    

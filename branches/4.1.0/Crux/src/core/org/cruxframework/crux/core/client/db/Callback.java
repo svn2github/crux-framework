@@ -16,12 +16,27 @@
 package org.cruxframework.crux.core.client.db;
 
 /**
- * Database cursor operations callback. 
- * Use this callback to read objects from a cursor.
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class DatabaseCountCallback extends Callback
+public class Callback
 {
-	public abstract void onSuccess(int result);
+	protected AbstractDatabase db;
+	
+	protected void setDb(AbstractDatabase db)
+	{
+		this.db = db;
+	}
+
+	/**
+	 * Called when an unexpected error occur.
+	 * @param message
+	 */
+	public void onError(String message)
+	{
+		if (db.errorHandler != null)
+		{
+			db.errorHandler.onError(message);
+		}
+	}
 }

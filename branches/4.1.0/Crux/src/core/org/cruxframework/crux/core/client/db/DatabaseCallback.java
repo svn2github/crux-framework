@@ -21,8 +21,10 @@ package org.cruxframework.crux.core.client.db;
  * 
  * @author Thiago da Rosa de Bustamante
  */
-public interface DatabaseCallback
+public abstract class DatabaseCallback extends Callback
 {
-	void onSuccess();
-	void onFailed(String message);
+	/**
+	 * Called to inform that operation performed ok.
+	 */
+	public abstract void onSuccess();
 }

@@ -165,4 +165,7 @@ public interface Database
      * @param callback
      */
 	<K, V> void delete(KeyRange<K> keyRange, Class<V> objectType, DatabaseCallback callback);
+
+	
+	void setDefaultErrorHandler(DatabaseErrorHandler errorHandler);
 }

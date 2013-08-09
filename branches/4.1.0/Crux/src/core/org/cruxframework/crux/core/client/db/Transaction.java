@@ -145,7 +145,15 @@ public class Transaction
 	 */
 	public void setTransactionCallback(TransactionCallback callback)
 	{
-		this.transactionCallback = callback;
+		if (transactionCallback != null)
+		{
+			transactionCallback.setDb(null);
+		}
+		transactionCallback = callback;
+		if (transactionCallback != null)
+		{
+			transactionCallback.setDb(db);
+		}
 	}
 	
 	/**
@@ -153,22 +161,22 @@ public class Transaction
 	 * @author Thiago da Rosa de Bustamante
 	 *
 	 */
-	public static interface TransactionCallback
+	public abstract static class TransactionCallback extends Callback
 	{
 		/**
 		 * Called when the transaction completes with success.
 		 */
-		void onComplete();
+		public abstract void onComplete();
 
-		/**
-		 * Called when an unexpected error occur.
-		 * @param message
-		 */
-		void onError(String message);
-		
 		/**
 		 * Called if the transaction is aborted before completion (rolled back).
 		 */
-		void onAbort();
+		public void onAbort()
+		{
+			if (db.errorHandler != null)
+			{
+				db.errorHandler.onError(db.messages.databaseTransactionAborted(db.getName()));
+			}
+		}
 	}
 }
