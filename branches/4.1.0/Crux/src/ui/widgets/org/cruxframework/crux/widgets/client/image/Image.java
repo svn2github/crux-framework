@@ -20,6 +20,8 @@ import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -48,22 +50,22 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 	{
 		protected boolean preventDefaultTouchEvents = false;
 		protected abstract void select();
-		
+
 		public HandlerRegistration addSelectHandler(SelectHandler handler)
-        {
-		    return addHandler(handler, SelectEvent.getType());
-        }
+		{
+			return addHandler(handler, SelectEvent.getType());
+		}
 
 		protected void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
 		{
 			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
 		}
 	}
-	
+
 	static class NoTouchImpl extends ImageImpl 
 	{
 		public NoTouchImpl()
-        {
+		{
 			addClickHandler(new ClickHandler()
 			{
 				@Override
@@ -76,15 +78,15 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 					}
 				}
 			});
-        }
-		
+		}
+
 		@Override
 		protected void select()
 		{
 			SelectEvent.fire(NoTouchImpl.this);
 		}
 	}
-	
+
 	static class TouchImpl extends ImageImpl implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
 	{
 		private static final int TAP_EVENT_THRESHOLD = 5;
@@ -94,16 +96,16 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 		private HandlerRegistration touchEndHandler;
 
 		public TouchImpl()
-        {
+		{
 			addTouchStartHandler(this);
-        }
-		
+		}
+
 		@Override
 		protected void select()
 		{
 			SelectEvent.fire(this);
 		}
-		
+
 		@Override
 		public void onTouchEnd(TouchEndEvent event)
 		{
@@ -152,11 +154,11 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 			touchEndHandler.removeHandler();
 			touchEndHandler = null;
 		}
-		
+
 	}
 
 	private ImageImpl impl;
-	
+
 	public Image()
 	{
 		impl = GWT.create(ImageImpl.class);
@@ -181,16 +183,30 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 		setUrl(url);
 	}
 
-	public Image(String url, int left, int top, int width, int height)
+	public Image(final String url, final int left, final int top, final int width, final int height)
 	{
 		this();
-		setUrlAndVisibleRect(url, left, top, width, height);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				setUrlAndVisibleRect(url, left, top, width, height);
+			}
+		});
 	}
 
-	public Image(SafeUri url, int left, int top, int width, int height)
+	public Image(final SafeUri url, final int left, final int top, final int width, final int height)
 	{
 		this();
-		setUrlAndVisibleRect(url, left, top, width, height);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand()
+		{
+			@Override
+			public void execute()
+			{
+				setUrlAndVisibleRect(url, left, top, width, height);
+			}
+		});
 	}
 
 	public int getWidth()
@@ -259,23 +275,23 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 	}
 
 	@Override
-    public HandlerRegistration addErrorHandler(ErrorHandler handler)
-    {
-	    return impl.addErrorHandler(handler);
-    }
+	public HandlerRegistration addErrorHandler(ErrorHandler handler)
+	{
+		return impl.addErrorHandler(handler);
+	}
 
 	@Override
-    public HandlerRegistration addLoadHandler(LoadHandler handler)
-    {
-	    return impl.addLoadHandler(handler);
-    }
+	public HandlerRegistration addLoadHandler(LoadHandler handler)
+	{
+		return impl.addLoadHandler(handler);
+	}
 
 	@Override
-    public HandlerRegistration addSelectHandler(SelectHandler handler)
-    {
-	    return impl.addSelectHandler(handler);
-    }
-	
+	public HandlerRegistration addSelectHandler(SelectHandler handler)
+	{
+		return impl.addSelectHandler(handler);
+	}
+
 	public void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
 	{
 		impl.setPreventDefaultTouchEvents(preventDefaultTouchEvents);

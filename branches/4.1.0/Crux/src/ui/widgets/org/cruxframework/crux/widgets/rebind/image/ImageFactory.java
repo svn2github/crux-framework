@@ -48,23 +48,16 @@ public class ImageFactory extends WidgetCreator<WidgetCreatorContext>
         }
 
 		@Override
-        public void processAttribute(SourcePrinter out, WidgetCreatorContext context, String attributeValue)
+        public void processAttribute(SourcePrinter out, final WidgetCreatorContext context, String attributeValue)
         {
 			String property = context.readWidgetProperty("url");
 	        if (getWidgetCreator().isResourceReference(property))
 	        {
 	        	String resource = ViewFactoryCreator.createVariableName("resource");
-	        	out.println(ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(property)+";");
-	        	
-	        	//trying
-	        	//out.println(context.getWidget()+".setUrlAndVisibleRect(Screen.rewriteUrl("+resource+".getSafeUri().asString()), "+resource+".getLeft(), "+resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight());");
-	        	
-	        	//use? It seems that setUrlAndVisibleRect is a no-op.
-	        	//out.println(context.getWidget()+".addLoadHandler(new com.google.gwt.event.dom.client.LoadHandler() { public void onLoad(com.google.gwt.event.dom.client.LoadEvent event) { "+context.getWidget()+".getElement().getStyle().setVisibility(com.google.gwt.dom.client.Style.Visibility.VISIBLE); } });");
-	        	//out.println(context.getWidget()+".getElement().getStyle().setVisibility(com.google.gwt.dom.client.Style.Visibility.HIDDEN);");
-	        	
-	        	//working
-	        	out.println(context.getWidget()+".setUrl(Screen.rewriteUrl("+resource+".getSafeUri().asString()));");
+	        	out.println("final " + ImageResource.class.getCanonicalName()+" "+resource+" = "+getWidgetCreator().getResourceAccessExpression(property)+";");
+	        	out.println("com.google.gwt.core.client.Scheduler.get().scheduleDeferred(new com.google.gwt.core.client.Scheduler.ScheduledCommand() { @Override public void execute() {" 
+	        	+ context.getWidget() + ".setUrlAndVisibleRect(Screen.rewriteUrl("+
+	        			resource + ".getSafeUri().asString()), "+resource+".getLeft(), "+resource+".getTop(), "+resource+".getWidth(), "+resource+".getHeight()); } });");
 	        }
 	        else
 	        {
