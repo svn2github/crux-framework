@@ -54,12 +54,6 @@
 	<property name="site.build.dir" value="${site.dir}/build" />
 	<property name="site.webinf.dir" value="${site.dir}/war/WEB-INF" />
 
-	<!-- Properties refering CruxCrossDevice Project -->
-	<property name="crossdevice.build" value="../CruxCrossDeviceWidgets" />
-	<property name="crossdevice.build.dir" value="${crossdevice.build}/build" />
-	<property name="crossdevice.dist.dir" value="${crossdevice.build}/dist" />
-	<property name="crossdevice.name" value="crux-cross-device-widgets" />
-
 	<!-- Properties refering CrossDeviceHelloWorld Project -->
 	<property name="crossdevicehelloworld.build" value="../CrossDeviceHelloWorld" />
 	<property name="crossdevicehelloworld.build.dir" value="${crossdevicehelloworld.build}/build" />
@@ -141,7 +135,6 @@
 
 		<!-- Run Crux distribution tasks -->
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
-		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<subant inheritall="false" target="generate-javadoc" antfile="${crux.build.dir}/build.xml" failonerror="false" buildpath="."/>
 		<copy todir="${expanded.dir}/docs">
 			<fileset dir="${crux.dist.dir}/docs" includes="**/*"/>
@@ -154,9 +147,6 @@
 				<include name="${crux.dev.name}.jar" />
 				<include name="${crux.widgets.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
-			</fileset>
-			<fileset dir="${crossdevice.dist.dir}">
-			    <include name="${crossdevice.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="${crux.dev.deps.name}.jar" />
@@ -222,7 +212,6 @@
 	-->
 	<target name="compile-update-applications-jars" depends="download-dependencies">
 		<ant inheritall="false" target="dist" antfile="${crux.build.dir}/build.xml"/>
-		<ant inheritall="false" target="dist" antfile="${crossdevice.build.dir}/build.xml"/>
 		<antcall target="update-applications-jars" />
 	</target>
 
@@ -283,9 +272,6 @@
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
 			</fileset>
-			<fileset dir="${crossdevice.dist.dir}">
-				<include name="*.jar"/>
-			</fileset>
 		</copy>
 		<copy todir="${showcase.webinf.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
@@ -296,31 +282,12 @@
 			</fileset>
 		</copy>
 
-		<!-- Update CruxCrossDeviceWidgets project -->
-		<copy todir="${crossdevice.build.dir}/lib">
-			<fileset dir="${crux.dist.dir}" >
-				<include name="${crux.dev.name}.jar" />
-				<include name="${crux.widgets.name}.jar" />
-				<include name="${crux.themes.name}.jar" />
-				<include name="${crux.runtime.name}.jar" />
-			</fileset>
-			<fileset dir="${crux.dependencies.dir}" >
-				<include name="**/*.jar" />
-			</fileset>
-			<fileset dir="${crux.lib.dir}" >
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
-
 		<!-- Update CrossDeviceHelloWorld project -->
 		<copy todir="${crossdevicehelloworld.build.dir}/lib">
 			<fileset dir="${crux.dist.dir}" >
 				<include name="${crux.dev.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
 				<include name="${crux.widgets.name}.jar" />
-			</fileset>
-			<fileset dir="${crossdevice.dist.dir}">
-			    <include name="${crossdevice.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
@@ -341,9 +308,6 @@
 				<include name="${crux.dev.name}.jar" />
 				<include name="${crux.themes.name}.jar" />
 				<include name="${crux.widgets.name}.jar" />
-			</fileset>
-			<fileset dir="${crossdevice.dist.dir}">
-			    <include name="${crossdevice.name}.jar" />
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
@@ -367,9 +331,6 @@
 			</fileset>
 			<fileset dir="${crux.lib.dir}" >
 				<include name="**/*.jar" />
-			</fileset>
-			<fileset dir="${crossdevice.dist.dir}">
-				<include name="*.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${site.webinf.dir}/lib">

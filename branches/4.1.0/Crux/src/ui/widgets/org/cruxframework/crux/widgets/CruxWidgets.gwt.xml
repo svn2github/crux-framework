@@ -299,6 +299,7 @@
 		<when-type-assignable class="org.cruxframework.crux.widgets.client.formdisplay.FormDisplay.FormEntry" />
 		<any>
 			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
 		</any>
 	</replace-with>
     
