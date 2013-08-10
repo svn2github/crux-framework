@@ -1,7 +1,6 @@
 package org.cruxframework.crux.widgets.client.storyboard;
 
 import org.cruxframework.crux.core.client.controller.Controller;
-import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,15 +21,7 @@ public class StoryboardLargeMouseController extends StoryboardLargeController
 		final FocusPanel panel = new FocusPanel();
 		panel.add(widget);
 		panel.setStyleName("item");
-		if (!StringUtils.isEmpty(itemHeight))
-		{
-			panel.setHeight(itemHeight);
-		}
-		
-		if (!StringUtils.isEmpty(itemWidth))
-		{
-			panel.setWidth(itemWidth);
-		}
+		configHeightWidth(panel);
 
 		panel.addClickHandler(new ClickHandler()
 		{

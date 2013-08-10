@@ -49,7 +49,9 @@ class StoryboardContext extends WidgetCreatorContext
 	@TagAttribute(value="largeDeviceItemHeight", supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch}),
 	@TagAttribute(value="horizontalAlignment", type=HorizontalAlignment.class, processor=HorizontalAlignmentAttributeParser.class, defaultValue="center",  
 			supportedDevices={Device.largeDisplayArrows, Device.largeDisplayMouse, Device.largeDisplayTouch}),
-	@TagAttribute(value="verticalAlignment", type=VerticalAlignment.class, processor=VerticalAlignmentAttributeParser.class, defaultValue="middle")
+	@TagAttribute(value="verticalAlignment", type=VerticalAlignment.class, processor=VerticalAlignmentAttributeParser.class, defaultValue="middle"), 
+	@TagAttribute(value="fixedWidth", type=Boolean.class, defaultValue="true"), 
+	@TagAttribute(value="fixedHeight", type=Boolean.class, defaultValue="true") 
 })
 public class StoryboardFactory  extends ComplexPanelFactory<StoryboardContext> implements HasSelectionHandlersFactory<StoryboardContext>
 {

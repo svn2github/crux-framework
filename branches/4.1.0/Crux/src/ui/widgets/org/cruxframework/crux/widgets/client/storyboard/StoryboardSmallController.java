@@ -26,8 +26,8 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 	protected FlowPanel storyboard;
 	protected String itemHeight;
 	protected String itemWidth;
-	private boolean expandHeight;
-	private boolean expandWidth;
+	protected boolean fixedHeight = true;
+	protected boolean fixedWidth = true;
 
 	@Override
 	public Widget getWidget(int index)
@@ -143,27 +143,29 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 		return panel;
 	}
 
-	private void configHeightWidth(final SelectablePanel panel) {
+	protected void configHeightWidth(final Widget panel) {
 		if (!StringUtils.isEmpty(itemHeight))
 		{
-			if(expandHeight)
+			if(fixedHeight)
 			{
-				panel.setHeight("100%");
+				panel.setHeight(itemHeight);
+			}
+			else
+			{
 				panel.getElement().getStyle().setProperty("min-height", itemHeight);
 			}
-			
-			panel.setHeight(itemHeight);
 		}
 		
 		if (!StringUtils.isEmpty(itemWidth))
 		{
-			if(expandWidth)
+			if(fixedWidth)
 			{
-				panel.setWidth("100%");
+				panel.setWidth(itemWidth);
+			}
+			else
+			{
 				panel.getElement().getStyle().setProperty("min-width", itemWidth);
 			}
-			
-			panel.setWidth(itemWidth);
 		}
 	}
 		
@@ -252,12 +254,12 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
     }
 
 	@Override
-	public void setExpandHeight(boolean expandHeight) {
-		this.expandHeight = expandHeight;
+	public void setFixedHeight(boolean fixedHeight) {
+		this.fixedHeight = fixedHeight;
 	}
 
 	@Override
-	public void setExpandWidth(boolean expandWidth) {
-		this.expandWidth = expandWidth;
+	public void setFixedWidth(boolean fixedWidth) {
+		this.fixedWidth = fixedWidth;
 	}
 }
