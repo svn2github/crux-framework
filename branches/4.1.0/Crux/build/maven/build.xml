@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<!-- DEPLOY -->
+	<property name="dist" location="../../dist/sonatype/deploy/" />
+	<property name="version" value="5.0.2-SNAPSHOT" />
+	
+	<!-- STAGE -->
+<!--
+	<property name="dist" location="../../dist/sonatype/stage/" />
+	<property name="version" value="5.0.2" /> 
+-->
+
+	<!-- define pom path -->
+	<property name="poms" location="poms" />
+
+	<!-- define Maven coordinates -->
+	<property name="groupId" value="org.cruxframework" />
+	
+	<property name="artifactId_dev" value="crux-dev" />
+	<property name="artifactId_gadgets-runtime" value="crux-gadgets-runtime" />
+	<property name="artifactId_crux-gadgets" value="crux-gadgets" />
+	<property name="artifactId_crux-runtime" value="crux-runtime" />
+	<property name="artifactId_crux-themes" value="crux-themes" />
+	<property name="artifactId_crux-widgets" value="crux-widgets" />
+	
+	<!-- define artifacts' name, which follows the convention of Maven -->
+	<property name="maven-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}.jar" />
+	<property name="maven-javadoc-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}-javadoc.jar" />
+	<property name="maven-sources-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}-sources.jar" />
+
+    <property name="maven-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}-sources.jar" />
+
+    <property name="maven-jar_crux-gadgets" value="${dist}/${artifactId_crux-gadgets}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-gadgets" value="${dist}/${artifactId_crux-gadgets}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-gadgets" value="${dist}/${artifactId_crux-gadgets}-${version}-sources.jar" />
+
+    <property name="maven-jar_crux-runtime" value="${dist}/${artifactId_crux-runtime}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-runtime" value="${dist}/${artifactId_crux-runtime}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-runtime" value="${dist}/${artifactId_crux-runtime}-${version}-sources.jar" />
+
+    <property name="maven-jar_crux-themes" value="${dist}/${artifactId_crux-themes}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-themes" value="${dist}/${artifactId_crux-themes}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-themes" value="${dist}/${artifactId_crux-themes}-${version}-sources.jar" />
+
+    <property name="maven-jar_crux-widgets" value="${dist}/${artifactId_crux-widgets}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-widgets" value="${dist}/${artifactId_crux-widgets}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-widgets" value="${dist}/${artifactId_crux-widgets}-${version}-sources.jar" />
+
+	<!-- defined maven snapshots and staging repository id and url -->
+	<property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
+	<property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots" />
+	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
+	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
+
+	<target name="init">
+	</target>
+
+    <target name="dist">
+       <!-- TODO: run dist target on build.xml -->
+    </target>
+
+	<target name="deploy" depends="dist" description="deploy snapshot version to Maven snapshot repository">
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+			<arg value="-Durl=${maven-snapshots-repository-url}" />
+			<arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+			<arg value="-DpomFile=${poms}/pom_crux-dev.xml" />
+			<arg value="-Dfile=${maven-jar_crux-dev}" />
+		</artifact:mvn>
+		<artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+            <arg value="-Durl=${maven-snapshots-repository-url}" />
+            <arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets-runtime.xml" />
+            <arg value="-Dfile=${maven-jar_crux-gadgets-runtime}" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+            <arg value="-Durl=${maven-snapshots-repository-url}" />
+            <arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets.xml" />
+            <arg value="-Dfile=${maven-jar_crux-gadgets}" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+            <arg value="-Durl=${maven-snapshots-repository-url}" />
+            <arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-runtime.xml" />
+            <arg value="-Dfile=${maven-jar_crux-runtime}" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+            <arg value="-Durl=${maven-snapshots-repository-url}" />
+            <arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-themes.xml" />
+            <arg value="-Dfile=${maven-jar_crux-themes}" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+            <arg value="-Durl=${maven-snapshots-repository-url}" />
+            <arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-widgets.xml" />
+            <arg value="-Dfile=${maven-jar_crux-widgets}" />
+        </artifact:mvn>
+	</target>
+
+	<!-- before this, update project version (both build.xml and pom.xml) from SNAPSHOT to RELEASE -->
+	<target name="stage" depends="dist" description="deploy release version to Maven staging repository">
+		<!-- sign and deploy the main artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=${poms}/pom_crux-dev.xml" />
+			<arg value="-Dfile=${maven-jar_crux-dev}" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+		<artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets-runtime.xml" />
+            <arg value="-Dfile=${maven-jar_crux-gadgets-runtime}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets.xml" />
+            <arg value="-Dfile=${maven-jar_crux-gadgets}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>		
+
+
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-runtime.xml" />
+            <arg value="-Dfile=${maven-jar_crux-runtime}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-themes.xml" />
+            <arg value="-Dfile=${maven-jar_crux-themes}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-widgets.xml" />
+            <arg value="-Dfile=${maven-jar_crux-widgets}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn> 
+		
+		<!-- sign and deploy the sources artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=${poms}/pom_crux-dev.xml" />
+			<arg value="-Dfile=${maven-sources-jar_crux-dev}" />
+			<arg value="-Dclassifier=sources" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+		<artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets-runtime.xml" />
+            <arg value="-Dfile=${maven-sources-jar_crux-gadgets-runtime}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets.xml" />
+            <arg value="-Dfile=${maven-sources-jar_crux-gadgets}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+
+		
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-runtime.xml" />
+            <arg value="-Dfile=${maven-sources-jar_crux-runtime}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-themes.xml" />
+            <arg value="-Dfile=${maven-sources-jar_crux-themes}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-widgets.xml" />
+            <arg value="-Dfile=${maven-sources-jar_crux-widgets}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+		
+		<!-- sign and deploy the javadoc artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=${poms}/pom_crux-dev.xml" />
+			<arg value="-Dfile=${maven-javadoc-jar_crux-dev}" />
+			<arg value="-Dclassifier=javadoc" />
+			<arg value="-Pgpg" />
+		</artifact:mvn>
+		<artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets-runtime.xml" />
+            <arg value="-Dfile=${maven-javadoc-jar_crux-gadgets-runtime}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-gadgets.xml" />
+            <arg value="-Dfile=${maven-javadoc-jar_crux-gadgets}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-runtime.xml" />
+            <arg value="-Dfile=${maven-javadoc-jar_crux-runtime}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-themes.xml" />
+            <arg value="-Dfile=${maven-javadoc-jar_crux-themes}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${poms}/pom_crux-widgets.xml" />
+            <arg value="-Dfile=${maven-javadoc-jar_crux-widgets}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+	</target>
+
+</project>
