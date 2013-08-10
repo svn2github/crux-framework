@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.db.AbstractDatabase;
 import org.cruxframework.crux.core.client.db.ObjectStore;
@@ -47,6 +48,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -198,7 +200,22 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    
 	    Set<String> addedObjectStores = new HashSet<String>();
 		String objectStoreVar = "objectStore";
+		String indexNamesVar = "indexNames";
 		srcWriter.println("IDBObjectStore "+objectStoreVar+";");
+		srcWriter.println(FastList.class.getCanonicalName() +"<String> storeNames = db.listObjectStoreNames();");
+		if (databaseMetadata.overrideDBElements())
+		{
+			srcWriter.println("for(int i=0; i< storeNames.size(); i++){");
+			srcWriter.println("String storeName = storeNames.get(i);");
+			srcWriter.println("try{");
+			srcWriter.println("db.deleteObjectStore(storeName);");
+			srcWriter.println("}catch (Exception e){/* Chrome BUG. When an object store is created, but have no data, chrome raises a NoFoundException when removing these store. So ignore any delete failed attempt.*/}");
+			srcWriter.println("}");
+		}
+		else
+		{
+			srcWriter.println(FastList.class.getCanonicalName() +"<String> "+indexNamesVar+";");
+		}
 		for (ObjectStoreDef objectStoreMetadata : objectStores)
         {
 			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
@@ -208,15 +225,9 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				throw new CruxGeneratorException("Duplicated objectstore declared on Datasource ["+databaseMetadata.name()+"]");
 			}
 			addedObjectStores.add(objectStoreName);
-			if (databaseMetadata.overrideDBElements())
+			if (!databaseMetadata.overrideDBElements())
 			{
-				srcWriter.println("if (db.listObjectStoreNames().contains("+EscapeUtils.quote(objectStoreName)+")){");
-				srcWriter.println("db.deleteObjectStore("+EscapeUtils.quote(objectStoreName)+");");
-				srcWriter.println("}");
-			}
-			else
-			{//TODO otimizar pra nao rodar toda hora o list...aqui e no index
-				srcWriter.println("if (!db.listObjectStoreNames().contains("+EscapeUtils.quote(objectStoreName)+")){");
+				srcWriter.println("if (!storeNames.contains("+EscapeUtils.quote(objectStoreName)+")){");
 			}
 			
 			if (objectStoreMetadata.keyPath().length == 1)
@@ -253,57 +264,73 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.println(objectStoreVar+" = "+requestVar+".getTransaction().getObjectStore("+EscapeUtils.quote(objectStoreName)+");");
 				srcWriter.println("}");
 			}
-			generateIndexesCreation(srcWriter, objectStoreMetadata.indexes(), objectStoreTarget, objectStoreVar, objectStoreName);
+			generateIndexesCreation(srcWriter, objectStoreMetadata.indexes(), objectStoreTarget, objectStoreVar, objectStoreName, indexNamesVar);
         }
     }
 	
-	protected void generateIndexesCreation(SourcePrinter srcWriter, IndexDef[] indexMetadata, JClassType objectStoreTarget, String objectStoreVar, String objectStoreName)
+	protected void generateIndexesCreation(SourcePrinter srcWriter, IndexDef[] indexMetadata, 
+										   JClassType objectStoreTarget, String objectStoreVar, 
+										   String objectStoreName, String indexNamesVar)
     {
+		if (!databaseMetadata.overrideDBElements())
+		{
+			srcWriter.println(indexNamesVar+" = "+objectStoreVar+".listIndexNames();");
+		}
 		Set<String> indexesCreated = new HashSet<String>();
-		generateIndexCreationFromMetadata(srcWriter, indexMetadata, objectStoreVar, objectStoreName, indexesCreated);
-		generateIndexCreationFromAnnotations(srcWriter, objectStoreTarget, objectStoreVar, objectStoreName, indexesCreated);
+		generateIndexCreationFromMetadata(srcWriter, indexMetadata, objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
+		generateIndexCreationFromAnnotations(srcWriter, objectStoreTarget, objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
     }
 
-	protected void generateIndexCreationFromAnnotations(SourcePrinter srcWriter, JClassType objectStoreTarget, String objectStoreVar, String objectStoreName, Set<String> indexesCreated)
+	protected void generateIndexCreationFromAnnotations(SourcePrinter srcWriter, JClassType objectStoreTarget, 
+			String objectStoreVar, String objectStoreName, Set<String> indexesCreated, String indexNamesVar)
     {
 	    if (objectStoreTarget != null)
 		{
 	    	Store store = objectStoreTarget.getAnnotation(Store.class);
 	    	if (store != null)
 	    	{
-	    		generateIndexCreationFromMetadata(srcWriter, store.indexes(), objectStoreVar, objectStoreName, indexesCreated);
+	    		generateIndexCreationFromMetadata(srcWriter, store.indexes(), objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
 
-	    		List<IndexData> indexes = getIndexFromAnnotations(objectStoreTarget);
+	    		List<IndexData> indexes = getIndexFromAnnotations(objectStoreTarget, "");
 	    		for (IndexData index: indexes)
 	    		{
 	    			if (indexesCreated.contains(index.column))
 	    			{
 	    				throw new CruxGeneratorException("Duplicated index declared on ObjectSore ["+objectStoreName+"] Index ["+index.column+"] Datasource ["+databaseMetadata.name()+"]");
 	    			}
-	    			generateIndexCreation(srcWriter, index.column, index.unique, false, index.column, objectStoreVar);
+	    			generateIndexCreation(srcWriter, index.column, index.unique, false, index.column, objectStoreVar, indexNamesVar);
 	    		}
 	    	}
 		}
     }
 
-	protected List<IndexData> getIndexFromAnnotations(JClassType objectStoreTarget)
+	protected List<IndexData> getIndexFromAnnotations(JClassType objectStoreTarget, String prefix)
     {
 		List<IndexData> result = new ArrayList<IndexData>();
 		List<JMethod> getterMethods = JClassUtils.getGetterMethods(objectStoreTarget);
 		for (JMethod method : getterMethods)
         {
-	        Indexed indexed = method.getAnnotation(Indexed.class);
-			if (indexed != null)
+	        if (JClassUtils.isSimpleType(method.getReturnType()))
 	        {
-				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-				result.add(new IndexData(property, indexed.unique()));
+	        	Indexed indexed = method.getAnnotation(Indexed.class);
+	        	if (indexed != null)
+	        	{
+	        		String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+	        		result.add(new IndexData(prefix+property, indexed.unique()));
+	        	}
+	        }
+	        else
+	        {
+        		String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
+	        	result.addAll(getIndexFromAnnotations(method.getReturnType().isClassOrInterface(), prefix+property+"."));
 	        }
         }
 		
 	    return result;
     }
 	
-	protected void generateIndexCreationFromMetadata(SourcePrinter srcWriter, IndexDef[] indexMetadata, String objectStoreVar, String objectStoreName, Set<String> indexesCreated)
+	protected void generateIndexCreationFromMetadata(SourcePrinter srcWriter, IndexDef[] indexMetadata, String objectStoreVar, 
+													 String objectStoreName, Set<String> indexesCreated, String indexNamesVar)
     {
 	    for (IndexDef index : indexMetadata)
         {
@@ -318,11 +345,11 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			else if (index.keyPath().length == 1)
 			{//TODO ensureValidIdentifier... remove ',' etc
-				generateIndexCreation(srcWriter, index.keyPath()[0], index.unique(), index.multiEntry(), indexName, objectStoreVar);
+				generateIndexCreation(srcWriter, index.keyPath()[0], index.unique(), index.multiEntry(), indexName, objectStoreVar, indexNamesVar);
 			}
 			else
 			{
-				generateIndexCreation(srcWriter, index.keyPath(), index.unique(), index.multiEntry(), indexName, objectStoreVar);
+				generateIndexCreation(srcWriter, index.keyPath(), index.unique(), index.multiEntry(), indexName, objectStoreVar, indexNamesVar);
 			}
         }
     }
@@ -354,11 +381,12 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		
 	}
 
-	protected void generateIndexCreation(SourcePrinter srcWriter, String keyPath, boolean unique, boolean multiEntry, String name, String objectStoreVar)
+	protected void generateIndexCreation(SourcePrinter srcWriter, String keyPath, boolean unique, boolean multiEntry, 
+										 String name, String objectStoreVar, String indexNamesVar)
     {
 		if (!databaseMetadata.overrideDBElements())
 		{
-			srcWriter.println("if (!"+objectStoreVar+".listIndexNames().contains("+EscapeUtils.quote(name)+")){");
+			srcWriter.println("if (!"+indexNamesVar+".contains("+EscapeUtils.quote(name)+")){");
 		}
 	    srcWriter.println(objectStoreVar+".createIndex("+EscapeUtils.quote(name)+", "+ EscapeUtils.quote(keyPath) + ", " +
 	    		IDBIndexParameters.class.getCanonicalName()+".create("+unique+", "+multiEntry+"));");
@@ -368,11 +396,12 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		}
     }
 
-	protected void generateIndexCreation(SourcePrinter srcWriter, String[] keyPaths, boolean unique, boolean multiEntry, String name, String objectStoreVar)
+	protected void generateIndexCreation(SourcePrinter srcWriter, String[] keyPaths, boolean unique, boolean multiEntry, 
+										String name, String objectStoreVar, String indexNamesVar)
 	{
 		if (!databaseMetadata.overrideDBElements())
 		{
-			srcWriter.println("if (!"+objectStoreVar+".listIndexNames().contains("+EscapeUtils.quote(name)+")){");
+			srcWriter.println("if (!"+indexNamesVar+".contains("+EscapeUtils.quote(name)+")){");
 		}
 	    srcWriter.println(objectStoreVar+".createIndex("+EscapeUtils.quote(name)+", new String[]{");
 	    boolean first = true;
@@ -465,9 +494,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	        Key key = method.getAnnotation(Key.class);
 			if (key != null)
 	        {
-	        	if (!method.getReturnType().equals(stringType) && 
-	        		!method.getReturnType().equals(integerType) && 
-	        		!method.getReturnType().equals(JPrimitiveType.INT))
+	        	if (!isValidTypeForKey(method.getReturnType()))
 	        	{
 	        		throw new CruxGeneratorException("Crux databases only support Strings or int as key components");
 	        	}
@@ -499,6 +526,13 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		
 		return keyPath.toArray(new String[keyPath.size()]);
 	}
+
+	protected boolean isValidTypeForKey(JType jType)
+    {
+	    return jType.equals(stringType) || 
+	    	jType.equals(integerType) || 
+	    	jType.equals(JPrimitiveType.INT);
+    }
 	
 	protected JClassType getObjectStoreTarget(ObjectStoreDef objectStoreMetadata)
 	{
