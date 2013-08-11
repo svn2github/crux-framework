@@ -4,7 +4,7 @@
 	xmlns:core="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-	useController="mainController"> 
+	useController="mainController" title="FormDisplay"> 
 	
 	<crux:styledPanel id="panel">
 		<crux:formDisplay id="form">
