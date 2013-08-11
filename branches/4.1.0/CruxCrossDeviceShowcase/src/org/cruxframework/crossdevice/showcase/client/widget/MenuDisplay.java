@@ -33,4 +33,5 @@ public interface MenuDisplay extends DeviceAdaptive
 {
 	void showMenu();
 	void addMenuEntry(String label, String targetView);
+	void addMenuSection(String label);
 }

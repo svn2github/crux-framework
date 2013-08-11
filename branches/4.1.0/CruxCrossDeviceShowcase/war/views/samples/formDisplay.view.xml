@@ -6,7 +6,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	useController="mainController"> 
 	
-	<crux:styledPanel id="panel" height="100%">
+	<crux:styledPanel id="panel">
 		<crux:formDisplay id="form">
 			<crux:entry label="Framework:">
 				<gwt:textBox id="frameworkTextBox" value="Crux Framework"/>
@@ -18,7 +18,7 @@
 				<gwt:textBox id="subjectTextBox" value="Exemplos Cross-Device"/>
 			</crux:entry>
 			<crux:entry label="Suporte:">
-				<gwt:horizontalPanel id="supportPanel" spacing="10">
+				<gwt:horizontalPanel id="supportPanel" spacing="3">
 					<gwt:checkBox id="desktopCheckBox" text="Desktop" checked="true"/>
 					<gwt:checkBox id="smartPhoneCheckBox" text="Smart Phone" checked="true"/>
 					<gwt:checkBox id="tabletCheckBox" text="Tablet" checked="true"/>
@@ -29,6 +29,23 @@
 			</crux:entry>
 		</crux:formDisplay>	
 	</crux:styledPanel>
+	
+	<div class="speechBubble">
+		<H1>FormDisplay</H1>
+		<p>
+			O propósito do FormDisplay é organizar os elementos de um formulário, 
+			tornando mais simples a construção de telas cujo conteúdo seja essencialmente
+			de entrada de dados. Ele organiza os componentes de forma automática, provendo
+			diferentes posicionamentos de acordo com as características do dispositivo 
+			do cliente.
+		</p>
+		<p> 
+			Em dispositivos de tela pequena, tais como smart phones, os componentes
+			são ordenados de forma vertical, evitando a rolagem horizontal da tela. 
+			Em dispositivos maiores, labels e componentes são alinhados lado a lado, aproveitando melhor
+			a largura da janela do navegador.
+		</p> 
+	</div>
 	
 	
 </v:view>

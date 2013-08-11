@@ -18,8 +18,81 @@
 				  smallViewport="user-scalable=no, width=320" 
 				  largeViewport="user-scalable=no, width=device-width, height=device-height" useResource="xStandardResources" height="100%"/>
 
-		<show:menuDisplay id="menuDisplay" height="100%">
+		<style>
+			.menuEntriesContainer
+			{
+				padding: 10px;
+				background-image: url(img/logo-small.png);
+				background-repeat: no-repeat;
+				background-position: top;
+				background-size: 100%;
+				padding-top: 80px;				
+			}
+			
+			.speechBubble
+			{
+				position: relative;
+				background-color: #EEEEEE;
+				border: solid 3px #FFFFFF;
+				box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+				margin-top: 15px;
+				margin: 8px;
+				border-radius: 8px;
+				padding: 10px;
+				text-align: left;
+			}
+			
+			.speechBubble P
+			{
+				text-align: left;
+				text-shadow: 0 1px #FFFFFF;
+				color: #303030;
+				font-size: 15px;
+			}
+			
+			.speechBubble H1
+			{
+				color: #404040;
+				text-shadow: 0 1px #fff;
+				font-size: 16px;
+				box-shadow: 0px 1px 0px rgba(0,0,0,0.2), 0px 2px 0px rgba(255,255,255,0.6);
+				margin-bottom: 10px;
+				padding-bottom: 10px;
+			}
+			
+			.speechBubble:after
+			{
+				content: "";
+				position: absolute;
+				top: -11px;
+				left: 80%;
+				border: 3px solid #FFFFFF;
+				background-color: #eee;
+				display: block;
+				-webkit-transform: rotate(45deg);
+				height: 15px;
+				width: 15px;
+				border-bottom: 0px;
+				border-right: 0px;
+			}
+		</style>
+
+		<show:menuDisplay id="menuDisplay">
+			<show:menuSection label="Elementos de Layout"/>
 			<show:menuEntry label="Forms" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 2" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 3" targetView="formDisplay"/>
+			<show:menuSection label="Seção 2"/>
+			<show:menuEntry label="Exemplo 4" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 5" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 6" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 7" targetView="formDisplay"/>
+			<show:menuSection label="Seção 3"/>
+			<show:menuEntry label="Exemplo 8" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 9" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 10" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 11" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 12" targetView="formDisplay"/>
 		</show:menuDisplay>
 	
 	</body>

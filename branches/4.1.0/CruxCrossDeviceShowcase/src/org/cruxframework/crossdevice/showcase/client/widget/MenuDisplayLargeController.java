@@ -22,7 +22,9 @@ import org.cruxframework.crux.widgets.client.event.SelectEvent;
 import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.tabcontainer.TabContainer;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Gesse Dafe
@@ -37,6 +39,7 @@ public class MenuDisplayLargeController extends DeviceAdaptiveController impleme
 	public void addMenuEntry(String label, final String targetView)
 	{
 		Button menuItem = new Button();
+		menuItem.addStyleName("menuEntry");
 		menuItem.setText(label);
 		menuItem.addSelectHandler(new SelectHandler()
 		{
@@ -55,6 +58,7 @@ public class MenuDisplayLargeController extends DeviceAdaptiveController impleme
 	{
 		menuPanel = getChildWidget("menuPanel");
 		viewContainer = getChildWidget("viewContainer");
+		setStyleName("crux-MenuDisplay");
 	}
 
 	@Override
@@ -66,5 +70,15 @@ public class MenuDisplayLargeController extends DeviceAdaptiveController impleme
 			String viewId = viewContainer.getViewId(index);
 			viewContainer.closeView(viewId, true);
 		}
+	}
+
+	@Override
+	public void addMenuSection(String label)
+	{
+		Label separator = new Label();
+		separator.setStyleName("menuSection");
+		separator.getElement().getStyle().setDisplay(Display.BLOCK);
+		separator.setText(label);
+		menuPanel.add(separator);
 	}
 }

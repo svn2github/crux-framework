@@ -23,7 +23,9 @@ import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Gesse Dafe
@@ -38,6 +40,7 @@ public class MenuDisplaySmallController extends DeviceAdaptiveController impleme
 	public void addMenuEntry(String label, final String targetView)
 	{
 		Button menuItem = new Button();
+		menuItem.addStyleName("menuEntry");
 		menuItem.setText(label);
 		menuItem.addSelectHandler(new SelectHandler()
 		{
@@ -57,11 +60,22 @@ public class MenuDisplaySmallController extends DeviceAdaptiveController impleme
 		viewContainer = getChildWidget("viewContainer");
 		viewContainer.showView("small-menu");
 		menuPanel = (FlowPanel) viewContainer.getActiveView().getWidget("menuPanel");
+		setStyleName("crux-MenuDisplay");
 	}
 
 	@Override
 	public void showMenu()
 	{
 		viewContainer.showView("small-menu", Direction.BACKWARDS);
+	}
+
+	@Override
+	public void addMenuSection(String label)
+	{
+		Label separator = new Label();
+		separator.setStyleName("menuSection");
+		separator.getElement().getStyle().setDisplay(Display.BLOCK);
+		separator.setText(label);
+		menuPanel.add(separator);
 	}
 }
