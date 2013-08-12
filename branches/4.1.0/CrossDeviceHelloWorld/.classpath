@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/crux-runtime.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet-deps.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="build/lib/crux-cross-device-widgets.jar"/>
+	<classpathentry kind="lib" path="build/lib/jgroups-3.2.9.Final.jar"/>
+	<classpathentry kind="lib" path="build/lib/tools-jdk-1.7.0.21.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
