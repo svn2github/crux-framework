@@ -1,7 +1,7 @@
 The artifacts must contain the following pattern:
-{artifact_name}_{version}.jar
-{artifact_name}_sources_{version}.jar
-{artifact_name}_javadoc_{version}.jar
+{artifact_name}-{version}.jar
+{artifact_name}-{version}-sources.jar
+{artifact_name}-{version}-javadoc.jar
 
 Samples:
 
