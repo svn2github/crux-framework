@@ -152,7 +152,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 			}
 			else
 			{
-				panel.getElement().getStyle().setProperty("min-height", itemHeight);
+				panel.getElement().getStyle().setProperty("minHeight", itemHeight);
 			}
 		}
 		
@@ -164,7 +164,7 @@ public class StoryboardSmallController extends DeviceAdaptiveController implemen
 			}
 			else
 			{
-				panel.getElement().getStyle().setProperty("min-width", itemWidth);
+				panel.getElement().getStyle().setProperty("minWidth", itemWidth);
 			}
 		}
 	}
