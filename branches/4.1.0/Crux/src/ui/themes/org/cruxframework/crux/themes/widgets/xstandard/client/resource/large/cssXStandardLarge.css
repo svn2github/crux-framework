@@ -36,22 +36,21 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-Button
 {
 	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
-	border: 1px solid rgba(45, 102, 195, 1);
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 	border-radius: 2px;
-	min-height: 45px;
+	min-height: 32px;
 	min-width: 100px;
 	-webkit-user-select: none;
 	padding: 8px 13px;
 	outline: 0;
-	transition: box-shadow ease-in-out 0.15s;	
+	transition: background-image ease-in-out 0.15s;	
 }
 .crux-Button:hover
 {
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-	background-image: -webkit-linear-gradient(#70AAFF,#70AAFF);
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
 }
 
 @external crux-FormDisplay, formEntryLabel, formEntryData;
@@ -93,7 +92,8 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 @external crux-TabContainer, crux-TabPanelBottom; 
 @external crux-TabBar, crux-TabBarItem, crux-TabBarItem-selected, flapLabel, flapCloseButton;
 @external crux-RollingPanelPreviousWrapper, crux-RollingPanelPreviousWrapper-disabled, crux-RollingPanelPrevious;
-@external crux-RollingPanelNextWrapper, crux-RollingPanelNextWrapper-disabled, crux-RollingPanelNext;  
+@external crux-RollingPanelNextWrapper, crux-RollingPanelNextWrapper-disabled, crux-RollingPanelNext;
+@external crux-TabBarFirst-wrapper, crux-TabBarRest-wrapper;  
 .crux-TabContainer
 {
 	background-color: #606060;
@@ -113,15 +113,20 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-TabBarItem
 {
 	border: solid 1px #ddd;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-	border-bottom: 0;
-	background-color: #fcfcfc;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom: 0px;
 	height: 25px;
+	opacity: 0.75;
+	background-color: #DDDDDD;
+	margin-left: 1px;
+	outline: 0px;
+	cursor: default;
 }
 .crux-TabBarItem-selected
 {
-	box-shadow: 5px 8px 20px #000000;
+	background-color: #FCFCFC;
+	opacity: 1;
 }
 .crux-TabBarItem .flapLabel
 {
@@ -131,8 +136,8 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 }
 .flapCloseButton 
 {
-	background-image: -webkit-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
-	border: 1px solid rgba(45, 102, 195, 1);
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 	border-radius: 2px;
 	-webkit-user-select: none;
@@ -150,11 +155,12 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	color: #FFFFFF;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	-webkit-user-select: none;
+	font-size: 10px;
+	padding-right: 1px;
 }
 .flapCloseButton:hover 
 {
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-	background-image: -webkit-linear-gradient(#70AAFF,#70AAFF);
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
 }
 .crux-RollingPanelPreviousWrapper, .crux-RollingPanelNextWrapper 
 {
@@ -163,12 +169,12 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 }
 .crux-RollingPanelPrevious, .crux-RollingPanelNext
 {
-	height: 24px;
+	height: 25px;
 	margin-top: 4px;
 	width: 24px;
 	color: #FFFFFF;
-	background-image: -webkit-linear-gradient(#5d9aff,rgba(93,154,255,1)38%,#5891f0);
-	border: 1px solid rgba(45,102,195,1);
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	box-shadow: 0 1px 0 rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2);
 	border-radius: 2px;
@@ -177,8 +183,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 }
 .crux-RollingPanelPrevious:hover, .crux-RollingPanelNext:hover 
 {
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-	background-image: -webkit-linear-gradient(#70AAFF,#70AAFF);
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
 }
 .crux-RollingPanelPreviousWrapper-disabled
 {
@@ -187,6 +192,10 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-RollingPanelNextWrapper-disabled
 {
 	visibility: hidden;
+}
+.crux-TabBarFirst-wrapper, .crux-TabBarRest-wrapper
+{
+	display: none;
 }
 
 @external gwt-TextBox;
