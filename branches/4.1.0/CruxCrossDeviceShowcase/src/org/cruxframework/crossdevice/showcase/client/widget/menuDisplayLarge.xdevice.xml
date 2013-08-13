@@ -7,7 +7,7 @@
 
 	<gwt:horizontalPanel id="splitPanel" height="100%" width="100%">
 		<gwt:cell width="200px">
-			<gwt:flowPanel id="menuPanel" width="180px"/>
+			<gwt:flowPanel id="menuPanel" style="margin-right:5px"/>
 		</gwt:cell>
 		<gwt:cell>
 			<crux:tabViewContainer id="viewContainer" width="100%" height="100%"/>

@@ -36,7 +36,7 @@ public class MenuDisplayLargeController extends DeviceAdaptiveController impleme
 	private TabContainer viewContainer;
 	
 	@Override
-	public void addMenuEntry(String label, final String targetView)
+	public void addMenuEntry(final String label, final String targetView)
 	{
 		Button menuItem = new Button();
 		menuItem.addStyleName("menuEntry");
@@ -46,7 +46,8 @@ public class MenuDisplayLargeController extends DeviceAdaptiveController impleme
 			@Override
 			public void onSelect(SelectEvent event)
 			{
-				viewContainer.showView(targetView);
+				viewContainer.showView(targetView, targetView);
+				viewContainer.focusView(targetView);
 			}
 		});
 		
