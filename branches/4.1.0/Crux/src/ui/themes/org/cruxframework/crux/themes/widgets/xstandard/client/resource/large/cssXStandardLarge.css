@@ -75,7 +75,6 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 }
 .crux-MenuDisplay .menuSection
 {
-	margin-top: 5px;
 	color: #FFFFFF;
 	background-color: #606060;
 	text-shadow: 0 1px 0 #000000;
@@ -88,6 +87,10 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	border: 1px solid #000000;
 	border-bottom: 1px solid rgba(0,0,0,0.3);
 }
+.menuEntry~.menuSection 
+{
+	margin-top: 5px;
+}
 
 @external crux-TabContainer, crux-TabPanelBottom; 
 @external crux-TabBar, crux-TabBarItem, crux-TabBarItem-selected, flapLabel, flapCloseButton;
@@ -97,8 +100,8 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 .crux-TabContainer
 {
 	background-color: #606060;
-	border: solid 2px #606060;
 	border-radius: 3px;
+	box-shadow: 0 0 15px rgba(0,0,0, 0.4);
 }
 .crux-TabBar
 {
@@ -133,6 +136,7 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	color: #1C5994;
 	text-shadow: 0px 1px #FFFFFF;
 	padding-top: 2px;
+	cursor: default;
 }
 .flapCloseButton 
 {
@@ -177,9 +181,16 @@ DIV, TD, LABEL, SPAN, INPUT, BUTTON
 	border: 1px solid #206080;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
 	box-shadow: 0 1px 0 rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2);
-	border-radius: 2px;
 	text-align: center;
 	font-size: 12px;
+}
+.crux-RollingPanelPrevious
+{
+	border-top-left-radius: 4px;
+}
+.crux-RollingPanelNext
+{
+	border-top-right-radius: 4px;
 }
 .crux-RollingPanelPrevious:hover, .crux-RollingPanelNext:hover 
 {
