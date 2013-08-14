@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb.events;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 
@@ -40,6 +42,15 @@ public class IDBObjectStoreEvent extends JavaScriptObject
 	}-*/;
 	
 	public final native int getIntKey()/*-{
+		return this.target.result;
+	}-*/;
+
+	public final Date getDateKey()
+	{
+		return new Date((long) getDoubleKey());
+	}
+
+	private native double getDoubleKey()/*-{
 		return this.target.result;
 	}-*/;
 }

@@ -15,9 +15,10 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
-import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
@@ -66,17 +67,6 @@ public class IDBObjectStore extends JavaScriptObject
 		}-*/;
 	}
 
-	public static class IDBObjectCountRequest extends IDBRequest<IDBObjectStore>
-	{
-		protected IDBObjectCountRequest(){}
-		
-		public final native void onSuccess(IDBCountEvent.Handler handler) /*-{
-			this.onsuccess = function(evt) {
-		    	handler.@org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent.Handler::onSuccess(Lorg/cruxframework/crux/core/client/db/indexeddb/events/IDBCountEvent;)(evt);
-			};              
-		}-*/;
-	}
-	
 	protected IDBObjectStore(){}
 
 	public final native String getName() /*-{
@@ -134,6 +124,15 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.put(value,key);
 	}-*/;
 
+	public final IDBObjectStoreRequest put(JavaScriptObject value, Date key) 
+	{
+	    return put(value,key.getTime());
+	}
+
+	private native IDBObjectStoreRequest put(JavaScriptObject value,double key) /*-{
+	    return this.put(value,key);
+	}-*/;
+
 	public final native IDBObjectStoreRequest add(JavaScriptObject value) /*-{
 	    return this.add(value);
 	}-*/;
@@ -147,6 +146,15 @@ public class IDBObjectStore extends JavaScriptObject
 	}-*/;
 	
 	public final native IDBObjectStoreRequest add(JavaScriptObject value,int key) /*-{
+	    return this.add(value,key);
+	}-*/;
+
+	public final IDBObjectStoreRequest add(JavaScriptObject value, Date key) 
+	{
+	    return add(value,key.getTime());
+	}
+
+	private native IDBObjectStoreRequest add(JavaScriptObject value,double key) /*-{
 	    return this.add(value,key);
 	}-*/;
 
@@ -166,6 +174,15 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this["delete"](key);
 	}-*/;
 	
+	public final IDBRequest<IDBObjectStore> delete(Date key) 
+	{
+	    return delete(key.getTime());
+	}
+
+	private native IDBRequest<IDBObjectStore> delete(double key) /*-{
+	    return this["delete"](key);
+	}-*/;
+
 	public final native IDBObjectRetrieveRequest get(JsArrayMixed key) /*-{
 	    return this.get(key);
 	}-*/;
@@ -175,6 +192,15 @@ public class IDBObjectStore extends JavaScriptObject
 	}-*/;
 
 	public final native IDBObjectRetrieveRequest get(int key) /*-{
+	    return this.get(key);
+	}-*/;
+
+	public final IDBObjectRetrieveRequest get(Date key) 
+	{
+	    return get(key.getTime());
+	}
+
+	private native IDBObjectRetrieveRequest get(double key) /*-{
 	    return this.get(key);
 	}-*/;
 

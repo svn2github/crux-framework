@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.rebind.database;
 
 import java.io.PrintWriter;
-import java.util.Date;
 
 import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
@@ -32,16 +31,20 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class CursorProxyCreator extends AbstractKeyValueProxyCreator
+public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 {
 	private JClassType cursorType;
 	private String idbCursorVariable;
-	private final String cursorName;
+	private String[] objectStoreKeyPath;
+	private String indexName;
 
-	public CursorProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, String cursorName)
+	public KeyCursorProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, 
+								String objectStoreName, String[] keyPath, String[] objectStoreKeyPath, 
+								String indexName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
-		this.cursorName = cursorName;
+		this.objectStoreKeyPath = objectStoreKeyPath;
+		this.indexName = indexName;
 		this.cursorType = context.getTypeOracle().findType(Cursor.class.getCanonicalName());
 		this.idbCursorVariable = "idbCursor";
 	}
@@ -84,10 +87,6 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("return "+idbCursorVariable+".getIntKey();");
 		}
-		else if (keyTypeName.equals(Date.class.getCanonicalName()))
-		{
-			srcWriter.println("return "+idbCursorVariable+".getDateKey();");
-		}
 		else
 		{
 			srcWriter.println("return "+idbCursorVariable+".getObjectKey().cast();");
@@ -97,7 +96,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateGetValueMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public "+getTargetObjectClassName()+" getValue(){");
+		srcWriter.println("public "+getKeyTypeName(objectStoreKeyPath)+" getValue(){");
 		if (isEmptyType())
 		{
 			srcWriter.println("return "+idbCursorVariable+".getValue();");
@@ -111,15 +110,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateUpdateMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void update("+getTargetObjectClassName()+" value){");
-		if (isEmptyType())
-		{
-			srcWriter.println(idbCursorVariable+".update(value);");
-		}
-		else
-		{
-			srcWriter.println(idbCursorVariable+".update("+serializerVariable+".encode(value).isObject().getJavaScriptObject());");
-		}
+		srcWriter.println("public void update("+getKeyTypeName(objectStoreKeyPath)+" value){");
 		srcWriter.println("}");
     }
 	
@@ -146,8 +137,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 	@Override
 	public String getProxySimpleName()
 	{
-		String typeName = cursorName.replaceAll("\\W", "_");
-		return typeName+"_Cursor";
+		return indexName.replaceAll("\\W", "_")+"_KeyCursor";
 	}
 
 	@Override
@@ -168,7 +158,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			composerFactory.addImport(imp);
 		}
-		composerFactory.setSuperclass("Cursor<"+getKeyTypeName()+","+getTargetObjectClassName()+">");
+		composerFactory.setSuperclass("Cursor<"+getKeyTypeName()+","+getKeyTypeName(objectStoreKeyPath)+">");
 
 		return new SourcePrinter(composerFactory.createSourceWriter(context, printWriter), logger);
 	}
@@ -182,5 +172,4 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		};
 		return imports;
 	}
-	
 }

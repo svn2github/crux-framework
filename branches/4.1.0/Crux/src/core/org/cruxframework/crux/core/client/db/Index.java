@@ -15,18 +15,181 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectCountRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 
 /**
  * @author Thiago da Rosa de Bustamante
- *
+ *@param <K> object key type
+ *@param <I> index key type
+ *@param <V> object type
  */
-public class Index
+public abstract class Index<K, I, V>
 {
 	protected final IDBIndex idbIndex;
+	protected final AbstractDatabase db;
 
-	public Index(IDBIndex idbIndex)
+	protected Index(AbstractDatabase db, IDBIndex idbIndex)
     {
+		this.db = db;
 		this.idbIndex = idbIndex;
     }
+
+	/**
+	 * Retrieve the index name
+	 * @return
+	 */
+	public String getName()
+	{
+		return idbIndex.getName();
+	}
+
+	public boolean isUnique()
+	{
+		return idbIndex.isUnique();
+	}
+	
+	public boolean isMultiEntry()
+	{
+		return idbIndex.isMultiEntry();
+	}
+	
+	/**
+	 * Return the number of items referenced by the index.
+	 * @param callback
+	 */
+	public void count(DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbIndex.count();
+		handleCountCallback(callback, countRequest);
+	}
+
+	/**
+	 * Return the number of items referenced by the index in the given range.
+	 * @param range
+	 * @param callback
+	 */
+	public void count(KeyRange<I> range, DatabaseCountCallback callback)
+	{
+		IDBObjectCountRequest countRequest = idbIndex.count(range.getNativeKeyRange());
+		handleCountCallback(callback, countRequest);
+	}
+
+	/**
+	 * Retrieve the object associated with the given key from the index. To read the object, 
+	 * use the method onSuccess from {@link DatabaseRetrieveCallback}.
+	 * @param key
+	 * @param callback
+	 */
+	public abstract void get(I key, DatabaseRetrieveCallback<V> callback);
+	
+	/**
+	 * Retrieve the object in the given keyRange from the index. To read the object, 
+	 * use the method onSuccess from {@link DatabaseRetrieveCallback}.
+	 * @param keyRange
+	 * @param callback
+	 */
+	public abstract void get(KeyRange<I> keyRange, DatabaseRetrieveCallback<V> callback);
+	
+	/**
+	 * Retrieve the object key associated with the given key from the index. To read the object, 
+	 * use the method onSuccess from {@link DatabaseRetrieveCallback}.
+	 * @param key
+	 * @param callback
+	 */
+	public abstract void getKey(I key, DatabaseRetrieveCallback<K> callback);
+	
+	/**
+	 * Retrieve the object key in the given keyRange from the index. To read the object, 
+	 * use the method onSuccess from {@link DatabaseRetrieveCallback}.
+	 * @param keyRange
+	 * @param callback
+	 */
+	public abstract void getKey(KeyRange<I> keyRange, DatabaseRetrieveCallback<K> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param callback
+	 */
+	public abstract void openCursor(DatabaseCursorCallback<I, V> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param callback
+	 */
+	public abstract void openCursor(KeyRange<I> keyRange, DatabaseCursorCallback<I, V> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param direction
+	 * @param callback
+	 */
+	public abstract void openCursor(KeyRange<I> keyRange, CursorDirection direction, DatabaseCursorCallback<I, V> callback);
+
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param callback
+	 */
+	public abstract void openKeyCursor(DatabaseCursorCallback<I, K> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param callback
+	 */
+	public abstract void openKeyCursor(KeyRange<I> keyRange, DatabaseCursorCallback<I, K> callback);
+	
+	/**
+	 * Open a cursor to iterate over the object store.
+	 * @param keyRange
+	 * @param direction
+	 * @param callback
+	 */
+	public abstract void openKeyCursor(KeyRange<I> keyRange, CursorDirection direction, DatabaseCursorCallback<I, K> callback);
+	
+	private void handleCountCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
+    {
+		if (callback != null || db.errorHandler != null)
+		{
+			if (callback != null)
+			{
+				callback.setDb(db);
+			}
+			countRequest.onError(new IDBErrorEvent.Handler()
+			{
+				@Override
+				public void onError(IDBErrorEvent event)
+				{
+					if (callback != null)
+					{
+						callback.onError(db.messages.objectStoreCountError(event.getName()));
+						callback.setDb(null);
+					}
+					else if (db.errorHandler != null)
+					{
+						db.errorHandler.onError(db.messages.objectStoreCountError(event.getName()));
+					}
+				}
+			});
+			countRequest.onSuccess(new IDBCountEvent.Handler()
+			{
+
+				@Override
+				public void onSuccess(IDBCountEvent event)
+				{
+					if (callback != null)
+					{
+						callback.onSuccess(event.getCount());
+						callback.setDb(null);
+					}
+				}
+			});
+		}
+    }
+	
 }

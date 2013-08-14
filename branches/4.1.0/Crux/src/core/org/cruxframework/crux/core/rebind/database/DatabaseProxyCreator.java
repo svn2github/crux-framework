@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.database;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,12 +64,14 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private JClassType integerType;
 	private JClassType stringType;
 	private JClassType emptyType;
+	private JClassType dateType;
 
 	public DatabaseProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		databaseMetadata = baseIntf.getAnnotation(DatabaseDef.class);
 		integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
+		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
 		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
 		emptyType = context.getTypeOracle().findType(Empty.class.getCanonicalName());
 	}
@@ -153,9 +156,10 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 					srcWriter.print("else ");
 				}
 				first = false;
+				Set<IndexData> indexes = getIndexes(objectStoreMetadata.indexes(), objectStoreTarget, objectStoreName);
 				srcWriter.println("if (StringUtils.unsafeEquals(className, "+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+")){");
 				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
-				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
+				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath, indexes).create();
 			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(this, idbObjectStore);");
 				srcWriter.println("}");
 			}
@@ -182,9 +186,10 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 				srcWriter.print("else ");
 			}
 			first = false;
+			Set<IndexData> indexes = getIndexes(objectStoreMetadata.indexes(), objectStoreTarget, objectStoreName);
 			srcWriter.println("if (StringUtils.unsafeEquals(storeName, "+EscapeUtils.quote(objectStoreName)+")){");
 			String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
-			String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath).create();
+			String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath, indexes).create();
 			srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(this, idbObjectStore);");
 			srcWriter.println("}");
         }
@@ -268,6 +273,54 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
         }
     }
 	
+	protected Set<IndexData> getIndexes(IndexDef[] indexMetadata, JClassType objectStoreTarget, String objectStoreName)
+	{
+		Set<IndexData> indexesCreated = new HashSet<IndexData>();
+		getIndexesFromMetadata(indexMetadata, indexesCreated, objectStoreName);
+		getIndexesFromObject(objectStoreTarget, indexesCreated, objectStoreName);
+		return indexesCreated;
+	}
+	
+	protected void getIndexesFromObject(JClassType objectStoreTarget, Set<IndexData> indexesCreated, String objectStoreName)
+    {
+	    if (objectStoreTarget != null)
+		{
+	    	Store store = objectStoreTarget.getAnnotation(Store.class);
+	    	if (store != null)
+	    	{
+	    		getIndexesFromMetadata(store.indexes(), indexesCreated, objectStoreName);
+
+	    		List<IndexData> indexes = getIndexFromAnnotations(objectStoreTarget, "");
+	    		for (IndexData index: indexes)
+	    		{
+	    			if (indexesCreated.contains(index.keyPath[0]))
+	    			{
+	    				throw new CruxGeneratorException("Duplicated index declared on ObjectSore ["+objectStoreName+"] Index ["+index.keyPath[0]+"] Datasource ["+databaseMetadata.name()+"]");
+	    			}
+	    			indexesCreated.add(index);
+	    		}
+	    	}
+		}
+    }
+	
+	protected void getIndexesFromMetadata(IndexDef[] indexMetadata,  Set<IndexData> indexesCreated, String objectStoreName)
+	{
+		for (IndexDef index : indexMetadata)
+		{
+			String indexName = getIndexName(index, objectStoreName);
+			if (indexesCreated.contains(indexName))
+			{
+				throw new CruxGeneratorException("Duplicated index declared on ObjectSore ["+objectStoreName+"] Index ["+indexName+"] Datasource ["+databaseMetadata.name()+"]");
+			}
+			if (index.keyPath() == null || index.keyPath().length == 0)
+			{
+				throw new CruxGeneratorException("Can not create an index without a key definition. Index ["+indexName+"] ObjectStore["+objectStoreName+"] Datasource ["+databaseMetadata.name()+"].");
+			}
+			indexesCreated.add(new IndexData(index.keyPath(), index.unique(), index.multiEntry(), indexName));
+		}
+	}
+	
+	
 	protected void generateIndexesCreation(SourcePrinter srcWriter, IndexDef[] indexMetadata, 
 										   JClassType objectStoreTarget, String objectStoreVar, 
 										   String objectStoreName, String indexNamesVar)
@@ -276,32 +329,18 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		{
 			srcWriter.println(indexNamesVar+" = "+objectStoreVar+".listIndexNames();");
 		}
-		Set<String> indexesCreated = new HashSet<String>();
-		generateIndexCreationFromMetadata(srcWriter, indexMetadata, objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
-		generateIndexCreationFromAnnotations(srcWriter, objectStoreTarget, objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
-    }
-
-	protected void generateIndexCreationFromAnnotations(SourcePrinter srcWriter, JClassType objectStoreTarget, 
-			String objectStoreVar, String objectStoreName, Set<String> indexesCreated, String indexNamesVar)
-    {
-	    if (objectStoreTarget != null)
-		{
-	    	Store store = objectStoreTarget.getAnnotation(Store.class);
-	    	if (store != null)
-	    	{
-	    		generateIndexCreationFromMetadata(srcWriter, store.indexes(), objectStoreVar, objectStoreName, indexesCreated, indexNamesVar);
-
-	    		List<IndexData> indexes = getIndexFromAnnotations(objectStoreTarget, "");
-	    		for (IndexData index: indexes)
-	    		{
-	    			if (indexesCreated.contains(index.column))
-	    			{
-	    				throw new CruxGeneratorException("Duplicated index declared on ObjectSore ["+objectStoreName+"] Index ["+index.column+"] Datasource ["+databaseMetadata.name()+"]");
-	    			}
-	    			generateIndexCreation(srcWriter, index.column, index.unique, false, index.column, objectStoreVar, indexNamesVar);
-	    		}
-	    	}
-		}
+		Set<IndexData> indexesCreated = getIndexes(indexMetadata, objectStoreTarget, objectStoreName);
+		for (IndexData index : indexesCreated)
+        {
+			if (index.keyPath.length == 1)
+			{//TODO ensureValidIdentifier... remove ',' etc
+				generateIndexCreation(srcWriter, index.keyPath[0], index.unique, index.multiEntry, index.indexName, objectStoreVar, indexNamesVar);
+			}
+			else
+			{
+				generateIndexCreation(srcWriter, index.keyPath, index.unique, index.multiEntry, index.indexName, objectStoreVar, indexNamesVar);
+			}
+        }
     }
 
 	protected List<IndexData> getIndexFromAnnotations(JClassType objectStoreTarget, String prefix)
@@ -316,7 +355,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	        	if (indexed != null)
 	        	{
 	        		String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
-	        		result.add(new IndexData(prefix+property, indexed.unique()));
+	        		result.add(new IndexData(new String[]{prefix+property}, indexed.unique(), false, prefix+property));
 	        	}
 	        }
 	        else
@@ -328,32 +367,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		
 	    return result;
     }
-	
-	protected void generateIndexCreationFromMetadata(SourcePrinter srcWriter, IndexDef[] indexMetadata, String objectStoreVar, 
-													 String objectStoreName, Set<String> indexesCreated, String indexNamesVar)
-    {
-	    for (IndexDef index : indexMetadata)
-        {
-	        String indexName = getIndexName(index, objectStoreName);
-			if (indexesCreated.contains(indexName))
-	        {
-				throw new CruxGeneratorException("Duplicated index declared on ObjectSore ["+objectStoreName+"] Index ["+indexName+"] Datasource ["+databaseMetadata.name()+"]");
-	        }
-			if (index.keyPath() == null || index.keyPath().length == 0)
-			{
-				throw new CruxGeneratorException("Can not create an index without a key definition. Index ["+indexName+"] ObjectStore["+objectStoreName+"] Datasource ["+databaseMetadata.name()+"].");
-			}
-			else if (index.keyPath().length == 1)
-			{//TODO ensureValidIdentifier... remove ',' etc
-				generateIndexCreation(srcWriter, index.keyPath()[0], index.unique(), index.multiEntry(), indexName, objectStoreVar, indexNamesVar);
-			}
-			else
-			{
-				generateIndexCreation(srcWriter, index.keyPath(), index.unique(), index.multiEntry(), indexName, objectStoreVar, indexNamesVar);
-			}
-        }
-    }
-	
+
 	protected String getIndexName(IndexDef indexDef, String objectStoreName)
 	{
 		if (!StringUtils.isEmpty(indexDef.name()))
@@ -531,7 +545,8 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
     {
 	    return jType.equals(stringType) || 
 	    	jType.equals(integerType) || 
-	    	jType.equals(JPrimitiveType.INT);
+	    	jType.equals(JPrimitiveType.INT) ||
+	    	jType.equals(dateType);
     }
 	
 	protected JClassType getObjectStoreTarget(ObjectStoreDef objectStoreMetadata)
@@ -597,14 +612,18 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	}
 	
 
-	private static class IndexData
+	static class IndexData
 	{
-		private boolean unique;
-		private String column;
-		IndexData(String column, boolean unique)
+		boolean unique;
+		boolean multiEntry;
+		String[] keyPath;
+		final String indexName;
+		IndexData(String[] keyPath, boolean unique, boolean multiEntry, String indexName)
 		{
-			this.column = column;
+			this.keyPath = keyPath;
 			this.unique = unique;
+			this.multiEntry = multiEntry;
+			this.indexName = indexName;
 		}
 	}
 }

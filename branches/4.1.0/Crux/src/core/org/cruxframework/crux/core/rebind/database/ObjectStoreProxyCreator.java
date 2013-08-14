@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind.database;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 import org.cruxframework.crux.core.client.db.AbstractObjectStore;
 import org.cruxframework.crux.core.client.db.Cursor;
@@ -29,7 +30,9 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.rebind.database.DatabaseProxyCreator.IndexData;
 
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
@@ -46,10 +49,12 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	private JClassType abstractObjectStoreType;
 	private String idbObjectStoreVariable;
 	private String dbVariable;
+	private final Set<IndexData> indexes;
 
-	public ObjectStoreProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
+	public ObjectStoreProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
+		this.indexes = indexes;
 		this.abstractObjectStoreType = context.getTypeOracle().findType(AbstractObjectStore.class.getCanonicalName());
 		this.idbObjectStoreVariable = "idbObjectStore";
 		this.dbVariable = "db";
@@ -73,8 +78,9 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		generatePutMethod(srcWriter);
 		generateGetMethod(srcWriter);
 		generateOpenCursorMethod(srcWriter);
-		generateOpenCursorMethodKeyMethod(srcWriter);
-		generateOpenCursorMethodKeyDirectionMethod(srcWriter);
+		generateOpenCursorKeyMethod(srcWriter);
+		generateOpenCursorKeyDirectionMethod(srcWriter);
+		generateGetIndexMethod(srcWriter);
 		if (hasCompositeKey())
 		{
 			generateGetNativeKeyMethod(srcWriter);
@@ -159,39 +165,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbObjectStoreVariable+".get(key);");
 		}
-		srcWriter.println("if (callback != null || "+dbVariable+".errorHandler != null){");
-		srcWriter.println("if (callback != null){");
-		srcWriter.println("callback.setDb("+dbVariable+");");
-		srcWriter.println("}");
-		
-		srcWriter.println("retrieveRequest.onSuccess(new IDBObjectRetrieveEvent.Handler(){");
-		srcWriter.println("public void onSuccess(IDBObjectRetrieveEvent event){");
-		srcWriter.println("if (callback != null){");
-		if (isEmptyType())
-		{
-			srcWriter.println("callback.onSuccess(event.getObject());");
-		}
-		else
-		{
-			srcWriter.println("callback.onSuccess("+serializerVariable+".decode(new JSONObject(event.getObject())));");
-		}
-		srcWriter.println("callback.setDb(null);");
-		srcWriter.println("}");
-		srcWriter.println("}");
-		srcWriter.println("});");
-
-		srcWriter.println("retrieveRequest.onError(new IDBErrorEvent.Handler(){");
-		srcWriter.println("public void onError(IDBErrorEvent event){");
-		srcWriter.println("if (callback != null){");
-		srcWriter.println("callback.onError("+dbVariable+".messages.objectStoreGetError(event.getName()));");
-		srcWriter.println("callback.setDb(null);");
-		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
-		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreGetError(event.getName()));");
-		srcWriter.println("}");
-		srcWriter.println("}");
-		srcWriter.println("});");
-
-		srcWriter.println("}");
+		henerateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();
@@ -201,59 +175,43 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
     {
 		srcWriter.println("public void openCursor(final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
 		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor();");
-		generateCursorHandlers(srcWriter);
+		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", "ObjectStore_"+getTargetObjectClassName());
 		srcWriter.println("}");
 		srcWriter.println();
     }
 
-	protected void generateOpenCursorMethodKeyMethod(SourcePrinter srcWriter)
+	protected void generateOpenCursorKeyMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
 		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor(keyRange.getNativeKeyRange());");
-		generateCursorHandlers(srcWriter);
+		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", "ObjectStore_"+getTargetObjectClassName());
 		srcWriter.println("}");
 		srcWriter.println();
     }
 	
-	protected void generateOpenCursorMethodKeyDirectionMethod(SourcePrinter srcWriter)
+	protected void generateOpenCursorKeyDirectionMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void openCursor(KeyRange<"+getKeyTypeName()+"> keyRange, CursorDirection direction, final DatabaseCursorCallback<"+getKeyTypeName()+", "+getTargetObjectClassName()+"> callback){");
 		srcWriter.println("IDBObjectCursorRequest cursorRequest = " + idbObjectStoreVariable+".openCursor(keyRange.getNativeKeyRange(), direction.getNativeCursorDirection());");
-		generateCursorHandlers(srcWriter);
+		generateCursorHandlers(srcWriter, "callback", dbVariable, "cursorRequest", "ObjectStore_"+getTargetObjectClassName());
 		srcWriter.println("}");
 		srcWriter.println();
     }
 
-	private void generateCursorHandlers(SourcePrinter srcWriter)
+	protected void generateGetIndexMethod(SourcePrinter srcWriter)
 	{
-		srcWriter.println("if (callback != null || "+dbVariable+".errorHandler != null){");
-		srcWriter.println("if (callback != null){");
-		srcWriter.println("callback.setDb("+dbVariable+");");
-		srcWriter.println("}");
+		srcWriter.println("public <I> Index<"+getKeyTypeName()+", I, "+getTargetObjectClassName()+"> getIndex(String name){");
+		for(IndexData index: indexes)
+		{
+			srcWriter.println("if (StringUtils.unsafeEquals(name, "+EscapeUtils.quote(index.indexName)+")){");
+			String indexClassName = new IndexProxyCreator(context, logger, targetObjectType, objectStoreName, index.keyPath, index.indexName, keyPath).create();
+			srcWriter.println("return (Index<"+getKeyTypeName()+", I, "+getTargetObjectClassName()+">) new " + indexClassName + "("+dbVariable+", "+idbObjectStoreVariable+".getIndex(name));");
+			srcWriter.println("}");
+		}
 		
-		srcWriter.println("cursorRequest.onSuccess(new IDBCursorEvent.Handler(){");
-		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
-		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath).create();
-		srcWriter.println("if (callback != null){");
-		srcWriter.println("callback.onSuccess(new "+cursorClassName+"(event.getCursor()));");
-		srcWriter.println("callback.setDb(null);");
+		srcWriter.println("return null;");
 		srcWriter.println("}");
-		srcWriter.println("}");
-		srcWriter.println("});");
-		
-		srcWriter.println("cursorRequest.onError(new IDBErrorEvent.Handler(){");
-		srcWriter.println("public void onError(IDBErrorEvent event){");
-		srcWriter.println("if (callback != null){");
-		srcWriter.println("callback.onError("+dbVariable+".messages.objectStoreCursorError(event.getName()));");
-		srcWriter.println("callback.setDb(null);");
-		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
-		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreCursorError(event.getName()));");
-		srcWriter.println("}");
-		srcWriter.println("}");
-		srcWriter.println("});");
-		
-		srcWriter.println("}");
-		
+		srcWriter.println();
 	}
 	
 	@Override
@@ -309,7 +267,8 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 				IDBCursorEvent.class.getCanonicalName(),
 				IDBErrorEvent.class.getCanonicalName(),
 				Cursor.class.getCanonicalName(), 
-				CursorDirection.class.getCanonicalName()
+				CursorDirection.class.getCanonicalName(), 
+				StringUtils.class.getCanonicalName()
 		};
 		return imports;
 	}

@@ -15,8 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db;
 
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectCountRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCountRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 
@@ -64,12 +64,6 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 	{
 		IDBObjectCountRequest countRequest = idbObjectStore.count(range.getNativeKeyRange());
 		handleCallback(callback, countRequest);
-	}
-
-	@Override
-	public Index getIndex(String name)
-	{
-	    return new Index(idbObjectStore.getIndex(name));
 	}
 	
 	private void handleCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)

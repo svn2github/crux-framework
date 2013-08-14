@@ -15,15 +15,17 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
-import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectStoreRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.utils.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayString;
 
 /**
@@ -91,32 +93,36 @@ public class IDBIndex extends JavaScriptObject
 	    return this.openCursor(range,direction);
 	}-*/;
 	
-	public final native IDBObjectCursorRequest openKeyCursor() /*-{
+	public final native IDBIndexCursorRequest openKeyCursor() /*-{
 	    return this.openKeyCursor();
 	}-*/;
 	
-	public final native IDBObjectCursorRequest openKeyCursor(IDBKeyRange range) /*-{
+	public final native IDBIndexCursorRequest openKeyCursor(IDBKeyRange range) /*-{
 	    return this.openKeyCursor(range);
 	}-*/;
 	
-	public final IDBObjectCursorRequest openKeyCursor(IDBKeyRange range, IDBCursorDirection direction)
+	public final IDBIndexCursorRequest openKeyCursor(IDBKeyRange range, IDBCursorDirection direction)
 	{
 		return openKeyCursorNative(range, direction.toString());
 	}
 	
-	private native IDBObjectCursorRequest openKeyCursorNative(IDBKeyRange range, String direction) /*-{
+	private native IDBIndexCursorRequest openKeyCursorNative(IDBKeyRange range, String direction) /*-{
 	    return this.openKeyCursor(range,direction);
 	}-*/;
 
-	public final native IDBIndexCursorRequest count() /*-{
+	public final native IDBObjectCountRequest count() /*-{
 	    return this.count();
 	}-*/;
 	
-	public final native IDBIndexCursorRequest count(IDBKeyRange range) /*-{
+	public final native IDBObjectCountRequest count(IDBKeyRange range) /*-{
 	    return this.count(range);
 	}-*/;
 
-	public final native IDBObjectRetrieveRequest get(JavaScriptObject key) /*-{
+	public final native IDBObjectRetrieveRequest get(IDBKeyRange range) /*-{
+	    return this.get(range);
+	}-*/;
+
+	public final native IDBObjectRetrieveRequest get(JsArrayMixed key) /*-{
 	    return this.get(key);
 	}-*/;
 	
@@ -124,14 +130,27 @@ public class IDBIndex extends JavaScriptObject
 	    return this.get(key);
 	}-*/;
 	
+	public final IDBObjectRetrieveRequest get(Date key)
+	{
+	    return get(key.getTime());
+	}
+
+	private native IDBObjectRetrieveRequest get(double key) /*-{
+	    return this.get(key);
+	}-*/;
+	
 	public final native IDBObjectRetrieveRequest get(int key) /*-{
 	    return this.get(key);
 	}-*/;
 
-	public final native IDBObjectStoreRequest getKey(JavaScriptObject key) /*-{
+	public final native IDBObjectStoreRequest getKey(JsArrayMixed key) /*-{
 	    return this.getKey(key);
 	}-*/;
 	
+	public final native IDBObjectStoreRequest getKey(IDBKeyRange range) /*-{
+	    return this.getKey(range);
+	}-*/;
+
 	public final native IDBObjectStoreRequest getKey(String key) /*-{
 	    return this.getKey(key);
 	}-*/;
@@ -139,4 +158,14 @@ public class IDBIndex extends JavaScriptObject
 	public final native IDBObjectStoreRequest getKey(int key) /*-{
 	    return this.getKey(key);
 	}-*/;
+
+	public final IDBObjectStoreRequest getKey(Date key)
+	{
+	    return getKey(key.getTime());
+	}
+
+	private native IDBObjectStoreRequest getKey(double key) /*-{
+	    return this.get(key);
+	}-*/;
+
 }

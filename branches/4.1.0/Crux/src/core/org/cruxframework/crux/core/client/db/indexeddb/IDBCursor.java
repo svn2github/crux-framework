@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -66,7 +68,16 @@ public class IDBCursor extends JavaScriptObject
     	return this.key;
 	}-*/;
 
-	public final native JsArrayMixed getObjectPrimaryKey() /*-{
+    public final Date getDateKey() 
+    {
+		return new Date((long)getDoubleKey());
+	}
+
+    private native double getDoubleKey() /*-{
+		return this.key;
+	}-*/;
+
+    public final native JsArrayMixed getObjectPrimaryKey() /*-{
 	    return this.primaryKey;
 	}-*/;
 	
@@ -76,6 +87,15 @@ public class IDBCursor extends JavaScriptObject
 
 	public final native int getIntPrimaryKey() /*-{
 	    return this.primaryKey;
+	}-*/;
+
+    public final Date getDatePrimaryKey() 
+    {
+		return new Date((long)getDoublePrimaryKey());
+	}
+
+    private native double getDoublePrimaryKey() /*-{
+		return this.primaryKey;
 	}-*/;
 
 	public final native IDBCursorStoreRequest update(JavaScriptObject value) /*-{
@@ -102,6 +122,15 @@ public class IDBCursor extends JavaScriptObject
 	    this["continue"](key);
 	}-*/;
 
+    public final void continueCursor(Date key) 
+    {
+		continueCursor(key.getTime());
+	}
+
+    private native void continueCursor(double key) /*-{
+	    this["continue"](key);
+	}-*/;
+	
 	public final native IDBRequest<IDBCursor> delete() /*-{
 	    return this["delete"]();
 	}-*/;

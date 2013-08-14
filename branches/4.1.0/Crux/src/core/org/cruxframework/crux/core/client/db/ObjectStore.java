@@ -121,5 +121,5 @@ public interface ObjectStore<K, V>
 	 * @param name
 	 * @return
 	 */
-	Index getIndex(String name);
+	<I> Index<K, I, V> getIndex(String name);
 }

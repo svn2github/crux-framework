@@ -803,6 +803,31 @@ public class JClassUtils
 		return result.toArray(new PropertyInfo[result.size()]);
 	}
 	
+	public static JType getTypeForProperty(String property, JClassType objectType)
+	{
+		if (objectType == null)
+		{
+			return null;
+		}
+		int index = property.indexOf('.');
+		if (index < 0)
+		{
+			String getterMethod = JClassUtils.getGetterMethod(property, objectType);
+			if (StringUtils.isEmpty(getterMethod))
+			{
+				return null;
+			}
+			return JClassUtils.getReturnTypeFromMethodClass(objectType, getterMethod, new JType[]{});
+		}
+		String getterMethod = JClassUtils.getGetterMethod(property.substring(0, index), objectType);
+		if (StringUtils.isEmpty(getterMethod))
+		{
+			return null;
+		}
+		return getTypeForProperty(property.substring(index+1), JClassUtils.getReturnTypeFromMethodClass(objectType, getterMethod, new JType[]{}).isClassOrInterface());
+	}
+	
+	
 	public static String getEmptyValueForType(JType objectType)
     {
 		JPrimitiveType primitiveType = objectType.isPrimitive();
