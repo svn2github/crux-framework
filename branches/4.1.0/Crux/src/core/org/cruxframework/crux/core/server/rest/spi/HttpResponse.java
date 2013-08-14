@@ -46,19 +46,6 @@ public class HttpResponse
 		this.response.setStatus(status);
 	}
 
-	/**
-	 * Flushes the response as a error.
-	 * @param errorContent the file content. 
-	 * @throws IOException
-	 */
-	public void flushFileContentError(String errorContent) throws IOException
-	{
-		PrintWriter writer = this.response.getWriter();
-		writer.println(errorContent);
-		writer.close();
-		
-		this.response.flushBuffer();
-	}
 	
 	/**
 	 * Flushes the response as a file.
@@ -70,7 +57,6 @@ public class HttpResponse
 	public void flushFileContent(String mimeType, String fileName, String fileContent) throws IOException
 	{
 		generateFileContent(mimeType, "UTF-8", fileName, fileContent);
-		
 		this.response.flushBuffer();
 	}
 	
@@ -85,14 +71,13 @@ public class HttpResponse
 	public void flushFileContent(String mimeType, String charset, String fileName, String fileContent) throws IOException
 	{
 		generateFileContent(mimeType, charset, fileName, fileContent);
-		
 		this.response.flushBuffer();
 	}
 
-	private void generateFileContent(String mimeType, String charset,
-			String fileName, String fileContent) throws IOException {
+	private void generateFileContent(String mimeType, String charset, String fileName, String fileContent) throws IOException 
+	{
 		this.response.setContentType(mimeType + "; " + "charset=" + charset);
-		this.response.setHeader("Content-disposition", "inline; filename=" + fileName);
+		this.response.setHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline; filename=" + fileName);
 		
 		PrintWriter writer = this.response.getWriter();
 		writer.println(fileContent);
