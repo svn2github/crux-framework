@@ -229,7 +229,7 @@ implements MeasurableRemoteDataSource<T>
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void sort(String columnName, boolean ascending, boolean isCaseSensitive)
+	public void sort(String columnName, boolean ascending, boolean caseSensitive)
 	{
 		ensurePageLoaded(currentRecord);
 		if (currentRecord > -1)
@@ -242,7 +242,7 @@ implements MeasurableRemoteDataSource<T>
 			{
 				pageData[i] = data[i+startPageRecord];
 			}
-			sortArray(pageData, columnName, ascending, isCaseSensitive);
+			sortArray(pageData, columnName, ascending, caseSensitive);
 			updateRecords(startPageRecord, endPageRecord, pageData);
 		}
 	}	

@@ -66,9 +66,9 @@ public interface DataSource<E>
 	 * Sort dataSource records, based on column informed
 	 * @param columnName Base column for sorting.
 	 * @param ascending If true, sort ascending.
-	 * @param isCaseSensitive indicate if the columns sort are or not key sensitive  
+	 * @param caseSensitive indicate if the columns sort are or not key sensitive  
 	 */
-	void sort(String columnName, boolean ascending, boolean isCaseSensitive);
+	void sort(String columnName, boolean ascending, boolean caseSensitive);
 	
 	/**
 	 * Reset DataSource, as if it was never loaded before.

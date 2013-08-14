@@ -521,7 +521,7 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 	 * @see org.cruxframework.crux.core.client.datasource.DataSource#sort(java.lang.String, boolean)
 	 */
 	@SuppressWarnings("unchecked")
-    public void sort(String columnName, boolean ascending, boolean isCaseSensitive)
+    public void sort(String columnName, boolean ascending, boolean caseSensitive)
 	{
 		if (currentRecord > -1)
 		{
@@ -533,12 +533,12 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 			{
 				pageData[i] = data.get(i+startPageRecord);
 			}
-			sortArray(pageData,columnName, ascending, isCaseSensitive);
+			sortArray(pageData,columnName, ascending, caseSensitive);
 			updatePageRecords(startPageRecord, endPageRecord, pageData);
 		}
 	}
 	
-	protected void sortArray(DataSourceRecord<T>[] array, final String columnName, final boolean ascending, final boolean isCaseSensitive)
+	protected void sortArray(DataSourceRecord<T>[] array, final String columnName, final boolean ascending, final boolean caseSensitive)
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
@@ -572,13 +572,13 @@ public abstract class RemoteStreamingDataSource<T> implements StreamingDataSourc
 					if (value2==null) return -1;
 				}
 
-				return compareNonNullValuesByType(value1,value2,ascending,isCaseSensitive);
+				return compareNonNullValuesByType(value1,value2,ascending,caseSensitive);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean isCaseSensitive)
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean caseSensitive)
 			{
-				if(!isCaseSensitive && value1 instanceof String && value2 instanceof String)
+				if(!caseSensitive && value1 instanceof String && value2 instanceof String)
 				{
 					if (ascending)
 					{

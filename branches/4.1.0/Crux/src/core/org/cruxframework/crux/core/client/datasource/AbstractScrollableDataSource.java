@@ -115,16 +115,16 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 	}
 	
 	@Override
-	public void sort(final String columnName, boolean ascending, boolean isCaseSensitive)
+	public void sort(final String columnName, boolean ascending, boolean caseSensitive)
 	{
 		ensureLoaded();
 		if (data != null)
 		{
-			sortArray(data,columnName, ascending, isCaseSensitive);
+			sortArray(data,columnName, ascending, caseSensitive);
 		}
 	}
 
-	protected void sortArray(DataSourceRecord<E>[] array, final String columnName, final boolean ascending, final boolean isCaseSensitive)
+	protected void sortArray(DataSourceRecord<E>[] array, final String columnName, final boolean ascending, final boolean caseSensitive)
 	{
 		if (!definitions.getColumn(columnName).isSortable())
 		{
@@ -158,13 +158,13 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 					if (value2==null) return -1;
 				}
 
-				return compareNonNullValuesByType(value1,value2,ascending,isCaseSensitive);
+				return compareNonNullValuesByType(value1,value2,ascending,caseSensitive);
 			}
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean isCaseSensitive)
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean caseSensitive)
 			{
-				if(!isCaseSensitive && value1 instanceof String && value2 instanceof String)
+				if(!caseSensitive && value1 instanceof String && value2 instanceof String)
 				{
 					if (ascending)
 					{

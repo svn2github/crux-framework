@@ -85,7 +85,8 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 	@TagAttributeDeclaration(value="defaultSortingColumn", type=String.class),
 	@TagAttributeDeclaration(value="defaultSortingType", type=SortingType.class, defaultValue="ascending"),
 	@TagAttributeDeclaration(value="showRowDetailsIcon", type=Boolean.class, defaultValue="true"),
-	@TagAttributeDeclaration(value="freezeHeaders", type=Boolean.class, defaultValue="false")
+	@TagAttributeDeclaration(value="freezeHeaders", type=Boolean.class, defaultValue="false"),
+	@TagAttributeDeclaration(value="caseSensitive", type=Boolean.class, defaultValue="false")
 })
 @TagAttributes({
 	@TagAttribute(value="dataSource", processor=GridFactory.DataSourceAttributeParser.class)
@@ -121,7 +122,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
             getStretchColumns(widgetElement)+", "+getHighlightRowOnMouseOver(widgetElement)+", "+
             getEmptyDataFilling(widgetElement)+", "+isFixedCellSize(widgetElement)+", "+getSortingColumn(widgetElement)+", "+
             getSortingType(widgetElement) + ", "+ rowDetailsCreator + ", "+ 
-            getShowRowDetailsIcon(widgetElement) + ", " + getFreezeHeaders(widgetElement) + ");");
+            getShowRowDetailsIcon(widgetElement) + ", " + getFreezeHeaders(widgetElement) +", "+getCaseSensitive(widgetElement) + ");");
 	}
 	
 	private boolean getShowRowDetailsIcon(JSONObject gridElem) 
@@ -179,6 +180,20 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 		return null;
 	}
 
+	/**
+	 * @param gridElem
+	 * @return
+	 */
+	private String getCaseSensitive(JSONObject gridElem)
+	{
+		String caseSensitive = gridElem.optString("caseSensitive");
+		if (!StringUtils.isEmpty(caseSensitive))
+		{
+			return EscapeUtils.quote(caseSensitive);
+		}
+		return null;
+	}
+	
 	/**
 	 * @param gridElem
 	 * @return
