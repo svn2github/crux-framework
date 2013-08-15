@@ -184,14 +184,15 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 	 * @param gridElem
 	 * @return
 	 */
-	private String getCaseSensitive(JSONObject gridElem)
+	private boolean getCaseSensitive(JSONObject gridElem)
 	{
 		String caseSensitive = gridElem.optString("caseSensitive");
-		if (!StringUtils.isEmpty(caseSensitive))
+		
+		if(caseSensitive != null && caseSensitive.trim().length() > 0)
 		{
-			return EscapeUtils.quote(caseSensitive);
+			return Boolean.parseBoolean(caseSensitive);
 		}
-		return null;
+		return false;
 	}
 	
 	/**
