@@ -18,6 +18,9 @@ package org.cruxframework.crux.core.client.db;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
+
 /**
  * @author Thiago da Rosa de Bustamante
  *
@@ -69,6 +72,11 @@ public abstract class Cursor<K, V>
 		idbCursor.delete();
 	}
 
+	public <T extends JavaScriptObject> T getNativeValue()
+	{
+		return idbCursor.getValue().cast();
+	}
+	
 	public CursorDirection getDirection()
 	{
 		switch (idbCursor.getDirection())
@@ -84,6 +92,7 @@ public abstract class Cursor<K, V>
         }
 	}
 	
+	public abstract JsArrayMixed getNativeArrayKey();
 	public abstract void update(V value);
 	public abstract K getKey();
 	public abstract V getValue();

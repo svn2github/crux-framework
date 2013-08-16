@@ -126,7 +126,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 	    srcWriter.println();
     }
 
-	private void generateCreateArrayMethod(SourcePrinter srcWriter)
+	protected void generateCreateArrayMethod(SourcePrinter srcWriter)
     {
 	    srcWriter.println("private native "+JsArrayMixed.class.getCanonicalName()+" createArray()/*-{");
 	    srcWriter.println("return [];");
@@ -144,12 +144,11 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 	    int i=0;
 	    for (String key : keyPath)
         {
-	        String getterMethod = JClassUtils.getGetterMethod(key, targetObjectType);
-			if (StringUtils.isEmpty(getterMethod))
+			JType jType = JClassUtils.getTypeForProperty(key, targetObjectType);
+			if (jType == null)
 			{
 				throw new CruxGeneratorException("Invalid keyPath for objectStore ["+targetObjectType.getParameterizedQualifiedSourceName()+"]");
 			}
-			JType jType = JClassUtils.getReturnTypeFromMethodClass(targetObjectType, getterMethod, new JType[]{});
         	if (jType.equals(stringType))
         	{
         	    srcWriter.println("result.push((String)key["+i+"]);");
@@ -318,4 +317,25 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("}");
 	}
 	
+	protected void generateGetNativeArrayKeyMethod(SourcePrinter srcWriter, String idbCursorVariable)
+    {
+		if (keyPath.length <= 1)
+		{
+			srcWriter.println("private native "+JsArrayMixed.class.getCanonicalName()+" createKeyArray(IDBCursor cursor)/*-{");
+			srcWriter.println("return [cursor.key];");
+			srcWriter.println("}-*/;");
+			srcWriter.println();
+		}
+
+	    srcWriter.println("public JsArrayMixed getNativeArrayKey(){");
+		if (keyPath.length > 1)
+		{
+			srcWriter.println("return "+idbCursorVariable+".getObjectKey();");
+		}
+		else 
+		{
+			srcWriter.println("return createKeyArray("+idbCursorVariable+");");
+		}
+		srcWriter.println("}");
+    }
 }

@@ -218,7 +218,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("String storeName = storeNames.get(i);");
 			srcWriter.println("try{");
 			srcWriter.println("db.deleteObjectStore(storeName);");
-			srcWriter.println("}catch (Exception e){/* Chrome BUG. When an object store is created, but have no data, chrome raises a NoFoundException when removing these store. So ignore any delete failed attempt.*/}");
+			srcWriter.println("}catch (Exception e){/* Chrome BUG. When an object store is created, but have no data, chrome raises a NotFoundException when removing these store. So ignore any delete failed attempt.*/}");
 			srcWriter.println("}");
 		}
 		else

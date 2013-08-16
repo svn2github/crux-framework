@@ -19,9 +19,11 @@ import java.io.PrintWriter;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.db.Cursor;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -61,6 +63,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		generateGetValueMethod(srcWriter);
 		generateUpdateMethod(srcWriter);
 		generateContinueCursorMethod(srcWriter);
+		generateGetNativeArrayKeyMethod(srcWriter, idbCursorVariable);
 		if (hasCompositeKey())
 		{
 			generateFromNativeKeyMethod(srcWriter);
@@ -182,7 +185,9 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		String[] imports = new String[] {
 				Cursor.class.getCanonicalName(), 
 				IDBCursorWithValue.class.getCanonicalName(), 
-				JSONObject.class.getCanonicalName()
+				JSONObject.class.getCanonicalName(),
+				JsArrayMixed.class.getCanonicalName(),
+				IDBCursor.class.getCanonicalName()
 		};
 		return imports;
 	}
