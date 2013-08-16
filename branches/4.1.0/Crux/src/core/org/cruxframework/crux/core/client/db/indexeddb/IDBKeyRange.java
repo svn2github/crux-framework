@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 
@@ -38,6 +40,15 @@ public class IDBKeyRange extends JavaScriptObject
 		return this.lower;
 	}-*/;
 
+	public final Date getLowerDate()
+	{
+		return new Date((long)getLowerDouble());
+	}
+
+	public final  native double getLowerDouble() /*-{
+		return this.lower;
+	}-*/;
+
 	public final native JsArrayMixed getUpperObject() /*-{
 		return this.upper;
 	}-*/;
@@ -47,6 +58,15 @@ public class IDBKeyRange extends JavaScriptObject
 	}-*/;
 
 	public final native int getUpperInt() /*-{
+		return this.upper;
+	}-*/;
+
+	public final Date getUpperDate()
+	{
+		return new Date((long)getUpperDouble());
+	}
+
+	public final  native double getUpperDouble() /*-{
 		return this.upper;
 	}-*/;
 
@@ -62,6 +82,15 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.only(key);
 	}-*/;
 
+	public final static IDBKeyRange only(Date key)
+	{
+		return only(key.getTime());
+	}
+
+	public final  native static IDBKeyRange only(double key) /*-{
+		return $wnd.IDBKeyRange.only(key);
+	}-*/;
+
 	public final native static IDBKeyRange only(int key) /*-{
 		return $wnd.IDBKeyRange.only(key);
 	}-*/;
@@ -72,6 +101,15 @@ public class IDBKeyRange extends JavaScriptObject
 
 	public final native static IDBKeyRange lowerBound(JsArrayMixed key, boolean open) /*-{
 		return $wnd.IDBKeyRange.lowerBound(key,open);
+	}-*/;
+
+	public final static IDBKeyRange lowerBound(Date key)
+	{
+		return lowerBound(key.getTime());
+	}
+
+	public final  native static IDBKeyRange lowerBound(double key) /*-{
+		return $wnd.IDBKeyRange.lowerBound(key);
 	}-*/;
 
 	public final native static IDBKeyRange lowerBound(int key, boolean open) /*-{
@@ -86,6 +124,15 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.lowerBound(key);
 	}-*/;
 	
+	public final static IDBKeyRange lowerBound(Date key, boolean open)
+	{
+		return lowerBound(key.getTime(), open);
+	}
+
+	public final  native static IDBKeyRange lowerBound(double key, boolean open) /*-{
+		return $wnd.IDBKeyRange.lowerBound(key, open);
+	}-*/;
+
 	public final native static IDBKeyRange lowerBound(int key) /*-{
 		return $wnd.IDBKeyRange.lowerBound(key);
 	}-*/;
@@ -96,6 +143,24 @@ public class IDBKeyRange extends JavaScriptObject
 
 	public final native static IDBKeyRange upperBound(JsArrayMixed key, boolean open)/*-{
 		return $wnd.IDBKeyRange.upperBound(key,open);
+	}-*/;
+
+	public final static IDBKeyRange upperBound(Date key, boolean open)
+	{
+		return upperBound(key.getTime(), open);
+	}
+
+	public final  native static IDBKeyRange upperBound(double key, boolean open) /*-{
+		return $wnd.IDBKeyRange.upperBound(key, open);
+	}-*/;
+
+	public final static IDBKeyRange upperBound(Date key)
+	{
+		return upperBound(key.getTime());
+	}
+
+	public final  native static IDBKeyRange upperBound(double key) /*-{
+		return $wnd.IDBKeyRange.upperBound(key);
 	}-*/;
 
 	public final native static IDBKeyRange upperBound(int key, boolean open)/*-{
@@ -126,6 +191,15 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.bound(startKey,endKey,startOpen,endOpen);
 	}-*/;
 
+	public final static IDBKeyRange bound(Date startKey, Date endKey, boolean startOpen, boolean endOpen)
+	{
+		return bound(startKey.getTime(), startKey.getTime(), startOpen, endOpen);
+	}
+
+	public final  native static IDBKeyRange bound(double startKey, double endKey, boolean startOpen, boolean endOpen) /*-{
+		return $wnd.IDBKeyRange.bound(startKey,endKey,startOpen,endOpen);
+	}-*/;
+
 	public final native static IDBKeyRange bound(String startKey, String endKey, boolean startOpen, boolean endOpen) /*-{
 		return $wnd.IDBKeyRange.bound(startKey,endKey,startOpen,endOpen);
 	}-*/;
@@ -134,6 +208,15 @@ public class IDBKeyRange extends JavaScriptObject
 		return $wnd.IDBKeyRange.bound(startKey,endKey);
 	}-*/;
 	
+	public final static IDBKeyRange bound(Date startKey, Date endKey)
+	{
+		return bound(startKey.getTime(), startKey.getTime());
+	}
+
+	public final native static IDBKeyRange bound(double startKey, double endKey) /*-{
+		return $wnd.IDBKeyRange.bound(startKey,endKey);
+	}-*/;
+
 	public final native static IDBKeyRange bound(int startKey, int endKey) /*-{
 		return $wnd.IDBKeyRange.bound(startKey,endKey);
 	}-*/;

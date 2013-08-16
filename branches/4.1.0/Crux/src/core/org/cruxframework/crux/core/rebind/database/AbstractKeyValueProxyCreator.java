@@ -40,6 +40,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 {
 	protected final JClassType targetObjectType;
 	protected final JClassType integerType;
+	protected final JClassType doubleType;
 	protected final JClassType stringType;
 	protected final JClassType dateType;
 	protected final JClassType emptyType;
@@ -59,6 +60,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		}
 		this.stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
 		this.integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
+		this.doubleType = context.getTypeOracle().findType(Double.class.getCanonicalName());
 		this.dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
 		this.emptyType = context.getTypeOracle().findType(Empty.class.getCanonicalName());
 		this.serializerVariable = "serializer";
@@ -104,6 +106,10 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
         	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
         	{
         	    srcWriter.println("result["+i+"] = (int)key.getNumber("+i+");");
+        	}
+        	else if (jType.equals(doubleType) || (jType.equals(JPrimitiveType.DOUBLE)))
+        	{
+        	    srcWriter.println("result["+i+"] = key.getNumber("+i+");");
         	}
         	else if (jType.equals(dateType))
         	{
@@ -151,6 +157,10 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
         	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
         	{
         	    srcWriter.println("result.push((int)key["+i+"]);");
+        	}
+        	else if (jType.equals(doubleType) || (jType.equals(JPrimitiveType.DOUBLE)))
+        	{
+        	    srcWriter.println("result.push((double)key["+i+"]);");
         	}
         	else if (jType.equals(dateType))
         	{
@@ -204,7 +214,10 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
         	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
         	{
         		return "Integer";
-        		
+        	}
+        	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
+        	{
+        		return "Double";
         	}
         	else if (jType.equals(dateType))
         	{
@@ -228,6 +241,15 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 	    return targetObjectType.isAssignableTo(emptyType);
     }
 	
+	protected void generateGetKeyRangeFactoryMethod(SourcePrinter srcWriter, String parentName)
+    {
+		srcWriter.println("public KeyRangeFactory<"+getKeyTypeName()+"> getKeyRangeFactory(){");
+		String keyRangeFatoryClassName = new KeyRangeFactoryProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, parentName).create();
+		srcWriter.println("return (KeyRangeFactory<"+getKeyTypeName()+">) new "+keyRangeFatoryClassName+"();");
+		srcWriter.println("}");
+		srcWriter.println();
+    }
+
 	protected void henerateGetCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String retrieveRequestVar)
     {
 	    srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");

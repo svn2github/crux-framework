@@ -50,7 +50,7 @@ public class IDBObjectStoreEvent extends JavaScriptObject
 		return new Date((long) getDoubleKey());
 	}
 
-	private native double getDoubleKey()/*-{
+	public final native double getDoubleKey()/*-{
 		return this.target.result;
 	}-*/;
 }

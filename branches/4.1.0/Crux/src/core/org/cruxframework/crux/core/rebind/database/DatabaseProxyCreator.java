@@ -25,6 +25,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.db.AbstractDatabase;
+import org.cruxframework.crux.core.client.db.DatabaseErrorHandler;
 import org.cruxframework.crux.core.client.db.ObjectStore;
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef;
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.Empty;
@@ -43,6 +44,7 @@ import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContextExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -62,6 +64,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
 	private DatabaseDef databaseMetadata;
 	private JClassType integerType;
+	private JClassType doubleType;
 	private JClassType stringType;
 	private JClassType emptyType;
 	private JClassType dateType;
@@ -71,6 +74,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		super(logger, context, baseIntf, true);
 		databaseMetadata = baseIntf.getAnnotation(DatabaseDef.class);
 		integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
+		doubleType = context.getTypeOracle().findType(Double.class.getCanonicalName());
 		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());
 		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
 		emptyType = context.getTypeOracle().findType(Empty.class.getCanonicalName());
@@ -84,6 +88,14 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    Set<String> added = new HashSet<String>();
 	    
 		srcWriter.println("public "+getProxySimpleName()+"(){");
+		srcWriter.println("this.name = "+EscapeUtils.quote(databaseMetadata.name())+";");
+		srcWriter.println("this.version =  "+databaseMetadata.version()+";");
+
+		if (!DatabaseDef.NoErrorHandler.class.isAssignableFrom(databaseMetadata.defaultErrorHandler()))
+		{
+			srcWriter.println("this.setDefaultErrorHandler((DatabaseErrorHandler)GWT.create("+databaseMetadata.defaultErrorHandler().getCanonicalName()+".class));");
+		}
+		
 		for (ObjectStoreDef objectStoreMetadata : objectStores)
         {
 			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
@@ -110,14 +122,6 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
-		srcWriter.println("public String getName(){");
-		srcWriter.println("return "+EscapeUtils.quote(databaseMetadata.name())+";");
-		srcWriter.println("}");
-		srcWriter.println();
-		srcWriter.println("public int getVersion(){");
-		srcWriter.println("return "+databaseMetadata.version()+";");
-		srcWriter.println("}");
-		srcWriter.println();
 	    srcWriter.println("protected String getObjectStoreName(Class<?> objectType){");
 	    srcWriter.println("return storeNames.get(objectType.getName().replace('$','.'));");
 	    srcWriter.println("}");
@@ -243,7 +247,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			{
 				generateObjectStoreCreation(srcWriter, objectStoreMetadata.keyPath(), objectStoreMetadata.autoIncrement(), objectStoreName, objectStoreVar);
 			}
-			else if (objectStoreTarget != null)
+			else if (objectStoreTarget != null && !objectStoreTarget.isAssignableTo(emptyType))
 			{
 				String[] keyPath = getKeyPath(objectStoreTarget);
 				if (keyPath == null || keyPath.length == 0)
@@ -546,6 +550,8 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	    return jType.equals(stringType) || 
 	    	jType.equals(integerType) || 
 	    	jType.equals(JPrimitiveType.INT) ||
+	    	jType.equals(doubleType) || 
+	    	jType.equals(JPrimitiveType.DOUBLE) ||
 	    	jType.equals(dateType);
     }
 	
@@ -578,8 +584,10 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			AbstractDatabase.class.getCanonicalName(), 
 			IDBObjectStore.class.getCanonicalName(),
 			IDBOpenDBRequest.class.getCanonicalName(),
+			DatabaseErrorHandler.class.getCanonicalName(),
 			ObjectStore.class.getCanonicalName(), 
-			StringUtils.class.getCanonicalName()
+			StringUtils.class.getCanonicalName(), 
+			GWT.class.getCanonicalName()
 		};
 	}
 

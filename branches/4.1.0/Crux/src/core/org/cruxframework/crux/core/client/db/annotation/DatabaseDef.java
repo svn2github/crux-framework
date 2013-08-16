@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cruxframework.crux.core.client.db.DatabaseErrorHandler;
+
 /**
  * Defines the database metadada. All Database interfaces must be annotated with 
  * this annotation to inform Crux the database structure.
@@ -31,15 +33,20 @@ public @interface DatabaseDef
 	/**
 	 * @return Database name.
 	 */
-	String name();
+	String name() default "";
 	/**
 	 * @return Database version.
 	 */
-	int version();
+	int version() default 1;
 	/**
 	 * @return Object stores metadata.
 	 */
 	ObjectStoreDef[] objectStores();
+	
+	/**
+	 * Set a defaultErrorHandler for database
+	 */
+	Class<? extends DatabaseErrorHandler> defaultErrorHandler() default NoErrorHandler.class;
 
 	/**
 	 * If this property is true, Crux will override any existent Object store or index when updating database.
@@ -80,4 +87,11 @@ public @interface DatabaseDef
 	}
 
 	public static class Empty{}
+	
+	public static class NoErrorHandler implements DatabaseErrorHandler
+	{
+        public void onError(String message){}
+        public void onError(String message, Throwable t){}
+	}
+
 }

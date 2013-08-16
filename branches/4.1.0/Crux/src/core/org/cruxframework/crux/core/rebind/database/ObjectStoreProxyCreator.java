@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
+import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
@@ -81,6 +82,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		generateOpenCursorKeyMethod(srcWriter);
 		generateOpenCursorKeyDirectionMethod(srcWriter);
 		generateGetIndexMethod(srcWriter);
+		generateGetKeyRangeFactoryMethod(srcWriter, objectStoreName);
 		if (hasCompositeKey())
 		{
 			generateGetNativeKeyMethod(srcWriter);
@@ -266,6 +268,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 				IDBObjectCursorRequest.class.getCanonicalName(), 
 				IDBCursorEvent.class.getCanonicalName(),
 				IDBErrorEvent.class.getCanonicalName(),
+				KeyRangeFactory.class.getCanonicalName(),
 				Cursor.class.getCanonicalName(), 
 				CursorDirection.class.getCanonicalName(), 
 				StringUtils.class.getCanonicalName()

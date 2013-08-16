@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteE
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
+import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -45,11 +46,49 @@ public abstract class AbstractDatabase implements Database
 	protected static Logger logger = Logger.getLogger(AbstractDatabase.class.getName());
 	protected IDBDatabase db = null;
 	protected DBMessages messages = GWT.create(DBMessages.class);
-	protected DatabaseErrorHandler errorHandler; 
+	protected DatabaseErrorHandler errorHandler;
+	protected String name;
+	protected int version; 
 
+	@Override
+	public String getName()
+	{
+	    return name;
+	}
+	
+	@Override
+	public void setName(String newName) throws DatabaseException
+	{
+		if (isOpen())
+		{
+			throw new DatabaseException(messages.databaseSetPropertyOnOpenDBError(getName()));
+		}
+		this.name = newName;
+	}
+	
+	@Override
+	public int getVersion()
+	{
+	    return version;
+	}
+	
+	@Override
+	public void setVersion(int newVersion) throws DatabaseException
+	{
+		if (isOpen())
+		{
+			throw new DatabaseException(messages.databaseSetPropertyOnOpenDBError(getName()));
+		}
+		this.version = newVersion;
+	}
+	
     @Override
 	public void open(final DatabaseCallback callback)
 	{
+		if (StringUtils.isEmpty(getName()))
+		{
+			throw new DatabaseException(messages.databaseInvalidNameDBError(getName()));
+		}
 		final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
 		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
 		{
@@ -152,6 +191,10 @@ public abstract class AbstractDatabase implements Database
     @Override
 	public void delete(final DatabaseCallback callback)
 	{
+		if (StringUtils.isEmpty(getName()))
+		{
+			throw new DatabaseException(messages.databaseInvalidNameDBError(getName()));
+		}
 		IDBDeleteDBRequest deleteDatabase = IDBFactory.get().deleteDatabase(getName());
 		deleteDatabase.onSuccess(new IDBDatabaseDeleteEvent.Handler()
 		{

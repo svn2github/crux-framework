@@ -67,4 +67,10 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("Error counting object store items. Error name [{0}].")
 	String objectStoreCountError(String name);
+
+	@DefaultMessage("Error changing database property for Database[{0}]. This operation can not be performed on an open database.")
+	String databaseSetPropertyOnOpenDBError(String name);
+
+	@DefaultMessage("Invalid database name [{0}].")
+	String databaseInvalidNameDBError(String name);
 }

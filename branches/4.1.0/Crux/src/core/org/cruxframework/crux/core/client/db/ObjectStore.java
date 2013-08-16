@@ -122,4 +122,10 @@ public interface ObjectStore<K, V>
 	 * @return
 	 */
 	<I> Index<K, I, V> getIndex(String name);
+	
+	/**
+	 * Retrieve a factory to create KeyRange objects used by this object store.
+	 * @return
+	 */
+	KeyRangeFactory<K> getKeyRangeFactory();
 }

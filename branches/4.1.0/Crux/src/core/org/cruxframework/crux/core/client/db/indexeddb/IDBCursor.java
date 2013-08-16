@@ -73,7 +73,7 @@ public class IDBCursor extends JavaScriptObject
 		return new Date((long)getDoubleKey());
 	}
 
-    private native double getDoubleKey() /*-{
+    public final  native double getDoubleKey() /*-{
 		return this.key;
 	}-*/;
 
@@ -94,7 +94,7 @@ public class IDBCursor extends JavaScriptObject
 		return new Date((long)getDoublePrimaryKey());
 	}
 
-    private native double getDoublePrimaryKey() /*-{
+    public final  native double getDoublePrimaryKey() /*-{
 		return this.primaryKey;
 	}-*/;
 
@@ -127,7 +127,7 @@ public class IDBCursor extends JavaScriptObject
 		continueCursor(key.getTime());
 	}
 
-    private native void continueCursor(double key) /*-{
+    public final  native void continueCursor(double key) /*-{
 	    this["continue"](key);
 	}-*/;
 	

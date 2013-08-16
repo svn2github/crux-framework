@@ -152,6 +152,12 @@ public abstract class Index<K, I, V>
 	 */
 	public abstract void openKeyCursor(KeyRange<I> keyRange, CursorDirection direction, DatabaseCursorCallback<I, K> callback);
 	
+	/**
+	 * Retrieve a factory to create KeyRange objects used by this index.
+	 * @return
+	 */	
+	public abstract KeyRangeFactory<I> getKeyRangeFactory();
+
 	private void handleCountCallback(final DatabaseCountCallback callback, IDBObjectCountRequest countRequest)
     {
 		if (callback != null || db.errorHandler != null)

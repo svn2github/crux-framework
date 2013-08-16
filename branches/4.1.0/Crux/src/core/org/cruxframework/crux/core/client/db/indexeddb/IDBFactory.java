@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -69,4 +71,14 @@ public class IDBFactory extends JavaScriptObject
     public final native int cmp(int o1, int o2) /*-{
 		return this.cmp(o1,o2);
 	}-*/;
+    
+    public final native int cmp(double o1, double o2) /*-{
+		return this.cmp(o1,o2);
+	}-*/;
+
+    public final int cmp(Date o1, Date o2)
+    {
+		return this.cmp(o1.getTime(),o2.getTime());
+	};
+
 }

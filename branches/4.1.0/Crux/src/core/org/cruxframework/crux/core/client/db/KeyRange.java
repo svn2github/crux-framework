@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class KeyRange<K>
+public class KeyRange<K>
 {
 	protected final IDBKeyRange idbKeyRange;
 
@@ -45,7 +45,4 @@ public abstract class KeyRange<K>
 	{
 		return idbKeyRange;
 	}
-
-	public abstract K getLower();
-	public abstract K getUpper();
 }

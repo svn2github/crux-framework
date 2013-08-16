@@ -135,7 +135,7 @@ public class IDBIndex extends JavaScriptObject
 	    return get(key.getTime());
 	}
 
-	private native IDBObjectRetrieveRequest get(double key) /*-{
+	public final native IDBObjectRetrieveRequest get(double key) /*-{
 	    return this.get(key);
 	}-*/;
 	
@@ -164,7 +164,7 @@ public class IDBIndex extends JavaScriptObject
 	    return getKey(key.getTime());
 	}
 
-	private native IDBObjectStoreRequest getKey(double key) /*-{
+	public final  native IDBObjectStoreRequest getKey(double key) /*-{
 	    return this.get(key);
 	}-*/;
 

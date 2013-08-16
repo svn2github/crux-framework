@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
 import org.cruxframework.crux.core.client.db.Index;
 import org.cruxframework.crux.core.client.db.KeyRange;
+import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex.IDBIndexCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
@@ -84,6 +85,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		generateOpenKeyCursorMethod(srcWriter);
 		generateOpenKeyCursorKeyMethod(srcWriter);
 		generateOpenKeyCursorKeyDirectionMethod(srcWriter);
+		generateGetKeyRangeFactoryMethod(srcWriter, indexName);
 		if (hasCompositeKey())
 		{
 			generateGetNativeKeyMethod(srcWriter);
@@ -260,6 +262,10 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println(callbackVar+".onSuccess(event.getIntKey());");
 		}
+		else if (keyTypeName.equals("Double"))
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getDoubleKey());");
+		}
 		else if (keyTypeName.equals(Date.class.getCanonicalName()))
 		{
 			srcWriter.println(callbackVar+".onSuccess(event.getDateKey());");
@@ -339,6 +345,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 				DatabaseCursorCallback.class.getCanonicalName(),
 				AbstractDatabase.class.getCanonicalName(),
 				KeyRange.class.getCanonicalName(), 
+				KeyRangeFactory.class.getCanonicalName(),
 				JSONObject.class.getCanonicalName(), 
 				CursorDirection.class.getCanonicalName()
 		};

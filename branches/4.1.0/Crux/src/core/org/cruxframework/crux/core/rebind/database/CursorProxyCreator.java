@@ -84,6 +84,10 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("return "+idbCursorVariable+".getIntKey();");
 		}
+		else if (keyTypeName.equals("Double"))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getDoubleKey();");
+		}
 		else if (keyTypeName.equals(Date.class.getCanonicalName()))
 		{
 			srcWriter.println("return "+idbCursorVariable+".getDateKey();");

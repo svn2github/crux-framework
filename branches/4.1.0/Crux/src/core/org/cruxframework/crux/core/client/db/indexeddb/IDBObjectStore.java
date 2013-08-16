@@ -129,7 +129,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return put(value,key.getTime());
 	}
 
-	private native IDBObjectStoreRequest put(JavaScriptObject value,double key) /*-{
+	public final  native IDBObjectStoreRequest put(JavaScriptObject value,double key) /*-{
 	    return this.put(value,key);
 	}-*/;
 
@@ -154,7 +154,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return add(value,key.getTime());
 	}
 
-	private native IDBObjectStoreRequest add(JavaScriptObject value,double key) /*-{
+	public final  native IDBObjectStoreRequest add(JavaScriptObject value,double key) /*-{
 	    return this.add(value,key);
 	}-*/;
 
@@ -179,7 +179,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return delete(key.getTime());
 	}
 
-	private native IDBRequest<IDBObjectStore> delete(double key) /*-{
+	public final  native IDBRequest<IDBObjectStore> delete(double key) /*-{
 	    return this["delete"](key);
 	}-*/;
 
@@ -200,7 +200,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return get(key.getTime());
 	}
 
-	private native IDBObjectRetrieveRequest get(double key) /*-{
+	public final  native IDBObjectRetrieveRequest get(double key) /*-{
 	    return this.get(key);
 	}-*/;
 

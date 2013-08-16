@@ -40,6 +40,18 @@ public interface Database
 	String getName(); 
 
 	/**
+	 * Change the database name. This operation can not be executed on an open database.
+	 * @return
+	 */
+	void setName(String newName) throws DatabaseException; 
+
+	/**
+	 * Change the database version. This operation can not be executed on an open database.
+	 * @return
+	 */
+	void setVersion(int newVersion) throws DatabaseException; 
+
+	/**
 	 * Retrieve the database version. This information is extracted from {@code @}DatabaseDef annotation
 	 * @return
 	 */
