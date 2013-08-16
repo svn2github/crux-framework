@@ -363,7 +363,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			}
 			else if (objectType.isAssignableTo(setType))
 			{
-				srcWriter.println(resultObjectVar+" = new "+HashSet.class.getCanonicalName()+"<"+targetObjectType.getParameterizedQualifiedSourceName()+">;");
+				srcWriter.println(resultObjectVar+" = new "+HashSet.class.getCanonicalName()+"<"+targetObjectType.getParameterizedQualifiedSourceName()+">();");
 			}
 			else if (objectType.isAssignableTo(mapType))
 			{
