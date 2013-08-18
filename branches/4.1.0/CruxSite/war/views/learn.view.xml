@@ -5,7 +5,6 @@
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 	xmlns:site="http://www.cruxframework.org/crux/site"
-	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:tmp="http://www.cruxframework.org/templates/siteTemplates" title="${siteMessages.siteTitle}" 
 	useResource="siteResources, communityResources">
 	
@@ -32,7 +31,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<xdev:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
+					<crux:storyboard id="communityStoryboard" width="100%" largeDeviceItemWidth="440px" largeDeviceItemHeight="240px" smallDeviceItemHeight="190px">
 						<tmp:siteReference href="http://blog.cruxframework.org" styleName="${siteResources.css.blockTypes}" siteTitle="Crux's Blog" 
 										   siteDescription="Visit our blog, there you can find helpful video tutorials, tips and news." 
 										   image="${communityResources.iconBlogger}" buttonLabel="Visit the Blog" id="blogSite"/>
@@ -45,7 +44,7 @@
 						<tmp:siteReference href="mailto:team@cruxframework.org" styleName="${siteResources.css.blockTypes2}" siteTitle="Crux's Team" 
 										   siteDescription="Our contact: team@cruxframework.org" 
 										   image="${communityResources.iconForum}" buttonLabel="Talk to us" id="talkSite"/>
-					</xdev:storyboard>
+					</crux:storyboard>
 				</gwt:widget>
 			</gwt:cell>
 		</gwt:row>

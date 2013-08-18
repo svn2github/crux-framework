@@ -20,8 +20,8 @@ import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
-import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.swapcontainer.SwapContainer;
 import org.cruxframework.cruxsite.client.SiteConstants;
 
@@ -112,11 +112,6 @@ public class SiteFaceLargeController extends DeviceAdaptiveController implements
 	{
 		menuBar = getChildWidget("menuBar");
 		viewContainer = getChildWidget("viewContainer");
-	}
-
-	@Override
-	protected void initWidgetDefaultStyleName()
-	{
 		setStyleName("site-SiteFace");
 	}
 }

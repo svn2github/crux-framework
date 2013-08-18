@@ -2,7 +2,7 @@
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:t="http://www.cruxframework.org/templates"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	library="siteTemplates">
 	<gwt:HTMLPanel id="#{id}Panel">
 		<div class="#{styleName}">
@@ -15,9 +15,9 @@
 			</div>
 			<div class="clear"></div>
 			<div class="blockText">
-				<xdev:anchor id="#{id}Btn" href="#{href}" target="_blank" preventDefaultTouchEvents="true" >
+				<crux:anchor id="#{id}Btn" href="#{href}" target="_blank" preventDefaultTouchEvents="true" >
 					<div class="refButton">#{buttonLabel}</div>
-				</xdev:anchor>
+				</crux:anchor>
 			</div>
 			<div class="risk"></div>
 		</div>

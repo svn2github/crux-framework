@@ -1,6 +1,6 @@
 <x:xdevice xmlns:x="http://www.cruxframework.org/xdevice"
            xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
+           xmlns:crux="http://www.cruxframework.org/crux/widgets"
            useController="tutorialLargeController">
 	<gwt:flexTable id="flexTlable" width="100%">
 		<gwt:row>
@@ -56,7 +56,7 @@
 		<gwt:row>
 			<gwt:cell>
 				<gwt:widget>
-					<xdev:button id="openTutorial" onSelect="tutorialLargeController.openTutorialClick" styleName="openTutorialButton" text="Go to Tutorial"/>
+					<crux:button id="openTutorial" onSelect="tutorialLargeController.openTutorialClick" styleName="openTutorialButton" text="Go to Tutorial"/>
 				</gwt:widget>
 			</gwt:cell>
 		</gwt:row>

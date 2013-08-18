@@ -2,7 +2,6 @@
 		   xmlns:x="http://www.cruxframework.org/xdevice"
            xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 		   xmlns:crux="http://www.cruxframework.org/crux/widgets"
-		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
            useController="siteFaceLargeController" useResource="siteResources">
 	<div id="canvas" style="height:100%">
 		<gwt:grid id="frame" styleName="${siteResources.css.frame}" cellSpacing="0" cellPadding="0">

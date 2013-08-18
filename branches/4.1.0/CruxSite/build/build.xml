@@ -144,6 +144,9 @@
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />
 
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y"/>
+			
 			<arg value="-draftCompile" />
 			
 			<!-- use these parameters if you want to modify GWT output settings

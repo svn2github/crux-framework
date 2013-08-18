@@ -3,9 +3,9 @@ package org.cruxframework.cruxsite.client.controller;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.ScreenWidgetAccessor;
 import org.cruxframework.crux.core.client.screen.views.BindRootView;
 import org.cruxframework.crux.core.client.screen.views.View;
-import org.cruxframework.crux.core.client.screen.views.ViewWrapper;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.cruxsite.client.widget.SiteFace;
 
@@ -119,7 +119,7 @@ public class MainPageController
 	}
 			
 	@BindRootView
-	public static interface MainScreen extends ViewWrapper
+	public static interface MainScreen extends ScreenWidgetAccessor
 	{
 		SiteFace site();
 	}

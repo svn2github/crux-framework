@@ -19,7 +19,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Template;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Templates;
-import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 
 /**
  * @author Thiago da Rosa de Bustamante

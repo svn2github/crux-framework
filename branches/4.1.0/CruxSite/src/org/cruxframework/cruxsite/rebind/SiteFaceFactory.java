@@ -16,8 +16,8 @@ import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagChildren;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagConstraints;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEventsDeclaration;
-import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
-import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.cruxsite.client.widget.SiteFace;
 
 /**

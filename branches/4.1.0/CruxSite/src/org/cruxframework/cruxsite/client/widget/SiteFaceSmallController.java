@@ -22,9 +22,9 @@ import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveC
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
 import org.cruxframework.crux.core.client.utils.StyleUtils;
-import org.cruxframework.crux.crossdevice.client.button.Button;
-import org.cruxframework.crux.crossdevice.client.event.SelectEvent;
-import org.cruxframework.crux.crossdevice.client.event.SelectHandler;
+import org.cruxframework.crux.widgets.client.button.Button;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
@@ -153,11 +153,6 @@ public class SiteFaceSmallController extends DeviceAdaptiveController implements
 		menu = getChildWidget("menu");
 		viewContainer = getChildWidget("viewContainer");
 		header = getChildWidget("header");
-	}
-
-	@Override
-	protected void initWidgetDefaultStyleName()
-	{
 		setStyleName("site-SiteFace");
 	}
 }

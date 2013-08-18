@@ -4,7 +4,6 @@
 	xmlns:core="http://www.cruxframework.org/crux" 
 	xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
-	xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
 	xmlns:site="http://www.cruxframework.org/crux/site"
 	title="Crux Framework - Download" useResource="siteResources" useController="downloadController">
 	<gwt:flexTable id="insideContentDown">
@@ -44,12 +43,12 @@
 						<gwt:row>
 							<gwt:cell verticalAlignment="top">
 								<gwt:widget>
-									<xdev:storyboard id="downloadBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" smallDeviceItemHeight="170px">
+									<crux:storyboard id="downloadBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" smallDeviceItemHeight="170px">
 										<gwt:flexTable id="downloadLinkPanel" cellSpacing="10">
 											<gwt:row>
 												<gwt:cell rowSpan="2">
 													<gwt:widget>
-														<xdev:button id="downloadButton" styleName="${siteResources.css.donwloadButton}" onSelect="downloadController.download" />
+														<crux:button id="downloadButton" styleName="${siteResources.css.donwloadButton}" onSelect="downloadController.download" />
 													</gwt:widget>
 												</gwt:cell>
 												<gwt:cell><gwt:html><h1>Crux Framework 4</h1></gwt:html></gwt:cell>
@@ -62,7 +61,7 @@
 													<gwt:widget>
 														<gwt:horizontalPanel id="olderVersionsLinkPanel" verticalAlignment="top">
 															<gwt:label styleName="${siteResources.css.shyText}" id="areYoulookingLabel" text="... or are you looking for"/>
-															<xdev:anchor styleName="${siteResources.css.shyLink}" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
+															<crux:anchor styleName="${siteResources.css.shyLink}" id="olderVersionsAnchor" text="older versions" href="http://goo.gl/dLD4J" target="downloadWindow"/>
 															<gwt:label styleName="${siteResources.css.shyText}" id="areYoulookingLabel2" text="?"/>
 														</gwt:horizontalPanel>
 													</gwt:widget>
@@ -80,7 +79,7 @@
 												</ul>
 											</gwt:HTML>
 										</gwt:verticalPanel>
-									</xdev:storyboard>
+									</crux:storyboard>
 								</gwt:widget>
 							</gwt:cell>
 						</gwt:row>

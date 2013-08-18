@@ -78,11 +78,6 @@ public class TutorialLargeController extends DeviceAdaptiveController implements
 		learnDescription = getChildWidget("learnDescription");
 		title = getChildWidget("title");
 		subtitle = getChildWidget("subtitle");;
-	}
-
-	@Override
-	protected void initWidgetDefaultStyleName()
-	{
 		setStyleName("site-Tutorial");
 	}
 

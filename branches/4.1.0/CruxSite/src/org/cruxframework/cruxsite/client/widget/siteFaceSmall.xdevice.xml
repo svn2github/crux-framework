@@ -2,16 +2,15 @@
 		   xmlns:x="http://www.cruxframework.org/xdevice"
            xmlns:gwt="http://www.cruxframework.org/crux/gwt"
 		   xmlns:crux="http://www.cruxframework.org/crux/widgets"
-		   xmlns:xdev="http://www.cruxframework.org/crux/crossDevice"
            useController="siteFaceSmallController" useResource="siteResources">
 	<gwt:flowPanel id="canvas" height="100%">
 		<gwt:flowPanel id="menu" styleName="${siteResources.css.headerMenu}"></gwt:flowPanel>
 		<gwt:flowPanel id="header" styleName="${siteResources.css.header}">
-			<xdev:button id="menuButton" styleName="${siteResources.css.buttonMenu}" onSelect="siteFaceSmallController.openOrCloseMenu" preventDefaultTouchEvents="true">
+			<crux:button id="menuButton" styleName="${siteResources.css.buttonMenu}" onSelect="siteFaceSmallController.openOrCloseMenu" preventDefaultTouchEvents="true">
 	        	<div></div>
 	            <div></div>
 	            <div></div>
-	        </xdev:button>
+	        </crux:button>
 	        <gwt:label id="cruxLabel" text="CRUX" styleName="${siteResources.css.cruxLabel}"/>
 	        <gwt:image id="cruxLogo" url="${siteResources.cruxLogo}" styleName="${siteResources.css.cruxLogo}"/>
 	    </gwt:flowPanel>
