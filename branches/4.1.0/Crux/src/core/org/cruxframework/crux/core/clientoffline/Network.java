@@ -94,9 +94,9 @@ public class Network implements HasNetworkHandlers
         }
 	}
 	
-	public static class HTML5Impl extends Impl
+	public static class SafariImpl extends Impl
 	{
-		public HTML5Impl()
+		public SafariImpl()
         {
 			createNetworkEventListeners(this);
         }
@@ -106,14 +106,14 @@ public class Network implements HasNetworkHandlers
 	        return navigator.onLine;
         }-*/;
 
-		private native void createNetworkEventListeners(HTML5Impl instance)/*-{
+		private native void createNetworkEventListeners(SafariImpl instance)/*-{
 	        $wnd.addEventListener('offline',
 	                function(event) {
-	                    instance.@org.cruxframework.crux.core.clientoffline.Network.HTML5Impl::fireOffLineEvent()();
+	                    instance.@org.cruxframework.crux.core.clientoffline.Network.SafariImpl::fireOffLineEvent()();
 	                }, false);
 	        $wnd.addEventListener('online',
 	                function(event) {
-	                    instance.@org.cruxframework.crux.core.clientoffline.Network.HTML5Impl::fireOnLineEvent()();
+	                    instance.@org.cruxframework.crux.core.clientoffline.Network.SafariImpl::fireOnLineEvent()();
 	                }, false);
 		}-*/;
 	}
@@ -141,7 +141,7 @@ public class Network implements HasNetworkHandlers
 
 	public static class CacheManifestImpl extends Impl
 	{
-		private boolean isOnLine = false;
+		private boolean isOnLine = getInitialState();
 		
 		public CacheManifestImpl()
         {
@@ -162,8 +162,16 @@ public class Network implements HasNetworkHandlers
                     }
 				}
 			});
+			ApplicationCacheHandler.updateCache();
         }
 		
+		private native boolean getInitialState()/*-{
+			if (navigator.onLine){
+				return true;
+			}
+	        return false;
+        }-*/;
+
 		@Override
         public boolean isOnLine()
 		{

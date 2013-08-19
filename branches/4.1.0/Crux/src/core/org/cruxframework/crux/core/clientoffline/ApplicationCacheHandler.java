@@ -49,7 +49,7 @@ public class ApplicationCacheHandler implements EntryPoint
     private OfflineConstants constants = GWT.create(OfflineConstants.class);
     private ApplicationCacheUIHandler uiHandler = GWT.create(ApplicationCacheUIHandler.class);
 
-    private boolean updating = false;
+    private static boolean updating = false;
 	private boolean obsolete = false;
 	private static FastList<ApplicationCacheEvent.Handler> cacheEventHandlers = null;
 
@@ -106,7 +106,10 @@ public class ApplicationCacheHandler implements EntryPoint
     {
     	try
     	{
-    		updateCacheNative();	
+        	if (!updating) 
+            {
+        		updateCacheNative();
+            }
     	}
     	catch (Exception e) 
     	{
@@ -180,10 +183,7 @@ public class ApplicationCacheHandler implements EntryPoint
                 {
                 	return false;
                 }
-            	if (!updating) 
-                {
-                    updateCache();
-                }
+                updateCache();
                 return true;
             }
         }, constants.updateCheckInterval());
