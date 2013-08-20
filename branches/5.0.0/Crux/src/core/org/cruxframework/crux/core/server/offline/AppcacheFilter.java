@@ -68,7 +68,6 @@ public class AppcacheFilter implements Filter
 			long dateModified = getDateModified(request);
 			if ((ifModifiedHeader == null) || isFileModified(ifModifiedHeader, dateModified))
 			{
-				response = new ResponseWrapper(response, request.getContextPath());
 				sendRequestedFile(chain, request, response, dateModified);
 			}
 			else
@@ -151,12 +150,11 @@ public class AppcacheFilter implements Filter
 	throws IOException, ServletException
 	{
 		String ae = request.getHeader(HttpHeaderNames.ACCEPT_ENCODING);
-		boolean gzipped = false;
 		if (ae != null && ae.indexOf("gzip") != -1) 
 		{        
 			response = new GZIPResponseWrapper(response);
-			gzipped = true;
 		}
+		response = new ResponseWrapper(response, request.getContextPath());
 
 		response.setContentType("text/cache-manifest");
 		response.setCharacterEncoding("UTF-8");
@@ -169,10 +167,7 @@ public class AppcacheFilter implements Filter
 			response.addDateHeader(HttpHeaderNames.LAST_MODIFIED, dateModified);
 		}
 		chain.doFilter(request, response);
-		if (gzipped)
-		{
-			((GZIPResponseWrapper)response).finishResponse();
-		}
+		((ResponseWrapper)response).finishResponse();
 	}
 
 	@Override
@@ -233,10 +228,32 @@ public class AppcacheFilter implements Filter
 		    fOutputStream.flush();
 		}
 		
+		public void finishResponse() 
+		{
+			try 
+			{
+				if (fWriter != null) 
+				{
+					fWriter.close();
+				} 
+				else 
+				{
+					if (fOutputStream != null) 
+					{
+						fOutputStream.close();
+					}
+				}
+			} 
+			catch (IOException e) 
+			{
+				//
+			}
+		}
+		
 		private byte[] modifyResponse(String input)
 		{
 			int indexContext = input.indexOf("/{context}");
-			if (indexContext > 0)
+			if (indexContext >= 0)
 			{
 				input = RegexpPatterns.REGEXP_CONTEXT.matcher(input).replaceAll(context);
 //				input = input.replace("/{context}", this.context);
