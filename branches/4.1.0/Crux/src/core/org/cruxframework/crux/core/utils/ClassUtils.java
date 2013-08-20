@@ -439,7 +439,7 @@ public class ClassUtils
 		}
 		else 
 		{
-        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName());
+        	throw new RuntimeException("Unable to determine property types for bean: " + baseRawType.getCanonicalName() + ". Type is not supported: " + propertyType);
 		}
 		
 	    return result;
