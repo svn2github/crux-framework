@@ -1,0 +1,128 @@
+HTML
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+BODY
+{
+	background-color: #CAD0D3;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+DIV, TD, LABEL, SPAN, INPUT, BUTTON
+{
+	font-size: 16px;
+	font-family:OpenSans,Verdana,Helvetica,Arial,sans-serif;
+}
+
+@external crux-StyledPanel, crux-StyledPanelOuter;
+.crux-StyledPanelOuter
+{
+	padding: 8px;
+	width: 100%;
+}
+.crux-StyledPanel
+{
+	border: solid 1px #FFFFFF;
+	border-radius: 2px !important;
+	background-image: -webkit-linear-gradient(top, #F0F0F0, #EAEAEA);
+	box-shadow: 0px 0px 10px #606060;
+}
+
+@external gwt-Label;
+.gwt-Label
+{
+	color: #1C5994;
+	text-shadow: 0px 1px #FFFFFF;
+}
+
+@external crux-Button;
+.crux-Button
+{
+	color: #FFFFFF;
+	background-image: -webkit-linear-gradient(#5D9AFF,rgba(93,154,255,1.0) 38%, #5891F0);
+	border: 1px solid rgba(45, 102, 195, 1);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+	border-radius: 2px;
+	min-height: 45px;
+	min-width: 100px;
+	-webkit-user-select: none;
+	padding: 8px 13px;
+}
+
+@external crux-FormDisplay, formEntryLabel, formEntryData;
+.crux-FormDisplay
+{
+	width: 100%;
+	padding: 8px;
+}
+.crux-FormDisplay .formEntryLabel
+{
+	padding-top: 5px;
+}
+.crux-FormDisplay .formEntryData
+{
+	padding-bottom: 15px;
+	padding-top: 5px;
+	box-shadow: 0px 1px 0px rgba(0,0,0,0.2), 0px 2px 0px rgba(255,255,255,0.6);
+}
+.crux-FormDisplay > tbody > tr:last-child > td
+{
+	box-shadow: none;
+}
+
+@external crux-MenuDisplay, menuEntry, menuSection;
+.crux-MenuDisplay
+{
+	padding: 5px;
+}
+.crux-MenuDisplay .menuEntry
+{
+	width: 100%;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-radius: 0px !important;
+	border-top: 0px;
+}
+.crux-MenuDisplay .menuSection
+{
+	margin-top: 15px;
+	color: #FFFFFF;
+	background-color: #606060;
+	text-shadow: 0 1px 0 #000000;
+	border-radius: 3px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px; 
+	-webkit-user-select: none;
+	padding: 12px;
+	text-align: center;
+	border: 1px solid #000000;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+@external gwt-TextBox;
+.gwt-TextBox
+{
+	height: 35px;
+	border: solid 1px rgba(0,0,0,.3);
+	width: 100%;
+	border-radius: 3px;
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;	
+}
+.gwt-TextBox:focus
+{
+	border-color: #66AFE9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+@external gwt-CheckBox;
+.gwt-CheckBox LABEL
+{
+	color: rgba(0,0,0,0.8);
+	text-shadow: 0px 1px #FFFFFF;
+}

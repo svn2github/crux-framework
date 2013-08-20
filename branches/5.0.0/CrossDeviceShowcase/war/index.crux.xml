@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:show="http://www.cruxframework.org/crux/showcase"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt">
+	
+	<head>
+		<title>Crux Framework - Cross-Device Showcase</title>
+		<meta name="fragment" content="!" />
+	</head>
+	
+	<body>
+		<script type="text/javascript" src="crossdeviceshowcase/crossdeviceshowcase.nocache.js"></script>
+
+		<c:screen useController="mainController" useView="**/views/**/*" 
+				  smallViewport="user-scalable=no, width=320" 
+				  largeViewport="user-scalable=no, width=device-width, height=device-height" 
+				  useResource="xStandardResources,showcaseResources" height="100%"/>
+
+		<show:menuDisplay id="menuDisplay">
+			<show:menuSection label="Elementos de Layout"/>
+			<show:menuEntry label="StyledPanel" targetView="styledPanel"/>
+			<show:menuEntry label="FormDisplay" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 3" targetView="formDisplay"/>
+			<show:menuSection label="Seção 2"/>
+			<show:menuEntry label="Exemplo 4" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 5" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 6" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 7" targetView="formDisplay"/>
+			<show:menuSection label="Seção 3"/>
+			<show:menuEntry label="Exemplo 8" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 9" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 10" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 11" targetView="formDisplay"/>
+			<show:menuEntry label="Exemplo 12" targetView="formDisplay"/>
+		</show:menuDisplay>
+	
+	</body>
+</html>

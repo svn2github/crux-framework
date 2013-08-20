@@ -1,0 +1,234 @@
+HTML
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+BODY
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+DIV, TD, LABEL, SPAN, INPUT, BUTTON
+{
+	font-size: 12px;
+	font-family:OpenSans,Verdana,Helvetica,Arial,sans-serif;
+}
+
+@external crux-StyledPanel, crux-StyledPanelOuter;
+.crux-StyledPanelOuter
+{
+	padding: 8px;
+	min-width: 400px;
+}
+.crux-StyledPanel
+{
+	display: block;
+	border: solid #EAEAEA 1px;
+	border-radius: 3px;
+	box-shadow: 0px 0px 10px rgba(90,90,90,0.1);
+	background-image: -webkit-linear-gradient(top,rgba(255,255,255,1)80%,rgba(240,240,240,0.3));
+	padding: 10px;
+}
+
+@external crux-Button;
+.crux-Button
+{
+	color: #FFFFFF;
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+	border-radius: 2px;
+	min-height: 32px;
+	min-width: 100px;
+	-webkit-user-select: none;
+	padding: 8px 13px;
+	outline: 0;
+	transition: background-image ease-in-out 0.15s;	
+}
+.crux-Button:hover
+{
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+}
+
+@external crux-FormDisplay, formEntryLabel, formEntryData;
+.crux-FormDisplay .formEntryData, .crux-FormDisplay .formEntryLabel
+{
+	padding-bottom: 5px;
+}
+
+@external crux-MenuDisplay, menuEntry, menuSection;
+.crux-MenuDisplay
+{
+	padding: 5px;
+}
+.crux-MenuDisplay .menuEntry
+{
+	width: 100%;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-radius: 0px !important;
+	border-top: 0px;
+	min-height: 30px;
+}
+.crux-MenuDisplay .menuSection
+{
+	color: #FFFFFF;
+	background-color: #606060;
+	text-shadow: 0 1px 0 #000000;
+	border-radius: 3px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px; 
+	-webkit-user-select: none;
+	padding: 6px;
+	text-align: center;
+	border: 1px solid #000000;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+.menuEntry~.menuSection 
+{
+	margin-top: 5px;
+}
+
+@external crux-TabContainer, crux-TabPanelBottom; 
+@external crux-TabBar, crux-TabBarItem, crux-TabBarItem-selected, flapLabel, flapCloseButton;
+@external crux-RollingPanelPreviousWrapper, crux-RollingPanelPreviousWrapper-disabled, crux-RollingPanelPrevious;
+@external crux-RollingPanelNextWrapper, crux-RollingPanelNextWrapper-disabled, crux-RollingPanelNext;
+@external crux-TabBarFirst-wrapper, crux-TabBarRest-wrapper;  
+.crux-TabContainer
+{
+	background-color: #606060;
+	border-radius: 3px;
+	box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.crux-TabBar
+{
+	height: 30px;
+}
+.crux-TabPanelBottom
+{
+	border-radius: 3px;
+	background-color: #FCFCFC;
+	height: 100%;
+}
+.crux-TabBarItem
+{
+	border: solid 1px #ddd;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom: 0px;
+	height: 25px;
+	opacity: 0.75;
+	background-color: #DDDDDD;
+	margin-left: 1px;
+	outline: 0px;
+	cursor: default;
+}
+.crux-TabBarItem-selected
+{
+	background-color: #FCFCFC;
+	opacity: 1;
+}
+.crux-TabBarItem .flapLabel
+{
+	color: #1C5994;
+	text-shadow: 0px 1px #FFFFFF;
+	padding-top: 2px;
+	cursor: default;
+}
+.flapCloseButton 
+{
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+	border-radius: 2px;
+	-webkit-user-select: none;
+	outline: 0;
+	transition: box-shadow ease-in-out 0.15s;	
+	height: 14px;
+	width: 14px;
+	margin-left: 5px;
+	margin-top: 2px;
+	text-align: center;
+}
+.flapCloseButton:before 
+{
+	content: 'X';
+	color: #FFFFFF;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	-webkit-user-select: none;
+	font-size: 10px;
+	padding-right: 1px;
+}
+.flapCloseButton:hover 
+{
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+}
+.crux-RollingPanelPreviousWrapper, .crux-RollingPanelNextWrapper 
+{
+	width: 25px;
+	height: 25px;
+}
+.crux-RollingPanelPrevious, .crux-RollingPanelNext
+{
+	height: 25px;
+	margin-top: 4px;
+	width: 24px;
+	color: #FFFFFF;
+	background-image: -webkit-linear-gradient(top,#3085B1,#3080A1);
+	border: 1px solid #206080;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	box-shadow: 0 1px 0 rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2);
+	text-align: center;
+	font-size: 12px;
+}
+.crux-RollingPanelPrevious
+{
+	border-top-left-radius: 4px;
+}
+.crux-RollingPanelNext
+{
+	border-top-right-radius: 4px;
+}
+.crux-RollingPanelPrevious:hover, .crux-RollingPanelNext:hover 
+{
+	background-image: -webkit-linear-gradient(#3198D1, #2188C1);
+}
+.crux-RollingPanelPreviousWrapper-disabled
+{
+	visibility: hidden;
+}
+.crux-RollingPanelNextWrapper-disabled
+{
+	visibility: hidden;
+}
+.crux-TabBarFirst-wrapper, .crux-TabBarRest-wrapper
+{
+	display: none;
+}
+
+@external gwt-TextBox;
+.gwt-TextBox
+{
+	height: 22px;
+	border: solid 1px rgba(0,0,0,.3);
+	width: 100%;
+	border-radius: 3px;
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;	
+}
+.gwt-TextBox:focus
+{
+	border-color: #66AFE9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+@external gwt-Label;
+.gwt-Label
+{
+	color: #1C5994;
+	text-shadow: 0px 1px #FFFFFF;
+}

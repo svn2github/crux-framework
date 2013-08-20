@@ -1,0 +1,67 @@
+<v:view 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:v="http://www.cruxframework.org/view" 
+	xmlns:core="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt"
+	xmlns:site="http://www.cruxframework.org/crux/site"
+	onLoad="rssController.onLoad" useController="rssController,bannerController" 
+	useResource="siteResources,homeResources" title="${siteMessages.siteTitle}">
+	
+	<gwt:grid id="contentAreas" styleName="${siteResources.css.contentAreas}" cellPadding="0" cellSpacing="0">
+		<gwt:row>
+			<gwt:cell styleName="${siteResources.css.contentLeft}"><gwt:html>.</gwt:html></gwt:cell>
+			<gwt:cell styleName="${siteResources.css.contentCenter}">
+				<gwt:widget>
+					<gwt:flexTable id="BannerAndNews" cellPadding="0" cellSpacing="0" styleName="${siteResources.css.bannerAndNews}">
+						<gwt:row>
+							<gwt:cell styleName="${siteResources.css.bannerArea}" colSpan="3">
+								<gwt:widget>
+									 <crux:promoBanner id="banner" largeBannersHeight="300px" smallBannersHeight="150px" width="100%" 
+									 				   transitionDuration="400" autoTransitionInterval="20000" styleName="${siteResources.css.promoBanner}">
+									 	<crux:banner image="${homeResources.bannerWhatIsCrux}" buttonLabel="${siteMessages.bannerActionLearnMore}" 
+									 				 title="${siteMessages.bannerWhatIsCruxTitle}" 
+									 				 text="${siteMessages.bannerWhatIsCrux}" onSelect="bannerController.onClickBannerJava"/>
+									 	<crux:banner image="${homeResources.bannerCrossDevice}" 
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerCrossDeviceTitle}" 
+									 				 text="${siteMessages.bannerCrossDeviceText}" onSelect="bannerController.onClickBannerCrossDevice"/>
+									 	<crux:banner image="${homeResources.bannerFast}" 
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerFastTitle}" 
+									 				 text="${siteMessages.bannerFastText}" onSelect="bannerController.onClickBannerFast"/>
+									 	<crux:banner image="${homeResources.bannerSocial}" 
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerSocialTitle}" 
+									 				 text="${siteMessages.bannerSocialText}" styleName="longText" onSelect="bannerController.onClickBannerSocial"/>
+									 	<crux:banner image="${homeResources.bannerJava}" 
+									 				 buttonLabel="${siteMessages.bannerActionLearnMore}" title="${siteMessages.bannerJavaTitle}" 
+									 				 text="${siteMessages.bannerJavaText}" onSelect="bannerController.onClickBannerJava"/>
+									</crux:promoBanner>
+								</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell styleName="${siteResources.css.contentHorizontalSeparator}" colSpan="3">
+								<gwt:text>.</gwt:text>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell colSpan="3" height="50px">
+								<gwt:text></gwt:text>
+							</gwt:cell>
+						</gwt:row>
+						<gwt:row>
+							<gwt:cell colSpan="3">
+								<gwt:widget>
+									<crux:storyboard id="newsBoard" largeDeviceItemWidth="420px" largeDeviceItemHeight="220px" styleName="${siteResources.css.newsBoard}" smallDeviceItemHeight="240px">
+										<site:rssPanel id="blogFeeds" title="${siteMessages.blogFeedsTitle}" maxTitleSize="45" styleName="${siteResources.css.rssPanel}"/>
+										<site:rssPanel id="projectFeeds" title="${siteMessages.projectFeedsTitle}" maxTitleSize="45" styleName="${siteResources.css.rssPanel}"/>
+									</crux:storyboard>
+								</gwt:widget>
+							</gwt:cell>
+						</gwt:row>
+					</gwt:flexTable>
+				</gwt:widget>														
+			</gwt:cell>
+			<gwt:cell styleName="${siteResources.css.contentRight}"><gwt:html>.</gwt:html></gwt:cell>
+		</gwt:row>
+	</gwt:grid>	
+</v:view>
