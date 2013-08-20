@@ -24,7 +24,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.json.client.JSONObject;
@@ -40,7 +40,7 @@ public class CursorProxyCreator extends AbstractKeyValueProxyCreator
 	private String idbCursorVariable;
 	private final String cursorName;
 
-	public CursorProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, String cursorName)
+	public CursorProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, String cursorName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.cursorName = cursorName;

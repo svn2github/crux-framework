@@ -24,7 +24,7 @@ import org.cruxframework.crux.core.server.rest.annotation.QueryParam;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -35,7 +35,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
  */
 class QueryParameterHandler extends AbstractParameterHelper
 {
-	public QueryParameterHandler(GeneratorContextExt context)
+	public QueryParameterHandler(GeneratorContext context)
     {
 		super(context);
     }

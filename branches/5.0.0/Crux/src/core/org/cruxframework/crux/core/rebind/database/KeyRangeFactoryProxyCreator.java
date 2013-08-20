@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -36,7 +36,7 @@ public class KeyRangeFactoryProxyCreator extends AbstractKeyValueProxyCreator
 	private JClassType keyRangeType;
  	private String parentName;
 
-	public KeyRangeFactoryProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
+	public KeyRangeFactoryProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
 			String[] keyPath, String parentName)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);

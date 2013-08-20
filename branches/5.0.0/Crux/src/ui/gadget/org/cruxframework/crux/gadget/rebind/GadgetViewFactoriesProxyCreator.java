@@ -18,7 +18,7 @@ package org.cruxframework.crux.gadget.rebind;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoriesProxyCreator;
 import org.cruxframework.crux.core.server.Environment;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 
 /**
@@ -28,7 +28,7 @@ import com.google.gwt.core.ext.TreeLogger;
 public class GadgetViewFactoriesProxyCreator extends ViewFactoriesProxyCreator
 {
 
-	public GadgetViewFactoriesProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public GadgetViewFactoriesProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context);
     }

@@ -35,7 +35,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveE
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.json.client.JSONObject;
@@ -53,7 +53,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 	private String dbVariable;
 	private String[] objectStoreKeyPath;
 
-	public IndexProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
+	public IndexProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, 
 			String[] keyPath, String indexName, String[] objectStoreKeyPath)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);

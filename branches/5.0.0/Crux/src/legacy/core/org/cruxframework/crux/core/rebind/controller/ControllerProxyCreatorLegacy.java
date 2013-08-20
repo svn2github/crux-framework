@@ -49,7 +49,7 @@ import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreato
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -92,7 +92,7 @@ public class ControllerProxyCreatorLegacy extends AbstractInvocableProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public ControllerProxyCreatorLegacy(TreeLogger logger, GeneratorContextExt context, JClassType controllerClass)
+	public ControllerProxyCreatorLegacy(TreeLogger logger, GeneratorContext context, JClassType controllerClass)
 	{
 		super(logger, context, getCrossDocumentInterface(logger, context, controllerClass), controllerClass);
 		this.controllerClass = controllerClass;

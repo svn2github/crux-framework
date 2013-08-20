@@ -18,7 +18,7 @@ package org.cruxframework.crux.gadget.rebind;
 import org.cruxframework.crux.core.rebind.AbstractGenerator;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
@@ -31,7 +31,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 public class GadgetViewFactoryGenerator extends AbstractGenerator
 {
 	@Override
-    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf)
+    protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf)
     {
 	    return new GadgetViewFactoriesProxyCreator(logger, ctx);
     }

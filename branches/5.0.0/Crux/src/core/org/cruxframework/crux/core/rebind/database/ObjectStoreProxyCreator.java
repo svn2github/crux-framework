@@ -35,7 +35,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.database.DatabaseProxyCreator.IndexData;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.json.client.JSONObject;
@@ -52,7 +52,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	private String dbVariable;
 	private final Set<IndexData> indexes;
 
-	public ObjectStoreProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
+	public ObjectStoreProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath, Set<IndexData> indexes)
 	{
 		super(context, logger, targetObjectType, objectStoreName, keyPath);
 		this.indexes = indexes;

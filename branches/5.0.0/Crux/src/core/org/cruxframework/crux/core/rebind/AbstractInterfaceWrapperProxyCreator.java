@@ -35,13 +35,13 @@ import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.development.ViewTesterScreen;
 
 import com.google.gwt.core.ext.BadPropertyValueException;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.CachedGeneratorResult;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JRealClassType;
-import com.google.gwt.dev.javac.rebind.CachedRebindResult;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -57,7 +57,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	private boolean cacheable;
 	private boolean cacheableVersionFound;
 
-	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)
+	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf, boolean cacheable)
     {
 	    super(logger, context);
 		this.baseIntf = baseIntf;
@@ -276,7 +276,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 */
 	protected boolean findCacheableImplementationAndMarkForReuseIfAvailable()
 	{
-		CachedRebindResult lastResult = context.getCachedGeneratorResult();
+		CachedGeneratorResult lastResult = context.getCachedGeneratorResult();
 		if (lastResult == null || !context.isGeneratorResultCachingEnabled())
 		{
 			return false;
@@ -300,7 +300,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 
 			if (lastModified != 0L && lastModified < lastResult.getTimeGenerated())
 			{
-				return context.reuseTypeFromCacheIfAvailable(proxyName);
+				return context.tryReuseTypeFromCache(proxyName);
 			}
 		}
 		catch (RuntimeException ex)
@@ -312,7 +312,6 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 		return false;
 	}
 	
-	@Override
 	protected boolean isCacheable()
 	{
 		return cacheable;

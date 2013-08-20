@@ -21,9 +21,9 @@ import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.rpc.CruxProxyCreator;
 import org.cruxframework.crux.gadget.util.HangoutUtils;
 
-
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.RebindMode;
+import com.google.gwt.core.ext.RebindResult;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -62,11 +62,12 @@ public class CruxGadgetProxyCreator extends CruxProxyCreator
 	 * @see com.google.gwt.user.rebind.rpc.ProxyCreator#create(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.GeneratorContext)
 	 */
 	@Override
-	public String create(TreeLogger logger, GeneratorContextExt context)
+	public RebindResult create(TreeLogger logger, GeneratorContext context)
 			throws UnableToCompleteException
 	{
 		this.logger = logger;
-		String cruxServiceTypeName = super.create(logger, context);
+		RebindResult result = super.create(logger, context);
+		String cruxServiceTypeName = result.getResultTypeName();
 		
 		return createGadgetWrapper(context, cruxServiceTypeName);
 	}
@@ -78,21 +79,21 @@ public class CruxGadgetProxyCreator extends CruxProxyCreator
 	 * @return
 	 * @throws UnableToCompleteException 
 	 */
-	private String createGadgetWrapper(GeneratorContext context, String cruxServiceTypeName) throws UnableToCompleteException
+	private RebindResult createGadgetWrapper(GeneratorContext context, String cruxServiceTypeName) throws UnableToCompleteException
 	{
 		SourceWriter srcWriter = getSourceWriter(logger, context, cruxServiceTypeName);
 
 		String gadgetWrapperName = getGadgetProxyQualifiedName();
 		if (srcWriter == null) 
 		{
-			return gadgetWrapperName;
+			return new RebindResult(RebindMode.USE_EXISTING, gadgetWrapperName);
 		}
 
 		generateGadgetProxyContructor(srcWriter);
 
 	    srcWriter.commit(logger);
 	    
-		return gadgetWrapperName;
+		return new RebindResult(RebindMode.USE_ALL_NEW_WITH_NO_CACHING, gadgetWrapperName);
 	}
 	
 	/**

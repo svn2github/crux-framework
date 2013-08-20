@@ -14,6 +14,5 @@
 	<classpathentry kind="lib" path="lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="lib" path="lib/crux-dev-deps.jar"/>
 	<classpathentry kind="lib" path="lib/jgroups-3.2.9.Final.jar"/>
-	<classpathentry kind="lib" path="lib/tools-jdk-1.7.0.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

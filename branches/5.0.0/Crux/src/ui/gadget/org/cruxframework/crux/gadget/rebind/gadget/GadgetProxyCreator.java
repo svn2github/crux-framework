@@ -32,7 +32,7 @@ import org.cruxframework.crux.gadget.linker.GadgetManifestGenerator;
 import org.cruxframework.crux.gadget.rebind.gwt.GadgetUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.user.client.Window;
 
@@ -50,7 +50,7 @@ public class GadgetProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public GadgetProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public GadgetProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context, context.getTypeOracle().findType(Gadget.class.getCanonicalName()), true);
 	    if (!cacheableVersionFound())

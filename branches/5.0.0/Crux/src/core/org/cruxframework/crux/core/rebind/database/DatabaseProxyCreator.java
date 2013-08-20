@@ -45,7 +45,7 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -69,7 +69,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private JClassType emptyType;
 	private JClassType dateType;
 
-	public DatabaseProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public DatabaseProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		databaseMetadata = baseIntf.getAnnotation(DatabaseDef.class);

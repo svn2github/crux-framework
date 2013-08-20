@@ -34,7 +34,7 @@ import com.google.gwt.core.client.GwtScriptOnly;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
@@ -116,7 +116,7 @@ public class TypeSerializerCreator {
     }
   }
 
-  private final GeneratorContextExt context;
+  private final GeneratorContext context;
 
   private final SerializableTypeOracle deserializationOracle;
 
@@ -139,7 +139,7 @@ public class TypeSerializerCreator {
   private final Map<JType, String> typeStrings = new IdentityHashMap<JType, String>();
 
   public TypeSerializerCreator(TreeLogger logger, SerializableTypeOracle serializationOracle,
-      SerializableTypeOracle deserializationOracle, GeneratorContextExt context,
+      SerializableTypeOracle deserializationOracle, GeneratorContext context,
       String typeSerializerClassName, String typeSerializerSimpleName)
       throws UnableToCompleteException {
     this.context = context;
@@ -232,7 +232,7 @@ public class TypeSerializerCreator {
    * Create a field serializer for a type if it does not have a custom
    * serializer.
    */
-  private void createFieldSerializer(TreeLogger logger, GeneratorContextExt ctx, JType type) {
+  private void createFieldSerializer(TreeLogger logger, GeneratorContext ctx, JType type) {
     Event event = SpeedTracerLogger.start(CompilerEventType.GENERATOR_RPC_FIELD_SERIALIZER);
     try {
       assert (type != null);
@@ -280,7 +280,7 @@ public class TypeSerializerCreator {
   /*
    * Create all of the necessary field serializers.
    */
-  private void createFieldSerializers(TreeLogger logger, GeneratorContextExt ctx) {
+  private void createFieldSerializers(TreeLogger logger, GeneratorContext ctx) {
     JType[] types = getSerializableTypes();
     int typeCount = types.length;
     for (int typeIndex = 0; typeIndex < typeCount; ++typeIndex) {
@@ -297,7 +297,7 @@ public class TypeSerializerCreator {
    * return false.
    */
   private boolean findCacheableFieldSerializerAndMarkForReuseIfAvailable(TreeLogger logger,
-      GeneratorContextExt ctx, JType type) {
+      GeneratorContext ctx, JType type) {
 
     CachedRebindResult lastResult = ctx.getCachedGeneratorResult();
     if (lastResult == null || !ctx.isGeneratorResultCachingEnabled()) {
@@ -379,7 +379,7 @@ public class TypeSerializerCreator {
     return serializableTypes;
   }
 
-  private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContextExt ctx) {
+  private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContext ctx) {
     String name[] = getPackageAndClassName(typeSerializerClassName);
     String packageName = name[0];
     String className = name[1];

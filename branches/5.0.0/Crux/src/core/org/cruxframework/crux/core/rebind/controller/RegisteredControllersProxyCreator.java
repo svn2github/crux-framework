@@ -36,7 +36,7 @@ import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
@@ -63,7 +63,7 @@ public class RegisteredControllersProxyCreator extends AbstractInterfaceWrapperP
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String module, String iocContainerClassName, String device)
+	public RegisteredControllersProxyCreator(TreeLogger logger, GeneratorContext context, View view, String module, String iocContainerClassName, String device)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredControllers.class.getCanonicalName()), false);
 		this.view = view;

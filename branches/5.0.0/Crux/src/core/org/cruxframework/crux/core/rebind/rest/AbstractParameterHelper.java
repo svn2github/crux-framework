@@ -21,7 +21,7 @@ import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 
@@ -34,7 +34,7 @@ abstract class AbstractParameterHelper
 	protected JClassType stringType;
 	protected JClassType dateType;
 	
-	public AbstractParameterHelper(GeneratorContextExt context)
+	public AbstractParameterHelper(GeneratorContext context)
     {
 		stringType = context.getTypeOracle().findType(String.class.getCanonicalName());
 		dateType = context.getTypeOracle().findType(Date.class.getCanonicalName());

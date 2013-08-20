@@ -30,7 +30,7 @@ import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGenerato
 import org.cruxframework.crux.core.rebind.screen.parameter.ParameterBindGeneratorInitializer;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -52,7 +52,7 @@ public abstract class AbstractInvocableProxyCreator extends AbstractSerializable
 {
 	protected JClassType invocableClassType;
 	
-	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType, JClassType invocableClassType)
+	public AbstractInvocableProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType, JClassType invocableClassType)
     {
 	    super(logger, context, baseProxyType);
 	    this.invocableClassType = invocableClassType;

@@ -19,7 +19,7 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.config.CruxClientConfigProxyCreator;
 import org.cruxframework.crux.module.CruxModuleHandler;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 
 /**
@@ -28,7 +28,7 @@ import com.google.gwt.core.ext.TreeLogger;
  */
 public class ConfigProxyCreator extends CruxClientConfigProxyCreator
 {
-	public ConfigProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public ConfigProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context);
     }

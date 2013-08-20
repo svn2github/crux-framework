@@ -15,23 +15,30 @@
  */
 package org.cruxframework.crux.core.rebind;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
-import com.google.gwt.core.ext.GeneratorExt;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.IncrementalGenerator;
+import com.google.gwt.core.ext.RebindMode;
+import com.google.gwt.core.ext.RebindResult;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.dev.javac.rebind.RebindResult;
-import com.google.gwt.dev.javac.rebind.RebindStatus;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractGenerator extends GeneratorExt
+public abstract class AbstractGenerator extends IncrementalGenerator
 {
+
 	@Override
-	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContextExt context, String typeName) throws UnableToCompleteException
+	public long getVersionId() 
+	{
+		return 1L;
+	}
+	
+	@Override
+	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException
 	{
 		TypeOracle typeOracle = context.getTypeOracle();
 		assert (typeOracle != null);
@@ -47,15 +54,15 @@ public abstract class AbstractGenerator extends GeneratorExt
 		String returnType = proxy.create();
 		if (returnType == null)
 		{
-		    return new RebindResult(RebindStatus.USE_EXISTING, typeName);
+		    return new RebindResult(RebindMode.USE_EXISTING, typeName);
 		}
 		else if (proxy.isCacheable())
 		{
-		    return new RebindResult(RebindStatus.USE_PARTIAL_CACHED, returnType);
+		    return new RebindResult(RebindMode.USE_PARTIAL_CACHED, returnType);
 		}
 		else
 		{
-		    return new RebindResult(RebindStatus.USE_ALL_NEW_WITH_NO_CACHING, returnType);
+		    return new RebindResult(RebindMode.USE_ALL_NEW_WITH_NO_CACHING, returnType);
 		}
 	}
 	
@@ -66,5 +73,5 @@ public abstract class AbstractGenerator extends GeneratorExt
 	 * @return
 	 * @throws UnableToCompleteException 
 	 */
-	protected abstract AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContextExt ctx, JClassType baseIntf) throws UnableToCompleteException;
+	protected abstract AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf) throws UnableToCompleteException;
 }

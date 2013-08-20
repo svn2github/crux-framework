@@ -15,8 +15,12 @@
  */
 package org.cruxframework.crux.core.server.offline;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,10 +30,12 @@ import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.server.http.GZIPResponseWrapper;
@@ -38,6 +44,7 @@ import org.cruxframework.crux.core.server.rest.util.DateUtil;
 import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.server.rest.util.HttpResponseCodes;
 import org.cruxframework.crux.core.server.rest.util.header.CacheControlHeaderParser;
+import org.cruxframework.crux.core.utils.RegexpPatterns;
 import org.cruxframework.crux.core.utils.StreamUtils;
 
 /**
@@ -54,12 +61,14 @@ public class AppcacheFilter implements Filter
 	{
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
+
 		if (Environment.isProduction())
 		{
 			String ifModifiedHeader = request.getHeader(HttpHeaderNames.IF_MODIFIED_SINCE);
 			long dateModified = getDateModified(request);
 			if ((ifModifiedHeader == null) || isFileModified(ifModifiedHeader, dateModified))
 			{
+				response = new ResponseWrapper(response, request.getContextPath());
 				sendRequestedFile(chain, request, response, dateModified);
 			}
 			else
@@ -69,6 +78,7 @@ public class AppcacheFilter implements Filter
 		}
 		else
 		{
+			response = new ResponseWrapper(response, request.getContextPath());
 			response.setContentType("text/cache-manifest");
 			response.setCharacterEncoding("UTF-8");
 			chain.doFilter(req, resp);
@@ -174,5 +184,115 @@ public class AppcacheFilter implements Filter
 	@Override
 	public void destroy()
 	{
+	}
+	
+	/**
+	 * 
+	 * @author Thiago da Rosa de Bustamante
+	 *
+	 */
+	private static class ResponseWrapper extends HttpServletResponseWrapper
+	{
+		private PrintWriter fWriter; 
+		private ModifiedOutputStream fOutputStream;
+		private boolean fWriterReturned;
+		private boolean fOutputStreamReturned;
+		private final String context;
+
+		public ResponseWrapper(HttpServletResponse response, String context) throws IOException
+        {
+	        super(response);
+			this.context = context;
+	        fOutputStream = new ModifiedOutputStream(response.getOutputStream());
+	        fWriter = new PrintWriter(new OutputStreamWriter(fOutputStream, "UTF-8"));
+        }
+		
+		public final ServletOutputStream getOutputStream() 
+		{
+			if ( fWriterReturned ) 
+			{
+				throw new IllegalStateException();
+			}
+			fOutputStreamReturned = true;
+			return fOutputStream;
+		}
+		
+		public final PrintWriter getWriter() 
+		{
+			if ( fOutputStreamReturned ) 
+			{
+				throw new IllegalStateException();
+			}
+			fWriterReturned = true;
+			return fWriter;
+		}
+
+		@Override
+		public void flushBuffer() throws IOException
+		{
+		    fOutputStream.flush();
+		}
+		
+		private byte[] modifyResponse(String input)
+		{
+			int indexContext = input.indexOf("/{context}");
+			if (indexContext > 0)
+			{
+				input = RegexpPatterns.REGEXP_CONTEXT.matcher(input).replaceAll(context);
+//				input = input.replace("/{context}", this.context);
+			}
+			
+			return input.getBytes(Charset.forName("UTF-8"));
+		}
+
+		private class ModifiedOutputStream extends ServletOutputStream 
+		{
+			private ServletOutputStream fServletOutputStream;
+			private ByteArrayOutputStream fBuffer;
+			private boolean fIsClosed = false;
+
+			public ModifiedOutputStream(ServletOutputStream aOutputStream) 
+			{
+				fServletOutputStream = aOutputStream;
+				fBuffer = new ByteArrayOutputStream();
+			}
+			
+			public void write(int aByte) throws IOException
+			{
+				fBuffer.write(aByte) ;
+				if (aByte == '\n')
+				{
+					processStream();
+					fBuffer.reset();
+				}
+			}
+			
+			public void close() throws IOException 
+			{
+				if ( !fIsClosed )
+				{
+					processStream();
+					fServletOutputStream.close();
+					fIsClosed = true;
+				}
+			}
+			
+			public void flush() throws IOException 
+			{
+				if ( fBuffer.size() != 0 )
+				{
+					if ( !fIsClosed ) 
+					{
+						processStream();
+						fBuffer.reset();
+					}
+				}
+			}
+			
+			public void processStream() throws IOException 
+			{
+				fServletOutputStream.write(modifyResponse(fBuffer.toString()));
+			}
+		}
 	}
 }

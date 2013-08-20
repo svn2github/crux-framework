@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.core.rebind;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -26,12 +26,12 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
  */
 public abstract class AbstractWrapperProxyCreator extends AbstractInterfaceWrapperProxyCreator
 {
-	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
     {
 	    this(logger, context, baseIntf, true);
     }
 
-	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf, boolean cacheable)
+	public AbstractWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf, boolean cacheable)
     {
 	    super(logger, context, baseIntf, cacheable);
     }

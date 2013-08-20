@@ -24,7 +24,7 @@ import org.cruxframework.crux.core.rebind.crossdocument.gwt.SerializationUtils;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.Shared;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeSerializerCreator;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -54,7 +54,7 @@ public class WizardDataSerializerProxyCreator extends CrossDocumentProxyCreator
 	 * @param context
 	 * @param baseProxyType
 	 */
-	public WizardDataSerializerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseProxyType)
+	public WizardDataSerializerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType)
 	{
 		super(logger, context, baseProxyType);
 	}

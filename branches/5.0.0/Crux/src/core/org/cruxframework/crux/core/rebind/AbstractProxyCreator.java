@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
@@ -36,7 +36,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public abstract class AbstractProxyCreator
 {
-	protected GeneratorContextExt context;
+	protected GeneratorContext context;
 	protected TreeLogger logger;
 
 	/**
@@ -44,11 +44,16 @@ public abstract class AbstractProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public AbstractProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public AbstractProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 		this.logger = logger;
 		this.context = context;
     }
+	
+	protected boolean isAlreadyGenerated(String className)
+	{
+		return context.getTypeOracle().findType(className) != null;
+	}
 	
 	/**
 	 * Creates the proxy.
@@ -58,10 +63,15 @@ public abstract class AbstractProxyCreator
 	 */
 	public String create() throws CruxGeneratorException
 	{
+		String className = getProxyQualifiedName();
+		if (isAlreadyGenerated(className))
+		{
+			return className;
+		}
 		SourcePrinter printer = getSourcePrinter();
 		if (printer == null)
 		{
-			return getProxyQualifiedName();
+			return className;
 		}
 
 		generateSubTypes(printer);
@@ -70,7 +80,7 @@ public abstract class AbstractProxyCreator
 		generateProxyFields(printer);
 
 		printer.commit();
-		return getProxyQualifiedName();
+		return className;
 	}
 
 	/**

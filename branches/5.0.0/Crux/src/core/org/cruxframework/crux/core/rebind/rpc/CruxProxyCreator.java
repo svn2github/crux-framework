@@ -31,7 +31,8 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.RebindMode;
+import com.google.gwt.core.ext.RebindResult;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -79,11 +80,13 @@ public class CruxProxyCreator extends ProxyCreator
 	 * @see com.google.gwt.user.rebind.rpc.ProxyCreator#create(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.GeneratorContext)
 	 */
 	@Override
-	public String create(TreeLogger logger, GeneratorContextExt context)
+	public RebindResult create(TreeLogger logger, GeneratorContext context)
 			throws UnableToCompleteException
 	{
 		this.logger = logger;
-		String asyncServiceTypeName = super.create(logger, context);
+		RebindResult result = super.create(logger, context);
+		
+		String asyncServiceTypeName = result.getResultTypeName();
 		
 		return createAsyncWrapper(context, asyncServiceTypeName);
 	}
@@ -120,6 +123,11 @@ public class CruxProxyCreator extends ProxyCreator
 		return ret;
 	}
 
+	private boolean checkAlreadyGenerated(GeneratorContext context, String className)
+	{
+		return context.getTypeOracle().findType(className) != null;
+	}
+
 	/**
 	 * @param logger
 	 * @param context
@@ -127,15 +135,20 @@ public class CruxProxyCreator extends ProxyCreator
 	 * @return
 	 * @throws UnableToCompleteException 
 	 */
-	private String createAsyncWrapper(GeneratorContext context, String asyncServiceTypeName) throws UnableToCompleteException
+	private RebindResult createAsyncWrapper(GeneratorContext context, String asyncServiceTypeName) throws UnableToCompleteException
 	{
 		JClassType serviceAsync = context.getTypeOracle().findType(serviceIntf.getQualifiedSourceName() + "Async");
-		SourceWriter srcWriter = getSourceWriter(logger, context, asyncServiceTypeName);
-
 		String asyncWrapperName = getProxyWrapperQualifiedName();
-		if (srcWriter == null) 
+
+		if (checkAlreadyGenerated(context, asyncWrapperName))
 		{
-			return asyncWrapperName;
+			return new RebindResult(RebindMode.USE_EXISTING, asyncWrapperName);
+		}
+
+		SourceWriter srcWriter = getSourceWriter(logger, context, asyncServiceTypeName, asyncWrapperName);
+	    if (srcWriter == null) 
+		{
+			return new RebindResult(RebindMode.USE_EXISTING, asyncWrapperName);
 		}
 
 		generateWrapperProxyFields(srcWriter, asyncServiceTypeName);
@@ -157,7 +170,7 @@ public class CruxProxyCreator extends ProxyCreator
 		
 	    srcWriter.commit(logger);
 	    
-		return asyncWrapperName;
+	    return new RebindResult(RebindMode.USE_ALL_NEW_WITH_NO_CACHING, asyncWrapperName);
 	}
 
 	/**
@@ -563,9 +576,9 @@ public class CruxProxyCreator extends ProxyCreator
 	 * @param asyncServiceName 
 	 * @return
 	 */
-	private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContext ctx, String asyncServiceName) 
+	private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContext ctx, String asyncServiceName, String asyncWrapperName) 
 	{
-		String name[] = getPackageAndClassName(getProxyWrapperQualifiedName());
+		String name[] = getPackageAndClassName(asyncWrapperName);
 		String packageName = name[0];
 		String className = name[1];
 		PrintWriter printWriter = ctx.tryCreate(logger, packageName, className);

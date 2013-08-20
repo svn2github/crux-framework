@@ -37,7 +37,7 @@ import org.cruxframework.crux.core.server.Environment;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 
 /**
@@ -53,7 +53,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 	 * @param logger
 	 * @param context
 	 */
-	public ViewFactoriesProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public ViewFactoriesProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context, context.getTypeOracle().findType(ViewFactory.class.getCanonicalName()), false);
     }

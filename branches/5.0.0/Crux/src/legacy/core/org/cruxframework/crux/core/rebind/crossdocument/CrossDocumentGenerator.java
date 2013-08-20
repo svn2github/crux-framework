@@ -17,7 +17,7 @@ package org.cruxframework.crux.core.rebind.crossdocument;
 
 import org.cruxframework.crux.core.client.Legacy;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.GeneratorExt;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -37,7 +37,7 @@ import com.google.gwt.dev.javac.rebind.RebindStatus;
 public class CrossDocumentGenerator extends GeneratorExt
 {
 	@Override
-	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContextExt context, String typeName) throws UnableToCompleteException
+	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException
 	{
 		TypeOracle typeOracle = context.getTypeOracle();
 		assert (typeOracle != null);

@@ -40,7 +40,7 @@ import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -63,7 +63,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 	private JClassType remoteServiceType;
 	private Device device;
 
-	public IocContainerRebind(TreeLogger logger, GeneratorContextExt context, View view, String device)
+	public IocContainerRebind(TreeLogger logger, GeneratorContext context, View view, String device)
     {
 	    super(logger, context);
 		this.view = view;

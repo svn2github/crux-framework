@@ -68,7 +68,7 @@ import org.json.JSONObject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -197,7 +197,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 * @param device
 	 * @param module
 	 */
-	public ViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, View view, String device, String module)
+	public ViewFactoryCreator(GeneratorContext context, TreeLogger logger, View view, String device, String module)
     {
 		super(logger, context);
 		this.view = view;
@@ -704,7 +704,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	/**
 	 * @return
 	 */
-	protected GeneratorContextExt getContext()
+	protected GeneratorContext getContext()
 	{
 		return context;
 	}
@@ -824,7 +824,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 * @param logger
 	 * @param device
 	 */
-    protected void prepare(GeneratorContextExt context, TreeLogger logger, String device)
+    protected void prepare(GeneratorContext context, TreeLogger logger, String device)
 	{
 		this.context = context;
 		this.logger = logger;

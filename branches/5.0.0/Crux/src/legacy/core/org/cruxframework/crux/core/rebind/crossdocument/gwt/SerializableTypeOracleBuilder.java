@@ -39,7 +39,7 @@ import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypeParameterExposureComputer.TypeParameterFlowInfo;
 import org.cruxframework.crux.core.rebind.crossdocument.gwt.TypePaths.TypePath;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -711,7 +711,7 @@ public class SerializableTypeOracleBuilder {
    */
   private final JGenericType collectionClass;
 
-  private final GeneratorContextExt context;
+  private final GeneratorContext context;
 
   private Set<String> enhancedClasses = null;
 
@@ -763,7 +763,7 @@ public class SerializableTypeOracleBuilder {
    *           types
    */
   public SerializableTypeOracleBuilder(TreeLogger logger, PropertyOracle propertyOracle,
-      GeneratorContextExt context) throws UnableToCompleteException {
+      GeneratorContext context) throws UnableToCompleteException {
     this.context = context;
     this.typeOracle = context.getTypeOracle();
     typeConstrainer = new TypeConstrainer(typeOracle);

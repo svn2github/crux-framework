@@ -40,7 +40,7 @@ import org.cruxframework.crux.core.utils.ClassUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.dom.client.Element;
@@ -379,7 +379,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 	/**
 	 * @return
 	 */
-	public GeneratorContextExt getContext()
+	public GeneratorContext getContext()
 	{
 		return viewFactory.getContext();
 	}

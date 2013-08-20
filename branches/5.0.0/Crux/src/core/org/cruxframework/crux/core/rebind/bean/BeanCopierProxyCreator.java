@@ -22,7 +22,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
@@ -41,7 +41,7 @@ public class BeanCopierProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	 * @param context
 	 * @param baseIntf
 	 */
-	public BeanCopierProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public BeanCopierProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		JClassType beanCopierType = context.getTypeOracle().findType(BeanCopier.class.getCanonicalName());

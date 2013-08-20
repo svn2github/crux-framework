@@ -25,7 +25,7 @@ import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 
 /**
@@ -44,7 +44,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	 * @param device
 	 * @param controllerClass 
 	 */
-	public DeviceAdaptiveViewFactoryCreator(GeneratorContextExt context, TreeLogger logger, View view, String device, final String controllerName, String module)
+	public DeviceAdaptiveViewFactoryCreator(GeneratorContext context, TreeLogger logger, View view, String device, final String controllerName, String module)
     {
 	    super(context, logger, view, device, module);
 	    controllerClass = ClientControllers.getController(controllerName, Device.valueOf(device));

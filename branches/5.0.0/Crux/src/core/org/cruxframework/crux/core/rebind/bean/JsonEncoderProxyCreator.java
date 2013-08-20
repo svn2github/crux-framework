@@ -26,7 +26,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.json.client.JSONObject;
@@ -46,7 +46,7 @@ public class JsonEncoderProxyCreator extends AbstractInterfaceWrapperProxyCreato
 	private String serializerVariable;
 	private JClassType stringType;
 
-	public JsonEncoderProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public JsonEncoderProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		JClassType jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());

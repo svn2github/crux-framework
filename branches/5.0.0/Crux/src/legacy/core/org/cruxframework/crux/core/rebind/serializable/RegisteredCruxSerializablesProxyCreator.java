@@ -42,7 +42,7 @@ import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.screen.View;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -63,7 +63,7 @@ public class RegisteredCruxSerializablesProxyCreator extends AbstractInterfaceWr
 	 * @param logger
 	 * @param context
 	 */
-	public RegisteredCruxSerializablesProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public RegisteredCruxSerializablesProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredCruxSerializables.class.getCanonicalName()), false);
     }	

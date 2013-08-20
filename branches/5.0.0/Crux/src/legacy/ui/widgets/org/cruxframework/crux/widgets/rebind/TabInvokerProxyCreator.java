@@ -18,7 +18,7 @@ package org.cruxframework.crux.widgets.rebind;
 import org.cruxframework.crux.core.client.Legacy;
 import org.cruxframework.crux.widgets.client.dynatabs.DynaTabs;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
@@ -30,7 +30,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 @Deprecated
 public class TabInvokerProxyCreator extends AbstractTabInvokerProxyCreator
 {
-	public TabInvokerProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public TabInvokerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }

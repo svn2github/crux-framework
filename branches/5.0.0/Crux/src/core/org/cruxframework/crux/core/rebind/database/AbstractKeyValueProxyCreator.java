@@ -26,7 +26,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
@@ -48,7 +48,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 	protected final String[] keyPath;
 	protected final String serializerVariable;
 
-	public AbstractKeyValueProxyCreator(GeneratorContextExt context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
+	public AbstractKeyValueProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
 	{
 		super(logger, context);
 		this.objectStoreName = objectStoreName;

@@ -52,7 +52,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JEnumConstant;
@@ -89,7 +89,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	private QueryParameterHandler queryParameterHandler;
 	private BodyParameterHandler bodyParameterHandler;
 
-	public CruxRestProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public CruxRestProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
 		super(logger, context, baseIntf, true);
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());

@@ -37,7 +37,7 @@ import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.RegexpPatterns;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -72,7 +72,7 @@ public class DataSourceProxyCreatorLegacy extends AbstractInvocableProxyCreator
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public DataSourceProxyCreatorLegacy(TreeLogger logger, GeneratorContextExt context, JClassType dataSourceClass)
+	public DataSourceProxyCreatorLegacy(TreeLogger logger, GeneratorContext context, JClassType dataSourceClass)
 	{
 		super(logger, context, null, dataSourceClass);
 		this.dataSourceClass = dataSourceClass;

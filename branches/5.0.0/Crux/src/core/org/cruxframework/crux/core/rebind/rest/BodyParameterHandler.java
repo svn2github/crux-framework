@@ -31,7 +31,7 @@ import org.cruxframework.crux.core.server.rest.util.HttpHeaderNames;
 import org.cruxframework.crux.core.utils.JClassUtils;
 import org.cruxframework.crux.core.utils.JClassUtils.PropertyInfo;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameter;
@@ -45,9 +45,9 @@ import com.google.gwt.user.client.Cookies;
 class BodyParameterHandler extends AbstractParameterHelper
 {
 	private final TreeLogger logger;
-	private final GeneratorContextExt context;
+	private final GeneratorContext context;
 
-	public BodyParameterHandler(TreeLogger logger, GeneratorContextExt context)
+	public BodyParameterHandler(TreeLogger logger, GeneratorContext context)
     {
 		super(context);
 		this.logger = logger;

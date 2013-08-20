@@ -23,7 +23,7 @@ import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -48,7 +48,7 @@ public class ViewBinderProxyCreator extends AbstractViewBindableProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public ViewBinderProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType invokerIntf)
+	public ViewBinderProxyCreator(TreeLogger logger, GeneratorContext context, JClassType invokerIntf)
     {
 	    super(logger, context, invokerIntf);
 	    try

@@ -32,7 +32,7 @@ import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.screen.View;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -55,7 +55,7 @@ public class RegisteredDataSourcesProxyCreator extends AbstractInterfaceWrapperP
 	private Device device;
 	private NameFactory nameFactory;
 
-	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContextExt context, View view, String iocContainerClassName, String device)
+	public RegisteredDataSourcesProxyCreator(TreeLogger logger, GeneratorContext context, View view, String iocContainerClassName, String device)
     {
 	    super(logger, context, context.getTypeOracle().findType(RegisteredDataSources.class.getCanonicalName()), false);
 		this.view = view;

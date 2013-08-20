@@ -29,7 +29,7 @@ import org.cruxframework.crux.core.rebind.screen.View;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -49,7 +49,7 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
 	private String loggerVariable;
 	private final Device device;
 
-	public ResourcesHandlerProxyCreator(TreeLogger logger, GeneratorContextExt context, String resourceId, View view, String devive)
+	public ResourcesHandlerProxyCreator(TreeLogger logger, GeneratorContext context, String resourceId, View view, String devive)
     {
 	    super(logger, context);
 		this.resourceId = resourceId;

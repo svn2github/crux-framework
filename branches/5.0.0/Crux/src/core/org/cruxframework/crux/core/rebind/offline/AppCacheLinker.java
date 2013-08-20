@@ -252,13 +252,13 @@ public class AppCacheLinker extends AbstractLinker
 
 		for (String fn : cachedArtifacts)
 		{
-			builder.append("/" + moduleName + "/" + fn + "\n");
+			builder.append("/{context}/" + moduleName + "/" + fn + "\n");
 		}
 		
 		Set<String> keySet = generatedManifestResources.keySet();
 		for (String permutationName : keySet)
 		{
-			builder.append("/" + moduleName + "/" + getManifestLoaderName(permutationName) + "\n");
+			builder.append("/{context}/" + moduleName + "/" + getManifestLoaderName(permutationName) + "\n");
 		}
 		
 		builder.append("\nNETWORK:\n");
@@ -298,7 +298,7 @@ public class AppCacheLinker extends AbstractLinker
 
 		for (String fn : artifacts)
 		{
-			builder.append("/" + moduleName + "/" + fn + "\n");
+			builder.append("/{context}/" + moduleName + "/" + fn + "\n");
 		}
 		builder.append("\nNETWORK:\n");
 		builder.append("*\n\n");

@@ -18,11 +18,13 @@ package org.cruxframework.crux.core.client.db.indexeddb;
 import java.util.Date;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.PartialSupport;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@PartialSupport
 public class IDBFactory extends JavaScriptObject 
 {
 	private static boolean initialized = false;
@@ -81,4 +83,12 @@ public class IDBFactory extends JavaScriptObject
 		return this.cmp(o1.getTime(),o2.getTime());
 	};
 
+	public static native boolean isSupported()/*-{
+	    var IDBKeyRange = $wnd.IDBKeyRange || $wnd.webkitIDBKeyRange;
+	    var indexedDB = $wnd.indexedDB || $wnd.mozIndexedDB || $wnd.webkitIndexedDB;
+		if (IDBKeyRange && indexedDB) {
+			return true;
+		}
+		return false;
+	}-*/;
 }

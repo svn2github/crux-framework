@@ -38,7 +38,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.w3c.dom.Document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -73,7 +73,7 @@ public class DeviceAdaptiveProxyCreator extends AbstractWrapperProxyCreator
 	 * @param context
 	 * @param baseIntf
 	 */
-	public DeviceAdaptiveProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public DeviceAdaptiveProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf, false);
 

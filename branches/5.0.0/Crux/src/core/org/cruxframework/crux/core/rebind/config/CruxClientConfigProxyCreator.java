@@ -21,7 +21,7 @@ import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.AbstractInterfaceWrapperProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 
 /**
@@ -35,7 +35,7 @@ public class CruxClientConfigProxyCreator extends AbstractInterfaceWrapperProxyC
 	 * @param logger
 	 * @param context
 	 */
-	public CruxClientConfigProxyCreator(TreeLogger logger, GeneratorContextExt context)
+	public CruxClientConfigProxyCreator(TreeLogger logger, GeneratorContext context)
     {
 	    super(logger, context, context.getTypeOracle().findType(CruxClientConfig.class.getCanonicalName()), true);
     }

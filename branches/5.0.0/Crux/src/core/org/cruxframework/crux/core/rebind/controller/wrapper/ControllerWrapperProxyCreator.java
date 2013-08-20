@@ -23,7 +23,7 @@ import org.cruxframework.crux.core.rebind.AbstractViewBindableProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.ext.GeneratorContextExt;
+import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -35,7 +35,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
  */
 public class ControllerWrapperProxyCreator extends AbstractViewBindableProxyCreator
 {
-	public ControllerWrapperProxyCreator(TreeLogger logger, GeneratorContextExt context, JClassType baseIntf)
+	public ControllerWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }
