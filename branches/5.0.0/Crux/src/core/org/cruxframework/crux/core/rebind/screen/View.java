@@ -41,6 +41,8 @@ public class View
 	protected String width;
 	protected String height;
 	protected String fragment;
+	protected String smallViewport;
+	protected String largeViewport;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -385,6 +387,44 @@ public class View
 	protected void setFragment(String fragment)
     {
     	this.fragment = fragment;
+    }
+
+	/**
+	 * Viewport for small devices
+	 * 
+	 * @return
+	 */
+	public String getSmallViewport()
+    {
+    	return smallViewport;
+    }
+
+	/**
+	 * Viewport for small devices
+	 * @param smallViewport
+	 */
+	protected void setSmallViewport(String smallViewport)
+    {
+    	this.smallViewport = smallViewport;
+    }
+
+	/**
+	 * Viewport for large devices
+	 * 
+	 * @return
+	 */
+	public String getLargeViewport()
+    {
+    	return largeViewport;
+    }
+
+	/**
+	 * Viewport for large devices
+	 * @param largeViewport
+	 */
+	protected void setLargeViewport(String largeViewport)
+    {
+    	this.largeViewport = largeViewport;
     }
 
 	/**

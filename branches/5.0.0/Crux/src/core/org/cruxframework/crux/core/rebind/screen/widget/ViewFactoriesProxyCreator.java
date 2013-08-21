@@ -139,7 +139,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				Device currentDevice = Device.valueOf(getDeviceFeatures());
 				if (currentDevice.getSize().equals(Size.small))
 				{
-					String smallViewport = view.getViewElement().optString("smallViewport");
+					String smallViewport = view.getSmallViewport();
 					if (smallViewport != null && smallViewport.length() > 0)
 					{
 						sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(smallViewport, false)+");");
@@ -147,7 +147,7 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 				}
 				else
 				{
-					String largeViewport = view.getViewElement().optString("largeViewport");
+					String largeViewport = view.getLargeViewport();
 					if (largeViewport != null && largeViewport.length() > 0)
 					{
 						sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(largeViewport, false)+");");

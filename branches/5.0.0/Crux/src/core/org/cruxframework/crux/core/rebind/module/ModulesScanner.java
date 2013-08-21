@@ -194,7 +194,7 @@ public class ModulesScanner extends AbstractScanner
 					}
 					catch (Exception e) 
 					{
-						logger.error("Error parsing module file: ["+found.toString()+"].");
+						logger.error("Error parsing module file: ["+found.toString()+"].", e);
 					}
 					finally
 					{

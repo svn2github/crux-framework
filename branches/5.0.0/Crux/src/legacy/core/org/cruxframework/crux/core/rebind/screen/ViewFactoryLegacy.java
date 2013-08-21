@@ -98,6 +98,22 @@ public class ViewFactoryLegacy
 	        	{
 	        		parseViewUseViewAttribute(view, elem);
 	        	}
+	        	else if (attrName.equals("width"))
+				{
+					view.setWidth(elem.getString(attrName));
+				}
+	        	else if(attrName.equals("height"))
+				{
+					view.setHeight(elem.getString(attrName));
+				}
+	        	else if(attrName.equals("smallViewport"))
+				{
+					view.setSmallViewport(elem.getString(attrName));
+				}
+	        	else if(attrName.equals("largeViewport"))
+				{
+					view.setLargeViewport(elem.getString(attrName));
+				}
 	        	else if (attrName.startsWith("on"))
 	        	{
 	        		Event event = EventFactory.getEvent(attrName, elem.getString(attrName));

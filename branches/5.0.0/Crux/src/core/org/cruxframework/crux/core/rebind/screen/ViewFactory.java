@@ -374,7 +374,14 @@ public class ViewFactory
 				{
 					view.setHeight(elem.getString(attrName));
 				}
-	        	
+	        	else if(attrName.equals("smallViewport"))
+				{
+					view.setSmallViewport(elem.getString(attrName));
+				}
+	        	else if(attrName.equals("largeViewport"))
+				{
+					view.setLargeViewport(elem.getString(attrName));
+				}
 	        	else if (attrName.startsWith("on"))
 	        	{
 	        		Event event = EventFactory.getEvent(attrName, elem.getString(attrName));
