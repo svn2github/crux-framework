@@ -86,9 +86,19 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		generateFromNativeKeyMethod(srcWriter, keyPath);
     }
 	
+	protected void generateFromNativeValueMethod(SourcePrinter srcWriter, String[] keyPath)
+    {
+		generateFromNativeMethod(srcWriter, "fromNativeValue", keyPath);
+    }
+	
 	protected void generateFromNativeKeyMethod(SourcePrinter srcWriter, String[] keyPath)
     {
-	    srcWriter.println("private Object[] fromNativeKey("+JsArrayMixed.class.getCanonicalName()+" key){");
+		generateFromNativeMethod(srcWriter, "fromNativeKey", keyPath);
+    }
+	
+	protected void generateFromNativeMethod(SourcePrinter srcWriter, String methodName, String[] keyPath)
+    {
+	    srcWriter.println("private Object[] "+methodName+"("+JsArrayMixed.class.getCanonicalName()+" key){");
 	    srcWriter.println("Object[] result = new Object[key.length()];");
 	    int i=0;
 	    for (String key : keyPath)
@@ -214,7 +224,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
         	{
         		return "Integer";
         	}
-        	else if (jType.equals(integerType) || (jType.equals(JPrimitiveType.INT)))
+        	else if (jType.equals(doubleType) || (jType.equals(JPrimitiveType.DOUBLE)))
         	{
         		return "Double";
         	}
@@ -233,7 +243,6 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 			throw new CruxGeneratorException("can not create an objectStore without a key definition. ObjectStore["+objectStoreName+"].");
 		}
 	}
-
 	
 	protected boolean isEmptyType()
     {

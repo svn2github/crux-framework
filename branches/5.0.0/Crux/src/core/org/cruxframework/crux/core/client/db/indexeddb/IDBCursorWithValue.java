@@ -15,7 +15,10 @@
  */
 package org.cruxframework.crux.core.client.db.indexeddb;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -26,6 +29,31 @@ public class IDBCursorWithValue extends IDBCursor
 	protected IDBCursorWithValue(){}
 	
 	public final native JavaScriptObject getValue()/*-{
+		return this.value;
+	}-*/;
+	
+    public final native JsArrayMixed getArrayValue() /*-{
+	    return this.value;
+	}-*/;
+	
+    public final native JavaScriptObject getObjectValue() /*-{
+	    return this.value;
+	}-*/;
+
+	public final native int getIntValue() /*-{
+	    return this.value;
+	}-*/;
+	
+	public final native String getStringValue() /*-{
+		return this.value;
+	}-*/;
+	
+	public final Date getDateValue() 
+	{
+		return new Date((long)getDoubleValue());
+	}
+	
+	public final  native double getDoubleValue() /*-{
 		return this.value;
 	}-*/;
 }

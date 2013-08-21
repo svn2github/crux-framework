@@ -16,6 +16,7 @@
 package org.cruxframework.crux.core.rebind.database;
 
 import java.io.PrintWriter;
+import java.sql.Date;
 
 import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor;
@@ -52,6 +53,12 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 	}
 
 	@Override
+	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
+	{
+		
+	}
+	
+	@Override
 	protected void generateProxyContructor(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
 		srcWriter.println("public "+getProxySimpleName()+"(IDBCursorWithValue idbCursor){");
@@ -71,6 +78,7 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			generateFromNativeKeyMethod(srcWriter);
 			generateGetNativeKeyMethod(srcWriter);
+			generateFromNativeValueMethod(srcWriter, objectStoreKeyPath);
 		}
 	}
 	
@@ -94,6 +102,10 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("return "+idbCursorVariable+".getDoubleKey();");
 		}
+		else if (keyTypeName.equals(Date.class.getCanonicalName()))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getDateKey();");
+		}
 		else
 		{
 			srcWriter.println("return "+idbCursorVariable+".getObjectKey().cast();");
@@ -103,14 +115,35 @@ public class KeyCursorProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateGetValueMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public "+getKeyTypeName(objectStoreKeyPath)+" getValue(){");
+		String keyTypeName = getKeyTypeName(objectStoreKeyPath);
+		srcWriter.println("public "+keyTypeName+" getValue(){");
 		if (isEmptyType())
 		{
-			srcWriter.println("return "+idbCursorVariable+".getValue();");
+			srcWriter.println("return "+idbCursorVariable+".getValue().cast();");
+		}
+		else if (objectStoreKeyPath.length > 1)
+		{
+			srcWriter.println("return fromNativeValue("+idbCursorVariable+".getArrayValue());");
+		}
+		else if (keyTypeName.equals("String"))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getStringValue();");
+		}
+		else if (keyTypeName.equals("Integer"))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getIntValue();");
+		}
+		else if (keyTypeName.equals("Double"))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getDoubleValue();");
+		}
+		else if (keyTypeName.equals(Date.class.getCanonicalName()))
+		{
+			srcWriter.println("return "+idbCursorVariable+".getDateValue();");
 		}
 		else
 		{
-			srcWriter.println("return "+serializerVariable+".decode(new JSONObject("+idbCursorVariable+".getValue()));");
+			srcWriter.println("return "+idbCursorVariable+".getObjectValue().cast();");
 		}
 		srcWriter.println("}");
     }
