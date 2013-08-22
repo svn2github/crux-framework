@@ -3,13 +3,13 @@
 <project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
 	<!-- DEPLOY -->
-	<property name="dist" location="../../dist/sonatype/deploy/" />
-	<property name="version" value="5.0.2-SNAPSHOT" />
+	<property name="dist" location="E:/docs/Crux/_converterMaven/Crux/Sonatype/toSend/deploy/" />
+	<property name="version" value="5.0.0-SNAPSHOT" />
 	
 	<!-- STAGE -->
 <!--
 	<property name="dist" location="../../dist/sonatype/stage/" />
-	<property name="version" value="5.0.2" /> 
+	<property name="version" value="5.0.0" /> 
 -->
 
 	<!-- define pom path -->
@@ -18,21 +18,21 @@
 	<!-- define Maven coordinates -->
 	<property name="groupId" value="org.cruxframework" />
 	
-	<property name="artifactId_dev" value="crux-dev" />
-	<property name="artifactId_gadgets-runtime" value="crux-gadgets-runtime" />
+	<property name="artifactId_crux-dev" value="crux-dev" />
+	<property name="artifactId_crux-gadgets-runtime" value="crux-gadgets-runtime" />
 	<property name="artifactId_crux-gadgets" value="crux-gadgets" />
 	<property name="artifactId_crux-runtime" value="crux-runtime" />
 	<property name="artifactId_crux-themes" value="crux-themes" />
 	<property name="artifactId_crux-widgets" value="crux-widgets" />
 	
 	<!-- define artifacts' name, which follows the convention of Maven -->
-	<property name="maven-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}.jar" />
-	<property name="maven-javadoc-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}-javadoc.jar" />
-	<property name="maven-sources-jar_crux-dev" value="${dist}/${artifactId_dev}-${version}-sources.jar" />
+	<property name="maven-jar_crux-dev" value="${dist}/${artifactId_crux-dev}-${version}.jar" />
+	<property name="maven-javadoc-jar_crux-dev" value="${dist}/${artifactId_crux-dev}-${version}-javadoc.jar" />
+	<property name="maven-sources-jar_crux-dev" value="${dist}/${artifactId_crux-dev}-${version}-sources.jar" />
 
-    <property name="maven-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}.jar" />
-    <property name="maven-javadoc-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}-javadoc.jar" />
-    <property name="maven-sources-jar_crux-gadgets-runtime" value="${dist}/${artifactId_gadgets-runtime}-${version}-sources.jar" />
+    <property name="maven-jar_crux-gadgets-runtime" value="${dist}/${artifactId_crux-gadgets-runtime}-${version}.jar" />
+    <property name="maven-javadoc-jar_crux-gadgets-runtime" value="${dist}/${artifactId_crux-gadgets-runtime}-${version}-javadoc.jar" />
+    <property name="maven-sources-jar_crux-gadgets-runtime" value="${dist}/${artifactId_crux-gadgets-runtime}-${version}-sources.jar" />
 
     <property name="maven-jar_crux-gadgets" value="${dist}/${artifactId_crux-gadgets}-${version}.jar" />
     <property name="maven-javadoc-jar_crux-gadgets" value="${dist}/${artifactId_crux-gadgets}-${version}-javadoc.jar" />
