@@ -56,7 +56,7 @@ public class FileReader extends JavaScriptObject
 	public native final void readAsArrayBuffer(Blob blob, ReaderArrayCallback callback)/*-{
 		this.readAsArrayBuffer(blob);
 		this.onload = function(e) {
-			callback.@org.cruxframework.crux.core.client.file.FileReader.ReaderArrayCallback::onComplete(Lorg/cruxframework/crux/core/client/file/array/ArrayBuffer;)(e.target.result);
+			callback.@org.cruxframework.crux.core.client.file.FileReader.ReaderArrayCallback::onComplete(Lcom/google/gwt/typedarrays/shared/ArrayBuffer;)(e.target.result);
 		};
 	}-*/;
 
@@ -74,7 +74,7 @@ public class FileReader extends JavaScriptObject
 		};
 	}-*/;
 	
-	public native void readAsBinaryString(Blob blob, ReaderStringCallback callback)/*-{
+	public final native void readAsBinaryString(Blob blob, ReaderStringCallback callback)/*-{
 		this.readAsBinaryString(blob);
 		this.onload = function(e) {
 			callback.@org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback::onComplete(Ljava/lang/String;)(e.target.result);
@@ -83,7 +83,7 @@ public class FileReader extends JavaScriptObject
 
 	public native final void addErrorHandler(ErrorHandler errorHandler)/*-{
 		this.onerror = function(e) {
-			@org.cruxframework.crux.core.client.file.FileReader::fireError(Lorg/cruxframework/crux/core/client/file/FileReader/ErrorHandler;Ljava/lang/String;)(errorHandler, evt.target.error.name);
+			@org.cruxframework.crux.core.client.file.FileReader::fireError(Lorg/cruxframework/crux/core/client/file/FileReader/ErrorHandler;Ljava/lang/String;)(errorHandler, e.target.error.name);
 		};
 	}-*/;
 
@@ -105,13 +105,17 @@ public class FileReader extends JavaScriptObject
 		return this.readyState;
 	}-*/;
 	
-	private static void fireError(ErrorHandler callback, String errorName)
+	static void fireError(ErrorHandler callback, String errorName)
 	{
 		callback.onError(Error.valueOf(errorName));
 	}
 
 	public static native boolean isSupported()/*-{
-		return ($wnd.FileReader);		
+		if ($wnd.FileReader)
+		{
+			return true;
+		}
+		return false;	
 	}-*/;
 }
 

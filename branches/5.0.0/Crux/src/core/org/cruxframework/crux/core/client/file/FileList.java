@@ -36,6 +36,10 @@ public class FileList extends JavaScriptObject
 	}-*/;
 
 	public static native boolean isSupported()/*-{
-		return ($wnd.FileList);		
+		if ($wnd.FileList)
+		{
+			return true;
+		}
+		return false;
 	}-*/;
 }

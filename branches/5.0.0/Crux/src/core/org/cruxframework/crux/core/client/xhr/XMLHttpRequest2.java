@@ -15,6 +15,8 @@
  */
 package org.cruxframework.crux.core.client.xhr;
 
+import org.cruxframework.crux.core.client.file.File;
+
 import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.xhr.client.XMLHttpRequest;
 
@@ -33,21 +35,27 @@ public class XMLHttpRequest2 extends XMLHttpRequest
 	}
 
 	public final native void setOnProgressHandler(ProgressHandler handler) /*-{
-	    this.onprogress = function(e) {
-	      handler.@org.cruxframework.crux.core.client.xhr.XMLHttpRequest2.ProgressHandler::onProgress(DD)(e.loaded, e.total);
+	    this.upload.onprogress = function(e) {
+	    	if (e.lengthComputable){
+	      		handler.@org.cruxframework.crux.core.client.xhr.XMLHttpRequest2.ProgressHandler::onProgress(DD)(e.loaded, e.total);
+	      	}
 	    };
+	}-*/;
+	
+	public final native void send(File file) /*-{
+	    this.send(file);
 	}-*/;
 	
 	public static interface ProgressHandler
 	{
-		void onProgress(double loeaded, double total);
+		void onProgress(double loaded, double total);
 	}
 	
 	public static native boolean isSupported()/*-{
 		try {
 		    var xhr = new $wnd.XMLHttpRequest();
 
-		    if ('onprogress' in xhr) {
+		    if ('upload' in xhr) {
 		    	return true;
 		    } 
 		} catch (e) {}		

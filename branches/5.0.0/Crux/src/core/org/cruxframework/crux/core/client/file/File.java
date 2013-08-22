@@ -36,6 +36,10 @@ public class File extends Blob
 	}-*/;
 	
 	public static native boolean isSupported()/*-{
-		return ($wnd.File);		
+		if ($wnd.File)
+		{
+			return true;
+		}
+		return false;
 	}-*/;
 }
