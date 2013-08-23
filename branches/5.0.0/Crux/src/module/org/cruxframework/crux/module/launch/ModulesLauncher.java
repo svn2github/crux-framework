@@ -46,20 +46,25 @@ public class ModulesLauncher
 		}
 		
 		String webDir = "./war/";
+		boolean warParamFound = false;
 		for (int i=0; i< (args.length-1); i++)
         {
 			String arg = args[i];
 	        if ("-webDir".equals(arg))
 	        {
 	        	webDir = args[i+1];
-	        	//kill this param
-	        	args[i] = "";
-	        	args[i+1] = "";
-	        	break;
+	        	//change to -war
+	        	args[i] = "-war";
 	        } else if("-war".equals(arg))
 	        {
 	        	webDir = args[i+1];
-	        	break;
+	        	if(warParamFound)
+	        	{
+	        		//kill this duplicated param
+	        		args[i] = "";
+	        		args[i+1] = "";
+	        	}
+	        	warParamFound = true;
 	        }
         }
 		
