@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
@@ -39,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.lang.StringUtils;
 import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.server.http.GZIPResponseWrapper;
 import org.cruxframework.crux.core.server.rest.core.CacheControl;
@@ -255,17 +252,11 @@ public class AppcacheFilter implements Filter
 		
 		private byte[] modifyResponse(String input)
 		{
-			String strEncoded = StringUtils.EMPTY;
-			String strContext = "{context}";
-			try {
-				strEncoded = URLEncoder.encode(strContext, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			
-			if (input.indexOf(strContext) >= 0 || input.indexOf(strEncoded) >= 0)
+			int indexContext = input.indexOf("/{context}");
+			if (indexContext >= 0)
 			{
 				input = RegexpPatterns.REGEXP_CONTEXT.matcher(input).replaceAll(context);
+//				input = input.replace("/{context}", this.context);
 			}
 			
 			return input.getBytes(Charset.forName("UTF-8"));
