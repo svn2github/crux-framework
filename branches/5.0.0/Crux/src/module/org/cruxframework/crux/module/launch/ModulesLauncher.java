@@ -49,9 +49,17 @@ public class ModulesLauncher
 		for (int i=0; i< (args.length-1); i++)
         {
 			String arg = args[i];
-	        if ("-webDir".equals(arg) )
+	        if ("-webDir".equals(arg))
 	        {
 	        	webDir = args[i+1];
+	        	//kill this param
+	        	args[i] = "";
+	        	args[i+1] = "";
+	        	break;
+	        } else if("-war".equals(arg))
+	        {
+	        	webDir = args[i+1];
+	        	break;
 	        }
         }
 		
