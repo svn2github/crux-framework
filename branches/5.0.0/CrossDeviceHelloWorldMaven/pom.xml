@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<!-- POM file generated with GWT webAppCreator -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.cruxframework</groupId>
+	<artifactId>CrossDeviceHelloWorldMaven</artifactId>
+	<packaging>war</packaging>
+	<version>5.0.0</version>
+	<name>CrossDeviceHelloWorldMaven</name>
+
+	<properties>
+		<!-- Convenience property to set the GWT version -->
+		<gwtVersion>2.5.1</gwtVersion>
+		<!-- GWT needs at least java 1.5 -->
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<jdk_home>E:\desenv\java\jdk-7u21-windows-x64</jdk_home>
+
+		<!-- GWT RUN using ANT -->
+		<gwt.sdk>C:\Users\samuel.cardoso\Desktop\gwt_sdk</gwt.sdk>
+		<gwt.args>-gen generated -bindAddress 0.0.0.0 -logLevel INFO</gwt.args>
+		<webappctxname>CrossDeviceHelloWorldMaven-5.0.0</webappctxname>
+		<module.name>org.cruxframework.crossdevice.CrossDeviceHelloWorld</module.name>
+
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-dev</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-gadgets</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-gadgets-runtime</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-runtime</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-themes</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cruxframework</groupId>
+			<artifactId>crux-widgets</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.7</version>
+			<scope>system</scope>
+			<systemPath>${jdk_home}/lib/tools.jar</systemPath>
+		</dependency>
+
+		<!-- this dependency declaration will be removed in next version -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<!-- END: this dependency ... -->
+
+	</dependencies>
+
+<!-- 
+	<profiles>
+
+		<profile>
+			<id>activeAntTasks-debug</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+
+                            <execution>
+                                <id>generate-schemas</id>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <tasks>
+                                        <ant antfile="build/build.xml" target="debug" />
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+
+                        </executions>
+
+                    </plugin>
+					
+				</plugins>
+			</build>
+		</profile>
+
+
+		<profile>
+			<id>activeAntTasks-compile</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+
+							<execution>
+								<id>generate-schemas</id>
+								<phase>process-sources</phase>
+								<configuration>
+									<tasks>
+										<ant antfile="build/build.xml" target="compile-scripts" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+
+						</executions>
+
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+
+	</profiles>
+	 -->
+	 
+	 
+	 
+	<build>
+<!-- 	<pluginManagement> -->
+<!--      <plugins><plugin> -->
+<!--                         <artifactId>maven-dependency-plugin</artifactId> -->
+<!--                             <executions> -->
+<!--                                 <execution> -->
+<!--                                     <phase>compile</phase> -->
+<!--                                     <goals> -->
+<!--                                         <goal>copy-dependencies</goal> -->
+<!--                                     </goals> -->
+<!--                                     <configuration> -->
+<!--                                         <outputDirectory>${project.build.directory}/lib</outputDirectory> -->
+<!--                                     </configuration> -->
+<!--                                 </execution> -->
+<!--                             </executions> -->
+<!--                     </plugin> -->
+<!--      </plugins> -->
+<!--      </pluginManagement> -->
+	
+		<!-- Generate compiled stuff in the folder used for developing mode -->
+		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
+		<!-- <resources> <resource> <directory>src/main/resources</directory> <includes> 
+			<include>*.gwt.xml</include> </includes> <filtering>true</filtering> </resource> 
+			</resources> -->
+		<plugins>
+		
+                    
+		
+			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
+				<execution> <phase>process-resources</phase> <configuration> <tasks> <ant 
+				antfile="./build/build.xml" target="generate-schemas" /> </tasks> </configuration> 
+				<goals> <goal>run</goal> </goals> </execution> </executions> </plugin> <plugin> 
+				<groupId>org.codehaus.mojo</groupId> <artifactId>build-helper-maven-plugin</artifactId> 
+				<version>1.3</version> <executions> <execution> <id>add-jar</id> <phase>package</phase> 
+				<goals> <goal>attach-artifact</goal> </goals> <configuration> <artifacts> 
+				<artifact> <file>${project.build.directory}/ant-output.jar</file> <type>jar</type> 
+				</artifact> </artifacts> </configuration> </execution> </executions> </plugin> -->
+
+			<!-- GWT Maven Plugin <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
+				<version>2.5.1</version> <executions> <execution> <goals> <goal>compile</goal> 
+				<goal>test</goal> <goal>i18n</goal> <goal>generateAsync</goal> </goals> </execution> 
+				</executions> <configuration> <runTarget>CrossDeviceHelloWorld.html</runTarget> 
+				<hostedWebapp>${webappDirectory}</hostedWebapp> <i18nMessagesBundle>org.cruxframework.crossdevice.client.Messages</i18nMessagesBundle> 
+				</configuration> </plugin> -->
+			<!-- Copy static web files before executing gwt:run -->
+			<!-- Aqui tambem temos que excluir do web-inf/lib os jars que ficavam 
+				no build/lib (descobrir quais jars eram) -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>exploded</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<webappDirectory>${webappDirectory}</webappDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<!-- <profiles> <profile> <id>default-profile</id> <activation> <activeByDefault>true</activeByDefault> 
+		<file> <exists>${java.home}/../lib/tools.jar</exists> </file> </activation> 
+		<properties> <toolsjar>${java.home}/../lib/tools.jar</toolsjar> </properties> 
+		</profile> <profile> <id>mac-profile</id> <activation> <activeByDefault>false</activeByDefault> 
+		<file> <exists>${java.home}/../Classes/classes.jar</exists> </file> </activation> 
+		<properties> <toolsjar>${java.home}/../Classes/classes.jar</toolsjar> </properties> 
+		</profile> </profiles> -->
+</project>
