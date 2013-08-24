@@ -1,4 +1,4 @@
-<project name="CrossDeviceHelloWorld" basedir="../">
+<project name="CrossDeviceHelloWorldMaven" basedir="../">
 
 	<property name="final.name" value="CrossDeviceHelloWorldMaven" />
 	<property name="src.dir" value="src" />
@@ -17,8 +17,7 @@
 
 	<property name="webappctxname" value="CrossDeviceHelloWorldMaven-5.0.0"/>
 	<property name="gwt.args" value="-gen generated -bindAddress 0.0.0.0 -logLevel INFO"/>
-	<property name="module.name" value="org.cruxframework.crossdevice.CrossDeviceHelloWorld"/>
-
+	<property name="module.name" value="org.cruxframework.crossdevice.helloworld.CrossDeviceHelloWorld"/>
 
 	<path id="build.classpath">
 		<fileset dir="${web.lib.dir}">
@@ -53,8 +52,6 @@
 				<!-- the following is required because that’s where DevMode will find the java code for the GWT javascripts. -->
 				<pathelement location="${basedir}/src/main/java" />
 				<pathelement location="${basedir}/src/main/resources" />
-				<pathelement location="${basedir}/src/main/resources/org/cruxframework/crossdevice" />
-				
 
 			</classpath>
 			<!-- <arg value="-server"/> -->
