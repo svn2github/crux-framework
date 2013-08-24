@@ -2,16 +2,9 @@
 
 <project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
-	<!-- DEPLOY -->
-	<property name="dist" location="E:/docs/Crux/_converterMaven/Crux/Sonatype/toSend/deploy/" />
+	<property name="dist" location="dist" />
 	<property name="version" value="5.0.0-SNAPSHOT" />
 	
-	<!-- STAGE -->
-<!--
-	<property name="dist" location="../../dist/sonatype/stage/" />
-	<property name="version" value="5.0.0" /> 
--->
-
 	<!-- define pom path -->
 	<property name="poms" location="poms" />
 
