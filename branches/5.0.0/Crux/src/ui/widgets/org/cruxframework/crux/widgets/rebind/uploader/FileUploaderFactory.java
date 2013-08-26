@@ -28,7 +28,11 @@ import org.cruxframework.crux.widgets.client.uploader.FileUploader;
  */
 @DeclarativeFactory(library="widgets", id="fileUploader", targetWidget=FileUploader.class)
 @TagAttributes({
-	@TagAttribute(value="multiple", type=Boolean.class, defaultValue="false")
+	@TagAttribute(value="multiple", type=Boolean.class, defaultValue="false"),
+	@TagAttribute(value="autoUploadFiles", type=Boolean.class, defaultValue="false"),
+	@TagAttribute(value="fileInputText", supportsI18N=true),
+	@TagAttribute(value="sendButtonText", supportsI18N=true),
+	@TagAttribute("url")
 })
 public class FileUploaderFactory extends WidgetCreator<WidgetCreatorContext>
 {

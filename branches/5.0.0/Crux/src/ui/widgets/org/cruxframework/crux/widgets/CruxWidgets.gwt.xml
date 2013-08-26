@@ -303,4 +303,20 @@
 		</any>
 	</replace-with>
     
+	<!-- FileUploader  -->
+	<replace-with class="org.cruxframework.crux.widgets.client.uploader.FileUploaderSmallImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.uploader.AbstractFileUploader" />
+		<any>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</any>
+	</replace-with>
+	<replace-with class="org.cruxframework.crux.widgets.client.uploader.FileUploaderLargeImpl">
+		<when-type-assignable class="org.cruxframework.crux.widgets.client.uploader.AbstractFileUploader" />
+		<none>
+			<when-property-is name="device.features" value="smallDisplayTouch" />
+			<when-property-is name="device.features" value="smallDisplayArrows" />
+		</none>
+	</replace-with>
+    
 </module>
