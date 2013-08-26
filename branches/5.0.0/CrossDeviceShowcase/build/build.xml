@@ -131,7 +131,7 @@
 		Invokes the GWT compiler with draftCompile option and java debug parameters.
 	========================================================================================================
 	-->
-	<target name="fast-compile-scripts-bebug">
+	<target name="fast-compile-scripts-debug">
 		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
 			<dirset dir="${web.root}" />
 			<classpath>
