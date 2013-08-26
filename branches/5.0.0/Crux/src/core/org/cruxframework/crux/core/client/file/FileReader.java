@@ -83,7 +83,7 @@ public class FileReader extends JavaScriptObject
 
 	public native final void addErrorHandler(ErrorHandler errorHandler)/*-{
 		this.onerror = function(e) {
-			@org.cruxframework.crux.core.client.file.FileReader::fireError(Lorg/cruxframework/crux/core/client/file/FileReader/ErrorHandler;Ljava/lang/String;)(errorHandler, e.target.error.name);
+			@org.cruxframework.crux.core.client.file.FileReader::fireError(Lorg/cruxframework/crux/core/client/file/FileReader$ErrorHandler;Ljava/lang/String;)(errorHandler, e.target.error.name);
 		};
 	}-*/;
 

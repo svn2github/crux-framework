@@ -42,8 +42,10 @@ public class XMLHttpRequest2 extends XMLHttpRequest
 	    };
 	}-*/;
 	
-	public final native void send(File file) /*-{
-	    this.send(file);
+	public final native void send(String paramName, File file) /*-{
+	    var fd = new FormData();
+	    fd.append(paramName, file);
+	    this.send(fd);
 	}-*/;
 	
 	public static interface ProgressHandler
