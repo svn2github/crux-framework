@@ -15,7 +15,7 @@
  */
 package org.cruxframework.crux.widgets.client.progressbar;
 
-import com.google.gwt.dom.client.Style.Clear;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
@@ -36,19 +36,10 @@ public class ProgressBar extends Composite
 	public ProgressBar()
     {
         progressBar = new SimplePanel();
-        progressBar.getElement().getStyle().setClear(Clear.BOTH);
-//        -moz-transition: opacity 1s linear;
-//        -o-transition: opacity 1s linear;
-//        -webkit-transition: opacity 1s linear;
-//        margin: 10px 0;
-//        padding: 3px;
-//        border: 1px solid #000;
-//        font-size: 14px;
-
         percentBar = new Label("0%");
         percentBar.getElement().getStyle().setProperty("height", "auto");
         percentBar.getElement().getStyle().setWidth(0, Unit.PX);
-//        background-color: #99ccff;
+        percentBar.getElement().getStyle().setFloat(Float.LEFT);
         percentBar.setStyleName("percentBar");
 
         progressBar.add(percentBar);
@@ -63,15 +54,20 @@ public class ProgressBar extends Composite
 			if (!loading)
 			{
 				loading = true;
-				if (hideOnComplete)
-				{
-					progressBar.getElement().getStyle().setOpacity(1);
-				}
+				ensureVisible();
 			}
 			percentBar.getElement().getStyle().setWidth(percent, Unit.PCT);
 			percentBar.setText(percent + "%");				
 		}
 	}
+
+	protected void ensureVisible()
+    {
+		if (hideOnComplete)
+		{
+			progressBar.getElement().getStyle().setOpacity(1);
+		}
+    }
 	
 	public void conclude()
 	{
@@ -102,13 +98,13 @@ public class ProgressBar extends Composite
         {
         	progressBar.getElement().getStyle().setOpacity(0);
         }
-    	
     }
 	
 	public void setError(boolean error)
 	{
 		if (error)
 		{
+			ensureVisible();
 			progressBar.addStyleDependentName("error");
 		}
 		else
