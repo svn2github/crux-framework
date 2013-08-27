@@ -18,20 +18,19 @@
 	<property name="web.inf.dir" value="${web.dir}/WEB-INF" />
 	<property name="target.lib.dir" value="${target.root}/WEB-INF/lib" />
 
+	<property name="target.classes.dir" value="E:\desenv\workspaces\workspace-crux-5\CrossDeviceHelloWorldMaven/target/CrossDeviceHelloWorldMaven-5.0.0/WEB-INF/classes" />
+		
 	<property name="webappctxname" value="CrossDeviceHelloWorldMaven-5.0.0"/>
 	<property name="gwt.args" value="-gen generated -bindAddress 0.0.0.0 -logLevel INFO"/>
 	<property name="module.name" value="org.cruxframework.crossdevice.helloworld.CrossDeviceHelloWorld"/>
 	
-	<!-- see if it's necessary -->
-	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
-
 	<path id="target.build.classpath">
 		<fileset dir="${target.lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
 	
-	<taskdef resource="org/cruxframework/crux/tools/crux-tools.xml">
+	<taskdef resource="org/cruxframework/crux/tools/crux-modules-tools.xml">
 		<classpath>
 			<path refid="target.build.classpath" />
 		</classpath>
@@ -168,9 +167,15 @@
 			<dirset dir="${web.dir}" />
 			<classpath>
 				<path refid="target.build.classpath" />
-				<pathelement path="${target.lib.dir}" />
+				<pathelement path="${src.dir}" />
+			    <pathelement path="${resources.dir}" />
+				<pathelement path="${target.classes.dir}" />
 			</classpath>
 
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5555" />
+            <jvmarg value="-Xnoagent" />
+            <jvmarg value="-Djava.compiler=NONE" />
+			
 			<!-- change these two parameters if you need to modify memory settings -->
 			<jvmarg value="-Xmx768M" />
 			<jvmarg value="-Xms256M" />

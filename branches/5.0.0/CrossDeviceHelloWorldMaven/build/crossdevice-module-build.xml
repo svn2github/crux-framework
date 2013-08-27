@@ -1,0 +1,334 @@
+<project name="crossdevice-module-build" basedir="../">
+
+    <property environment="env"/>
+    <condition property="repo.url" value="${env.REPO_URL}" else="repo">
+        <isset property="env.REPO_URL"/>
+    </condition>
+    <echo message="Repository host: [${repo.url}]"/>
+
+    <property file="build/build.properties"/>
+    <property name="final.name" value="CrossDeviceHelloWorldMaven"/>
+	
+    <property name="src.dir" value="src/main/java"/>
+	<property name="resources.dir" value="src/main/resources" />
+	<property name="web.dir" value="src/main/webapp" />
+	
+    <property name="dist.dir" value="dist"/>
+    <property name="build.lib.dir" value="build/lib"/>
+    <property name="build.work.dir" value="build/work"/>
+    <property name="export.dir" value="${dist.dir}/export"/>
+    	
+    <property name="target.root" value="target/CrossDeviceHelloWorldMaven-5.0.0"/>
+    <property name="target.web.dir" value="${target.root}/WEB-INF/classes/public" />
+	
+    <property name="web.inf.dir" value="${target.root}/WEB-INF"/>
+    <property name="web.lib.dir" value="${web.inf.dir}/lib"/>
+    <property name="target.classes.dir" value="${web.inf.dir}/classes"/>
+    <property name="xsd.dir" value="xsd"/>
+    <property name="exploded.jar.dir" value="${dist.dir}/${final.name}.module.jar"/>
+    <property name="mount.dir" value="${basedir}/build/mount"/>
+
+    <property name="css.filename" value="core.css"/>
+    <property name="css.package" value="/br/com/mca/comissionamento/public/static"/>
+    <property name="exploded.css.dir" value="${exploded.jar.dir}/${css.package}"/>
+
+	
+	    <!-- maven mod 
+	    <property name="target.root" value="target/CrossDeviceHelloWorldMaven-5.0.0" />
+	    <property name="src.dir" value="src/main/java" />
+	    
+	    
+	    <property name="web.inf.dir" value="${web.dir}/WEB-INF" />
+	    <property name="target.lib.dir" value="${target.root}/WEB-INF/lib" />
+
+	    <property name="target.classes.dir" value="E:\desenv\workspaces\workspace-crux-5\CrossDeviceHelloWorldMaven/target/CrossDeviceHelloWorldMaven-5.0.0/WEB-INF/classes" />
+	        
+	    <property name="webappctxname" value="CrossDeviceHelloWorldMaven-5.0.0"/>
+	    <property name="gwt.args" value="-gen generated -bindAddress 0.0.0.0 -logLevel INFO"/>
+	    <property name="module.name" value="org.cruxframework.crossdevice.helloworld.CrossDeviceHelloWorld"/>
+	    
+	    <path id="target.build.classpath">
+	        <fileset dir="${target.lib.dir}">
+	            <include name="**/*.jar" />
+	        </fileset>
+	    </path>
+	   -->
+	
+    <path id="build.classpath">
+        <fileset dir="${web.lib.dir}">
+            <include name="*.jar"/>
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement path="${target.classes.dir}"/>
+    </path>
+
+    <path id="jars.build.classpath">
+        <fileset dir="${web.lib.dir}">
+            <include name="*.jar"/>
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!--
+    ========================================================================================================
+    Invokes the GWT compiler. Usefull for debugging generated Javascript. The draftCompile option is active.
+    ========================================================================================================
+    -->
+    <target name="compile-scripts">
+
+		<taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
+                <classpath>
+                    <path refid="jars.build.classpath"/>
+                </classpath>
+        </taskdef>
+
+    	<!--
+		<delete dir="${target.root}" failonerror="no" includeemptydirs="yes" includes="**/*"/>
+		<mkdir dir="${target.root}"/>
+        -->
+    	
+		<serviceMapper projectDir="${target.root}">
+			<classpath>
+				<path refid="jars.build.classpath"/>
+				<pathelement path="${target.classes.dir}"/>
+			</classpath>
+		</serviceMapper>
+
+        <cruxmodulecompiler srcDir="${src.dir}" outputDir="${target.root}" webDir="${target.web.dir}" keepPagesGeneratedFiles="true" inputCharset="ISO-8859-1" outputCharset="UTF-8">
+    		<classpath>
+                <path refid="jars.build.classpath" />
+                <pathelement path="${target.classes.dir}" />
+            </classpath>
+        	
+            <!-- change these two parameters if you need to modify memory settings -->
+            <jvmarg value="-Xmx1560M"/>
+            <jvmarg value="-Xms256M"/>
+            <!--
+            <jvmarg value="-Xdebug" />
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+            -->
+
+            <!-- use these parameters if you want to modify GWT output settings
+            <arg value="-extra" />
+            <arg value="compilerReports" />
+            <arg value="-compileReport" />
+            <arg value="-style"/>
+            <arg value="DETAILED"/>
+            <arg value="-logLevel"/>
+            <arg value="DEBUG"/>
+            -->
+            <arg value="-localWorkers"/>
+            <arg value="2"/>
+            <arg value="-draftCompile"/>
+        </cruxmodulecompiler>
+    </target>
+
+    <!--
+    ========================================================================================================
+    Generate XSD Files, based on Crux widgets libraries found on classpath
+    ========================================================================================================
+    -->
+    <target name="generate-schemas">
+        <taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
+            <classpath>
+                <path refid="jars.build.classpath"/>
+            </classpath>
+        </taskdef>
+        <generateSchemas outputDir="${xsd.dir}" inputCharset="ISO-8859-1">
+            <classpath>
+                <path refid="jars.build.classpath"/>
+                <pathelement location="${src.dir}"/>
+            </classpath>
+        </generateSchemas>
+    </target>
+
+
+    <!--
+    ============================================================================================================================================
+    Export project as a Crux Module, for using in a host application ( COMPILA CRUX, E EMPACOTA A COMPILAÇÃO CRUX DENTRO DO JAR)
+    ============================================================================================================================================
+    -->
+    <target name="export-as-module-with-crux-compilation">
+
+        <taskdef resource="org/cruxframework/crux/tools/crux-module-tools.xml">
+            <classpath>
+                <path refid="jars.build.classpath"/>
+            </classpath>
+        </taskdef>
+
+        <delete file="${exploded.jar.dir}" failonerror="false"/>
+        <mkdir dir="${exploded.jar.dir}"/>
+
+        <moduleExporter sourcedir="${src.dir}" outputdir="${dist.dir}" modulename="${compiledName}" outputmodulename="${final.name}" unpackaged="true" inputCharset="ISO-8859-1" pagesOutputCharset="ISO-8859-1">
+            <classpath>
+                <path refid="jars.build.classpath"/>
+            </classpath>
+            <!--
+            <jvmarg value="-Xdebug" />
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" />
+            -->
+        </moduleExporter>
+
+        <copy todir="${exploded.jar.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.class"/>
+            </fileset>
+        </copy>
+        <delete>
+            <fileset dir="${exploded.jar.dir}">
+                <include name="**/MCA.properties"/>
+                <include name="**/Crux.properties"/>
+                <include name="**/CruxModuleConfig.properties"/>
+				<include name="**/*.crux.xml"/>
+				<include name="**/log4j.xml"/>
+            </fileset>
+        </delete>
+        <antcall target="compress-css"/>
+        <property name="meta.inf.dir" value="${exploded.jar.dir}/META-INF"/>
+        <mkdir dir="${meta.inf.dir}"/>
+		<property name="manifest.file" value="${meta.inf.dir}/MANIFEST.MF"/>
+		<antcall target="create-manifest"/>
+        <jar destfile="${exploded.jar.dir}.zip" manifest="${manifest.file}">
+            <fileset dir="${exploded.jar.dir}"/>
+        </jar>
+        <delete dir="${exploded.jar.dir}" failonerror="yes" includeemptydirs="yes"/>
+        <rename src="${exploded.jar.dir}.zip" dest="${exploded.jar.dir}"/>
+    </target>
+
+    <!--
+    ========================================================================================================
+    Export project as a Crux Module, for using in a host application ( NÃO COMPILA CRUX)
+    ========================================================================================================
+    -->
+    <target name="export-as-module">
+        <delete file="${exploded.jar.dir}" failonerror="false"/>
+        <mkdir dir="${exploded.jar.dir}"/>
+        <javac destdir="${exploded.jar.dir}" fork="true" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" encoding="ISO-8859-1">
+            <src>
+                <pathelement location="${src.dir}"/>
+            </src>
+            <classpath refid="build.classpath"/>
+        </javac>
+        <copy todir="${exploded.jar.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.class"/>
+            </fileset>
+        </copy>
+        <delete>
+            <fileset dir="${exploded.jar.dir}">
+                <include name="**/MCA.properties"/>
+                <include name="**/Crux.properties"/>
+                <include name="**/CruxModuleConfig.properties"/>
+				<include name="**/*.crux.xml"/>
+				<include name="**/log4j.xml"/>
+            </fileset>
+        </delete>
+        <antcall target="compress-css"/>
+        <property name="meta.inf.dir" value="${exploded.jar.dir}/META-INF"/>
+        <mkdir dir="${meta.inf.dir}"/>
+
+		<property name="manifest.file" value="${meta.inf.dir}/MANIFEST.MF"/>
+		<antcall target="create-manifest"/>
+
+        <jar destfile="${exploded.jar.dir}.zip" manifest="${manifest.file}">
+            <fileset dir="${exploded.jar.dir}"/>
+        </jar>
+        <delete dir="${exploded.jar.dir}" failonerror="yes" includeemptydirs="yes"/>
+        <rename src="${exploded.jar.dir}.zip" dest="${exploded.jar.dir}"/>
+    </target>
+
+    <!--
+    ========================================================================================================
+    Export project as a Crux Module, for using in another module.
+    ========================================================================================================
+    -->
+    <target name="export-as-module-to-module">
+        <delete file="${exploded.jar.dir}" failonerror="false"/>
+        <mkdir dir="${exploded.jar.dir}"/>
+        <javac destdir="${exploded.jar.dir}" fork="true" deprecation="true" target="1.5" source="1.5" debug="true" optimize="false" encoding="ISO-8859-1">
+            <src>
+                <pathelement location="${src.dir}"/>
+            </src>
+            <classpath refid="build.classpath"/>
+        </javac>
+        <copy todir="${exploded.jar.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.class"/>
+            </fileset>
+        </copy>
+        <delete>
+            <fileset dir="${exploded.jar.dir}">
+                <include name="**/MCA.properties"/>
+                <include name="**/Crux.properties"/>
+                <include name="**/CruxModuleConfig.properties"/>
+				<include name="**/*.crux.xml"/>
+				<include name="**/log4j.xml"/>
+            </fileset>
+        </delete>
+        <antcall target="compress-css"/>
+        <property name="meta.inf.dir" value="${exploded.jar.dir}/META-INF"/>
+        <mkdir dir="${meta.inf.dir}"/>
+
+		<property name="manifest.file" value="${meta.inf.dir}/MANIFEST.MF"/>
+		<antcall target="create-manifest"/>
+
+        <jar destfile="${exploded.jar.dir}.zip">
+            <fileset dir="${exploded.jar.dir}"/>
+        </jar>
+        <delete dir="${exploded.jar.dir}" failonerror="yes" includeemptydirs="yes"/>
+        <rename src="${exploded.jar.dir}.zip" dest="${exploded.jar.dir}"/>
+    </target>
+
+    <!--
+    ========================================================================================================
+    Coleta de informacoes sobre a versao do codigo fonte usada para este build
+    ========================================================================================================
+    -->
+    <target name="create-manifest">
+        <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="build.classpath"/>
+		<echo message="Classpath: ${build.classpath}"/>
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="build.classpath"/>
+        <svn failonerror="false" javahl="false" svnkit="true">
+            <wcVersion path="${basedir}"/>
+        </svn>
+        <tstamp>
+             <format property="current.time" pattern="dd/MM/yyyy HH:mm:ss" locale="en,UK"/>
+        </tstamp>
+        <propertyregex property="svn.branch" input="${repository.path}" regexp=".*/([^/]+)/[^/]+" select="\1"/>
+        <manifest file="${manifest.file}">
+            <attribute name="Build-Timestamp" value="${current.time}"/>
+            <attribute name="Implementation-Version" value="${svn.branch}"/>
+            <attribute name="Implementation-Revision" value="${revision.max}"/>
+        </manifest>
+    </target>
+
+    <!-- Executes YUI compressor on simple css file -->
+    <target name="compress-css" depends="concatenate-css" if="compressCss">
+      <java jar="${build.lib.dir}/yuicompressor.jar" fork="true">
+        <arg value="-v"/>
+        <arg value="${exploded.css.dir}/${css.filename}"/>
+        <arg value="-o"/>
+        <arg value="${exploded.css.dir}/${css.filename}"/>
+      </java>
+    </target>
+
+    <target name="concatenate-css" description="Concatenate CSS source files" if="compressCss">
+        <echo message="Building ${css.filename}"/>
+        <concat destfile="${exploded.css.dir}/${css.filename}">
+            <fileset dir="${exploded.css.dir}" includes="adv-style.css"/>
+            <fileset dir="${exploded.css.dir}" includes="basic-style.css"/>
+            <fileset dir="${exploded.css.dir}" includes="custom-style.css"/>
+            <fileset dir="${exploded.css.dir}" includes="wizard.css"/>
+        </concat>
+        <echo message="${css.filename} built."/>
+    </target>
+
+</project>
