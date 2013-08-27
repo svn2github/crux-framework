@@ -23,7 +23,7 @@
 			<show:menuSection label="Elementos de Layout"/>
 			<show:menuEntry label="StyledPanel" targetView="styledPanel"/>
 			<show:menuEntry label="FormDisplay" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 3" targetView="formDisplay"/>
+			<show:menuEntry label="FileUploader" targetView="fileUploader"/>
 			<show:menuSection label="Seção 2"/>
 			<show:menuEntry label="Exemplo 4" targetView="formDisplay"/>
 			<show:menuEntry label="Exemplo 5" targetView="formDisplay"/>
