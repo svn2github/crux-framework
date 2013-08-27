@@ -46,7 +46,7 @@ import com.google.gwt.core.ext.typeinfo.JRawType;
 import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.dev.javac.rebind.CachedRebindResult;
+import com.google.gwt.core.ext.CachedGeneratorResult;
 import com.google.gwt.dev.util.log.speedtracer.CompilerEventType;
 import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger;
 import com.google.gwt.dev.util.log.speedtracer.SpeedTracerLogger.Event;
@@ -299,7 +299,7 @@ public class TypeSerializerCreator {
   private boolean findCacheableFieldSerializerAndMarkForReuseIfAvailable(TreeLogger logger,
       GeneratorContext ctx, JType type) {
 
-    CachedRebindResult lastResult = ctx.getCachedGeneratorResult();
+    CachedGeneratorResult lastResult = ctx.getCachedGeneratorResult();
     if (lastResult == null || !ctx.isGeneratorResultCachingEnabled()) {
       return false;
     }
@@ -325,7 +325,7 @@ public class TypeSerializerCreator {
     boolean foundMatch = false;
     if (typeLastModifiedTimeMap.get(sourceName).equals(cachedLastModifiedTimes.get(sourceName))) {
       // use cached version, if available
-      foundMatch = ctx.reuseTypeFromCacheIfAvailable(fieldSerializerName);
+      foundMatch = ctx.checkRebindRuleAvailable(fieldSerializerName);
     }
 
     if (logger.isLoggable(TreeLogger.TRACE)) {

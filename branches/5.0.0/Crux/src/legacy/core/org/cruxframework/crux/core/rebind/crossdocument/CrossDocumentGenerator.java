@@ -18,13 +18,13 @@ package org.cruxframework.crux.core.rebind.crossdocument;
 import org.cruxframework.crux.core.client.Legacy;
 
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.GeneratorExt;
+import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.dev.javac.rebind.RebindResult;
-import com.google.gwt.dev.javac.rebind.RebindStatus;
+import com.google.gwt.core.ext.RebindResult;
+import com.google.gwt.core.ext.RebindMode;
 
 /**
  * Generator for cross document objects.
@@ -34,10 +34,11 @@ import com.google.gwt.dev.javac.rebind.RebindStatus;
  */
 @Legacy
 @Deprecated
-public class CrossDocumentGenerator extends GeneratorExt
+public class CrossDocumentGenerator extends Generator
 {
+	
 	@Override
-	public RebindResult generateIncrementally(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException
+	public String generate(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException
 	{
 		TypeOracle typeOracle = context.getTypeOracle();
 		assert (typeOracle != null);
@@ -56,7 +57,7 @@ public class CrossDocumentGenerator extends GeneratorExt
 		}
 		
 		String returnType = new CrossDocumentProxyCreator(logger, context, crossDocument).create();
-	    return new RebindResult(RebindStatus.USE_PARTIAL_CACHED, returnType);
+	    return new RebindResult(RebindMode.USE_PARTIAL_CACHED, returnType).getResultTypeName();
 	}
 	
 }
