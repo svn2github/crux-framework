@@ -1,33 +1,39 @@
 <project name="CrossDeviceHelloWorldMaven" basedir="../">
 
 	<property name="final.name" value="CrossDeviceHelloWorldMaven" />
-	<property name="src.dir" value="src" />
+	<property name="src.root.dir" value="src" />
 	<property name="dist.dir" value="dist" />
 	<property name="temp.dir" value="${dist.dir}/temp" />
-
-	<property name="web.root" value="target/CrossDeviceHelloWorldMaven-5.0.0" />
-	<property name="web.inf.dir" value="${web.root}/WEB-INF" />
-	<property name="web.lib.dir" value="${web.inf.dir}/lib" />
-	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
 
 	<property name="xsd.dir" value="xsd" />
 	<property file="build/build.properties" />
 	<property file="build/version.properties" />
 	<property name="snapshots.dir" value="snapshots" />
+	
+	<!-- maven mod -->
+	<property name="target.root" value="target/CrossDeviceHelloWorldMaven-5.0.0" />
+	<property name="src.dir" value="src/main/java" />
+	<property name="resources.dir" value="src/main/resources" />
+	<property name="web.dir" value="src/main/webapp" />
+	<property name="web.inf.dir" value="${web.dir}/WEB-INF" />
+	<property name="target.lib.dir" value="${target.root}/WEB-INF/lib" />
 
 	<property name="webappctxname" value="CrossDeviceHelloWorldMaven-5.0.0"/>
 	<property name="gwt.args" value="-gen generated -bindAddress 0.0.0.0 -logLevel INFO"/>
 	<property name="module.name" value="org.cruxframework.crossdevice.helloworld.CrossDeviceHelloWorld"/>
+	
+	<!-- see if it's necessary -->
+	<property name="target.classes.dir" value="${web.inf.dir}/classes" />
 
-	<path id="build.classpath">
-		<fileset dir="${web.lib.dir}">
+	<path id="target.build.classpath">
+		<fileset dir="${target.lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-
+	
 	<taskdef resource="org/cruxframework/crux/tools/crux-tools.xml">
 		<classpath>
-			<path refid="build.classpath" />
+			<path refid="target.build.classpath" />
 		</classpath>
 	</taskdef>
 
@@ -97,13 +103,13 @@
 		<delete dir="${temp.dir}" failonerror="no" includeemptydirs="yes" includes="**/*" />
 		<mkdir dir="${temp.dir}" />
 
-		<copydir dest="${temp.dir}/webroot" src="${web.root}" />
+		<copydir dest="${temp.dir}/webroot" src="${web.dir}" />
 
-		<cruxcompiler srcDir="${src.dir}" keepPagesGeneratedFiles="true" outputDir="${temp.dir}/webroot" 
+		<cruxcompiler srcDir="${src.root.dir}" keepPagesGeneratedFiles="true" outputDir="${temp.dir}/webroot" 
 			webDir="${temp.dir}/webroot" pagesOutputDir="${temp.dir}/webroot" outputCharset="UTF-8">
 			<dirset dir="${temp.dir}/webroot" />
 			<classpath>
-				<path refid="build.classpath" />
+				<path refid="target.build.classpath" />
 			</classpath>
 
 			<!-- change these two parameters if you need to modify memory settings -->
@@ -132,7 +138,7 @@
 
 		<serviceMapper projectDir="${temp.dir}/webroot">
 			<classpath>
-				<path refid="build.classpath" />
+				<path refid="target.build.classpath" />
 				<pathelement path="${target.classes.dir}" />
 			</classpath>
 		</serviceMapper>
@@ -158,12 +164,11 @@
 	========================================================================================================
 	-->
 	<target name="compile-scripts">
-		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
+		<cruxcompiler srcDir="${src.dir}" outputDir="${target.root}" webDir="${web.dir}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
+			<dirset dir="${web.dir}" />
 			<classpath>
-				<path refid="build.classpath" />
-				<pathelement path="${web.root}" />
-				<pathelement path="${target.classes.dir}" />
+				<path refid="target.build.classpath" />
+				<pathelement path="${target.lib.dir}" />
 			</classpath>
 
 			<!-- change these two parameters if you need to modify memory settings -->
@@ -182,50 +187,18 @@
 			-->
 		</cruxcompiler>
 	</target>
-
-	<!-- 
-	========================================================================================================
-		Invokes the GWT compiler with draftCompile option and java debug parameters.
-	========================================================================================================
-	-->
-	<target name="fast-compile-scripts-bebug">
-		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
-			<classpath>
-				<path refid="build.classpath" />
-				<pathelement path="${web.root}" />
-				<pathelement path="${target.classes.dir}" />
-			</classpath>
-
-			<!-- change these two parameters if you need to modify memory settings -->
-			<jvmarg value="-Xmx768M" />
-			<jvmarg value="-Xms256M" />
-
-			<jvmarg value="-Xdebug" />
-			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y"/>
-
-			<arg value="-draftCompile" />
-
-			<!-- use these parameters if you want to modify GWT output settings
-			<arg value="-style"/>
-			<arg value="DETAILED"/>
-			<arg value="-logLevel"/>
-			<arg value="DEBUG"/>
-			-->
-		</cruxcompiler>
-	</target>
-
+	
 	<!-- 
 	========================================================================================================
 		Invokes the GWT compiler with draftCompile option.
 	========================================================================================================
 	-->
 	<target name="fast-compile-scripts">
-		<cruxcompiler srcDir="${src.dir}" outputDir="${web.root}" webDir="${web.root}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
-			<dirset dir="${web.root}" />
+		<cruxcompiler srcDir="${src.root.dir}" outputDir="${web.dir}" webDir="${web.dir}" keepPagesGeneratedFiles="false" outputCharset="UTF-8">
+			<dirset dir="${web.dir}" />
 			<classpath>
-				<path refid="build.classpath" />
-				<pathelement path="${web.root}" />
+				<path refid="target.build.classpath" />
+				<pathelement path="${web.dir}" />
 				<pathelement path="${target.classes.dir}" />
 			</classpath>
 
@@ -253,10 +226,10 @@
 	<target name="generate-schemas">
 		<generateSchemas outputDir="${xsd.dir}">
 			<classpath>
-				<path refid="build.classpath" />
+				<path refid="target.build.classpath" />
 				<pathelement path="${target.classes.dir}" />
-				<pathelement path="${web.root}" />
-				<pathelement location="${src.dir}" />
+				<pathelement path="${web.dir}" />
+				<pathelement location="${src.root.dir}" />
 			</classpath>
 		</generateSchemas>
 	</target>
@@ -327,10 +300,10 @@
 		<java classname="org.cruxframework.crux.tools.crawling.CrawlingTool" fork="true">
 			<classpath>
 				<pathelement path="${build/htmlunit}" />
-				<path refid="build.classpath" />
+				<path refid="target.build.classpath" />
 				<pathelement path="${target.classes.dir}" />
-				<pathelement path="${web.root}" />
-				<pathelement location="${src.dir}" />
+				<pathelement path="${web.dir}" />
+				<pathelement location="${src.root.dir}" />
 			</classpath>
 			<!--jvmarg value="-Xdebug" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=3331,server=y,suspend=y" /-->

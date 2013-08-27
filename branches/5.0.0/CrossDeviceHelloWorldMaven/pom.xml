@@ -17,11 +17,9 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<jdk_home>E:\desenv\java\jdk-7u21-windows-x64</jdk_home>
+		<jdk_home>C:\desenv\java\jres_jdks\jdk-7u17-windows-x64</jdk_home>
 
 		<!-- GWT RUN using ANT -->
-		<gwt.sdk>C:\Users\samuel.cardoso\Desktop\gwt_sdk</gwt.sdk>
-		<gwt.args>-gen generated -bindAddress 0.0.0.0 -logLevel INFO</gwt.args>
 		<webappctxname>CrossDeviceHelloWorldMaven-5.0.0</webappctxname>
 		<module.name>org.cruxframework.crossdevice.CrossDeviceHelloWorld</module.name>
 
