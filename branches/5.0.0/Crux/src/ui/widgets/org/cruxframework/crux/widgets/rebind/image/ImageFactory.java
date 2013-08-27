@@ -30,6 +30,7 @@ import com.google.gwt.resources.client.ImageResource;
 	@TagAttribute(value="preventDefaultTouchEvents", type=Boolean.class, defaultValue="false"),
 	@TagAttribute(value="url", processor=ImageFactory.URLAttributeParser.class, supportsResources=true),
 	@TagAttribute(value="altText"),
+	@TagAttribute(value="visible", type=Boolean.class, defaultValue="true"),
 	@TagAttribute(value="visibleRect", processor=ImageFactory.VisibleRectAttributeParser.class)
 })	
 @TagEvents({
