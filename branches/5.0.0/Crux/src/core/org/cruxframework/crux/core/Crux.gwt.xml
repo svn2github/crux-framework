@@ -108,19 +108,27 @@
 	
 	<!-- Replaces -->
 	
+	<!-- Specify Default implementation for Collator -->
+    <replace-with
+        class="org.cruxframework.crux.core.client.utils.StringUtils.CollatorFFandIE">
+        <when-type-is class="org.cruxframework.crux.core.client.utils.StringUtils.Collator" />
+    </replace-with>
+    <replace-with
+        class="org.cruxframework.crux.core.client.utils.StringUtils.CollatorSafari">
+        <when-type-is class="org.cruxframework.crux.core.client.utils.StringUtils.Collator" />
+        <when-property-is name="user.agent" value="safari"/>
+    </replace-with>   
+    
 	<!-- Specify Default implementation for NetworkChecker -->
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerDefault">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
     </replace-with>
-	
-	<!-- Specify implementation for specific browsers -->
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerSafari">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
         <when-property-is name="user.agent" value="safari"/>
     </replace-with>   
-    
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerIE8AndAbove">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
