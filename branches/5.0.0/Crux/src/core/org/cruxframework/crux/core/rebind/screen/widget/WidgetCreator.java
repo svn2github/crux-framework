@@ -610,7 +610,7 @@ public abstract class WidgetCreator <C extends WidgetCreatorContext>
 		instantiateWidget(out, context);
 		if(consumer != null)
 		{
-			consumer.consume(out, widgetId, widgetVariableName);
+			consumer.consume(out, widgetId, widgetVariableName, getWidgetFactoryDeclaration(), metaElem);
 		}			
 		return context;
 	}

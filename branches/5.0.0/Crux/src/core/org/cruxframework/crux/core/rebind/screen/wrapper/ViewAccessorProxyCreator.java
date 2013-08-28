@@ -17,6 +17,7 @@ package org.cruxframework.crux.core.rebind.screen.wrapper;
 
 import org.cruxframework.crux.core.client.Crux;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.core.client.screen.views.BindableView;
 import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.ViewContainer;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory.CreateCallback;
@@ -41,6 +42,7 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 {
 	private final JClassType viewType;
 	private JClassType createCallbackType;
+	private JClassType bindableViewType;
 
 	/**
 	 * Constructor
@@ -53,6 +55,7 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 	    try
         {
 	        viewType = invokerIntf.getOracle().getType(View.class.getCanonicalName());
+	        bindableViewType = invokerIntf.getOracle().getType(BindableView.class.getCanonicalName());
 	        createCallbackType = invokerIntf.getOracle().getType(CreateCallback.class.getCanonicalName());
         }
         catch (NotFoundException e)
@@ -101,19 +104,19 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 		{	
 			if(parameters.length == 0)
 			{
-				String widgetName;
+				String viewName;
 				if (name.startsWith("get"))
 				{
-					widgetName = name.substring(3);
-					if (widgetName.length() > 0)
+					viewName = name.substring(3);
+					if (viewName.length() > 0)
 					{
-						generateWrapperMethodForGetter(sourceWriter, name, widgetName);
+						generateWrapperMethodForGetter(sourceWriter, name, viewName, returnTypeClass);
 					}
 				}
 				else
 				{
-					widgetName = name;
-					generateWrapperMethod(sourceWriter, name, widgetName);
+					viewName = name;
+					generateWrapperMethod(sourceWriter, name, viewName, returnTypeClass);
 				}
 			}
 			else
@@ -135,11 +138,19 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 	 * @param sourceWriter
 	 * @param name
 	 * @param viewName
+	 * @param returnTypeClass 
 	 */
-	private void generateWrapperMethod(SourcePrinter sourceWriter, String name, String viewName)
+	private void generateWrapperMethod(SourcePrinter sourceWriter, String name, String viewName, JClassType returnTypeClass)
     {
-		sourceWriter.println("public View " + name+"(){");
-		sourceWriter.println("return View.getView(\""+viewName+"\");");
+		sourceWriter.println("public "+returnTypeClass.getParameterizedQualifiedSourceName()+" " + name+"(){");
+		if (returnTypeClass.isAssignableTo(bindableViewType))
+		{
+			sourceWriter.println("return ("+returnTypeClass.getParameterizedQualifiedSourceName()+")View.getView(\""+viewName+"\");");
+		}
+		else
+		{
+			sourceWriter.println("return View.getView(\""+viewName+"\");");
+		}
 		sourceWriter.println("}");
     }
 
@@ -164,17 +175,23 @@ public class ViewAccessorProxyCreator extends AbstractWrapperProxyCreator
 
 	/**
 	 * @param sourceWriter
-	 * @param returnType
 	 * @param name
 	 * @param viewName
+	 * @param returnType 
 	 */
 	private void generateWrapperMethodForGetter(SourcePrinter sourceWriter,
-			String name, String viewName)
+			String name, String viewName, JClassType returnTypeClass)
 	{
 		String widgetNameFirstLower = Character.toLowerCase(viewName.charAt(0)) + viewName.substring(1);
-		sourceWriter.println("public View " + name+"(){");
-		sourceWriter.println("return _getView(\""+widgetNameFirstLower+"\");");
-		sourceWriter.println("}");
+		sourceWriter.println("public "+returnTypeClass.getParameterizedQualifiedSourceName()+" " + name+"(){");
+		if (returnTypeClass.isAssignableTo(bindableViewType))
+		{
+			sourceWriter.println("return ("+returnTypeClass.getParameterizedQualifiedSourceName()+")_getView(\""+widgetNameFirstLower+"\");");
+		}
+		else
+		{
+			sourceWriter.println("return _getView(\""+widgetNameFirstLower+"\");");
+		}
 	}
 	
 	private void generateRootViewMethod(SourcePrinter sourceWriter)

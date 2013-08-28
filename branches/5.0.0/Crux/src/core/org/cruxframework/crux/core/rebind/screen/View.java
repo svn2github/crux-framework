@@ -43,6 +43,7 @@ public class View
 	protected String fragment;
 	protected String smallViewport;
 	protected String largeViewport;
+	protected String dataObject;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -387,6 +388,24 @@ public class View
 	protected void setFragment(String fragment)
     {
     	this.fragment = fragment;
+    }
+
+	/**
+	 * DataObject bound to this view.
+	 * @return
+	 */
+	public String getDataObject()
+    {
+    	return dataObject;
+    }
+
+	/**
+	 * DataObject bound to this view.
+	 * @param dataObject
+	 */
+	protected void setDataObject(String dataObject)
+    {
+    	this.dataObject = dataObject;
     }
 
 	/**

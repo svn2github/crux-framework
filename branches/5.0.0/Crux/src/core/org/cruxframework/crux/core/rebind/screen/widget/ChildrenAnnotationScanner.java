@@ -133,7 +133,7 @@ class ChildrenAnnotationScanner
 				{
 					childWidget = lazyFactory.getLazyPanel(out, context.getChildElement(), context.getWidgetId(), LazyPanelWrappingType.wrapChildren);
 					String lazyPanelId = ViewFactoryUtils.getLazyPanelId(context.getWidgetId(), LazyPanelWrappingType.wrapChildren);
-					consumer.consume(out, lazyPanelId, childWidget);
+					consumer.consume(out, lazyPanelId, childWidget, widgetCreator.getWidgetFactoryDeclaration(), context.getWidgetElement());
 					((LazyCompatibleWidgetConsumer)consumer).handleLazyWrapChildrenCreation(out, context.getWidgetId());
 				}
 				else

@@ -78,11 +78,11 @@ public class LazyPanelFactory
 		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
 		{
 			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
-		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+factory.getViewVariable()+", "+controllerAccessHandler.getSingleControllerVariable()+");");
+		factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+ViewFactoryCreator.getViewVariable()+", "+controllerAccessHandler.getSingleControllerVariable()+");");
 		}
 		else
 		{
-			factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+factory.getViewVariable()+");");
+			factoryPrinter.println(lazyPanel+"Class " + lazyPanel + " = new "+lazyPanel+"Class("+ViewFactoryCreator.getViewVariable()+");");
 		}
 		
 		return lazyPanel;
@@ -95,7 +95,7 @@ public class LazyPanelFactory
 	private void generateFields(SourcePrinter printer, String className)
     {
 		printer.println("private static Logger "+factory.getLoggerVariable()+" = Logger.getLogger("+className+".class.getName());");
-		printer.println("private View "+factory.getViewVariable()+";");
+		printer.println("private "+factory.getViewSuperClassName()+" "+ViewFactoryCreator.getViewVariable()+";");
 	    Map<String, String> declaredMessages = factory.getDeclaredMessages();
 		for (String messageClass: declaredMessages.keySet())
 	    {
@@ -118,16 +118,16 @@ public class LazyPanelFactory
 		if (factory.getControllerAccessHandler() instanceof SingleControllerAccessHandler)
 		{
 			SingleControllerAccessHandler controllerAccessHandler = (SingleControllerAccessHandler) factory.getControllerAccessHandler();
-			printer.println("public "+className+"(View view, "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+"){");
+			printer.println("public "+className+"("+factory.getViewSuperClassName()+" view, "+controllerAccessHandler.getSingleControllerImplClassName()+" "+controllerAccessHandler.getSingleControllerVariable()+"){");
 			printer.println("super(view, "+EscapeUtils.quote(widgetId)+");");
-			printer.println("this."+factory.getViewVariable()+" = view;");
+			printer.println("this."+ViewFactoryCreator.getViewVariable()+" = view;");
 			printer.println("this."+controllerAccessHandler.getSingleControllerVariable()+" = "+controllerAccessHandler.getSingleControllerVariable()+";");
 		}
 		else
 		{
-			printer.println("public "+className+"(View view){");
+			printer.println("public "+className+"("+factory.getViewSuperClassName()+" view){");
 			printer.println("super(view, "+EscapeUtils.quote(widgetId)+");");
-			printer.println("this."+factory.getViewVariable()+" = view;");
+			printer.println("this."+ViewFactoryCreator.getViewVariable()+" = view;");
 		}
 		printer.println("}");
     }

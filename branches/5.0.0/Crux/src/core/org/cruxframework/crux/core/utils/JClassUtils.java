@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator.SourcePrinter;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -43,22 +44,22 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 public class JClassUtils
 {
 
-	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String colKey, 
-			String recordObject, boolean finishCommand) 
+	public static JType buildGetValueExpression(StringBuilder out, JClassType dtoType, String propertyPath, 
+			String objectVariable, boolean finishCommand) 
 					throws NoSuchFieldException
     {
-        if (StringUtils.isEmpty(colKey))
+        if (StringUtils.isEmpty(propertyPath))
         {
-			throw new NoSuchFieldException(colKey);
+			throw new NoSuchFieldException(propertyPath);
         }
         String[] props;
-        if (colKey.contains("."))
+        if (propertyPath.contains("."))
         {
-        	props = colKey.split("\\.");
+        	props = propertyPath.split("\\.");
         }
         else
         {
-        	props = new String[]{colKey};
+        	props = new String[]{propertyPath};
         }
         
         if (props != null && props.length > 0)
@@ -66,14 +67,14 @@ public class JClassUtils
         	StringBuilder getExpression = new StringBuilder();
         	StringBuilder checkNullExpression = new StringBuilder();
         	
-        	getExpression.append(recordObject);
+        	getExpression.append(objectVariable);
         	JType baseType = dtoType;
         	JClassType baseClassType = baseType.isClassOrInterface();
         	for (int i=0; i < props.length; i++)
         	{
         		if (baseClassType == null && i < props.length-1)
         		{
-        			throw new NoSuchFieldException(colKey);
+        			throw new NoSuchFieldException(propertyPath);
         		}
         		String prop = props[i];
         		if (i>0)
@@ -91,7 +92,7 @@ public class JClassUtils
         			JMethod method = getMethod(baseClassType, prop, new JType[]{});
         			if (method == null)
         			{
-        				throw new NoSuchFieldException(colKey);
+        				throw new NoSuchFieldException(propertyPath);
         			}
         			else
         			{
@@ -117,10 +118,65 @@ public class JClassUtils
         }
         else
         {
-			throw new NoSuchFieldException(colKey);
+			throw new NoSuchFieldException(propertyPath);
         }
     }		
 
+	public static JType buildSetValueExpression(SourcePrinter out, JClassType dtoType, String propertyPath, String objectVariable, String value) 
+					throws NoSuchFieldException
+    {
+        if (StringUtils.isEmpty(propertyPath))
+        {
+			throw new NoSuchFieldException(propertyPath);
+        }
+        String[] props;
+        if (propertyPath.contains("."))
+        {
+        	props = propertyPath.split("\\.");
+        }
+        else
+        {
+        	props = new String[]{propertyPath};
+        }
+        
+        if (props != null && props.length > 0)
+        {
+        	StringBuilder getExpression = new StringBuilder();
+        	getExpression.append(objectVariable);
+        	JType baseType = dtoType;
+        	JClassType baseClassType = baseType.isClassOrInterface();
+        	for (int i=0; i < props.length-1; i++)
+        	{
+        		if (baseClassType == null && i < props.length-1)
+        		{
+        			throw new NoSuchFieldException(propertyPath);
+        		}
+        		String prop = props[i];
+        		JClassType propertyType = getTypeForProperty(prop, baseClassType).isClassOrInterface();
+        		
+        		String getterMethod = getGetterMethod(prop, baseClassType);
+        		String setterMethod = getSetterMethod(prop, baseClassType, propertyType);
+
+        		out.println("if ("+getExpression.toString()+"."+getterMethod+"()==null){");
+        		out.println(getExpression+"."+setterMethod+"(("+propertyType.getParameterizedQualifiedSourceName()+")"+GWT.class.getCanonicalName()+".create("+propertyType.getQualifiedSourceName()+".class));");
+        		out.println("}");
+        		getExpression.append("."+getterMethod+"()");
+        		
+        		baseClassType = propertyType;
+        	}
+    		String prop = props[props.length-1];
+    		JType propertyType = getTypeForProperty(prop, baseClassType);
+			String setterMethod = getSetterMethod(prop, baseClassType, propertyType);
+			out.println(getExpression+"."+setterMethod+"("+value+");");
+        	
+        	return propertyType;
+        }
+        else
+        {
+			throw new NoSuchFieldException(propertyPath);
+        }
+    }			
+	
 	/**
 	 * 
 	 * @param propertyName
@@ -162,6 +218,42 @@ public class JClassUtils
                 }
             }
 			
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param propertyName
+	 * @param baseClass 
+	 * @return
+	 */
+	public static String getSetterMethod(String propertyName, JClassType baseClass, JType propertyType)
+	{
+		if (propertyName == null || propertyName.length() == 0)
+		{
+			return null;
+		}
+		String result = ""+Character.toUpperCase(propertyName.charAt(0)); 
+		result += propertyName.substring(1);
+		if (propertyName.length() > 1)
+		{
+			try
+            {
+	            baseClass.getMethod("set"+result, new JType[]{propertyType});
+                result = "set"+result;
+            }
+            catch (Exception e)
+            {
+            	if (baseClass.getSuperclass() == null)
+            	{
+            		result = null;
+            	}
+            	else
+            	{
+            		result = getSetterMethod(propertyName, baseClass.getSuperclass(), propertyType);
+            	}
+            }
 		}
 		return result;
 	}

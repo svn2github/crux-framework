@@ -31,6 +31,7 @@ import org.cruxframework.crux.core.client.datasource.RegisteredDataSources;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
 import org.cruxframework.crux.core.client.screen.LazyPanelWrappingType;
+import org.cruxframework.crux.core.client.screen.views.BindableView;
 import org.cruxframework.crux.core.client.screen.views.View.RenderCallback;
 import org.cruxframework.crux.core.client.screen.views.ViewActivateEvent;
 import org.cruxframework.crux.core.client.screen.views.ViewActivateHandler;
@@ -45,7 +46,6 @@ import org.cruxframework.crux.core.client.screen.views.ViewUnloadHandler;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.ScriptTagHandler;
 import org.cruxframework.crux.core.client.utils.StringUtils;
-import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.declarativeui.ViewParser;
 import org.cruxframework.crux.core.i18n.MessageClasses;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
@@ -54,6 +54,7 @@ import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
 import org.cruxframework.crux.core.rebind.controller.RegisteredControllersProxyCreator;
 import org.cruxframework.crux.core.rebind.datasource.RegisteredDataSourcesProxyCreator;
+import org.cruxframework.crux.core.rebind.dto.DataObjects;
 import org.cruxframework.crux.core.rebind.ioc.IocContainerRebind;
 import org.cruxframework.crux.core.rebind.resources.Resources;
 import org.cruxframework.crux.core.rebind.screen.Event;
@@ -131,7 +132,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		public static EmptyWidgetConsumer EMPTY_WIDGET_CONSUMER = new EmptyWidgetConsumer();
 
-		void consume(SourcePrinter out, String widgetId, String widgetVariableName);
+		void consume(SourcePrinter out, String widgetId, String widgetVariableName, String widgetType, JSONObject metaElem);
 	}
 
 	/**
@@ -152,41 +153,11 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	public static class EmptyWidgetConsumer implements WidgetConsumer
 	{
-		public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName, String widgetType, JSONObject metaElem)
 		{
 		}
 	}
 
-	/**
-	 *
-	 * @author Thiago da Rosa de Bustamante
-	 *
-	 */
-	public class ViewWidgetConsumer implements LazyCompatibleWidgetConsumer
-	{
-		public void consume(SourcePrinter out, String widgetId, String widgetVariableName)
-		{
-			out.println(getViewVariable()+".addWidget("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +");");
-			if (Boolean.parseBoolean(ConfigurationFactory.getConfigurations().renderWidgetsWithIDs()))
-			{
-				out.println("ViewFactoryUtils.updateWidgetElementId("+EscapeUtils.quote(widgetId)+", "+ widgetVariableName +", "+viewVariable+");");
-			}
-		}
-
-		@Override
-        public void handleLazyWholeWidgetCreation(SourcePrinter out, String widgetId)
-        {
-			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+
-					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget)) +");");
-        }
-
-		@Override
-        public void handleLazyWrapChildrenCreation(SourcePrinter out, String widgetId)
-        {
-			out.println(getViewVariable()+".checkRuntimeLazyDependency("+EscapeUtils.quote(widgetId)+", "+
-					EscapeUtils.quote(ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapChildren)) +");");
-        }
-	}
 
 	/**
 	 * Constructor
@@ -206,7 +177,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		this.lazyFactory = new LazyPanelFactory(this);
 		this.loggerVariable = createVariableName("logger");
 		this.viewPanelVariable = createVariableName("viewPanel");
-		this.widgetConsumer = new ViewWidgetConsumer();
+		this.widgetConsumer = new ViewWidgetConsumer(this);
 		this.rootPanelChildren = new HashSet<String>();
 		this.controllerAccessHandler = new DefaultControllerAccessor(viewVariable);
 
@@ -249,7 +220,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	    {
 	    	printer.println("private "+messageClass+" "+declaredMessages.get(messageClass) + " = GWT.create("+messageClass+".class);");
 	    }
-		printer.println("private final View "+viewVariable+" = this;");
+		printer.println("private final "+getViewSuperClassName()+" "+viewVariable+" = this;");
 		printer.println("private static "+Logger.class.getCanonicalName()+" "+loggerVariable+" = "+
 	    		Logger.class.getCanonicalName()+".getLogger("+getProxySimpleName()+".class.getName());");
 		printer.println("private "+HTMLPanel.class.getCanonicalName()+" "+viewPanelVariable+" = null;");
@@ -300,6 +271,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
     	generateUpdateDimensionsMethods(printer);
     	generateInitializeLazyDependenciesMethod(printer);
     	generateGetIocContainerMethod(printer);
+		if (isDataBindEnabled())
+		{
+	    	generateCreateDataObjectMethod(printer);
+		}
+
+    }
+
+    protected void generateCreateDataObjectMethod(SourcePrinter printer)
+    {
+    	String dataObjectClass = DataObjects.getDataObject(view.getDataObject());
+		printer.println("protected "+ dataObjectClass +" createDataObject(){");
+    	printer.println("return GWT.create("+dataObjectClass+".class);");
+    	printer.println("}");
     }
 
 	protected void generateGetIocContainerMethod(SourcePrinter printer)
@@ -420,7 +404,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 			String lazyPanelId = ViewFactoryUtils.getLazyPanelId(widgetId, LazyPanelWrappingType.wrapWholeWidget);
 			lazyPanels.add(lazyPanelId);
 			widget = lazyFactory.getLazyPanel(printer, metaElem, widgetId, LazyPanelWrappingType.wrapWholeWidget);
-			consumer.consume(printer, lazyPanelId, widget);
+			consumer.consume(printer, lazyPanelId, widget, widgetType, metaElem);
 			((LazyCompatibleWidgetConsumer)consumer).handleLazyWholeWidgetCreation(printer, widgetId);
 		}
 		else
@@ -487,6 +471,19 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	{
 		return viewVariable;
 	}
+	
+    /**
+     * 
+     * @return
+     */
+	public String getViewSuperClassName()
+    {
+	    if (isDataBindEnabled())
+	    {
+	    	return BindableView.class.getCanonicalName()+"<"+DataObjects.getDataObject(view.getDataObject())+">";
+	    }
+	    return "View";
+    }
 
 	/**
 	 * Retrieves the logger variable name
@@ -1339,7 +1336,14 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 
 		ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, getProxySimpleName());
 
-		composerFactory.setSuperclass(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName());
+		if (isDataBindEnabled())
+		{
+			composerFactory.setSuperclass(getViewSuperClassName());
+		}
+		else
+		{
+			composerFactory.setSuperclass(org.cruxframework.crux.core.client.screen.views.View.class.getCanonicalName());
+		}
 
 		String[] imports = getImports();
 		for (String imp : imports)
@@ -1386,7 +1390,15 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		return false;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
+	protected boolean isDataBindEnabled()
+	{
+		return !StringUtils.isEmpty(view.getDataObject());
+	}
+	
     /**
      * Printer for code that should be executed after the screen creation.
      *

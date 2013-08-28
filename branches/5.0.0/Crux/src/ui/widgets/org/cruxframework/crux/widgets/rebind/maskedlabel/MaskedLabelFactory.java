@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandl
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAutoHorizontalAlignmentFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasFormatterFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasHorizontalAlignmentFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasWordWrapFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -53,7 +54,8 @@ public class MaskedLabelFactory extends WidgetCreator<WidgetCreatorContext>
 						   HasAllMouseHandlersFactory<WidgetCreatorContext>, 
 				           HasWordWrapFactory<WidgetCreatorContext>, 
 				           HasAutoHorizontalAlignmentFactory<WidgetCreatorContext>, 
-				           HasHorizontalAlignmentFactory<WidgetCreatorContext>
+				           HasHorizontalAlignmentFactory<WidgetCreatorContext>, 
+				           HasFormatterFactory<WidgetCreatorContext>
 {
 	/**
 	 * @param metaElem

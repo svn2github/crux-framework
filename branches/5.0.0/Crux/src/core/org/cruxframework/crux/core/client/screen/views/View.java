@@ -1117,9 +1117,10 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * @param id view identifier
 	 * @return the view or null if there is no view loaded into the screen with this identifier
 	 */
-	public static View getView(String id)
+	@SuppressWarnings("unchecked")
+    public static <T extends View> T getView(String id)
 	{
-		return loadedViews.get(id);
+		return (T) loadedViews.get(id);
 	}
 	
 	/**
@@ -1127,10 +1128,11 @@ public abstract class View implements HasViewResizeHandlers, HasWindowCloseHandl
 	 * @param viewAware
 	 * @return
 	 */
-	public static View of(Object viewAware)
+	@SuppressWarnings("unchecked")
+    public static <T extends View> T  of(Object viewAware)
 	{
 		assert (viewAware instanceof ViewAware): Crux.getMessages().viewOjectIsNotAwareOfView();
-		return ((ViewAware)viewAware).getBoundCruxView();
+		return (T) ((ViewAware)viewAware).getBoundCruxView();
 	}
 
 	/**

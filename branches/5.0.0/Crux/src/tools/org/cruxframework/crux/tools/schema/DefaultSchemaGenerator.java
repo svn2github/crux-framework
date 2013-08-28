@@ -733,6 +733,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		out.println("<xs:attribute name=\"onHistoryChanged\" type=\"xs:string\"/>");
 	    out.println("<xs:attribute name=\"width\" type=\"xs:string\"/>");
 	    out.println("<xs:attribute name=\"height\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"dataObject\" type=\"xs:string\"/>");
     }
 
 	/**

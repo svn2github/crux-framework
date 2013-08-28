@@ -29,6 +29,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.creator.HasAllMouseHandl
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasClickHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDirectionFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasDoubleClickHandlersFactory;
+import org.cruxframework.crux.core.rebind.screen.widget.creator.HasFormatterFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasNameFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.creator.HasValueChangeHandlersFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.DeclarativeFactory;
@@ -61,7 +62,8 @@ public class MaskedTextBoxFactory extends WidgetCreator<WidgetCreatorContext>
                   HasValueChangeHandlersFactory<WidgetCreatorContext>, 
                   HasClickHandlersFactory<WidgetCreatorContext>, HasAllFocusHandlersFactory<WidgetCreatorContext>,
                   HasAllKeyHandlersFactory<WidgetCreatorContext>, HasAllMouseHandlersFactory<WidgetCreatorContext>, 
-                  HasDoubleClickHandlersFactory<WidgetCreatorContext>
+                  HasDoubleClickHandlersFactory<WidgetCreatorContext>, 
+				  HasFormatterFactory<WidgetCreatorContext>
 {
 	/**
 	 * @param metaElem

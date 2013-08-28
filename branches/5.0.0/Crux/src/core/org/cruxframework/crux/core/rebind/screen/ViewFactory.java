@@ -406,6 +406,14 @@ public class ViewFactory
 	        			view.setFragment(fragment);
 	        		}
 	        	}
+	        	else if (attrName.equals("dataObject"))
+	        	{
+	        		String dataObject = elem.getString(attrName);
+	        		if (dataObject != null && dataObject.length() > 0)
+	        		{
+	        			view.setDataObject(dataObject);
+	        		}
+	        	}
 	        	else if (!attrName.equals("id") && !attrName.equals("_type"))
 	        	{
 	        		if (logger.isInfoEnabled()) logger.info("Error setting property ["+attrName+"] for view ["+view.getId()+"].");

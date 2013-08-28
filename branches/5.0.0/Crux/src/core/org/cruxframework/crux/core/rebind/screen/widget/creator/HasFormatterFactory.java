@@ -16,22 +16,16 @@
 package org.cruxframework.crux.core.rebind.screen.widget.creator;
 
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreatorContext;
-import org.cruxframework.crux.core.rebind.screen.widget.creator.event.ValueChangeEvtBind;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributeDeclaration;
 import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagAttributesDeclaration;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvent;
-import org.cruxframework.crux.core.rebind.screen.widget.declarative.TagEvents;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
 @TagAttributesDeclaration({
-	@TagAttributeDeclaration("bindPath")	
-})
-@TagEvents({
-	@TagEvent(ValueChangeEvtBind.class)
+	@TagAttributeDeclaration("bindPath")
 })	
-public interface HasValueChangeHandlersFactory<C extends WidgetCreatorContext>
+public interface HasFormatterFactory<C extends WidgetCreatorContext>
 {
 }

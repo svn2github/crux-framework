@@ -539,7 +539,7 @@ public class GridFactory extends WidgetCreator<WidgetCreatorContext>
 			this.rowVariableName = rowVariableName;
 		}
 		
-		public void consume(SourcePrinter out, String widgetId, String widgetVariableName) 
+		public void consume(SourcePrinter out, String widgetId, String widgetVariableName, String widgetType, JSONObject metaElem) 
 		{
 			out.println("registerWidget(" + rowVariableName + "," + EscapeUtils.quote(widgetId) + ", " + widgetVariableName + ");");
 		}
