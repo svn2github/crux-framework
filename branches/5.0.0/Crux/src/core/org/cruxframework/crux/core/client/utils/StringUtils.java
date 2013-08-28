@@ -19,10 +19,78 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * @author Gesse S. F. Dafe
- * @author Thiago da Rosa de Bustamante -
+ * @author Thiago da Rosa de Bustamante
+ * @author Samuel Almeida Cardoso
  */
 public class StringUtils
 {
+	private static Collator collator = null;
+	
+	public static int localeCompare(String source, String target)
+	{
+		return localeCompare(source, target, false);
+	}
+	
+	public static int localeCompare(String source, String target, boolean caseSensitive)
+	{
+		return getCollatorStaticInstance().compare(
+				caseSensitive ? source : source.toLowerCase(), caseSensitive ? target : target.toLowerCase());
+	}
+
+	private static Collator getCollatorStaticInstance()
+	{
+		if (collator == null)
+		{
+			collator = GWT.create(Collator.class);
+		}
+		return collator;
+	}
+	
+	/**
+	 * @author samuel.cardoso
+	 */
+	public interface Collator
+	{
+		public int compare(String source, String target);
+	}
+	
+	public static class CollatorFFandIE implements Collator
+	{
+		@Override
+		public native int compare(String source, String target); /*-{
+        	return source.localeCompare( target );
+    	}-*/
+	}
+	
+	public static class CollatorSafari implements Collator
+	{
+		@Override
+		public int compare(String source, String target)
+		{
+			return removeAccents(source).compareTo(removeAccents(target));
+		}
+	}
+	
+	public static String removeAccents(String value){
+        value = value.replaceAll("[ÂÀÁÄÃ]","A");  
+        value = value.replaceAll("[âãàáä]","a");  
+        value = value.replaceAll("[ÊÈÉË]","E");  
+        value = value.replaceAll("[êèéë]","e");  
+        value = value.replaceAll("ÎÍÌÏ","I");  
+        value = value.replaceAll("îíìï","i");  
+        value = value.replaceAll("[ÔÕÒÓÖ]","O");  
+        value = value.replaceAll("[ôõòóö]","o");  
+        value = value.replaceAll("[ÛÙÚÜ]","U");  
+        value = value.replaceAll("[ûúùü]","u");  
+        value = value.replaceAll("Ç","C");  
+        value = value.replaceAll("ç","c");   
+        value = value.replaceAll("[ýÿ]","y");  
+        value = value.replaceAll("Ý","Y");  
+        value = value.replaceAll("ñ","n");  
+        value = value.replaceAll("Ñ","N");  
+        return value;  
+    }  
+	
 	/**
 	 * @param src
 	 * @param length
