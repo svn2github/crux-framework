@@ -9,6 +9,7 @@
     <property file="build/build.properties"/>
     <property name="final.name" value="CrossDeviceHelloWorldMaven"/>
 	
+	<property name="gwt.unitcache" value="src/main"/>
     <property name="src.dir" value="src/main/java"/>
 	<property name="resources.dir" value="src/main/resources" />
 	<property name="web.dir" value="src/main/webapp" />
@@ -90,22 +91,20 @@
                 </classpath>
         </taskdef>
 
-    	<!--
-		<delete dir="${target.root}" failonerror="no" includeemptydirs="yes" includes="**/*"/>
+		<delete dir="${target.root}" failonerror="no" includeemptydirs="yes" includes="**/*" excludes="**lib/*.jar"/>
 		<mkdir dir="${target.root}"/>
-        -->
     	
-		<serviceMapper projectDir="${target.root}">
+		<serviceMapper projectDir="${web.dir}">
 			<classpath>
 				<path refid="jars.build.classpath"/>
-				<pathelement path="${target.classes.dir}"/>
 			</classpath>
 		</serviceMapper>
 
-        <cruxmodulecompiler srcDir="${src.dir}" outputDir="${target.root}" webDir="${target.web.dir}" keepPagesGeneratedFiles="true" inputCharset="ISO-8859-1" outputCharset="UTF-8">
+        <cruxmodulecompiler srcDir="${src.dir}" outputDir="${web.dir}" webDir="${web.dir}" keepPagesGeneratedFiles="true" inputCharset="ISO-8859-1" outputCharset="UTF-8">
     		<classpath>
                 <path refid="jars.build.classpath" />
-                <pathelement path="${target.classes.dir}" />
+    			<path location="${resources.dir}" />
+    			<path location="${gwt.unitcache}" />
             </classpath>
         	
             <!-- change these two parameters if you need to modify memory settings -->
