@@ -261,17 +261,39 @@ public class Image extends Composite implements HasSelectHandlers, HasLoadHandle
 
 	public void setUrlAndVisibleRect(SafeUri url, int left, int top, int width, int height)
 	{
+		/*
+		   note1: Issue submitted to GWT:
+		   Issue 8325: 	GWT Image: using 'VisibleRect' method erases previous stylesheets declared
+		   
+		   Until version 2.5.1 GWT doesn't copy any old 
+		   properties to the new element created inside a Clipped 
+		   or NotClipped constructor. So they are lost at some point.
+		   
+		   In order to copy the properties I had to use something like: 
+		   impl.setProperty(...);
+		   for each one of them because the following method 
+		   (intended to copy all properties) doesn't work here:
+		   getElement().setAttribute("style", currentStyle + oldStyle);
+		 */
+		boolean oldStyleHasDisplayNone = impl.getElement().getAttribute("style").contains("display: none");
 		impl.setUrlAndVisibleRect(url, left, top, width, height);
+		impl.setVisible(!oldStyleHasDisplayNone);
 	}
 
 	public void setUrlAndVisibleRect(String url, int left, int top, int width, int height)
 	{
+		//@see note1.
+		boolean oldStyleHasDisplayNone = impl.getElement().getAttribute("style").contains("display: none");
 		impl.setUrlAndVisibleRect(url, left, top, width, height);
+		impl.setVisible(!oldStyleHasDisplayNone);
 	}
 
 	public void setVisibleRect(int left, int top, int width, int height)
 	{
+		//@see note1.
+		boolean oldStyleHasDisplayNone = impl.getElement().getAttribute("style").contains("display: none"); 
 		impl.setVisibleRect(left, top, width, height);
+		impl.setVisible(!oldStyleHasDisplayNone);
 	}
 
 	@Override
