@@ -293,6 +293,7 @@ abstract class AbstractFileUploader extends Composite
 	protected Button createDeleteButton(final File file)
 	{
 		Button delete = new Button();
+		delete.setStyleName("cancelUploadButton");
 		delete.getElement().getStyle().setFloat(Float.LEFT);
 		delete.addSelectHandler(new SelectHandler()
 		{

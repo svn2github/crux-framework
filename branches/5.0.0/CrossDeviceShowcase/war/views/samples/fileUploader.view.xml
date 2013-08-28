@@ -7,7 +7,7 @@
 	useController="mainController" title="StyledPanel"> 
 	
 	<center>
-		<crux:fileUploader id="fileUploader" multiple="true"/>
+		<crux:fileUploader id="fileUploader" multiple="true" fileInputText="Escolher Arquivos" autoUploadFiles="true"/>
 		
 		<div class="speechBubble">
 			<H1>FileUploader</H1>
@@ -15,7 +15,7 @@
 				O FileUploader é um componente capaz de transmitir arquivos existentes no dispositivo cliente
 				para  servidor de aplicação. Construído sobre a especificação XMLHttpRequest 2, é capaz de 
 				enviar múltiplos arquivos simultaneamente e prover feedback de progresso ao usuário.
-				Além disso, quando o arquivo enviado é uma imagem, exibe uma miniatura de cada arquivo enviado, 
+				Além disso, caso um arquivo enviado seja uma imagem, exibe uma miniatura desse arquivo, 
 				enriquecendo a usabilidade do sistema.
 			</p> 
 		</div>
