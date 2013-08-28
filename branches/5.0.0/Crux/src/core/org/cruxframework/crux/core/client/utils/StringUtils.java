@@ -57,9 +57,10 @@ public class StringUtils
 	public static class CollatorFFandIE implements Collator
 	{
 		@Override
-		public native int compare(String source, String target); /*-{
-        	return source.localeCompare( target );
-    	}-*/
+		public native int compare(String source, String target)
+		/*-{
+			return source.localeCompare(target); 
+		}-*/;
 	}
 	
 	public static class CollatorSafari implements Collator

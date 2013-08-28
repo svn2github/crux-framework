@@ -23,6 +23,8 @@ import org.cruxframework.crux.core.client.Legacy;
 
 
 
+import org.cruxframework.crux.core.client.utils.StringUtils;
+
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -130,6 +132,10 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 		{
 			throw new DataSourceExcpetion(messages.dataSourceErrorColumnNotComparable(columnName));
 		}
+		
+		//optimization: infer column type only once
+		final boolean isStringColumn = getValue(columnName, array[0]) instanceof String;
+		
 		Arrays.sort(array, new Comparator<DataSourceRecord<E>>(){
 			public int compare(DataSourceRecord<E> o1, DataSourceRecord<E> o2)
 			{
@@ -158,20 +164,20 @@ abstract class AbstractScrollableDataSource<E> implements MeasurableDataSource<E
 					if (value2==null) return -1;
 				}
 
-				return compareNonNullValuesByType(value1,value2,ascending,caseSensitive);
+				return compareNonNullValuesByType(value1,value2,ascending,caseSensitive, isStringColumn);
 			}
 
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean caseSensitive)
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			private int compareNonNullValuesByType(Object value1, Object value2, boolean ascending, boolean caseSensitive, boolean isStringColumns)
 			{
-				if(!caseSensitive && value1 instanceof String && value2 instanceof String)
+				if(isStringColumns)
 				{
 					if (ascending)
 					{
-						return ((String)value1).compareToIgnoreCase((String)value2);	
+						return StringUtils.localeCompare((String)value1, (String)value2, caseSensitive);
 					} else
 					{
-						return ((String)value2).compareToIgnoreCase((String)value1);
+						return StringUtils.localeCompare((String)value2, (String)value1, caseSensitive);
 					}
 				}
 				
