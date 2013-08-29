@@ -72,7 +72,7 @@ public class DataSourceProxyCreator extends AbstractProxyCreator
 	 */
 	public DataSourceProxyCreator(TreeLogger logger, GeneratorContext context, JClassType dataSourceClass)
 	{
-		super(logger, context);
+		super(logger, context, false);
 		this.dataSourceClass = dataSourceClass;
 		this.dtoType = getDtoTypeFromClass();
 		this.recordType = getRecordTypeFromClass();

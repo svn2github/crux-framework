@@ -33,9 +33,9 @@ import com.google.gwt.core.ext.typeinfo.JType;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ControllerWrapperProxyCreator extends AbstractViewBindableProxyCreator
+public class ControllerAccessorProxyCreator extends AbstractViewBindableProxyCreator
 {
-	public ControllerWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
+	public ControllerAccessorProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
     {
 	    super(logger, context, baseIntf);
     }

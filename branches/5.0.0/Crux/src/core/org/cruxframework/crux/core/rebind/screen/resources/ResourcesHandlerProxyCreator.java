@@ -51,7 +51,7 @@ public class ResourcesHandlerProxyCreator extends AbstractProxyCreator
 
 	public ResourcesHandlerProxyCreator(TreeLogger logger, GeneratorContext context, String resourceId, View view, String devive)
     {
-	    super(logger, context);
+	    super(logger, context, false);
 		this.resourceId = resourceId;
 		this.view = view;
 		this.device = Device.valueOf(devive);

@@ -32,7 +32,7 @@
 	</generate-with>
 	
 	<!-- Specify the generator for screen wrappers.     -->
-	<generate-with class="org.cruxframework.crux.core.rebind.screen.wrapper.ViewWrapperGenerator">
+	<generate-with class="org.cruxframework.crux.core.rebind.screen.wrapper.WidgetAccessorGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.WidgetAccessor" />
 	</generate-with>
 
@@ -42,7 +42,7 @@
 	</generate-with>
 
 	<!-- Specify the generator for controller wrappers.     -->
-	<generate-with class="org.cruxframework.crux.core.rebind.controller.wrapper.ControllerWrapperGenerator">
+	<generate-with class="org.cruxframework.crux.core.rebind.controller.wrapper.ControllerAccessorGenerator">
 		<when-type-assignable class="org.cruxframework.crux.core.client.screen.views.ControllerAccessor" />
 	</generate-with>
 

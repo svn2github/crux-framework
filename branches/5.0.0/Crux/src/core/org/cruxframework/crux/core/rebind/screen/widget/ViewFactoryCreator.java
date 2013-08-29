@@ -170,7 +170,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 	 */
 	public ViewFactoryCreator(GeneratorContext context, TreeLogger logger, View view, String device, String module)
     {
-		super(logger, context);
+		super(logger, context, false);
 		this.view = view;
 		this.device = device;
 		this.module = module;

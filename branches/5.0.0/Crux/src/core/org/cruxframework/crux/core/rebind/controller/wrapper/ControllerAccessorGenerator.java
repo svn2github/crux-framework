@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.rebind.screen.wrapper;
+package org.cruxframework.crux.core.rebind.controller.wrapper;
 
 import org.cruxframework.crux.core.rebind.AbstractGenerator;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
@@ -27,11 +27,11 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ViewWrapperGenerator extends AbstractGenerator
+public class ControllerAccessorGenerator extends AbstractGenerator
 {
 	@Override
     protected AbstractProxyCreator createProxy(TreeLogger logger, GeneratorContext ctx, JClassType baseIntf) throws UnableToCompleteException
     {
-	    return new ViewWrapperProxyCreator(logger, ctx, baseIntf);
+	    return new ControllerAccessorProxyCreator(logger, ctx, baseIntf);
     }
 }

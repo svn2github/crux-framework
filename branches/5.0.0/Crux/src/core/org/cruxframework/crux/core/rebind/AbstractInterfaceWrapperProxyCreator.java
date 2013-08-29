@@ -35,13 +35,11 @@ import org.cruxframework.crux.core.server.CruxBridge;
 import org.cruxframework.crux.core.server.development.ViewTesterScreen;
 
 import com.google.gwt.core.ext.BadPropertyValueException;
-import com.google.gwt.core.ext.CachedGeneratorResult;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -54,31 +52,13 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 {
 	private static final String PROXY_SUFFIX = "_Impl";
 	protected JClassType baseIntf;
-	private boolean cacheable;
-	private boolean cacheableVersionFound;
 
 	public AbstractInterfaceWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf, boolean cacheable)
     {
-	    super(logger, context);
+	    super(logger, context, cacheable);
 		this.baseIntf = baseIntf;
-		this.cacheable = cacheable;
     }
 
-	@Override
-	public String create() throws CruxGeneratorException
-	{
-	    if (this.cacheable)
-	    {
-	    	if (findCacheableImplementationAndMarkForReuseIfAvailable())
-	    	{
-	    		this.cacheableVersionFound = true;
-	    		return getProxyQualifiedName();
-	    	}
-	    }
-		
-		return super.create();
-	}
-	
 	/**
 	 * @return the full qualified name of the proxy object.
 	 */
@@ -276,50 +256,7 @@ public abstract class AbstractInterfaceWrapperProxyCreator extends AbstractProxy
 	 */
 	protected boolean findCacheableImplementationAndMarkForReuseIfAvailable()
 	{
-		CachedGeneratorResult lastResult = context.getCachedGeneratorResult();
-		if (lastResult == null || !context.isGeneratorResultCachingEnabled())
-		{
-			return false;
-		}
-
-		String proxyName = getProxyQualifiedName();
-
-		// check that it is available for reuse
-		if (!lastResult.isTypeCached(proxyName))
-		{
-			return false;
-		}
-
-		try
-		{
-			long lastModified = 0L;
-			if (baseIntf instanceof JRealClassType)
-			{
-				lastModified = ((JRealClassType)baseIntf).getLastModifiedTime();
-			}
-
-			if (lastModified != 0L && lastModified < lastResult.getTimeGenerated())
-			{
-				return context.tryReuseTypeFromCache(proxyName);
-			}
-		}
-		catch (RuntimeException ex)
-		{
-			// could get an exception checking modified time
-			return false;
-		}
-
-		return false;
-	}
-	
-	protected boolean isCacheable()
-	{
-		return cacheable;
-	}
-	
-	protected boolean cacheableVersionFound()
-	{
-		return cacheableVersionFound;
+		return findCacheableImplementationAndMarkForReuseIfAvailable(baseIntf);
 	}
 	
 	/**

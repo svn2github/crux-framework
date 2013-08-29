@@ -75,7 +75,7 @@ public class ControllerProxyCreator extends AbstractProxyCreator
 	 */
 	public ControllerProxyCreator(TreeLogger logger, GeneratorContext context, JClassType controllerClass)
 	{
-		super(logger, context);
+		super(logger, context, false);
 		this.controllerClass = controllerClass;
 		Controller controllerAnnot = controllerClass.getAnnotation(Controller.class);
 		this.controllerName = controllerAnnot.value();

@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
+public class WidgetAccessorProxyCreator extends AbstractViewBindableProxyCreator
 {
 	private final JClassType widgetType;
 
@@ -44,7 +44,7 @@ public class ViewWrapperProxyCreator extends AbstractViewBindableProxyCreator
 	 * @param logger
 	 * @param context
 	 */
-	public ViewWrapperProxyCreator(TreeLogger logger, GeneratorContext context, JClassType invokerIntf)
+	public WidgetAccessorProxyCreator(TreeLogger logger, GeneratorContext context, JClassType invokerIntf)
     {
 	    super(logger, context, invokerIntf);
 	    try

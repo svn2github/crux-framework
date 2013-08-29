@@ -65,7 +65,7 @@ public class IocContainerRebind extends AbstractProxyCreator
 
 	public IocContainerRebind(TreeLogger logger, GeneratorContext context, View view, String device)
     {
-	    super(logger, context);
+	    super(logger, context, false);
 		this.view = view;
 		viewBindableType = context.getTypeOracle().findType(ViewBindable.class.getCanonicalName());
 		remoteServiceType = context.getTypeOracle().findType(RemoteService.class.getCanonicalName());

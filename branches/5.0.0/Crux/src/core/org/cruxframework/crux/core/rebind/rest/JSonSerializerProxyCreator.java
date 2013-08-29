@@ -74,7 +74,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 
 	public JSonSerializerProxyCreator(GeneratorContext context, TreeLogger logger, JType targetObjectType)
 	{
-		super(logger, context);
+		super(logger, context, true);
 		jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
 		exceptionType = context.getTypeOracle().findType(Exception.class.getCanonicalName());
 		listType = context.getTypeOracle().findType(List.class.getCanonicalName());

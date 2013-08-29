@@ -50,7 +50,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 
 	public AbstractKeyValueProxyCreator(GeneratorContext context, TreeLogger logger, JClassType targetObjectType, String objectStoreName, String[] keyPath)
 	{
-		super(logger, context);
+		super(logger, context, true);
 		this.objectStoreName = objectStoreName;
 		this.keyPath = keyPath;
 		this.targetObjectType = targetObjectType;

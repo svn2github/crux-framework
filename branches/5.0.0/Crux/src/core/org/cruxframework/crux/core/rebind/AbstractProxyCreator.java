@@ -21,11 +21,14 @@ import java.util.List;
 import org.cruxframework.crux.core.config.ConfigurationFactory;
 
 import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.CachedGeneratorResult;
 import com.google.gwt.core.ext.ConfigurationProperty;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -38,16 +41,19 @@ public abstract class AbstractProxyCreator
 {
 	protected GeneratorContext context;
 	protected TreeLogger logger;
+	protected boolean cacheable;
+	protected boolean cacheableVersionFound;
 
 	/**
 	 * @param logger
 	 * @param context
 	 * @param crossDocumentIntf
 	 */
-	public AbstractProxyCreator(TreeLogger logger, GeneratorContext context)
+	public AbstractProxyCreator(TreeLogger logger, GeneratorContext context, boolean cacheable)
     {
 		this.logger = logger;
 		this.context = context;
+		this.cacheable = cacheable;
     }
 	
 	protected boolean isAlreadyGenerated(String className)
@@ -64,6 +70,14 @@ public abstract class AbstractProxyCreator
 	public String create() throws CruxGeneratorException
 	{
 		String className = getProxyQualifiedName();
+	    if (this.cacheable)
+	    {
+	    	if (findCacheableImplementationAndMarkForReuseIfAvailable())
+	    	{
+	    		this.cacheableVersionFound = true;
+	    		return className;
+	    	}
+	    }
 		if (isAlreadyGenerated(className))
 		{
 			return className;
@@ -304,13 +318,62 @@ public abstract class AbstractProxyCreator
 		srcWriter.println(") {");
 		return parameters;
 	}
-	
+		
 	/**
 	 * @return
 	 */
-	protected boolean isCacheable()
+	protected boolean findCacheableImplementationAndMarkForReuseIfAvailable()
 	{
 		return false;
+	}
+	
+	protected boolean findCacheableImplementationAndMarkForReuseIfAvailable(JClassType baseIntf)
+	{
+		CachedGeneratorResult lastResult = context.getCachedGeneratorResult();
+		if (lastResult == null || !context.isGeneratorResultCachingEnabled())
+		{
+			return false;
+		}
+
+		String proxyName = getProxyQualifiedName();
+
+		// check that it is available for reuse
+		if (!lastResult.isTypeCached(proxyName))
+		{
+			return false;
+		}
+
+		try
+		{
+			long lastModified = 0L;
+			if (baseIntf instanceof JRealClassType)
+			{
+				lastModified = ((JRealClassType)baseIntf).getLastModifiedTime();
+			}
+
+			if (lastModified != 0L && lastModified < lastResult.getTimeGenerated())
+			{
+				return context.tryReuseTypeFromCache(proxyName);
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			// could get an exception checking modified time
+			return false;
+		}
+
+		return false;
+	}
+	
+	
+	protected boolean isCacheable()
+	{
+		return cacheable;
+	}
+	
+	protected boolean cacheableVersionFound()
+	{
+		return cacheableVersionFound;
 	}
 	
     /**
