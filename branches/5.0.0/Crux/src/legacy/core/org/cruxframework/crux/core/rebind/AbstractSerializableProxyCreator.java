@@ -48,7 +48,7 @@ public abstract class AbstractSerializableProxyCreator extends AbstractProxyCrea
 	 */
 	public AbstractSerializableProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseProxyType)
     {
-		super(logger, context);
+		super(logger, context, false);
 		this.baseProxyType = baseProxyType;
     }
 	
