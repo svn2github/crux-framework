@@ -71,7 +71,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	public DatabaseProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
-		super(logger, context, baseIntf, true);
+		super(logger, context, baseIntf, false);
 		databaseMetadata = baseIntf.getAnnotation(DatabaseDef.class);
 		integerType = context.getTypeOracle().findType(Integer.class.getCanonicalName());
 		doubleType = context.getTypeOracle().findType(Double.class.getCanonicalName());
@@ -102,7 +102,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			if (!objectStoreTarget.isAssignableTo(emptyType))
 			{
 				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
-				srcWriter.println("storeNames.put("+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+", "+EscapeUtils.quote(objectStoreName)+");");
+				srcWriter.println("storeNamesByClass.put("+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+", "+EscapeUtils.quote(objectStoreName)+");");
 				if (added.contains(objectStoreTarget.getQualifiedSourceName()))
 				{
 					throw new CruxGeneratorException("The same type is configured for different ObjectStores on Database["+databaseMetadata.name()+"]");
@@ -116,14 +116,14 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 	@Override
 	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
 	{
-		srcWriter.println(FastMap.class.getCanonicalName()+"<String> storeNames = new "+FastMap.class.getCanonicalName()+"<String>();");
+		srcWriter.println(FastMap.class.getCanonicalName()+"<String> storeNamesByClass = new "+FastMap.class.getCanonicalName()+"<String>();");
 	}
 	
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
 	    srcWriter.println("protected String getObjectStoreName(Class<?> objectType){");
-	    srcWriter.println("return storeNames.get(objectType.getName().replace('$','.'));");
+	    srcWriter.println("return storeNamesByClass.get(objectType.getName().replace('$','.'));");
 	    srcWriter.println("}");
 		srcWriter.println();
 		generateUpdateDatabaseStructureMethod(srcWriter);
