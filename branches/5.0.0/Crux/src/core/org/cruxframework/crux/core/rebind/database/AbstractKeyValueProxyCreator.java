@@ -259,12 +259,7 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
     }
 
 	protected void generateGetCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String retrieveRequestVar)
-    {
-		srcWriter.println("if("+retrieveRequestVar+" == null)");
-		srcWriter.println("{");
-		srcWriter.println(callbackVar+".onSuccess(null); return;");
-		srcWriter.println("}");
-		
+    {		
 		srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");
 		srcWriter.println("if ("+callbackVar+" != null){");
 		srcWriter.println(""+callbackVar+".setDb("+dbVariable+");");

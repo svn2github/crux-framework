@@ -117,19 +117,6 @@ public class Transaction
 	 * Retrieve an ObjectStore manipulated by the current transaction.
 	 * @param <K>
 	 * @param <V>
-	 * @param objectType
-	 * @return
-	 */
-	public <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType)
-	{
-		IDBObjectStore idbObjectStore = transaction.getObjectStore(db.getObjectStoreName(objectType));
-		return db.getObjectStore(objectType, idbObjectStore);
-	}
-
-	/**
-	 * Retrieve an ObjectStore manipulated by the current transaction.
-	 * @param <K>
-	 * @param <V>
 	 * @param storeName
 	 * @return
 	 */

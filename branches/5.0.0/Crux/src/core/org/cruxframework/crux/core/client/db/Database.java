@@ -75,29 +75,12 @@ public interface Database
 	void delete(final DatabaseCallback callback);
 	
 	/**
-	 * Create a new transaction targeting the objectStores associated with the given object types.
-	 * @param objectTypes
-	 * @param mode
-	 * @return
-	 */
-	Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode);
-
-	/**
 	 * Create a new transaction targeting the given objectStores.
 	 * @param storeNames
 	 * @param mode
 	 * @return
 	 */
 	Transaction getTransaction(String[] storeNames, Transaction.Mode mode);
-	
-	/**
-	 * Create a new transaction targeting the objectStores associated with the given object types.
-	 * @param objectTypes
-	 * @param mode
-	 * @param callback
-	 * @return
-	 */
-	Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode, TransactionCallback callback);
 
 	/**
 	 * Create a new transaction targeting the given objectStores.
@@ -109,74 +92,54 @@ public interface Database
 	Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback);
 
 	/**
-	 * Insert the object into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
-	 * @param <K>
+	 * Insert all objects into its associated objectStore. If no objectStore is associated with object store, a DatabaseException is threw
 	 * @param <V>
 	 * @param object
 	 * @param callback
 	 */
-	<K, V> void add(V object, DatabaseCallback callback);
-	
-	/**
-	 * Insert all objects into its associated objectStore. If no objectStore is associated with object type, a DatabaseException is threw
-	 * @param <K>
-	 * @param <V>
-	 * @param object
-	 * @param callback
-	 */
-	<K, V> void add(V[] objects, Class<V> objectType, DatabaseCallback callback);
-	
-	/**
-	 * Update object into its associated objectStore. If the object does not exists, create a new one.
-	 * @param <K>
-	 * @param <V>
-	 * @param object
-	 * @param callback
-	 */
-	<K, V> void put(V object, DatabaseCallback callback);
+	<V> void add(V[] objects, String objectStore, DatabaseCallback callback);
 
 	/**
 	 * Update all received objects into its associated objectStore. If one object does not exists, create a new one.
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * If no objectStore is associated with object store, a DatabaseException is threw  
 	 * @param <K>
 	 * @param <V>
 	 * @param object
+	 * @param objectStore
 	 * @param callback
 	 */
-	<K, V> void put(V[] objects, Class<V> objectType, DatabaseCallback callback);
+	<V> void put(V[] objects, String objectStore, DatabaseCallback callback);
 
     /**
      * Retrieve the object associated with the given key from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * If no objectStore is associated with object store, a DatabaseException is threw  
 	 * @param <K>
 	 * @param <V>
      * @param key
-     * @param objectType
+     * @param objectStore
      * @param callback
      */
-	<K, V> void get(K key, Class<V> objectType, DatabaseRetrieveCallback<V> callback);
+	<K, V> void get(K key, String objectStore, DatabaseRetrieveCallback<V> callback);
 	
     /**
      * Remove the object associated with the given key from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * If no objectStore is associated with object store, a DatabaseException is threw  
 	 * @param <K>
-	 * @param <V>
      * @param compositeKey
-     * @param objectType
+     * @param objectStore
      * @param callback
      */
-	<K, V> void delete(K key, Class<V> objectType, DatabaseCallback callback);
+	<K> void delete(K key, String objectStore, DatabaseCallback callback);
 
     /**
      * Remove all objects in the given range from its associated objectStore. 
-	 * If no objectStore is associated with object type, a DatabaseException is threw  
+	 * If no objectStore is associated with object store, a DatabaseException is threw  
 	 * @param <K>
-	 * @param <V>
      * @param compositeKey
-     * @param objectType
+     * @param objectStore
      * @param callback
      */
-	<K, V> void delete(KeyRange<K> keyRange, Class<V> objectType, DatabaseCallback callback);
+	<K> void delete(KeyRange<K> keyRange, String objectStore, DatabaseCallback callback);
 
 	
 	void setDefaultErrorHandler(DatabaseErrorHandler errorHandler);

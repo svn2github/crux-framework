@@ -15,8 +15,6 @@
  */
 package org.cruxframework.crux.core.client.db;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -251,35 +249,11 @@ public abstract class AbstractDatabase implements Database
 	}
 
     @Override
-	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode)
-	{
-		return getTransaction(objectTypes, mode, null);
-	}
-	
-    @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode)
 	{
 		return getTransaction(storeNames, mode, null);
 	}
 
-    @Override
-	public Transaction getTransaction(Class<?>[] objectTypes, Transaction.Mode mode, TransactionCallback callback)
-	{
-		List<String> storeNames = new ArrayList<String>();
-		
-		for(Class<?> objectType: objectTypes)
-		{
-			String storeName = getObjectStoreName(objectType);
-			if (storeName == null)
-			{
-				throw new DatabaseException(messages.databaseObjectStoreNotFoundError(getName(), objectType.getName()));
-			}
-			storeNames.add(storeName);
-		}
-			
-		return getTransaction(storeNames.toArray(new String[storeNames.size()]), mode, callback);
-	}
-	
     @Override
 	public Transaction getTransaction(String[] storeNames, Transaction.Mode mode, TransactionCallback callback)
 	{
@@ -288,40 +262,22 @@ public abstract class AbstractDatabase implements Database
 		return transaction;
 	}
 
-	@SuppressWarnings("unchecked")
     @Override
-    public <K, V> void add(V object, final DatabaseCallback callback)
+	public <V> void add(V[] objects, String objectStoreName, final DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
-   		objectStore.add(object);
-	}
-
-    @Override
-	public <K, V> void add(V[] objects, Class<V> objectType, final DatabaseCallback callback)
-	{
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<?, V> objectStore = transaction.getObjectStore(objectStoreName);
     	for (V object : objects)
         {
     		objectStore.add(object);
         }
 	}
 
-	@SuppressWarnings("unchecked")
     @Override
-    public <K, V> void put(V object, final DatabaseCallback callback)
+	public <V> void put(V[] objects, String objectStoreName, final DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{object.getClass()}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore((Class<V>) object.getClass());
-   		objectStore.put(object);
-	}
-
-    @Override
-	public <K, V> void put(V[] objects, Class<V> objectType, final DatabaseCallback callback)
-	{
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<?, V> objectStore = transaction.getObjectStore(objectStoreName);
     	for (V object : objects)
         {
     		objectStore.put(object);
@@ -329,26 +285,26 @@ public abstract class AbstractDatabase implements Database
 	}
 
     @Override
-    public <K, V> void get(K key, Class<V> objectType, final DatabaseRetrieveCallback<V> callback)
+    public <K, V> void get(K key, String objectStoreName, final DatabaseRetrieveCallback<V> callback)
     {
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readOnly);
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readOnly);
+    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectStoreName);
     	objectStore.get(key, callback);
     }
 
     @Override
-    public <K, V> void delete(K key, Class<V> objectType, DatabaseCallback callback)
+    public <K> void delete(K key, String objectStoreName, DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
     	objectStore.delete(key);
 	}
         
     @Override
-    public <K, V> void delete(KeyRange<K> keys, Class<V> objectType, DatabaseCallback callback)
+    public <K> void delete(KeyRange<K> keys, String objectStoreName, DatabaseCallback callback)
 	{
-    	Transaction transaction = getTransaction(new Class<?>[]{objectType}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
-    	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectType);
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
+    	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
     	objectStore.delete(keys);
 	}
 
@@ -411,7 +367,5 @@ public abstract class AbstractDatabase implements Database
     }
 
 	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
-	protected abstract <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType, IDBObjectStore idbObjectStore);
 	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
-	protected abstract String getObjectStoreName(Class<?> objectType);
 }

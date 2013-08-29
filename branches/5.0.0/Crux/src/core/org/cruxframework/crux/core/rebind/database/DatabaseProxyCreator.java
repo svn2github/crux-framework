@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.collection.FastList;
-import org.cruxframework.crux.core.client.collection.FastMap;
 import org.cruxframework.crux.core.client.db.AbstractDatabase;
 import org.cruxframework.crux.core.client.db.DatabaseErrorHandler;
 import org.cruxframework.crux.core.client.db.ObjectStore;
@@ -99,36 +98,21 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		for (ObjectStoreDef objectStoreMetadata : objectStores)
         {
 			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
-			if (!objectStoreTarget.isAssignableTo(emptyType))
+			String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
+			if (added.contains(objectStoreName))
 			{
-				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
-				srcWriter.println("storeNamesByClass.put("+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+", "+EscapeUtils.quote(objectStoreName)+");");
-				if (added.contains(objectStoreTarget.getQualifiedSourceName()))
-				{
-					throw new CruxGeneratorException("The same type is configured for different ObjectStores on Database["+databaseMetadata.name()+"]");
-				}
-				added.add(objectStoreTarget.getQualifiedSourceName());
+				throw new CruxGeneratorException("Duplicated ObjectStore found on Database["+databaseMetadata.name()+"]. ObjectStore["+objectStoreName+"]");
 			}
+			added.add(objectStoreName);
         }
 		srcWriter.println("}");
 	}
-	
-	@Override
-	protected void generateProxyFields(SourcePrinter srcWriter) throws CruxGeneratorException
-	{
-		srcWriter.println(FastMap.class.getCanonicalName()+"<String> storeNamesByClass = new "+FastMap.class.getCanonicalName()+"<String>();");
-	}
-	
+		
 	@Override
 	protected void generateProxyMethods(SourcePrinter srcWriter)
 	{
-	    srcWriter.println("protected String getObjectStoreName(Class<?> objectType){");
-	    srcWriter.println("return storeNamesByClass.get(objectType.getName().replace('$','.'));");
-	    srcWriter.println("}");
-		srcWriter.println();
 		generateUpdateDatabaseStructureMethod(srcWriter);
 		generateGetObjectStoreMethod(srcWriter);
-		generateGetObjectStoreByNameMethod(srcWriter);
 	}
 
 	protected void generateUpdateDatabaseStructureMethod(SourcePrinter srcWriter)
@@ -142,39 +126,6 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
     }
 	
 	protected void generateGetObjectStoreMethod(SourcePrinter srcWriter)
-    {
-	    srcWriter.println("protected <K, V> ObjectStore<K, V> getObjectStore(Class<V> objectType, IDBObjectStore idbObjectStore){");
-	    
-	    boolean first = true;
-	    ObjectStoreDef[] objectStores = databaseMetadata.objectStores();
-	    
-		srcWriter.println("String className = objectType.getName().replace('$','.');");
-		for (ObjectStoreDef objectStoreMetadata : objectStores)
-        {
-			JClassType objectStoreTarget = getObjectStoreTarget(objectStoreMetadata);
-			if (!objectStoreTarget.isAssignableTo(emptyType))
-			{
-				String objectStoreName = getObjectStoreName(objectStoreMetadata, objectStoreTarget);
-				if (!first)
-				{
-					srcWriter.print("else ");
-				}
-				first = false;
-				Set<IndexData> indexes = getIndexes(objectStoreMetadata.indexes(), objectStoreTarget, objectStoreName);
-				srcWriter.println("if (StringUtils.unsafeEquals(className, "+EscapeUtils.quote(objectStoreTarget.getQualifiedSourceName())+")){");
-				String[] keyPath = getKeyPath(objectStoreMetadata, objectStoreTarget);
-				String objectStore = new ObjectStoreProxyCreator(context, logger, objectStoreTarget, objectStoreName, keyPath, indexes).create();
-			    srcWriter.println("return (ObjectStore<K, V>) new "+objectStore+"(this, idbObjectStore);");
-				srcWriter.println("}");
-			}
-        }
-	    
-	    srcWriter.println("return null;");
-	    srcWriter.println("}");
-		srcWriter.println();
-    }
-
-	protected void generateGetObjectStoreByNameMethod(SourcePrinter srcWriter)
     {
 	    srcWriter.println("protected <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore){");
 	    
