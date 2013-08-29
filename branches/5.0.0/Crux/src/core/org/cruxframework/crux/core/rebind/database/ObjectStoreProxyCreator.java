@@ -167,7 +167,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbObjectStoreVariable+".get(key);");
 		}
-		henerateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
+		generateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();

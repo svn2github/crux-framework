@@ -106,7 +106,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbIndexVariable+".get(key);");
 		}
-		henerateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
+		generateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();
@@ -118,7 +118,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		String targetObjectClassName = getTargetObjectClassName();
 		srcWriter.println("public void get(KeyRange<"+keyTypeName+"> keyRange, final DatabaseRetrieveCallback<"+targetObjectClassName+"> callback){");
 		srcWriter.println("IDBObjectRetrieveRequest retrieveRequest = "+idbIndexVariable+".get(keyRange.getNativeKeyRange());");
-		henerateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
+		generateGetCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();
