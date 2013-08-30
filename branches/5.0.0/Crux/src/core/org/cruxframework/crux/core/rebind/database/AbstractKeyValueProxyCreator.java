@@ -274,7 +274,11 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		}
 		else
 		{
+			srcWriter.println("if (event.getObject() != null){");
 			srcWriter.println(""+callbackVar+".onSuccess("+serializerVariable+".decode(new JSONObject(event.getObject())));");
+			srcWriter.println("}else{");
+			srcWriter.println(""+callbackVar+".onSuccess(null);");
+			srcWriter.println("}");
 		}
 		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("}");

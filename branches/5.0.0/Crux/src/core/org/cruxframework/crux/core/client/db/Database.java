@@ -141,6 +141,9 @@ public interface Database
      */
 	<K> void delete(KeyRange<K> keyRange, String objectStore, DatabaseCallback callback);
 
-	
+	/**
+	 * An error handler called to handle uncaught errors. 
+	 * @param errorHandler
+	 */
 	void setDefaultErrorHandler(DatabaseErrorHandler errorHandler);
 }

@@ -31,6 +31,10 @@ public class IDBObjectRetrieveEvent extends JavaScriptObject
 	protected IDBObjectRetrieveEvent(){}
 
 	public final native JavaScriptObject getObject()/*-{
-		return this.target.result;
+		if (this.target.result)
+		{
+			return this.target.result;
+		}
+		return null;
 	}-*/;
 }
