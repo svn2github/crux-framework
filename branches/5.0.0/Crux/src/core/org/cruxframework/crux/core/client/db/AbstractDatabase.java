@@ -32,7 +32,6 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEv
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.logging.client.LogConfiguration;
 
 /**
@@ -288,21 +287,7 @@ public abstract class AbstractDatabase implements Database
     @Override
     public <K, V> void get(K key, String objectStoreName, final DatabaseRetrieveCallback<V> callback)
     {
-    	Transaction transaction = null;
-    	try
-    	{
-    		//according to http://www.w3.org/TR/IndexedDB/#widl-IDBObjectStore-get-IDBRequest-any-key
-    		//this may throw a exception if the objectstore is not present
-    		transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readOnly);	
-    	} catch (JavaScriptException e)
-		{
-			if(e.getName().equals("NotFoundError"))
-			{
-				callback.onSuccess(null);
-				return;
-			}
-		}
-    	
+    	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readOnly);
     	ObjectStore<K, V> objectStore = transaction.getObjectStore(objectStoreName);
     	objectStore.get(key, callback);
     }
