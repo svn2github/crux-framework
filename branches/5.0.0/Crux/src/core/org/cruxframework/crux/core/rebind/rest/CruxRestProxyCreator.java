@@ -91,7 +91,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 
 	public CruxRestProxyCreator(TreeLogger logger, GeneratorContext context, JClassType baseIntf)
 	{
-		super(logger, context, baseIntf, true);
+		super(logger, context, baseIntf, false);
 		callbackType = context.getTypeOracle().findType(Callback.class.getCanonicalName());
 		javascriptObjectType = context.getTypeOracle().findType(JavaScriptObject.class.getCanonicalName());
 		restImplementationClass = getRestImplementationClass(baseIntf);

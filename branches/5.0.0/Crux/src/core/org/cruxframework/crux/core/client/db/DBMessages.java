@@ -73,4 +73,7 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("Invalid database name [{0}].")
 	String databaseInvalidNameDBError(String name);
+
+	@DefaultMessage("Database [{0}] is already open.")
+	String databaseIAlreadyOpenDBError(String name);
 }

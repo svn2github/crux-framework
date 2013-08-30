@@ -87,6 +87,10 @@ public abstract class AbstractDatabase implements Database
 		{
 			throw new DatabaseException(messages.databaseInvalidNameDBError(getName()));
 		}
+		if (isOpen())
+		{
+			throw new DatabaseException(messages.databaseIAlreadyOpenDBError(getName()));
+		}
 		final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
 		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
 		{
