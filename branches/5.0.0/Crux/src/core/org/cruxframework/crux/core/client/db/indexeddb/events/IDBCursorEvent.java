@@ -33,6 +33,10 @@ public class IDBCursorEvent extends JavaScriptObject
 	protected IDBCursorEvent(){}
 
 	public final native IDBCursorWithValue getCursor()/*-{
-		return this.target.result;
+		if (this.target.result)
+		{
+			return this.target.result;
+		}
+		return null;
 	}-*/;
 }

@@ -25,6 +25,7 @@ import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
 import org.cruxframework.crux.core.client.db.Index;
 import org.cruxframework.crux.core.client.db.KeyRange;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBIndex.IDBIndexCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
@@ -136,7 +137,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		{
 			srcWriter.println("IDBObjectStoreRequest retrieveRequest = "+idbIndexVariable+".getKey(key);");
 		}
-		henerateGetKeyCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
+		generateGetKeyCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();
@@ -147,7 +148,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		String keyTypeName = getKeyTypeName();
 		srcWriter.println("public void getKey(KeyRange<"+keyTypeName+"> keyRange, final DatabaseRetrieveCallback<"+getKeyTypeName(objectStoreKeyPath)+"> callback){");
 		srcWriter.println("IDBObjectStoreRequest retrieveRequest = "+idbIndexVariable+".getKey(keyRange.getNativeKeyRange());");
-		henerateGetKeyCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
+		generateGetKeyCallbacks(srcWriter, "callback", dbVariable, "retrieveRequest");
 				
 		srcWriter.println("}");
 		srcWriter.println();
@@ -217,8 +218,9 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println(cursorRequestVar+".onSuccess(new IDBCursorEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
 		String cursorClassName = new KeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, objectStoreKeyPath, indexName).create();
-		srcWriter.println("if ("+callbackVar+" != null){");
-		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(event.getCursor()));");
+		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
+		srcWriter.println("if ("+callbackVar+" != null && cursor != null){");
+		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(cursor));");
 		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("}");
 		srcWriter.println("}");
@@ -239,7 +241,7 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("}");
 	}
 	
-	protected void henerateGetKeyCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String retrieveRequestVar)
+	protected void generateGetKeyCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String retrieveRequestVar)
     {
 	    srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");
 		srcWriter.println("if ("+callbackVar+" != null){");

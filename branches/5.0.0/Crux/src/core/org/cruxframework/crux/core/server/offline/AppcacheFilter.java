@@ -55,6 +55,7 @@ public class AppcacheFilter implements Filter
 {
 	private Map<String, Long> lastModifiedDates = Collections.synchronizedMap(new HashMap<String, Long>());
 	private FilterConfig filterConfig;
+	private long startTime;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException
@@ -87,6 +88,7 @@ public class AppcacheFilter implements Filter
 	    response.setCharacterEncoding("UTF-8");
 	    PrintWriter writer = response.getWriter();
 	    writer.println("CACHE MANIFEST\n");
+	    writer.println("# Build Time [" + startTime + "]\n");
 	    writer.println("\nCACHE:\n");
 	    writer.println("clear.cache.gif\n");
 	    writer.println("\nNETWORK:\n");
@@ -184,6 +186,7 @@ public class AppcacheFilter implements Filter
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
+		this.startTime = new Date().getTime();
 	}
 
 	@Override

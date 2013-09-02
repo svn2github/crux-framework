@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind.database;
 import java.util.Date;
 
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.Empty;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBCursorWithValue;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -309,8 +310,9 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println(cursorRequestVar+".onSuccess(new IDBCursorEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
 		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, cursorName).create();
-		srcWriter.println("if ("+callbackVar+" != null){");
-		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(event.getCursor()));");
+		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
+		srcWriter.println("if ("+callbackVar+" != null && cursor != null){");
+		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(cursor));");
 		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("}");
 		srcWriter.println("}");
