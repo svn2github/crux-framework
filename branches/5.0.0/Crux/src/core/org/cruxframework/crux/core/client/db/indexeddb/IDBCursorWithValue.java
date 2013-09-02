@@ -29,31 +29,60 @@ public class IDBCursorWithValue extends IDBCursor
 	protected IDBCursorWithValue(){}
 	
 	public final native JavaScriptObject getValue()/*-{
-		return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return null;
 	}-*/;
 	
     public final native JsArrayMixed getArrayValue() /*-{
-	    return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return null;
 	}-*/;
 	
     public final native JavaScriptObject getObjectValue() /*-{
-	    return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return null;
 	}-*/;
 
 	public final native int getIntValue() /*-{
-	    return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return 0;
 	}-*/;
 	
 	public final native String getStringValue() /*-{
-		return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return null;
 	}-*/;
 	
 	public final Date getDateValue() 
 	{
-		return new Date((long)getDoubleValue());
+		long value = (long)getDoubleValue();
+		if (value > 0)
+		{
+			return new Date(value);
+		}
+		return null;
 	}
 	
 	public final  native double getDoubleValue() /*-{
-		return this.value;
+		if (this.value)
+		{
+			return this.value;
+		};
+		return 0;
 	}-*/;
 }

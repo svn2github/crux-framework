@@ -77,6 +77,11 @@ public abstract class Cursor<K, V>
 		return idbCursor.getValue().cast();
 	}
 	
+	public boolean hasValue()
+	{
+		return idbCursor.getValue() != null;
+	}
+	
 	public CursorDirection getDirection()
 	{
 		switch (idbCursor.getDirection())
