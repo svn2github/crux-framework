@@ -77,12 +77,22 @@ public class AppcacheFilter implements Filter
 		}
 		else
 		{
-			response = new ResponseWrapper(response, request.getContextPath());
-			response.setContentType("text/cache-manifest");
-			response.setCharacterEncoding("UTF-8");
-			chain.doFilter(req, resp);
+			sendDebugManifest(req, resp, chain, request, response);
 		}
 	}
+
+	private void sendDebugManifest(ServletRequest req, ServletResponse resp, FilterChain chain, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+    {
+	    response.setContentType("text/cache-manifest");
+	    response.setCharacterEncoding("UTF-8");
+	    PrintWriter writer = response.getWriter();
+	    writer.println("CACHE MANIFEST\n");
+	    writer.println("\nCACHE:\n");
+	    writer.println("clear.cache.gif\n");
+	    writer.println("\nNETWORK:\n");
+	    writer.println("*\n");
+	    writer.close();
+    }
 
 	private boolean isFileModified(String ifModifiedHeader, long dateModified)
 	{
