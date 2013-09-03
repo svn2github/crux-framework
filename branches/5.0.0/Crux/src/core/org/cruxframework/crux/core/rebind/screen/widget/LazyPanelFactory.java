@@ -30,6 +30,7 @@ import org.cruxframework.crux.core.rebind.screen.widget.ControllerAccessHandler.
 import org.json.JSONObject;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.resources.client.ClientBundle;
 
 /**
  * A Factory that wraps an element with a panel which content is only rendered when it is accessed for the first time.
@@ -72,6 +73,7 @@ public class LazyPanelFactory
 		generateConstructor(lazyPrinter, lazyPanel+"Class", lazyId);
 		generateCreateWidgetMethod(lazyPrinter, element, lazyId);
 		generateFields(lazyPrinter, lazyPanel+"Class");
+		generateGetResourceMethod(lazyPrinter);
 		
 		lazyPrinter.commit();
 		
@@ -88,6 +90,13 @@ public class LazyPanelFactory
 		return lazyPanel;
 	}
 	
+	private void generateGetResourceMethod(SourcePrinter printer)
+    {
+		printer.println("public static "+ClientBundle.class.getCanonicalName()+" getResource(String id){");
+		printer.println("return "+ViewFactoryCreator.getViewVariable()+".getResource(id);");
+		printer.println("}");
+    }
+
 	/**
 	 * @param printer
 	 * @param className
