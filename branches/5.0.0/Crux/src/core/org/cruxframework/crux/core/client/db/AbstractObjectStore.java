@@ -41,9 +41,9 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 	}
 	
 	@Override
-	public boolean istAutoIncrement()
+	public boolean isAutoIncrement()
 	{
-	    return idbObjectStore.istAutoIncrement();
+	    return idbObjectStore.isAutoIncrement();
 	}
 	
 	@Override

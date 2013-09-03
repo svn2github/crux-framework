@@ -104,7 +104,7 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.transaction;
 	}-*/;
     
-    public final native boolean istAutoIncrement()/*-{
+    public final native boolean isAutoIncrement()/*-{
 		return this.autoIncrement;
 	}-*/;
     

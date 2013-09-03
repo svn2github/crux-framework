@@ -75,7 +75,7 @@ public interface ObjectStore<K, V>
 	 * Return true if this object store auto increments its keys.
 	 * @return
 	 */
-	boolean istAutoIncrement();
+	boolean isAutoIncrement();
 	
 	/**
 	 * Clear this object store
