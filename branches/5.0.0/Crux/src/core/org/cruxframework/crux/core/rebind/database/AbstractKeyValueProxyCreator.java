@@ -311,8 +311,12 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
 		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, cursorName).create();
 		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
-		srcWriter.println("if ("+callbackVar+" != null && cursor != null){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println("if(cursor != null){");
 		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(cursor));");
+		srcWriter.println("}else{");
+		srcWriter.println(""+callbackVar+".onSuccess(null);");
+		srcWriter.println("}");
 		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("}");
 		srcWriter.println("}");
