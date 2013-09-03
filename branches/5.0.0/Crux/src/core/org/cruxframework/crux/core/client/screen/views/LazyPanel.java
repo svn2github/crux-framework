@@ -15,6 +15,11 @@
  */
 package org.cruxframework.crux.core.client.screen.views;
 
+import org.cruxframework.crux.core.client.collection.FastMap;
+import org.cruxframework.crux.core.client.resources.Resource;
+
+import com.google.gwt.resources.client.ClientBundle;
+
 
 
 /**
@@ -26,7 +31,10 @@ public abstract class LazyPanel extends com.google.gwt.user.client.ui.LazyPanel
 	private boolean initialized = false;
 	private final String lazyId;
 	private final View view;
-
+	private static FastMap<ClientBundle> resources = new FastMap<ClientBundle>();
+	
+	//TODO: inject Controller and other resources in order to run when this is a device adaptive widget.
+	
 	public LazyPanel(View view, String lazyId)
     {
 		this.view = view;
@@ -47,4 +55,35 @@ public abstract class LazyPanel extends com.google.gwt.user.client.ui.LazyPanel
 		super.ensureWidget();
 	}
 
+	/**
+	 * Retrieve the client bundle associated with the given id. To map a client bundle interface to an identifier, use
+	 * the {@link Resource} annotation
+	 * @param id
+	 * @return
+	 */
+	public static ClientBundle getResource(String id)
+	{
+		return resources.get(id);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param resource
+	 */
+	protected static void addResource(String id, ClientBundle resource)
+	{
+		resources.put(id, resource);
+	}
+	
+	/**
+	 * Returns true if a resource associated with the given identifiers was loaded by application
+	 * @param id
+	 * @return
+	 */
+	public static boolean containsResource(String id)
+	{
+		return resources.containsKey(id);
+	}
+	
 }
