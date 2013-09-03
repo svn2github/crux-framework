@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Date;
 
-import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.cruxframework.crux.core.server.rest.spi.BadRequestException;
 import org.cruxframework.crux.core.utils.ClassUtils;
 
