@@ -92,7 +92,7 @@ public class LazyPanelFactory
 	
 	private void generateGetResourceMethod(SourcePrinter printer)
     {
-		printer.println("public static "+ClientBundle.class.getCanonicalName()+" getResource(String id){");
+		printer.println("public "+ClientBundle.class.getCanonicalName()+" getResource(String id){");
 		printer.println("return "+ViewFactoryCreator.getViewVariable()+".getResource(id);");
 		printer.println("}");
     }
