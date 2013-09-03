@@ -501,9 +501,14 @@ public class ViewParser
     {
 	    Document htmlDocument;
 		DocumentType doctype = cruxPageDocument.getDoctype();
-		if (doctype != null)
+		
+		if (doctype != null || isGenerateHTMLDoctypeSystemParam())
 		{
-			DocumentType newDoctype =  documentBuilder.getDOMImplementation().createDocumentType(doctype.getName(), doctype.getPublicId(), doctype.getSystemId());
+			String name     = doctype != null ? doctype.getName() : "HTML";
+			String publicId = doctype != null ? doctype.getPublicId() : null;
+			String systemId = doctype != null ? doctype.getSystemId() : null;
+			
+			DocumentType newDoctype =  documentBuilder.getDOMImplementation().createDocumentType(name, publicId, systemId);
 			htmlDocument = documentBuilder.getDOMImplementation().createDocument(XHTML_NAMESPACE, "html", newDoctype);
 		}
 		else
@@ -521,6 +526,13 @@ public class ViewParser
 		}
 	    return htmlDocument;
     }
+
+	//TODO: read param from system
+	private boolean isGenerateHTMLDoctypeSystemParam() 
+	{
+		//default: true;
+		return false;
+	}
 
 	/**
 	 * @param cruxPageInnerTag
