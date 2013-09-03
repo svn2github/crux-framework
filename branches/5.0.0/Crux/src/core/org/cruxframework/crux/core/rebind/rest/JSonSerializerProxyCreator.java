@@ -508,7 +508,16 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType returnType = method.getReturnType();
 				String serializerName = new JSonSerializerProxyCreator(context, logger, returnType).create();
+				boolean primitive = returnType.isPrimitive() != null;
+				if (!primitive)
+				{
+					srcWriter.println("if ("+objectVar+"."+method.getName()+"() != null){");
+				}
 				srcWriter.println(resultJSONValueVar+".isObject().put("+EscapeUtils.quote(property)+", new "+serializerName+"().encode("+objectVar+"."+method.getName()+"()));");
+				if (!primitive)
+				{
+					srcWriter.println("}");
+				}
 			}
 		}
 	}
