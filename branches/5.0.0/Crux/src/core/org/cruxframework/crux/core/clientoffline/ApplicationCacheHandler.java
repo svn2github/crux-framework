@@ -80,13 +80,20 @@ public class ApplicationCacheHandler implements EntryPoint
      */
     public void onModuleLoad() 
     {
+    	Network.get(); // initializes network monitor...
+    	
+    	if(!isSupported())
+    	{
+    		return;
+    	}
+    	
         hookAllListeners(this);
         scheduleUpdateChecker();
         if (getStatus() == DOWNLOADING)
         {
         	onDownloading();
         }
-        Network.get(); // initializes network monitor...
+        
         // Sometimes android leaves the status indicator spinning and spinning
         // and spinning...
         pollForStatusOnAndroid();
@@ -338,6 +345,14 @@ public class ApplicationCacheHandler implements EntryPoint
         }
     }
 
+    public static native boolean isSupported()/*-{
+	    if($wnd.applicationCache)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+    
     /**
      * Hooks all listeners to the specified instance.
      * 
