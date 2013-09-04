@@ -43,6 +43,9 @@ public interface Crux
 	@DefaultServerMessage("true")
 	String enableHotDeploymentForWebDirs();
 
+	@DefaultServerMessage("true")
+	String enableGenerateHTMLDoctype();
+	
 	@DefaultServerMessage("false")
 	String enableCrux2OldInterfacesCompatibility();
 	

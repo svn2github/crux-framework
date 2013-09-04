@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cruxframework.crux.core.client.screen.views.ViewFactoryUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.screen.ScreenFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetConfig;
 import org.cruxframework.crux.core.rebind.screen.widget.WidgetCreator;
@@ -502,7 +503,7 @@ public class ViewParser
 	    Document htmlDocument;
 		DocumentType doctype = cruxPageDocument.getDoctype();
 		
-		if (doctype != null || isGenerateHTMLDoctypeSystemParam())
+		if (doctype != null || Boolean.parseBoolean(ConfigurationFactory.getConfigurations().enableGenerateHTMLDoctype()))
 		{
 			String name     = doctype != null ? doctype.getName() : "HTML";
 			String publicId = doctype != null ? doctype.getPublicId() : null;
@@ -526,13 +527,6 @@ public class ViewParser
 		}
 	    return htmlDocument;
     }
-
-	//TODO: read param from system
-	private boolean isGenerateHTMLDoctypeSystemParam() 
-	{
-		//default: true;
-		return false;
-	}
 
 	/**
 	 * @param cruxPageInnerTag
