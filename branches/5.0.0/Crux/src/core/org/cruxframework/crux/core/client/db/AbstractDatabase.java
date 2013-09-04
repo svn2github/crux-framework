@@ -24,6 +24,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBDeleteDBRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.IndexedDBResources;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBBlockedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
@@ -32,7 +33,16 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEv
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.core.client.ScriptInjector.FromString;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * HTML5 AbstractDatabase based on IndexedDB (http://www.w3.org/TR/IndexedDB/) 
@@ -46,7 +56,9 @@ public abstract class AbstractDatabase implements Database
 	protected DBMessages messages = GWT.create(DBMessages.class);
 	protected DatabaseErrorHandler errorHandler;
 	protected String name;
-	protected int version; 
+	protected int version;
+	private static boolean shimInitialized = false; 
+	private static boolean shimInitializing = false; 
 
 	@Override
 	public String getName()
@@ -91,96 +103,18 @@ public abstract class AbstractDatabase implements Database
 		{
 			throw new DatabaseException(messages.databaseIAlreadyOpenDBError(getName()));
 		}
-		final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
-		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
-		{
-			@Override
-			public void onSuccess(IDBOpenedEvent event)
-			{
-				db = event.getResult();
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.INFO, messages.databaseOpened(getName()));
-				}
-				if (callback != null)
-				{
-					callback.onSuccess();
-				}
-			}
-		});
 		
-		openDBRequest.onBlocked(new IDBBlockedEvent.Handler()
+		if (shimInitialized)
 		{
-			@Override
-			public void onBlocked(IDBBlockedEvent event)
-			{
-				String message = messages.databaseBlocked(getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-		
-		openDBRequest.onError(new IDBErrorEvent.Handler()
+			doOpen(callback);
+		}
+		else
 		{
-			@Override
-			public void onError(IDBErrorEvent event)
-			{
-				String message = messages.databaseOpenError(getName(), event.getName());
-				if (LogConfiguration.loggingIsEnabled())
-				{
-					logger.log(Level.SEVERE, message);
-				}
-				if (callback != null)
-				{
-					callback.onError(message);
-				}
-				else if (errorHandler != null)
-				{
-					errorHandler.onError(message);
-				}
-			}
-		});
-		openDBRequest.onUpgradeNeeded(new IDBUpgradeNeededEvent.Handler()
-		{
-			@Override
-			public void onUpgradeNeeded(IDBUpgradeNeededEvent event)
-			{
-				db = event.getResult();
-				try
-				{
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.INFO, messages.databaseUpgrading(getName()));
-					}
-					updateDatabaseStructure(openDBRequest);
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.INFO, messages.databaseUpgraded(getName()));
-					}
-				}
-				catch (RuntimeException e) 
-				{
-					if (LogConfiguration.loggingIsEnabled())
-					{
-						logger.log(Level.SEVERE, messages.databaseUpgradeError(getName(), e.getMessage()), e);
-					}
-					throw e;
-				}
-			}
-		});
+			initializeShimAndTryOpen(callback);
+		}
 	}
 
-    @Override
+	@Override
 	public void close()
 	{
 		if (isOpen())
@@ -372,4 +306,194 @@ public abstract class AbstractDatabase implements Database
 
 	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
 	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
+
+	private void doOpen(final DatabaseCallback callback)
+    {
+	    final IDBOpenDBRequest openDBRequest = IDBFactory.get().open(getName(), getVersion());
+		openDBRequest.onSuccess(new IDBOpenedEvent.Handler()
+		{
+			@Override
+			public void onSuccess(IDBOpenedEvent event)
+			{
+				db = event.getResult();
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.INFO, messages.databaseOpened(getName()));
+				}
+				if (callback != null)
+				{
+					callback.onSuccess();
+				}
+			}
+		});
+		
+		openDBRequest.onBlocked(new IDBBlockedEvent.Handler()
+		{
+			@Override
+			public void onBlocked(IDBBlockedEvent event)
+			{
+				String message = messages.databaseBlocked(getName());
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.SEVERE, message);
+				}
+				if (callback != null)
+				{
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
+				}
+			}
+		});
+		
+		openDBRequest.onError(new IDBErrorEvent.Handler()
+		{
+			@Override
+			public void onError(IDBErrorEvent event)
+			{
+				String message = messages.databaseOpenError(getName(), event.getName());
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.SEVERE, message);
+				}
+				if (callback != null)
+				{
+					callback.onError(message);
+				}
+				else if (errorHandler != null)
+				{
+					errorHandler.onError(message);
+				}
+			}
+		});
+		openDBRequest.onUpgradeNeeded(new IDBUpgradeNeededEvent.Handler()
+		{
+			@Override
+			public void onUpgradeNeeded(IDBUpgradeNeededEvent event)
+			{
+				db = event.getResult();
+				try
+				{
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.INFO, messages.databaseUpgrading(getName()));
+					}
+					updateDatabaseStructure(openDBRequest);
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.INFO, messages.databaseUpgraded(getName()));
+					}
+				}
+				catch (RuntimeException e) 
+				{
+					if (LogConfiguration.loggingIsEnabled())
+					{
+						logger.log(Level.SEVERE, messages.databaseUpgradeError(getName(), e.getMessage()), e);
+					}
+					throw e;
+				}
+			}
+		});
+    }
+	
+    private void initializeShimAndTryOpen(final DatabaseCallback callback)
+    {
+    	if (shimInitializing)
+    	{
+    		waitForShimInitializationAndTryOpen(callback);
+    	}
+    	else
+    	{
+    		if (IDBFactory.isSupported())
+    		{
+				shimInitialized = true;
+				doOpen(callback);
+    		}
+    		else
+    		{
+	    		shimInitializing = true;
+	    		IndexedDBResources resources = GWT.create(IndexedDBResources.class);
+	
+	    		try
+	    		{
+	    			resources.indexeddbshim().getText(new ResourceCallback<TextResource>()
+	    			{
+	    				@Override
+	    				public void onSuccess(TextResource resource)
+	    				{
+	    					FromString injector = ScriptInjector.fromString(resource.getText());
+	    					injector.setWindow(getWindow());
+	    					injector.setRemoveTag(false);
+							injector.inject();
+	    					Scheduler.get().scheduleDeferred(new ScheduledCommand()
+	    					{
+	    						@Override
+	    						public void execute()
+	    						{
+	    							shimInitialized = true;
+	    							shimInitializing = false;
+	    							if (LogConfiguration.loggingIsEnabled())
+	    							{
+	    								logger.log(Level.SEVERE, messages.databaseUsingWebSQL());
+	    							}
+	    							doOpen(callback);
+	    						}
+	    					});
+	    				}
+	
+	    				private native JavaScriptObject getWindow()/*-{
+	                        return $wnd;
+                        }-*/;
+
+						@Override
+	    				public void onError(ResourceException e)
+	    				{
+							shimInitializing = false;
+	    					if (LogConfiguration.loggingIsEnabled())
+	    					{
+	    						logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
+	    					}
+	    					callback.onError(messages.databaseLoadingError(getName()));
+	    				}
+	    			});
+	    		}
+	    		catch (ResourceException e)
+	    		{
+					shimInitializing = false;
+	    			if (LogConfiguration.loggingIsEnabled())
+	    			{
+	    				logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
+	    			}
+	    			callback.onError(messages.databaseLoadingError(getName()));
+	    		}
+	    	}
+    	}
+    }
+
+	private void waitForShimInitializationAndTryOpen(final DatabaseCallback callback)
+    {
+	    Scheduler.get().scheduleFixedDelay(new RepeatingCommand()
+	    {
+	    	@Override
+	    	public boolean execute()
+	    	{
+	    		if (shimInitializing)
+	    		{
+	    			return true;
+	    		}
+	    		if (shimInitialized)
+	    		{
+	    			doOpen(callback);
+	    		}
+	    		else
+	    		{
+	    			callback.onError(messages.databaseLoadingError(getName()));
+	    		}
+	    		
+	    		return false;
+	    	}
+	    }, 10);
+    }
 }

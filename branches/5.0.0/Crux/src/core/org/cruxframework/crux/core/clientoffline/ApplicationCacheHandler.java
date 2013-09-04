@@ -25,6 +25,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.PartialSupport;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -32,6 +33,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  * @author Thiago da Rosa de Bustamante
  *
  */
+@PartialSupport
 public class ApplicationCacheHandler implements EntryPoint 
 {
 	private static Logger logger = Logger.getLogger(ApplicationCacheHandler.class.getName());
@@ -80,8 +82,6 @@ public class ApplicationCacheHandler implements EntryPoint
      */
     public void onModuleLoad() 
     {
-    	Network.get(); // initializes network monitor...
-    	
     	if(!isSupported())
     	{
     		return;
@@ -94,6 +94,7 @@ public class ApplicationCacheHandler implements EntryPoint
         	onDownloading();
         }
         
+        Network.get(); // initializes network monitor...
         // Sometimes android leaves the status indicator spinning and spinning
         // and spinning...
         pollForStatusOnAndroid();
@@ -345,6 +346,10 @@ public class ApplicationCacheHandler implements EntryPoint
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public static native boolean isSupported()/*-{
 	    if($wnd.applicationCache)
 		{

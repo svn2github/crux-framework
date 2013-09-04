@@ -76,4 +76,11 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("Database [{0}] is already open.")
 	String databaseIAlreadyOpenDBError(String name);
+	
+	@DefaultMessage("Error opening Database [{0}]. Can not load database script")
+	String databaseLoadingError(String databaseName);
+
+	@DefaultMessage("IndexedDB not supported. Using Web SQL for persistence.")
+	String databaseUsingWebSQL();
+	
 }

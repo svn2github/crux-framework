@@ -18,6 +18,8 @@ package org.cruxframework.crux.core.client.db;
 import org.cruxframework.crux.core.client.db.Transaction.TransactionCallback;
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef;
 
+import com.google.gwt.dom.client.PartialSupport;
+
 /**
  * A Crux client database. Uses IndexedDB to store objects on application's client side.
  * To declare a new database, create a new interface extending Database and use {@link DatabaseDef} 
@@ -25,6 +27,7 @@ import org.cruxframework.crux.core.client.db.annotation.DatabaseDef;
  * 
  * @author Thiago da Rosa de Bustamante
  */
+@PartialSupport
 public interface Database
 {
 	/**
