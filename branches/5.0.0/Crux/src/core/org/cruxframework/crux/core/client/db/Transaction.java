@@ -127,6 +127,15 @@ public class Transaction
 	}
 
 	/**
+	 * Abort current transaction and rollback operations.
+	 */
+	public void abort()
+	{
+		transaction.abort();
+	}
+	
+	
+	/**
 	 * Inform a callback to monitor the current transaction state changes.
 	 * @param callback
 	 */
