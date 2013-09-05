@@ -17,7 +17,7 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<jdk_home>C:\desenv\java\jres_jdks\jdk-7u17-windows-x64</jdk_home>
+		<jdk_home>E:\desenv\java\jdk-7u21-windows-x64</jdk_home>
 
 		<!-- GWT RUN using ANT -->
 		<webappctxname>CrossDeviceHelloWorldMaven-5.0.0</webappctxname>
@@ -79,110 +79,93 @@
 
 	</dependencies>
 
-<!-- 
-	<profiles>
-
-		<profile>
-			<id>activeAntTasks-debug</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-
-                            <execution>
-                                <id>generate-schemas</id>
-                                <phase>process-sources</phase>
-                                <configuration>
-                                    <tasks>
-                                        <ant antfile="build/build.xml" target="debug" />
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-
-                        </executions>
-
-                    </plugin>
-					
-				</plugins>
-			</build>
-		</profile>
-
-
-		<profile>
-			<id>activeAntTasks-compile</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-
-							<execution>
-								<id>generate-schemas</id>
-								<phase>process-sources</phase>
-								<configuration>
-									<tasks>
-										<ant antfile="build/build.xml" target="compile-scripts" />
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-
-						</executions>
-
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+	<!-- <profiles> <profile> <id>activeAntTasks-debug</id> <activation> <activeByDefault>false</activeByDefault> 
+		</activation> <build> <plugins> <plugin> <artifactId>maven-antrun-plugin</artifactId> 
+		<executions> <execution> <id>generate-schemas</id> <phase>process-sources</phase> 
+		<configuration> <tasks> <ant antfile="build/build.xml" target="debug" /> 
+		</tasks> </configuration> <goals> <goal>run</goal> </goals> </execution> 
+		</executions> </plugin> </plugins> </build> </profile> <profile> <id>activeAntTasks-compile</id> 
+		<activation> <activeByDefault>false</activeByDefault> </activation> <build> 
+		<plugins> <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
+		<execution> <id>generate-schemas</id> <phase>process-sources</phase> <configuration> 
+		<tasks> <ant antfile="build/build.xml" target="compile-scripts" /> </tasks> 
+		</configuration> <goals> <goal>run</goal> </goals> </execution> </executions> 
+		</plugin> </plugins> </build> </profile> </profiles> -->
 
 
 
-	</profiles>
-	 -->
-	 
-	 
-	 
 	<build>
-<!-- 	<pluginManagement> -->
-<!--      <plugins><plugin> -->
-<!--                         <artifactId>maven-dependency-plugin</artifactId> -->
-<!--                             <executions> -->
-<!--                                 <execution> -->
-<!--                                     <phase>compile</phase> -->
-<!--                                     <goals> -->
-<!--                                         <goal>copy-dependencies</goal> -->
-<!--                                     </goals> -->
-<!--                                     <configuration> -->
-<!--                                         <outputDirectory>${project.build.directory}/lib</outputDirectory> -->
-<!--                                     </configuration> -->
-<!--                                 </execution> -->
-<!--                             </executions> -->
-<!--                     </plugin> -->
-<!--      </plugins> -->
-<!--      </pluginManagement> -->
-	
+
+
+
+		<!-- <pluginManagement> -->
+		<!-- <plugins><plugin> -->
+		<!-- <artifactId>maven-dependency-plugin</artifactId> -->
+		<!-- <executions> -->
+		<!-- <execution> -->
+		<!-- <phase>compile</phase> -->
+		<!-- <goals> -->
+		<!-- <goal>copy-dependencies</goal> -->
+		<!-- </goals> -->
+		<!-- <configuration> -->
+		<!-- <outputDirectory>${project.build.directory}/lib</outputDirectory> -->
+		<!-- </configuration> -->
+		<!-- </execution> -->
+		<!-- </executions> -->
+		<!-- </plugin> -->
+		<!-- </plugins> -->
+		<!-- </pluginManagement> -->
+
 		<!-- Generate compiled stuff in the folder used for developing mode -->
-		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+<!-- 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory> -->
+
+<!-- 		<resources> -->
+
+<!-- 			<resource> -->
+
+<!-- 				<directory>target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib</directory> -->
+<!-- 				<includes> -->
+<!-- 					<include>**/*.jar</include> -->
+<!-- 				</includes> -->
+<!-- 			</resource> -->
+<!-- 		</resources> -->
 
 		<!-- <resources> <resource> <directory>src/main/resources</directory> <includes> 
 			<include>*.gwt.xml</include> </includes> <filtering>true</filtering> </resource> 
 			</resources> -->
 		<plugins>
-		
-                    
-		
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				
+				<configuration>
+				
+					<mainClass>org.cruxframework.crux.tools.compile.CruxCompiler</mainClass>
+					<arguments>
+						<argument>sourceDir</argument>
+						<argument>${basedir}\src/main/java</argument>
+						<argument>outputDir</argument>
+						<argument>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0</argument>
+						<argument>webDir</argument>
+						<argument>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0</argument>
+
+                        <argument>libDir</argument>
+                        <argument>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib</argument>
+
+						<!-- <argument>-Dfile.encoding</argument> <argument>ISO-8859-1</argument> 
+							<argument>inputCharset</argument> <argument>ISO-8859-1</argument> -->
+						<argument>outputCharset</argument>
+						<argument>UTF-8</argument>
+
+						<argument>cruxPagesDir</argument>
+						<argument>dirNames</argument>
+
+					</arguments>
+				</configuration>
+			</plugin>
+
+
 			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
 				<execution> <phase>process-resources</phase> <configuration> <tasks> <ant 
 				antfile="./build/build.xml" target="generate-schemas" /> </tasks> </configuration> 
