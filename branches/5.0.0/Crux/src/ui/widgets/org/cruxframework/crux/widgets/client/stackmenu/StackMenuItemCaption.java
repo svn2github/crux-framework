@@ -1,8 +1,13 @@
 package org.cruxframework.crux.widgets.client.stackmenu;
 
+import org.cruxframework.crux.widgets.client.event.HasSelectHandlers;
+import org.cruxframework.crux.widgets.client.event.SelectEvent;
+import org.cruxframework.crux.widgets.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.util.TextSelectionUtils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.TableLayout;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -13,6 +18,13 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -26,10 +38,9 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 class StackMenuItemCaption extends Composite
 {
-	private FocusPanel widget;
+	private FocusAreaStackImpl widget;
 	private Grid canvas;
 	private SimplePanel hasSubItemsIndicator;
-	private final StackMenuItem stackMenuItem;
 
 	/**
 	 * Package-protected constructor
@@ -38,7 +49,6 @@ class StackMenuItemCaption extends Composite
 	 */
 	StackMenuItemCaption(String label, StackMenuItem stackMenuItem)
 	{
-		this.stackMenuItem = stackMenuItem;
 		canvas = new Grid();
 		canvas.setStyleName("item");
 		canvas.setWidth("100%");
@@ -47,19 +57,204 @@ class StackMenuItemCaption extends Composite
 		canvas.setCellSpacing(0);
 		canvas.getElement().getStyle().setTableLayout(TableLayout.FIXED);
 
-		ClickHandler clickHandler = createBaseClickHandler();
-
 		createTopBorders();
-		createBody(label, clickHandler);
 		createBottomBorders();
+		createBody(label);
 
-		widget = new FocusPanel(canvas);
-		widget.addClickHandler(clickHandler);
-		widget.addMouseOverHandler(createMouseOverHandler());
-		widget.addMouseOutHandler(createMouseOutHandler());
-		widget.addKeyUpHandler(createKeyUpHandler());
+		widget = GWT.create(FocusAreaStackImpl.class); 
+		widget.setWidget(canvas);
+		widget.setStackMenuItem(stackMenuItem);
 
 		initWidget(widget);
+	}
+
+	/**
+	 * @author samuel.cardoso
+	 * Focus area (clicked or touched area) implementation.
+	 */
+	static abstract class FocusAreaStackImpl extends FocusPanel implements HasSelectHandlers
+	{
+		protected boolean preventDefaultTouchEvents = false;
+		protected abstract void select();
+		StackMenuItem stackMenuItem;
+
+		public HandlerRegistration addSelectHandler(SelectHandler handler)
+		{
+			return addHandler(handler, SelectEvent.getType());
+		}
+
+		protected void setPreventDefaultTouchEvents(boolean preventDefaultTouchEvents)
+		{
+			this.preventDefaultTouchEvents = preventDefaultTouchEvents;
+		}
+
+		public void setStackMenuItem(StackMenuItem stackMenuItem) {
+			this.stackMenuItem = stackMenuItem;
+		}
+	}
+
+	/**
+	 * @author samuel.cardoso
+	 * Implementation for notouch devices.
+	 *
+	 */
+	static class NoTouchImpl extends FocusAreaStackImpl 
+	{
+		public NoTouchImpl()
+		{
+			addMouseOverHandler(createMouseOverHandler());
+			addMouseOutHandler(createMouseOutHandler());
+			addKeyUpHandler(createKeyUpHandler());
+			addClickHandler(new ClickHandler()
+			{
+				public void onClick(ClickEvent event)
+				{
+					fireAction(event);
+				}
+			});
+		}
+
+		/**
+		 * Changes the item's appearance when mouse is out of it
+		 * @return
+		 */
+		private MouseOutHandler createMouseOutHandler()
+		{
+			return new MouseOutHandler()
+			{
+				public void onMouseOut(MouseOutEvent event)
+				{
+					getWidget().removeStyleDependentName("over");
+					event.stopPropagation();
+				}
+			};
+		}
+
+		/**
+		 * Changes the item's appearance when mouse is over it
+		 * @return
+		 */
+		private MouseOverHandler createMouseOverHandler()
+		{
+			return new MouseOverHandler()
+			{
+				public void onMouseOver(MouseOverEvent event)
+				{
+					getWidget().addStyleDependentName("over");
+					event.stopPropagation();
+				}
+			};
+		}
+
+		/**
+		 * Fires the action associated with the selection of the item when user presses enter.
+		 * @return
+		 */
+		private KeyUpHandler createKeyUpHandler()
+		{
+			return new KeyUpHandler()
+			{
+				public void onKeyUp(KeyUpEvent event)
+				{
+					int keyCode = event.getNativeEvent().getKeyCode();
+					if(keyCode == KeyCodes.KEY_ENTER || keyCode == ' ')
+					{
+						fireAction(event);
+					}
+				}
+			};
+		}
+
+		/**
+		 * Cancels the native event and fires the action associated with the selection of the item
+		 * @param event
+		 */
+		private void fireAction(DomEvent<?> event)
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			stackMenuItem.select();
+		}
+
+		@Override
+		protected void select()
+		{
+			stackMenuItem.select();
+		}
+	}
+
+	/**
+	 * @author samuel.cardoso
+	 * Implementation for touch devices.
+	 */
+	static class TouchImpl extends FocusAreaStackImpl implements TouchStartHandler, TouchMoveHandler, TouchEndHandler
+	{
+		private static final int TAP_EVENT_THRESHOLD = 5;
+		private int startX;
+		private int startY;
+		private HandlerRegistration touchMoveHandler;
+		private HandlerRegistration touchEndHandler;
+
+		public TouchImpl()
+		{
+			addTouchStartHandler(this);
+		}
+
+		@Override
+		protected void select()
+		{
+			stackMenuItem.select();
+		}
+
+		@Override
+		public void onTouchEnd(TouchEndEvent event)
+		{
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
+			event.stopPropagation();
+			select();
+			resetHandlers();
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event)
+		{
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
+			Touch touch = event.getTouches().get(0);
+			if (Math.abs(touch.getClientX() - this.startX) > TAP_EVENT_THRESHOLD || Math.abs(touch.getClientY() - this.startY) > TAP_EVENT_THRESHOLD) 
+			{
+				this.resetHandlers();
+			}
+		}
+
+		@Override
+		public void onTouchStart(TouchStartEvent event)
+		{
+			event.stopPropagation();
+			if (preventDefaultTouchEvents)
+			{
+				event.preventDefault();
+			}
+			Touch touch = event.getTouches().get(0);
+			startX = touch.getClientX();
+			startY = touch.getClientY();
+			touchMoveHandler = addTouchMoveHandler(this);
+			touchEndHandler = addTouchEndHandler(this);
+		}
+
+		private void resetHandlers()
+		{
+			touchMoveHandler.removeHandler();
+			touchMoveHandler = null;
+			touchEndHandler.removeHandler();
+			touchEndHandler = null;
+		}
+
 	}
 
 	/**
@@ -98,7 +293,7 @@ class StackMenuItemCaption extends Composite
 	 * @param clickHandler
 	 * @return
 	 */
-	private Label createBody(String label, ClickHandler clickHandler)
+	private Label createBody(String label)
 	{
 		canvas.setHTML(1, 0, "&nbsp;");
 		canvas.getCellFormatter().setStyleName(1, 0, "item-border-w");
@@ -106,7 +301,6 @@ class StackMenuItemCaption extends Composite
 		Label menuItemLabel = new Label(label);
 		menuItemLabel.setStyleName("itemLabel");
 		TextSelectionUtils.makeUnselectable(menuItemLabel.getElement());
-		menuItemLabel.addClickHandler(clickHandler);
 		canvas.setWidget(1, 1, menuItemLabel);
 		canvas.getCellFormatter().setVerticalAlignment(1, 1, HasVerticalAlignment.ALIGN_MIDDLE);
 
@@ -166,83 +360,6 @@ class StackMenuItemCaption extends Composite
 		hasSubItemsIndicator.setVisible(show);
 	}
 
-	/**
-	 * Changes the item's appearance when mouse is out of it
-	 * @return
-	 */
-	private MouseOutHandler createMouseOutHandler()
-	{
-		return new MouseOutHandler()
-		{
-			public void onMouseOut(MouseOutEvent event)
-			{
-				canvas.removeStyleDependentName("over");
-				event.stopPropagation();
-			}
-		};
-	}
-
-	/**
-	 * Changes the item's appearance when mouse is over it
-	 * @return
-	 */
-	private MouseOverHandler createMouseOverHandler()
-	{
-		return new MouseOverHandler()
-		{
-			public void onMouseOver(MouseOverEvent event)
-			{
-				canvas.addStyleDependentName("over");
-				event.stopPropagation();
-			}
-		};
-	}
-
-	/**
-	 * Fires the action associated with the selection of the item when user clicks it.
-	 * @return
-	 */
-	private ClickHandler createBaseClickHandler()
-	{
-		return new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				fireAction(event);
-			}
-		};
-	}
-
-
-	/**
-	 * Fires the action associated with the selection of the item when user presses enter.
-	 * @return
-	 */
-	private KeyUpHandler createKeyUpHandler()
-	{
-		return new KeyUpHandler()
-		{
-			public void onKeyUp(KeyUpEvent event)
-			{
-				int keyCode = event.getNativeEvent().getKeyCode();
-				if(keyCode == KeyCodes.KEY_ENTER || keyCode == ' ')
-				{
-					fireAction(event);
-				}
-			}
-		};
-	}
-
-	/**
-	 * Cancels the native event and fires the action associated with the selection of the item
-	 * @param event
-	 */
-	private void fireAction(DomEvent<?> event)
-	{
-		event.preventDefault();
-		event.stopPropagation();
-		stackMenuItem.select();
-	}
 	/**
 	 * Changes the layout of the item if it is the first one
 	 * @param first
