@@ -26,4 +26,7 @@ public interface IndexedDBResources extends ClientBundle
 {
 	@Source("indexeddbshim.js")
 	ExternalTextResource indexeddbshim();
+
+	@Source("indexeddbshim_debug.js")
+	ExternalTextResource indexeddbshimDebug();
 }

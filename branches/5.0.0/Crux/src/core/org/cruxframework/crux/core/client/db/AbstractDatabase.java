@@ -57,8 +57,9 @@ public abstract class AbstractDatabase implements Database
 	protected DatabaseErrorHandler errorHandler;
 	protected String name;
 	protected int version;
-	private static boolean shimInitialized = false; 
-	private static boolean shimInitializing = false; 
+	private static boolean nativeDBInitialized = false; 
+	private static boolean nativeDBInitializing = false;
+	private static boolean debugMode = true;
 
 	@Override
 	public String getName()
@@ -104,13 +105,13 @@ public abstract class AbstractDatabase implements Database
 			throw new DatabaseException(messages.databaseIAlreadyOpenDBError(getName()));
 		}
 		
-		if (shimInitialized)
+		if (nativeDBInitialized)
 		{
 			doOpen(callback);
 		}
 		else
 		{
-			initializeShimAndTryOpen(callback);
+			initializeNativeDBAndTryOpen(callback);
 		}
 	}
 
@@ -398,27 +399,27 @@ public abstract class AbstractDatabase implements Database
 		});
     }
 	
-    private void initializeShimAndTryOpen(final DatabaseCallback callback)
+    private void initializeNativeDBAndTryOpen(final DatabaseCallback callback)
     {
-    	if (shimInitializing)
+    	if (nativeDBInitializing)
     	{
-    		waitForShimInitializationAndTryOpen(callback);
+    		waitForNativeDBInitializationAndTryOpen(callback);
     	}
     	else
     	{
-    		if (IDBFactory.isSupported())
+    		if (IDBFactory.isSupported() && !debugMode)
     		{
-				shimInitialized = true;
+				nativeDBInitialized = true;
 				doOpen(callback);
     		}
     		else
     		{
-	    		shimInitializing = true;
+	    		nativeDBInitializing = true;
 	    		IndexedDBResources resources = GWT.create(IndexedDBResources.class);
 	
 	    		try
 	    		{
-	    			resources.indexeddbshim().getText(new ResourceCallback<TextResource>()
+	    			ResourceCallback<TextResource> resourceCallback = new ResourceCallback<TextResource>()
 	    			{
 	    				@Override
 	    				public void onSuccess(TextResource resource)
@@ -432,36 +433,45 @@ public abstract class AbstractDatabase implements Database
 	    						@Override
 	    						public void execute()
 	    						{
-	    							shimInitialized = true;
-	    							shimInitializing = false;
+	    							nativeDBInitialized = true;
+	    							nativeDBInitializing = false;
+	    			    			if (debugMode)
+	    			    			{
+	    			    				forceWebSQLUsage();
+	    			    			}
+
 	    							if (LogConfiguration.loggingIsEnabled())
 	    							{
-	    								logger.log(Level.SEVERE, messages.databaseUsingWebSQL());
+	    								logger.log(Level.INFO, messages.databaseUsingWebSQL());
 	    							}
 	    							doOpen(callback);
 	    						}
 	    					});
 	    				}
 	
-	    				private native JavaScriptObject getWindow()/*-{
-	                        return $wnd;
-                        }-*/;
-
 						@Override
 	    				public void onError(ResourceException e)
 	    				{
-							shimInitializing = false;
+							nativeDBInitializing = false;
 	    					if (LogConfiguration.loggingIsEnabled())
 	    					{
 	    						logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
 	    					}
 	    					callback.onError(messages.databaseLoadingError(getName()));
 	    				}
-	    			});
+	    			};
+	    			if (debugMode)
+	    			{
+	    				resources.indexeddbshimDebug().getText(resourceCallback);
+	    			}
+	    			else
+	    			{
+	    				resources.indexeddbshim().getText(resourceCallback);
+	    			}
 	    		}
 	    		catch (ResourceException e)
 	    		{
-					shimInitializing = false;
+					nativeDBInitializing = false;
 	    			if (LogConfiguration.loggingIsEnabled())
 	    			{
 	    				logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
@@ -472,18 +482,26 @@ public abstract class AbstractDatabase implements Database
     	}
     }
 
-	private void waitForShimInitializationAndTryOpen(final DatabaseCallback callback)
+	private native JavaScriptObject getWindow()/*-{
+	    return $wnd;
+	}-*/;
+
+    private native void forceWebSQLUsage()/*-{
+    	$wnd.shimIndexedDB.__useShim();
+    }-*/;
+    
+	private void waitForNativeDBInitializationAndTryOpen(final DatabaseCallback callback)
     {
 	    Scheduler.get().scheduleFixedDelay(new RepeatingCommand()
 	    {
 	    	@Override
 	    	public boolean execute()
 	    	{
-	    		if (shimInitializing)
+	    		if (nativeDBInitializing)
 	    		{
 	    			return true;
 	    		}
-	    		if (shimInitialized)
+	    		if (nativeDBInitialized)
 	    		{
 	    			doOpen(callback);
 	    		}
