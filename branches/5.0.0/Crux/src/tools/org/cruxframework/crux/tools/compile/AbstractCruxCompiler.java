@@ -75,7 +75,8 @@ public abstract class AbstractCruxCompiler
 	private List<CruxPreProcessor> preProcessors = new ArrayList<CruxPreProcessor>();
 
 	private File sourceDir;
-	
+	private File resourcesDir;
+	private File classpathDir;
 	
 	/**
 	 * @param parameters
@@ -343,6 +344,10 @@ public abstract class AbstractCruxCompiler
 		        JCompiler compiler = new JCompiler();
 		        compiler.setOutputDirectory(compilerWorkDir);
 		        compiler.setSourcepath(sourceDir);
+		        if(classpathDir != null)
+		        {
+		        	compiler.setClasspath(getClasspath());
+		        }
 		    	logger.info("Compiling java source");
 		        if (!compiler.compile(sourceDir))
 		    	{
@@ -356,6 +361,18 @@ public abstract class AbstractCruxCompiler
 		}
     }
 
+	//Wildcard is not supported by all JVM's, so let's use ';' approach.
+	private String getClasspath() {
+		File[] listOfFiles = classpathDir.listFiles();
+		StringBuffer classpath = new StringBuffer();
+		for (int i = 0; i < listOfFiles.length; i++) {
+		  if (listOfFiles[i].isFile()) {
+			  classpath.append(listOfFiles[i].getAbsolutePath()+";");
+		  }
+		}
+		return classpath.toString();
+    }
+	
 	/**
 	 * @return
 	 */
@@ -376,6 +393,14 @@ public abstract class AbstractCruxCompiler
 		parameter.addParameterOption(new ConsoleParameterOption("dirName", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
 
+		parameter = new ConsoleParameter("classpathDir", "The classpath folder.", false, true);
+		parameter.addParameterOption(new ConsoleParameterOption("classpathDir", "Classpath dir"));
+		parametersProcessor.addSupportedParameter(parameter);
+		
+		parameter = new ConsoleParameter("resourcesDir", "The resources folder.", false, true);
+		parameter.addParameterOption(new ConsoleParameterOption("resourcesDir", "Resources dir"));
+		parametersProcessor.addSupportedParameter(parameter);
+		
 		parameter = new ConsoleParameter("pagesOutputDir", "The folder where the generated page files will be created.", false, true);
 		parameter.addParameterOption(new ConsoleParameterOption("output", "Folder name"));
 		parametersProcessor.addSupportedParameter(parameter);
@@ -730,6 +755,45 @@ public abstract class AbstractCruxCompiler
     }
 
 	/**
+	 * @param parameters
+	 */
+	public void processResourcesParameter(ConsoleParameter parameter) {
+		if (parameter != null)
+        {
+    	    this.resourcesDir = new File(parameter.getValue());
+	    	try
+            {
+                ClassPathUtils.addURL(resourcesDir.toURI().toURL());
+            }
+            catch (Exception e)
+            {
+    			logger.error("Invalid resourcesDir informed.", e);
+    			System.exit(1);
+            }
+        }
+	}
+	
+	/**
+	 * @param parameters
+	 */
+	protected void processClasspathParameter(ConsoleParameter parameter)
+    {
+        if (parameter != null)
+        {
+    	    this.classpathDir = new File(parameter.getValue());
+	    	try
+            {
+                ClassPathUtils.addURL(classpathDir.toURI().toURL());
+            }
+            catch (Exception e)
+            {
+    			logger.error("Invalid classpathDir informed.", e);
+    			System.exit(1);
+            }
+        }
+    }
+
+	/**
 	 * Release any resource reserved during compilation
 	 */
 	protected void releaseCompilerResources()
@@ -808,5 +872,4 @@ public abstract class AbstractCruxCompiler
 	{
         private static final long serialVersionUID = -5285052847615664828L;
 	}
-	
 }

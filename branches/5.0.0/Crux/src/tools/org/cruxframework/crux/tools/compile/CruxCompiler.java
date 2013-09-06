@@ -51,6 +51,16 @@ public class CruxCompiler
 			}
 			else
 			{
+				if(parameters.get("classpathDir") != null)
+				{
+					compiler.processClasspathParameter(parameters.get("classpathDir"));
+				}
+				
+				if(parameters.get("resourcesDir") != null)
+				{
+					compiler.processResourcesParameter(parameters.get("resourcesDir"));
+				}
+				
 				compiler.processSourceParameter(parameters.get("sourceDir"));
 				compiler.processParameters(parameters.values());
 				compiler.execute();
