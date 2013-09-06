@@ -59,7 +59,7 @@ public abstract class AbstractDatabase implements Database
 	protected int version;
 	private static boolean nativeDBInitialized = false; 
 	private static boolean nativeDBInitializing = false;
-	private static boolean debugMode = true;
+	private static boolean debugMode = false;
 
 	@Override
 	public String getName()
