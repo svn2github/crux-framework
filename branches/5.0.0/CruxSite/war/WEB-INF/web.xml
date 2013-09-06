@@ -51,15 +51,6 @@
         <listener-class>org.cruxframework.crux.core.server.DevModeInitializerListener</listener-class>
     </listener>
 	<filter>
-		<display-name>CruxFilter</display-name>
-		<filter-name>CruxFilter</filter-name>
-		<filter-class>org.cruxframework.crux.core.server.CruxFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CruxFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-	<filter>
 		<display-name>DeclarativeUIFilter</display-name>
 		<filter-name>DeclarativeUIFilter</filter-name>
 		<filter-class>org.cruxframework.crux.core.declarativeui.filter.DeclarativeUIFilter</filter-class>
