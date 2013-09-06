@@ -23,13 +23,16 @@ import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
+import org.cruxframework.crux.core.client.db.DatabaseWriteCallback;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectStoreRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
@@ -123,17 +126,23 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateAddMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void add("+getTargetObjectClassName()+" object){");
+		srcWriter.println("put(object, null);");
+		srcWriter.println("}");
+		srcWriter.println();
+		
+		srcWriter.println("public void add("+getTargetObjectClassName()+" object, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
 		srcWriter.println("if (object == null){");
 		srcWriter.println("throw new NullPointerException();");
 		srcWriter.println("}");
 		if (isEmptyType())
 		{
-			srcWriter.println(idbObjectStoreVariable+".add(object);");
+			srcWriter.println("IDBObjectStoreRequest storeRequest = " + idbObjectStoreVariable+".add(object);");
 		}
 		else
 		{
-			srcWriter.println(idbObjectStoreVariable+".add("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+			srcWriter.println("IDBObjectStoreRequest storeRequest = " + idbObjectStoreVariable+".add("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
 		}
+		generateWriteCallbacks(srcWriter, "callback", dbVariable, "storeRequest");
 		srcWriter.println("}");
 		srcWriter.println();
     }
@@ -141,17 +150,23 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generatePutMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void put("+getTargetObjectClassName()+" object){");
+		srcWriter.println("put(object, null);");
+		srcWriter.println("}");
+		srcWriter.println();
+		
+		srcWriter.println("public void put("+getTargetObjectClassName()+" object, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
 		srcWriter.println("if (object == null){");
 		srcWriter.println("throw new NullPointerException();");
 		srcWriter.println("}");
 		if (isEmptyType())
 		{
-			srcWriter.println(idbObjectStoreVariable+".put(object);");
+			srcWriter.println("IDBObjectStoreRequest storeRequest = " + idbObjectStoreVariable+".put(object);");
 		}
 		else
 		{
-			srcWriter.println(idbObjectStoreVariable+".put("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
+			srcWriter.println("IDBObjectStoreRequest storeRequest = " + idbObjectStoreVariable+".put("+serializerVariable+".encode(object).isObject().getJavaScriptObject());");
 		}
+		generateWriteCallbacks(srcWriter, "callback", dbVariable, "storeRequest");
 		srcWriter.println("}");
 		srcWriter.println();
     }
@@ -260,9 +275,12 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 		String[] imports = new String[] {
 				AbstractObjectStore.class.getCanonicalName(), 
 				IDBObjectStore.class.getCanonicalName(),
-				DatabaseRetrieveCallback.class.getCanonicalName(), 
+				DatabaseRetrieveCallback.class.getCanonicalName(),
+				DatabaseWriteCallback.class.getCanonicalName(),
 				IDBObjectRetrieveEvent.class.getCanonicalName(), 
-				IDBObjectRetrieveRequest.class.getCanonicalName(), 
+				IDBObjectRetrieveRequest.class.getCanonicalName(),
+				IDBObjectStoreRequest.class.getCanonicalName(),
+				IDBObjectStoreEvent.class.getCanonicalName(),
 				JSONObject.class.getCanonicalName(), 
 				DatabaseCursorCallback.class.getCanonicalName(), 
 				IDBObjectCursorRequest.class.getCanonicalName(), 

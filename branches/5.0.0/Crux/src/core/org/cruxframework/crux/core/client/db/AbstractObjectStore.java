@@ -47,6 +47,18 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 	}
 	
 	@Override
+	public void put(V object) 
+	{
+		put(object, null);
+	}
+
+	@Override
+	public void add(V object) 
+	{
+		add(object, null);
+	}
+	
+	@Override
 	public void clear()
 	{
 		idbObjectStore.clear();

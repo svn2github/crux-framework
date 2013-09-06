@@ -38,13 +38,27 @@ public interface ObjectStore<K, V>
 	 * @param object
 	 */
 	void add(V object);
+
+	/**
+	 * Insert the given object into the store.
+	 * @param object
+	 * @param callback
+	 */
+	void add(V object, DatabaseWriteCallback<K> callback);
 	
 	/**
 	 * Update the given object into the storage. If it does not exists, insert it. 
 	 * @param object
 	 */
 	void put(V object);
-
+	
+	/**
+	 * Update the given object into the storage. If it does not exists, insert it. 
+	 * @param object
+	 * @param callback
+	 */
+	void put(V object, DatabaseWriteCallback<K> callback);
+	
 	/**
 	 * Retrieve the object associated with the given key from the store. To read the object, 
 	 * use the method onSuccess from {@link DatabaseRetrieveCallback}.

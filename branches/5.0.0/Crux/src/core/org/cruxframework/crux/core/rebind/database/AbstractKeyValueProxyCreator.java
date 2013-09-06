@@ -300,6 +300,62 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("}");
     }
 
+	protected void generateWriteCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String writeRequestVar)
+    {		
+		srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println(""+callbackVar+".setDb("+dbVariable+");");
+		srcWriter.println("}");
+
+		srcWriter.println(writeRequestVar+".onSuccess(new IDBObjectStoreEvent.Handler(){");
+		srcWriter.println("public void onSuccess(IDBObjectStoreEvent event){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+
+		String keyTypeName = getKeyTypeName();
+		if (hasCompositeKey())
+		{
+			srcWriter.println(callbackVar+".onSuccess(fromNativeKey(event.getObjectKey()));");
+		}
+		else if (keyTypeName.equals("String"))
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getStringKey());");
+		}
+		else if (keyTypeName.equals("Integer"))
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getIntKey());");
+		}
+		else if (keyTypeName.equals("Double"))
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getDoubleKey());");
+		}
+		else if (keyTypeName.equals(Date.class.getCanonicalName()))
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getDateKey());");
+		}
+		else
+		{
+			srcWriter.println(callbackVar+".onSuccess(event.getObjectKey().cast());");
+		}
+		
+		srcWriter.println(""+callbackVar+".setDb(null);");
+		srcWriter.println("}");
+		srcWriter.println("}");
+		srcWriter.println("});");
+
+		srcWriter.println(writeRequestVar+".onError(new IDBErrorEvent.Handler(){");
+		srcWriter.println("public void onError(IDBErrorEvent event){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println(""+callbackVar+".onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println(""+callbackVar+".setDb(null);");
+		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
+		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println("}");
+		srcWriter.println("}");
+		srcWriter.println("});");
+
+		srcWriter.println("}");
+    }
+	
 	protected void generateCursorHandlers(SourcePrinter srcWriter, String callbackVar, String dbVariable, String cursorRequestVar, String cursorName)
 	{
 		srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");

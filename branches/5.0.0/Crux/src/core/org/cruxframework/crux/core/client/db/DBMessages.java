@@ -26,6 +26,9 @@ public interface DBMessages extends Messages
 	@DefaultMessage("Error retrieving object from database. Error name [{0}]")
 	String objectStoreGetError(String errorName);
 	
+	@DefaultMessage("Error writing object into database. Error name [{0}]")
+	String objectStoreWriteError(String errorName);
+	
 	@DefaultMessage("Error on database cursor. Error name [{0}]")
 	String objectStoreCursorError(String errorName);
 
