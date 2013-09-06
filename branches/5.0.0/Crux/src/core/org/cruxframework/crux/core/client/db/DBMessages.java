@@ -85,5 +85,8 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("IndexedDB not supported. Using Web SQL for persistence.")
 	String databaseUsingWebSQL();
+
+	@DefaultMessage("Crux database is not supported on this browser.")
+	String databaseNotSupportedError();
 	
 }

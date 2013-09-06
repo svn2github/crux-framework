@@ -149,4 +149,10 @@ public interface Database
 	 * @param errorHandler
 	 */
 	void setDefaultErrorHandler(DatabaseErrorHandler errorHandler);
+	
+	/**
+	 * Return true if Crux Database is supported by current browser.
+	 * @return
+	 */
+	boolean isSupported();
 }

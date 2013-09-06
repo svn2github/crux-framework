@@ -24,28 +24,20 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBDeleteDBRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBOpenDBRequest;
-import org.cruxframework.crux.core.client.db.indexeddb.IndexedDBResources;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBBlockedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
+import org.cruxframework.crux.core.client.db.websql.NativeDBHandler;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.core.client.ScriptInjector.FromString;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
 
 /**
- * HTML5 AbstractDatabase based on IndexedDB (http://www.w3.org/TR/IndexedDB/) 
+ * HTML5 AbstractDatabase based on IndexedDB (http://www.w3.org/TR/IndexedDB/).
+ * Supported also on WEB SQL capable browsers. 
  * @author Thiago da Rosa de Bustamante
  *
  */
@@ -57,9 +49,6 @@ public abstract class AbstractDatabase implements Database
 	protected DatabaseErrorHandler errorHandler;
 	protected String name;
 	protected int version;
-	private static boolean nativeDBInitialized = false; 
-	private static boolean nativeDBInitializing = false;
-	private static boolean debugMode = false;
 
 	@Override
 	public String getName()
@@ -96,25 +85,25 @@ public abstract class AbstractDatabase implements Database
     @Override
 	public void open(final DatabaseCallback callback)
 	{
-		if (StringUtils.isEmpty(getName()))
+		if (checkOpenPreConditions(callback))
 		{
-			throw new DatabaseException(messages.databaseInvalidNameDBError(getName()));
-		}
-		if (isOpen())
-		{
-			throw new DatabaseException(messages.databaseIAlreadyOpenDBError(getName()));
-		}
-		
-		if (nativeDBInitialized)
-		{
-			doOpen(callback);
-		}
-		else
-		{
-			initializeNativeDBAndTryOpen(callback);
+			if (NativeDBHandler.isInitialized())
+			{
+				doOpen(callback);
+			}
+			else
+			{
+				initializeNativeDBAndTryOpen(callback);
+			}
 		}
 	}
 
+    @Override
+    public boolean isSupported()
+    {
+        return NativeDBHandler.isSupported();
+    }
+    
 	@Override
 	public void close()
 	{
@@ -260,6 +249,27 @@ public abstract class AbstractDatabase implements Database
         
     }
     
+	private boolean checkOpenPreConditions(final DatabaseCallback callback)
+    {
+	    if (StringUtils.isEmpty(getName()))
+		{
+			callback.onError(messages.databaseInvalidNameDBError(getName()));
+		}
+	    else if (isOpen())
+		{
+			callback.onError(messages.databaseIAlreadyOpenDBError(getName()));
+		}
+	    else if (!isSupported())
+		{
+			callback.onError(messages.databaseNotSupportedError());
+		}
+	    else
+	    {
+	    	return true;
+	    }
+	    return false;
+    }
+
 	private TransactionCallback getCallbackForWriteTransaction(final DatabaseCallback callback)
     {
 		if (callback == null && errorHandler == null)
@@ -304,9 +314,6 @@ public abstract class AbstractDatabase implements Database
 			}
 		};
     }
-
-	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
-	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
 
 	private void doOpen(final DatabaseCallback callback)
     {
@@ -401,117 +408,26 @@ public abstract class AbstractDatabase implements Database
 	
     private void initializeNativeDBAndTryOpen(final DatabaseCallback callback)
     {
-    	if (nativeDBInitializing)
-    	{
-    		waitForNativeDBInitializationAndTryOpen(callback);
-    	}
-    	else
-    	{
-    		if (IDBFactory.isSupported() && !debugMode)
-    		{
-				nativeDBInitialized = true;
+    	NativeDBHandler.initialize(new NativeDBHandler.Callback()
+		{
+			@Override
+			public void onSuccess()
+			{
 				doOpen(callback);
-    		}
-    		else
-    		{
-	    		nativeDBInitializing = true;
-	    		IndexedDBResources resources = GWT.create(IndexedDBResources.class);
-	
-	    		try
-	    		{
-	    			ResourceCallback<TextResource> resourceCallback = new ResourceCallback<TextResource>()
-	    			{
-	    				@Override
-	    				public void onSuccess(TextResource resource)
-	    				{
-	    					FromString injector = ScriptInjector.fromString(resource.getText());
-	    					injector.setWindow(getWindow());
-	    					injector.setRemoveTag(false);
-							injector.inject();
-	    					Scheduler.get().scheduleDeferred(new ScheduledCommand()
-	    					{
-	    						@Override
-	    						public void execute()
-	    						{
-	    							nativeDBInitialized = true;
-	    							nativeDBInitializing = false;
-	    			    			if (debugMode)
-	    			    			{
-	    			    				forceWebSQLUsage();
-	    			    			}
-
-	    							if (LogConfiguration.loggingIsEnabled())
-	    							{
-	    								logger.log(Level.INFO, messages.databaseUsingWebSQL());
-	    							}
-	    							doOpen(callback);
-	    						}
-	    					});
-	    				}
-	
-						@Override
-	    				public void onError(ResourceException e)
-	    				{
-							nativeDBInitializing = false;
-	    					if (LogConfiguration.loggingIsEnabled())
-	    					{
-	    						logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
-	    					}
-	    					callback.onError(messages.databaseLoadingError(getName()));
-	    				}
-	    			};
-	    			if (debugMode)
-	    			{
-	    				resources.indexeddbshimDebug().getText(resourceCallback);
-	    			}
-	    			else
-	    			{
-	    				resources.indexeddbshim().getText(resourceCallback);
-	    			}
-	    		}
-	    		catch (ResourceException e)
-	    		{
-					nativeDBInitializing = false;
-	    			if (LogConfiguration.loggingIsEnabled())
-	    			{
-	    				logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
-	    			}
-	    			callback.onError(messages.databaseLoadingError(getName()));
-	    		}
-	    	}
-    	}
+			}
+			
+			@Override
+			public void onError(Exception e)
+			{
+				if (LogConfiguration.loggingIsEnabled())
+				{
+					logger.log(Level.SEVERE, messages.databaseLoadingError(getName()), e);
+				}
+				callback.onError(messages.databaseLoadingError(getName()));
+			}
+		});
     }
-
-	private native JavaScriptObject getWindow()/*-{
-	    return $wnd;
-	}-*/;
-
-    private native void forceWebSQLUsage()/*-{
-    	$wnd.shimIndexedDB.__useShim();
-    }-*/;
     
-	private void waitForNativeDBInitializationAndTryOpen(final DatabaseCallback callback)
-    {
-	    Scheduler.get().scheduleFixedDelay(new RepeatingCommand()
-	    {
-	    	@Override
-	    	public boolean execute()
-	    	{
-	    		if (nativeDBInitializing)
-	    		{
-	    			return true;
-	    		}
-	    		if (nativeDBInitialized)
-	    		{
-	    			doOpen(callback);
-	    		}
-	    		else
-	    		{
-	    			callback.onError(messages.databaseLoadingError(getName()));
-	    		}
-	    		
-	    		return false;
-	    	}
-	    }, 10);
-    }
+	protected abstract void updateDatabaseStructure(IDBOpenDBRequest openDBRequest);
+	protected abstract <K, V> ObjectStore<K, V> getObjectStore(String storeName, IDBObjectStore idbObjectStore);
 }
