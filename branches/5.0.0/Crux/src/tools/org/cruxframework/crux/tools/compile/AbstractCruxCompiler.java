@@ -780,10 +780,15 @@ public abstract class AbstractCruxCompiler
     {
         if (parameter != null)
         {
-    	    this.classpathDir = new File(parameter.getValue());
 	    	try
             {
-                ClassPathUtils.addURL(classpathDir.toURI().toURL());
+	    		this.classpathDir = new File(parameter.getValue());
+	    		//TODO: change for system jar separator ';'. Where is it???
+	    		String[] classpaths = getClasspath().split(";");
+	    		for(String classpath : classpaths)
+	    		{
+	    			ClassPathUtils.addURL(new File(classpath).toURI().toURL());
+	    		}
             }
             catch (Exception e)
             {
