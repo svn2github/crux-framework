@@ -19,7 +19,7 @@
 
         <lib.folder>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib\</lib.folder>
 
-		<jdk_home>E:\desenv\java\jdk-7u21-windows-x64</jdk_home>
+		<jdk_home>C:\desenv\java\jres_jdks\jdk-7u17-windows-x64</jdk_home>
 
 		<!-- GWT RUN using ANT -->
 		<webappctxname>CrossDeviceHelloWorldMaven-5.0.0</webappctxname>
@@ -145,15 +145,19 @@
 
 				<configuration>
 					<mainClass>org.cruxframework.crux.tools.compile.CruxCompiler</mainClass>
+					
+					
 					<arguments>
+					
+					
 						<argument>sourceDir</argument>
 						<argument>${basedir}\src/main/java</argument>
 						
-						<argument>resourcesDir</argument>
-                        <argument>${basedir}\src/main/resources</argument>
+<!-- 						<argument>resourcesDir</argument> -->
+<!--                         <argument>${basedir}\src/main/resources</argument> -->
 						
 						<argument>webDir</argument>
-                        <argument>${basedir}\src\main\resources</argument>
+                        <argument>${basedir}\src\main\resources\public</argument>
 
                         <argument>cruxPagesDir</argument>
                         <argument>${basedir}\src\main\resources</argument>
@@ -163,7 +167,7 @@
 						
 						<argument>classpathDir</argument>
 						<argument>${lib.folder}</argument>
-<!-- 						<argument>${lib.folder}\commons-logging-1.1.3.jar;${lib.folder}\crux-dev-5.0.0.jar;${lib.folder}\crux-gadgets-5.0.0.jar;${lib.folder}\crux-gadgets-runtime-5.0.0.jar;${lib.folder}\crux-runtime-5.0.0.jar;${lib.folder}\crux-themes-5.0.0.jar;${lib.folder}\crux-widgets-5.0.0.jar;${lib.folder}\gwt-dev-2.5.1.jar;${lib.folder}\gwt-servlet-2.5.1.jar;${lib.folder}\gwt-user-2.5.1.jar;${lib.folder}\jackson-core-asl-1.9.13.jar;${lib.folder}\jackson-jaxrs-1.9.13.jar;${lib.folder}\jackson-mapper-asl-1.9.13.jar;${lib.folder}\javassist-3.12.1.GA.jar;${lib.folder}\jgroups-3.2.9.Final.jar;${lib.folder}\json-20090211.jar;${lib.folder}\validation-api-1.0.0.GA.jar;${lib.folder}\validation-api-1.0.0.GA-sources.jar</argument> -->
+<!--  						<argument>${lib.folder}\commons-logging-1.1.3.jar;${lib.folder}\crux-dev-5.0.0.jar;${lib.folder}\crux-gadgets-5.0.0.jar;${lib.folder}\crux-gadgets-runtime-5.0.0.jar;${lib.folder}\crux-runtime-5.0.0.jar;${lib.folder}\crux-themes-5.0.0.jar;${lib.folder}\crux-widgets-5.0.0.jar;${lib.folder}\gwt-dev-2.5.1.jar;${lib.folder}\gwt-servlet-2.5.1.jar;${lib.folder}\gwt-user-2.5.1.jar;${lib.folder}\jackson-core-asl-1.9.13.jar;${lib.folder}\jackson-jaxrs-1.9.13.jar;${lib.folder}\jackson-mapper-asl-1.9.13.jar;${lib.folder}\javassist-3.12.1.GA.jar;${lib.folder}\jgroups-3.2.9.Final.jar;${lib.folder}\json-20090211.jar;${lib.folder}\validation-api-1.0.0.GA.jar;${lib.folder}\validation-api-1.0.0.GA-sources.jar</argument> -->
 						<!-- <argument>-Dfile.encoding</argument> <argument>ISO-8859-1</argument> 
 							<argument>inputCharset</argument> <argument>ISO-8859-1</argument> -->
 							
