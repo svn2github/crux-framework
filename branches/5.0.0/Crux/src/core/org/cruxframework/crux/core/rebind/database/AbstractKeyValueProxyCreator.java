@@ -356,6 +356,29 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("}");
     }
 	
+	protected void generateDeleteCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String deleteRequestVar)
+    {		
+		srcWriter.println(deleteRequestVar+".onSuccess(new IDBObjectStoreEvent.Handler(){");
+		srcWriter.println("public void onSuccess(IDBObjectStoreEvent event){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println(callbackVar+".onSuccess(null);");
+		srcWriter.println("}");
+		srcWriter.println("}");
+		srcWriter.println("});");
+
+		srcWriter.println("public void onError(IDBErrorEvent event){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println(""+callbackVar+".onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println(""+callbackVar+".setDb(null);");
+		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
+		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println("}");
+		srcWriter.println("}");
+		srcWriter.println("});");
+
+		srcWriter.println("}");
+    }
+	
 	protected void generateCursorHandlers(SourcePrinter srcWriter, String callbackVar, String dbVariable, String cursorRequestVar, String cursorName)
 	{
 		srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");

@@ -71,7 +71,7 @@ public interface ObjectStore<K, V>
 	 * Remove the object associated with the given key from the store.
 	 * @param key
 	 */
-	void delete(K key);
+	void delete(K key, DatabaseWriteCallback<K> callback);
 
 	/**
 	 * Remove all the objects in the given range from the store.

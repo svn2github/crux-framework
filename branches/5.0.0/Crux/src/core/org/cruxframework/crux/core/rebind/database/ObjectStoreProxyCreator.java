@@ -102,23 +102,25 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateDeleteMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void delete("+getKeyTypeName()+" key){");
+		srcWriter.println("public void delete("+getKeyTypeName()+" key, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println(idbObjectStoreVariable+".delete(getNativeKey(key));");
+			srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(getNativeKey(key));");
 		}
 		else
 		{
-			srcWriter.println(idbObjectStoreVariable+".delete(key);");
+			srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(key);");
 		}
+		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");
 		srcWriter.println();
     }
 
 	protected void generateDeleteRangeMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange){");
-		srcWriter.println(idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
+		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
+		srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
+		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");
 		srcWriter.println();
     }
