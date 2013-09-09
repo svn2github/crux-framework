@@ -105,7 +105,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateDeleteMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void delete("+getKeyTypeName()+" key, final DatabaseDeleteCallback<"+getKeyTypeName()+"> callback){");
+		srcWriter.println("public void delete("+getKeyTypeName()+" key, final DatabaseDeleteCallback callback){");
 		if (hasCompositeKey())
 		{
 			srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(getNativeKey(key));");
@@ -121,7 +121,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateDeleteRangeMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
+		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseDeleteCallback callback){");
 		srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
 		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");

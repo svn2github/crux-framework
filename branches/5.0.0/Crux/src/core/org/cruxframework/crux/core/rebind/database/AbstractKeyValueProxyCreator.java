@@ -362,21 +362,25 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("if ("+callbackVar+" != null){");
 		srcWriter.println(""+callbackVar+".setDb("+dbVariable+");");
 		srcWriter.println("}");
-		
+
 		srcWriter.println(deleteRequestVar+".onSuccess(new IDBObjectDeleteEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBObjectDeleteEvent event){");
 		srcWriter.println("if ("+callbackVar+" != null){");
+
 		srcWriter.println(callbackVar+".onSuccess();");
+		
+		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
 
+		srcWriter.println(deleteRequestVar+".onError(new IDBErrorEvent.Handler(){");
 		srcWriter.println("public void onError(IDBErrorEvent event){");
 		srcWriter.println("if ("+callbackVar+" != null){");
-		srcWriter.println(""+callbackVar+".onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println(""+callbackVar+".onError("+dbVariable+".messages.objectStoreDeleteError(event.getName()));");
 		srcWriter.println(""+callbackVar+".setDb(null);");
 		srcWriter.println("} else if ("+dbVariable+".errorHandler != null){");
-		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreWriteError(event.getName()));");
+		srcWriter.println(dbVariable+".errorHandler.onError("+dbVariable+".messages.objectStoreDeleteError(event.getName()));");
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
