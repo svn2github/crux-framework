@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.db.websql;
+package org.cruxframework.crux.core.client.db;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.cruxframework.crux.core.client.db.DBMessages;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBFactory;
+import org.cruxframework.crux.core.client.db.websql.WebSQLResources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -39,7 +39,7 @@ import com.google.gwt.resources.client.TextResource;
  *
  */
 @PartialSupport
-public class NativeDBHandler
+class NativeDBHandler
 {
 	protected static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
 	private static boolean nativeDBInitialized = false; 
@@ -116,7 +116,7 @@ public class NativeDBHandler
 	    		{
 	    			FromString injector = ScriptInjector.fromString(resource.getText());
 	    			injector.setWindow(getWindow());
-	    			injector.setRemoveTag(false);
+	    			injector.setRemoveTag(!debugMode);
 	    			injector.inject();
 	    			Scheduler.get().scheduleDeferred(new ScheduledCommand()
 	    			{

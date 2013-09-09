@@ -29,7 +29,6 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBDatabaseDeleteE
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBOpenedEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBUpgradeNeededEvent;
-import org.cruxframework.crux.core.client.db.websql.NativeDBHandler;
 import org.cruxframework.crux.core.client.utils.StringUtils;
 
 import com.google.gwt.core.client.GWT;
