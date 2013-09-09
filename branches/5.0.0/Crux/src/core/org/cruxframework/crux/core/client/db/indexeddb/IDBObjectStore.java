@@ -20,6 +20,7 @@ import java.util.Date;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBCursor.IDBCursorDirection;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.client.utils.JsUtils;
@@ -41,6 +42,17 @@ public class IDBObjectStore extends JavaScriptObject
 		public final native void onSuccess(IDBObjectStoreEvent.Handler handler) /*-{
 			this.onsuccess = function(evt) {
 		    	handler.@org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent.Handler::onSuccess(Lorg/cruxframework/crux/core/client/db/indexeddb/events/IDBObjectStoreEvent;)(evt);
+			};              
+		}-*/;
+	}
+	
+	public static class IDBObjectDeleteRequest extends IDBRequest<IDBObjectStore>
+	{
+		protected IDBObjectDeleteRequest(){}
+		
+		public final native void onSuccess(IDBObjectDeleteEvent.Handler handler) /*-{
+			this.onsuccess = function(evt) {
+		    	handler.@org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectDeleteEvent.Handler::onSuccess(Lorg/cruxframework/crux/core/client/db/indexeddb/events/IDBObjectDeleteEvent;)(evt);
 			};              
 		}-*/;
 	}
@@ -158,28 +170,28 @@ public class IDBObjectStore extends JavaScriptObject
 	    return this.add(value,key);
 	}-*/;
 
-	public final native IDBRequest<IDBObjectStore> delete(IDBKeyRange keyRange) /*-{
+	public final native IDBObjectDeleteRequest delete(IDBKeyRange keyRange) /*-{
 	    return this["delete"](keyRange);
 	}-*/;
 
-	public final native IDBRequest<IDBObjectStore> delete(JsArrayMixed key) /*-{
+	public final native IDBObjectDeleteRequest delete(JsArrayMixed key) /*-{
 	    return this["delete"](key);
 	}-*/;
 
-	public final native IDBRequest<IDBObjectStore> delete(String key) /*-{
+	public final native IDBObjectDeleteRequest delete(String key) /*-{
 	    return this["delete"](key);
 	}-*/;
 	
-	public final native IDBRequest<IDBObjectStore> delete(int key) /*-{
+	public final native IDBObjectDeleteRequest delete(int key) /*-{
 	    return this["delete"](key);
 	}-*/;
 	
-	public final IDBRequest<IDBObjectStore> delete(Date key) 
+	public final IDBObjectDeleteRequest delete(Date key) 
 	{
 	    return delete(key.getTime());
 	}
 
-	public final  native IDBRequest<IDBObjectStore> delete(double key) /*-{
+	public final  native IDBObjectDeleteRequest delete(double key) /*-{
 	    return this["delete"](key);
 	}-*/;
 

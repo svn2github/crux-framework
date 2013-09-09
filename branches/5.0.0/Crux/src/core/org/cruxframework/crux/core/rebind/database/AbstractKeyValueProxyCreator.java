@@ -357,11 +357,16 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
     }
 	
 	protected void generateDeleteCallbacks(SourcePrinter srcWriter, String callbackVar, String dbVariable, String deleteRequestVar)
-    {		
-		srcWriter.println(deleteRequestVar+".onSuccess(new IDBObjectStoreEvent.Handler(){");
-		srcWriter.println("public void onSuccess(IDBObjectStoreEvent event){");
+    {	
+		srcWriter.println("if ("+callbackVar+" != null || "+dbVariable+".errorHandler != null){");
 		srcWriter.println("if ("+callbackVar+" != null){");
-		srcWriter.println(callbackVar+".onSuccess(null);");
+		srcWriter.println(""+callbackVar+".setDb("+dbVariable+");");
+		srcWriter.println("}");
+		
+		srcWriter.println(deleteRequestVar+".onSuccess(new IDBObjectDeleteEvent.Handler(){");
+		srcWriter.println("public void onSuccess(IDBObjectDeleteEvent event){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		srcWriter.println(callbackVar+".onSuccess();");
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");

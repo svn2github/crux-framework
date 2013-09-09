@@ -22,15 +22,18 @@ import org.cruxframework.crux.core.client.db.AbstractObjectStore;
 import org.cruxframework.crux.core.client.db.Cursor;
 import org.cruxframework.crux.core.client.db.Cursor.CursorDirection;
 import org.cruxframework.crux.core.client.db.DatabaseCursorCallback;
+import org.cruxframework.crux.core.client.db.DatabaseDeleteCallback;
 import org.cruxframework.crux.core.client.db.DatabaseRetrieveCallback;
 import org.cruxframework.crux.core.client.db.DatabaseWriteCallback;
 import org.cruxframework.crux.core.client.db.KeyRangeFactory;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectCursorRequest;
+import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectDeleteRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectRetrieveRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore.IDBObjectStoreRequest;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCursorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
+import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectDeleteEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
@@ -102,14 +105,14 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 
 	protected void generateDeleteMethod(SourcePrinter srcWriter)
     {
-		srcWriter.println("public void delete("+getKeyTypeName()+" key, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
+		srcWriter.println("public void delete("+getKeyTypeName()+" key, final DatabaseDeleteCallback<"+getKeyTypeName()+"> callback){");
 		if (hasCompositeKey())
 		{
-			srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(getNativeKey(key));");
+			srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(getNativeKey(key));");
 		}
 		else
 		{
-			srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(key);");
+			srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(key);");
 		}
 		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");
@@ -119,7 +122,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateDeleteRangeMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void delete(KeyRange<"+getKeyTypeName()+"> keyRange, final DatabaseWriteCallback<"+getKeyTypeName()+"> callback){");
-		srcWriter.println("IDBObjectStoreRequest deleteRequest = " + idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
+		srcWriter.println("IDBObjectDeleteRequest deleteRequest = " + idbObjectStoreVariable+".delete(keyRange.getNativeKeyRange());");
 		generateDeleteCallbacks(srcWriter, "callback", dbVariable, "deleteRequest");
 		srcWriter.println("}");
 		srcWriter.println();
@@ -291,7 +294,11 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 				KeyRangeFactory.class.getCanonicalName(),
 				Cursor.class.getCanonicalName(), 
 				CursorDirection.class.getCanonicalName(), 
-				StringUtils.class.getCanonicalName()
+				StringUtils.class.getCanonicalName(),
+				DatabaseDeleteCallback.class.getCanonicalName(),
+				IDBObjectDeleteEvent.class.getCanonicalName(),
+				IDBObjectDeleteRequest.class.getCanonicalName()
+				
 		};
 		return imports;
 	}
