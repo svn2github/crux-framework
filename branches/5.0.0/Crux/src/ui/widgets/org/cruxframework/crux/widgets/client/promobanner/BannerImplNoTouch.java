@@ -29,7 +29,7 @@ abstract class BannerImplNoTouch extends BannerImpl
 	protected Label rightArrow;
 	protected int visibleBanner = -1;
 	protected FastList<SimplePanel> panels = new FastList<SimplePanel>();
-	protected boolean controlsEnabled;
+	protected boolean controlsEnabled = true;
 
 
 	protected BannerImplNoTouch()
