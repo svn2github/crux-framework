@@ -220,19 +220,31 @@ public abstract class AbstractDatabase implements Database
     }
 
     @Override
-    public <K> void delete(K key, String objectStoreName, DatabaseCallback callback)
+    public <K> void delete(K key, String objectStoreName, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
-    	objectStore.delete(key);
+    	objectStore.delete(key, new DatabaseDeleteCallback() {
+			
+			@Override
+			public void onSuccess() {
+				callback.onSuccess();
+			}
+		});
 	}
         
     @Override
-    public <K> void delete(KeyRange<K> keys, String objectStoreName, DatabaseCallback callback)
+    public <K> void delete(KeyRange<K> keys, String objectStoreName, final DatabaseCallback callback)
 	{
     	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
-    	objectStore.delete(keys);
+    	objectStore.delete(keys, new DatabaseDeleteCallback() {
+			
+			@Override
+			public void onSuccess() {
+				callback.onSuccess();
+			}
+		});
 	}
 
     @Override
