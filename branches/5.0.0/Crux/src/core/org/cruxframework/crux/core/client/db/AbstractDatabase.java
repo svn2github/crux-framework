@@ -224,13 +224,7 @@ public abstract class AbstractDatabase implements Database
 	{
     	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
-    	objectStore.delete(key, new DatabaseDeleteCallback() {
-			
-			@Override
-			public void onSuccess() {
-				callback.onSuccess();
-			}
-		});
+    	objectStore.delete(key);
 	}
         
     @Override
@@ -238,13 +232,7 @@ public abstract class AbstractDatabase implements Database
 	{
     	Transaction transaction = getTransaction(new String[]{objectStoreName}, Transaction.Mode.readWrite, getCallbackForWriteTransaction(callback));
     	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
-    	objectStore.delete(keys, new DatabaseDeleteCallback() {
-			
-			@Override
-			public void onSuccess() {
-				callback.onSuccess();
-			}
-		});
+    	objectStore.delete(keys);
 	}
 
     @Override

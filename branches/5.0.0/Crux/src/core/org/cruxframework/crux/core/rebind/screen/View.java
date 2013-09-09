@@ -44,6 +44,7 @@ public class View
 	protected String smallViewport;
 	protected String largeViewport;
 	protected String dataObject;
+	protected boolean disableRefresh;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -425,6 +426,24 @@ public class View
 	protected void setSmallViewport(String smallViewport)
     {
     	this.smallViewport = smallViewport;
+    }
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isDisableRefresh()
+    {
+    	return disableRefresh;
+    }
+
+	/**
+	 * 
+	 * @param disableRefresh
+	 */
+	protected void setDisableRefresh(boolean disableRefresh)
+    {
+    	this.disableRefresh = disableRefresh;
     }
 
 	/**

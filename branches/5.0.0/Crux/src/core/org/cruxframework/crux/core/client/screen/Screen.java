@@ -30,12 +30,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingHandler;
@@ -59,6 +63,7 @@ public class Screen
 	protected String id;
 	protected ScreenBlocker screenBlocker = GWT.create(ScreenBlocker.class);
 	protected URLRewriter urlRewriter = GWT.create(URLRewriter.class);
+	private static HandlerRegistration refreshPreviewHandler;
 
     protected Screen(final String id) 
 	{
@@ -674,5 +679,49 @@ public class Screen
     public static native void reload() /*-{
     	$wnd.top.location.reload();
   	}-*/;
-
+    
+	/**
+	 * Enable or disable the browser refresh support.
+	 * @param enabled
+	 */
+    public static void setRefreshEnabled(boolean enabled)
+    {
+    	if (enabled)
+    	{
+    		if (refreshPreviewHandler != null)
+    		{
+    			refreshPreviewHandler.removeHandler();
+    			refreshPreviewHandler = null;
+    		}
+    	}
+    	else
+    	{
+    		disableRefresh();
+    	}
+    }
+    
+    private static void disableRefresh()
+	{
+		if (refreshPreviewHandler == null)
+		{
+			refreshPreviewHandler = Event.addNativePreviewHandler(new NativePreviewHandler(){
+				public void onPreviewNativeEvent(NativePreviewEvent event)
+				{
+					if (event.getTypeInt() == Event.ONKEYDOWN)
+					{
+						NativeEvent nEvent = event.getNativeEvent();
+						if (nEvent.getCtrlKey() && nEvent.getKeyCode() == 'R')
+						{
+							nEvent.preventDefault();
+						}
+						
+						if (nEvent.getKeyCode() == 116)//F5
+						{
+							nEvent.preventDefault();
+						}
+					}
+				}
+			});
+		}
+    }
 }

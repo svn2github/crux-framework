@@ -58,6 +58,17 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 		add(object, null);
 	}
 	
+	public void delete(K key) 
+	{
+		delete(key, null);
+	}
+	
+	@Override
+	public void delete(KeyRange<K> keyRange)
+	{
+		delete(keyRange, null);
+	}
+	
 	@Override
 	public void clear()
 	{

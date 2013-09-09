@@ -114,6 +114,10 @@ public class ViewFactoryLegacy
 				{
 					view.setLargeViewport(elem.getString(attrName));
 				}
+	        	else if(attrName.equals("disableRefresh"))
+				{
+					view.setDisableRefresh(elem.getBoolean(attrName));
+				}
 	        	else if (attrName.startsWith("on"))
 	        	{
 	        		Event event = EventFactory.getEvent(attrName, elem.getString(attrName));
