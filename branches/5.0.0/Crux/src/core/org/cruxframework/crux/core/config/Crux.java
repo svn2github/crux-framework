@@ -80,4 +80,7 @@ public interface Crux
 	String enableResourceStateCacheForRestServices();
 	void setEnableResourceStateCacheForRestServices(String value);
 
+	@DefaultServerMessage("false")
+	String disableRefreshByDefault();
+	void setDisableRefreshByDefault(String value);
 }

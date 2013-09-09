@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,6 +70,10 @@ public class View
 		this.lazyDependencies = lazyDependencies;
 		this.html = html;
 		this.rootView = rootView;
+		if (rootView)
+		{
+			disableRefresh = ConfigurationFactory.getConfigurations().disableRefreshByDefault().equals("true");
+		}
 	}
 
 	/**

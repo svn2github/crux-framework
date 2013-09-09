@@ -37,7 +37,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.History;
@@ -704,10 +703,10 @@ public class Screen
 	{
 		if (refreshPreviewHandler == null)
 		{
-			refreshPreviewHandler = Event.addNativePreviewHandler(new NativePreviewHandler(){
+			refreshPreviewHandler = com.google.gwt.user.client.Event.addNativePreviewHandler(new NativePreviewHandler(){
 				public void onPreviewNativeEvent(NativePreviewEvent event)
 				{
-					if (event.getTypeInt() == Event.ONKEYDOWN)
+					if (event.getTypeInt() == com.google.gwt.user.client.Event.ONKEYDOWN)
 					{
 						NativeEvent nEvent = event.getNativeEvent();
 						if (nEvent.getCtrlKey() && nEvent.getKeyCode() == 'R')
