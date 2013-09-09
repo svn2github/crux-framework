@@ -19,8 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.db.DBMessages;
-import org.cruxframework.crux.core.client.db.websql.NativeDBHandler;
-import org.cruxframework.crux.core.client.db.websql.NativeDBHandler.Callback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -37,7 +35,7 @@ import com.google.gwt.resources.client.TextResource;
 
 public class CryptUtils 
 {
-	protected static Logger logger = Logger.getLogger(NativeDBHandler.class.getName());
+	protected static Logger logger = Logger.getLogger(CryptUtils.class.getName());
 	private static boolean md5Initialized = false; 
 	private static boolean md5Initializing = false;
 	
@@ -45,6 +43,12 @@ public class CryptUtils
 	{
 		@Source("md5.js")
 		ExternalTextResource md5();
+	}
+	
+	public static interface Callback
+	{
+		void onSuccess(String result);
+		void onError(Exception e);
 	}
 	
 	public void initialize(String key, Callback callback) 
@@ -87,7 +91,7 @@ public class CryptUtils
 	    						DBMessages messages = GWT.create(DBMessages.class);
 	    						logger.log(Level.INFO, messages.databaseUsingWebSQL());
 	    					}
-	    					callback.onSuccess();
+	    					callback.onSuccess(null);
 	    				}
 	    			});
 	    		}
