@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.cruxframework.crux.core.client.utils.StringUtils;
+import org.cruxframework.crux.core.config.ConfigurationFactory;
 import org.cruxframework.crux.core.rebind.screen.widget.ViewFactoryCreator;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ public class View
 	protected String width;
 	protected String height;
 	protected String fragment;
+	protected boolean disableRefresh;
 	protected Map<String, Widget> widgets = new HashMap<String, Widget>();
 	protected Set<String> widgetTypes = new HashSet<String>();
 	protected Map<String, Event> events = new HashMap<String, Event>();
@@ -65,6 +67,10 @@ public class View
 		this.lazyDependencies = lazyDependencies;
 		this.html = html;
 		this.rootView = rootView;
+		if (rootView)
+		{
+			disableRefresh = ConfigurationFactory.getConfigurations().disableRefreshByDefault().equals("true");
+		}
 	}
 
 	/**
@@ -324,6 +330,25 @@ public class View
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isDisableRefresh()
+    {
+    	return disableRefresh;
+    }
+
+	/**
+	 * 
+	 * @param disableRefresh
+	 */
+	protected void setDisableRefresh(boolean disableRefresh)
+    {
+    	this.disableRefresh = disableRefresh;
+    }
+
+
 	/**
 	 * Iterate over view dataSources
 	 * @return

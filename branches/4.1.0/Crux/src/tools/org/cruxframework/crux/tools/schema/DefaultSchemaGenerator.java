@@ -687,6 +687,7 @@ public class DefaultSchemaGenerator implements CruxSchemaGenerator
 		generateElementAttributesForAllViewElements(out);
 		out.println("<xs:attribute name=\"smallViewport\" type=\"xs:string\"/>");
 		out.println("<xs:attribute name=\"largeViewport\" type=\"xs:string\"/>");
+		out.println("<xs:attribute name=\"disableRefresh\" type=\"xs:boolean\" default=\"false\" />");
 		out.println("</xs:complexType>");
 	}
 

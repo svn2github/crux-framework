@@ -27,6 +27,7 @@ import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Size;
 import org.cruxframework.crux.core.client.screen.DisplayHandler;
 import org.cruxframework.crux.core.client.screen.InterfaceConfigException;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.ViewFactory;
 import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.client.utils.StringUtils;
@@ -152,6 +153,10 @@ public class ViewFactoriesProxyCreator extends AbstractInterfaceWrapperProxyCrea
 					{
 						sourceWriter.println(DisplayHandler.class.getCanonicalName()+".configureViewport("+EscapeUtils.quote(largeViewport, false)+");");
 					}
+				}
+				if (view.isDisableRefresh())
+				{
+					sourceWriter.println(Screen.class.getCanonicalName()+".setRefreshEnabled(false);");
 				}
 			}
 			
