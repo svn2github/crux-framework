@@ -69,7 +69,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private JClassType javascriptObjectType;
 	private JClassType exceptionType;
 	private JClassType stringType;
-	private Set<String> processedUserTypes = new HashSet<String>();
+	private Set<String> referencedTypes = new HashSet<String>();
 	
 	private static NameFactory nameFactory = new NameFactory();
 
@@ -78,10 +78,10 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		this(context, logger, targetObjectType, new HashSet<String>());
 	}
 	
-	public JSonSerializerProxyCreator(GeneratorContext context, TreeLogger logger, JType targetObjectType, Set<String> decodedUserType)
+	public JSonSerializerProxyCreator(GeneratorContext context, TreeLogger logger, JType targetObjectType, Set<String> referencedTypes)
 	{
 		super(logger, context, true);
-		registerOldUserType(targetObjectType, decodedUserType);
+		registerUserType(targetObjectType, referencedTypes);
 		jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
 		exceptionType = context.getTypeOracle().findType(Exception.class.getCanonicalName());
 		listType = context.getTypeOracle().findType(List.class.getCanonicalName());
@@ -92,13 +92,13 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		this.targetObjectType = targetObjectType;
 	}
 
-	private void registerOldUserType(JType targetObjectType,
-			Set<String> processedUserTypes) {
+	private void registerUserType(JType targetObjectType,
+			Set<String> referencedTypes) {
 		if(targetObjectType.isClass() != null && !JClassUtils.isSimpleType(targetObjectType))
 		{
-			processedUserTypes.add(targetObjectType.getQualifiedSourceName());
+			referencedTypes.add(targetObjectType.getQualifiedSourceName());
 		}
-		this.processedUserTypes = processedUserTypes;
+		this.referencedTypes = referencedTypes;
 	}
 
 	@Override
@@ -343,7 +343,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JClassType targetObjectType = getCollectionTargetType(objectType);
 		generateCollectionInstantiation(srcWriter, objectType, resultObjectVar, resultSourceName, targetObjectType);
 
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>()).create();
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, referencedTypes).create();
 		String serializerVar = nameFactory.createName("serializer");
 		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
@@ -505,17 +505,28 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType paramType = method.getParameterTypes()[0];
 				
-				//check cyclic reference and clear user types after the recursive call.
-				if(processedUserTypes.contains(paramType.getQualifiedSourceName()))
-				{
-					throw new CruxGeneratorException("Type ["+paramType.getQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " + "Cyclic reference found: " + processedUserTypes.toString());	
-				}
-				String serializerName = new JSonSerializerProxyCreator(context, logger, paramType, processedUserTypes).create();
-				processedUserTypes.clear();
+				String serializerName = runAndCheckNestedEvaluation(paramType);
 				
 				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
 			}
 		}
+	}
+
+	private String runAndCheckNestedEvaluation(JType paramType) {
+		HashSet<String> referencedTypesBackup = new HashSet<String>(referencedTypes);
+		
+		//check cyclic reference and clear user types after the recursive call.
+		if(referencedTypes.contains(paramType.getQualifiedSourceName()))
+		{
+			throw new CruxGeneratorException("Type ["+paramType.getQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " + "Cyclic reference found: " + referencedTypes.toString());	
+		}
+		//run nested evaluation.
+		String serializerName = new JSonSerializerProxyCreator(context, logger, paramType, referencedTypes).create();
+		
+		//revert processed list
+		this.referencedTypes = referencedTypesBackup;
+		
+		return serializerName;
 	}
 
 	private void generateEncodeStringForCustomType(SourcePrinter srcWriter, JClassType objectType, String objectVar, String resultJSONValueVar)
@@ -529,15 +540,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			{
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType returnType = method.getReturnType();
-				
-				//check cyclic reference and clear user types after the recursive call.
-				if(processedUserTypes.contains(returnType.getQualifiedSourceName()))
-				{
-					throw new CruxGeneratorException("Type ["+returnType.getQualifiedSourceName()+"] can not be deserialized by JsonEncoder. " + "Cyclic reference found: " + processedUserTypes.toString());	
-				}
-				String serializerName = new JSonSerializerProxyCreator(context, logger, returnType, processedUserTypes).create();
-				processedUserTypes.clear();
-				
+				String serializerName = runAndCheckNestedEvaluation(returnType); 
 				boolean primitive = returnType.isPrimitive() != null;
 				if (!primitive)
 				{
