@@ -81,7 +81,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	public JSonSerializerProxyCreator(GeneratorContext context, TreeLogger logger, JType targetObjectType, Set<String> referencedTypes)
 	{
 		super(logger, context, true);
-		registerUserType(targetObjectType, referencedTypes);
+		registerReferencedType(targetObjectType, referencedTypes);
 		jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
 		exceptionType = context.getTypeOracle().findType(Exception.class.getCanonicalName());
 		listType = context.getTypeOracle().findType(List.class.getCanonicalName());
@@ -92,9 +92,9 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		this.targetObjectType = targetObjectType;
 	}
 
-	private void registerUserType(JType targetObjectType,
+	private void registerReferencedType(JType targetObjectType,
 			Set<String> referencedTypes) {
-		if(targetObjectType.isClass() != null && !JClassUtils.isSimpleType(targetObjectType))
+		if(targetObjectType.isClassOrInterface() != null && !JClassUtils.isSimpleType(targetObjectType))
 		{
 			referencedTypes.add(targetObjectType.getQualifiedSourceName());
 		}
@@ -343,7 +343,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JClassType targetObjectType = getCollectionTargetType(objectType);
 		generateCollectionInstantiation(srcWriter, objectType, resultObjectVar, resultSourceName, targetObjectType);
 
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, referencedTypes).create();
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>(referencedTypes)).create();
 		String serializerVar = nameFactory.createName("serializer");
 		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
@@ -422,7 +422,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JClassType targetObjectType = getCollectionTargetType(objectType);
 		generateJSONValueCollectionForEncode(srcWriter, resultJSONValueVar, isList);
 
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>()).create();
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>(referencedTypes)).create();
 		String serializerVar = nameFactory.createName("serializer");
 		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
@@ -504,15 +504,13 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			{
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType paramType = method.getParameterTypes()[0];
-				
-				String serializerName = runAndCheckNestedEvaluation(paramType);
-				
+				String serializerName = getSerializerForType(paramType);
 				srcWriter.println(resultObjectVar+"."+method.getName()+"(new "+serializerName+"().decode("+jsonObjectVar+".get("+EscapeUtils.quote(property)+")));");
 			}
 		}
 	}
 
-	private String runAndCheckNestedEvaluation(JType paramType) {
+	private String getSerializerForType(JType paramType) {
 		HashSet<String> referencedTypesBackup = new HashSet<String>(referencedTypes);
 		
 		//check cyclic reference and clear user types after the recursive call.
@@ -540,7 +538,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 			{
 				String property = JClassUtils.getPropertyForGetterOrSetterMethod(method);
 				JType returnType = method.getReturnType();
-				String serializerName = runAndCheckNestedEvaluation(returnType); 
+				String serializerName = getSerializerForType(returnType); 
 				boolean primitive = returnType.isPrimitive() != null;
 				if (!primitive)
 				{
