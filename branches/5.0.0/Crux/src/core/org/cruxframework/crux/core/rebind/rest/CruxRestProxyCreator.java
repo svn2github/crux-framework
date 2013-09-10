@@ -651,7 +651,7 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		return false;
 	}
 
-	protected List<Class<?>> getAllowedType(JType jType)
+	protected static List<Class<?>> getAllowedType(JType jType)
 	{
 		List<Class<?>> result = new ArrayList<Class<?>>();
 		JPrimitiveType primitiveType = jType.isPrimitive();
