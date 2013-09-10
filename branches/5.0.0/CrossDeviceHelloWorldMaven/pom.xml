@@ -17,7 +17,7 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <lib.folder>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib\</lib.folder>
+		<lib.folder>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib\</lib.folder>
 
 		<jdk_home>C:\desenv\java\jres_jdks\jdk-7u17-windows-x64</jdk_home>
 
@@ -132,11 +132,9 @@
 		<!-- </resource> -->
 		<!-- </resources> -->
 
-        <!--
-		<resources> <resource> <directory>src/main/resources</directory> <includes> 
+		<!-- <resources> <resource> <directory>src/main/resources</directory> <includes> 
 			<include>*.gwt.xml</include> </includes> <filtering>true</filtering> </resource> 
-			</resources> 
- 			-->
+			</resources> -->
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -145,36 +143,36 @@
 
 				<configuration>
 					<mainClass>org.cruxframework.crux.tools.compile.CruxCompiler</mainClass>
-					
-					
+
+
 					<arguments>
-					
-					
+
+
 						<argument>sourceDir</argument>
 						<argument>${basedir}\src/main/java</argument>
-						
-<!-- 						<argument>resourcesDir</argument> -->
-<!--                         <argument>${basedir}\src/main/resources</argument> -->
-						
-						<argument>webDir</argument>
-                        <argument>${basedir}\src\main\resources\public</argument>
 
-                        <argument>cruxPagesDir</argument>
-                        <argument>${basedir}\src\main\resources</argument>
-						
+						<!-- <argument>resourcesDir</argument> -->
+						<!-- <argument>${basedir}\src/main/resources</argument> -->
+
+						<argument>webDir</argument>
+						<argument>${basedir}\src\main\resources\public</argument>
+
+						<argument>resourcesDir</argument>
+						<argument>${basedir}\src\main\resources</argument>
+ 
 						<argument>outputDir</argument>
 						<argument>${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0</argument>
-						
+
 						<argument>classpathDir</argument>
 						<argument>${lib.folder}</argument>
-<!--  						<argument>${lib.folder}\commons-logging-1.1.3.jar;${lib.folder}\crux-dev-5.0.0.jar;${lib.folder}\crux-gadgets-5.0.0.jar;${lib.folder}\crux-gadgets-runtime-5.0.0.jar;${lib.folder}\crux-runtime-5.0.0.jar;${lib.folder}\crux-themes-5.0.0.jar;${lib.folder}\crux-widgets-5.0.0.jar;${lib.folder}\gwt-dev-2.5.1.jar;${lib.folder}\gwt-servlet-2.5.1.jar;${lib.folder}\gwt-user-2.5.1.jar;${lib.folder}\jackson-core-asl-1.9.13.jar;${lib.folder}\jackson-jaxrs-1.9.13.jar;${lib.folder}\jackson-mapper-asl-1.9.13.jar;${lib.folder}\javassist-3.12.1.GA.jar;${lib.folder}\jgroups-3.2.9.Final.jar;${lib.folder}\json-20090211.jar;${lib.folder}\validation-api-1.0.0.GA.jar;${lib.folder}\validation-api-1.0.0.GA-sources.jar</argument> -->
+						<!-- <argument>${lib.folder}\commons-logging-1.1.3.jar;${lib.folder}\crux-dev-5.0.0.jar;${lib.folder}\crux-gadgets-5.0.0.jar;${lib.folder}\crux-gadgets-runtime-5.0.0.jar;${lib.folder}\crux-runtime-5.0.0.jar;${lib.folder}\crux-themes-5.0.0.jar;${lib.folder}\crux-widgets-5.0.0.jar;${lib.folder}\gwt-dev-2.5.1.jar;${lib.folder}\gwt-servlet-2.5.1.jar;${lib.folder}\gwt-user-2.5.1.jar;${lib.folder}\jackson-core-asl-1.9.13.jar;${lib.folder}\jackson-jaxrs-1.9.13.jar;${lib.folder}\jackson-mapper-asl-1.9.13.jar;${lib.folder}\javassist-3.12.1.GA.jar;${lib.folder}\jgroups-3.2.9.Final.jar;${lib.folder}\json-20090211.jar;${lib.folder}\validation-api-1.0.0.GA.jar;${lib.folder}\validation-api-1.0.0.GA-sources.jar</argument> -->
 						<!-- <argument>-Dfile.encoding</argument> <argument>ISO-8859-1</argument> 
 							<argument>inputCharset</argument> <argument>ISO-8859-1</argument> -->
-							
+
 						<argument>outputCharset</argument>
 						<argument>UTF-8</argument>
 
-<!-- 						<argument>%classpath:${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib</argument> -->
+						<!-- <argument>%classpath:${basedir}\target\CrossDeviceHelloWorldMaven-5.0.0\WEB-INF\lib</argument> -->
 
 					</arguments>
 				</configuration>
@@ -227,6 +225,43 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											properties-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0-alpha-2,)
+										</versionRange>
+										<goals>
+											<goal>
+												set-system-properties
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<!-- <profiles> <profile> <id>default-profile</id> <activation> <activeByDefault>true</activeByDefault> 
 		<file> <exists>${java.home}/../lib/tools.jar</exists> </file> </activation> 
