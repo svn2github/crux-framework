@@ -85,7 +85,7 @@ public class Grid extends AbstractGrid<DataRow> implements Pageable, HasDataSour
 	private String emptyDataFilling;
 	private String defaultSortingColumn;
 	private boolean caseSensitive;
-	private SortingType defaultSortingType;
+	private SortingType defaultSortingType = SortingType.ascending;
 	private RowDetailsManager rowDetailsManager;
 	private DataRow currentEditingRow;
 
