@@ -1,9 +1,9 @@
 package org.cruxframework.crossdevice.showcase.client;
 
-import org.cruxframework.crossdevice.showcase.client.widget.MenuDisplay;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.screen.Screen;
+import org.cruxframework.crux.widgets.client.disposal.menutabsdisposal.MenuTabsDisposal;
 
 @Controller("mainController")
 public class MainController 
@@ -11,7 +11,7 @@ public class MainController
 	@Expose
 	public void showMenu()
 	{
-		MenuDisplay menuDisplay = (MenuDisplay) Screen.get("menuDisplay");
-		menuDisplay.showMenu();
+		MenuTabsDisposal menuDisposal = (MenuTabsDisposal) Screen.get("menuDisposal");
+		menuDisposal.showMenu();
 	}
 }

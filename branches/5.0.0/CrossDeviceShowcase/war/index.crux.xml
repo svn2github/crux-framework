@@ -19,23 +19,23 @@
 				  largeViewport="user-scalable=no, width=device-width, height=device-height" 
 				  useResource="xStandardResources,showcaseResources" height="100%"/>
 
-		<show:menuDisplay id="menuDisplay">
-			<show:menuSection label="Elementos de Layout"/>
-			<show:menuEntry label="StyledPanel" targetView="styledPanel"/>
-			<show:menuEntry label="FormDisplay" targetView="formDisplay"/>
-			<show:menuEntry label="FileUploader" targetView="fileUploader"/>
-			<show:menuSection label="Seção 2"/>
-			<show:menuEntry label="Exemplo 4" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 5" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 6" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 7" targetView="formDisplay"/>
-			<show:menuSection label="Seção 3"/>
-			<show:menuEntry label="Exemplo 8" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 9" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 10" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 11" targetView="formDisplay"/>
-			<show:menuEntry label="Exemplo 12" targetView="formDisplay"/>
-		</show:menuDisplay>
+		<crux:menuTabsDisposal id="menuDisposal">
+			<crux:menuSection label="Elementos de Layout"/>
+			<crux:menuEntry label="StyledPanel" targetView="styledPanel"/>
+			<crux:menuEntry label="FormDisplay" targetView="formDisplay"/>
+			<crux:menuEntry label="FileUploader" targetView="fileUploader"/>
+			<crux:menuSection label="Seção 2"/>
+			<crux:menuEntry label="Exemplo 4" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 5" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 6" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 7" targetView="formDisplay"/>
+			<crux:menuSection label="Seção 3"/>
+			<crux:menuEntry label="Exemplo 8" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 9" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 10" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 11" targetView="formDisplay"/>
+			<crux:menuEntry label="Exemplo 12" targetView="formDisplay"/>
+		</crux:menuTabsDisposal>
 	
 	</body>
 </html>

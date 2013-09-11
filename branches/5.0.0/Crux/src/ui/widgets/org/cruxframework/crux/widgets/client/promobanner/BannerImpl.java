@@ -144,7 +144,7 @@ abstract class BannerImpl extends Composite
 	{
 		SimplePanel panel = new SimplePanel();
 		panel.getElement().getStyle().setBackgroundImage("url(" + Screen.rewriteUrl(imageURL) + ")");
-
+		panel.setStyleName("promoBannerImage");
 		doAddBanner(title, text, styleName, buttonLabel, selectHandler, panel);
 	}
 

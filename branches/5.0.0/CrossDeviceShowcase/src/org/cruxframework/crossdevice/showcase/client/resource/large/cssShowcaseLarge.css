@@ -49,8 +49,8 @@ BODY
 	padding-bottom: 10px;
 }
 
-@external crux-MenuDisplay; 
-.crux-MenuDisplay
+@external crux-MenuTabsDisposal; 
+.crux-MenuTabsDisposal
 {
 	width: 80%;
 	margin-left: auto;
