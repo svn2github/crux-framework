@@ -123,6 +123,11 @@
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerDefault">
         <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
+        <none>
+            <when-property-is name="user.agent" value="ie8"/>
+            <when-property-is name="user.agent" value="ie9"/>
+            <when-property-is name="user.agent" value="safari"/>
+        </none>
     </replace-with>
     <replace-with
         class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerSafari">
