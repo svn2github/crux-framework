@@ -23,6 +23,8 @@ import com.google.gwt.core.client.JsArrayMixed;
 
 /**
  * @author Thiago da Rosa de Bustamante
+ * @param <K> The type of the key used to identify objects into the cursor.
+ * @param <V> The type of the objects referenced by this cursor 
  *
  */
 public abstract class Cursor<K, V>

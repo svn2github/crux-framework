@@ -35,6 +35,7 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectRetrieveEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBObjectStoreEvent;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
+import org.cruxframework.crux.core.server.Environment;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -219,9 +220,27 @@ public class IndexProxyCreator extends AbstractKeyValueProxyCreator
 		srcWriter.println("public void onSuccess(IDBCursorEvent event){");
 		String cursorClassName = new KeyCursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, objectStoreKeyPath, indexName).create();
 		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
-		srcWriter.println("if ("+callbackVar+" != null && cursor != null){");
+		srcWriter.println("if ("+callbackVar+" != null){");
+		
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("try{");
+		}
+		
+		srcWriter.println("if(cursor != null){");
 		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(cursor));");
+		srcWriter.println("}else{");
+		srcWriter.println(""+callbackVar+".onSuccess(null);");
+		srcWriter.println("}");
 		srcWriter.println(""+callbackVar+".setDb(null);");
+		
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("reportError("+callbackVar+", "+dbVariable+".messages.objectStoreCursorError(e.getMessage()), e);");
+			srcWriter.println("}");
+		}
+		
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");//TODO em chaves compostas, obrigar um order >=0. 

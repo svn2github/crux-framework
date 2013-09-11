@@ -16,7 +16,6 @@
 package org.cruxframework.crux.core.client.db;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.client.db.indexeddb.IDBObjectStore;
 import org.cruxframework.crux.core.client.db.indexeddb.IDBTransaction;
@@ -32,7 +31,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public class Transaction
+public class Transaction extends DBObject
 {
 	/**
 	 * Transaction mode.
@@ -41,15 +40,12 @@ public class Transaction
 	 */
 	public static enum Mode{readWrite, readOnly}
 	
-	protected static Logger logger = Logger.getLogger(Transaction.class.getName());
-	
 	private IDBTransaction transaction;
-	private final AbstractDatabase db;
 	private TransactionCallback transactionCallback;
 
-	protected Transaction(AbstractDatabase db, String[] storeNames, Mode mode)
+	protected Transaction(final AbstractDatabase db, String[] storeNames, Mode mode)
     {
-		this.db = db;
+		super(db);
 		IDBTransactionMode idbMode;
 		switch (mode)
         {
@@ -76,7 +72,15 @@ public class Transaction
 				}
 				if (transactionCallback != null)
 				{
-					transactionCallback.onAbort();
+					try
+					{
+						transactionCallback.onAbort();
+					}
+					catch (Exception e) 
+					{
+						String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), e.getMessage());
+						reportError(transactionCallback, message, e);
+					}
 				}
 			}
 		});
@@ -91,7 +95,16 @@ public class Transaction
 				}
 				if (transactionCallback != null)
 				{
-					transactionCallback.onComplete();
+					try
+					{
+						transactionCallback.onComplete();
+					}
+					catch (Exception e) 
+					{
+						String message = Transaction.this.db.messages.databaseTransactionError(Transaction.this.db.getName(), e.getMessage());
+						reportError(transactionCallback, message, e);
+					}
+						
 				}
 			}
 		});

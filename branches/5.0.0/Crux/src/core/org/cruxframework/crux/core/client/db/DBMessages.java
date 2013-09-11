@@ -91,5 +91,4 @@ public interface DBMessages extends Messages
 
 	@DefaultMessage("Crux database is not supported on this browser.")
 	String databaseNotSupportedError();
-	
 }

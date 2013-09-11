@@ -18,10 +18,15 @@ package org.cruxframework.crux.core.client.db;
 /**
  * Database retrieve operation callback. 
  * Use this callback to read objects from object stores.
- * 
+ * @param <K> The type of the object returned to this callback.
  * @author Thiago da Rosa de Bustamante
  */
 public abstract class DatabaseRetrieveCallback<T> extends Callback
 {
+	/**
+	 * Called after a successfully read operation into the database (a get operation). 
+     * @param <K> The type of the retrieved object.
+	 * @param result
+	 */
 	public abstract void onSuccess(T result);
 }

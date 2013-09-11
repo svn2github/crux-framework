@@ -18,10 +18,16 @@ package org.cruxframework.crux.core.client.db;
 /**
  * Database write operation callback. 
  * Use this callback to retrieve the key from object writen into the stores.
+ * @param <K> The type of the key returned to this callback.
  * 
  * @author Thiago da Rosa de Bustamante
  */
 public abstract class DatabaseWriteCallback<T> extends Callback
 {
+	/**
+	 * Called after a successfully write operation into the database (an add or put operation). 
+     * @param <K> The type of the key assigned to the writen object.
+	 * @param result
+	 */
 	public abstract void onSuccess(T result);
 }

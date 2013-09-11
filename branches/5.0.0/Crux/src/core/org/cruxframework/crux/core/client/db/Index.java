@@ -22,19 +22,19 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBCountEvent;
 import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
 
 /**
+ * Represents an index into this database.
+ * @param <K> object key type
+ * @param <I> index key type. The type of the indexed column
+ * @param <V> object type
  * @author Thiago da Rosa de Bustamante
- *@param <K> object key type
- *@param <I> index key type
- *@param <V> object type
  */
-public abstract class Index<K, I, V>
+public abstract class Index<K, I, V> extends DBObject 
 {
 	protected final IDBIndex idbIndex;
-	protected final AbstractDatabase db;
 
 	protected Index(AbstractDatabase db, IDBIndex idbIndex)
     {
-		this.db = db;
+		super(db);
 		this.idbIndex = idbIndex;
     }
 
@@ -171,15 +171,7 @@ public abstract class Index<K, I, V>
 				@Override
 				public void onError(IDBErrorEvent event)
 				{
-					if (callback != null)
-					{
-						callback.onError(db.messages.objectStoreCountError(event.getName()));
-						callback.setDb(null);
-					}
-					else if (db.errorHandler != null)
-					{
-						db.errorHandler.onError(db.messages.objectStoreCountError(event.getName()));
-					}
+					reportError(callback, db.messages.objectStoreCountError(event.getName()), null);
 				}
 			});
 			countRequest.onSuccess(new IDBCountEvent.Handler()
@@ -190,12 +182,18 @@ public abstract class Index<K, I, V>
 				{
 					if (callback != null)
 					{
-						callback.onSuccess(event.getCount());
-						callback.setDb(null);
+						try
+						{
+							callback.onSuccess(event.getCount());
+							callback.setDb(null);
+						}
+						catch(Exception e)
+						{
+							reportError(callback, db.messages.objectStoreCountError(e.getMessage()), e);
+						}
 					}
 				}
 			});
 		}
     }
-	
 }

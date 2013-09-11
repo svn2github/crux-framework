@@ -19,8 +19,8 @@ package org.cruxframework.crux.core.client.db;
 
 /**
  * A factory for KeyRange objects
+ * @param <K> The type of the key used by KeyRanges produced by this factory .
  * @author Thiago da Rosa de Bustamante
- *
  */
 public interface KeyRangeFactory<K>
 {

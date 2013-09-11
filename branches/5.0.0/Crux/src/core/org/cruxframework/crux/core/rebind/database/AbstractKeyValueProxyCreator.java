@@ -23,6 +23,7 @@ import org.cruxframework.crux.core.client.utils.StringUtils;
 import org.cruxframework.crux.core.rebind.AbstractProxyCreator;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.rest.JSonSerializerProxyCreator;
+import org.cruxframework.crux.core.server.Environment;
 import org.cruxframework.crux.core.utils.JClassUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -269,6 +270,12 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println(retrieveRequestVar+".onSuccess(new IDBObjectRetrieveEvent.Handler(){");
 		srcWriter.println("public void onSuccess(IDBObjectRetrieveEvent event){");
 		srcWriter.println("if ("+callbackVar+" != null){");
+
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("try{");
+		}
+
 		if (isEmptyType())
 		{
 			srcWriter.println(""+callbackVar+".onSuccess(event.getObject());");
@@ -282,6 +289,14 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 			srcWriter.println("}");
 		}
 		srcWriter.println(""+callbackVar+".setDb(null);");
+
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("reportError("+callbackVar+", "+dbVariable+".messages.objectStoreGetError(e.getMessage()), e);");
+			srcWriter.println("}");
+		}
+
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
@@ -311,6 +326,11 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("public void onSuccess(IDBObjectStoreEvent event){");
 		srcWriter.println("if ("+callbackVar+" != null){");
 
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("try{");
+		}
+
 		String keyTypeName = getKeyTypeName();
 		if (hasCompositeKey())
 		{
@@ -338,6 +358,14 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		}
 		
 		srcWriter.println(""+callbackVar+".setDb(null);");
+
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("reportError("+callbackVar+", "+dbVariable+".messages.objectStoreWriteError(e.getMessage()), e);");
+			srcWriter.println("}");
+		}
+		
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
@@ -367,9 +395,21 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		srcWriter.println("public void onSuccess(IDBObjectDeleteEvent event){");
 		srcWriter.println("if ("+callbackVar+" != null){");
 
-		srcWriter.println(callbackVar+".onSuccess();");
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("try{");
+		}
 		
+		srcWriter.println(callbackVar+".onSuccess();");
 		srcWriter.println(""+callbackVar+".setDb(null);");
+
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("reportError("+callbackVar+", "+dbVariable+".messages.objectStoreDeleteError(e.getMessage()), e);");
+			srcWriter.println("}");
+		}
+		
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");
@@ -400,12 +440,26 @@ public abstract class AbstractKeyValueProxyCreator extends AbstractProxyCreator
 		String cursorClassName = new CursorProxyCreator(context, logger, targetObjectType, objectStoreName, keyPath, cursorName).create();
 		srcWriter.println(IDBCursorWithValue.class.getCanonicalName()+" cursor = event.getCursor();");
 		srcWriter.println("if ("+callbackVar+" != null){");
+
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("try{");
+		}
+		
 		srcWriter.println("if(cursor != null){");
 		srcWriter.println(""+callbackVar+".onSuccess(new "+cursorClassName+"(cursor));");
 		srcWriter.println("}else{");
 		srcWriter.println(""+callbackVar+".onSuccess(null);");
 		srcWriter.println("}");
 		srcWriter.println(""+callbackVar+".setDb(null);");
+		
+		if (!Environment.isProduction())
+		{
+			srcWriter.println("}catch (Exception e){");
+			srcWriter.println("reportError("+callbackVar+", "+dbVariable+".messages.objectStoreCursorError(e.getMessage()), e);");
+			srcWriter.println("}");
+		}
+		
 		srcWriter.println("}");
 		srcWriter.println("}");
 		srcWriter.println("});");

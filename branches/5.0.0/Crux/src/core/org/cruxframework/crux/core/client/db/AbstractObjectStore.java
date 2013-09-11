@@ -24,14 +24,13 @@ import org.cruxframework.crux.core.client.db.indexeddb.events.IDBErrorEvent;
  * @author Thiago da Rosa de Bustamante
  *
  */
-public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
+public abstract class AbstractObjectStore<K, V> extends DBObject implements ObjectStore<K, V> 
 {
-	protected final AbstractDatabase db;
 	protected final IDBObjectStore idbObjectStore;
 
 	protected AbstractObjectStore(AbstractDatabase db, IDBObjectStore idbObjectStore)
 	{
-		this.db = db;
+		super(db);
 		this.idbObjectStore = idbObjectStore;
 	}
 	
@@ -102,15 +101,7 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 				@Override
 				public void onError(IDBErrorEvent event)
 				{
-					if (callback != null)
-					{
-						callback.onError(db.messages.objectStoreCountError(event.getName()));
-						callback.setDb(null);
-					}
-					else if (db.errorHandler != null)
-					{
-						db.errorHandler.onError(db.messages.objectStoreCountError(event.getName()));
-					}
+					reportError(callback, db.messages.objectStoreCountError(event.getName()), null);
 				}
 			});
 			countRequest.onSuccess(new IDBCountEvent.Handler()
@@ -121,8 +112,15 @@ public abstract class AbstractObjectStore<K, V> implements ObjectStore<K, V>
 				{
 					if (callback != null)
 					{
-						callback.onSuccess(event.getCount());
-						callback.setDb(null);
+						try
+						{
+							callback.onSuccess(event.getCount());
+							callback.setDb(null);
+						}
+						catch (Exception e) 
+						{
+							reportError(callback, db.messages.objectStoreCountError(e.getMessage()), e);
+						}
 					}
 				}
 			});

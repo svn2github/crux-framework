@@ -19,6 +19,8 @@ import org.cruxframework.crux.core.client.db.indexeddb.IDBKeyRange;
 
 
 /**
+ * Specify a range of Keys. Used to openCursors on object stores or indexes.
+ * @param <K> The type of the key referenced by this KeyRange .
  * @author Thiago da Rosa de Bustamante
  *
  */
