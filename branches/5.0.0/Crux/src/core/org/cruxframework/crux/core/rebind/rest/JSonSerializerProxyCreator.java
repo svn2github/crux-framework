@@ -343,7 +343,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JClassType targetObjectType = getCollectionTargetType(objectType);
 		generateCollectionInstantiation(srcWriter, objectType, resultObjectVar, resultSourceName, targetObjectType);
 
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>(referencedTypes)).create();
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>()).create();
 		String serializerVar = nameFactory.createName("serializer");
 		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
@@ -422,7 +422,7 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 		JClassType targetObjectType = getCollectionTargetType(objectType);
 		generateJSONValueCollectionForEncode(srcWriter, resultJSONValueVar, isList);
 
-		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>(referencedTypes)).create();
+		String serializerName = new JSonSerializerProxyCreator(context, logger, targetObjectType, new HashSet<String>()).create();
 		String serializerVar = nameFactory.createName("serializer");
 		srcWriter.println(serializerName+" "+serializerVar+" = new "+serializerName+"();");
 		if (isList)
