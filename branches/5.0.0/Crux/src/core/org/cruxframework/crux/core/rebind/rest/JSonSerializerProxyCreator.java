@@ -70,7 +70,6 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	private JClassType exceptionType;
 	private JClassType stringType;
 	private Set<String> referencedTypes = new HashSet<String>();
-	private TreeLogger logger;
 	
 	private static NameFactory nameFactory = new NameFactory();
 
@@ -82,7 +81,6 @@ public class JSonSerializerProxyCreator extends AbstractProxyCreator
 	public JSonSerializerProxyCreator(GeneratorContext context, TreeLogger logger, JType targetObjectType, Set<String> referencedTypes)
 	{
 		super(logger, context, true);
-		this.logger = logger;
 		registerReferencedType(targetObjectType, referencedTypes);
 		jsonEncoderType = context.getTypeOracle().findType(JsonEncoder.class.getCanonicalName());
 		exceptionType = context.getTypeOracle().findType(Exception.class.getCanonicalName());
