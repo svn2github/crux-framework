@@ -27,6 +27,8 @@ import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -106,7 +108,14 @@ public class SlideshowPhotoPanel extends SlideshowComponent
 			
 			photosPanel = new HorizontalSwapPanel();
 			photosPanel.setWidth("100%");
-			photosPanel.setHeight("100%");
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+				
+				@Override
+				public void execute() {
+					photosPanel.setHeight("100%");		
+				}
+			});
+			
 			
 			leftArrow = new Label();
 			leftArrow.setStyleName("leftArrow");

@@ -96,4 +96,5 @@ public interface Slideshow extends DeviceAdaptive
 	AlbumService getAlbumService();
 	void setAlbumService(AlbumService albumService);
 	void load(Callback callback);
+	SlideshowPhotoPanel getPhotoPanel();
 }

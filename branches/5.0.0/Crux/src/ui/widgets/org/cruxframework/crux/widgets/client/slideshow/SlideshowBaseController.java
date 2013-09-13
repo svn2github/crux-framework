@@ -346,6 +346,11 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 		return activeImage;
 	}
 	
+	@Override
+	public SlideshowPhotoPanel getPhotoPanel() {
+		return photoPanel;
+	}
+	
 	/**
 	 * 
 	 * @param index
@@ -510,6 +515,11 @@ public abstract class SlideshowBaseController extends DeviceAdaptiveController i
 	 */
     protected void adjustImageSize(Widget referencePanel, Photo photo, Image image)
     {
+    	if(photo.getWidth() == 0 || photo.getWidth() == 0)
+    	{
+    		return;
+    	}
+    	
 		if (SCALE_IMAGES)
 		{
 			double scaleWidth = referencePanel.getOffsetWidth() / ((double)photo.getWidth());
