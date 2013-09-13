@@ -108,14 +108,13 @@ public class SlideshowPhotoPanel extends SlideshowComponent
 			
 			photosPanel = new HorizontalSwapPanel();
 			photosPanel.setWidth("100%");
+			//see @ note1.
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-				
 				@Override
 				public void execute() {
 					photosPanel.setHeight("100%");		
 				}
 			});
-			
 			
 			leftArrow = new Label();
 			leftArrow.setStyleName("leftArrow");
@@ -207,7 +206,14 @@ public class SlideshowPhotoPanel extends SlideshowComponent
 	    {
 			photosPanel = new TouchSlider();
 			photosPanel.setWidth("100%");
-			photosPanel.setHeight("100%");
+			//see @ note1.
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+				@Override
+				public void execute() {
+					photosPanel.setHeight("100%");		
+				}
+			});
+			
 			photosPanel.addSwapHandler(new SwapHandler()
 			{
 				@Override
@@ -241,6 +247,14 @@ public class SlideshowPhotoPanel extends SlideshowComponent
     {
 		impl = GWT.create(SlideshowPhotoPanelImpl.class);
 		impl.setStyleName("crux-SlideshowPhotoPanel");
+		//note1: fixing height 'bug' that makes the object's height relative to parent. If parent is created
+		//before then the object will not have the height setted with parent's value.
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				impl.setHeight("100%");		
+			}
+		});
 	    return impl;
     }
 	
