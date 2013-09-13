@@ -275,8 +275,9 @@ public class CruxRestProxyCreator extends AbstractInterfaceWrapperProxyCreator
 		try
 		{
 			//try to parse response object
+			srcWriter.println("JSONObject jsonObject = null;");
 			srcWriter.println("try {");
-			srcWriter.println("JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();");
+			srcWriter.println("jsonObject = JSONParser.parseStrict(response.getText()).isObject();");
 			//For instance if we have 400-404 server response, the object is not a json value. This will make JSON throws an Exception
 			srcWriter.println("} catch (Exception exception) {");
 			srcWriter.println(callbackParameterName+".onError(new RestError(response.getStatusCode(), response.getText()));");
