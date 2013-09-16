@@ -249,6 +249,10 @@ public class CruxInternalConfirmController implements CruxInternalConfirmControl
 		if($wnd.top._confirm_origin != null)
 		{
 			$wnd.top._confirm_origin.pop();
+			if ($wnd.top._confirm_origin.length == 0)
+			{
+				$wnd.top._messageBox_origin = null;
+			}
 			return true;
 		}
 		return false;
