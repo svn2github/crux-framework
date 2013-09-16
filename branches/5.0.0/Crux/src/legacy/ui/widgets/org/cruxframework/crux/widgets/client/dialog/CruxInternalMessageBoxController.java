@@ -198,6 +198,10 @@ public class CruxInternalMessageBoxController implements CruxInternalMessageBoxC
 		if($wnd.top._messageBox_origin != null)
 		{
 			$wnd.top._messageBox_origin.pop();
+			if ($wnd.top._messageBox_origin.length == 0)
+			{
+				$wnd.top._messageBox_origin = null;
+			}
 			return true;
 		}
 		return false;
