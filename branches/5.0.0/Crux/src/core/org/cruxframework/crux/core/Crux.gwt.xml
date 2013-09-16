@@ -118,31 +118,7 @@
         <when-type-is class="org.cruxframework.crux.core.client.utils.StringUtils.Collator" />
         <when-property-is name="user.agent" value="safari"/>
     </replace-with>   
-    
-	<!-- Specify Default implementation for NetworkChecker -->
-    <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerDefault">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
-        <none>
-            <when-property-is name="user.agent" value="ie8"/>
-            <when-property-is name="user.agent" value="ie9"/>
-            <when-property-is name="user.agent" value="safari"/>
-        </none>
-    </replace-with>
-    <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerSafari">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
-        <when-property-is name="user.agent" value="safari"/>
-    </replace-with>   
-    <replace-with
-        class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkCheckerIE8AndAbove">
-        <when-type-is class="org.cruxframework.crux.core.client.screen.BrowserNetworkTools.NetworkChecker" />
-        <any>
-            <when-property-is name="user.agent" value="ie8"/>
-            <when-property-is name="user.agent" value="ie9"/>
-        </any>
-    </replace-with>
-    
+        
 	<!-- Specify ie6 implementation for screen blocker -->
 	<replace-with
     	class="org.cruxframework.crux.core.client.screen.ScreenBlockerIE6">
@@ -160,6 +136,27 @@
 			<when-property-is name="user.agent" value="ie9" />
 		</any>
     </replace-with>	
+
+	<!-- Specify Base64 Implementation -->
+	<replace-with
+    	class="org.cruxframework.crux.core.client.utils.Base64.NativeImpl">
+    	<when-type-is class="org.cruxframework.crux.core.client.utils.Base64.Impl" />
+   		<none>
+ 	  		<when-property-is name="user.agent" value="ie6" />
+ 	  		<when-property-is name="user.agent" value="ie8" />
+ 	  		<when-property-is name="user.agent" value="ie9" />
+   		</none>
+    </replace-with>    
+	<replace-with
+    	class="org.cruxframework.crux.core.client.utils.Base64.EmulatedImpl">
+    	<when-type-is class="org.cruxframework.crux.core.client.utils.Base64.Impl" />
+   		<any>
+ 	  		<when-property-is name="user.agent" value="ie6" />
+ 	  		<when-property-is name="user.agent" value="ie8" />
+ 	  		<when-property-is name="user.agent" value="ie9" />
+   		</any>
+    </replace-with>    
+
 	<source path="client" /> 
 	<source path="shared" /> 
 </module>
