@@ -423,4 +423,8 @@ public class StringUtils
 		}
 		return true;
 	}	
+	
+	public static native int charCodeAt(String str, int i)/*-{
+		return str.charCodeAt(i);
+	}-*/;
 }

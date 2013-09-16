@@ -78,4 +78,12 @@ public class JsUtils
 		return js;
 	}
 
+	public static native String escape(String input)/*-{
+		return escape(input);
+	}-*/;
+
+	public static native String unescape(String input)/*-{
+		return unescape(input);
+	}-*/;
+	
 }

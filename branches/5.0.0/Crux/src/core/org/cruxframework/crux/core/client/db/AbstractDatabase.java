@@ -234,7 +234,7 @@ public abstract class AbstractDatabase implements Database
     	ObjectStore<K, ?> objectStore = transaction.getObjectStore(objectStoreName);
     	objectStore.delete(keys);
 	}
-
+    
     @Override
     public boolean isOpen()
     {

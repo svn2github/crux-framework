@@ -15,8 +15,11 @@
  */
 package org.cruxframework.crux.core.client.file;
 
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.PartialSupport;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
+import com.google.gwt.typedarrays.shared.ArrayBufferView;
 
 /**
  * @author Thiago da Rosa de Bustamante
@@ -41,5 +44,54 @@ public class File extends Blob
 			return true;
 		}
 		return false;
+	}-*/;
+	
+	public static File createIfSupported(JsArrayMixed body, String type, String fileName)
+	{
+		if (isSupported())
+		{
+			return create(Blob.createIfSupported(body, type), fileName);
+		}
+		return null;
+	}
+	
+	public static File createIfSupported(Blob blob, String fileName)
+	{
+		if (isSupported())
+		{
+			return create(blob, fileName);
+		}
+		return null;
+	}
+	
+	public static File createIfSupported(ArrayBuffer body, String type, String fileName)
+	{
+		if (isSupported())
+		{
+			return create(Blob.createIfSupported(body, type), fileName);
+		}
+		return null;
+	}
+	
+	public static File createIfSupported(ArrayBufferView body, String type, String fileName)
+	{
+		if (isSupported())
+		{
+			return create(Blob.createIfSupported(body, type), fileName);
+		}
+		return null;
+	}
+	
+	public static File createIfSupported(String body, String type, String fileName)
+	{
+		if (isSupported())
+		{
+			return create(Blob.createIfSupported(body, type), fileName);
+		}
+		return null;
+	}
+
+	protected static native File create(Blob blob, String fileName)/*-{
+		return new $File(blob, fileName);
 	}-*/;
 }

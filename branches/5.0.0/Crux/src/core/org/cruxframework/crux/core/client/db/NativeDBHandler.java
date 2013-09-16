@@ -194,4 +194,13 @@ class NativeDBHandler
     private static native void forceWebSQLUsage()/*-{
     	$wnd.shimIndexedDB.__useShim();
     }-*/;
+    
+    static native boolean usesWebSQL()/*-{
+		if ($wnd.shimIndexedDB)
+		{
+			return true;
+		}
+		return false;
+	}-*/;
+    
 }

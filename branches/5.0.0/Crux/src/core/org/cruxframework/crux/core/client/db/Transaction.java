@@ -147,6 +147,15 @@ public class Transaction extends DBObject
 		transaction.abort();
 	}
 	
+	/**
+	 * Retrieve a specialized object store for files handling.
+	 * @return
+	 */
+	public FileStore getFileStore()
+	{
+		IDBObjectStore idbObjectStore = transaction.getObjectStore(FileStore.OBJECT_STORE_NAME);
+		return new FileStore(db, idbObjectStore);
+	}
 	
 	/**
 	 * Inform a callback to monitor the current transaction state changes.

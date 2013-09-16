@@ -25,6 +25,7 @@ import java.util.Set;
 import org.cruxframework.crux.core.client.collection.FastList;
 import org.cruxframework.crux.core.client.db.AbstractDatabase;
 import org.cruxframework.crux.core.client.db.DatabaseErrorHandler;
+import org.cruxframework.crux.core.client.db.FileStore;
 import org.cruxframework.crux.core.client.db.ObjectStore;
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef;
 import org.cruxframework.crux.core.client.db.annotation.DatabaseDef.Empty;
@@ -172,7 +173,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("}catch (Exception e){/* Chrome BUG. When an object store is created, but have no data, chrome raises a NotFoundException when removing these store. So ignore any delete failed attempt.*/}");
 			srcWriter.println("}");
 		}
-		else
+		else //Just check for existing indexes if override DB elements is turned off;
 		{
 			srcWriter.println(FastList.class.getCanonicalName() +"<String> "+indexNamesVar+";");
 		}
@@ -226,6 +227,7 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			}
 			generateIndexesCreation(srcWriter, objectStoreMetadata.indexes(), objectStoreTarget, objectStoreVar, objectStoreName, indexNamesVar);
         }
+		generateFileStoreCreation(srcWriter);		
     }
 	
 	protected Set<IndexData> getIndexes(IndexDef[] indexMetadata, JClassType objectStoreTarget, String objectStoreName)
@@ -389,7 +391,20 @@ public class DatabaseProxyCreator extends AbstractInterfaceWrapperProxyCreator
 			srcWriter.println("}");
 		}
 	}
-	
+
+	protected void generateFileStoreCreation(SourcePrinter srcWriter)
+    {
+		if (!databaseMetadata.overrideDBElements())
+		{
+			srcWriter.println("if (!storeNames.contains("+EscapeUtils.quote(FileStore.OBJECT_STORE_NAME)+")){");
+		}
+		srcWriter.println("db.createObjectStore("+EscapeUtils.quote(FileStore.OBJECT_STORE_NAME)+");");
+		if (!databaseMetadata.overrideDBElements())
+		{
+			srcWriter.println("}");
+		}
+    }
+
 	protected void generateObjectStoreCreation(SourcePrinter srcWriter, String keyPath, boolean autoIncrement, String objectStoreName, String objectStoreVar)
 	{
 		srcWriter.println(objectStoreVar+" = db.createObjectStore("+EscapeUtils.quote(objectStoreName)+", "+

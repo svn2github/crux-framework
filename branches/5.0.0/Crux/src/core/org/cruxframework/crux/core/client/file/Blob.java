@@ -16,11 +16,16 @@
 package org.cruxframework.crux.core.client.file;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.dom.client.PartialSupport;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
+import com.google.gwt.typedarrays.shared.ArrayBufferView;
 
 /**
  * @author Thiago da Rosa de Bustamante
  *
  */
+@PartialSupport
 public class Blob extends JavaScriptObject
 {
 	protected Blob(){}
@@ -51,5 +56,78 @@ public class Blob extends JavaScriptObject
 
 	public final native Blob slice(int start, int end, String contentType)/*-{
 		return this.slice(start, end, contentType);
+	}-*/;
+
+	public static native boolean isSupported()/*-{
+		if ($wnd.Blob)
+		{
+			return true;
+		}
+		return false;	
+	}-*/;
+
+	public static Blob createIfSupported(JsArrayMixed body, String type)
+	{
+		if (isSupported())
+		{
+			return create(body, type);
+		}
+		return null;
+	}
+	
+	public static Blob createIfSupported(ArrayBuffer body, String type)
+	{
+		if (isSupported())
+		{
+			return create(body, type);
+		}
+		return null;
+	}
+	
+	public static Blob createIfSupported(ArrayBufferView body, String type)
+	{
+		if (isSupported())
+		{
+			return create(body, type);
+		}
+		return null;
+	}
+	
+	public static Blob createIfSupported(Blob body, String type)
+	{
+		if (isSupported())
+		{
+			return create(body, type);
+		}
+		return null;
+	}
+	
+	public static Blob createIfSupported(String body, String type)
+	{
+		if (isSupported())
+		{
+			return create(body, type);
+		}
+		return null;
+	}
+	
+	protected static native Blob create(JsArrayMixed b, String t)/*-{
+		return new $wnd.Blob(b, {type: t});
+	}-*/;
+
+	protected static native Blob create(ArrayBuffer b, String t)/*-{
+		return new $wnd.Blob([b], {type: t});
+	}-*/;
+
+	protected static native Blob create(ArrayBufferView b, String t)/*-{
+		return new $wnd.Blob([b], {type: t});
+	}-*/;
+
+	protected static native Blob create(Blob b, String t)/*-{
+		return new $wnd.Blob([b], {type: t});
+	}-*/;
+
+	protected static native Blob create(String b, String t)/*-{
+		return new $wnd.Blob([b], {type: t});
 	}-*/;
 }

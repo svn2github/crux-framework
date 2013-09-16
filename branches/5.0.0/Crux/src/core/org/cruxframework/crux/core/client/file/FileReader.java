@@ -110,12 +110,25 @@ public class FileReader extends JavaScriptObject
 		callback.onError(Error.valueOf(errorName));
 	}
 
+	public static FileReader createIfSupported()
+	{
+		if (isSupported())
+		{
+			return create();
+		}
+		return null;
+	}
+	
 	public static native boolean isSupported()/*-{
 		if ($wnd.FileReader)
 		{
 			return true;
 		}
 		return false;	
+	}-*/;
+	
+	private static native FileReader create()/*-{
+		return new $wnd.FileReader();
 	}-*/;
 }
 

@@ -131,7 +131,7 @@ public class ObjectStoreProxyCreator extends AbstractKeyValueProxyCreator
 	protected void generateAddMethod(SourcePrinter srcWriter)
     {
 		srcWriter.println("public void add("+getTargetObjectClassName()+" object){");
-		srcWriter.println("put(object, null);");
+		srcWriter.println("add(object, null);");
 		srcWriter.println("}");
 		srcWriter.println();
 		
