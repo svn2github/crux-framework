@@ -18,6 +18,7 @@ package org.cruxframework.crux.core.rebind.crossdevice;
 import java.util.Map;
 
 import org.cruxframework.crux.core.client.screen.DeviceAdaptive.Device;
+import org.cruxframework.crux.core.client.utils.EscapeUtils;
 import org.cruxframework.crux.core.rebind.CruxGeneratorException;
 import org.cruxframework.crux.core.rebind.controller.ClientControllers;
 import org.cruxframework.crux.core.rebind.controller.ControllerProxyCreator;
@@ -54,7 +55,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
             public String getControllerExpression(String controller, Device device)
             {
 	            assert(controllerName.equals(controller)):"Controller ["+controller+" not found into this view.]";
-				return getProxyQualifiedName()+".getController()";
+		        return "(("+controllerClass+")"+getViewVariable()+".getController("+EscapeUtils.quote(controller)+"))";
             }
 
 			@Override
@@ -91,8 +92,9 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	{
 	    super.generateProxyMethods(printer);
 	    
-	    printer.println("public controllerClass getController(){");
-		printer.println("return this._controller;");
+		printer.println("@Override");
+	    printer.println("public <T> T getController(String controller){");
+		printer.println("return (T)this._controller;");
 		printer.println("}");
 	    
 		printer.println("public void setController("+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" controller){");

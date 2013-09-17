@@ -1472,7 +1472,7 @@ public class ViewFactoryCreator extends AbstractProxyCreator
 		public String getControllerExpression(String controller, Device device)
         {
 
-	        return "(("+getControllerImplClassName(controller, device)+")"+viewVariable+".getRegisteredControllers().getController("
+	        return "(("+getControllerImplClassName(controller, device)+")"+viewVariable+".getController("
 			+EscapeUtils.quote(controller)+"))";
         }
 
