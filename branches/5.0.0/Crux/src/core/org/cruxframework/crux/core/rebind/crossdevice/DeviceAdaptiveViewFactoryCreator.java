@@ -54,7 +54,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
             public String getControllerExpression(String controller, Device device)
             {
 	            assert(controllerName.equals(controller)):"Controller ["+controller+" not found into this view.]";
-				return getProxyQualifiedName()+".this._controller";
+				return getProxyQualifiedName()+".getController()";
             }
 
 			@Override
@@ -90,6 +90,11 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	protected void generateProxyMethods(SourcePrinter printer)
 	{
 	    super.generateProxyMethods(printer);
+	    
+	    printer.println("public controllerClass getController(){");
+		printer.println("return this._controller;");
+		printer.println("}");
+	    
 		printer.println("public void setController("+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" controller){");
 		printer.println("this._controller = controller;");
 		printer.println("}");
