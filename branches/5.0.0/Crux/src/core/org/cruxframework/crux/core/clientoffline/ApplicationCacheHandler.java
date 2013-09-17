@@ -82,7 +82,7 @@ public class ApplicationCacheHandler implements EntryPoint
      */
     public void onModuleLoad() 
     {
-    	if(!isSupported())
+    	if(!isSupported() || !GWT.isProdMode())
     	{
     		return;
     	}
