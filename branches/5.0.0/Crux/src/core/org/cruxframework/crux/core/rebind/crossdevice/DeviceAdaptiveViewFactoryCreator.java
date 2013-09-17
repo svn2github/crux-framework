@@ -70,7 +70,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
 	protected void generateProxyFields(SourcePrinter printer)
 	{
 	    super.generateProxyFields(printer);
-		printer.println("private "+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" _controller;");
+		printer.println("public "+controllerClass+ ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+" _controller;");
 	}
 	
 	/**
