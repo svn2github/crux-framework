@@ -55,7 +55,7 @@ public class DeviceAdaptiveViewFactoryCreator extends ViewFactoryCreator
             public String getControllerExpression(String controller, Device device)
             {
 	            assert(controllerName.equals(controller)):"Controller ["+controller+" not found into this view.]";
-		        return "(("+controllerClass+")"+getViewVariable()+".getController("+EscapeUtils.quote(controller)+"))";
+		        return "(("+controllerClass+ControllerProxyCreator.CONTROLLER_PROXY_SUFFIX+")"+getViewVariable()+".getController("+EscapeUtils.quote(controller)+"))";
             }
 
 			@Override
