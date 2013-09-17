@@ -1,0 +1,244 @@
+/*
+ * Copyright 2013 cruxframework.org.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package org.cruxframework.crux.core.client.image;
+
+import org.cruxframework.crux.core.client.file.File;
+import org.cruxframework.crux.core.client.file.FileReader;
+import org.cruxframework.crux.core.client.file.URL;
+import org.cruxframework.crux.core.client.file.FileReader.ReaderStringCallback;
+import org.cruxframework.crux.core.client.utils.FileUtils;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.CanvasElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.PartialSupport;
+
+/**
+ * An Image processor 
+ * @author Thiago da Rosa de Bustamante
+ */
+@PartialSupport
+public class ImageProcessor
+{
+	private NativeImage image;
+	private CanvasElement canvas;
+
+	/**
+	 * Constructor
+	 */
+	protected ImageProcessor(){}
+	
+	/**
+	 * Loads an image to the processor.
+	 * @param url Image URL
+	 * @param handler Called whem image is completely loaded
+	 */
+	public void loadImage(String url, ImageLoadHandler handler)
+	{
+		image = NativeImage.create();
+		image.setLoadHandler(handler);
+		image.setSrc(url);
+	}
+	
+	/**
+	 * Loads an image to the processor.
+	 * @param file Image File
+	 * @param handler Called whem image is completely loaded
+	 */
+	public void loadImage(final File image, final ImageLoadHandler handler)
+	{
+		if (URL.isSupported())
+		{
+			loadImage(URL.createObjectURL(image), handler);
+		}
+		else
+		{
+			FileReader.createIfSupported().readAsDataURL(image, new ReaderStringCallback()
+			{
+				@Override
+				public void onComplete(String result)
+				{
+					loadImage(result, handler);
+				}
+			});
+		}
+	}
+	
+	public void ensureMaxSize(int maxHeight, int maxWidth, boolean keepProportions)
+	{
+		assert (image != null || canvas != null) : "You must load an image first";
+		
+		int width = (image != null?image.getWidth():canvas.getWidth());
+		int height = (image != null?image.getHeight():canvas.getHeight());
+
+		if (keepProportions)
+		{
+			if (width > height)
+			{
+				if (width > maxWidth)
+				{
+					height = Math.round(height *= maxWidth / width);
+					width = maxWidth;
+				}
+			}
+			else
+			{
+				if (height > maxHeight)
+				{
+					width = Math.round(width *= maxHeight / height);
+					height = maxHeight;
+				}
+			}
+		}
+		else
+		{
+			width = Math.min(width, maxWidth);
+			height = Math.min(height, maxHeight);
+		}
+		resize(width, height);
+	}
+
+	public void resize(int width, int height)
+    {
+		assert (image != null || this.canvas != null) : "You must load an image first";
+		
+		CanvasElement canvas = Document.get().createCanvasElement().cast();
+		canvas.setWidth(width);
+		canvas.setHeight(height);
+		if (image != null)
+		{
+			canvas.getContext2d().drawImage(image.asImageElement(), 0, 0, width, height);
+		}
+		else
+		{
+			canvas.getContext2d().drawImage(this.canvas, 0, 0, this.canvas.getWidth(), this.canvas.getHeight(), 0, 0, width, height);
+		}
+		
+		this.canvas = canvas;
+		image = null;
+    }
+	
+	/**
+	 * Export content image as a JPEG file.
+	 * @param fileName Name of the exported file
+	 * @param quality JPEG quality. It ranges from 0.0 to 1.0
+	 * @return
+	 */
+	public File asJpeg(String fileName, double quality)
+	{
+		assert (image != null || this.canvas != null) : "You must load an image first";
+		
+		if (image != null)
+		{
+			resize(image.getWidth(), image.getHeight());
+		}
+		return FileUtils.fromDataURI(toJpegURL(canvas, quality), fileName);
+	}
+	
+	private native String toJpegURL(CanvasElement canvas, double quality)/*-{
+		return canvas.toDataUrl("image/jpeg", quality);
+	}-*/;
+	
+	/**
+	 * Export content image as a PNG file.
+	 * @param fileName Name of the exported file
+	 * @return
+	 */
+	public File asPng(String fileName)
+	{
+		return exportImage(fileName, "image/png");
+	}
+
+	/**
+	 * Export content image as a GIF file.
+	 * @param fileName Name of the exported file
+	 * @return
+	 */
+	public File asGif(String fileName)
+	{
+		return exportImage(fileName, "image/gif");
+	}
+
+	private File exportImage(String fileName, String imageType)
+    {
+	    assert (image != null || this.canvas != null) : "You must load an image first";
+		
+		if (image != null)
+		{
+			resize(image.getWidth(), image.getHeight());
+		}
+		return FileUtils.fromDataURI(canvas.toDataUrl(imageType), fileName);
+    }
+
+	/**
+	 * Check if browser supports this feature
+	 * @return
+	 */
+	public static boolean isSupported()
+	{
+		return File.isSupported() && FileReader.isSupported();
+	}
+	
+	/**
+	 * If the current browser supports, create a new ImageProcessor
+	 * @return
+	 */
+	public static ImageProcessor createIfSupported()
+	{
+		if (isSupported())
+		{
+			return new ImageProcessor();
+		}
+		return null;
+	}
+	
+	static class NativeImage extends JavaScriptObject
+	{
+		protected NativeImage(){}
+		
+		public final native ImageElement asImageElement()/*-{
+	        return this;
+        }-*/;
+
+		public final native int getWidth()/*-{
+			return this.width;
+		}-*/;
+
+		public final native int getHeight()/*-{
+			return this.height;
+		}-*/;
+
+		public final native void setSrc(String url)/*-{
+			this.src = url;
+		}-*/;
+
+		public final native void setLoadHandler(ImageLoadHandler handler)/*-{
+			this.onload = function(){
+				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onLoad()();
+			};
+		}-*/;
+		
+		public static native NativeImage create()/*-{
+			return new Image();
+		}-*/;
+	}
+	
+	public static interface ImageLoadHandler 
+	{
+		void onLoad();
+	}
+}

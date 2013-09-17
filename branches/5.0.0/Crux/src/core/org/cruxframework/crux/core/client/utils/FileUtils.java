@@ -15,6 +15,7 @@
  */
 package org.cruxframework.crux.core.client.utils;
 
+import org.cruxframework.crux.core.client.encoder.Base64;
 import org.cruxframework.crux.core.client.file.Blob;
 import org.cruxframework.crux.core.client.file.File;
 

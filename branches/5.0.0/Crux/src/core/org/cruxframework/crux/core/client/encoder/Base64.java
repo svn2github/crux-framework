@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.core.client.utils;
+package org.cruxframework.crux.core.client.encoder;
 
 import com.google.gwt.core.client.GWT;
 

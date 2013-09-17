@@ -139,8 +139,8 @@
 
 	<!-- Specify Base64 Implementation -->
 	<replace-with
-    	class="org.cruxframework.crux.core.client.utils.Base64.NativeImpl">
-    	<when-type-is class="org.cruxframework.crux.core.client.utils.Base64.Impl" />
+    	class="org.cruxframework.crux.core.client.encoder.Base64.NativeImpl">
+    	<when-type-is class="org.cruxframework.crux.core.client.encoder.Base64.Impl" />
    		<none>
  	  		<when-property-is name="user.agent" value="ie6" />
  	  		<when-property-is name="user.agent" value="ie8" />
@@ -148,8 +148,8 @@
    		</none>
     </replace-with>    
 	<replace-with
-    	class="org.cruxframework.crux.core.client.utils.Base64.EmulatedImpl">
-    	<when-type-is class="org.cruxframework.crux.core.client.utils.Base64.Impl" />
+    	class="org.cruxframework.crux.core.client.encoder.Base64.EmulatedImpl">
+    	<when-type-is class="org.cruxframework.crux.core.client.encoder.Base64.Impl" />
    		<any>
  	  		<when-property-is name="user.agent" value="ie6" />
  	  		<when-property-is name="user.agent" value="ie8" />
