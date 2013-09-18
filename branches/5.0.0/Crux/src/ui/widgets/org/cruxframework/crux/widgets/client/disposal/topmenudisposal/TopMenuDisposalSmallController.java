@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cruxframework.crux.widgets.client.disposal.menutabsdisposal;
+package org.cruxframework.crux.widgets.client.disposal.topmenudisposal;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.crossdevice.DeviceAdaptiveController;
@@ -24,15 +24,13 @@ import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel;
 import org.cruxframework.crux.widgets.client.swappanel.HorizontalSwapPanel.Direction;
 
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author Gesse Dafe
  */
-@Controller("menuTabsDisposalSmallController")
-public class MenuTabsDisposalSmallController extends DeviceAdaptiveController implements MenuTabsDisposal
+@Controller("topMenuDisposalSmallController")
+public class TopMenuDisposalSmallController extends DeviceAdaptiveController implements TopMenuDisposal
 {
 	private HorizontalSwapPanel swapPanel;
 	private FlowPanel menuPanel;
@@ -63,22 +61,12 @@ public class MenuTabsDisposalSmallController extends DeviceAdaptiveController im
 		viewContainer = new SimpleViewContainer();
 		swapPanel = getChildWidget("swapPanel");
 		menuPanel = getChildWidget("menuPanel");
-		setStyleName("crux-MenuTabsDisposal");
+		setStyleName("crux-TopMenuDisposal");
 	}
 
 	@Override
 	public void showMenu()
 	{
 		swapPanel.transitTo(menuPanel, Direction.BACKWARDS);
-	}
-
-	@Override
-	public void addMenuSection(String label)
-	{
-		Label section = new Label();
-		section.setStyleName("menuSection");
-		section.getElement().getStyle().setDisplay(Display.BLOCK);
-		section.setText(label);
-		menuPanel.add(section);
 	}
 }
