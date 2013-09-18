@@ -165,13 +165,13 @@ public abstract class AbstractCruxCompiler
 			ClassScanner.initialize(urls);
 
 			initializeProcessors();
-			for (CruxPreProcessor preprocess : this.preProcessors)
+			for (int i=0; i< this.preProcessors.size(); i++)
 			{
-				preprocess.initialize(urls);
+				this.preProcessors.get(i).initialize(urls);
 			}
-			for (CruxPostProcessor postprocess : this.postProcessors)
+			for (int i=0; i< this.postProcessors.size(); i++)
 			{
-				postprocess.initialize(urls);
+				this.postProcessors.get(i).initialize(urls);
 			}
 			this.initialized = true;
 		}
