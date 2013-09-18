@@ -164,6 +164,7 @@ public abstract class AbstractCruxCompiler
 			ModuleUtils.initializeScannerURLs(urls);
 			ClassScanner.initialize(urls);
 
+			initializeProcessors();
 			for (CruxPreProcessor preprocess : this.preProcessors)
 			{
 				preprocess.initialize(urls);
@@ -172,7 +173,6 @@ public abstract class AbstractCruxCompiler
 			{
 				postprocess.initialize(urls);
 			}
-			initializeProcessors();
 			this.initialized = true;
 		}
 	}
