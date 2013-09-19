@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Crux-maven" default="init" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
-    <property name="dist" location="dis" />
+    <property name="dist" location="dist" />
     <property name="version" value="5.0.0-SNAPSHOT" />
 
     <!-- define Crux dist folder -->
@@ -51,6 +51,11 @@
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
 	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
 
+	<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+	           uri="antlib:org.apache.maven.artifact.ant"
+	           classpathref="maven-ant-tasks.classpath" />
+	
 	<target name="init">
 	</target>
 
