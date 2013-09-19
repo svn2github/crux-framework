@@ -47,11 +47,33 @@ public class ImageProcessor
 	 * @param url Image URL
 	 * @param handler Called whem image is completely loaded
 	 */
-	public void loadImage(String url, ImageLoadHandler handler)
+	public void loadImage(String url, final ImageLoadHandler handler)
 	{
-		image = NativeImage.create();
-		image.setLoadHandler(handler);
-		image.setSrc(url);
+		this.canvas = null;
+		this.image = null;
+		final NativeImage newImage = NativeImage.create();
+		newImage.setLoadHandler(new ImageLoadHandler()
+		{
+			@Override
+			public void onLoad()
+			{
+				image = newImage;
+				if (handler != null)
+				{
+					handler.onLoad();
+				}
+			}
+			
+			@Override
+			public void onError()
+			{
+				if (handler != null)
+				{
+					handler.onError();
+				}
+			}
+		});
+		newImage.setSrc(url);
 	}
 	
 	/**
@@ -78,6 +100,12 @@ public class ImageProcessor
 		}
 	}
 	
+	/**
+	 * Ensure a max size for the image
+	 * @param maxHeight
+	 * @param maxWidth
+	 * @param keepProportions
+	 */
 	public void ensureMaxSize(int maxHeight, int maxWidth, boolean keepProportions)
 	{
 		assert (image != null || canvas != null) : "You must load an image first";
@@ -230,6 +258,9 @@ public class ImageProcessor
 			this.onload = function(){
 				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onLoad()();
 			};
+			this.onerror = function(){
+				handler.@org.cruxframework.crux.core.client.image.ImageProcessor.ImageLoadHandler::onError()();
+			};
 		}-*/;
 		
 		public static native NativeImage create()/*-{
@@ -240,5 +271,6 @@ public class ImageProcessor
 	public static interface ImageLoadHandler 
 	{
 		void onLoad();
+		void onError();
 	}
 }
