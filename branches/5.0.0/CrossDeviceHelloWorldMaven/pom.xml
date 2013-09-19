@@ -128,70 +128,73 @@
 		<!-- <resources> <resource> <directory>src/main/resources</directory> <includes> 
 			<include>*.gwt.xml</include> </includes> <filtering>true</filtering> </resource> 
 			</resources> -->
+
+
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id></id> -->
-<!-- 						<phase>compile</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exploded</goal> -->
-<!-- 						</goals> -->
-<!-- 						<inherited>false</inherited> -->
-<!-- 						<configuration> -->
-<!-- 						</configuration> -->
-<!-- 					</execution>					 -->
-<!-- 				</executions> -->
-				<configuration>
-					<mainClass>org.cruxframework.crux.tools.compile.CruxCompiler</mainClass>
-					<arguments>
-						<argument>sourceDir</argument>
-						<argument>${basedir}/src/main/java</argument>
+			    <artifactId>maven-antrun-plugin</artifactId>
+			    <version>1.6</version>
+			    <executions>
+			        <execution>
+			            <phase>package</phase>
+			            <configuration>
+			                <target>
+								<path id="build.classpath">
+									<fileset dir="${lib.folder}">
+										<include name="**/*.jar" />
+									</fileset>
+								</path>
+								<java classname="org.cruxframework.crux.tools.compile.CruxCompiler" fork="true" >
+									<classpath>
+										<path refid="build.classpath" />
+									</classpath>
+									<arg value="sourceDir" />
+									<arg value="${basedir}/src/main/java" />
 
-						<argument>webDir</argument>
-						<argument>${basedir}/target/CrossDeviceHelloWorldMaven-5.0.0</argument>
+									<arg value="webDir" />
+									<arg value="${basedir}/target/CrossDeviceHelloWorldMaven-5.0.0" />
 
-						<argument>resourcesDir</argument>
-						<argument>${classes.folder}</argument>
- 
-						<argument>outputDir</argument>
-						<argument>${basedir}/target/CrossDeviceHelloWorldMaven-5.0.0</argument>
+									<arg value="resourcesDir" />
+									<arg value="${classes.folder}" />
 
-						<argument>classpathDir</argument>
-						<argument>${lib.folder}</argument>
+									<arg value="outputDir" />
+									<arg value="${basedir}/target/CrossDeviceHelloWorldMaven-5.0.0" />
 
-						<argument>outputCharset</argument>
-						<argument>UTF-8</argument>
+									<arg value="outputCharset" />
+									<arg value="UTF-8" />
 
-						<argument>-localWorkers</argument>
-						<argument>2</argument>
-						
-						<argument>-forceModulesCompilation</argument>
-						
-						<argument>-logLevel</argument>
-						<argument>ERROR</argument>
-						
-						<argument>-gen</argument>
-						<argument>generated</argument>
-						
-						<argument>-keepPagesGeneratedFiles</argument>
-						
-						<argument>-doNotPreCompileJavaSource</argument>
-						
-						<argument>-indentPages</argument>
-						
-						<argument>pageFileExtension</argument>
-						<argument>html</argument>
-						
-						<!-- <argument>%classpath:${basedir}/target/CrossDeviceHelloWorldMaven-5.0.0/WEB-INF/lib</argument> -->
+									<arg value="-localWorkers" />
+									<arg value="2" />
 
-					</arguments>
-				</configuration>
+									<arg value="-logLevel" />
+									<arg value="ERROR" />
+
+									<arg value="-gen" />
+									<arg value="generated" />
+
+									<arg value="pageFileExtension" />
+									<arg value="html" />
+
+									<arg value="-forceModulesCompilation" />
+
+									<arg value="-keepPagesGeneratedFiles" />
+
+									<arg value="-indentPages" />
+
+									<arg value="-doNotPreCompileJavaSource" />
+
+									<jvmarg value="-Xmx768M" />
+									<jvmarg value="-Xms256M" />
+									<jvmarg value="-DCruxToolsConfig.compilerClass=org.cruxframework.crux.tools.compile.CruxModuleCompiler" />
+								</java>
+			                </target>
+			            </configuration>
+			            <goals>
+			                <goal>run</goal>
+			            </goals>
+			       </execution>
+			   </executions>
 			</plugin>
-
 
 			<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
 				<execution> <phase>process-resources</phase> <configuration> <tasks> <ant 
