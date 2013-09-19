@@ -66,6 +66,8 @@ abstract class AbstractFileUploader extends Composite
 	protected boolean autoUploadFiles = false;
 	protected Button sendButton;
 	
+	private ClientProcessFileHandler clientProcessFileHandler;
+	
 	/**
 	 * Protected Constructor. Use createIfSupported() to instantiate.
 	 */
@@ -125,9 +127,22 @@ abstract class AbstractFileUploader extends Composite
 
 	public void uploadFile(File file)
 	{
-		uploadFile(file, url);
+		if(clientProcessFileHandler == null || clientProcessFileHandler.process(file))
+		{
+			uploadFile(file, url);
+		}
 	}
-
+	
+	public static interface ClientProcessFileHandler
+	{
+		boolean process(File file);
+	}
+	
+	public void setClientProcessFileHandler(ClientProcessFileHandler clientProcessFileHandler) 
+	{
+		this.clientProcessFileHandler = clientProcessFileHandler;
+	}
+	
 	public void uploadFile(final File file, String url)
 	{
 		XMLHttpRequest2 xhr = getXhr(file);
