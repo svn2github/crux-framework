@@ -50,6 +50,7 @@ public abstract class AbstractDeclarativeUIPreProcessor implements CruxPreProces
 	/**
 	 * @see org.cruxframework.crux.tools.compile.CruxPreProcessor#preProcess(java.io.File)
 	 */
+	@Override
 	public URL preProcess(URL url, Module module) throws IOException, InterfaceConfigException
 	{
 		logger.info("Pre-processing file: " + url.toString());
